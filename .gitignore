@@ -1,6 +1,4 @@
 .env
-composer.lock
-symfony.lock
 /var/
 /vendor/
 /html/upload/temp_image/
