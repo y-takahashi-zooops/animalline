@@ -1,0 +1,6 @@
+.env
+/var/
+/vendor/
+/html/upload/temp_image/
+/html/upload/save_image/
+/app/DoctrineMigrations/
