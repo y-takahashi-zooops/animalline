@@ -220,6 +220,10 @@ th, td {
     font-size: 18px!important;
 }
 
+.font-size-16 {
+    font-size: 16px!important;
+}
+
 .font-size-14 {
     font-size: 14px!important;
 }
@@ -273,14 +277,17 @@ th, td {
 }
 
 .main {
-    max-width: 1200px;
+    max-width: 1600px;
     margin: auto;
     padding: 2em 4em;
 }
 
-
 .header-nav .nav-link.active:hover{
     color: white;
+}
+
+.header-nav .nav-item a {
+    height: 50px;
 }
 
 .dropdown-toggle::after {
@@ -445,7 +452,7 @@ th, td {
 
 .search-area select {
     border: none!important;
-    font-size: 14px;
+    font-size: 18px;
     appearance: none;
 }
 
