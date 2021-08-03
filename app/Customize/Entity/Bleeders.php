@@ -63,7 +63,7 @@ class Bleeders
     private $breeder_house_address;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $breeder_house_building;
 
