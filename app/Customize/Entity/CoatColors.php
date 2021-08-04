@@ -6,6 +6,7 @@ use Customize\Repository\CoatColorsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="alm_coat_colors")
  * @ORM\Entity(repositoryClass=CoatColorsRepository::class)
  */
 class CoatColors

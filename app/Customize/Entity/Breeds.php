@@ -6,6 +6,7 @@ use Customize\Repository\BreedsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="alm_breeds")
  * @ORM\Entity(repositoryClass=BreedsRepository::class)
  */
 class Breeds
