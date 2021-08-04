@@ -33,7 +33,7 @@ class CoatColorsType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('sort_oder', IntegerType::class);
+            ->add('sort_order', IntegerType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
