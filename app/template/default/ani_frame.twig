@@ -9,21 +9,12 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/base-style.css') }}">
     {% block stylesheet %}{% endblock %}
 </head>
-<body>
-    {% include 'Block/header.twig' %}
-    {# <div class="dummy-header d-none d-sm-block"></div>
-    <div class="sm-dummy-header d-block d-sm-none"></div>
-    <div class="bg-white">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb m-auto bg-white">
-                <li class="breadcrumb-item"><a href="top.html" class="color-adoption font-size-12">Home</a></li>
-                <li class="breadcrumb-item active font-size-12" aria-current="page">Library</li>
-            </ol>
-        </nav>
-    </div> #}
+<body class="bg-primary">
+    {% include 'ani_header.twig' %}
     <div class="main">
         <div class="row">
             <div class="main-container col-12">
@@ -36,7 +27,7 @@
             </div>
         </div>
     </div>
-    {% include 'Block/footer.twig' %}
+    {% include 'ani_footer.twig' %}
 </body>
 <script>
     function toggleNav() {

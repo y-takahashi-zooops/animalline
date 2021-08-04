@@ -15,6 +15,8 @@ security:
             id: Eccube\Security\Core\User\MemberProvider
         customer_provider:
             id: Eccube\Security\Core\User\CustomerProvider
+        adoption_provider:
+            id: Customize\Security\Core\User\AdoptionProvider
     # https://symfony.com/doc/current/security.html#initial-security-yml-setup-authentication
     firewalls:
         dev:
@@ -59,7 +61,23 @@ security:
             logout:
                 path: logout
                 target: homepage
-
+        adoption:
+            pattern: '^/adoption/configration/'
+            anonymous: true
+            provider: adoption_provider
+            form_login:
+                check_path: adoption_login
+                login_path: adoption_login
+                csrf_token_generator: security.csrf.token_manager
+                default_target_path: adoption_homepage
+                username_parameter: 'email'
+                password_parameter: 'password'
+                use_forward: false
+                success_handler: eccube.security.success_handler
+                failure_handler: eccube.security.failure_handler
+            logout:
+                path: admin_logout
+                target: admin_login
     access_decision_manager:
         strategy: unanimous
         allow_if_all_abstain: false

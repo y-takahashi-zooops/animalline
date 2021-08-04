@@ -2,7 +2,7 @@
     <nav class="navbar navbar-default bg-white">
         <div class="container-fluid">
             <div class="navbar-header m-3">
-                <a class="navbar-brand" href="top.html">
+                <a class="navbar-brand" href="/">
                 {% if site_type == 'adoption' %}
                     <img src="{{ asset('assets/img/adoption/logo.svg') }}"></a>
                 {% elseif site_type == 'breeder' %}
@@ -53,40 +53,20 @@
                     </nav>
                     <ul class="header-nav nav nav-pills nav-justified bg-white">
                         <li class="nav-item">
-                            <a class="nav-link active font-size-18 rounded-0" href="#">Active</a>
+                            <a class="nav-link active font-size-18 rounded-0" href="#">保護団体TOP</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link font-size-18 rounded-0" href="/ec/top">ECのTOP</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle font-size-18 rounded-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            <div style="vertical-align: middle">Dropdown</div>                
+                                テストリンク
                             </a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item font-size-16 rounded-0" href="#">
-                                    カテゴリカテゴリカテゴリカテゴリ</a>
-                                <div class="m-2"></div>
-                                <a class="dropdown-item font-size-16 rounded-0" href="#">
-                                    カテゴリカテゴリカテゴリカテゴリ</a>
-                                <div class="m-2"></div>
-                                <a class="dropdown-item font-size-16 rounded-0" href="#">
-                                    カテゴリカテゴリカテゴリカテゴリ
-                                </a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle font-size-18 rounded-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item font-size-16 rounded-0" href="#">
-                                    カテゴリカテゴリカテゴリカテゴリ
+                                <a class="dropdown-item font-size-16 rounded-0" href="/adoption/mypage/login">
+                                    保護団体ログイン
                                 </a>
                                 <div class="m-2"></div>
-                                <a class="dropdown-item font-size-16 rounded-0" href="#">
-                                    カテゴリカテゴリカテゴリカテゴリ
-                                </a>
-                                <div class="m-2"></div>
-                                <a class="dropdown-item font-size-16 rounded-0" href="#">
-                                    カテゴリカテゴリカテゴリカテゴリ
-                                </a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -117,7 +97,7 @@
     <nav class="navbar navbar-default bg-white">
         <div class="container-fluid">
             <div class="navbar-header m-auto p-4">
-                <a class="navbar-brand" href="top.html">
+                <a class="navbar-brand" href="/">
                     <img src="{{ asset('assets/img/adoption-logo.svg') }}"></a>
                 </div>
                 <nav class="headerNav bg-primary position-fixed w-100 h-100">
@@ -154,4 +134,5 @@
         <a class="nav-item nav-link" href="#">Link</a>
     </nav>
 </header>
-    
+<div class="dummy-header d-none d-sm-block"></div>
+<div class="sm-dummy-header d-block d-sm-none"></div>
