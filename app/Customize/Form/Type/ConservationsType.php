@@ -6,11 +6,13 @@ use Customize\Entity\Conservations;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Validator\Constraints as Assert;
+use Eccube\Form\Validator\Email;
 
 class ConservationsType extends AbstractType
 {
@@ -34,7 +36,7 @@ class ConservationsType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
-                    'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                 ]
             ])
@@ -157,15 +159,14 @@ class ConservationsType extends AbstractType
             ->add('staff_count_2', IntegerType::class)
             ->add('staff_count_3', IntegerType::class)
             ->add('staff_count_4', IntegerType::class)
-            ->add('email', TextType::class, [
+            ->add('email', EmailType::class, [
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
                 'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                ]
+                    new Assert\NotBlank(),
+                    new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
+                ],
             ])
             ->add('password', PasswordType::class, [
                 'attr' => [

@@ -5,12 +5,13 @@ namespace Customize\Form\Type;
 use Customize\Entity\Breeders;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Eccube\Form\Validator\Email;
 
 class BreedersType extends AbstractType
 {
@@ -326,16 +327,15 @@ class BreedersType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('email', TextType::class, [
+            ->add('email', EmailType::class, [
                 'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
                 'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                ]
+                    new Assert\NotBlank(),
+                    new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
+                ],
             ]);
     }
 
