@@ -8,10 +8,32 @@
 </p>
 
 <div class="col-md-8" style="margin: 0 auto;">
-    <form>
-        {{ form_label(form.email, 'メールアドレス') }}
-        {{ form_widget(form.email) }}
-        {{ form_widget(form.password) }}
+    <form  method="post" action="{{ url('adoption_entry') }}" novalidate>
+        {{ form_label(form.password, 'メールアドレス', { 'label_attr': {'class': 'ec-label' }}) }}
+        <div class="ec-input{{ has_errors(form.password) ? ' error' }}">
+            <div class="ec-input{{ has_errors(form.email) ? ' error' }}">
+                {{ form_widget(form.email, { 'attr': { 'placeholder': '例：ec-cube@example.com' }}) }}
+                {{ form_errors(form.email) }}
+            </div>
+        </div>
+        {{ form_label(form.password, 'パスワード', { 'label_attr': {'class': 'ec-label' }}) }}
+        <div class="ec-input{{ has_errors(form.password.first) ? ' error' }}">
+            {{ form_widget(form.password.first, {
+                'attr': { 'placeholder': '半角英数記号%min%〜%max%文字'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }) },
+                'type': 'password'
+            }) }}
+            {{ form_errors(form.password.first) }}
+        </div>
+        {{ form_label(form.password, 'パスワード確認', { 'label_attr': {'class': 'ec-label' }}) }}
+        <div class="ec-input{{ has_errors(form.password.second) ? ' error' }}">
+            {{ form_widget(form.password.second, {
+                'attr': { 'placeholder': '確認のためもう一度入力してください'|trans },
+                'type': 'password'
+            }) }}
+            {{ form_errors(form.password.second) }}
+        </div>
+
+        {{ form_widget(form._token) }}
         <button class="ec-blockBtn--action bg-adoption" style="margin-bottom: 20px;">{{ '登録する'|trans }}</button>
         {# <a class="ec-blockBtn--action bg-adoption" type="submit" style="margin-bottom: 20px;" href={{url('adoption_entry_complete')}}>{{ '登録する'|trans }}</a> #}
         <a class="ec-blockBtn--cancel" href="{{ url('adoption_top') }}">{{ 'キャンセル'|trans }}</a>

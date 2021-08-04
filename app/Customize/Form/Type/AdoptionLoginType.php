@@ -6,6 +6,7 @@ use Eccube\Common\EccubeConfig;
 use Eccube\Form\Validator\Email;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Eccube\Form\Type\RepeatedEmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Eccube\Form\Type\RepeatedPasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,6 +36,7 @@ class AdoptionLoginType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /*
         $builder->add('email', EmailType::class, [
             'label' => 'メールアドレス',
             'attr' => [
@@ -46,6 +48,10 @@ class AdoptionLoginType extends AbstractType
             ],
             'data' => $this->authenticationUtils->getLastUsername(),
         ]);
+        */
+        $builder->add('email', EmailType::class);
+        $builder->add('password', RepeatedPasswordType::class);
+        /*
         $builder->add('password', RepeatedPasswordType::class, [
             'first_options' => [
                 'label' => 'admin.setting.system.member.password',
@@ -54,6 +60,7 @@ class AdoptionLoginType extends AbstractType
                 'label' => 'admin.setting.system.member.password_confirm',
             ],
         ]);
+        */
     }
 
     /**

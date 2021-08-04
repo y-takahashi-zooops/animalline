@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AppTestController extends AbstractController
 {
     /**
-     * @Route("/test/crud_adoption", name="test_crud_adoption")
+     * @Route("/test/list_adoption", name="test_crud_adoption")
      * @Template("test/alm_adoption.twig")
      */
     public function index()

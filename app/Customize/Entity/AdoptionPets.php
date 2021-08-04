@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=AdoptionPetsRepository::class)
+ * @ORM\Table(name="alm_adoption_pets")
  */
 class AdoptionPets
 {
@@ -19,7 +20,6 @@ class AdoptionPets
 
     /**
      * @ORM\Column(type="integer")
-     * @ORM\Table(name="alm_adoption_pets")
      */
     private $breeder_id;
 

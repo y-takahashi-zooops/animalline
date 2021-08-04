@@ -129,6 +129,7 @@ class EntryController extends AbstractController
         $form = $this->createForm(AdoptionLoginType::class);
         $form->handleRequest($request);
 
+var_dump($form->isValid());
         if ($form->isSubmitted() && $form->isValid()) {
             $encoder = $this->encoderFactory->getEncoder($Conservation);
             $salt = $encoder->createSalt();
