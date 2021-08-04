@@ -4,6 +4,7 @@
 :root {
     --breeder-main-color: #549B35;
     --adoption-main-color: #F08300;
+    --common-main-color: #1343df;
     --bg-color: #F5F4F2;
     --accent-color: #FF5D5D;
     --gray-500: #424242;
@@ -179,13 +180,6 @@ th, td {
     background-color: var(--accent-color);
 }
 
-.bg-adoption {
-    background-color: var(--adoption-main-color)!important;
-}
-
-.bg-sub-adoption {
-    background-color: #FFAC69;
-}
 
 .bg-gray-300 {
     background-color: var(--gray-300);
@@ -196,10 +190,6 @@ th, td {
 /* フォントSTART */
 .color-breeder {
     color: var(--breeder-main-color);
-}
-
-.color-adoption {
-    color: var(--adoption-main-color);
 }
 
 .color-accent {
@@ -228,6 +218,10 @@ th, td {
 
 .font-size-18 {
     font-size: 18px!important;
+}
+
+.font-size-16 {
+    font-size: 16px!important;
 }
 
 .font-size-14 {
@@ -283,26 +277,17 @@ th, td {
 }
 
 .main {
-    max-width: 1200px;
+    max-width: 1600px;
     margin: auto;
     padding: 2em 4em;
-}
-
-.header-nav .nav-link.active{
-    background-color: var(--adoption-main-color);
 }
 
 .header-nav .nav-link.active:hover{
     color: white;
 }
 
-.header-nav .nav-link:hover {
-    color: var(--adoption-main-color);
-}
-
-.nav-pills .show>.nav-link {
-    background-color: var(--gray-200);
-    color: var(--adoption-main-color);
+.header-nav .nav-item a {
+    height: 50px;
 }
 
 .dropdown-toggle::after {
@@ -416,13 +401,7 @@ th, td {
     color: white;
 }
 
-.adoption-btn {
-    background-color: var(--adoption-main-color);
-}
 
-.adoption-btn:hover {
-    background-color: #FFAC69;
-}
 
 .accent-btn {
     background-color: var(--accent-color);
@@ -465,18 +444,6 @@ th, td {
     background-color: var(--gray-400);
 }
 
-.pagination .page-item.active .page-link {
-    background-color: var(--adoption-main-color);
-    border-color: var(--adoption-main-color);
-}
-
-.pagination .page-link {
-    color: var(--adoption-main-color)
-}
-
-.adoption-border {
-    border: 3px solid #FFAC69!important;
-}
 
 .input-group-lg>.custom-select, .input-group-lg>.form-control:not(textarea), .gender-form {
     height: calc(1.5em + 1rem + 12px);
@@ -485,7 +452,7 @@ th, td {
 
 .search-area select {
     border: none!important;
-    font-size: 14px;
+    font-size: 18px;
     appearance: none;
 }
 

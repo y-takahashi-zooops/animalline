@@ -22,7 +22,7 @@ class TopController extends AbstractController
 {
     /**
      * @Route("/adoption/", name="adoption_top")
-     * @Template("animalline/index.twig")
+     * @Template("animalline/adoption/index.twig")
      */
     public function adoption_index()
     {
@@ -31,7 +31,7 @@ class TopController extends AbstractController
 
     /**
      * @Route("/breeder/", name="breeder_top")
-     * @Template("animalline/index.twig")
+     * @Template("animalline/breeder/index.twig")
      */
     public function breeder_index()
     {

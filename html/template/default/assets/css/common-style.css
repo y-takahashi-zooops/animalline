@@ -1,0 +1,37 @@
+/*
+カラー定義
+*/
+:root {
+    --breeder-main-color: #549B35;
+    --adoption-main-color: #F08300;
+    --common-main-color: #1343df;
+    --bg-color: #F5F4F2;
+    --accent-color: #FF5D5D;
+    --gray-500: #424242;
+    --gray-400: #7C7C7C;
+    --gray-300: #B2B2B2;
+    --gray-200: #F0F0F0;
+    --gray-100: #F8F8F8;
+}
+
+.header-nav .nav-link.active{
+    background-color: var(--common-main-color);
+}
+
+.header-nav .nav-link:hover {
+    color: var(--common-main-color);
+}
+
+.nav-pills .show>.nav-link {
+    background-color: var(--gray-200);
+    color: var(--common-main-color);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--common-main-color);
+    border-color: var(--common-main-color);
+}
+
+.pagination .page-link {
+    color: var(--common-main-color)
+}

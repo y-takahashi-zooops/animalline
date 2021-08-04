@@ -1,0 +1,40 @@
+<footer class="footer">
+    <div class="m-2 p-2"></div>
+    {# <div class="m-4 p-4"></div> #}
+    <div class="container">
+        {% if site_type == 'adoption' %}
+            <img src="{{ asset('assets/img/adoption/logo.svg') }}"></a>
+        {% elseif site_type == 'breeder' %}
+            <img src="{{ asset('assets/img/breeder/logo.svg') }}"></a>
+        {% elseif site_type == 'common' %}
+            <img src="{{ asset('assets/img/common/logo.svg') }}"></a>
+        {% endif %}
+            <div class="m-1 p-1"></div>
+            <nav class="nav nav-justified">
+                <a class="nav-item nav-link font-size-18" href="#">
+                    Link
+                </a>
+                <a class="nav-item nav-link font-size-18" href="#">
+                    Link
+                </a>
+                <a class="nav-item nav-link font-size-18" href="#">
+                    Link
+                </a>
+                <a class="nav-item nav-link font-size-18" href="#">
+                    Link
+                </a>
+                <a class="nav-item nav-link font-size-18" href="#">
+                    Link
+                </a>
+                <a class="nav-item nav-link font-size-18" href="#">
+                    Link
+                </a>
+            </nav>
+            <div class="m-1 p-1"></div>
+            <p>
+                <small>
+                    Copyright ●● 2021 All right reserved
+                </small>
+            </p>
+        </div>
+    </footer>
