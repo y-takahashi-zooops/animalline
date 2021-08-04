@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ConservationsRepository::class)
+ * @ORM\Table(name="alm_adoptions")
  */
 class Conservations
 {

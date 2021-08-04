@@ -6,6 +6,7 @@ use Customize\Repository\CoatColorsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="alm_coat_colors")
  * @ORM\Entity(repositoryClass=CoatColorsRepository::class)
  */
 class CoatColors
@@ -30,7 +31,7 @@ class CoatColors
     /**
      * @ORM\Column(type="integer")
      */
-    private $sort_oder;
+    private $sort_order;
 
     public function getId(): ?int
     {
@@ -61,14 +62,14 @@ class CoatColors
         return $this;
     }
 
-    public function getSortOder(): ?int
+    public function getSortOrder(): ?int
     {
-        return $this->sort_oder;
+        return $this->sort_order;
     }
 
-    public function setSortOder(int $sort_oder): self
+    public function setSortOrder(int $sort_order): self
     {
-        $this->sort_oder = $sort_oder;
+        $this->sort_order = $sort_order;
 
         return $this;
     }

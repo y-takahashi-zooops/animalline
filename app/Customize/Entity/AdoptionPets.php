@@ -19,8 +19,9 @@ class AdoptionPets
 
     /**
      * @ORM\Column(type="integer")
+     * @ORM\Table(name="alm_adoption_pets")
      */
-    private $bleeder_id;
+    private $breeder_id;
 
     /**
      * @ORM\Column(type="smallint")
@@ -82,14 +83,14 @@ class AdoptionPets
         return $this->id;
     }
 
-    public function getBleederId(): ?int
+    public function getBreederId(): ?int
     {
-        return $this->bleeder_id;
+        return $this->breeder_id;
     }
 
-    public function setBleederId(int $bleeder_id): self
+    public function setBreederId(int $breeder_id): self
     {
-        $this->bleeder_id = $bleeder_id;
+        $this->breeder_id = $breeder_id;
 
         return $this;
     }
