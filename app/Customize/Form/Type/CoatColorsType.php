@@ -31,7 +31,10 @@ class CoatColorsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                ]
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
             ])
             ->add('sort_order', IntegerType::class);
     }
