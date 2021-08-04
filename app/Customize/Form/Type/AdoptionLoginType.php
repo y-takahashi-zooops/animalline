@@ -5,9 +5,9 @@ namespace Customize\Form\Type;
 use Eccube\Common\EccubeConfig;
 use Eccube\Form\Validator\Email;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Eccube\Form\Type\RepeatedPasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -35,7 +35,8 @@ class AdoptionLoginType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('login_email', EmailType::class, [
+        $builder->add('email', EmailType::class, [
+            'label' => 'メールアドレス',
             'attr' => [
                 'max_length' => $this->eccubeConfig['eccube_stext_len'],
             ],
@@ -45,15 +46,12 @@ class AdoptionLoginType extends AbstractType
             ],
             'data' => $this->authenticationUtils->getLastUsername(),
         ]);
-        $builder->add('login_memory', CheckboxType::class, [
-            'required' => false,
-        ]);
-        $builder->add('login_pass', PasswordType::class, [
-            'attr' => [
-                'max_length' => $this->eccubeConfig['eccube_stext_len'],
+        $builder->add('password', RepeatedPasswordType::class, [
+            'first_options' => [
+                'label' => 'admin.setting.system.member.password',
             ],
-            'constraints' => [
-                new Assert\NotBlank(),
+            'second_options' => [
+                'label' => 'admin.setting.system.member.password_confirm',
             ],
         ]);
     }

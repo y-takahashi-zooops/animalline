@@ -3,17 +3,16 @@
 
 namespace Customize\Controller\Adoption;
 
+use Customize\Form\Type\AdoptionLoginType;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\BaseInfo;
 use Eccube\Entity\Master\CustomerStatus;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
-use Eccube\Form\Type\Front\EntryType;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Eccube\Repository\BaseInfoRepository;
-use Eccube\Repository\CustomerRepository;
 use Eccube\Repository\Master\CustomerStatusRepository;
-use Eccube\Service\MailService;
+use Customize\Service\MailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception as HttpException;
@@ -25,6 +24,10 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Customize\Entity\Conservations;
+use Customize\Repository\ConservationsRepository;
 
 class EntryController extends AbstractController
 {
@@ -64,32 +67,45 @@ class EntryController extends AbstractController
     protected $tokenStorage;
 
     /**
+     * @var EventDispatcher
+     */
+    protected $eventDispatcher;
+
+    /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
      * EntryController constructor.
      *
      * @param CustomerStatusRepository $customerStatusRepository
      * @param MailService $mailService
      * @param BaseInfoRepository $baseInfoRepository
-     * @param CustomerRepository $customerRepository
      * @param EncoderFactoryInterface $encoderFactory
      * @param ValidatorInterface $validatorInterface
      * @param TokenStorageInterface $tokenStorage
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param ConservationsRepository $conservationsRepository
      */
     public function __construct(
         CustomerStatusRepository $customerStatusRepository,
         MailService $mailService,
         BaseInfoRepository $baseInfoRepository,
-        CustomerRepository $customerRepository,
         EncoderFactoryInterface $encoderFactory,
         ValidatorInterface $validatorInterface,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        EventDispatcherInterface $eventDispatcher,
+        ConservationsRepository $conservationsRepository
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
         $this->BaseInfo = $baseInfoRepository->get();
-        $this->customerRepository = $customerRepository;
         $this->encoderFactory = $encoderFactory;
         $this->recursiveValidator = $validatorInterface;
         $this->tokenStorage = $tokenStorage;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->conservationsRepository = $conservationsRepository;
     }
 
     /**
@@ -106,96 +122,39 @@ class EntryController extends AbstractController
             return $this->redirectToRoute('mypage');
         }
 
-        /** @var $Customer \Eccube\Entity\Customer */
-        $Customer = $this->customerRepository->newCustomer();
+        /* @var $Conservations \Customize\Entity\Conservations */
+        $Conservation = $this->conservationsRepository->newAdoption();
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
-        $builder = $this->formFactory->createBuilder(EntryType::class, $Customer);
-
-        $event = new EventArgs(
-            [
-                'builder' => $builder,
-                'Customer' => $Customer,
-            ],
-            $request
-        );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_INDEX_INITIALIZE, $event);
-
-        /* @var $form \Symfony\Component\Form\FormInterface */
-        $form = $builder->getForm();
-
+        $form = $this->createForm(AdoptionLoginType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            switch ($request->get('mode')) {
-                case 'confirm':
-                    log_info('会員登録確認開始');
-                    log_info('会員登録確認完了');
+            $encoder = $this->encoderFactory->getEncoder($Conservation);
+            $salt = $encoder->createSalt();
+            $password = $encoder->encodePassword($Conservation->getPassword(), $salt);
+            $secretKey = $this->conservationsRepository->getUniqueSecretKey();
 
-                    return $this->render(
-                        'Entry/confirm.twig',
-                        [
-                            'form' => $form->createView(),
-                        ]
-                    );
+            $Conservation
+                ->setSalt($salt)
+                ->setPassword($password)
+                ->setSecretKey($secretKey);
 
-                case 'complete':
-                    log_info('会員登録開始');
+            var_dump($Conservation);
 
-                    $encoder = $this->encoderFactory->getEncoder($Customer);
-                    $salt = $encoder->createSalt();
-                    $password = $encoder->encodePassword($Customer->getPassword(), $salt);
-                    $secretKey = $this->customerRepository->getUniqueSecretKey();
+            $this->entityManager->persist($Conservation);
+            $this->entityManager->flush();
 
-                    $Customer
-                        ->setSalt($salt)
-                        ->setPassword($password)
-                        ->setSecretKey($secretKey)
-                        ->setPoint(0);
+            log_info('会員登録完了');
 
-                    $this->entityManager->persist($Customer);
-                    $this->entityManager->flush();
+            $activateUrl = $this->generateUrl('adoption_entry_activate', ['secret_key' => $Conservation->getSecretKey()], UrlGeneratorInterface::ABSOLUTE_URL);
 
-                    log_info('会員登録完了');
+            // メール送信
+            $this->mailService->sendCustomerConfirmMail($Conservation, $activateUrl);
 
-                    $event = new EventArgs(
-                        [
-                            'form' => $form,
-                            'Customer' => $Customer,
-                        ],
-                        $request
-                    );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_INDEX_COMPLETE, $event);
+            log_info('仮会員登録完了画面へリダイレクト');
 
-
-                    $activateFlg = $this->BaseInfo->isOptionCustomerActivate();
-
-                    // 仮会員設定が有効な場合は、確認メールを送信し完了画面表示.
-                    if ($activateFlg) {
-                        $activateUrl = $this->generateUrl('adoption_entry_activate', ['secret_key' => $Customer->getSecretKey()], UrlGeneratorInterface::ABSOLUTE_URL);
-
-                        // メール送信
-                        $this->mailService->sendCustomerConfirmMail($Customer, $activateUrl);
-
-                        if ($event->hasResponse()) {
-                            return $event->getResponse();
-                        }
-
-                        log_info('仮会員登録完了画面へリダイレクト');
-
-                        return $this->redirectToRoute('entry_complete');
-
-                    } else {
-                        // 仮会員設定が無効な場合は、会員登録を完了させる.
-                        $this->entryActivate($request, $Customer->getSecretKey());
-
-                        // URLを変更するため完了画面にリダイレクト
-                        return $this->redirectToRoute('adoption_entry_activate', [
-                            'secret_key' => $Customer->getSecretKey()
-                        ]);
-
-                    }
-            }
+            return $this->redirectToRoute('adoption_entry_complete');
         }
 
         return [
@@ -218,7 +177,7 @@ class EntryController extends AbstractController
      * 会員のアクティベート（本会員化）を行う.
      *
      * @Route("/adoption/configration/entry/activate/{secret_key}", name="adoption_entry_activate")
-     * @Template("adoption/entry/activate.twig")
+     * @Template("animalline/adoption/entry/activate.twig")
      */
     public function activate(Request $request, $secret_key)
     {
@@ -267,10 +226,10 @@ class EntryController extends AbstractController
         $builder->get('login_memory')->setData((bool) $request->getSession()->get('_security.login_memory'));
 
         if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $Customer = $this->getUser();
-            if ($Customer instanceof Customer) {
+            $Conservation = $this->getUser();
+            if ($Conservation instanceof Conservations) {
                 $builder->get('login_email')
-                    ->setData($Customer->getEmail());
+                    ->setData($Conservation->getEmail());
             }
         }
 
@@ -299,38 +258,37 @@ class EntryController extends AbstractController
     private function entryActivate(Request $request, $secret_key)
     {
         log_info('本会員登録開始');
-        $Customer = $this->customerRepository->getProvisionalCustomerBySecretKey($secret_key);
-        if (is_null($Customer)) {
+
+        $Conservation = $this->conservationsRepository->findOneBy(['secret_key' => $secret_key]);
+        if (is_null($Conservation)) {
             throw new HttpException\NotFoundHttpException();
         }
 
         $CustomerStatus = $this->customerStatusRepository->find(CustomerStatus::REGULAR);
-        $Customer->setStatus($CustomerStatus);
-        $this->entityManager->persist($Customer);
+        $Conservation->setStatus($CustomerStatus);
+        $this->entityManager->persist($Conservation);
         $this->entityManager->flush();
 
         log_info('本会員登録完了');
 
         $event = new EventArgs(
             [
-                'Customer' => $Customer,
+                'Conservation' => $Conservation,
             ],
             $request
         );
         $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_ACTIVATE_COMPLETE, $event);
 
         // メール送信
-        $this->mailService->sendCustomerCompleteMail($Customer);
+        $this->mailService->sendCustomerCompleteMail($Conservation);
 
         // 本会員登録してログイン状態にする
-        $token = new UsernamePasswordToken($Customer, null, 'customer', ['ROLE_USER']);
-        $this->tokenStorage->setToken($token);
-        $request->getSession()->migrate(true);
+        // $token = new UsernamePasswordToken($Conservation, null, 'customer', ['ROLE_USER']);
+        // $this->tokenStorage->setToken($token);
+        // $request->getSession()->migrate(true);
 
-        log_info('ログイン済に変更', [$this->getUser()->getId()]);
+        // log_info('ログイン済に変更', [$this->getUser()->getId()]);
 
         return 0;
-
     }
-
 }
