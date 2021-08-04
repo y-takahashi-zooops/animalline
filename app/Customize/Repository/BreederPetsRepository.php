@@ -2,25 +2,25 @@
 
 namespace Customize\Repository;
 
-use Customize\Entity\Bleeders;
+use Customize\Entity\BreederPets;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Bleeders|null find($id, $lockMode = null, $lockVersion = null)
- * @method Bleeders|null findOneBy(array $criteria, array $orderBy = null)
- * @method Bleeders[]    findAll()
- * @method Bleeders[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method BreederPets|null find($id, $lockMode = null, $lockVersion = null)
+ * @method BreederPets|null findOneBy(array $criteria, array $orderBy = null)
+ * @method BreederPets[]    findAll()
+ * @method BreederPets[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BleedersRepository extends ServiceEntityRepository
+class BreederPetsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Bleeders::class);
+        parent::__construct($registry, BreederPets::class);
     }
 
     // /**
-    //  * @return Bleeders[] Returns an array of Bleeders objects
+    //  * @return BreederPets[] Returns an array of BreederPets objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class BleedersRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Bleeders
+    public function findOneBySomeField($value): ?BreederPets
     {
         return $this->createQueryBuilder('b')
             ->andWhere('b.exampleField = :val')

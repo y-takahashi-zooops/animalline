@@ -2,13 +2,13 @@
 
 namespace Customize\Entity;
 
-use Customize\Repository\BleedersRepository;
+use Customize\Repository\BreedersRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=BleedersRepository::class)
+ * @ORM\Entity(repositoryClass=BreedersRepository::class)
  */
-class Bleeders
+class Breeders
 {
     /**
      * @ORM\Id
