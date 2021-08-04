@@ -5,7 +5,11 @@ namespace Customize\Entity;
 use Customize\Repository\ConservationsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
+/**     
+ * @ORM\Table(name="alm_adoptions")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=ConservationsRepository::class)
  * @ORM\Table(name="alm_adoptions")
  */
@@ -152,6 +156,26 @@ class Conservations
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $password;
+
+    /**
+     * @var \Eccube\Entity\Master\CustomerStatus
+     *
+     * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\CustomerStatus")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id")
+     * })
+     */
+    private $Status;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $salt;
+
+    /**
+     * @ORM\Column(name="secret_key", type="string", length=255)
+     */
+    private $secret_key;
 
     public function getId(): ?int
     {
@@ -480,5 +504,77 @@ class Conservations
         $this->password = $password;
 
         return $this;
+    }
+
+    /**
+     * Set status.
+     *
+     * @param \Eccube\Entity\Master\CustomerStatus|null $status
+     *
+     * @return Customer
+     */
+    public function setStatus(\Eccube\Entity\Master\CustomerStatus $status = null)
+    {
+        $this->Status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status.
+     *
+     * @return \Eccube\Entity\Master\CustomerStatus|null
+     */
+    public function getStatus()
+    {
+        return $this->Status;
+    }
+
+    /**
+     * Set salt.
+     *
+     * @param string|null $salt
+     *
+     * @return Customer
+     */
+    public function setSalt($salt = null)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
+     * Get salt.
+     *
+     * @return string|null
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    /**
+     * Set secretKey.
+     *
+     * @param string $secretKey
+     *
+     * @return Customer
+     */
+    public function setSecretKey($secretKey)
+    {
+        $this->secret_key = $secretKey;
+
+        return $this;
+    }
+
+    /**
+     * Get secretKey.
+     *
+     * @return string
+     */
+    public function getSecretKey()
+    {
+        return $this->secret_key;
     }
 }

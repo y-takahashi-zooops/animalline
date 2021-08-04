@@ -5,6 +5,8 @@ namespace Customize\Repository;
 use Customize\Entity\Conservations;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Eccube\Util\StringUtil;
+use Eccube\Entity\Master\CustomerStatus;
 
 /**
  * @method Conservations|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +49,31 @@ class ConservationsRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function newAdoption()
+    {
+        $CustomerStatus = $this->getEntityManager()
+            ->find(CustomerStatus::class, CustomerStatus::PROVISIONAL);
+
+        $Conservation = new \Customize\Entity\Conservations();
+        $Conservation
+            ->setStatus($CustomerStatus);
+
+        return $Conservation;
+    }
+
+    /**
+     * ユニークなシークレットキーを返す.
+     *
+     * @return string
+     */
+    public function getUniqueSecretKey()
+    {
+        do {
+            $key = StringUtil::random(32);
+            $Conservation = $this->findOneBy(['secret_key' => $key]);
+        } while ($Conservation);
+
+        return $key;
+    }    
 }

@@ -16,6 +16,7 @@
 
 .bg-adoption {
     background-color: var(--adoption-main-color)!important;
+    border: var(--adoption-main-color)!important;
 }
 
 .bg-sub-adoption {

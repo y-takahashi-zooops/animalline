@@ -6,6 +6,8 @@ security:
           id: Eccube\Security\Core\Encoder\PasswordEncoder
         Eccube\Entity\Customer:
           id: Eccube\Security\Core\Encoder\PasswordEncoder
+        Customize\Entity\Conservations:
+          id: Eccube\Security\Core\Encoder\PasswordEncoder
     providers:
         # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
         # In this example, users are stored via Doctrine in the database
