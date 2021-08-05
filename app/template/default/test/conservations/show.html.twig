@@ -3,7 +3,8 @@
 {% block main %}
 
     <h1>Conservations</h1>
-
+    <br>
+    <a href="{{ path('conservations_index') }}">< back to list</a>
     <table class="table">
         <tbody>
             <tr>
@@ -128,10 +129,5 @@
             </tr>
         </tbody>
     </table>
-
-    <a href="{{ path('conservations_index') }}">back to list</a>
-
-    <a href="{{ path('conservations_edit', {'id': conservation.id}) }}">edit</a>
-
     {{ include('test/conservations/_delete_form.html.twig') }}
 {% endblock %}
