@@ -1,0 +1,42 @@
+{% set site_type = 'common' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <h1>CoatColors index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Pet_kind</th>
+                <th>Coat_color_name</th>
+                <th>Sort_order</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for coat_color in coat_colors %}
+            <tr>
+                <td>{{ coat_color.id }}</td>
+                <td>{{ coat_color.petKind }}</td>
+                <td>{{ coat_color.coatColorName }}</td>
+                <td>{{ coat_color.sortOrder }}</td>
+                <td>
+                    <a href="{{ path('coat_colors_show', {'id': coat_color.id}) }}">show</a>
+                    <a href="{{ path('coat_colors_edit', {'id': coat_color.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('coat_colors_new') }}">Create new</a>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

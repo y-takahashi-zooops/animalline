@@ -1,0 +1,97 @@
+{% set site_type = 'adoption' %}
+{% extends 'ani_frame.twig' %}
+{% block main %}
+    <h1>BreederPets</h1>
+    <br>
+    <a href="{{ path('breeder_pets_index') }}">< back to list</a>
+    <hr>
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ breeder_pet.id }}</td>
+        </tr>
+        <tr>
+            <th>Breeder_id</th>
+            <td>{{ breeder_pet.breederId }}</td>
+        </tr>
+        <tr>
+            <th>Pet_kind</th>
+            <td>{{ breeder_pet.petKind }}</td>
+        </tr>
+        <tr>
+            <th>Breeds_type</th>
+            <td>{{ breeder_pet.breedsType }}</td>
+        </tr>
+        <tr>
+            <th>Pet_sex</th>
+            <td>{{ breeder_pet.petSex }}</td>
+        </tr>
+        <tr>
+            <th>Pet_birthday</th>
+            <td>{{ breeder_pet.petBirthday ? breeder_pet.petBirthday|date('Y-m-d') : '' }}</td>
+        </tr>
+        <tr>
+            <th>Coat_color</th>
+            <td>{{ breeder_pet.coatColor }}</td>
+        </tr>
+        <tr>
+            <th>Future_wait</th>
+            <td>{{ breeder_pet.futureWait }}</td>
+        </tr>
+        <tr>
+            <th>Dna_check_result</th>
+            <td>{{ breeder_pet.dnaCheckResult }}</td>
+        </tr>
+        <tr>
+            <th>Pr_comment</th>
+            <td>{{ breeder_pet.prComment }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ breeder_pet.description }}</td>
+        </tr>
+        <tr>
+            <th>Is_breeding</th>
+            <td>{{ breeder_pet.isBreeding }}</td>
+        </tr>
+        <tr>
+            <th>Is_selling</th>
+            <td>{{ breeder_pet.isSelling }}</td>
+        </tr>
+        <tr>
+            <th>Guarantee</th>
+            <td>{{ breeder_pet.guarantee }}</td>
+        </tr>
+        <tr>
+            <th>Is_pedigree</th>
+            <td>{{ breeder_pet.isPedigree }}</td>
+        </tr>
+        <tr>
+            <th>Include_vaccine_fee</th>
+            <td>{{ breeder_pet.includeVaccineFee }}</td>
+        </tr>
+        <tr>
+            <th>Delivery_time</th>
+            <td>{{ breeder_pet.deliveryTime }}</td>
+        </tr>
+        <tr>
+            <th>Delivery_way</th>
+            <td>{{ breeder_pet.deliveryWay }}</td>
+        </tr>
+        <tr>
+            <th>Payment_method</th>
+            <td>{{ breeder_pet.paymentMethod }}</td>
+        </tr>
+        <tr>
+            <th>Reservation_fee</th>
+            <td>{{ breeder_pet.reservationFee }}</td>
+        </tr>
+        <tr>
+            <th>Price</th>
+            <td>{{ breeder_pet.price }}</td>
+        </tr>
+        </tbody>
+    </table>
+    {{ include('test/breeder_pets/_delete_form.html.twig') }}
+{% endblock %}
