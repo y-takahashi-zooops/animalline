@@ -1,0 +1,37 @@
+{% set site_type = 'common' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <h1>Breeds</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ breed.id }}</td>
+            </tr>
+            <tr>
+                <th>Pet_kind</th>
+                <td>{{ breed.petKind }}</td>
+            </tr>
+            <tr>
+                <th>Breeds_name</th>
+                <td>{{ breed.breedsName }}</td>
+            </tr>
+            <tr>
+                <th>Sort_order</th>
+                <td>{{ breed.sortOrder }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('breeds_index') }}">back to list</a>
+
+    <a href="{{ path('breeds_edit', {'id': breed.id}) }}">edit</a>
+
+    {{ include('test/breeds/_delete_form.html.twig') }}
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

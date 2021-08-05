@@ -1,0 +1,14 @@
+{% set site_type = 'common' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <h1>Create new Breeds</h1>
+
+    {{ include('test/breeds/_form.html.twig') }}
+
+    <a href="{{ path('breeds_index') }}">back to list</a>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

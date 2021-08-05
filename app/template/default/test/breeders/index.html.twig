@@ -1,0 +1,121 @@
+{% set site_type = 'common' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <h1>Breeders index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Breeder_house_name</th>
+                <th>Owner_name</th>
+                <th>Owner_kana</th>
+                <th>Breeder_house_tel</th>
+                <th>Breeder_house_fax</th>
+                <th>Breeder_house_zip</th>
+                <th>Breeder_house_pref</th>
+                <th>Breeder_house_city</th>
+                <th>Breeder_house_address</th>
+                <th>Breeder_house_building</th>
+                <th>Responsible_name</th>
+                <th>Responsible_kana</th>
+                <th>Responsible_zip</th>
+                <th>Responsible_pref</th>
+                <th>Responsible_city</th>
+                <th>Responsible_address</th>
+                <th>Office_name</th>
+                <th>Authorization_type</th>
+                <th>Pet_parent_count</th>
+                <th>Staff_count_1</th>
+                <th>Staff_count_2</th>
+                <th>Staff_count_3</th>
+                <th>Staff_count_4</th>
+                <th>Breed_exp_year</th>
+                <th>Is_participation_show</th>
+                <th>Cage_size</th>
+                <th>Pet_exercise_env</th>
+                <th>Can_publish_count</th>
+                <th>Self_breed_exp_year</th>
+                <th>Direct_sell_exp</th>
+                <th>Is_pet_trade</th>
+                <th>Sell_route</th>
+                <th>Is_full_time</th>
+                <th>Homepage_url</th>
+                <th>Sns_url</th>
+                <th>Regist_reason</th>
+                <th>Free_comment</th>
+                <th>Introducer_name</th>
+                <th>Examination_status</th>
+                <th>Is_active</th>
+                <th>Password</th>
+                <th>Email</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for breeder in breeders %}
+            <tr>
+                <td>{{ breeder.id }}</td>
+                <td>{{ breeder.breederHouseName }}</td>
+                <td>{{ breeder.ownerName }}</td>
+                <td>{{ breeder.ownerKana }}</td>
+                <td>{{ breeder.breederHouseTel }}</td>
+                <td>{{ breeder.breederHouseFax }}</td>
+                <td>{{ breeder.breederHouseZip }}</td>
+                <td>{{ breeder.breederHousePref }}</td>
+                <td>{{ breeder.breederHouseCity }}</td>
+                <td>{{ breeder.breederHouseAddress }}</td>
+                <td>{{ breeder.breederHouseBuilding }}</td>
+                <td>{{ breeder.responsibleName }}</td>
+                <td>{{ breeder.responsibleKana }}</td>
+                <td>{{ breeder.responsibleZip }}</td>
+                <td>{{ breeder.responsiblePref }}</td>
+                <td>{{ breeder.responsibleCity }}</td>
+                <td>{{ breeder.responsibleAddress }}</td>
+                <td>{{ breeder.officeName }}</td>
+                <td>{{ breeder.authorizationType }}</td>
+                <td>{{ breeder.petParentCount }}</td>
+                <td>{{ breeder.staffCount1 }}</td>
+                <td>{{ breeder.staffCount2 }}</td>
+                <td>{{ breeder.staffCount3 }}</td>
+                <td>{{ breeder.staffCount4 }}</td>
+                <td>{{ breeder.breedExpYear }}</td>
+                <td>{{ breeder.isParticipationShow }}</td>
+                <td>{{ breeder.cageSize }}</td>
+                <td>{{ breeder.petExerciseEnv }}</td>
+                <td>{{ breeder.canPublishCount }}</td>
+                <td>{{ breeder.selfBreedExpYear }}</td>
+                <td>{{ breeder.directSellExp }}</td>
+                <td>{{ breeder.isPetTrade }}</td>
+                <td>{{ breeder.sellRoute }}</td>
+                <td>{{ breeder.isFullTime }}</td>
+                <td>{{ breeder.homepageUrl }}</td>
+                <td>{{ breeder.snsUrl }}</td>
+                <td>{{ breeder.registReason }}</td>
+                <td>{{ breeder.freeComment }}</td>
+                <td>{{ breeder.introducerName }}</td>
+                <td>{{ breeder.examinationStatus }}</td>
+                <td>{{ breeder.isActive }}</td>
+                <td>{{ breeder.password }}</td>
+                <td>{{ breeder.email }}</td>
+                <td>
+                    <a href="{{ path('breeders_show', {'id': breeder.id}) }}">show</a>
+                    <a href="{{ path('breeders_edit', {'id': breeder.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="44">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('breeders_new') }}">Create new</a>
+{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
