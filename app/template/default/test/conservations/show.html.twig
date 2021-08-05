@@ -1,0 +1,137 @@
+{% set site_type = 'adoption' %}
+{% extends 'ani_frame.twig' %}
+{% block main %}
+
+    <h1>Conservations</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ conservation.id }}</td>
+            </tr>
+            <tr>
+                <th>User_id</th>
+                <td>{{ conservation.userId }}</td>
+            </tr>
+            <tr>
+                <th>Adoption_house_name</th>
+                <td>{{ conservation.adoptionHouseName }}</td>
+            </tr>
+            <tr>
+                <th>Owner_name</th>
+                <td>{{ conservation.ownerName }}</td>
+            </tr>
+            <tr>
+                <th>Owner_kana</th>
+                <td>{{ conservation.ownerKana }}</td>
+            </tr>
+            <tr>
+                <th>Adoption_house_zip</th>
+                <td>{{ conservation.adoptionHouseZip }}</td>
+            </tr>
+            <tr>
+                <th>Adoption_house_pref</th>
+                <td>{{ conservation.adoptionHousePref }}</td>
+            </tr>
+            <tr>
+                <th>Adoption_house_city</th>
+                <td>{{ conservation.adoptionHouseCity }}</td>
+            </tr>
+            <tr>
+                <th>Adoption_house_address</th>
+                <td>{{ conservation.adoptionHouseAddress }}</td>
+            </tr>
+            <tr>
+                <th>Adoption_house_building</th>
+                <td>{{ conservation.adoptionHouseBuilding }}</td>
+            </tr>
+            <tr>
+                <th>Adoption_house_tel</th>
+                <td>{{ conservation.adoptionHouseTel }}</td>
+            </tr>
+            <tr>
+                <th>Adoption_house_fax</th>
+                <td>{{ conservation.adoptionHouseFax }}</td>
+            </tr>
+            <tr>
+                <th>Homepage_url</th>
+                <td>{{ conservation.homepageUrl }}</td>
+            </tr>
+            <tr>
+                <th>Sns_url</th>
+                <td>{{ conservation.snsUrl }}</td>
+            </tr>
+            <tr>
+                <th>Is_active</th>
+                <td>{{ conservation.isActive }}</td>
+            </tr>
+            <tr>
+                <th>Examination_status</th>
+                <td>{{ conservation.examinationStatus }}</td>
+            </tr>
+            <tr>
+                <th>Regist_reason</th>
+                <td>{{ conservation.registReason }}</td>
+            </tr>
+            <tr>
+                <th>Free_comment</th>
+                <td>{{ conservation.freeComment }}</td>
+            </tr>
+            <tr>
+                <th>Can_publish_count</th>
+                <td>{{ conservation.canPublishCount }}</td>
+            </tr>
+            <tr>
+                <th>Pet_exercise_env</th>
+                <td>{{ conservation.petExerciseEnv }}</td>
+            </tr>
+            <tr>
+                <th>Cage_size</th>
+                <td>{{ conservation.cageSize }}</td>
+            </tr>
+            <tr>
+                <th>Adoption_exp_year</th>
+                <td>{{ conservation.adoptionExpYear }}</td>
+            </tr>
+            <tr>
+                <th>Staff_count_1</th>
+                <td>{{ conservation.staffCount1 }}</td>
+            </tr>
+            <tr>
+                <th>Staff_count_2</th>
+                <td>{{ conservation.staffCount2 }}</td>
+            </tr>
+            <tr>
+                <th>Staff_count_3</th>
+                <td>{{ conservation.staffCount3 }}</td>
+            </tr>
+            <tr>
+                <th>Staff_count_4</th>
+                <td>{{ conservation.staffCount4 }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ conservation.email }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ conservation.password }}</td>
+            </tr>
+            <tr>
+                <th>Salt</th>
+                <td>{{ conservation.salt }}</td>
+            </tr>
+            <tr>
+                <th>Secret_key</th>
+                <td>{{ conservation.secretKey }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('conservations_index') }}">back to list</a>
+
+    <a href="{{ path('conservations_edit', {'id': conservation.id}) }}">edit</a>
+
+    {{ include('test/conservations/_delete_form.html.twig') }}
+{% endblock %}

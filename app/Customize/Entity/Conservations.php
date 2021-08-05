@@ -5,13 +5,12 @@ namespace Customize\Entity;
 use Customize\Repository\ConservationsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**     
+/**
  * @ORM\Table(name="alm_adoptions")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=ConservationsRepository::class)
- * @ORM\Table(name="alm_adoptions")
  */
 class Conservations
 {
@@ -162,7 +161,7 @@ class Conservations
      *
      * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\CustomerStatus")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id")
      * })
      */
     private $Status;
@@ -176,6 +175,8 @@ class Conservations
      * @ORM\Column(name="secret_key", type="string", length=255)
      */
     private $secret_key;
+
+    private $discriminator_type;
 
     public function getId(): ?int
     {
@@ -577,4 +578,17 @@ class Conservations
     {
         return $this->secret_key;
     }
+
+    public function getDiscriminatorType(): ?string
+    {
+        return $this->discriminator_type;
+    }
+
+    public function setDiscriminatorType(?string $discriminator_type): self
+    {
+        $this->discriminator_type = $discriminator_type;
+
+        return $this;
+    }
+
 }

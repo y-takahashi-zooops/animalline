@@ -1,0 +1,90 @@
+{% set site_type = 'adoption' %}
+{% extends 'ani_frame.twig' %}
+{% block main %}
+    <h1>Conservations index</h1>
+    <br>
+        <a class="btn btn-primary" href="{{ path('adoption_pets_new') }}">Create new</a>
+    <hr>
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>User_id</th>
+                <th>Adoption_house_name</th>
+                <th>Owner_name</th>
+                <th>Owner_kana</th>
+                <th>Adoption_house_zip</th>
+                <th>Adoption_house_pref</th>
+                <th>Adoption_house_city</th>
+                <th>Adoption_house_address</th>
+                <th>Adoption_house_building</th>
+                <th>Adoption_house_tel</th>
+                <th>Adoption_house_fax</th>
+                <th>Homepage_url</th>
+                <th>Sns_url</th>
+                <th>Is_active</th>
+                <th>Examination_status</th>
+                <th>Regist_reason</th>
+                <th>Free_comment</th>
+                <th>Can_publish_count</th>
+                <th>Pet_exercise_env</th>
+                <th>Cage_size</th>
+                <th>Adoption_exp_year</th>
+                <th>Staff_count_1</th>
+                <th>Staff_count_2</th>
+                <th>Staff_count_3</th>
+                <th>Staff_count_4</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Salt</th>
+                <th>Secret_key</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for conservation in conservations %}
+            <tr>
+                <td>{{ conservation.id }}</td>
+                <td>{{ conservation.userId }}</td>
+                <td>{{ conservation.adoptionHouseName }}</td>
+                <td>{{ conservation.ownerName }}</td>
+                <td>{{ conservation.ownerKana }}</td>
+                <td>{{ conservation.adoptionHouseZip }}</td>
+                <td>{{ conservation.adoptionHousePref }}</td>
+                <td>{{ conservation.adoptionHouseCity }}</td>
+                <td>{{ conservation.adoptionHouseAddress }}</td>
+                <td>{{ conservation.adoptionHouseBuilding }}</td>
+                <td>{{ conservation.adoptionHouseTel }}</td>
+                <td>{{ conservation.adoptionHouseFax }}</td>
+                <td>{{ conservation.homepageUrl }}</td>
+                <td>{{ conservation.snsUrl }}</td>
+                <td>{{ conservation.isActive }}</td>
+                <td>{{ conservation.examinationStatus }}</td>
+                <td>{{ conservation.registReason }}</td>
+                <td>{{ conservation.freeComment }}</td>
+                <td>{{ conservation.canPublishCount }}</td>
+                <td>{{ conservation.petExerciseEnv }}</td>
+                <td>{{ conservation.cageSize }}</td>
+                <td>{{ conservation.adoptionExpYear }}</td>
+                <td>{{ conservation.staffCount1 }}</td>
+                <td>{{ conservation.staffCount2 }}</td>
+                <td>{{ conservation.staffCount3 }}</td>
+                <td>{{ conservation.staffCount4 }}</td>
+                <td>{{ conservation.email }}</td>
+                <td>{{ conservation.password }}</td>
+                <td>{{ conservation.salt }}</td>
+                <td>{{ conservation.secretKey }}</td>
+                <td>
+                    <a href="{{ path('conservations_show', {'id': conservation.id}) }}">show</a>
+                    <a href="{{ path('conservations_edit', {'id': conservation.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="31">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
