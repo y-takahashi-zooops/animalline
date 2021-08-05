@@ -29,8 +29,11 @@ class ConservationsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('user_id', IntegerType::class)
+            ->add('user_id', IntegerType::class, [
+                'required' => false,
+            ])
             ->add('adoption_house_name', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -41,6 +44,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('owner_name', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -51,6 +55,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('owner_kana', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -61,6 +66,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('adoption_house_zip', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => 7,
                 ],
@@ -71,6 +77,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('adoption_house_pref', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => 10,
                 ],
@@ -81,6 +88,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('adoption_house_city', TextType::class, [
+                'required' => false,
                 'constraints' => [
                     new Assert\Length([
                         'max' => 10,
@@ -88,6 +96,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('adoption_house_address', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -98,6 +107,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('adoption_house_building', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -108,6 +118,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('adoption_house_tel', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => 10,
                 ],
@@ -118,6 +129,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('adoption_house_fax', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => 10,
                 ],
@@ -128,6 +140,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('homepage_url', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -138,6 +151,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('sns_url', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -147,19 +161,44 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('is_active', IntegerType::class)
-            ->add('examination_status', IntegerType::class)
-            ->add('regist_reason', TextType::class)
-            ->add('free_comment', TextType::class)
-            ->add('can_publish_count', IntegerType::class)
-            ->add('pet_exercise_env', IntegerType::class)
-            ->add('cage_size', IntegerType::class)
-            ->add('adoption_exp_year', IntegerType::class)
-            ->add('staff_count_1', IntegerType::class)
-            ->add('staff_count_2', IntegerType::class)
-            ->add('staff_count_3', IntegerType::class)
-            ->add('staff_count_4', IntegerType::class)
+            ->add('is_active', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('examination_status', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('regist_reason', TextType::class, [
+                'required' => false,
+            ])
+            ->add('free_comment', TextType::class, [
+                'required' => false,
+            ])
+            ->add('can_publish_count', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('pet_exercise_env', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('cage_size', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('adoption_exp_year', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('staff_count_1', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('staff_count_2', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('staff_count_3', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('staff_count_4', IntegerType::class, [
+                'required' => false,
+            ])
             ->add('email', EmailType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -169,6 +208,39 @@ class ConservationsType extends AbstractType
                 ],
             ])
             ->add('password', PasswordType::class, [
+                'required' => false,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                ]
+            ])
+            ->add('salt', TextType::class, [
+                'required' => false,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                ]
+            ])
+            ->add('secret_key', TextType::class, [
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                ]
+            ])
+            ->add('discriminator_type', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],

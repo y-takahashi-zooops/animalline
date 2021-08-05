@@ -1,0 +1,186 @@
+{% set site_type = 'breeder' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <h1>Breeders</h1>
+    <br>
+    <a href="{{ path('breeders_index') }}">< back to list</a>
+    <hr>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ breeder.id }}</td>
+            </tr>
+            <tr>
+                <th>Breeder_house_name</th>
+                <td>{{ breeder.breederHouseName }}</td>
+            </tr>
+            <tr>
+                <th>Owner_name</th>
+                <td>{{ breeder.ownerName }}</td>
+            </tr>
+            <tr>
+                <th>Owner_kana</th>
+                <td>{{ breeder.ownerKana }}</td>
+            </tr>
+            <tr>
+                <th>Breeder_house_tel</th>
+                <td>{{ breeder.breederHouseTel }}</td>
+            </tr>
+            <tr>
+                <th>Breeder_house_fax</th>
+                <td>{{ breeder.breederHouseFax }}</td>
+            </tr>
+            <tr>
+                <th>Breeder_house_zip</th>
+                <td>{{ breeder.breederHouseZip }}</td>
+            </tr>
+            <tr>
+                <th>Breeder_house_pref</th>
+                <td>{{ breeder.breederHousePref }}</td>
+            </tr>
+            <tr>
+                <th>Breeder_house_city</th>
+                <td>{{ breeder.breederHouseCity }}</td>
+            </tr>
+            <tr>
+                <th>Breeder_house_address</th>
+                <td>{{ breeder.breederHouseAddress }}</td>
+            </tr>
+            <tr>
+                <th>Breeder_house_building</th>
+                <td>{{ breeder.breederHouseBuilding }}</td>
+            </tr>
+            <tr>
+                <th>Responsible_name</th>
+                <td>{{ breeder.responsibleName }}</td>
+            </tr>
+            <tr>
+                <th>Responsible_kana</th>
+                <td>{{ breeder.responsibleKana }}</td>
+            </tr>
+            <tr>
+                <th>Responsible_zip</th>
+                <td>{{ breeder.responsibleZip }}</td>
+            </tr>
+            <tr>
+                <th>Responsible_pref</th>
+                <td>{{ breeder.responsiblePref }}</td>
+            </tr>
+            <tr>
+                <th>Responsible_city</th>
+                <td>{{ breeder.responsibleCity }}</td>
+            </tr>
+            <tr>
+                <th>Responsible_address</th>
+                <td>{{ breeder.responsibleAddress }}</td>
+            </tr>
+            <tr>
+                <th>Office_name</th>
+                <td>{{ breeder.officeName }}</td>
+            </tr>
+            <tr>
+                <th>Authorization_type</th>
+                <td>{{ breeder.authorizationType }}</td>
+            </tr>
+            <tr>
+                <th>Pet_parent_count</th>
+                <td>{{ breeder.petParentCount }}</td>
+            </tr>
+            <tr>
+                <th>Staff_count_1</th>
+                <td>{{ breeder.staffCount1 }}</td>
+            </tr>
+            <tr>
+                <th>Staff_count_2</th>
+                <td>{{ breeder.staffCount2 }}</td>
+            </tr>
+            <tr>
+                <th>Staff_count_3</th>
+                <td>{{ breeder.staffCount3 }}</td>
+            </tr>
+            <tr>
+                <th>Staff_count_4</th>
+                <td>{{ breeder.staffCount4 }}</td>
+            </tr>
+            <tr>
+                <th>Breed_exp_year</th>
+                <td>{{ breeder.breedExpYear }}</td>
+            </tr>
+            <tr>
+                <th>Is_participation_show</th>
+                <td>{{ breeder.isParticipationShow }}</td>
+            </tr>
+            <tr>
+                <th>Cage_size</th>
+                <td>{{ breeder.cageSize }}</td>
+            </tr>
+            <tr>
+                <th>Pet_exercise_env</th>
+                <td>{{ breeder.petExerciseEnv }}</td>
+            </tr>
+            <tr>
+                <th>Can_publish_count</th>
+                <td>{{ breeder.canPublishCount }}</td>
+            </tr>
+            <tr>
+                <th>Self_breed_exp_year</th>
+                <td>{{ breeder.selfBreedExpYear }}</td>
+            </tr>
+            <tr>
+                <th>Direct_sell_exp</th>
+                <td>{{ breeder.directSellExp }}</td>
+            </tr>
+            <tr>
+                <th>Is_pet_trade</th>
+                <td>{{ breeder.isPetTrade }}</td>
+            </tr>
+            <tr>
+                <th>Sell_route</th>
+                <td>{{ breeder.sellRoute }}</td>
+            </tr>
+            <tr>
+                <th>Is_full_time</th>
+                <td>{{ breeder.isFullTime }}</td>
+            </tr>
+            <tr>
+                <th>Homepage_url</th>
+                <td>{{ breeder.homepageUrl }}</td>
+            </tr>
+            <tr>
+                <th>Sns_url</th>
+                <td>{{ breeder.snsUrl }}</td>
+            </tr>
+            <tr>
+                <th>Regist_reason</th>
+                <td>{{ breeder.registReason }}</td>
+            </tr>
+            <tr>
+                <th>Free_comment</th>
+                <td>{{ breeder.freeComment }}</td>
+            </tr>
+            <tr>
+                <th>Introducer_name</th>
+                <td>{{ breeder.introducerName }}</td>
+            </tr>
+            <tr>
+                <th>Examination_status</th>
+                <td>{{ breeder.examinationStatus }}</td>
+            </tr>
+            <tr>
+                <th>Is_active</th>
+                <td>{{ breeder.isActive }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ breeder.password }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ breeder.email }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {{ include('test/breeders/_delete_form.html.twig') }}
+{% endblock %}
