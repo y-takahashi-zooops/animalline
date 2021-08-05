@@ -1,0 +1,37 @@
+{% set site_type = 'common' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <h1>CoatColors</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ coat_color.id }}</td>
+            </tr>
+            <tr>
+                <th>Pet_kind</th>
+                <td>{{ coat_color.petKind }}</td>
+            </tr>
+            <tr>
+                <th>Coat_color_name</th>
+                <td>{{ coat_color.coatColorName }}</td>
+            </tr>
+            <tr>
+                <th>Sort_order</th>
+                <td>{{ coat_color.sortOrder }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('coat_colors_index') }}">back to list</a>
+
+    <a href="{{ path('coat_colors_edit', {'id': coat_color.id}) }}">edit</a>
+
+    {{ include('test/coat_colors/_delete_form.html.twig') }}
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
