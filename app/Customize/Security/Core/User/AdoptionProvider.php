@@ -13,9 +13,9 @@
 
 namespace Customize\Security\Core\User;
 
-use Eccube\Entity\Customer;
 use Eccube\Entity\Master\CustomerStatus;
-use Eccube\Repository\CustomerRepository;
+use Customize\Entity\Conservations;
+use Customize\Repository\ConservationsRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -24,13 +24,13 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class AdoptionProvider implements UserProviderInterface
 {
     /**
-     * @var CustomerRepository
+     * @var ConservationsRepository
      */
-    protected $customerRepository;
+    protected $conservationsRepository;
 
-    public function __construct(CustomerRepository $customerRepository)
+    public function __construct(ConservationsRepository $conservationsRepository)
     {
-        $this->customerRepository = $customerRepository;
+        $this->conservationsRepository = $conservationsRepository;
     }
 
     /**
@@ -47,16 +47,16 @@ class AdoptionProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $Customer = $this->customerRepository->findOneBy([
-            'email' => $username,
+        $Conservation = $this->conservationsRepository->findOneBy([
+            'login_email' => $username,
             'Status' => CustomerStatus::REGULAR,
         ]);
 
-        if (null === $Customer) {
+        if (null === $Conservation) {
             throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
         }
 
-        return $Customer;
+        return $Conservation;
     }
 
     /**
@@ -73,7 +73,7 @@ class AdoptionProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        if (!$user instanceof Customer) {
+        if (!$user instanceof Conservations) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
@@ -89,6 +89,6 @@ class AdoptionProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return Customer::class === $class;
+        return Conservations::class === $class;
     }
 }

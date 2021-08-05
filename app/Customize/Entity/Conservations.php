@@ -3,6 +3,7 @@
 namespace Customize\Entity;
 
 use Customize\Repository\ConservationsRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**     
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=ConservationsRepository::class)
  * @ORM\Table(name="alm_adoptions")
  */
-class Conservations
+class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterface
 {
     /**
      * @ORM\Id
@@ -576,5 +577,28 @@ class Conservations
     public function getSecretKey()
     {
         return $this->secret_key;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoles()
+    {
+        return ['ROLE_USER'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function eraseCredentials()
+    {
     }
 }

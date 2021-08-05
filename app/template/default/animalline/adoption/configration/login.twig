@@ -8,7 +8,7 @@
         </div>
         <div class="ec-off2Grid">
             <div class="ec-off2Grid__cell">
-                <form name="login_mypage" id="login_mypage" method="post" action="{{ url('mypage_login') }}">
+                <form name="login_mypage" id="login_mypage" method="post" action="{{ url('adoption_login') }}">
                     {% if app.session.flashBag.has('eccube.login.target.path') %}
                         {% for targetPath in app.session.flashBag.peek('eccube.login.target.path') %}
                             <input type="hidden" name="_target_path" value="{{ targetPath }}" />
@@ -44,16 +44,15 @@
                         <div class="ec-grid2">
                             <div class="ec-grid2__cell">
                                 <div class="ec-login__actions">
-                                    <button type="submit"
-                                            class="ec-blockBtn--cancel">{{ 'ログイン'|trans }}</button>
+                                    <button type="submit" class="ec-blockBtn--cancel">{{ 'ログイン'|trans }}</button>
                                 </div>
                             </div>
                             <div class="ec-grid2__cell">
-                                <div class="ec-login__link"><a class="ec-link"
-                                                               href="{{ url('forgot') }}">{{ 'ログイン情報をお忘れですか？'|trans }}</a>
+                                <div class="ec-login__link">
+                                    <a class="ec-link" href="{{ url('forgot') }}">{{ 'ログイン情報をお忘れですか？'|trans }}</a>
                                 </div>
-                                <div class="ec-login__link"><a class="ec-link"
-                                                               href="{{ url('entry') }}">{{ '新規会員登録'|trans }}</a>
+                                <div class="ec-login__link">
+                                    <a class="ec-link" href="{{ url('adoption_entry') }}">{{ '新規会員登録'|trans }}</a>
                                 </div>
                             </div>
                         </div>

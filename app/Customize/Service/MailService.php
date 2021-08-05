@@ -15,7 +15,7 @@ namespace Customize\Service;
 
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\BaseInfo;
-use Eccube\Entity\Customer;
+use Customize\Entity\Conservations;
 use Eccube\Entity\MailHistory;
 use Eccube\Entity\MailTemplate;
 use Eccube\Entity\Order;
@@ -116,8 +116,7 @@ class MailService
         $message = (new \Swift_Message())
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            // ->setTo([$Conservation->getEmail()])
-            ->setTo(['m.goto@zooops-japan.co.jp'])
+            ->setTo([$Conservation->getEmail()])
             ->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
@@ -176,8 +175,7 @@ class MailService
         $message = (new \Swift_Message())
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            // ->setTo([$Conservation->getEmail()])
-            ->setTo(['m.goto@zooops-japan.co.jp'])
+            ->setTo([$Conservation->getEmail()])
             ->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
@@ -218,7 +216,7 @@ class MailService
     /**
      * Send withdraw mail.
      *
-     * @param $Customer Customer
+     * @param $Conservations Conservation
      * @param $email string
      */
     public function sendCustomerWithdrawMail(Conservations $Conservation, string $email)
