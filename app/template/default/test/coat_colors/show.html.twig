@@ -1,9 +1,10 @@
-{% set site_type = 'common' %}
+{% set site_type = 'adoption' %}
 {% extends 'ani_frame.twig' %}
-
 {% block main %}
     <h1>CoatColors</h1>
-
+    <br>
+    <a href="{{ path('coat_colors_index') }}">< back to list</a>
+    <hr>
     <table class="table">
         <tbody>
             <tr>
@@ -25,13 +26,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('coat_colors_index') }}">back to list</a>
-
-    <a href="{{ path('coat_colors_edit', {'id': coat_color.id}) }}">edit</a>
-
     {{ include('test/coat_colors/_delete_form.html.twig') }}
 {% endblock %}
-{% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
-{% endblock %}
-{% block javascript %}{% endblock %}
