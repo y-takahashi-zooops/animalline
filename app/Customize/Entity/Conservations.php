@@ -164,7 +164,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id")
      * })
-     * @ORM\Column(type="smallint", length=5)
+     * @ORM\Column(name="customer_status_id", type="smallint", length=5, nullable=true)
      */
     private $Status;
 
