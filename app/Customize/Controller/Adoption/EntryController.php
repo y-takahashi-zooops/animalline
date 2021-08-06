@@ -123,14 +123,14 @@ class EntryController extends AbstractController
         }
 
         /* @var $Conservations \Customize\Entity\Conservations */
-        $Conservation = $this->conservationsRepository->newAdoption();
+        $Conservation = $this->conservationsRepository->newConservation();
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
         $form = $this->createForm(AdoptionLoginType::class);
         $form->handleRequest($request);
 
-var_dump($form->isValid());
         if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
             $encoder = $this->encoderFactory->getEncoder($Conservation);
             $salt = $encoder->createSalt();
             $password = $encoder->encodePassword($Conservation->getPassword(), $salt);
@@ -139,9 +139,8 @@ var_dump($form->isValid());
             $Conservation
                 ->setSalt($salt)
                 ->setPassword($password)
-                ->setSecretKey($secretKey);
-
-            var_dump($Conservation);
+                ->setSecretKey($secretKey)
+                ->setEmail($formData['email']);
 
             $this->entityManager->persist($Conservation);
             $this->entityManager->flush();
@@ -221,6 +220,8 @@ var_dump($form->isValid());
             return $this->redirectToRoute('mypage');
         }
 
+        log_info('処理開始');
+
         /* @var $form \Symfony\Component\Form\FormInterface */
         $builder = $this->formFactory
             ->createNamedBuilder('', CustomerLoginType::class);
@@ -240,14 +241,25 @@ var_dump($form->isValid());
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_MYPAGE_LOGIN_INITIALIZE, $event);
 
         $form = $builder->getForm();
+
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_MYPAGE_LOGIN_INITIALIZE, $event);
+
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     $formData = $form->getData();
+        //     $Conservation = $this->conservationsRepository->findOneBy(['email' => $formData['email']]);
+        //     $token = new UsernamePasswordToken($Conservation->getEmail(), null, 'adoption', ['ROLE_USER']);
+        //     $this->tokenStorage->setToken($token);
+        //     $request->getSession()->migrate(true);
+        // }
 
         return [
             'error' => $utils->getLastAuthenticationError(),
             'form' => $form->createView(),
         ];
+
+        log_info('処理終了');
     }
 
     /**
@@ -266,6 +278,12 @@ var_dump($form->isValid());
         }
 
         $CustomerStatus = $this->customerStatusRepository->find(CustomerStatus::REGULAR);
+        $Status = $Conservation->getStatus();
+
+        // すでに会員の場合は何もしない
+        if ($Status == $CustomerStatus) {
+            return 0;
+        }
         $Conservation->setStatus($CustomerStatus);
         $this->entityManager->persist($Conservation);
         $this->entityManager->flush();
@@ -284,9 +302,9 @@ var_dump($form->isValid());
         $this->mailService->sendCustomerCompleteMail($Conservation);
 
         // 本会員登録してログイン状態にする
-        // $token = new UsernamePasswordToken($Conservation, null, 'customer', ['ROLE_USER']);
-        // $this->tokenStorage->setToken($token);
-        // $request->getSession()->migrate(true);
+        $token = new UsernamePasswordToken($Conservation->getEmail(), null, 'adoption', ['ROLE_USER']);
+        $this->tokenStorage->setToken($token);
+        $request->getSession()->migrate(true);
 
         // log_info('ログイン済に変更', [$this->getUser()->getId()]);
 

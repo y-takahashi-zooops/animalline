@@ -50,7 +50,12 @@ class ConservationsRepository extends ServiceEntityRepository
     }
     */
 
-    public function newAdoption()
+    /**
+     * 新規Conservationを作成する
+     *
+     * @return Conservation
+     */
+    public function newConservation()
     {
         $CustomerStatus = $this->getEntityManager()
             ->find(CustomerStatus::class, CustomerStatus::PROVISIONAL);
@@ -75,5 +80,5 @@ class ConservationsRepository extends ServiceEntityRepository
         } while ($Conservation);
 
         return $key;
-    }    
+    }
 }

@@ -42,7 +42,7 @@ security:
                 path: admin_logout
                 target: admin_login
         customer:
-            pattern: ^/
+            pattern: '^/ec/'
             anonymous: true
             provider: customer_provider
             remember_me:
@@ -64,22 +64,23 @@ security:
                 path: logout
                 target: homepage
         adoption:
-            pattern: '^/adoption/configration/'
+            pattern: '^/adoption/configration'
             anonymous: true
             provider: adoption_provider
             form_login:
                 check_path: adoption_login
                 login_path: adoption_login
                 csrf_token_generator: security.csrf.token_manager
-                default_target_path: adoption_homepage
-                username_parameter: 'email'
-                password_parameter: 'password'
+                default_target_path: adoption_top
+                username_parameter: 'login_email'
+                password_parameter: 'login_pass'
                 use_forward: false
                 success_handler: eccube.security.success_handler
                 failure_handler: eccube.security.failure_handler
             logout:
-                path: admin_logout
-                target: admin_login
+                path: adoption_logout
+                target: adoption_top
+
     access_decision_manager:
         strategy: unanimous
         allow_if_all_abstain: false
