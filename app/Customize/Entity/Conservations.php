@@ -162,8 +162,9 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      *
      * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\CustomerStatus")
      * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id", type="smallint", length=5)
+     * @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id")
      * })
+     * @ORM\Column(type="smallint", length=5)
      */
     private $Status;
 
