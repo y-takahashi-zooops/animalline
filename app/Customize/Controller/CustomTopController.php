@@ -21,10 +21,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class CustomTopController extends AbstractController
 {
     /**
-     * @Route("/", name="homepage")
-     * @Template("ani_index.twig")
+     * @Route("/ec", name="homepage")
+     * @Template("index.twig")
      */
     public function index()
+    {
+        return [];
+    }
+
+    /**
+     * @Route("/", name="ani_homepage")
+     * @Template("ani_index.twig")
+     */
+    public function animalline_index()
     {
         return [];
     }
