@@ -620,4 +620,5 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
 
         return $this;
     }
+
 }

@@ -37,4 +37,40 @@ class CustomTopController extends AbstractController
     {
         return [];
     }
+
+    /**
+     * @Route("/policy", name="ani_policy")
+     * @Template("ani_policy.twig")
+     */
+    public function policy()
+    {
+        return [];
+    }
+
+    /**
+     * @Route("/terms", name="ani_terms")
+     * @Template("ani_terms.twig")
+     */
+    public function terms()
+    {
+        return [];
+    }
+
+    /**
+     * @Route("/company", name="ani_company")
+     * @Template("ani_company.twig")
+     */
+    public function company()
+    {
+        return [];
+    }
+
+    /**
+     * @Route("/contact", name="ani_contact")
+     * @Template("ani_contact.twig")
+     */
+    public function contact()
+    {
+        return [];
+    }
 }
