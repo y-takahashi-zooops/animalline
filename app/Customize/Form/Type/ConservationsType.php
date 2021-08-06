@@ -238,17 +238,6 @@ class ConservationsType extends AbstractType
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                 ]
-            ])
-            ->add('discriminator_type', TextType::class, [
-                'required' => false,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                ]
             ]);
     }
 

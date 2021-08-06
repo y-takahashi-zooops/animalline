@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Eccube\Form\Validator\Email;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class BreedersType extends AbstractType
 {
@@ -316,7 +317,7 @@ class BreedersType extends AbstractType
             ->add('is_active', IntegerType::class, [
                 'required' => false,
             ])
-            ->add('password', TextType::class, [
+            ->add('password', PasswordType::class, [
                 'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],

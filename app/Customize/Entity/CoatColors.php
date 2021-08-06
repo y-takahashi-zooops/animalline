@@ -7,31 +7,36 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="alm_coat_colors")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=CoatColorsRepository::class)
  */
 class CoatColors
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="pet_kind", type="smallint")
      */
     private $pet_kind;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="coat_color_name", type="string", length=255)
      */
     private $coat_color_name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="sort_order", type="integer")
      */
     private $sort_order;
+
+    private $discriminator_type;
 
     public function getId(): ?int
     {
@@ -70,6 +75,18 @@ class CoatColors
     public function setSortOrder(int $sort_order): self
     {
         $this->sort_order = $sort_order;
+
+        return $this;
+    }
+
+    public function getDiscriminatorType(): ?string
+    {
+        return $this->discriminator_type;
+    }
+
+    public function setDiscriminatorType(?string $discriminator_type): self
+    {
+        $this->discriminator_type = $discriminator_type;
 
         return $this;
     }

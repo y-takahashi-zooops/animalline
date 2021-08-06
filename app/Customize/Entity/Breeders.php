@@ -6,227 +6,232 @@ use Customize\Repository\BreedersRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=BreedersRepository::class)
  * @ORM\Table(name="alm_breeders")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+ * @ORM\HasLifecycleCallbacks()
+ * @ORM\Entity(repositoryClass=BreedersRepository::class)
  */
 class Breeders
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="breeder_house_name", type="string", length=255, nullable=true)
      */
     private $breeder_house_name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="owner_name", type="string", length=255, nullable=true)
      */
     private $owner_name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="owner_kana", type="string", length=255, nullable=true)
      */
     private $owner_kana;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(name="breeder_house_tel", type="string", length=10, nullable=true)
      */
     private $breeder_house_tel;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(name="breeder_house_fax", type="string", length=10, nullable=true)
      */
     private $breeder_house_fax;
 
     /**
-     * @ORM\Column(type="string", length=7, nullable=true)
+     * @ORM\Column(name="breeder_house_zip", type="string", length=7, nullable=true)
      */
     private $breeder_house_zip;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(name="breeder_house_pref", type="string", length=10, nullable=true)
      */
     private $breeder_house_pref;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(name="breeder_house_city", type="string", length=10, nullable=true)
      */
     private $breeder_house_city;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="breeder_house_address", type="string", length=255, nullable=true)
      */
     private $breeder_house_address;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="breeder_house_building", type="string", length=255, nullable=true)
      */
     private $breeder_house_building;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="responsible_name", type="string", length=255, nullable=true)
      */
     private $responsible_name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="responsible_kana", type="string", length=255, nullable=true)
      */
     private $responsible_kana;
 
     /**
-     * @ORM\Column(type="string", length=7, nullable=true)
+     * @ORM\Column(name="responsible_zip", type="string", length=7, nullable=true)
      */
     private $responsible_zip;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(name="responsible_pref", type="string", length=10, nullable=true)
      */
     private $responsible_pref;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(name="responsible_city", type="string", length=10, nullable=true)
      */
     private $responsible_city;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="responsible_address", type="string", length=255, nullable=true)
      */
     private $responsible_address;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="office_name", type="string", length=255, nullable=true)
      */
     private $office_name;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="authorization_type", type="smallint", nullable=true)
      */
     private $authorization_type;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="pet_parent_count", type="smallint", nullable=true)
      */
     private $pet_parent_count;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="staff_count_1", type="smallint", nullable=true)
      */
     private $staff_count_1;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="staff_count_2", type="smallint", nullable=true)
      */
     private $staff_count_2;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="staff_count_3", type="smallint", nullable=true)
      */
     private $staff_count_3;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="staff_count_4", type="smallint", nullable=true)
      */
     private $staff_count_4;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="breed_exp_year", type="smallint", nullable=true)
      */
     private $breed_exp_year;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="is_participation_show", type="smallint", nullable=true)
      */
     private $is_participation_show;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="cage_size", type="smallint", nullable=true)
      */
     private $cage_size;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="pet_exercise_env", type="smallint", nullable=true)
      */
     private $pet_exercise_env;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="can_publish_count", type="smallint", nullable=true)
      */
     private $can_publish_count;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="self_breed_exp_year", type="smallint", nullable=true)
      */
     private $self_breed_exp_year;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="direct_sell_exp", type="smallint", nullable=true)
      */
     private $direct_sell_exp;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="is_pet_trade", type="smallint", nullable=true)
      */
     private $is_pet_trade;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="sell_route", type="string", length=255, nullable=true)
      */
     private $sell_route;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="is_full_time", type="smallint", nullable=true)
      */
     private $is_full_time;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="homepage_url", type="string", length=255, nullable=true)
      */
     private $homepage_url;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="sns_url", type="string", length=255, nullable=true)
      */
     private $sns_url;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="regist_reason", type="text", nullable=true)
      */
     private $regist_reason;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="free_comment", type="text", nullable=true)
      */
     private $free_comment;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="introducer_name", type="string", length=255, nullable=true)
      */
     private $introducer_name;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="examination_status", type="smallint", nullable=true)
      */
     private $examination_status;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="is_active", type="smallint", nullable=true)
      */
     private $is_active;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="password", type="string", length=255, nullable=true)
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
      */
     private $email;
+
+    private $discriminator_type;
 
     public function getId(): ?int
     {
@@ -521,12 +526,12 @@ class Breeders
         return $this;
     }
 
-    public function getIsParticipationShow(): ?bool
+    public function getIsParticipationShow(): ?int
     {
         return $this->is_participation_show;
     }
 
-    public function setIsParticipationShow(?bool $is_participation_show): self
+    public function setIsParticipationShow(?int $is_participation_show): self
     {
         $this->is_participation_show = $is_participation_show;
 
@@ -733,6 +738,18 @@ class Breeders
     public function setEmail(?string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getDiscriminatorType(): ?string
+    {
+        return $this->discriminator_type;
+    }
+
+    public function setDiscriminatorType(?string $discriminator_type): self
+    {
+        $this->discriminator_type = $discriminator_type;
 
         return $this;
     }

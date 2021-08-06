@@ -20,7 +20,7 @@ class ConservationsController extends Controller
      */
     public function index(ConservationsRepository $conservationsRepository): Response
     {
-        return $this->render('test/conservations/index.html.twig', [
+        return $this->render('test/conservations/index.twig', [
             'conservations' => $conservationsRepository->findAll(),
         ]);
     }
@@ -42,7 +42,7 @@ class ConservationsController extends Controller
             return $this->redirectToRoute('conservations_index');
         }
 
-        return $this->render('test/conservations/new.html.twig', [
+        return $this->render('test/conservations/new.twig', [
             'conservation' => $conservation,
             'form' => $form->createView(),
         ]);
@@ -53,7 +53,7 @@ class ConservationsController extends Controller
      */
     public function show(Conservations $conservation): Response
     {
-        return $this->render('test/conservations/show.html.twig', [
+        return $this->render('test/conservations/show.twig', [
             'conservation' => $conservation,
         ]);
     }
@@ -72,7 +72,7 @@ class ConservationsController extends Controller
             return $this->redirectToRoute('conservations_index');
         }
 
-        return $this->render('test/conservations/edit.html.twig', [
+        return $this->render('test/conservations/edit.twig', [
             'conservation' => $conservation,
             'form' => $form->createView(),
         ]);

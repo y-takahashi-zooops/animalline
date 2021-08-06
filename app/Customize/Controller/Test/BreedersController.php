@@ -20,7 +20,7 @@ class BreedersController extends Controller
      */
     public function index(BreedersRepository $breedersRepository): Response
     {
-        return $this->render('test/breeders/index.html.twig', [
+        return $this->render('test/breeders/index.twig', [
             'breeders' => $breedersRepository->findAll(),
         ]);
     }
@@ -42,7 +42,7 @@ class BreedersController extends Controller
             return $this->redirectToRoute('breeders_index');
         }
 
-        return $this->render('test/breeders/new.html.twig', [
+        return $this->render('test/breeders/new.twig', [
             'breeder' => $breeder,
             'form' => $form->createView(),
         ]);
@@ -53,7 +53,7 @@ class BreedersController extends Controller
      */
     public function show(Breeders $breeder): Response
     {
-        return $this->render('test/breeders/show.html.twig', [
+        return $this->render('test/breeders/show.twig', [
             'breeder' => $breeder,
         ]);
     }
@@ -72,7 +72,7 @@ class BreedersController extends Controller
             return $this->redirectToRoute('breeders_index');
         }
 
-        return $this->render('test/breeders/edit.html.twig', [
+        return $this->render('test/breeders/edit.twig', [
             'breeder' => $breeder,
             'form' => $form->createView(),
         ]);

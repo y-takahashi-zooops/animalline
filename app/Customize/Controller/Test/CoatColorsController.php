@@ -20,7 +20,7 @@ class CoatColorsController extends Controller
      */
     public function index(CoatColorsRepository $coatColorsRepository): Response
     {
-        return $this->render('test/coat_colors/index.html.twig', [
+        return $this->render('test/coat_colors/index.twig', [
             'coat_colors' => $coatColorsRepository->findAll(),
         ]);
     }
@@ -42,7 +42,7 @@ class CoatColorsController extends Controller
             return $this->redirectToRoute('coat_colors_index');
         }
 
-        return $this->render('test/coat_colors/new.html.twig', [
+        return $this->render('test/coat_colors/new.twig', [
             'coat_color' => $coatColor,
             'form' => $form->createView(),
         ]);
@@ -53,7 +53,7 @@ class CoatColorsController extends Controller
      */
     public function show(CoatColors $coatColor): Response
     {
-        return $this->render('test/coat_colors/show.html.twig', [
+        return $this->render('test/coat_colors/show.twig', [
             'coat_color' => $coatColor,
         ]);
     }
@@ -72,7 +72,7 @@ class CoatColorsController extends Controller
             return $this->redirectToRoute('coat_colors_index');
         }
 
-        return $this->render('test/coat_colors/edit.html.twig', [
+        return $this->render('test/coat_colors/edit.twig', [
             'coat_color' => $coatColor,
             'form' => $form->createView(),
         ]);
