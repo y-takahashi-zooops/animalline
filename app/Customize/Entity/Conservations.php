@@ -6,155 +6,154 @@ use Customize\Repository\ConservationsRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-/**     
+/**
  * @ORM\Table(name="alm_adoptions")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=ConservationsRepository::class)
- * @ORM\Table(name="alm_adoptions")
  */
 class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterface
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="user_id", type="integer", nullable=true)
      */
     private $user_id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="adoption_house_name", type="string", length=255, nullable=true)
      */
     private $adoption_house_name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="owner_name", type="string", length=255, nullable=true)
      */
     private $owner_name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="owner_kana", type="string", length=255, nullable=true)
      */
     private $owner_kana;
 
     /**
-     * @ORM\Column(type="string", length=7, nullable=true)
+     * @ORM\Column(name="adoption_house_zip", type="string", length=7, nullable=true)
      */
     private $adoption_house_zip;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(name="adoption_house_pref", type="string", length=10, nullable=true)
      */
     private $adoption_house_pref;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(name="adoption_house_city", type="string", length=10, nullable=true)
      */
     private $adoption_house_city;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="adoption_house_address", type="string", length=255, nullable=true)
      */
     private $adoption_house_address;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="adoption_house_building", type="string", length=255, nullable=true)
      */
     private $adoption_house_building;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(name="adoption_house_tel", type="string", length=10, nullable=true)
      */
     private $adoption_house_tel;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(name="adoption_house_fax", type="string", length=10, nullable=true)
      */
     private $adoption_house_fax;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="homepage_url", type="string", length=255, nullable=true)
      */
     private $homepage_url;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="sns_url", type="string", length=255, nullable=true)
      */
     private $sns_url;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="is_active", type="smallint", nullable=true)
      */
     private $is_active;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="examination_status", type="smallint", nullable=true)
      */
     private $examination_status;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="regist_reason", type="text", nullable=true)
      */
     private $regist_reason;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="free_comment", type="text", nullable=true)
      */
     private $free_comment;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="can_publish_count", type="smallint", nullable=true)
      */
     private $can_publish_count;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="pet_exercise_env", type="smallint", nullable=true)
      */
     private $pet_exercise_env;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="cage_size", type="smallint", nullable=true)
      */
     private $cage_size;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="adoption_exp_year", type="smallint", nullable=true)
      */
     private $adoption_exp_year;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="staff_count_1", type="smallint", nullable=true)
      */
     private $staff_count_1;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="staff_count_2", type="smallint", nullable=true)
      */
     private $staff_count_2;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="staff_count_3", type="smallint", nullable=true)
      */
     private $staff_count_3;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="staff_count_4", type="smallint", nullable=true)
      */
     private $staff_count_4;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="password", type="string", length=255, nullable=true)
      */
     private $password;
 
@@ -163,13 +162,13 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      *
      * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\CustomerStatus")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id", type="smallint", length=5)
      * })
      */
     private $Status;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="salt", type="string", length=255, nullable=true)
      */
     private $salt;
 
