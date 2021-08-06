@@ -586,7 +586,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      */
     public function getRoles()
     {
-        return ['ROLE_USER'];
+        return ['ROLE_ADOPTION_USER'];
     }
 
     /**
@@ -602,6 +602,11 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      */
     public function eraseCredentials()
     {
+    }
+
+    public function equals(UserInterface $user)
+    {
+        return $this->getUsername() == $user->getUsername();
     }
 
     public function getDiscriminatorType(): ?string

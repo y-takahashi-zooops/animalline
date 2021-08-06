@@ -41,6 +41,28 @@ security:
             logout:
                 path: admin_logout
                 target: admin_login
+        adoption:
+            pattern: '^/adoption/configration'
+            anonymous: true
+            provider: adoption_provider
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 3600
+                name: eccube_remember_me
+                remember_me_parameter: 'adoption_login_memory'
+            form_login:
+                check_path: adoption_login
+                login_path: adoption_login
+                csrf_token_generator: security.csrf.token_manager
+                default_target_path: adoption_mypage
+                username_parameter: 'email'
+                password_parameter: 'password'
+                use_forward: false
+                success_handler: eccube.security.success_handler
+                failure_handler: eccube.security.failure_handler
+            logout:
+                path: adoption_logout
+                target: adoption_top
         customer:
             pattern: '^/'
             anonymous: true
@@ -63,24 +85,6 @@ security:
             logout:
                 path: logout
                 target: homepage
-        adoption:
-            pattern: '^/adoption/configration'
-            anonymous: true
-            provider: adoption_provider
-            form_login:
-                check_path: adoption_login
-                login_path: adoption_login
-                csrf_token_generator: security.csrf.token_manager
-                default_target_path: adoption_top
-                username_parameter: 'email'
-                password_parameter: 'password'
-                use_forward: false
-                success_handler: eccube.security.success_handler
-                failure_handler: eccube.security.failure_handler
-            logout:
-                path: adoption_logout
-                target: adoption_top
-
     access_decision_manager:
         strategy: unanimous
         allow_if_all_abstain: false

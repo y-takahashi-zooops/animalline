@@ -3,6 +3,7 @@
 
 namespace Customize\Controller\Adoption;
 
+use Customize\Form\Type\AdoptionEntryType;
 use Customize\Form\Type\AdoptionLoginType;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\BaseInfo;
@@ -28,6 +29,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Customize\Entity\Conservations;
 use Customize\Repository\ConservationsRepository;
+use Customize\Config\AnilineConf;
 
 class EntryController extends AbstractController
 {
@@ -50,11 +52,6 @@ class EntryController extends AbstractController
      * @var BaseInfo
      */
     protected $BaseInfo;
-
-    /**
-     * @var CustomerRepository
-     */
-    protected $customerRepository;
 
     /**
      * @var EncoderFactoryInterface
@@ -119,14 +116,30 @@ class EntryController extends AbstractController
         if ($this->isGranted('ROLE_USER')) {
             log_info('認証済のためログイン処理をスキップ');
 
-            return $this->redirectToRoute('mypage');
+            return $this->redirectToRoute('adoption_mypage');
         }
 
         /* @var $Conservations \Customize\Entity\Conservations */
         $Conservation = $this->conservationsRepository->newConservation();
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
-        $form = $this->createForm(AdoptionLoginType::class);
+        $form = $this->createForm(AdoptionEntryType::class);
+
+         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
+         $builder = $this->formFactory->createBuilder(AdoptionEntryType::class, $Conservation);
+
+         $event = new EventArgs(
+             [
+                 'builder' => $builder,
+                 'Customer' => $Conservation,
+             ],
+             $request
+         );
+         $this->eventDispatcher->dispatch(AnilineConf::ANILINE_ADOPTION_ENTRY_INDEX_INITIALIZE, $event);
+ 
+         /* @var $form \Symfony\Component\Form\FormInterface */
+        $form = $builder->getForm();
+    
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -217,20 +230,20 @@ class EntryController extends AbstractController
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             log_info('認証済のためログイン処理をスキップ');
 
-            return $this->redirectToRoute('mypage');
+            return $this->redirectToRoute('adoption_mypage');
         }
 
-        log_info('処理開始');
+        log_info('login処理開始');
 
         /* @var $form \Symfony\Component\Form\FormInterface */
         $builder = $this->formFactory
-            ->createNamedBuilder('', CustomerLoginType::class);
-        $builder->get('login_memory')->setData((bool) $request->getSession()->get('_security.login_memory'));
+            ->createNamedBuilder('', AdoptionLoginType::class);
+        $builder->get('login_memory')->setData((bool) $request->getSession()->get('_security.adoption_login_memory'));
 
         if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $Conservation = $this->getUser();
             if ($Conservation instanceof Conservations) {
-                $builder->get('login_email')
+                $builder->get('email')
                     ->setData($Conservation->getEmail());
             }
         }
@@ -244,15 +257,7 @@ class EntryController extends AbstractController
 
         $form = $builder->getForm();
 
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_MYPAGE_LOGIN_INITIALIZE, $event);
-
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     $formData = $form->getData();
-        //     $Conservation = $this->conservationsRepository->findOneBy(['email' => $formData['email']]);
-        //     $token = new UsernamePasswordToken($Conservation->getEmail(), null, 'adoption', ['ROLE_USER']);
-        //     $this->tokenStorage->setToken($token);
-        //     $request->getSession()->migrate(true);
-        // }
+        $this->eventDispatcher->dispatch(AnilineConf::ANILINE_ADOPTION_LOGIN_INITIALIZE, $event);
 
         return [
             'error' => $utils->getLastAuthenticationError(),
@@ -296,13 +301,13 @@ class EntryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_ACTIVATE_COMPLETE, $event);
+        $this->eventDispatcher->dispatch(AnilineConf::ANILINE_ADOPTION_LOGIN_COMPLETE, $event);
 
         // メール送信
         $this->mailService->sendCustomerCompleteMail($Conservation);
 
         // 本会員登録してログイン状態にする
-        $token = new UsernamePasswordToken($Conservation->getEmail(), null, 'adoption', ['ROLE_USER']);
+        $token = new UsernamePasswordToken($Conservation->getEmail(), null, 'adoption', ['ROLE_ADOPTION_USER']);
         $this->tokenStorage->setToken($token);
         $request->getSession()->migrate(true);
 

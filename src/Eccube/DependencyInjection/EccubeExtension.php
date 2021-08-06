@@ -56,12 +56,17 @@ class EccubeExtension extends Extension implements PrependExtensionInterface
 
         // SSL強制時は, httpsのみにアクセス制限する
         $accessControl = [
-          ['path' => '^/%eccube_admin_route%/login', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
-          ['path' => '^/%eccube_admin_route%/', 'roles' => 'ROLE_ADMIN'],
-          ['path' => '^/mypage/login', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
-          ['path' => '^/mypage/withdraw_complete', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
-          ['path' => '^/mypage/change', 'roles' => 'IS_AUTHENTICATED_FULLY'],
-          ['path' => '^/mypage/', 'roles' => 'ROLE_USER'],
+            // Animalline追加設定
+            ['path' => '^/adoption/configration/entry', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
+            ['path' => '^/adoption/configration/login', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
+            ['path' => '^/adoption/configration/', 'roles' => 'ROLE_ADOPTION_USER'],
+            // Animalline追加設定
+            ['path' => '^/%eccube_admin_route%/login', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
+            ['path' => '^/%eccube_admin_route%/', 'roles' => 'ROLE_ADMIN'],
+            ['path' => '^/mypage/login', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
+            ['path' => '^/mypage/withdraw_complete', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
+            ['path' => '^/mypage/change', 'roles' => 'IS_AUTHENTICATED_FULLY'],
+            ['path' => '^/mypage/', 'roles' => 'ROLE_USER'],
         ];
         if ($forceSSL) {
             foreach ($accessControl as &$control) {

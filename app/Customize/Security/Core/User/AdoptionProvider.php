@@ -48,7 +48,7 @@ class AdoptionProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         $Conservation = $this->conservationsRepository->findOneBy([
-            'login_email' => $username,
+            'email' => $username,
             'Status' => CustomerStatus::REGULAR,
         ]);
 
