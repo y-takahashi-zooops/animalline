@@ -6,12 +6,13 @@ use Customize\Repository\ConservationsRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
+/**     
  * @ORM\Table(name="alm_adoptions")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=ConservationsRepository::class)
+ * @ORM\Table(name="alm_adoptions")
  */
 class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterface
 {
@@ -162,7 +163,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      *
      * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\CustomerStatus")
      * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id")
      * })
      */
     private $Status;
@@ -602,6 +603,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     public function eraseCredentials()
     {
     }
+
     public function getDiscriminatorType(): ?string
     {
         return $this->discriminator_type;
