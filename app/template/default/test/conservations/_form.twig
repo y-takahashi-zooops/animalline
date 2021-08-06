@@ -115,9 +115,5 @@
     {{ form_widget(form.secret_key) }}
     {{ form_errors(form.secret_key) }}
 
-    {{ form_label(form.discriminator_type, 'Discriminator type', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.discriminator_type) }}
-    {{ form_errors(form.discriminator_type) }}
-
 <button class="btn btn-info">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
