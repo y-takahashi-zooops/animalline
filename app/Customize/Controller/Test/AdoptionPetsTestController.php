@@ -20,7 +20,7 @@ class AdoptionPetsTestController extends Controller
      */
     public function index(AdoptionPetsRepository $adoptionPetsRepository): Response
     {
-        return $this->render('test/adoption_pets/index.html.twig', [
+        return $this->render('test/adoption_pets/index.twig', [
             'adoption_pets' => $adoptionPetsRepository->findAll(),
         ]);
     }
@@ -42,7 +42,7 @@ class AdoptionPetsTestController extends Controller
             return $this->redirectToRoute('adoption_pets_index');
         }
 
-        return $this->render('test/adoption_pets/new.html.twig', [
+        return $this->render('test/adoption_pets/new.twig', [
             'adoption_pet' => $adoptionPet,
             'form' => $form->createView(),
         ]);
@@ -53,7 +53,7 @@ class AdoptionPetsTestController extends Controller
      */
     public function show(AdoptionPets $adoptionPet): Response
     {
-        return $this->render('test/adoption_pets/show.html.twig', [
+        return $this->render('test/adoption_pets/show.twig', [
             'adoption_pet' => $adoptionPet,
         ]);
     }
@@ -72,7 +72,7 @@ class AdoptionPetsTestController extends Controller
             return $this->redirectToRoute('adoption_pets_index');
         }
 
-        return $this->render('test/adoption_pets/edit.html.twig', [
+        return $this->render('test/adoption_pets/edit.twig', [
             'adoption_pet' => $adoptionPet,
             'form' => $form->createView(),
         ]);

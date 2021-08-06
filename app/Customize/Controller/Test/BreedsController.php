@@ -20,7 +20,7 @@ class BreedsController extends Controller
      */
     public function index(BreedsRepository $breedsRepository): Response
     {
-        return $this->render('test/breeds/index.html.twig', [
+        return $this->render('test/breeds/index.twig', [
             'breeds' => $breedsRepository->findAll(),
         ]);
     }
@@ -42,7 +42,7 @@ class BreedsController extends Controller
             return $this->redirectToRoute('breeds_index');
         }
 
-        return $this->render('test/breeds/new.html.twig', [
+        return $this->render('test/breeds/new.twig', [
             'breed' => $breed,
             'form' => $form->createView(),
         ]);
@@ -53,7 +53,7 @@ class BreedsController extends Controller
      */
     public function show(Breeds $breed): Response
     {
-        return $this->render('test/breeds/show.html.twig', [
+        return $this->render('test/breeds/show.twig', [
             'breed' => $breed,
         ]);
     }
@@ -72,7 +72,7 @@ class BreedsController extends Controller
             return $this->redirectToRoute('breeds_index');
         }
 
-        return $this->render('test/breeds/edit.html.twig', [
+        return $this->render('test/breeds/edit.twig', [
             'breed' => $breed,
             'form' => $form->createView(),
         ]);
