@@ -1,0 +1,65 @@
+{% set site_type = 'adoption' %}
+{% extends 'ani_frame.twig' %}
+{% block main %}
+    <h1>AdoptionPets</h1>
+    <br>
+    <a href="{{ path('adoption_pets_index') }}">< back to list</a>
+    <hr>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ adoption_pet.id }}</td>
+            </tr>
+            <tr>
+                <th>Breeder_id</th>
+                <td>{{ adoption_pet.breederId }}</td>
+            </tr>
+            <tr>
+                <th>Pet_kind</th>
+                <td>{{ adoption_pet.petKind }}</td>
+            </tr>
+            <tr>
+                <th>Breeds_type</th>
+                <td>{{ adoption_pet.breedsType }}</td>
+            </tr>
+            <tr>
+                <th>Pet_sex</th>
+                <td>{{ adoption_pet.petSex }}</td>
+            </tr>
+            <tr>
+                <th>Pet_birthday</th>
+                <td>{{ adoption_pet.petBirthday ? adoption_pet.petBirthday|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Coat_color</th>
+                <td>{{ adoption_pet.coatColor }}</td>
+            </tr>
+            <tr>
+                <th>Future_wait</th>
+                <td>{{ adoption_pet.futureWait }}</td>
+            </tr>
+            <tr>
+                <th>Dna_check_result</th>
+                <td>{{ adoption_pet.dnaCheckResult }}</td>
+            </tr>
+            <tr>
+                <th>Pr_comment</th>
+                <td>{{ adoption_pet.prComment }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ adoption_pet.description }}</td>
+            </tr>
+            <tr>
+                <th>Delivery_time</th>
+                <td>{{ adoption_pet.deliveryTime }}</td>
+            </tr>
+            <tr>
+                <th>Delivery_way</th>
+                <td>{{ adoption_pet.deliveryWay }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {{ include('test/adoption_pets/_delete_form.html.twig') }}
+{% endblock %}

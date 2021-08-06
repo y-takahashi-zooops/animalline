@@ -1,0 +1,9 @@
+{% set site_type = 'breeder' %}
+{% extends 'ani_frame.twig' %}
+{% block main %}
+    <h1>Create new BreederPets</h1>
+    <br>
+    <a href="{{ path('breeder_pets_index') }}">< back to list</a>
+    <hr>
+    {{ include('test/breeder_pets/_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% set site_type = 'breeder' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <h1>Breeds index</h1>
+    <br>
+    <a class="btn btn-primary" href="{{ path('breeds_new') }}">Create new</a>
+    <hr>
+    <table class="table table-responsive">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Pet_kind</th>
+            <th>Breeds_name</th>
+            <th>Sort_order</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for breed in breeds %}
+            <tr>
+                <td>{{ breed.id }}</td>
+                <td>{{ breed.petKind }}</td>
+                <td>{{ breed.breedsName }}</td>
+                <td>{{ breed.sortOrder }}</td>
+                <td>
+                    <a href="{{ path('breeds_show', {'id': breed.id}) }}">show</a>
+                    <a href="{{ path('breeds_edit', {'id': breed.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
