@@ -526,12 +526,12 @@ class Breeders
         return $this;
     }
 
-    public function getIsParticipationShow(): ?bool
+    public function getIsParticipationShow(): ?int
     {
         return $this->is_participation_show;
     }
 
-    public function setIsParticipationShow(?bool $is_participation_show): self
+    public function setIsParticipationShow(?int $is_participation_show): self
     {
         $this->is_participation_show = $is_participation_show;
 
