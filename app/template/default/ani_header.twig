@@ -2,13 +2,18 @@
     <nav class="navbar navbar-default bg-white">
         <div class="container-fluid">
             <div class="navbar-header m-3">
-                <a class="navbar-brand" href="/">
                     {% if site_type == 'adoption' %}
-                        <img src="{{ asset('assets/img/adoption/logo.svg') }}"></a>
+                        <a class="navbar-brand" href="/adoption">
+                            <img src="{{ asset('assets/img/adoption/logo.svg') }}">
+                        </a>
                     {% elseif site_type == 'breeder' %}
-                        <img src="{{ asset('assets/img/breeder/logo.svg') }}"></a>
+                        <a class="navbar-brand" href="/">
+                            <img src="{{ asset('assets/img/breeder/logo.svg') }}">
+                        </a>
                     {% elseif site_type == 'common' %}
-                        <img src="{{ asset('assets/img/common/logo.svg') }}"></a>
+                        <a class="navbar-brand" href="/">
+                            <img src="{{ asset('assets/img/common/logo.svg') }}">
+                        </a>
                     {% endif %}
             </div>
             <div>
@@ -37,7 +42,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" href="#">
+                            <a class="nav-link d-flex align-items-center" href={{ url('adoption_favolite') }}>
                                 <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
                                 <h4 class="color-gray-500 font-size-18">お気に入り</h4>
                             </a>
@@ -56,7 +61,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" href="#">
+                            <a class="nav-link d-flex align-items-center" href={{ url('adoption_favolite') }}>
                                 <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
                                 <h4 class="color-gray-500 font-size-18">お気に入り</h4>
                             </a>
@@ -74,7 +79,7 @@
     </nav>
     <ul class="header-nav nav nav-pills nav-justified bg-white">
         <li class="nav-item">
-            <a class="nav-link active font-size-18 rounded-0" href="#">保護団体TOP</a>
+            <a class="nav-link active font-size-18 rounded-0" href={{url('adoption_top')}}>保護団体TOP</a>
         </li>
         <li class="nav-item">
             <a class="nav-link font-size-18 rounded-0" href="/ec/top">ECのTOP</a>

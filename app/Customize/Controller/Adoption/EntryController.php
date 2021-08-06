@@ -4,6 +4,7 @@
 namespace Customize\Controller\Adoption;
 
 use Customize\Form\Type\AdoptionLoginType;
+use Customize\Form\Type\AdoptionTempRegistType;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\BaseInfo;
 use Eccube\Entity\Master\CustomerStatus;
@@ -112,7 +113,7 @@ class EntryController extends AbstractController
      * 会員登録画面.
      *
      * @Route("/adoption/configration/entry", name="adoption_entry")
-     * @Template("animalline/adoption/entry/index.twig")
+     * @Template("animalline/adoption/configration/entry/index.twig")
      */
     public function index(Request $request)
     {
@@ -126,7 +127,7 @@ class EntryController extends AbstractController
         $Conservation = $this->conservationsRepository->newConservation();
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
-        $form = $this->createForm(AdoptionLoginType::class);
+        $form = $this->createForm(AdoptionTempRegistType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -166,7 +167,7 @@ class EntryController extends AbstractController
      * 会員登録完了画面.
      *
      * @Route("/adoption/configration/entry/complete", name="adoption_entry_complete")
-     * @Template("animalline/adoption/entry/complete.twig")
+     * @Template("animalline/adoption/configration/entry/complete.twig")
      */
     public function complete()
     {
@@ -177,7 +178,7 @@ class EntryController extends AbstractController
      * 会員のアクティベート（本会員化）を行う.
      *
      * @Route("/adoption/configration/entry/activate/{secret_key}", name="adoption_entry_activate")
-     * @Template("animalline/adoption/entry/activate.twig")
+     * @Template("animalline/adoption/configration/entry/activate.twig")
      */
     public function activate(Request $request, $secret_key)
     {
@@ -220,17 +221,15 @@ class EntryController extends AbstractController
             return $this->redirectToRoute('mypage');
         }
 
-        log_info('処理開始');
-
         /* @var $form \Symfony\Component\Form\FormInterface */
         $builder = $this->formFactory
-            ->createNamedBuilder('', CustomerLoginType::class);
+            ->createNamedBuilder('', AdoptionLoginType::class);
         $builder->get('login_memory')->setData((bool) $request->getSession()->get('_security.login_memory'));
 
         if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $Conservation = $this->getUser();
             if ($Conservation instanceof Conservations) {
-                $builder->get('login_email')
+                $builder->get('email')
                     ->setData($Conservation->getEmail());
             }
         }
@@ -258,8 +257,6 @@ class EntryController extends AbstractController
             'error' => $utils->getLastAuthenticationError(),
             'form' => $form->createView(),
         ];
-
-        log_info('処理終了');
     }
 
     /**
@@ -309,5 +306,26 @@ class EntryController extends AbstractController
         // log_info('ログイン済に変更', [$this->getUser()->getId()]);
 
         return 0;
+    }
+
+
+    /**
+     * 基本情報入力画面.
+     *
+     * @Route("/adoption/configration/baseinfo_edit", name="adoption_baseinfo_edit")
+     * @Template("animalline/adoption/configration/baseinfo_edit.twig")
+     */
+    public function baseinfo_edit(Request $request, AuthenticationUtils $utils)
+    {
+    }
+
+    /**
+     * 
+     *
+     * @Route("/adoption/configration/dashboad", name="adoption_dashboad")
+     * @Template("animalline/adoption/configration/dashboad.twig")
+     */
+    public function dashboad(Request $request, AuthenticationUtils $utils)
+    {
     }
 }
