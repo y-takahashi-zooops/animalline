@@ -8,115 +8,120 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=BreederPetsRepository::class)
  * @ORM\Table(name="alm_breeder_pets")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+ * @ORM\HasLifecycleCallbacks()
  */
 class BreederPets
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="breeder_id", type="integer")
      */
     private $breeder_id;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="pet_kind", type="smallint")
      */
     private $pet_kind;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="breeds_type", type="integer")
      */
     private $breeds_type;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="pet_sex", type="smallint")
      */
     private $pet_sex;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(name="pet_birthday", type="date")
      */
     private $pet_birthday;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="coat_color", type="integer")
      */
     private $coat_color;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="future_wait", type="smallint")
      */
     private $future_wait;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="dna_check_result", type="integer")
      */
     private $dna_check_result;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="pr_comment", type="text")
      */
     private $pr_comment;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="description", type="text")
      */
     private $description;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="is_breeding", type="smallint")
      */
     private $is_breeding;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="is_selling", type="smallint")
      */
     private $is_selling;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="guarantee", type="text")
      */
     private $guarantee;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="is_pedigree", type="smallint")
      */
     private $is_pedigree;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="include_vaccine_fee", type="smallint")
      */
     private $include_vaccine_fee;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="delivery_time", type="text")
      */
     private $delivery_time;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="delivery_way", type="text")
      */
     private $delivery_way;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="payment_method", type="text")
      */
     private $payment_method;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="reservation_fee", type="integer")
      */
     private $reservation_fee;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="price", type="integer")
      */
     private $price;
+
+    private $discriminator_type;
 
     public function getId(): ?int
     {
@@ -359,6 +364,18 @@ class BreederPets
     public function setPrice(int $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getDiscriminatorType(): ?string
+    {
+        return $this->discriminator_type;
+    }
+
+    public function setDiscriminatorType(?string $discriminator_type): self
+    {
+        $this->discriminator_type = $discriminator_type;
 
         return $this;
     }
