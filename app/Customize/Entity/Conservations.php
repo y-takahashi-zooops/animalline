@@ -178,6 +178,8 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      */
     private $secret_key;
 
+    private $discriminator_type;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -600,5 +602,17 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      */
     public function eraseCredentials()
     {
+    }
+
+    public function getDiscriminatorType(): ?string
+    {
+        return $this->discriminator_type;
+    }
+
+    public function setDiscriminatorType(?string $discriminator_type): self
+    {
+        $this->discriminator_type = $discriminator_type;
+
+        return $this;
     }
 }
