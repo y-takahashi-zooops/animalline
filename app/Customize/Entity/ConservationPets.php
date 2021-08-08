@@ -2,17 +2,17 @@
 
 namespace Customize\Entity;
 
-use Customize\Repository\AdoptionPetsRepository;
+use Customize\Repository\ConservationPetsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=AdoptionPetsRepository::class)
- * @ORM\Table(name="alm_adoption_pets")
+ * @ORM\Entity(repositoryClass=ConservationPetsRepository::class)
+ * @ORM\Table(name="alm_conservation_pets")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
  * @ORM\HasLifecycleCallbacks()
  */
-class AdoptionPets
+class ConservationPets
 {
     /**
      * @ORM\Id
@@ -77,11 +77,38 @@ class AdoptionPets
     private $delivery_time;
 
     /**
-     * @ORM\Column("delivery_way", type="text")
+     * @ORM\Column(name="delivery_way", type="text")
      */
     private $delivery_way;
 
-    private $discriminator_type;
+    /**
+     * @ORM\Column(name="release_status", type="smallint", options={"default" = 0})
+     */
+    private $release_status;
+
+    /**
+     * @ORM\Column(name="release_date", type="date", nullable=true)
+     */
+    private $release_date;
+
+     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
+    private $create_date;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
+     */
+    private $update_date;
+
+    /**
+     * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
+     */
+    private $thumbnail_path;
 
     public function getId(): ?int
     {
@@ -232,14 +259,66 @@ class AdoptionPets
         return $this;
     }
 
-    public function getDiscriminatorType(): ?string
+    public function getThumbnailPath(): ?string
     {
-        return $this->discriminator_type;
+        return $this->thumbnail_path;
     }
 
-    public function setDiscriminatorType(?string $discriminator_type): self
+    public function setThumbnailPath(string $thumbnail_path): self
     {
-        $this->discriminator_type = $discriminator_type;
+        $this->thumbnail_path = $thumbnail_path;
+
+        return $this;
+    }
+
+    public function getReleaseStatus(): ?int
+    {
+        return $this->release_status;
+    }
+
+    public function setReleaseStatus(int $release_status): self
+    {
+        $this->release_status = $release_status;
+
+        return $this;
+    }
+
+    public function getReleaseDate(): ?date
+    {
+        return $this->release_date;
+    }
+
+    public function setReleaseDate(date $release_date): self
+    {
+        $this->release_date = $release_date;
+
+        return $this;
+    }
+    
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->create_date = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Set updateDate.
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Payment
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->update_date = $updateDate;
 
         return $this;
     }

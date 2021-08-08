@@ -283,13 +283,13 @@ class EntryController extends AbstractController
         }
 
         $CustomerStatus = $this->customerStatusRepository->find(CustomerStatus::REGULAR);
-        $Status = $Conservation->getStatus();
+        $Status = $Conservation->getRegisterStatusId();
 
         // すでに会員の場合は何もしない
         if ($Status == $CustomerStatus) {
             return 0;
         }
-        $Conservation->setStatus($CustomerStatus);
+        $Conservation->setRegisterStatusId($CustomerStatus);
         $this->entityManager->persist($Conservation);
         $this->entityManager->flush();
 

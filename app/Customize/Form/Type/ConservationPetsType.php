@@ -2,7 +2,7 @@
 
 namespace Customize\Form\Type;
 
-use Customize\Entity\AdoptionPets;
+use Customize\Entity\ConservationPets;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class AdoptionPetsType extends AbstractType
+class ConservationPetsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -32,7 +32,7 @@ class AdoptionPetsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => AdoptionPets::class,
+            'data_class' => ConservationPets::class,
         ]);
     }
 }

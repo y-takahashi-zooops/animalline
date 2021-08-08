@@ -5,4 +5,15 @@ final class AnilineConf {
     const ANILINE_ADOPTION_LOGIN_INITIALIZE = 'aniline.login.initialize';
     const ANILINE_ADOPTION_LOGIN_COMPLETE = 'aniline.login.complete';
     const ANILINE_ADOPTION_ENTRY_INDEX_INITIALIZE = 'aniline.adoption.entry.initialize';
+
+    //画像の配置場所のベースディレクトリ
+    const ANILINE_IMAGE_URL_BASE = 'html/upload/save_image';
+
+    //ペット種別
+    const ANILINE_PET_KIND_DOG = 1;
+    const ANILINE_PET_KIND_CAT = 2;
+
+    //ペット性別
+    const ANILINE_PET_SEX_MALE = 1;
+    const ANILINE_PET_SEX_FEMALE = 2;
 }

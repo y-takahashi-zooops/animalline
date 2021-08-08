@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="alm_adoptions")
+ * @ORM\Table(name="alm_conservations")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
  * @ORM\HasLifecycleCallbacks()
@@ -28,9 +28,9 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $user_id;
 
     /**
-     * @ORM\Column(name="adoption_house_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="conservation_house_name", type="string", length=255, nullable=true)
      */
-    private $adoption_house_name;
+    private $conservation_house_name;
 
     /**
      * @ORM\Column(name="owner_name", type="string", length=255, nullable=true)
@@ -43,39 +43,39 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $owner_kana;
 
     /**
-     * @ORM\Column(name="adoption_house_zip", type="string", length=7, nullable=true)
+     * @ORM\Column(name="conservation_house_zip", type="string", length=7, nullable=true)
      */
-    private $adoption_house_zip;
+    private $conservation_house_zip;
 
     /**
-     * @ORM\Column(name="adoption_house_pref", type="string", length=10, nullable=true)
+     * @ORM\Column(name="conservation_house_pref", type="string", length=10, nullable=true)
      */
-    private $adoption_house_pref;
+    private $conservation_house_pref;
 
     /**
-     * @ORM\Column(name="adoption_house_city", type="string", length=10, nullable=true)
+     * @ORM\Column(name="conservation_house_city", type="string", length=10, nullable=true)
      */
-    private $adoption_house_city;
+    private $conservation_house_city;
 
     /**
-     * @ORM\Column(name="adoption_house_address", type="string", length=255, nullable=true)
+     * @ORM\Column(name="conservation_house_address", type="string", length=255, nullable=true)
      */
-    private $adoption_house_address;
+    private $conservation_house_address;
 
     /**
-     * @ORM\Column(name="adoption_house_building", type="string", length=255, nullable=true)
+     * @ORM\Column(name="conservation_house_building", type="string", length=255, nullable=true)
      */
-    private $adoption_house_building;
+    private $conservation_house_building;
 
     /**
-     * @ORM\Column(name="adoption_house_tel", type="string", length=10, nullable=true)
+     * @ORM\Column(name="conservation_house_tel", type="string", length=11, nullable=true)
      */
-    private $adoption_house_tel;
+    private $conservation_house_tel;
 
     /**
-     * @ORM\Column(name="adoption_house_fax", type="string", length=10, nullable=true)
+     * @ORM\Column(name="conservation_house_fax", type="string", length=11, nullable=true)
      */
-    private $adoption_house_fax;
+    private $conservation_house_fax;
 
     /**
      * @ORM\Column(name="homepage_url", type="string", length=255, nullable=true)
@@ -123,9 +123,9 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $cage_size;
 
     /**
-     * @ORM\Column(name="adoption_exp_year", type="smallint", nullable=true)
+     * @ORM\Column(name="conservation_exp_year", type="smallint", nullable=true)
      */
-    private $adoption_exp_year;
+    private $conservation_exp_year;
 
     /**
      * @ORM\Column(name="staff_count_1", type="smallint", nullable=true)
@@ -164,9 +164,9 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id")
      * })
-     * @ORM\Column(name="customer_status_id", type="smallint", length=5, nullable=true)
+     * @ORM\Column(name="register_status_id", type="smallint", length=5, nullable=true)
      */
-    private $Status;
+    private $register_status_id;
 
     /**
      * @ORM\Column(name="salt", type="string", length=255, nullable=true)
@@ -178,7 +178,24 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      */
     private $secret_key;
 
-    private $discriminator_type;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
+    private $create_date;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
+     */
+    private $update_date;
+
+    /**
+     * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
+     */
+    private $thumbnail_path;
 
     public function getId(): ?int
     {
@@ -197,14 +214,14 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    public function getAdoptionHouseName(): ?string
+    public function getConservationHouseName(): ?string
     {
-        return $this->adoption_house_name;
+        return $this->conservation_house_name;
     }
 
-    public function setAdoptionHouseName(?string $adoption_house_name): self
+    public function setConservationHouseName(?string $conservation_house_name): self
     {
-        $this->adoption_house_name = $adoption_house_name;
+        $this->conservation_house_name = $conservation_house_name;
 
         return $this;
     }
@@ -233,86 +250,86 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    public function getAdoptionHouseZip(): ?string
+    public function getConservationHouseZip(): ?string
     {
-        return $this->adoption_house_zip;
+        return $this->conservation_house_zip;
     }
 
-    public function setAdoptionHouseZip(?string $adoption_house_zip): self
+    public function setConservationHouseZip(?string $conservation_house_zip): self
     {
-        $this->adoption_house_zip = $adoption_house_zip;
+        $this->conservation_house_zip = $conservation_house_zip;
 
         return $this;
     }
 
-    public function getAdoptionHousePref(): ?string
+    public function getConservationHousePref(): ?string
     {
-        return $this->adoption_house_pref;
+        return $this->conservation_house_pref;
     }
 
-    public function setAdoptionHousePref(?string $adoption_house_pref): self
+    public function setConservationHousePref(?string $conservation_house_pref): self
     {
-        $this->adoption_house_pref = $adoption_house_pref;
+        $this->conservation_house_pref = $conservation_house_pref;
 
         return $this;
     }
 
-    public function getAdoptionHouseCity(): ?string
+    public function getConservationHouseCity(): ?string
     {
-        return $this->adoption_house_city;
+        return $this->conservation_house_city;
     }
 
-    public function setAdoptionHouseCity(?string $adoption_house_city): self
+    public function setConservationHouseCity(?string $conservation_house_city): self
     {
-        $this->adoption_house_city = $adoption_house_city;
+        $this->conservation_house_city = $conservation_house_city;
 
         return $this;
     }
 
-    public function getAdoptionHouseAddress(): ?string
+    public function getConservationHouseAddress(): ?string
     {
-        return $this->adoption_house_address;
+        return $this->conservation_house_address;
     }
 
-    public function setAdoptionHouseAddress(?string $adoption_house_address): self
+    public function setConservationHouseAddress(?string $conservation_house_address): self
     {
-        $this->adoption_house_address = $adoption_house_address;
+        $this->conservation_house_address = $conservation_house_address;
 
         return $this;
     }
 
-    public function getAdoptionHouseBuilding(): ?string
+    public function getConservationHouseBuilding(): ?string
     {
-        return $this->adoption_house_building;
+        return $this->conservation_house_building;
     }
 
-    public function setAdoptionHouseBuilding(?string $adoption_house_building): self
+    public function setConservationHouseBuilding(?string $conservation_house_building): self
     {
-        $this->adoption_house_building = $adoption_house_building;
+        $this->conservation_house_building = $conservation_house_building;
 
         return $this;
     }
 
-    public function getAdoptionHouseTel(): ?string
+    public function getConservationHouseTel(): ?string
     {
-        return $this->adoption_house_tel;
+        return $this->conservation_house_tel;
     }
 
-    public function setAdoptionHouseTel(?string $adoption_house_tel): self
+    public function setConservationHouseTel(?string $conservation_house_tel): self
     {
-        $this->adoption_house_tel = $adoption_house_tel;
+        $this->conservation_house_tel = $conservation_house_tel;
 
         return $this;
     }
 
-    public function getAdoptionHouseFax(): ?string
+    public function getConservationHouseFax(): ?string
     {
-        return $this->adoption_house_fax;
+        return $this->conservation_house_fax;
     }
 
-    public function setAdoptionHouseFax(?string $adoption_house_fax): self
+    public function setConservationHouseFax(?string $conservation_house_fax): self
     {
-        $this->adoption_house_fax = $adoption_house_fax;
+        $this->conservation_house_fax = $conservation_house_fax;
 
         return $this;
     }
@@ -425,14 +442,14 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    public function getAdoptionExpYear(): ?int
+    public function getConservationExpYear(): ?int
     {
-        return $this->adoption_exp_year;
+        return $this->conservation_exp_year;
     }
 
-    public function setAdoptionExpYear(?int $adoption_exp_year): self
+    public function setConservationExpYear(?int $conservation_exp_year): self
     {
-        $this->adoption_exp_year = $adoption_exp_year;
+        $this->conservation_exp_year = $conservation_exp_year;
 
         return $this;
     }
@@ -511,14 +528,11 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
 
     /**
      * Set status.
-     *
      * @param \Eccube\Entity\Master\CustomerStatus|null $status
-     *
-     * @return Customer
      */
-    public function setStatus(\Eccube\Entity\Master\CustomerStatus $status = null)
+    public function setRegisterStatusId(\Eccube\Entity\Master\CustomerStatus $register_status_id = null)
     {
-        $this->Status = $status;
+        $this->register_status_id = $register_status_id;
 
         return $this;
     }
@@ -528,9 +542,9 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      *
      * @return \Eccube\Entity\Master\CustomerStatus|null
      */
-    public function getStatus()
+    public function getRegisterStatusId()
     {
-        return $this->Status;
+        return $this->register_status_id;
     }
 
     /**
@@ -609,14 +623,42 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this->getUsername() == $user->getUsername();
     }
 
-    public function getDiscriminatorType(): ?string
+    public function getThumbnailPath(): ?string
     {
-        return $this->discriminator_type;
+        return $this->thumbnail_path;
     }
 
-    public function setDiscriminatorType(?string $discriminator_type): self
+    public function setThumbnailPath(string $thumbnail_path): self
     {
-        $this->discriminator_type = $discriminator_type;
+        $this->thumbnail_path = $thumbnail_path;
+
+        return $this;
+    }
+
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->create_date = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Set updateDate.
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Payment
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->update_date = $updateDate;
 
         return $this;
     }

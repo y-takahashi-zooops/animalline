@@ -36,7 +36,19 @@ class CoatColors
      */
     private $sort_order;
 
-    private $discriminator_type;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
+    private $create_date;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
+     */
+    private $update_date;
 
     public function getId(): ?int
     {
@@ -79,14 +91,30 @@ class CoatColors
         return $this;
     }
 
-    public function getDiscriminatorType(): ?string
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
     {
-        return $this->discriminator_type;
+        $this->create_date = $createDate;
+
+        return $this;
     }
 
-    public function setDiscriminatorType(?string $discriminator_type): self
+    /**
+     * Set updateDate.
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Payment
+     */
+    public function setUpdateDate($updateDate)
     {
-        $this->discriminator_type = $discriminator_type;
+        $this->update_date = $updateDate;
 
         return $this;
     }

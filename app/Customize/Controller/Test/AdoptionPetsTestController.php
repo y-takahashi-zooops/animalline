@@ -2,9 +2,9 @@
 
 namespace Customize\Controller\Test;
 
-use Customize\Entity\AdoptionPets;
-use Customize\Form\Type\AdoptionPetsType;
-use Customize\Repository\AdoptionPetsRepository;
+use Customize\Entity\ConservationPets;
+use Customize\Form\Type\ConservationPetsType;
+use Customize\Repository\ConservationPetsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +18,10 @@ class AdoptionPetsTestController extends Controller
     /**
      * @Route("/", name="adoption_pets_index", methods={"GET"})
      */
-    public function index(AdoptionPetsRepository $adoptionPetsRepository): Response
+    public function index(ConservationPetsRepository $conservationPetsRepository): Response
     {
         return $this->render('test/adoption_pets/index.twig', [
-            'adoption_pets' => $adoptionPetsRepository->findAll(),
+            'adoption_pets' => $conservationPetsRepository->findAll(),
         ]);
     }
 
@@ -30,20 +30,20 @@ class AdoptionPetsTestController extends Controller
      */
     public function new(Request $request): Response
     {
-        $adoptionPet = new AdoptionPets();
-        $form = $this->createForm(AdoptionPetsType::class, $adoptionPet);
+        $conservationPet = new ConservationPets();
+        $form = $this->createForm(ConservationPetsType::class, $conservationPet);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($adoptionPet);
+            $entityManager->persist($conservationPet);
             $entityManager->flush();
 
             return $this->redirectToRoute('adoption_pets_index');
         }
 
         return $this->render('test/adoption_pets/new.twig', [
-            'adoption_pet' => $adoptionPet,
+            'adoption_pet' => $conservationPet,
             'form' => $form->createView(),
         ]);
     }
@@ -51,19 +51,19 @@ class AdoptionPetsTestController extends Controller
     /**
      * @Route("/{id}", name="adoption_pets_show", methods={"GET"})
      */
-    public function show(AdoptionPets $adoptionPet): Response
+    public function show(ConservationPets $conservationPet): Response
     {
         return $this->render('test/adoption_pets/show.twig', [
-            'adoption_pet' => $adoptionPet,
+            'adoption_pet' => $conservationPet,
         ]);
     }
 
     /**
      * @Route("/{id}/edit", name="adoption_pets_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, AdoptionPets $adoptionPet): Response
+    public function edit(Request $request, ConservationPets $conservationPet): Response
     {
-        $form = $this->createForm(AdoptionPetsType::class, $adoptionPet);
+        $form = $this->createForm(ConservationPetsType::class, $conservationPet);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -73,7 +73,7 @@ class AdoptionPetsTestController extends Controller
         }
 
         return $this->render('test/adoption_pets/edit.twig', [
-            'adoption_pet' => $adoptionPet,
+            'adoption_pet' => $conservationPet,
             'form' => $form->createView(),
         ]);
     }
@@ -81,11 +81,11 @@ class AdoptionPetsTestController extends Controller
     /**
      * @Route("/{id}", name="adoption_pets_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, AdoptionPets $adoptionPet): Response
+    public function delete(Request $request, ConservationPets $conservationPet): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$adoptionPet->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$conservationPet->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($adoptionPet);
+            $entityManager->remove($conservationPet);
             $entityManager->flush();
         }
 

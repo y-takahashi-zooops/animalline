@@ -37,12 +37,12 @@ class Breeders
     private $owner_kana;
 
     /**
-     * @ORM\Column(name="breeder_house_tel", type="string", length=10, nullable=true)
+     * @ORM\Column(name="breeder_house_tel", type="string", length=11, nullable=true)
      */
     private $breeder_house_tel;
 
     /**
-     * @ORM\Column(name="breeder_house_fax", type="string", length=10, nullable=true)
+     * @ORM\Column(name="breeder_house_fax", type="string", length=11, nullable=true)
      */
     private $breeder_house_fax;
 
@@ -231,7 +231,24 @@ class Breeders
      */
     private $email;
 
-    private $discriminator_type;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
+    private $create_date;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
+     */
+    private $update_date;
+
+    /**
+     * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
+     */
+    private $thumbnail_path;
 
     public function getId(): ?int
     {
@@ -742,14 +759,42 @@ class Breeders
         return $this;
     }
 
-    public function getDiscriminatorType(): ?string
+    public function getThumbnailPath(): ?string
     {
-        return $this->discriminator_type;
+        return $this->thumbnail_path;
     }
 
-    public function setDiscriminatorType(?string $discriminator_type): self
+    public function setThumbnailPath(string $thumbnail_path): self
     {
-        $this->discriminator_type = $discriminator_type;
+        $this->thumbnail_path = $thumbnail_path;
+
+        return $this;
+    }
+
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->create_date = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Set updateDate.
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Payment
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->update_date = $updateDate;
 
         return $this;
     }

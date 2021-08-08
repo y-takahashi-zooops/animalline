@@ -2,7 +2,7 @@
 
 namespace Customize\Repository;
 
-use Customize\Entity\AdoptionPets;
+use Customize\Entity\ConservationPets;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -12,15 +12,15 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method AdoptionPets[]    findAll()
  * @method AdoptionPets[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AdoptionPetsRepository extends ServiceEntityRepository
+class ConservationPetsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, AdoptionPets::class);
+        parent::__construct($registry, ConservationPets::class);
     }
 
     // /**
-    //  * @return AdoptionPets[] Returns an array of AdoptionPets objects
+    //  * @return ConservationPets[] Returns an array of ConservationPets objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class AdoptionPetsRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?AdoptionPets
+    public function findOneBySomeField($value): ?ConservationPets
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.exampleField = :val')
