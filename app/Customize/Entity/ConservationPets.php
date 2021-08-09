@@ -113,10 +113,10 @@ class ConservationPets
     private $release_date;
 
     /**
-    * @var \DateTime
-    *
-    * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
-    */
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
     private $create_date;
 
     /**
@@ -146,16 +146,21 @@ class ConservationPets
         return $this->id;
     }
 
-    public function getBreederId(): ?int
-    {
-        return $this->breeder_id;
-    }
+    /**
+     * @ORM\Column(name="price", type="integer")
+     */
+    private $price;
 
-    public function setBreederId(int $breeder_id): self
+    public function setPrice(int $price): self
     {
-        $this->breeder_id = $breeder_id;
+        $this->price = $price;
 
         return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
     }
 
     public function getPetKind(): ?int
@@ -325,7 +330,7 @@ class ConservationPets
 
         return $this;
     }
-    
+
     /**
      * Set createDate.
      *

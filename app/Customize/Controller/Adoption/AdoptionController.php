@@ -13,7 +13,6 @@
 
 namespace Customize\Controller\Adoption;
 
-use Customize\Repository\ConservationPetsRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -106,19 +105,19 @@ class AdoptionController extends AbstractController
             throw new HttpException\NotFoundHttpException();
         }
 
+        $images = $conservationPet->getConservationPetImages();
+
         $pref = '';
-        $conservation = $this->conservationsRepository->find($conservationPet->getBreederId());
+        $conservation = $this->conservationsRepository->find($conservationPet->getConservationId());
         if($conservation) $pref = $conservation->getConservationHousePref();
 
         $name = '';
         $breed = $this->breedsRepository->find($conservationPet->getBreedsType());
         if ($breed) $name = $breed->getBreedsName();
 
-        $coatColor = $this->coatColorsRepository->findOneBy(['id' => $conservationPet->getCoatColor()])->getCoatColorName();
+        $coatColor = $conservationPet->getCoatColor2()->getCoatColorName();
 
-        //var_dump($conservationPet->getCoatColor2()->getCoatColorName());
-
-        return $this->render('animalline/adoption/pet/detail.twig', ['conservationPet' => $conservationPet, 'coatColor' => $coatColor, 'pref' => $pref, 'name' => $name]);
+        return $this->render('animalline/adoption/pet/detail.twig', ['conservationPet' => $conservationPet, 'coatColor' => $coatColor, 'pref' => $pref, 'name' => $name, 'images' => $images]);
     }
 
     /**
