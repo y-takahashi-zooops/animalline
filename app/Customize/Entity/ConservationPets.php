@@ -3,6 +3,8 @@
 namespace Customize\Entity;
 
 use Customize\Repository\ConservationPetsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,9 +24,10 @@ class ConservationPets
     private $id;
 
     /**
-     * @ORM\Column(name="breeder_id", type="integer")
+     * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="conservationPets")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $breeder_id;
+    private $conservation_id;
 
     /**
      * @ORM\Column(name="pet_kind", type="smallint")
@@ -91,11 +94,11 @@ class ConservationPets
      */
     private $release_date;
 
-     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
-     */
+    /**
+    * @var \DateTime
+    *
+    * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+    */
     private $create_date;
 
     /**
@@ -109,6 +112,16 @@ class ConservationPets
      * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
      */
     private $thumbnail_path;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ConservationPetImage::class, mappedBy="conservation_pet_id", orphanRemoval=true)
+     */
+    private $conservationPetImages;
+
+    public function __construct()
+    {
+        $this->conservationPetImages = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -319,6 +332,48 @@ class ConservationPets
     public function setUpdateDate($updateDate)
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ConservationPetImage[]
+     */
+    public function getConservationPetImages(): Collection
+    {
+        return $this->conservationPetImages;
+    }
+
+    public function addConservationPetImage(ConservationPetImage $conservationPetImage): self
+    {
+        if (!$this->conservationPetImages->contains($conservationPetImage)) {
+            $this->conservationPetImages[] = $conservationPetImage;
+            $conservationPetImage->setConservationPetId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConservationPetImage(ConservationPetImage $conservationPetImage): self
+    {
+        if ($this->conservationPetImages->removeElement($conservationPetImage)) {
+            // set the owning side to null (unless already changed)
+            if ($conservationPetImage->getConservationPetId() === $this) {
+                $conservationPetImage->setConservationPetId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getConservationId(): ?Conservations
+    {
+        return $this->conservation_id;
+    }
+
+    public function setConservationId(?Conservations $conservation_id): self
+    {
+        $this->conservation_id = $conservation_id;
 
         return $this;
     }
