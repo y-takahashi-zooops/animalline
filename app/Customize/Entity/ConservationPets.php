@@ -4,6 +4,7 @@ namespace Customize\Entity;
 
 use Customize\Repository\ConservationPetsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Customize\Entity\CoatColors;
 
 /**
  * @ORM\Entity(repositoryClass=ConservationPetsRepository::class)
@@ -52,6 +53,23 @@ class ConservationPets
     private $coat_color;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\CoatColors", inversedBy="conservationPets")
+     */
+    private $coatColor;
+
+    public function getCoatColor2(): ?CoatColors
+    {
+        return $this->coatColor;
+    }
+
+    public function setCoatColor2(?CoatColors $coatColor): self
+    {
+        $this->coatColor = $coatColor;
+
+        return $this;
+    }
+
+    /**
      * @ORM\Column(name="future_wait", type="smallint")
      */
     private $future_wait;
@@ -82,7 +100,7 @@ class ConservationPets
     private $delivery_way;
 
     /**
-     * @ORM\Column(name="release_status", type="smallint", options={"default" = 0})
+     * @ORM\Column(name="release_status", type="smallint", options={"default" = 0}, nullable=true)
      */
     private $release_status;
 

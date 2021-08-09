@@ -17,17 +17,49 @@ use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\ConservationsRepository;
+use Customize\Repository\BreedsRepository;
+use Customize\Repository\CoatColorsRepository;
+use Symfony\Component\HttpKernel\Exception as HttpException;
 
 class AdoptionController extends AbstractController
 {
+    /**
+     * @var ConservationPetsRepository
+     */
+    protected $conservationPetsRepository;
+
+    /**
+     * @var ConservationRepository
+     */
+    protected $conservationRepository;
+
+    /**
+     * @var BreedsRepository
+     */
+    protected $breedsRepository;
+
+    /**
+     * @var CoatColorsRepository
+     */
+    protected $coatColorsRepository;
+
      /**
      * AdoptionController constructor.
      *
      * @param 
      */
     public function __construct(
+        ConservationPetsRepository $conservationPetsRepository,
+        ConservationsRepository $conservationsRepository,
+        BreedsRepository $breedsRepository,
+        CoatColorsRepository $coatColorsRepository
     ) {
+        $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->conservationsRepository = $conservationsRepository;
+        $this->breedsRepository = $breedsRepository;
+        $this->coatColorsRepository = $coatColorsRepository;
     }
 
     /**
@@ -60,7 +92,26 @@ class AdoptionController extends AbstractController
      */
     public function petDetail(Request $request)
     {
-        return;
+        $id = $request->get('id');
+
+        $conservationPet = $this->conservationPetsRepository->findOneBy(['id' => $id]);
+        if (is_null($conservationPet)) {
+            throw new HttpException\NotFoundHttpException();
+        }
+
+        $pref = '';
+        $conservation = $this->conservationsRepository->find($conservationPet->getBreederId());
+        if($conservation) $pref = $conservation->getConservationHousePref();
+
+        $name = '';
+        $breed = $this->breedsRepository->find($conservationPet->getBreedsType());
+        if ($breed) $name = $breed->getBreedsName();
+
+        $coatColor = $this->coatColorsRepository->findOneBy(['id' => $conservationPet->getCoatColor()])->getCoatColorName();
+
+        //var_dump($conservationPet->getCoatColor2()->getCoatColorName());
+
+        return $this->render('animalline/adoption/pet/detail.twig', ['conservationPet' => $conservationPet, 'coatColor' => $coatColor, 'pref' => $pref, 'name' => $name]);
     }
 
     /**

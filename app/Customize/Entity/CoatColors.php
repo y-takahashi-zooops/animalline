@@ -4,6 +4,9 @@ namespace Customize\Entity;
 
 use Customize\Repository\CoatColorsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Customize\Entity\ConservationPets;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Table(name="alm_coat_colors")
@@ -49,6 +52,24 @@ class CoatColors
      * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
     private $update_date;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationPets", mappedBy="coatColor")
+     */
+    private $conservationPets;
+
+    public function __construct()
+    {
+        $this->conservationPets = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|ConservationPets[]
+     */
+    public function getConservationPets(): Collection
+    {
+        return $this->conservationPets;
+    }
 
     public function getId(): ?int
     {
