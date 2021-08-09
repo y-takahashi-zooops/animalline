@@ -15,11 +15,11 @@ class ConservationPetsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('breeder_id', IntegerType::class)
+            ->add('conservation_id', IntegerType::class)
             ->add('pet_kind', IntegerType::class)
             ->add('breeds_type', IntegerType::class)
             ->add('pet_sex', IntegerType::class)
-            ->add('pet_birthday',DateType::class)
+            ->add('pet_birthday', DateType::class)
             ->add('coat_color', IntegerType::class)
             ->add('future_wait', IntegerType::class)
             ->add('dna_check_result', IntegerType::class)

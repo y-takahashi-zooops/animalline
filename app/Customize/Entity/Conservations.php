@@ -3,6 +3,8 @@
 namespace Customize\Entity;
 
 use Customize\Repository\ConservationsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -196,6 +198,16 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
      */
     private $thumbnail_path;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ConservationPets::class, mappedBy="conservation_id", orphanRemoval=true)
+     */
+    private $conservationPets;
+
+    public function __construct()
+    {
+        $this->conservationPets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -663,4 +675,33 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
+    /**
+     * @return Collection|ConservationPets[]
+     */
+    public function getConservationPets(): Collection
+    {
+        return $this->conservationPets;
+    }
+
+    public function addConservationPet(ConservationPets $conservationPet): self
+    {
+        if (!$this->conservationPets->contains($conservationPet)) {
+            $this->conservationPets[] = $conservationPet;
+            $conservationPet->setConservationId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConservationPet(ConservationPets $conservationPet): self
+    {
+        if ($this->conservationPets->removeElement($conservationPet)) {
+            // set the owning side to null (unless already changed)
+            if ($conservationPet->getConservationId() === $this) {
+                $conservationPet->setConservationId(null);
+            }
+        }
+
+        return $this;
+    }
 }

@@ -22,9 +22,10 @@ class ConservationPetImage
     private $id;
 
     /**
-     * @ORM\Column(name="conservation_id", type="integer")
+     * @ORM\ManyToOne(targetEntity=ConservationPets::class, inversedBy="conservationPetImages")
+     * @ORM\JoinColumn(name="conservation_pet_id", nullable=false)
      */
-    private $conservation_id;
+    private $conservation_pet_id;
 
     /**
      * @ORM\Column(name="image_type", type="smallint")
@@ -90,6 +91,18 @@ class ConservationPetImage
     public function setSortOrder(int $sort_order): self
     {
         $this->sort_order = $sort_order;
+
+        return $this;
+    }
+
+    public function getConservationPetId(): ?ConservationPets
+    {
+        return $this->conservation_pet_id;
+    }
+
+    public function setConservationPetId(?ConservationPets $conservation_pet_id): self
+    {
+        $this->conservation_pet_id = $conservation_pet_id;
 
         return $this;
     }

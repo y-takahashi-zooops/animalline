@@ -26,7 +26,7 @@ class ConservationPetImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('conservation_id', IntegerType::class)
+            ->add('conservation_pet_id', IntegerType::class)
             ->add('image_type', IntegerType::class)
             ->add('image_uri', TextType::class, [
                 'constraints' => [
