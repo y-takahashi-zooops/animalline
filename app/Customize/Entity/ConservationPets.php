@@ -314,12 +314,12 @@ class ConservationPets
         return $this;
     }
 
-    public function getReleaseDate(): ?date
+    public function getReleaseDate(): ?\DateTimeInterface
     {
         return $this->release_date;
     }
 
-    public function setReleaseDate(date $release_date): self
+    public function setReleaseDate(\DateTimeInterface $release_date): self
     {
         $this->release_date = $release_date;
 

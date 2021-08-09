@@ -47,5 +47,17 @@
     {{ form_widget(form.delivery_way) }}
     {{ form_errors(form.delivery_way) }}
 
+    {{ form_label(form.thumbnail_path, 'Thumbnail path', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.thumbnail_path) }}
+    {{ form_errors(form.thumbnail_path) }}
+
+    {{ form_label(form.release_status, 'Release status', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.release_status) }}
+    {{ form_errors(form.release_status) }}
+
+    {{ form_label(form.release_date, 'Release date', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.release_date) }}
+    {{ form_errors(form.release_date) }}
+
 <button class="btn btn-info">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
