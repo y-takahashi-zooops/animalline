@@ -6,7 +6,7 @@ use Customize\Entity\Conservations;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Eccube\Util\StringUtil;
-use Eccube\Entity\Master\CustomerStatus;
+use Customize\Config\AnilineConf;
 
 /**
  * @method Conservations|null find($id, $lockMode = null, $lockVersion = null)
@@ -57,12 +57,8 @@ class ConservationsRepository extends ServiceEntityRepository
      */
     public function newConservation()
     {
-        $CustomerStatus = $this->getEntityManager()
-            ->find(CustomerStatus::class, CustomerStatus::PROVISIONAL);
-
         $Conservation = new \Customize\Entity\Conservations();
-        $Conservation
-            ->setStatus($CustomerStatus);
+        $Conservation->setRegisterStatusId(AnilineConf::ANILINE_REGISTER_STATUS_PROVISIONAL);
 
         return $Conservation;
     }

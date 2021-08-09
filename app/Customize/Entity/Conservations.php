@@ -5,6 +5,7 @@ namespace Customize\Entity;
 use Customize\Repository\ConservationsRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Customize\Config\AnilineConf;
 
 /**
  * @ORM\Table(name="alm_conservations")
@@ -158,12 +159,6 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $password;
 
     /**
-     * @var \Eccube\Entity\Master\CustomerStatus
-     *
-     * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\CustomerStatus")
-     * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="customer_status_id", referencedColumnName="id")
-     * })
      * @ORM\Column(name="register_status_id", type="smallint", length=5, nullable=true)
      */
     private $register_status_id;
@@ -526,22 +521,13 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    /**
-     * Set status.
-     * @param \Eccube\Entity\Master\CustomerStatus|null $status
-     */
-    public function setRegisterStatusId(\Eccube\Entity\Master\CustomerStatus $register_status_id = null)
+    public function setRegisterStatusId(int $register_status_id)
     {
         $this->register_status_id = $register_status_id;
 
         return $this;
     }
 
-    /**
-     * Get status.
-     *
-     * @return \Eccube\Entity\Master\CustomerStatus|null
-     */
     public function getRegisterStatusId()
     {
         return $this->register_status_id;

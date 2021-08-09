@@ -7,12 +7,10 @@ use Customize\Form\Type\AdoptionEntryType;
 use Customize\Form\Type\AdoptionLoginType;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\BaseInfo;
-use Eccube\Entity\Master\CustomerStatus;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Eccube\Repository\BaseInfoRepository;
-use Eccube\Repository\Master\CustomerStatusRepository;
 use Customize\Service\MailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,11 +31,6 @@ use Customize\Config\AnilineConf;
 
 class EntryController extends AbstractController
 {
-    /**
-     * @var CustomerStatusRepository
-     */
-    protected $customerStatusRepository;
-
     /**
      * @var ValidatorInterface
      */
@@ -76,7 +69,6 @@ class EntryController extends AbstractController
     /**
      * EntryController constructor.
      *
-     * @param CustomerStatusRepository $customerStatusRepository
      * @param MailService $mailService
      * @param BaseInfoRepository $baseInfoRepository
      * @param EncoderFactoryInterface $encoderFactory
@@ -86,7 +78,6 @@ class EntryController extends AbstractController
      * @param ConservationsRepository $conservationsRepository
      */
     public function __construct(
-        CustomerStatusRepository $customerStatusRepository,
         MailService $mailService,
         BaseInfoRepository $baseInfoRepository,
         EncoderFactoryInterface $encoderFactory,
@@ -95,7 +86,6 @@ class EntryController extends AbstractController
         EventDispatcherInterface $eventDispatcher,
         ConservationsRepository $conservationsRepository
     ) {
-        $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->encoderFactory = $encoderFactory;
@@ -109,7 +99,7 @@ class EntryController extends AbstractController
      * 会員登録画面.
      *
      * @Route("/adoption/configration/entry", name="adoption_entry")
-     * @Template("animalline/adoption/entry/index.twig")
+     * @Template("animalline/adoption/configration/entry/index.twig")
      */
     public function index(Request $request)
     {
@@ -179,7 +169,7 @@ class EntryController extends AbstractController
      * 会員登録完了画面.
      *
      * @Route("/adoption/configration/entry/complete", name="adoption_entry_complete")
-     * @Template("animalline/adoption/entry/complete.twig")
+     * @Template("animalline/adoption/configration/entry/complete.twig")
      */
     public function complete()
     {
@@ -190,7 +180,7 @@ class EntryController extends AbstractController
      * 会員のアクティベート（本会員化）を行う.
      *
      * @Route("/adoption/configration/entry/activate/{secret_key}", name="adoption_entry_activate")
-     * @Template("animalline/adoption/entry/activate.twig")
+     * @Template("animalline/adoption/configration/entry/activate.twig")
      */
     public function activate(Request $request, $secret_key)
     {
@@ -282,14 +272,13 @@ class EntryController extends AbstractController
             throw new HttpException\NotFoundHttpException();
         }
 
-        $CustomerStatus = $this->customerStatusRepository->find(CustomerStatus::REGULAR);
-        $Status = $Conservation->getRegisterStatusId();
+        $register_status_id = $Conservation->getRegisterStatusId();
 
         // すでに会員の場合は何もしない
-        if ($Status == $CustomerStatus) {
+        if ($register_status_id == AnilineConf::ANILINE_REGISTER_STATUS_ACTIVE) {
             return 0;
         }
-        $Conservation->setRegisterStatusId($CustomerStatus);
+        $Conservation->setRegisterStatusId(AnilineConf::ANILINE_REGISTER_STATUS_ACTIVE);
         $this->entityManager->persist($Conservation);
         $this->entityManager->flush();
 

@@ -13,7 +13,7 @@
 
 namespace Customize\Security\Core\User;
 
-use Eccube\Entity\Master\CustomerStatus;
+use Customize\Config\AnilineConf;
 use Customize\Entity\Conservations;
 use Customize\Repository\ConservationsRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -49,7 +49,7 @@ class AdoptionProvider implements UserProviderInterface
     {
         $Conservation = $this->conservationsRepository->findOneBy([
             'email' => $username,
-            'Status' => CustomerStatus::REGULAR,
+            'register_status_id' => AnilineConf::ANILINE_REGISTER_STATUS_ACTIVE,
         ]);
 
         if (null === $Conservation) {

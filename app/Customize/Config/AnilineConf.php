@@ -9,6 +9,11 @@ final class AnilineConf {
     //画像の配置場所のベースディレクトリ
     const ANILINE_IMAGE_URL_BASE = 'html/upload/save_image';
 
+    //登録ステータス
+    const ANILINE_REGISTER_STATUS_PROVISIONAL = 1;
+    const ANILINE_REGISTER_STATUS_ACTIVE = 2;
+    const ANILINE_REGISTER_STATUS_EXIT = 3;
+
     //ペット種別
     const ANILINE_PET_KIND_DOG = 1;
     const ANILINE_PET_KIND_CAT = 2;
