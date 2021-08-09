@@ -13,9 +13,11 @@
 
 namespace Customize\Controller\Adoption;
 
+use Customize\Repository\ConservationPetsRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -47,9 +49,14 @@ class AdoptionController extends AbstractController
      * @Route("/adoption/pet/search/result", name="adoption_pet_search_result")
      * @Template("animalline/adoption/pet/search_result.twig")
      */
-    public function petSearchResult(Request $request)
+    public function petSearchResult(Request $request, ConservationPetsRepository $conservationPetsRepository): Response
     {
-        return;
+        return $this->render('animalline/adoption/pet/search_result.twig', [
+            'pets' => $conservationPetsRepository->findBy(
+                ['release_status' => 1],
+                ['release_date' => 'DESC']
+            ),
+        ]);
     }
 
     /**
