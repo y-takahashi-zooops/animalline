@@ -121,7 +121,7 @@ class AdoptionController extends AbstractController
     /**
      * マイページ.
      *
-     * @Route("/adoption/mypage", name="adoption_mypage")
+     * @Route("/adoption/configration/mypage", name="adoption_mypage")
      * @Template("animalline/adoption/mypage.twig")
      */
     public function mypage(Request $request)
