@@ -19,7 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Knp\Component\Pager\PaginatorInterface;
 
 class AdoptionController extends AbstractController
 {
@@ -49,14 +49,24 @@ class AdoptionController extends AbstractController
      * @Route("/adoption/pet/search/result", name="adoption_pet_search_result")
      * @Template("animalline/adoption/pet/search_result.twig")
      */
-    public function petSearchResult(Request $request, ConservationPetsRepository $conservationPetsRepository): Response
+    public function petSearchResult(PaginatorInterface $paginator, Request $request, ConservationPetsRepository $conservationPetsRepository): Response
     {
-        return $this->render('animalline/adoption/pet/search_result.twig', [
-            'pets' => $conservationPetsRepository->findBy(
-                ['release_status' => 1],
-                ['release_date' => 'DESC']
-            ),
-        ]);
+        $query = $conservationPetsRepository->findBy(
+            ['release_status' => 1]
+        );
+        $pets = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            1,
+        );
+
+        return $this->render('animalline/adoption/pet/search_result.twig', ['pets'=>$pets]);
+//        return $this->render('animalline/adoption/pet/search_result.twig', [
+//            'pets' => $conservationPetsRepository->findBy(
+//                ['release_status' => 1],
+//                ['release_date' => 'DESC']
+//            ),
+//        ]);
     }
 
     /**
