@@ -14,6 +14,7 @@
 namespace Customize\Controller\Adoption;
 
 
+use Customize\Config\AnilineConf;
 use Customize\Repository\ConservationPetsRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
@@ -42,7 +43,8 @@ class AdoptionController extends AbstractController
      */
     public function __construct(
         ConservationPetsRepository $conservationPetsRepository
-    ) {
+    )
+    {
         $this->conservationPetsRepository = $conservationPetsRepository;
     }
 
@@ -72,7 +74,7 @@ class AdoptionController extends AbstractController
         $pets = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            4
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
         return $this->render('animalline/adoption/pet/search_result.twig', ['pets' => $pets]);

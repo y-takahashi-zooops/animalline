@@ -21,4 +21,6 @@ final class AnilineConf {
     //ペット性別
     const ANILINE_PET_SEX_MALE = 1;
     const ANILINE_PET_SEX_FEMALE = 2;
+
+    const ANILINE_NUMBER_ITEM_PER_PAGE = 12;
 }
