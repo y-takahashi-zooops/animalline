@@ -166,23 +166,23 @@
             </div>
             <div class="main-container col-sm-10">
                 <div class="sub-title">
-                    <h2>柴犬（標準）</h2>
+                    <h2>{{ name }}</h2>
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <img src="{{ asset('assets/img/thumbnail.png') }}" class="card-img-top" alt="...">
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[0].imageUri ?? '/no_image_product.png') }}" class="card-img-top" alt="...">
                         <div class="d-block d-sm-none m-2 p-2"></div>
                     </div>
                     <div class="col-6 col-sm-3">
-                        <img src="{{ asset('assets/img/thumbnail.png') }}" class="card-img-top w-100" alt="...">
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[1].imageUri ?? '/no_image_product.png') }}" class="card-img-top w-100" alt="...">
                         <div class="m-2 p-2"></div>
-                        <img src="{{ asset('assets/img/thumbnail.png') }}" class="card-img-top w-100" alt="...">
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[2].imageUri ?? '/no_image_product.png') }}" class="card-img-top w-100" alt="...">
                     </div>
                     <div class="col-6 col-sm-3">
-                        <img src="{{ asset('assets/img/thumbnail.png') }}" class="card-img-top w-100" alt="...">
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[3].imageUri ?? '/no_image_product.png') }}" class="card-img-top w-100" alt="...">
                         <div class="m-2 p-2"></div>
-                        <img src="{{ asset('assets/img/thumbnail.png') }}" class="card-img-top w-100" alt="...">
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[4].imageUri ?? '/no_image_product.png') }}" class="card-img-top w-100" alt="...">
                     </div>
                 </div>
                 <div class="m-2 p-2"></div>
@@ -192,25 +192,25 @@
                             <tbody>
                             <tr>
                                 <th scope="row" class="text-align-center">犬種</th>
-                                <td class="color-gray-500">柴犬（標準）</td>
+                                <td class="color-gray-500">{{ name }}</td>
                                 <th scope="row" class="text-align-center">性別</th>
-                                <td class="color-gray-500">男の子</td>
+                                <td class="color-gray-500">{{ conservationPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? 'オス' : 'メス' }}</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">見学地域</th>
-                                <td class="color-gray-500">埼玉県和光市</td>
+                                <td class="color-gray-500">{{ pref }}</td>
                                 <th scope="row" class="text-align-center">誕生日</th>
-                                <td class="color-gray-500">2020年00月00日</td>
+                                <td class="color-gray-500">{{ conservationPet.petBirthday().format('Y年m月d日') }}</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">色</th>
-                                <td class="color-gray-500">茶</td>
+                                <td class="color-gray-500">{{ coatColor }}</td>
                                 <th scope="row" class="text-align-center">成犬時予想</th>
-                                <td class="color-gray-500">体重：35~50kg　体高：60~70cm</td>
+                                <td class="color-gray-500">{{ conservationPet.futureWait() }}kg</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">PR</th>
-                                <td colspan="2" class="color-gray-500">かわいい元気な子です！かわいい元気な子です！</td>
+                                <td colspan="2" class="color-gray-500">{{ conservationPet.prComment() }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -219,7 +219,7 @@
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="price-container col-12">
-                        <h2>200,000円（税込）</h2>
+                        <h2>{{ conservationPet.price }}</h2>
                     </div>
                 </div>
                 <div class="m-2 p-2"></div>
@@ -239,12 +239,7 @@
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-12">
-                        <p>テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。</p>
+                        <p>{{ conservationPet.description() }}</p>
                     </div>
                 </div>
                 <div class="m-2 p-2"></div>

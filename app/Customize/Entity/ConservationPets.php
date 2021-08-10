@@ -3,6 +3,8 @@
 namespace Customize\Entity;
 
 use Customize\Repository\ConservationPetsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,15 +24,21 @@ class ConservationPets
     private $id;
 
     /**
-     * @ORM\Column(name="breeder_id", type="integer")
+     * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="conservationPets")
+     * @ORM\JoinColumn(name="conservation_id", nullable=false)
      */
-    private $breeder_id;
+    private $conservation_id;
 
     /**
      * @ORM\Column(name="pet_kind", type="smallint")
      */
     private $pet_kind;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeds", inversedBy="conservationPets")
+     * @ORM\JoinColumn(name="breeds_type", nullable=true)
+     */
+    private $breeds_type;
 
     /**
      * @ORM\Column(name="pet_sex", type="smallint")
@@ -43,7 +51,8 @@ class ConservationPets
     private $pet_birthday;
 
     /**
-     * @ORM\Column(name="coat_color", type="integer")
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\CoatColors", inversedBy="conservationPets")
+     * @ORM\JoinColumn(name="coat_color", nullable=true)
      */
     private $coat_color;
 
@@ -78,7 +87,7 @@ class ConservationPets
     private $delivery_way;
 
     /**
-     * @ORM\Column(name="release_status", type="smallint", options={"default" = 0})
+     * @ORM\Column(name="release_status", type="smallint", options={"default" = 0}, nullable=true)
      */
     private $release_status;
 
@@ -87,7 +96,7 @@ class ConservationPets
      */
     private $release_date;
 
-     /**
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
@@ -107,31 +116,23 @@ class ConservationPets
     private $thumbnail_path;
 
     /**
-     * @ORM\Column(name="price", type="integer", nullable=true)
+     * @ORM\Column(name="price", type="integer")
      */
     private $price;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Breeds::class, inversedBy="conservationPets")
-     * @ORM\JoinColumn(name="breeds_type", nullable=false)
+     * @ORM\OneToMany(targetEntity=ConservationPetImage::class, mappedBy="conservation_pet_id", orphanRemoval=true)
      */
-    private $breeds_type;
+    private $conservationPetImages;
+
+    public function __construct()
+    {
+        $this->conservationPetImages = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getBreederId(): ?int
-    {
-        return $this->breeder_id;
-    }
-
-    public function setBreederId(int $breeder_id): self
-    {
-        $this->breeder_id = $breeder_id;
-
-        return $this;
     }
 
     public function getPetKind(): ?int
@@ -142,6 +143,18 @@ class ConservationPets
     public function setPetKind(int $pet_kind): self
     {
         $this->pet_kind = $pet_kind;
+
+        return $this;
+    }
+
+    public function getBreedsType(): ?Breeds
+    {
+        return $this->breeds_type;
+    }
+
+    public function setBreedsType(Breeds $breeds_type): self
+    {
+        $this->breeds_type = $breeds_type;
 
         return $this;
     }
@@ -170,12 +183,12 @@ class ConservationPets
         return $this;
     }
 
-    public function getCoatColor(): ?int
+    public function getCoatColor(): ?CoatColors
     {
         return $this->coat_color;
     }
 
-    public function setCoatColor(int $coat_color): self
+    public function setCoatColor(?CoatColors $coat_color): self
     {
         $this->coat_color = $coat_color;
 
@@ -289,7 +302,7 @@ class ConservationPets
 
         return $this;
     }
-    
+
     /**
      * Set createDate.
      *
@@ -330,14 +343,44 @@ class ConservationPets
         return $this;
     }
 
-    public function getBreedsType(): ?Breeds
+    /**
+     * @return Collection|ConservationPetImage[]
+     */
+    public function getConservationPetImages(): Collection
     {
-        return $this->breeds_type;
+        return $this->conservationPetImages;
     }
 
-    public function setBreedsType(?Breeds $breeds_type): self
+    public function addConservationPetImage(ConservationPetImage $conservationPetImage): self
     {
-        $this->breeds_type = $breeds_type;
+        if (!$this->conservationPetImages->contains($conservationPetImage)) {
+            $this->conservationPetImages[] = $conservationPetImage;
+            $conservationPetImage->setConservationPetId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConservationPetImage(ConservationPetImage $conservationPetImage): self
+    {
+        if ($this->conservationPetImages->removeElement($conservationPetImage)) {
+            // set the owning side to null (unless already changed)
+            if ($conservationPetImage->getConservationPetId() === $this) {
+                $conservationPetImage->setConservationPetId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getConservationId(): ?Conservations
+    {
+        return $this->conservation_id;
+    }
+
+    public function setConservationId(?Conservations $conservation_id): self
+    {
+        $this->conservation_id = $conservation_id;
 
         return $this;
     }
