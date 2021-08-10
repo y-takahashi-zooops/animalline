@@ -36,7 +36,8 @@ class ConservationPets
     private $pet_kind;
 
     /**
-     * @ORM\Column(name="breeds_type", type="integer")
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeds", inversedBy="conservationPets")
+     * @ORM\JoinColumn(name="breeds_type", nullable=true)
      */
     private $breeds_type;
 
@@ -51,26 +52,10 @@ class ConservationPets
     private $pet_birthday;
 
     /**
-     * @ORM\Column(name="coat_color", type="integer")
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\CoatColors", inversedBy="conservationPets")
+     * @ORM\JoinColumn(name="coat_color", nullable=true)
      */
     private $coat_color;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Customize\Entity\CoatColors", inversedBy="conservationPets")
-     */
-    private $coatColor;
-
-    public function getCoatColor2(): ?CoatColors
-    {
-        return $this->coatColor;
-    }
-
-    public function setCoatColor2(?CoatColors $coatColor): self
-    {
-        $this->coatColor = $coatColor;
-
-        return $this;
-    }
 
     /**
      * @ORM\Column(name="future_wait", type="smallint")
@@ -163,12 +148,12 @@ class ConservationPets
         return $this;
     }
 
-    public function getBreedsType(): ?int
+    public function getBreedsType(): ?Breeds
     {
         return $this->breeds_type;
     }
 
-    public function setBreedsType(int $breeds_type): self
+    public function setBreedsType(Breeds $breeds_type): self
     {
         $this->breeds_type = $breeds_type;
 
@@ -199,12 +184,12 @@ class ConservationPets
         return $this;
     }
 
-    public function getCoatColor(): ?int
+    public function getCoatColor(): ?CoatColors
     {
         return $this->coat_color;
     }
 
-    public function setCoatColor(int $coat_color): self
+    public function setCoatColor(?CoatColors $coat_color): self
     {
         $this->coat_color = $coat_color;
 

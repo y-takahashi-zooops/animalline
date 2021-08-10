@@ -4,7 +4,6 @@ namespace Customize\Entity;
 
 use Customize\Repository\CoatColorsRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Customize\Entity\ConservationPets;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -61,14 +60,6 @@ class CoatColors
     public function __construct()
     {
         $this->conservationPets = new ArrayCollection();
-    }
-
-    /**
-     * @return Collection|ConservationPets[]
-     */
-    public function getConservationPets(): Collection
-    {
-        return $this->conservationPets;
     }
 
     public function getId(): ?int
@@ -138,5 +129,10 @@ class CoatColors
         $this->update_date = $updateDate;
 
         return $this;
+    }
+
+    public function getConservationPets(): Collection
+    {
+        return $this->conservationPets;
     }
 }
