@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <ul class="d-flex align-items-center">
-                    {% if is_granted('ROLE_USER') %}
+                    {% if is_granted('ROLE_ADOPTION_USER') %}
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center font-size-18" href={{url('adoption_mypage')}}>
                                 <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
