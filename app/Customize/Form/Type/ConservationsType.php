@@ -4,15 +4,15 @@ namespace Customize\Form\Type;
 
 use Customize\Entity\Conservations;
 use Eccube\Common\EccubeConfig;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Eccube\Form\Validator\Email;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Validator\Constraints as Assert;
-use Eccube\Form\Validator\Email;
 
 class ConservationsType extends AbstractType
 {
@@ -32,7 +32,7 @@ class ConservationsType extends AbstractType
             ->add('user_id', IntegerType::class, [
                 'required' => false,
             ])
-            ->add('adoption_house_name', TextType::class, [
+            ->add('conservation_house_name', TextType::class, [
                 'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
@@ -65,7 +65,7 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('adoption_house_zip', TextType::class, [
+            ->add('conservation_house_zip', TextType::class, [
                 'required' => false,
                 'attr' => [
                     'maxlength' => 7,
@@ -76,7 +76,7 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('adoption_house_pref', TextType::class, [
+            ->add('conservation_house_pref', TextType::class, [
                 'required' => false,
                 'attr' => [
                     'maxlength' => 10,
@@ -87,7 +87,7 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('adoption_house_city', TextType::class, [
+            ->add('conservation_house_city', TextType::class, [
                 'required' => false,
                 'constraints' => [
                     new Assert\Length([
@@ -95,7 +95,7 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('adoption_house_address', TextType::class, [
+            ->add('conservation_house_address', TextType::class, [
                 'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
@@ -106,7 +106,7 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('adoption_house_building', TextType::class, [
+            ->add('conservation_house_building', TextType::class, [
                 'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
@@ -117,7 +117,7 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('adoption_house_tel', TextType::class, [
+            ->add('conservation_house_tel', TextType::class, [
                 'required' => false,
                 'attr' => [
                     'maxlength' => 10,
@@ -128,7 +128,7 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('adoption_house_fax', TextType::class, [
+            ->add('conservation_house_fax', TextType::class, [
                 'required' => false,
                 'attr' => [
                     'maxlength' => 10,
@@ -182,7 +182,7 @@ class ConservationsType extends AbstractType
             ->add('cage_size', IntegerType::class, [
                 'required' => false,
             ])
-            ->add('adoption_exp_year', IntegerType::class, [
+            ->add('conservation_exp_year', IntegerType::class, [
                 'required' => false,
             ])
             ->add('staff_count_1', IntegerType::class, [
@@ -230,6 +230,16 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('secret_key', TextType::class, [
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                ]
+            ])
+            ->add('thumbnail_path', TextType::class, [
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
