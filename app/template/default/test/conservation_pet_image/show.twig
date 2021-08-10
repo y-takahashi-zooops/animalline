@@ -1,0 +1,33 @@
+{% set site_type = 'adoption' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <h1>ConservationPetImage</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ conservation_pet_image.id }}</td>
+            </tr>
+            <tr>
+                <th>Image_type</th>
+                <td>{{ conservation_pet_image.imageType }}</td>
+            </tr>
+            <tr>
+                <th>Image_uri</th>
+                <td>{{ conservation_pet_image.imageUri }}</td>
+            </tr>
+            <tr>
+                <th>Sort_order</th>
+                <td>{{ conservation_pet_image.sortOrder }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('conservation_pet_image_index') }}">back to list</a>
+
+    <a href="{{ path('conservation_pet_image_edit', {'id': conservation_pet_image.id}) }}">edit</a>
+
+    {{ include('test/conservation_pet_image/_delete_form.twig') }}
+{% endblock %}
