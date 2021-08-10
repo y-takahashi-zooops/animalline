@@ -17,17 +17,19 @@ use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Eccube\Event\EccubeEvents;
+use Eccube\Event\EventArgs;
+use Customize\Form\Type\ConservationContactType;
 
 class AdoptionController extends AbstractController
 {
-     /**
+    /**
      * AdoptionController constructor.
      *
      * @param 
      */
-    public function __construct(
-    ) {
+    public function __construct()
+    {
     }
 
     /**
@@ -127,5 +129,52 @@ class AdoptionController extends AbstractController
     public function mypage(Request $request)
     {
         return;
+    }
+
+    /**
+     * お問い合わせ.
+     *
+     * @Route("/adoption/member/contact/{pet_id}", name="adpotion_contact", requirements={"pet_id" = "\d+"})
+     * @Template("/animalline/adoption/contact.twig")
+     */
+    public function contact(Request $request)
+    {
+
+        $builder = $this->formFactory->createBuilder(ConservationContactType::class);
+
+        // if ($this->isGranted('ROLE_ADOPTION_USER')) {
+        //     /** @var Customer $user */
+        //     $user = $this->getUser();
+        //     $builder->setData(
+        //         [
+        //             'name01' => $user->getName01(),
+        //             'name02' => $user->getName02(),
+        //             'kana01' => $user->getKana01(),
+        //             'kana02' => $user->getKana02(),
+        //             'postal_code' => $user->getPostalCode(),
+        //             'pref' => $user->getPref(),
+        //             'addr01' => $user->getAddr01(),
+        //             'addr02' => $user->getAddr02(),
+        //             'phone_number' => $user->getPhoneNumber(),
+        //             'email' => $user->getEmail(),
+        //         ]
+        //     );
+        // }
+
+        // FRONT_CONTACT_INDEX_INITIALIZE
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);      
+
+        return [
+            'form' => $form->createView(),
+        ];
     }
 }

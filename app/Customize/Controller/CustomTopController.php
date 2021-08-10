@@ -74,27 +74,26 @@ class CustomTopController extends AbstractController
      */
     public function contact(Request $request)
     {
-
         $builder = $this->formFactory->createBuilder(ContactType::class);
 
-        // if ($this->isGranted('ROLE_ADOPTION_USER')) {
-        //     /** @var Customer $user */
-        //     $user = $this->getUser();
-        //     $builder->setData(
-        //         [
-        //             'name01' => $user->getName01(),
-        //             'name02' => $user->getName02(),
-        //             'kana01' => $user->getKana01(),
-        //             'kana02' => $user->getKana02(),
-        //             'postal_code' => $user->getPostalCode(),
-        //             'pref' => $user->getPref(),
-        //             'addr01' => $user->getAddr01(),
-        //             'addr02' => $user->getAddr02(),
-        //             'phone_number' => $user->getPhoneNumber(),
-        //             'email' => $user->getEmail(),
-        //         ]
-        //     );
-        // }
+        if ($this->isGranted('ROLE_ADOPTION_USER')) {
+            /** @var Customer $user */
+            $user = $this->getUser();
+            $builder->setData(
+                [
+                    'name01' => $user->getName01(),
+                    'name02' => $user->getName02(),
+                    'kana01' => $user->getKana01(),
+                    'kana02' => $user->getKana02(),
+                    'postal_code' => $user->getPostalCode(),
+                    'pref' => $user->getPref(),
+                    'addr01' => $user->getAddr01(),
+                    'addr02' => $user->getAddr02(),
+                    'phone_number' => $user->getPhoneNumber(),
+                    'email' => $user->getEmail(),
+                ]
+            );
+        }
 
         // FRONT_CONTACT_INDEX_INITIALIZE
         $event = new EventArgs(

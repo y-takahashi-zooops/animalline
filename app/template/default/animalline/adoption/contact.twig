@@ -1,0 +1,99 @@
+{% set site_type = 'adoption' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <div class="ec-contactRole">
+        <div class="ec-pageHeader">
+            <h1>{{ 'お問い合わせ'|trans }}</h1>
+        </div>
+        <div class="ec-off1Grid">
+            <div class="ec-off1Grid__cell">
+                <form method="post" action="{{url('adpotion_contact', {'pet_id': '1'}) }}" class="h-adr" novalidate>
+                    <span class="p-country-name" style="display:none;">Japan</span>
+                    {{ form_widget(form._token) }}
+                    {# <p class="ec-para-normal font-size-18">
+                        {{ '内容によっては回答をさしあげるのにお時間をいただくこともございます。'|trans|nl2br }}
+                    </p> #}
+                    <div class="ec-borderedDefs">
+                        <dl>
+                            <dt>
+                                {{ form_label(form.contact_type, 'お問い合わせ内容', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.contact_type) ? ' error' }}">
+                                    {{ form_widget(form.contact_type) }}
+                                    {{ form_errors(form.contact_type) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.contact_title, 'タイトル', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.contact_title) ? ' error' }}">
+                                    {{ form_widget(form.contact_title) }}
+                                    {{ form_errors(form.contact_title) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.contact_description, '内容', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.contact_description) ? ' error' }}">
+                                    {{ form_widget(form.contact_description) }}
+                                    {{ form_errors(form.contact_description) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.booking_request, '見学希望日', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.booking_request) ? ' error' }}">
+                                    {{ form_widget(form.booking_request) }}
+                                    {{ form_errors(form.booking_request) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        {# エンティティ拡張の自動出力 #}
+                        {% for f in form if f.vars.eccube_form_options.auto_render %}
+                            {% if f.vars.eccube_form_options.form_theme %}
+                                {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                {{ form_row(f) }}
+                            {% else %}
+                                <dl>
+                                    <dt>
+                                        {{ form_label(f) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="{{ f.vars.eccube_form_options.style_class }}{{ has_errors(f) ? ' error' }}">
+                                            {{ form_widget(f) }}
+                                            {{ form_errors(f) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="ec-RegisterRole__actions">
+                        <div class="ec-off4Grid">
+                            <div class="ec-off4Grid__cell">
+                                {# <button type="submit" class="ec-blockBtn--action" name="mode" value="confirm">{{ '確認ページへ'|trans }} #}
+                                <button type="submit" class="basic-btn adoption-btn" name="mode" value="">{{ '確認ページへ'|trans }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

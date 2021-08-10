@@ -2,20 +2,19 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
+
     <div class="ec-contactRole">
         <div class="ec-pageHeader">
             <h1>{{ 'お問い合わせ'|trans }}</h1>
         </div>
         <div class="ec-off1Grid">
             <div class="ec-off1Grid__cell">
-                <form method="post" action="{{ url('ani_contact') }}" class="h-adr" novalidate>
+                <form method="post" action="{{ url('contact') }}" class="h-adr" novalidate>
                     <span class="p-country-name" style="display:none;">Japan</span>
                     {{ form_widget(form._token) }}
-                    <p class="ec-para-normal font-size-18">
-                        {# {{ '内容によっては回答をさしあげるのにお時間をいただくこともございます。
-                        また、休業日は翌営業日以降の対応となりますのでご了承ください。'|trans|nl2br }} #}
-                        {{ '内容によっては回答をさしあげるのにお時間をいただくこともございます。'|trans|nl2br }}
-                    </p>
+                    <p class="ec-para-normal">{{ '内容によっては回答をさしあげるのにお時間をいただくこともございます。
+また、休業日は翌営業日以降の対応となりますのでご了承ください。
+'|trans|nl2br }}</p>
                     <div class="ec-borderedDefs">
                         <dl>
                             <dt>
@@ -106,7 +105,7 @@
                                     {{ form_widget(form.contents) }}
                                     {{ form_errors(form.contents) }}
                                 </div>
-                                {# <p>{{ 'ご注文に関するお問い合わせには、必ず「ご注文番号」をご記入くださいますようお願いいたします。'|trans }}</p> #}
+                                <p>{{ 'ご注文に関するお問い合わせには、必ず「ご注文番号」をご記入くださいますようお願いいたします。'|trans }}</p>
                             </dd>
                         </dl>
                         {# エンティティ拡張の自動出力 #}
@@ -132,8 +131,7 @@
                     <div class="ec-RegisterRole__actions">
                         <div class="ec-off4Grid">
                             <div class="ec-off4Grid__cell">
-                                {# <button type="submit" class="ec-blockBtn--action" name="mode" value="confirm">{{ '確認ページへ'|trans }} #}
-                                <button type="submit" class="basic-btn adoption-btn" name="mode" value="">{{ '確認ページへ'|trans }}
+                                <button type="submit" class="basic-btn adoption-btn" name="mode" value="confirm">{{ '確認ページへ'|trans }}
                                 </button>
                             </div>
                         </div>
