@@ -9,7 +9,7 @@
         <thead>
         <tr>
                 <th>Id</th>
-                <th>Breeder_id</th>
+                <th>Conservation_house_name</th>
                 <th>Pet_kind</th>
                 <th>Breeds_type</th>
                 <th>Pet_sex</th>
@@ -28,12 +28,12 @@
         {% for adoption_pet in adoption_pets %}
             <tr>
                 <td>{{ adoption_pet.id }}</td>
-                <td>{{ adoption_pet.conservationId }}</td>
+                <td>{{ adoption_pet.conservationId.getConservationHouseName ?? '' }}</td>
                 <td>{{ adoption_pet.petKind }}</td>
-                <td>{{ adoption_pet.breedsType }}</td>
+                <td>{{ adoption_pet.breedsType.getBreedsName ?? '' }}</td>
                 <td>{{ adoption_pet.petSex }}</td>
                 <td>{{ adoption_pet.petBirthday ? adoption_pet.petBirthday|date('Y-m-d') : '' }}</td>
-                <td>{{ adoption_pet.coatColor }}</td>
+                <td>{{ adoption_pet.coatColor.getCoatColorName ?? '' }}</td>
                 <td>{{ adoption_pet.futureWait }}</td>
                 <td>{{ adoption_pet.dnaCheckResult }}</td>
                 <td>{{ adoption_pet.prComment }}</td>
