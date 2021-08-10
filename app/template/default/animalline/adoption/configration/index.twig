@@ -1,0 +1,34 @@
+{% set site_type = 'adoption' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    ダッシュボード<div class="main">
+    <div class="row">
+        <div class="main-container col-12">
+            <div class="sub-title">
+                <h1>保護団体名 - 管理ページ</h1>
+            </div>
+            <div class="m-2 p-2"></div>
+            <div class="sub-title d-flex justify-content-between align-items-end">
+                <h2>交渉中のお取引</h2>
+            </div>
+            <div class="m-1 p-1"></div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-sm-flex justify-content-between py-3 border adoption-border rounded">
+                        <div class="ml-5">
+                            <h3>送信ユーザー名</h3>
+                            <h3><a href={{url('adoption_configration_messages')}}>１通目のお問い合わせ送信時のメッセージタイトル</a></h3>
+                        </div>
+                        <h4 class="mr-sm-5 ml-5">返信日時：2021年00月00日　10:00</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

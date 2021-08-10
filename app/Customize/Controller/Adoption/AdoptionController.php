@@ -157,15 +157,48 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * マイページ.
+     * 保護団体管理ページTOP
      *
-     * @Route("/adoption/configration/mypage", name="adoption_mypage")
-     * @Template("animalline/adoption/mypage.twig")
+     * @Route("/adoption/configration/configration", name="adoption_configration")
+     * @Template("animalline/adoption/configration/index.twig")
      */
-    public function mypage(Request $request)
+    public function adoption_configration(Request $request)
     {
         return;
     }
+    /**
+     * 保護団体管理ページ - 取引メッセージ履歴
+     *
+     * @Route("/adoption/member/message", name="adoption_configration_messages")
+     * @Template("animalline/adoption/configration/message.twig")
+     */
+    public function adoption_configration_message(Request $request)
+    {
+        return;
+    }
+
+    /**
+     * 保護団体用ユーザーページ
+     *
+     * @Route("/adoption/member/", name="adoption_mypage")
+     * @Template("animalline/adoption/member/index.twig")
+     */
+    public function adoption_mypage(Request $request)
+    {
+        return;
+    }
+
+    /**
+     * 保護団体用ユーザーページ - 取引メッセージ履歴
+     *
+     * @Route("/adoption/member/message", name="adoption_mypage_messages")
+     * @Template("animalline/adoption/member/message.twig")
+     */
+    public function adoption_message(Request $request)
+    {
+        return;
+    }
+
 
     /**
      * お問い合わせ.

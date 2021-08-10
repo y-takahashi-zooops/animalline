@@ -1,0 +1,70 @@
+{% set site_type = 'adoption' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+<div class="main">
+        <div class="row">
+            <div class="main-container col-12">
+                <div class="sub-title">
+                    <h1>取引履歴 - ユーザー名</h1>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="sub-title d-flex justify-content-between align-items-end">
+                    <h2>１通目のメッセージタイトル</h2>
+                </div>
+                <div class="m-1 p-1"></div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
+                            <div class="ml-5">
+                                ユーザーから保護団体に向けたメッセージ（時系列）
+                            </div>
+                            <h4 class="mr-sm-5 ml-5">送信日時：2021年00月00日　10:00</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-1 p-1"></div>
+                <div class="row">
+                    <div class="col-7 px-5">
+                        <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
+                            <div class="ml-5">
+                                メッセージに対する保護団体からの返信
+                            </div>
+                            <h4 class="mr-sm-5 ml-5">送信日時：2021年00月00日　10:00</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-1 p-1"></div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
+                            <div class="ml-5">
+                                保護団体からのメッセージに対する返信
+                            </div>
+                            <h4 class="mr-sm-5 ml-5">送信日時：2021年00月00日　10:00</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-1 p-1"></div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
+                            <div class="px-4">
+                                返信内容
+                            </div>
+                            <div class="px-4">
+                                <textarea class="col-6" rows="5">返信メッセージ</textarea>
+                                <button type="submit" class="ec-blockBtn--cancel">送信</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

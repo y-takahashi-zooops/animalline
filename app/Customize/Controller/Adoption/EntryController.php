@@ -106,7 +106,7 @@ class EntryController extends AbstractController
         if ($this->isGranted('ROLE_USER')) {
             log_info('認証済のためログイン処理をスキップ');
 
-            return $this->redirectToRoute('adoption_mypage');
+            return $this->redirectToRoute('adoption_configration');
         }
 
         /* @var $Conservations \Customize\Entity\Conservations */
@@ -220,7 +220,7 @@ class EntryController extends AbstractController
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             log_info('認証済のためログイン処理をスキップ');
 
-            return $this->redirectToRoute('adoption_mypage');
+            return $this->redirectToRoute('adoption_configration');
         }
 
         log_info('login処理開始');
