@@ -3,9 +3,9 @@
 namespace Customize\Entity;
 
 use Customize\Repository\BreedsRepository;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="alm_breeds")
@@ -131,8 +131,33 @@ class Breeds
         return $this;
     }
 
+    /**
+     * @return Collection|ConservationPets[]
+     */
     public function getConservationPets(): Collection
     {
         return $this->conservationPets;
+    }
+
+    public function addConservationPet(ConservationPets $conservationPet): self
+    {
+        if (!$this->conservationPets->contains($conservationPet)) {
+            $this->conservationPets[] = $conservationPet;
+            $conservationPet->setBreedsType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConservationPet(ConservationPets $conservationPet): self
+    {
+        if ($this->conservationPets->removeElement($conservationPet)) {
+            // set the owning side to null (unless already changed)
+            if ($conservationPet->getBreedsType() === $this) {
+                $conservationPet->setBreedsType(null);
+            }
+        }
+
+        return $this;
     }
 }

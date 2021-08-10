@@ -6,7 +6,6 @@ use Customize\Repository\ConservationPetsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Customize\Entity\CoatColors;
 
 /**
  * @ORM\Entity(repositoryClass=ConservationPetsRepository::class)

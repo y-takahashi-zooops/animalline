@@ -177,10 +177,11 @@
                         <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                             <div class="catalog-card">
                                 <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
-                                    <img src="{{ asset('assets/img/thumbnail.png') }}" class="card-img-top" alt="...">
+                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
+                                         class="card-img-top" alt="Pet-image">
                                 </a>
                                 <div class="card-body bg-white">
-                                    <h3 class="color-gray-500 font-weight-600">柴犬（標準）</h3>
+                                    <h3 class="color-gray-500 font-weight-600">{{ pet.getBreedsType().getBreedsName() }}</h3>
                                     <div class="m-4"></div>
                                     <div class="d-flex">
                                         <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
@@ -188,15 +189,16 @@
                                     </div>
                                     <div class="mb-2"></div>
                                     <div class="d-flex">
-                                        <h4 class="mr-3">埼玉県</h4>
-                                        <h4>茶色</h4>
+                                        <h4 class="mr-3">{{ pet.getConservationId().getConservationHousePref() }}</h4>
+                                        <h4>{{ pet.getCoatColor().getCoatColorName() }}</h4>
                                     </div>
                                     <div class="m-2"></div>
                                     <h4>{{ pet.prComment }}</h4>
                                     <div class="m-2"></div>
                                     <h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4>
                                     <div class="m-4"></div>
-                                    <h3 class="color-gray-500 font-weight-600">200,000<span>円（税込）</span></h3>
+                                    <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円（税込）</span>
+                                    </h3>
                                 </div>
                             </div>
                         </div>
@@ -205,17 +207,9 @@
                     {% endfor %}
                 </div>
                 <div class="m-2 p-2"></div>
-
-                <nav>
-                    <ul class="pagination pagination-lg justify-content-end">
-                        <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">前</a></li>
-                        <li class="page-item active"><a class="page-link" href="#">1<span class="sr-only">（現在位置）</span></a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">次</a></li>
-                    </ul>
-                </nav>
+                <div class="navigation">
+                    {{ knp_pagination_render(pets) }}
+                </div>
                 <div class="m-2 p-2"></div>
             </div>
         </div>
