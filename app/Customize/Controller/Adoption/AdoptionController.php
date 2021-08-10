@@ -13,21 +13,55 @@
 
 namespace Customize\Controller\Adoption;
 
+use Customize\Repository\BreedsRepository;
+use Customize\Repository\CoatColorsRepository;
+use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\ConservationsRepository;
 use Eccube\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
-
 
 class AdoptionController extends AbstractController
 {
-     /**
+    /**
+     * @var ConservationPetsRepository
+     */
+    protected $conservationPetsRepository;
+
+    /**
+     * @var ConservationRepository
+     */
+    protected $conservationRepository;
+
+    /**
+     * @var BreedsRepository
+     */
+    protected $breedsRepository;
+
+    /**
+     * @var CoatColorsRepository
+     */
+    protected $coatColorsRepository;
+
+    /**
      * AdoptionController constructor.
      *
-     * @param 
+     * @param
      */
     public function __construct(
+        ConservationPetsRepository $conservationPetsRepository,
+        ConservationsRepository $conservationsRepository,
+        BreedsRepository $breedsRepository,
+        CoatColorsRepository $coatColorsRepository
     ) {
+        $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->conservationsRepository = $conservationsRepository;
+        $this->breedsRepository = $breedsRepository;
+        $this->coatColorsRepository = $coatColorsRepository;
     }
 
     /**
@@ -47,9 +81,19 @@ class AdoptionController extends AbstractController
      * @Route("/adoption/pet/search/result", name="adoption_pet_search_result")
      * @Template("animalline/adoption/pet/search_result.twig")
      */
-    public function petSearchResult(Request $request)
+    public function petSearchResult(PaginatorInterface $paginator, Request $request, ConservationPetsRepository $conservationPetsRepository): Response
     {
-        return;
+        $query = $conservationPetsRepository->findBy(
+            ['release_status' => 1],
+            ['release_date' => 'DESC']
+        );
+        $pets = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            4
+        );
+
+        return $this->render('animalline/adoption/pet/search_result.twig', ['pets' => $pets]);
     }
 
     /**
@@ -60,7 +104,19 @@ class AdoptionController extends AbstractController
      */
     public function petDetail(Request $request)
     {
-        return;
+        $id = $request->get('id');
+
+        $conservationPet = $this->conservationPetsRepository->find($id);
+        if (!$conservationPet) {
+            throw new HttpException\NotFoundHttpException();
+        }
+
+        $images = $conservationPet->getConservationPetImages();
+
+        return $this->render(
+            'animalline/adoption/pet/detail.twig',
+            ['conservationPet' => $conservationPet, 'images' => $images]
+        );
     }
 
     /**
