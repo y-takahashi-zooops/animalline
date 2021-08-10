@@ -57,8 +57,7 @@ class AdoptionController extends AbstractController
         ConservationsRepository $conservationsRepository,
         BreedsRepository $breedsRepository,
         CoatColorsRepository $coatColorsRepository
-    )
-    {
+    ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationsRepository = $conservationsRepository;
         $this->breedsRepository = $breedsRepository;
@@ -107,17 +106,17 @@ class AdoptionController extends AbstractController
     {
         $id = $request->get('id');
 
-        $conservationPet = $this->conservationPetsRepository->findOneBy(['id' => $id]);
-        if (is_null($conservationPet)) {
+        $conservationPet = $this->conservationPetsRepository->find($id);
+        if (!$conservationPet) {
             throw new HttpException\NotFoundHttpException();
         }
 
         $images = $conservationPet->getConservationPetImages();
-        $pref = '';
-        $conservation = $this->conservationsRepository->find($conservationPet->getConservationId());
-        if ($conservation) $pref = $conservation->getConservationHousePref();
 
-        return $this->render('animalline/adoption/pet/detail.twig', ['conservationPet' => $conservationPet, 'pref' => $pref, 'images' => $images]);
+        return $this->render(
+            'animalline/adoption/pet/detail.twig',
+            ['conservationPet' => $conservationPet, 'images' => $images]
+        );
     }
 
     /**

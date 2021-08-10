@@ -198,7 +198,7 @@
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">見学地域</th>
-                                <td class="color-gray-500">{{ pref }}</td>
+                                <td class="color-gray-500">{{ conservationPet.getConservationId().getConservationHousePref() ?? '' }}</td>
                                 <th scope="row" class="text-align-center">誕生日</th>
                                 <td class="color-gray-500">{{ conservationPet.petBirthday.format('Y年m月d日') ?? '' }}</td>
                             </tr>
