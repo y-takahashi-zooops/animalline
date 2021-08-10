@@ -13,10 +13,8 @@
 
 namespace Customize\Controller\Adoption;
 
-use Customize\Repository\BreedsRepository;
-use Customize\Repository\CoatColorsRepository;
+
 use Customize\Repository\ConservationPetsRepository;
-use Customize\Repository\ConservationsRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -32,20 +30,6 @@ class AdoptionController extends AbstractController
      */
     protected $conservationPetsRepository;
 
-    /**
-     * @var ConservationRepository
-     */
-    protected $conservationRepository;
-
-    /**
-     * @var BreedsRepository
-     */
-    protected $breedsRepository;
-
-    /**
-     * @var CoatColorsRepository
-     */
-    protected $coatColorsRepository;
 
     /**
      * AdoptionController constructor.
@@ -53,15 +37,9 @@ class AdoptionController extends AbstractController
      * @param
      */
     public function __construct(
-        ConservationPetsRepository $conservationPetsRepository,
-        ConservationsRepository $conservationsRepository,
-        BreedsRepository $breedsRepository,
-        CoatColorsRepository $coatColorsRepository
+        ConservationPetsRepository $conservationPetsRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
-        $this->conservationsRepository = $conservationsRepository;
-        $this->breedsRepository = $breedsRepository;
-        $this->coatColorsRepository = $coatColorsRepository;
     }
 
     /**
