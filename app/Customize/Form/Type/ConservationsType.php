@@ -238,6 +238,16 @@ class ConservationsType extends AbstractType
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                 ]
+            ])
+            ->add('thumbnail_path', TextType::class, [
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                ]
             ]);
     }
 

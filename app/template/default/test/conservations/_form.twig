@@ -115,5 +115,9 @@
     {{ form_widget(form.secret_key) }}
     {{ form_errors(form.secret_key) }}
 
+    {{ form_label(form.thumbnail_path, 'Thumbnail path', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.thumbnail_path) }}
+    {{ form_errors(form.thumbnail_path) }}
+
 <button class="btn btn-info">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
