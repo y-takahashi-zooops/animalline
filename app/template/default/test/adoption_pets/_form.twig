@@ -59,5 +59,9 @@
     {{ form_widget(form.release_date) }}
     {{ form_errors(form.release_date) }}
 
+    {{ form_label(form.price, 'Price', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.price) }}
+    {{ form_errors(form.price) }}
+
 <button class="btn btn-info">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

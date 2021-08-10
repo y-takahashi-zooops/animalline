@@ -50,7 +50,8 @@ class ConservationPetsType extends AbstractType
                 ]
             ])
             ->add('release_status', IntegerType::class)
-            ->add('release_date', DateType::class);
+            ->add('release_date', DateType::class)
+            ->add('price', IntegerType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

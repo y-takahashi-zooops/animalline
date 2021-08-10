@@ -31,10 +31,6 @@ class ConservationPets
      */
     private $pet_kind;
 
-    /**
-     * @ORM\Column(name="breeds_type", type="integer")
-     */
-    private $breeds_type;
 
     /**
      * @ORM\Column(name="pet_sex", type="smallint")
@@ -110,6 +106,17 @@ class ConservationPets
      */
     private $thumbnail_path;
 
+    /**
+     * @ORM\Column(name="price", type="integer", nullable=true)
+     */
+    private $price;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Breeds::class, inversedBy="conservationPets")
+     * @ORM\JoinColumn(name="breeds_type", nullable=false)
+     */
+    private $breeds_type;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -135,18 +142,6 @@ class ConservationPets
     public function setPetKind(int $pet_kind): self
     {
         $this->pet_kind = $pet_kind;
-
-        return $this;
-    }
-
-    public function getBreedsType(): ?int
-    {
-        return $this->breeds_type;
-    }
-
-    public function setBreedsType(int $breeds_type): self
-    {
-        $this->breeds_type = $breeds_type;
 
         return $this;
     }
@@ -319,6 +314,30 @@ class ConservationPets
     public function setUpdateDate($updateDate)
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getBreedsType(): ?Breeds
+    {
+        return $this->breeds_type;
+    }
+
+    public function setBreedsType(?Breeds $breeds_type): self
+    {
+        $this->breeds_type = $breeds_type;
 
         return $this;
     }

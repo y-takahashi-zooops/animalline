@@ -57,7 +57,7 @@ class AdoptionController extends AbstractController
         $pets = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            1,
+            4,
         );
 
         return $this->render('animalline/adoption/pet/search_result.twig', ['pets'=>$pets]);

@@ -3,6 +3,8 @@
 namespace Customize\Entity;
 
 use Customize\Repository\BreedsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -49,6 +51,16 @@ class Breeds
      * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
     private $update_date;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ConservationPets::class, mappedBy="breeds_type")
+     */
+    private $conservationPets;
+
+    public function __construct()
+    {
+        $this->conservationPets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -115,6 +127,36 @@ class Breeds
     public function setUpdateDate($updateDate)
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ConservationPets[]
+     */
+    public function getConservationPets(): Collection
+    {
+        return $this->conservationPets;
+    }
+
+    public function addConservationPet(ConservationPets $conservationPet): self
+    {
+        if (!$this->conservationPets->contains($conservationPet)) {
+            $this->conservationPets[] = $conservationPet;
+            $conservationPet->setBreedsType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConservationPet(ConservationPets $conservationPet): self
+    {
+        if ($this->conservationPets->removeElement($conservationPet)) {
+            // set the owning side to null (unless already changed)
+            if ($conservationPet->getBreedsType() === $this) {
+                $conservationPet->setBreedsType(null);
+            }
+        }
 
         return $this;
     }
