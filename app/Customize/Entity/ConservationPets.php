@@ -26,7 +26,7 @@ class ConservationPets
 
     /**
      * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="conservationPets")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="conservation_id", nullable=false)
      */
     private $conservation_id;
 
@@ -132,6 +132,11 @@ class ConservationPets
     private $thumbnail_path;
 
     /**
+     * @ORM\Column(name="price", type="integer")
+     */
+    private $price;
+
+    /**
      * @ORM\OneToMany(targetEntity=ConservationPetImage::class, mappedBy="conservation_pet_id", orphanRemoval=true)
      */
     private $conservationPetImages;
@@ -144,23 +149,6 @@ class ConservationPets
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @ORM\Column(name="price", type="integer")
-     */
-    private $price;
-
-    public function setPrice(int $price): self
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    public function getPrice(): ?int
-    {
-        return $this->price;
     }
 
     public function getPetKind(): ?int
@@ -355,6 +343,18 @@ class ConservationPets
     public function setUpdateDate($updateDate)
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): self
+    {
+        $this->price = $price;
 
         return $this;
     }
