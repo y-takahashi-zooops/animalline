@@ -166,7 +166,7 @@
             </div>
             <div class="main-container col-sm-10">
                 <div class="sub-title">
-                    <h2>{{ name }}</h2>
+                    <h2>{{ conservationPet.breedsType.breedsName ?? '' }}</h2>
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="row">
@@ -192,7 +192,7 @@
                             <tbody>
                             <tr>
                                 <th scope="row" class="text-align-center">犬種</th>
-                                <td class="color-gray-500">{{ name }}</td>
+                                <td class="color-gray-500">{{ conservationPet.breedsType.breedsName ?? '' }}</td>
                                 <th scope="row" class="text-align-center">性別</th>
                                 <td class="color-gray-500">{{ conservationPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? 'オス' : 'メス' }}</td>
                             </tr>
@@ -200,17 +200,17 @@
                                 <th scope="row" class="text-align-center">見学地域</th>
                                 <td class="color-gray-500">{{ pref }}</td>
                                 <th scope="row" class="text-align-center">誕生日</th>
-                                <td class="color-gray-500">{{ conservationPet.petBirthday().format('Y年m月d日') }}</td>
+                                <td class="color-gray-500">{{ conservationPet.petBirthday.format('Y年m月d日') ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">色</th>
-                                <td class="color-gray-500">{{ coatColor }}</td>
+                                <td class="color-gray-500">{{ conservationPet.coatColor.coatColorName ?? '' }}</td>
                                 <th scope="row" class="text-align-center">成犬時予想</th>
-                                <td class="color-gray-500">{{ conservationPet.futureWait() }}kg</td>
+                                <td class="color-gray-500">{{ conservationPet.futureWait }}kg</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">PR</th>
-                                <td colspan="2" class="color-gray-500">{{ conservationPet.prComment() }}</td>
+                                <td colspan="2" class="color-gray-500">{{ conservationPet.prComment }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -239,7 +239,7 @@
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-12">
-                        <p>{{ conservationPet.description() }}</p>
+                        <p>{{ conservationPet.description }}</p>
                     </div>
                 </div>
                 <div class="m-2 p-2"></div>

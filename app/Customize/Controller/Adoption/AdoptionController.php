@@ -106,14 +106,11 @@ class AdoptionController extends AbstractController
         }
 
         $images = $conservationPet->getConservationPetImages();
-        $name = $conservationPet->getBreedsType()->getBreedsName();
-        $coatColor = $conservationPet->getCoatColor()->getCoatColorName();
-
         $pref = '';
         $conservation = $this->conservationsRepository->find($conservationPet->getConservationId());
         if ($conservation) $pref = $conservation->getConservationHousePref();
 
-        return $this->render('animalline/adoption/pet/detail.twig', ['conservationPet' => $conservationPet, 'coatColor' => $coatColor, 'pref' => $pref, 'name' => $name, 'images' => $images]);
+        return $this->render('animalline/adoption/pet/detail.twig', ['conservationPet' => $conservationPet, 'pref' => $pref, 'images' => $images]);
     }
 
     /**
