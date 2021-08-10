@@ -4,6 +4,8 @@ namespace Customize\Entity;
 
 use Customize\Repository\BreedsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Table(name="alm_breeds")
@@ -49,6 +51,16 @@ class Breeds
      * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
     private $update_date;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationPets", mappedBy="breeds_type")
+     */
+    private $conservationPets;
+
+    public function __construct()
+    {
+        $this->conservationPets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -117,5 +129,10 @@ class Breeds
         $this->update_date = $updateDate;
 
         return $this;
+    }
+
+    public function getConservationPets(): Collection
+    {
+        return $this->conservationPets;
     }
 }
