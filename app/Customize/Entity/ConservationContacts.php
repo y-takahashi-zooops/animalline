@@ -83,9 +83,9 @@ class ConservationContacts
     private $send_date;
 
     /**
-     * @ORM\Column(name="is_responce", type="smallint", options={"default" = 0})
+     * @ORM\Column(name="is_response", type="smallint", options={"default" = 0})
      */
-    private $is_responce;
+    private $is_response;
 
     /**
      * @ORM\Column(name="contract_status", type="smallint", options={"default" = 0})
@@ -234,14 +234,14 @@ class ConservationContacts
         return $this;
     }
 
-    public function getIsResponce(): ?int
+    public function getIsResponse(): ?int
     {
-        return $this->is_responce;
+        return $this->is_response;
     }
 
-    public function setIsResponce(int $is_responce): self
+    public function setIsResponse(int $is_response): self
     {
-        $this->is_responce = $is_responce;
+        $this->is_response = $is_response;
 
         return $this;
     }
