@@ -17,7 +17,40 @@
                     <div class="ec-borderedDefs">
                         <dl>
                             <dt>
-                                {{ form_label(form.contact_type, 'お問い合わせ内容', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                {{ form_label(form.conservation, '	保護団体ID', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.conservation) ? ' error' }}">
+                                    {{ form_widget(form.conservation) }}
+                                    {{ form_errors(form.conservation) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.message_from, 'メッセージ送信者', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.message_from) ? ' error' }}">
+                                    {{ form_widget(form.message_from) }}
+                                    {{ form_errors(form.message_from) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.pet, '問い合わせ対象ペットID', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.pet) ? ' error' }}">
+                                    {{ form_widget(form.pet) }}
+                                    {{ form_errors(form.pet) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.contact_type, 'コンタクト内容', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.contact_type) ? ' error' }}">
@@ -28,7 +61,7 @@
                         </dl>
                         <dl>
                             <dt>
-                                {{ form_label(form.contact_title, 'タイトル', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                {{ form_label(form.contact_title, 'コンタクト内容タイトル', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.contact_title) ? ' error' }}">
@@ -39,7 +72,7 @@
                         </dl>
                         <dl>
                             <dt>
-                                {{ form_label(form.contact_description, '内容', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                {{ form_label(form.contact_description, 'コンタクト内容本文', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.contact_description) ? ' error' }}">
@@ -56,6 +89,61 @@
                                 <div class="ec-input{{ has_errors(form.booking_request) ? ' error' }}">
                                     {{ form_widget(form.booking_request) }}
                                     {{ form_errors(form.booking_request) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.parent_message_id, '返信対象メッセージID', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.parent_message_id) ? ' error' }}">
+                                    {{ form_widget(form.parent_message_id) }}
+                                    {{ form_errors(form.parent_message_id) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.send_date, '	送信日時', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.send_date) ? ' error' }}">
+                                    {{ form_widget(form.send_date) }}
+                                    {{ form_errors(form.send_date) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.is_response, 'レスポンス受信フラグ', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.is_response) ? ' error' }}">
+                                    {{ form_widget(form.is_response) }}
+                                    {{ form_errors(form.is_response) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.contract_status, '見学希望メッセージに対する成約フラグ', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.contract_status) ? ' error' }}">
+                                    {{ form_widget(form.contract_status) }}
+                                    {{ form_errors(form.contract_status) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.reason, '非成約理由', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.reason) ? ' error' }}">
+                                    {{ form_widget(form.reason) }}
+                                    {{ form_errors(form.reason) }}
                                 </div>
                             </dd>
                         </dl>
