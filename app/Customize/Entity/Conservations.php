@@ -199,9 +199,15 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      */
     private $conservationPets;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ConservationContacts::class, mappedBy="conservation_id")
+     */
+    private $conservationContacts;
+
     public function __construct()
     {
         $this->conservationPets = new ArrayCollection();
+        $this->conservationContacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -685,6 +691,36 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
             // set the owning side to null (unless already changed)
             if ($conservationPet->getConservationId() === $this) {
                 $conservationPet->setConservationId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ConservationContacts[]
+     */
+    public function getConservationContacts(): Collection
+    {
+        return $this->conservationContacts;
+    }
+
+    public function addConservationContact(ConservationContacts $conservationContact): self
+    {
+        if (!$this->conservationContacts->contains($conservationContact)) {
+            $this->conservationContacts[] = $conservationContact;
+            $conservationContact->setConservationId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConservationContact(ConservationContacts $conservationContact): self
+    {
+        if ($this->conservationContacts->removeElement($conservationContact)) {
+            // set the owning side to null (unless already changed)
+            if ($conservationContact->getConservationId() === $this) {
+                $conservationContact->setConservationId(null);
             }
         }
 
