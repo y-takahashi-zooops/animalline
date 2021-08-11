@@ -47,8 +47,12 @@ class ConservationContactType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('conservation', IntegerType::class, [
-                'required' => false,
+            ->add('conservation', EntityType::class, [
+                'class'    => 'Customize\Entity\Conservations',
+                'choice_label'   => function(\Customize\Entity\Conservations $conservations){
+                    return $conservations->getId();
+                },
+                'required' => true,
             ])
             ->add('message_from', ChoiceType::class, [
                 'choices' =>
@@ -58,9 +62,6 @@ class ConservationContactType extends AbstractType
                     ],
                 'required' => true,
                 'expanded' => false,
-            ])
-            ->add('pet', IntegerType::class, [
-                'required' => false,
             ])
             ->add('contact_type', ChoiceType::class, [
                 'choices' =>
@@ -72,32 +73,9 @@ class ConservationContactType extends AbstractType
                 'required' => true,
                 'expanded' => false,
             ])
-            ->add('contact_title', TextType::class, [
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-            ])
-            ->add('contact_description', TextareaType::class, [
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-            ])
-            ->add('booking_request', TextType::class, [
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-            ])
-            ->add('parent_message_id', ChoiceType::class, [
-                'choices' =>
-                    [
-                        '新規' => 0,
-                    ],
-                'required' => true,
-                'expanded' => false,
-            ])
-            ->add('send_date', DateTimeType::class, [
-                'required' => true,
-            ])
+            ->add('contact_title', TextType::class)
+            ->add('contact_description', TextareaType::class)
+            ->add('booking_request', TextareaType::class)
             ->add('is_response', ChoiceType::class, [
                 'choices' =>
                     [
@@ -118,6 +96,9 @@ class ConservationContactType extends AbstractType
                 'expanded' => false,
             ])
             ->add('reason', IntegerType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
                 'required' => true,
             ]);
     }

@@ -8,7 +8,7 @@
         </div>
         <div class="ec-off1Grid">
             <div class="ec-off1Grid__cell">
-                <form method="post" action="{{url('adpotion_contact', {'pet_id': '1'}) }}" class="h-adr" novalidate>
+                <form method="post" action="{{url('adpotion_contact', {'pet_id': id}) }}" class="h-adr" novalidate>
                     <span class="p-country-name" style="display:none;">Japan</span>
                     {{ form_widget(form._token) }}
                     {# <p class="ec-para-normal font-size-18">
@@ -34,17 +34,6 @@
                                 <div class="ec-input{{ has_errors(form.message_from) ? ' error' }}">
                                     {{ form_widget(form.message_from) }}
                                     {{ form_errors(form.message_from) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.pet, '問い合わせ対象ペットID', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.pet) ? ' error' }}">
-                                    {{ form_widget(form.pet) }}
-                                    {{ form_errors(form.pet) }}
                                 </div>
                             </dd>
                         </dl>
@@ -89,28 +78,6 @@
                                 <div class="ec-input{{ has_errors(form.booking_request) ? ' error' }}">
                                     {{ form_widget(form.booking_request) }}
                                     {{ form_errors(form.booking_request) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.parent_message_id, '返信対象メッセージID', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.parent_message_id) ? ' error' }}">
-                                    {{ form_widget(form.parent_message_id) }}
-                                    {{ form_errors(form.parent_message_id) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.send_date, '	送信日時', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.send_date) ? ' error' }}">
-                                    {{ form_widget(form.send_date) }}
-                                    {{ form_errors(form.send_date) }}
                                 </div>
                             </dd>
                         </dl>

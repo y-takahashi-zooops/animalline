@@ -14,8 +14,12 @@
 namespace Customize\Controller\Adoption;
 
 
+use Carbon\Carbon;
 use Customize\Config\AnilineConf;
+use Customize\Entity\ConservationContacts;
+use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\ConservationsRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -35,6 +39,16 @@ class AdoptionController extends AbstractController
      */
     protected $conservationPetsRepository;
 
+    /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
+     * @var ConservationContactsRepository
+     */
+    protected $conservationContactsRepository;
+
 
     /**
      * AdoptionController constructor.
@@ -42,10 +56,14 @@ class AdoptionController extends AbstractController
      * @param
      */
     public function __construct(
-        ConservationPetsRepository $conservationPetsRepository
+        ConservationPetsRepository $conservationPetsRepository,
+        ConservationsRepository $conservationsRepository,
+        ConservationContactsRepository $conservationContactsRepository
     )
     {
         $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->conservationsRepository = $conservationsRepository;
+        $this->conservationContactsRepository = $conservationContactsRepository;
     }
 
     /**
@@ -210,8 +228,9 @@ class AdoptionController extends AbstractController
      */
     public function contact(Request $request)
     {
-
-        $builder = $this->formFactory->createBuilder(ConservationContactType::class);
+        $id = $request->get('pet_id');
+        $contact = new ConservationContacts();
+        $builder = $this->formFactory->createBuilder(ConservationContactType::class, $contact);
 
         // if ($this->isGranted('ROLE_ADOPTION_USER')) {
         //     /** @var Customer $user */
@@ -236,17 +255,34 @@ class AdoptionController extends AbstractController
         $event = new EventArgs(
             [
                 'builder' => $builder,
+                'contact' => $contact
             ],
             $request
         );
         $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
 
         $form = $builder->getForm();
-        $form->handleRequest($request);      
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $pet = $this->conservationPetsRepository->find($id);
+            if (!$pet) {
+                throw new HttpException\NotFoundHttpException();
+            }
+            $contact->setParentMessageId(0)
+                    ->setSendDate(Carbon::now())
+                    ->setPet($pet)
+                    ->setCustomer($this->getUser());
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($contact);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('adoption_pet_detail', ['id' => $id]);
+        }
 
         return [
             'form' => $form->createView(),
+            'id' => $id
         ];
     }
-
 }

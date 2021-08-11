@@ -26,7 +26,7 @@ class ConservationContacts
      *
      * @ORM\ManyToOne(targetEntity="Eccube\Entity\Customer")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $Customer;
@@ -34,7 +34,7 @@ class ConservationContacts
     /**
      * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="conservationContacts")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="conservation_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="conservation_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $Conservation;
@@ -47,7 +47,7 @@ class ConservationContacts
     /**
      * @ORM\ManyToOne(targetEntity=ConservationPets::class)
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="pet_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="pet_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $Pet;
