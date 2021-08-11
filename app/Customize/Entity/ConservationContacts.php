@@ -33,9 +33,11 @@ class ConservationContacts
 
     /**
      * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="conservationContacts")
-     * @ORM\JoinColumn(name="conservation_id", nullable=false)
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="conservation_id", referencedColumnName="id")
+     * })
      */
-    private $conservation_id;
+    private $Conservation;
 
     /**
      * @ORM\Column(name="message_from", type="smallint")
@@ -43,9 +45,12 @@ class ConservationContacts
     private $message_from;
 
     /**
-     * @ORM\Column(name="pet_id", type="integer")
+     * @ORM\ManyToOne(targetEntity=ConservationPets::class)
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="pet_id", referencedColumnName="id")
+     * })
      */
-    private $pet_id;
+    private $Pet;
 
     /**
      * @ORM\Column(name="contact_type", type="smallint")
@@ -121,14 +126,14 @@ class ConservationContacts
         return $this->Customer;
     }
 
-    public function getConservationId(): ?Conservations
+    public function getConservation(): ?Conservations
     {
-        return $this->conservation_id;
+        return $this->Conservation;
     }
 
-    public function setConservationId(?Conservations $conservation_id): self
+    public function setConservation(?Conservations $conservation): self
     {
-        $this->conservation_id = $conservation_id;
+        $this->Conservation = $conservation;
 
         return $this;
     }
@@ -145,14 +150,14 @@ class ConservationContacts
         return $this;
     }
 
-    public function getPetId(): ?int
+    public function getPet(): ?ConservationPets
     {
-        return $this->pet_id;
+        return $this->Pet;
     }
 
-    public function setPetId(int $pet_id): self
+    public function setPet(?ConservationPets $pet): self
     {
-        $this->pet_id = $pet_id;
+        $this->Pet = $pet;
 
         return $this;
     }
