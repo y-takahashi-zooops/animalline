@@ -6,45 +6,29 @@
         <div class="row">
             <div class="main-container col-12">
                 <div class="sub-title">
-                    <h1>取引履歴 - 保護団体名</h1>
+                    <h1>取引履歴 - {{ rootMessage.getConservation().getConservationHouseName() ?? '' }}</h1>
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="sub-title d-flex justify-content-between align-items-end">
-                    <h2>１通目のメッセージタイトル</h2>
+                    <h2>{{ rootMessage.contactTitle }}</h2>
                 </div>
-                <div class="m-1 p-1"></div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
-                            <div class="ml-5">
-                                自分から保護団体に向けたメッセージ（時系列）
+
+                {% for childMessage in childMessages %}
+                    <div class="m-1 p-1"></div>
+                    <div class="row">
+                        <div class="{{ childMessage.messageFrom == 1 ? 'col-6' : 'col-7 px-5' }}">
+                            <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
+                                <div class="ml-5">
+                                    {{ childMessage.contactDescription }}
+                                </div>
+                                <h4 class="mr-sm-5 ml-5">送信日時：{{ childMessage.sendDate.format('Y年m月d日　H:i') }}</h4>
                             </div>
-                            <h4 class="mr-sm-5 ml-5">送信日時：2021年00月00日　10:00</h4>
                         </div>
                     </div>
-                </div>
-                <div class="m-1 p-1"></div>
-                <div class="row">
-                    <div class="col-7 px-5">
-                        <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
-                            <div class="ml-5">
-                                メッセージに対する保護団体からの返信
-                            </div>
-                            <h4 class="mr-sm-5 ml-5">送信日時：2021年00月00日　10:00</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-1 p-1"></div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
-                            <div class="ml-5">
-                                保護団体からのメッセージに対する返信
-                            </div>
-                            <h4 class="mr-sm-5 ml-5">送信日時：2021年00月00日　10:00</h4>
-                        </div>
-                    </div>
-                </div>
+                {% else %}
+                    No message founds.
+                {% endfor %}
+
                 <div class="m-1 p-1"></div>
                 <div class="row">
                     <div class="col-6">
@@ -53,8 +37,10 @@
                                 返信内容
                             </div>
                             <div class="px-4">
-                                <textarea class="col-6" rows="5">返信メッセージ</textarea>
-                                <button type="submit" class="ec-blockBtn--cancel">送信</button>
+                                <form action="/adoption/member/message/{{ rootMessage.id }}" method="post">
+                                    <textarea class="col-12" rows="5" name="reply_message">返信メッセージ</textarea>
+                                    <button type="submit" class="ec-blockBtn--cancel">送信</button>
+                                </form>
                             </div>
                         </div>
                     </div>
