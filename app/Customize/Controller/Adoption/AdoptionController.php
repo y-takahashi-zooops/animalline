@@ -43,7 +43,6 @@ class AdoptionController extends AbstractController
      */
     protected $conservationContactsRepository;
 
-
     /**
      * @var ConservationsRepository
      */
@@ -179,22 +178,66 @@ class AdoptionController extends AbstractController
     /**
      * 保護団体管理ページTOP
      *
-     * @Route("/adoption/configration/configration", name="adoption_configration")
+     * @Route("/adoption/configration", name="adoption_configration")
      * @Template("animalline/adoption/configration/index.twig")
      */
     public function adoption_configration(Request $request)
     {
-        return;
+        $rootMessages = $this->conservationContactsRepository->findBy(
+            ['parent_message_id' => 0],
+            ['is_response' => 'ASC', 'send_date' => 'DESC']
+        );
+
+        return $this->render(
+            'animalline/adoption/configration/index.twig',
+            ['rootMessages' => $rootMessages]
+        );
     }
     /**
      * 保護団体管理ページ - 取引メッセージ履歴
      *
-     * @Route("/adoption/member/message", name="adoption_configration_messages")
+     * @Route("/adoption/configration/message/{contact_id}", name="adoption_configration_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/adoption/configration/message.twig")
      */
-    public function adoption_configration_message(Request $request)
+    public function adoption_configration_message(Request $request, $contact_id)
     {
-        return;
+        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $rootMessage = $this->conservationContactsRepository->find($contact_id);
+            if (!$rootMessage) {
+                throw new HttpException\NotFoundHttpException();
+            }
+
+            $description = $request->get('contact_description');
+
+            $conservationContact = new ConservationContacts();
+            $form = $this->createFormBuilder($conservationContact)->getForm();
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted()) {
+                $conservationContact->setConservation($this->getUser())
+                    ->setMessageFrom(2)
+                    ->setPet($rootMessage->getPet())
+                    ->setContactType(3)
+                    ->setContactDescription($description)
+                    ->setParentMessageId($contact_id)
+                    ->setSendDate(new DateTime())
+                    ->setIsResponse(1)
+                    ->setContractStatus(0)
+                    ->setReason(0);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($conservationContact);
+                $entityManager->flush();
+            }
+            $messages = $this->conservationContactsRepository->findBy(
+                ['parent_message_id' => $contact_id],
+                ['send_date' => 'ASC']
+            );
+            return $this->render('animalline/adoption/configration/message.twig', [
+                'rootMessage' => $rootMessage,
+                'messages' => $messages,
+                'form' => $form->createView()
+            ]);
+        }
     }
 
     /**
