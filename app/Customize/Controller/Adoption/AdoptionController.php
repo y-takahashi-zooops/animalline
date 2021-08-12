@@ -49,9 +49,10 @@ class AdoptionController extends AbstractController
      * @param ConservationContactsRepository $conservationContactsRepository
      */
     public function __construct(
-        ConservationPetsRepository $conservationPetsRepository,
+        ConservationPetsRepository     $conservationPetsRepository,
         ConservationContactsRepository $conservationContactsRepository
-    ) {
+    )
+    {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
     }
@@ -184,6 +185,7 @@ class AdoptionController extends AbstractController
             ['rootMessages' => $rootMessages]
         );
     }
+
     /**
      * 保護団体管理ページ - 取引メッセージ履歴
      *
@@ -263,7 +265,7 @@ class AdoptionController extends AbstractController
     public function adoption_message(Request $request)
     {
         $contactId = $request->get('contact_id');
-        $rootMessage = $this->conservationContactsRepository->findOneBy(['id' => $contactId, 'parent_message_id' =>  AnilineConf::ROOT_MESSAGE_ID]);
+        $rootMessage = $this->conservationContactsRepository->findOneBy(['id' => $contactId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
         if (!$rootMessage) {
             throw new HttpException\NotFoundHttpException();
         }
@@ -311,27 +313,6 @@ class AdoptionController extends AbstractController
         $id = $request->get('pet_id');
         $contact = new ConservationContacts();
         $builder = $this->formFactory->createBuilder(ConservationContactType::class, $contact);
-
-        // if ($this->isGranted('ROLE_ADOPTION_USER')) {
-        //     /** @var Customer $user */
-        //     $user = $this->getUser();
-        //     $builder->setData(
-        //         [
-        //             'name01' => $user->getName01(),
-        //             'name02' => $user->getName02(),
-        //             'kana01' => $user->getKana01(),
-        //             'kana02' => $user->getKana02(),
-        //             'postal_code' => $user->getPostalCode(),
-        //             'pref' => $user->getPref(),
-        //             'addr01' => $user->getAddr01(),
-        //             'addr02' => $user->getAddr02(),
-        //             'phone_number' => $user->getPhoneNumber(),
-        //             'email' => $user->getEmail(),
-        //         ]
-        //     );
-        // }
-
-        // FRONT_CONTACT_INDEX_INITIALIZE
         $event = new EventArgs(
             [
                 'builder' => $builder,

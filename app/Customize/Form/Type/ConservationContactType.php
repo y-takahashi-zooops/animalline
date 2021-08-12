@@ -13,6 +13,7 @@
 
 namespace Customize\Form\Type;
 
+use Customize\Config\AnilineConf;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Eccube\Common\EccubeConfig;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -60,8 +61,8 @@ class ConservationContactType extends AbstractType
             ->add('message_from', ChoiceType::class, [
                 'choices' =>
                     [
-                        'ユーザー' => 1,
-                        '保護団体' => 2,
+                        'ユーザー' => AnilineConf::MESSAGE_FROM_USER,
+                        '保護団体' => AnilineConf::MESSAGE_FROM_CONFIGURATION,
                     ],
                 'required' => true,
                 'expanded' => false,
@@ -69,9 +70,9 @@ class ConservationContactType extends AbstractType
             ->add('contact_type', ChoiceType::class, [
                 'choices' =>
                     [
-                        '問い合わせ' => 1,
-                        '見学希望' => 2,
-                        '返信' => 3,
+                        '問い合わせ' => AnilineConf::CONTACT_TYPE_INQUIRY,
+                        '見学希望' => AnilineConf::CONTACT_TYPE_VISIT_REQUEST,
+                        '返信' => AnilineConf::CONTACT_TYPE_REPLY,
                     ],
                 'required' => true,
                 'expanded' => false,
@@ -96,8 +97,8 @@ class ConservationContactType extends AbstractType
             ->add('is_response', ChoiceType::class, [
                 'choices' =>
                     [
-                        '未返信' => 0,
-                        '返信あり' => 1,
+                        '未返信' => AnilineConf::RESPONSE_UNREPLIED,
+                        '返信あり' => AnilineConf::RESPONSE_REPLIED,
                     ],
                 'required' => true,
                 'expanded' => false,
@@ -105,9 +106,9 @@ class ConservationContactType extends AbstractType
             ->add('contract_status', ChoiceType::class, [
                 'choices' =>
                     [
-                        '交渉中' => 0,
-                        '成約 ' => 1,
-                        '非成約' => 2,
+                        '交渉中' => AnilineConf::CONSTRACT_STATUS_UNDER_NEGOTIATION,
+                        '成約 ' => AnilineConf::CONSTRACT_STATUS_CONTRACT,
+                        '非成約' => AnilineConf::CONSTRACT_STATUS_NONCONTRACT,
                     ],
                 'required' => true,
                 'expanded' => false,
