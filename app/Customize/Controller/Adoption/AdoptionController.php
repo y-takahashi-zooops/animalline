@@ -13,9 +13,12 @@
 
 namespace Customize\Controller\Adoption;
 
-
+use Carbon\Carbon;
 use Customize\Config\AnilineConf;
+use Customize\Entity\ConservationContacts;
+use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\ConservationsRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -26,7 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\ConservationContactType;
-
+use DateTime;
 
 class AdoptionController extends AbstractController
 {
@@ -35,17 +38,31 @@ class AdoptionController extends AbstractController
      */
     protected $conservationPetsRepository;
 
+    /**
+     * @var ConservationContactsRepository
+     */
+    protected $conservationContactsRepository;
+
+    /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
 
     /**
      * AdoptionController constructor.
      *
-     * @param
+     * @param ConservationPetsRepository $conservationPetsRepository
+     * @param ConservationContactsRepository $conservationContactsRepository
+     * @param ConservationsRepository $conservationsRepository
      */
     public function __construct(
-        ConservationPetsRepository $conservationPetsRepository
-    )
-    {
+        ConservationPetsRepository $conservationPetsRepository,
+        ConservationContactsRepository $conservationContactsRepository,
+        ConservationsRepository $conservationsRepository
+    ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->conservationContactsRepository = $conservationContactsRepository;
+        $this->conservationsRepository = $conservationsRepository;
     }
 
     /**
@@ -161,22 +178,66 @@ class AdoptionController extends AbstractController
     /**
      * 保護団体管理ページTOP
      *
-     * @Route("/adoption/configration/configration", name="adoption_configration")
+     * @Route("/adoption/configration", name="adoption_configration")
      * @Template("animalline/adoption/configration/index.twig")
      */
     public function adoption_configration(Request $request)
     {
-        return;
+        $rootMessages = $this->conservationContactsRepository->findBy(
+            ['parent_message_id' => 0],
+            ['is_response' => 'ASC', 'send_date' => 'DESC']
+        );
+
+        return $this->render(
+            'animalline/adoption/configration/index.twig',
+            ['rootMessages' => $rootMessages]
+        );
     }
     /**
      * 保護団体管理ページ - 取引メッセージ履歴
      *
-     * @Route("/adoption/member/message", name="adoption_configration_messages")
+     * @Route("/adoption/configration/message/{contact_id}", name="adoption_configration_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/adoption/configration/message.twig")
      */
-    public function adoption_configration_message(Request $request)
+    public function adoption_configration_message(Request $request, $contact_id)
     {
-        return;
+        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $rootMessage = $this->conservationContactsRepository->find($contact_id);
+            if (!$rootMessage) {
+                throw new HttpException\NotFoundHttpException();
+            }
+
+            $description = $request->get('contact_description');
+
+            $conservationContact = new ConservationContacts();
+            $form = $this->createFormBuilder($conservationContact)->getForm();
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted()) {
+                $conservationContact->setConservation($this->getUser())
+                    ->setMessageFrom(2)
+                    ->setPet($rootMessage->getPet())
+                    ->setContactType(3)
+                    ->setContactDescription($description)
+                    ->setParentMessageId($contact_id)
+                    ->setSendDate(new DateTime())
+                    ->setIsResponse(1)
+                    ->setContractStatus(0)
+                    ->setReason(0);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($conservationContact);
+                $entityManager->flush();
+            }
+            $messages = $this->conservationContactsRepository->findBy(
+                ['parent_message_id' => $contact_id],
+                ['send_date' => 'ASC']
+            );
+            return $this->render('animalline/adoption/configration/message.twig', [
+                'rootMessage' => $rootMessage,
+                'messages' => $messages,
+                'form' => $form->createView()
+            ]);
+        }
     }
 
     /**
@@ -187,18 +248,66 @@ class AdoptionController extends AbstractController
      */
     public function adoption_mypage(Request $request)
     {
-        return;
+        $customerId = $this->getUser()->getId();
+        $parentMessageId = 0;
+        $rootMessages = $this->conservationContactsRepository->findBy(['Customer' => $customerId, 'parent_message_id' => $parentMessageId]);
+
+        $lastReplies = [];
+        foreach ($rootMessages as $rootMessage) {
+            $lastReply = $this->conservationContactsRepository->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
+            $lastReplies[$rootMessage->getId()] = $lastReply;
+        }
+
+        return $this->render('animalline/adoption/member/index.twig', [
+            'rootMessages' => $rootMessages,
+            'lastReplies' => $lastReplies
+        ]);
     }
 
     /**
      * 保護団体用ユーザーページ - 取引メッセージ履歴
      *
-     * @Route("/adoption/member/message", name="adoption_mypage_messages")
+     * @Route("/adoption/member/message/{contact_id}", name="adoption_mypage_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/adoption/member/message.twig")
      */
     public function adoption_message(Request $request)
     {
-        return;
+        $contactId = $request->get('contact_id');
+        $parentMessageId = 0;
+        $rootMessage = $this->conservationContactsRepository->findOneBy(['id' => $contactId, 'parent_message_id' => $parentMessageId]);
+        if (!$rootMessage) {
+            throw new HttpException\NotFoundHttpException();
+        }
+
+        $replyMessage = $request->get('reply_message');
+        if ($replyMessage) {
+            $conservationContact = (new ConservationContacts())
+                ->setCustomer($rootMessage->getCustomer())
+                ->setConservation($rootMessage->getConservation())
+                ->setMessageFrom(1)
+                ->setPet($rootMessage->getPet())
+                ->setContactType(3)
+                ->setContactDescription($replyMessage)
+                ->setParentMessageId($rootMessage->getId())
+                ->setSendDate(new DateTime())
+                ->setIsResponse(1)
+                ->setContractStatus(0)
+                ->setReason(0);
+
+            $rootMessage->setIsResponse(1);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($conservationContact);
+            $entityManager->persist($rootMessage);
+            $entityManager->flush();
+        }
+
+        $childMessages = $this->conservationContactsRepository->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
+
+        return $this->render('animalline/adoption/member/message.twig', [
+            'rootMessage' => $rootMessage,
+            'childMessages' => $childMessages
+        ]);
     }
 
 
@@ -210,8 +319,9 @@ class AdoptionController extends AbstractController
      */
     public function contact(Request $request)
     {
-
-        $builder = $this->formFactory->createBuilder(ConservationContactType::class);
+        $id = $request->get('pet_id');
+        $contact = new ConservationContacts();
+        $builder = $this->formFactory->createBuilder(ConservationContactType::class, $contact);
 
         // if ($this->isGranted('ROLE_ADOPTION_USER')) {
         //     /** @var Customer $user */
@@ -236,17 +346,59 @@ class AdoptionController extends AbstractController
         $event = new EventArgs(
             [
                 'builder' => $builder,
+                'contact' => $contact
             ],
             $request
         );
         $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
 
         $form = $builder->getForm();
-        $form->handleRequest($request);      
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            switch ($request->get('mode')) {
+                case 'confirm':
+                    return $this->render(
+                        'animalline/adoption/contact_confirm.twig',
+                        [
+                            'form' => $form->createView(),
+                            'id' => $id
+                        ]
+                    );
+
+                case 'complete':
+                    $pet = $this->conservationPetsRepository->find($id);
+                    if (!$pet) {
+                        throw new HttpException\NotFoundHttpException();
+                    }
+                    $contact->setParentMessageId(0)
+                        ->setSendDate(Carbon::now())
+                        ->setPet($pet)
+                        ->setCustomer($this->getUser());
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($contact);
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('adpotion_contact_complete', ['pet_id' => $id]);
+            }
+        }
 
         return [
             'form' => $form->createView(),
+            'id' => $id
         ];
     }
 
+    /**
+     * お問い合わせ完了画面
+     *
+     * @Route("/adoption/member/contact/{pet_id}/complete", name="adpotion_contact_complete", requirements={"pet_id" = "\d+"})
+     * @Template("/animalline/adoption/contact_complete.twig")
+     */
+    public function complete(Request $request)
+    {
+        return $this->render('animalline/adoption/contact_complete.twig', [
+            'id' => $request->get('pet_id')
+        ]);
+    }
 }

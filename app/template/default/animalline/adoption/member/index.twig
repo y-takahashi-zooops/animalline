@@ -12,18 +12,22 @@
                 <div class="sub-title d-flex justify-content-between align-items-end">
                     <h2>交渉中のお取引</h2>
                 </div>
-                <div class="m-1 p-1"></div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-sm-flex justify-content-between py-3 border adoption-border rounded">
-                            <div class="ml-5">
-                                <h3>保護団体名</h3>
-                                <h3><a href={{url('adoption_mypage_messages')}}>１通目のお問い合わせ送信時のメッセージタイトル</a></h3>
+                {% for rootMessage in rootMessages %}
+                    <div class="m-1 p-1"></div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-sm-flex justify-content-between py-3 border adoption-border rounded">
+                                <div class="ml-5">
+                                    <h3>{{ rootMessage.conservation.conservationHouseName ?? '' }}</h3>
+                                    <h3><a href={{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}>{{ rootMessage.contactTitle }}</a></h3>
+                                </div>
+                                <h4 class="mr-sm-5 ml-5">返信日時：{{ lastReplies[rootMessage.id].sendDate.format('Y年m月d日　H:i') ?? 'なし。' }}</h4>
                             </div>
-                            <h4 class="mr-sm-5 ml-5">返信日時：2021年00月00日　10:00</h4>
                         </div>
                     </div>
-                </div>
+                {% else %}
+                    メッセージが見つかりません。
+                {% endfor %}
             
                 <div class="m-4 p-4"></div>
                 <div class="sub-title d-flex justify-content-between align-items-end">
