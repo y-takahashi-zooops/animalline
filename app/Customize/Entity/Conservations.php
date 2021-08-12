@@ -726,4 +726,9 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return (string) $this->getId();
+    }
 }

@@ -265,24 +265,49 @@ class AdoptionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $pet = $this->conservationPetsRepository->find($id);
-            if (!$pet) {
-                throw new HttpException\NotFoundHttpException();
-            }
-            $contact->setParentMessageId(0)
-                    ->setSendDate(Carbon::now())
-                    ->setPet($pet)
-                    ->setCustomer($this->getUser());
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($contact);
-            $entityManager->flush();
+            switch ($request->get('mode')) {
+                case 'confirm':
+                    return $this->render(
+                        'animalline/adoption/contact_confirm.twig',
+                        [
+                            'form' => $form->createView(),
+                            'id' => $id
+                        ]
+                    );
 
-            return $this->redirectToRoute('adoption_pet_detail', ['id' => $id]);
+                case 'complete':
+                    $pet = $this->conservationPetsRepository->find($id);
+                    if (!$pet) {
+                        throw new HttpException\NotFoundHttpException();
+                    }
+                    $contact->setParentMessageId(0)
+                        ->setSendDate(Carbon::now())
+                        ->setPet($pet)
+                        ->setCustomer($this->getUser());
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($contact);
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('adpotion_contact_complete', ['pet_id' => $id]);
+            }
         }
 
         return [
             'form' => $form->createView(),
             'id' => $id
         ];
+    }
+
+    /**
+     * お問い合わせ完了画面
+     *
+     * @Route("/adoption/member/contact/{pet_id}/complete", name="adpotion_contact_complete", requirements={"pet_id" = "\d+"})
+     * @Template("/animalline/adoption/contact_complete.twig")
+     */
+    public function complete(Request $request)
+    {
+        return $this->render('animalline/adoption/contact_complete.twig', [
+            'id' => $request->get('pet_id')
+        ]);
     }
 }

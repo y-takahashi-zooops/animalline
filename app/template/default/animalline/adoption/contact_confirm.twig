@@ -2,27 +2,26 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-    <div class="ec-contactRole">
+    <div class="ec-registerRole">
         <div class="ec-pageHeader">
-            <h1>{{ 'お問い合わせ'|trans }}</h1>
+            <h1>{{ 'お問い合わせの内容を確認ください'|trans }}</h1>
         </div>
         <div class="ec-off1Grid">
             <div class="ec-off1Grid__cell">
-                <form method="post" action="{{ url('adpotion_contact', {'pet_id': id}) }}" class="h-adr" novalidate>
-                    <span class="p-country-name" style="display:none;">Japan</span>
+                <form method="post" action="{{ url('adpotion_contact', {'pet_id': id}) }}">
                     {{ form_widget(form._token) }}
-                    {# <p class="ec-para-normal font-size-18">
-                        {{ '内容によっては回答をさしあげるのにお時間をいただくこともございます。'|trans|nl2br }}
-                    </p> #}
+                    <p>{{ 'お問い合わせの内容は下記の通りです。ご確認してください。
+よろしければ、下部に「送信」ボタンをクリックしてください
+'|trans|nl2br }}</p>
                     <div class="ec-borderedDefs">
                         <dl>
                             <dt>
-                                {{ form_label(form.conservation, '	保護団体ID', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                {{ form_label(form.conservation, '保護団体ID', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.conservation) ? ' error' }}">
-                                    {{ form_widget(form.conservation) }}
-                                    {{ form_errors(form.conservation) }}
+                                    {{ form.conservation.vars.data }}
+                                    {{ form_widget(form.conservation, { 'attr': {'class': 'hidden'} }) }}
                                 </div>
                             </dd>
                         </dl>
@@ -32,8 +31,8 @@
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.message_from) ? ' error' }}">
-                                    {{ form_widget(form.message_from) }}
-                                    {{ form_errors(form.message_from) }}
+                                    {{ form.message_from.vars.choices[form.message_from.vars.data-1].label }}
+                                    {{ form_widget(form.message_from, { 'attr': {'class': 'hidden'} }) }}
                                 </div>
                             </dd>
                         </dl>
@@ -43,8 +42,8 @@
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.contact_type) ? ' error' }}">
-                                    {{ form_widget(form.contact_type) }}
-                                    {{ form_errors(form.contact_type) }}
+                                    {{ form.contact_type.vars.choices[form.contact_type.vars.data-1].label }}
+                                    {{ form_widget(form.contact_type, { 'attr': {'class': 'hidden'} }) }}
                                 </div>
                             </dd>
                         </dl>
@@ -54,8 +53,8 @@
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.contact_title) ? ' error' }}">
-                                    {{ form_widget(form.contact_title) }}
-                                    {{ form_errors(form.contact_title) }}
+                                    {{ form.contact_title.vars.data }}
+                                    {{ form_widget(form.contact_title, { 'attr': {'class': 'hidden'} }) }}
                                 </div>
                             </dd>
                         </dl>
@@ -65,8 +64,8 @@
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.contact_description) ? ' error' }}">
-                                    {{ form_widget(form.contact_description) }}
-                                    {{ form_errors(form.contact_description) }}
+                                    {{ form.contact_description.vars.data }}
+                                    {{ form_widget(form.contact_description, { 'attr': {'class': 'hidden'} }) }}
                                 </div>
                             </dd>
                         </dl>
@@ -76,8 +75,8 @@
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.booking_request) ? ' error' }}">
-                                    {{ form_widget(form.booking_request) }}
-                                    {{ form_errors(form.booking_request) }}
+                                    {{ form.booking_request.vars.data }}
+                                    {{ form_widget(form.booking_request, { 'attr': {'class': 'hidden'} }) }}
                                 </div>
                             </dd>
                         </dl>
@@ -87,8 +86,8 @@
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.is_response) ? ' error' }}">
-                                    {{ form_widget(form.is_response) }}
-                                    {{ form_errors(form.is_response) }}
+                                    {{ form.is_response.vars.choices[form.is_response.vars.data].label }}
+                                    {{ form_widget(form.is_response, { 'attr': {'class': 'hidden'} }) }}
                                 </div>
                             </dd>
                         </dl>
@@ -98,8 +97,8 @@
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.contract_status) ? ' error' }}">
-                                    {{ form_widget(form.contract_status) }}
-                                    {{ form_errors(form.contract_status) }}
+                                    {{ form.contract_status.vars.choices[form.contract_status.vars.data].label }}
+                                    {{ form_widget(form.contract_status, { 'attr': {'class': 'hidden'} }) }}
                                 </div>
                             </dd>
                         </dl>
@@ -109,8 +108,8 @@
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.reason) ? ' error' }}">
-                                    {{ form_widget(form.reason) }}
-                                    {{ form_errors(form.reason) }}
+                                    {{ form.reason.vars.data }}
+                                    {{ form_widget(form.reason, { 'attr': {'class': 'hidden'} }) }}
                                 </div>
                             </dd>
                         </dl>
@@ -134,13 +133,14 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <div class="ec-RegisterRole__actions">
+                    <div class="ec-registerRole__actions">
                         <div class="ec-off4Grid">
                             <div class="ec-off4Grid__cell">
-                                {# <button type="submit" class="ec-blockBtn--action" name="mode" value="confirm">{{ '確認ページへ'|trans }} #}
-                                <button type="submit" class="basic-btn adoption-btn" name="mode"
-                                        value="confirm">{{ '確認ページへ'|trans }}
-                                </button>
+                                <button class="basic-btn adoption-btn" type="submit" name="mode"
+                                        value="complete">{{ '送信'|trans }}</button>
+                                <br><br>
+                                <button class="basic-btn accent-btn bg-accent text-align-center" type="submit"
+                                        name="mode" value="back">{{ '戻る'|trans }}</button>
                             </div>
                         </div>
                     </div>

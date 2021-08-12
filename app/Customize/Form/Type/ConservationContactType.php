@@ -48,11 +48,14 @@ class ConservationContactType extends AbstractType
     {
         $builder
             ->add('conservation', EntityType::class, [
-                'class'    => 'Customize\Entity\Conservations',
-                'choice_label'   => function(\Customize\Entity\Conservations $conservations){
+                'class' => 'Customize\Entity\Conservations',
+                'choice_label' => function (\Customize\Entity\Conservations $conservations) {
                     return $conservations->getId();
                 },
                 'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
             ])
             ->add('message_from', ChoiceType::class, [
                 'choices' =>
@@ -73,9 +76,23 @@ class ConservationContactType extends AbstractType
                 'required' => true,
                 'expanded' => false,
             ])
-            ->add('contact_title', TextType::class)
-            ->add('contact_description', TextareaType::class)
-            ->add('booking_request', TextareaType::class)
+            ->add('contact_title', TextType::class, [
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                ],
+                'required' => false,
+            ])
+            ->add('contact_description', TextareaType::class, [
+                'required' => false,
+            ])
+            ->add('booking_request', TextareaType::class, [
+                'required' => false,
+            ])
             ->add('is_response', ChoiceType::class, [
                 'choices' =>
                     [

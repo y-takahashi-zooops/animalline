@@ -60,3 +60,6 @@
 .adoption-border {
     border: 3px solid #FFAC69!important;
 }
+.hidden {
+    display: none !important;
+}
