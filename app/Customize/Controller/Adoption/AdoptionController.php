@@ -285,7 +285,7 @@ class AdoptionController extends AbstractController
                 ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
                 ->setReason(0);
 
-            $rootMessage->setIsResponse(1);
+            $rootMessage->setIsResponse(AnilineConf::RESPONSE_UNREPLIED);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationContact);

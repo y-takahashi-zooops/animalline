@@ -25,8 +25,6 @@
                         </div>
                     </div>
                 </div>
-            {% else %}
-                メッセージが見つかりません。
             {% endfor %}
 
             <div class="m-1 p-1"></div>
@@ -38,7 +36,7 @@
                         </div>
                         <div class="px-4">
                             <form action="{{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}" method="post">
-                                <textarea class="col-12" rows="5" name="reply_message">返信メッセージ</textarea>
+                                <textarea class="col-12" rows="5" name="reply_message" placeholder="返信メッセージ"></textarea>
                                 <button type="submit" class="ec-blockBtn--cancel">送信</button>
                             </form>
                         </div>
