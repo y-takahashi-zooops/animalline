@@ -21,12 +21,12 @@
                                     <h3>{{ rootMessage.conservation.conservationHouseName ?? '' }}</h3>
                                     <h3><a href={{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}>{{ rootMessage.contactTitle }}</a></h3>
                                 </div>
-                                <h4 class="mr-sm-5 ml-5">返信日時：{{ rootMessage.sendDate.format('Y年m月d日　H:i') }}</h4>
+                                <h4 class="mr-sm-5 ml-5">返信日時：{{ lastReplies[rootMessage.id].sendDate.format('Y年m月d日　H:i') ?? 'なし。' }}</h4>
                             </div>
                         </div>
                     </div>
                 {% else %}
-                    No messages here.
+                    メッセージが見つかりません。
                 {% endfor %}
             
                 <div class="m-4 p-4"></div>

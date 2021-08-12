@@ -209,8 +209,15 @@ class AdoptionController extends AbstractController
         $parentMessageId = 0;
         $rootMessages = $this->conservationContactsRepository->findBy(['Customer' => $customerId, 'parent_message_id' => $parentMessageId]);
 
+        $lastReplies = [];
+        foreach ($rootMessages as $rootMessage) {
+            $lastReply = $this->conservationContactsRepository->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
+            $lastReplies[$rootMessage->getId()] = $lastReply;
+        }
+
         return $this->render('animalline/adoption/member/index.twig', [
-            'rootMessages' => $rootMessages
+            'rootMessages' => $rootMessages,
+            'lastReplies' => $lastReplies
         ]);
     }
 
@@ -351,5 +358,4 @@ class AdoptionController extends AbstractController
             'id' => $request->get('pet_id')
         ]);
     }
-
 }
