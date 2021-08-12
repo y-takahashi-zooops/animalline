@@ -179,9 +179,21 @@ class AdoptionController extends AbstractController
             ['is_response' => 'ASC', 'send_date' => 'DESC']
         );
 
+        $lastReplies = [];
+        foreach ($rootMessages as $message) {
+            $lastReply = $this->conservationContactsRepository->findOneBy(
+                ['parent_message_id' => $message->getId()],
+                 ['send_date' => 'DESC']
+            );
+            $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
+        }
+
         return $this->render(
             'animalline/adoption/configration/index.twig',
-            ['rootMessages' => $rootMessages]
+            [
+                'rootMessages' => $rootMessages,
+                'lastReplies' => $lastReplies,
+            ]
         );
     }
 
