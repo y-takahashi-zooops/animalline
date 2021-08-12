@@ -13,7 +13,6 @@
 
 namespace Customize\Controller\Adoption;
 
-
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationContacts;
@@ -30,7 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\ConservationContactType;
-
+use DateTime;
 
 class AdoptionController extends AbstractController
 {
@@ -40,30 +39,31 @@ class AdoptionController extends AbstractController
     protected $conservationPetsRepository;
 
     /**
-     * @var ConservationsRepository
-     */
-    protected $conservationsRepository;
-
-    /**
      * @var ConservationContactsRepository
      */
     protected $conservationContactsRepository;
 
 
     /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
      * AdoptionController constructor.
      *
-     * @param
+     * @param ConservationPetsRepository $conservationPetsRepository
+     * @param ConservationContactsRepository $conservationContactsRepository
+     * @param ConservationsRepository $conservationsRepository
      */
     public function __construct(
         ConservationPetsRepository $conservationPetsRepository,
-        ConservationsRepository $conservationsRepository,
-        ConservationContactsRepository $conservationContactsRepository
-    )
-    {
+        ConservationContactsRepository $conservationContactsRepository,
+        ConservationsRepository $conservationsRepository
+    ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
-        $this->conservationsRepository = $conservationsRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
+        $this->conservationsRepository = $conservationsRepository;
     }
 
     /**
@@ -205,18 +205,59 @@ class AdoptionController extends AbstractController
      */
     public function adoption_mypage(Request $request)
     {
-        return;
+        $customerId = $this->getUser()->getId();
+        $parentMessageId = 0;
+        $rootMessages = $this->conservationContactsRepository->findBy(['Customer' => $customerId, 'parent_message_id' => $parentMessageId]);
+
+        return $this->render('animalline/adoption/member/index.twig', [
+            'rootMessages' => $rootMessages
+        ]);
     }
 
     /**
      * 保護団体用ユーザーページ - 取引メッセージ履歴
      *
-     * @Route("/adoption/member/message", name="adoption_mypage_messages")
+     * @Route("/adoption/member/message/{contact_id}", name="adoption_mypage_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/adoption/member/message.twig")
      */
     public function adoption_message(Request $request)
     {
-        return;
+        $contactId = $request->get('contact_id');
+        $parentMessageId = 0;
+        $rootMessage = $this->conservationContactsRepository->findOneBy(['id' => $contactId, 'parent_message_id' => $parentMessageId]);
+        if (!$rootMessage) {
+            throw new HttpException\NotFoundHttpException();
+        }
+
+        $replyMessage = $request->get('reply_message');
+        if ($replyMessage) {
+            $conservationContact = (new ConservationContacts())
+                ->setCustomer($rootMessage->getCustomer())
+                ->setConservation($rootMessage->getConservation())
+                ->setMessageFrom(1)
+                ->setPet($rootMessage->getPet())
+                ->setContactType(3)
+                ->setContactDescription($replyMessage)
+                ->setParentMessageId($rootMessage->getId())
+                ->setSendDate(new DateTime())
+                ->setIsResponse(1)
+                ->setContractStatus(0)
+                ->setReason(0);
+
+            $rootMessage->setIsResponse(1);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($conservationContact);
+            $entityManager->persist($rootMessage);
+            $entityManager->flush();
+        }
+
+        $childMessages = $this->conservationContactsRepository->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
+
+        return $this->render('animalline/adoption/member/message.twig', [
+            'rootMessage' => $rootMessage,
+            'childMessages' => $childMessages
+        ]);
     }
 
 
@@ -310,4 +351,5 @@ class AdoptionController extends AbstractController
             'id' => $request->get('pet_id')
         ]);
     }
+
 }
