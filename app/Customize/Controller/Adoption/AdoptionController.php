@@ -175,7 +175,10 @@ class AdoptionController extends AbstractController
     public function adoption_configration(Request $request)
     {
         $rootMessages = $this->conservationContactsRepository->findBy(
-            ['parent_message_id' => AnilineConf::ROOT_MESSAGE_ID],
+            [
+                'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
+                'Conservation' => $this->getUser()
+            ],
             ['is_response' => 'ASC', 'send_date' => 'DESC']
         );
 
@@ -183,7 +186,7 @@ class AdoptionController extends AbstractController
         foreach ($rootMessages as $message) {
             $lastReply = $this->conservationContactsRepository->findOneBy(
                 ['parent_message_id' => $message->getId()],
-                 ['send_date' => 'DESC']
+                ['send_date' => 'DESC']
             );
             $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
         }
@@ -217,7 +220,8 @@ class AdoptionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $conservationContact->setConservation($this->getUser())
+            $conservationContact->setCustomer($rootMessage->getCustomer())
+                ->setConservation($this->getUser())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_CONFIGURATION)
                 ->setPet($rootMessage->getPet())
                 ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
