@@ -23,4 +23,20 @@ final class AnilineConf {
     const ANILINE_PET_SEX_FEMALE = 2;
 
     const ANILINE_NUMBER_ITEM_PER_PAGE = 12;
+
+    const ROOT_MESSAGE_ID = 0;
+
+    const MESSAGE_FROM_USER = 1;
+    const MESSAGE_FROM_CONFIGURATION = 2;
+
+    const CONTACT_TYPE_INQUIRY = 1;
+    const CONTACT_TYPE_VISIT_REQUEST = 2;
+    const CONTACT_TYPE_REPLY = 3;
+
+    const RESPONSE_UNREPLIED = 0;
+    const RESPONSE_REPLIED = 1;
+
+    const CONSTRACT_STATUS_UNDER_NEGOTIATION = 0;
+    const CONSTRACT_STATUS_CONTRACT = 1;
+    const CONSTRACT_STATUS_NONCONTRACT = 2;
 }

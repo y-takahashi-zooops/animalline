@@ -18,7 +18,6 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationContacts;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
-use Customize\Repository\ConservationsRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -44,25 +43,17 @@ class AdoptionController extends AbstractController
     protected $conservationContactsRepository;
 
     /**
-     * @var ConservationsRepository
-     */
-    protected $conservationsRepository;
-
-    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param ConservationContactsRepository $conservationContactsRepository
-     * @param ConservationsRepository $conservationsRepository
      */
     public function __construct(
         ConservationPetsRepository $conservationPetsRepository,
-        ConservationContactsRepository $conservationContactsRepository,
-        ConservationsRepository $conservationsRepository
+        ConservationContactsRepository $conservationContactsRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
-        $this->conservationsRepository = $conservationsRepository;
     }
 
     /**
@@ -249,8 +240,7 @@ class AdoptionController extends AbstractController
     public function adoption_mypage(Request $request)
     {
         $customerId = $this->getUser()->getId();
-        $parentMessageId = 0;
-        $rootMessages = $this->conservationContactsRepository->findBy(['Customer' => $customerId, 'parent_message_id' => $parentMessageId]);
+        $rootMessages = $this->conservationContactsRepository->findBy(['Customer' => $customerId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
 
         $lastReplies = [];
         foreach ($rootMessages as $rootMessage) {
@@ -273,8 +263,7 @@ class AdoptionController extends AbstractController
     public function adoption_message(Request $request)
     {
         $contactId = $request->get('contact_id');
-        $parentMessageId = 0;
-        $rootMessage = $this->conservationContactsRepository->findOneBy(['id' => $contactId, 'parent_message_id' => $parentMessageId]);
+        $rootMessage = $this->conservationContactsRepository->findOneBy(['id' => $contactId, 'parent_message_id' =>  AnilineConf::ROOT_MESSAGE_ID]);
         if (!$rootMessage) {
             throw new HttpException\NotFoundHttpException();
         }
@@ -282,16 +271,16 @@ class AdoptionController extends AbstractController
         $replyMessage = $request->get('reply_message');
         if ($replyMessage) {
             $conservationContact = (new ConservationContacts())
-                ->setCustomer($rootMessage->getCustomer())
+                ->setCustomer($this->getUser())
                 ->setConservation($rootMessage->getConservation())
-                ->setMessageFrom(1)
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
                 ->setPet($rootMessage->getPet())
-                ->setContactType(3)
+                ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
                 ->setContactDescription($replyMessage)
                 ->setParentMessageId($rootMessage->getId())
                 ->setSendDate(new DateTime())
-                ->setIsResponse(1)
-                ->setContractStatus(0)
+                ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
+                ->setContractStatus(AnilineConf::CONSTRACT_STATUS_UNDER_NEGOTIATION)
                 ->setReason(0);
 
             $rootMessage->setIsResponse(1);
