@@ -106,9 +106,9 @@ class ConservationContactType extends AbstractType
             ->add('contract_status', ChoiceType::class, [
                 'choices' =>
                     [
-                        '交渉中' => AnilineConf::CONSTRACT_STATUS_UNDER_NEGOTIATION,
-                        '成約 ' => AnilineConf::CONSTRACT_STATUS_CONTRACT,
-                        '非成約' => AnilineConf::CONSTRACT_STATUS_NONCONTRACT,
+                        '交渉中' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION,
+                        '成約 ' => AnilineConf::CONTRACT_STATUS_CONTRACT,
+                        '非成約' => AnilineConf::CONTRACT_STATUS_NONCONTRACT,
                     ],
                 'required' => true,
                 'expanded' => false,
