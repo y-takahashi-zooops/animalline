@@ -169,13 +169,13 @@ class AdoptionController extends AbstractController
     /**
      * 保護団体管理ページTOP
      *
-     * @Route("/adoption/configration", name="adoption_configration")
+     * @Route("/adoption/configration/", name="adoption_configration")
      * @Template("animalline/adoption/configration/index.twig")
      */
     public function adoption_configration(Request $request)
     {
         $rootMessages = $this->conservationContactsRepository->findBy(
-            ['parent_message_id' => 0],
+            ['parent_message_id' => AnilineConf::ROOT_MESSAGE_ID],
             ['is_response' => 'ASC', 'send_date' => 'DESC']
         );
 
@@ -192,43 +192,41 @@ class AdoptionController extends AbstractController
      */
     public function adoption_configration_message(Request $request, $contact_id)
     {
-        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $rootMessage = $this->conservationContactsRepository->find($contact_id);
-            if (!$rootMessage) {
-                throw new HttpException\NotFoundHttpException();
-            }
-
-            $description = $request->get('contact_description');
-
-            $conservationContact = new ConservationContacts();
-            $form = $this->createFormBuilder($conservationContact)->getForm();
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted()) {
-                $conservationContact->setConservation($this->getUser())
-                    ->setMessageFrom(2)
-                    ->setPet($rootMessage->getPet())
-                    ->setContactType(3)
-                    ->setContactDescription($description)
-                    ->setParentMessageId($contact_id)
-                    ->setSendDate(new DateTime())
-                    ->setIsResponse(1)
-                    ->setContractStatus(0)
-                    ->setReason(0);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($conservationContact);
-                $entityManager->flush();
-            }
-            $messages = $this->conservationContactsRepository->findBy(
-                ['parent_message_id' => $contact_id],
-                ['send_date' => 'ASC']
-            );
-            return $this->render('animalline/adoption/configration/message.twig', [
-                'rootMessage' => $rootMessage,
-                'messages' => $messages,
-                'form' => $form->createView()
-            ]);
+        $rootMessage = $this->conservationContactsRepository->find($contact_id);
+        if (!$rootMessage) {
+            throw new HttpException\NotFoundHttpException();
         }
+
+        $description = $request->get('contact_description');
+
+        $conservationContact = new ConservationContacts();
+        $form = $this->createFormBuilder($conservationContact)->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $conservationContact->setConservation($this->getUser())
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_CONFIGURATION)
+                ->setPet($rootMessage->getPet())
+                ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
+                ->setContactDescription($description)
+                ->setParentMessageId($contact_id)
+                ->setSendDate(new DateTime())
+                ->setIsResponse(AnilineConf::RESPONSE_REPLIED)
+                ->setContractStatus(AnilineConf::CONSTRACT_STATUS_UNDER_NEGOTIATION)
+                ->setReason(0);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($conservationContact);
+            $entityManager->flush();
+        }
+        $messages = $this->conservationContactsRepository->findBy(
+            ['parent_message_id' => $contact_id],
+            ['send_date' => 'ASC']
+        );
+        return $this->render('animalline/adoption/configration/message.twig', [
+            'rootMessage' => $rootMessage,
+            'messages' => $messages,
+            'form' => $form->createView()
+        ]);
     }
 
     /**
