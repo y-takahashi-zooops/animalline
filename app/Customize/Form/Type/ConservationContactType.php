@@ -58,15 +58,6 @@ class ConservationContactType extends AbstractType
                     new Assert\NotBlank(),
                 ],
             ])
-            ->add('message_from', ChoiceType::class, [
-                'choices' =>
-                    [
-                        'ユーザー' => AnilineConf::MESSAGE_FROM_USER,
-                        '保護団体' => AnilineConf::MESSAGE_FROM_CONFIGURATION,
-                    ],
-                'required' => true,
-                'expanded' => false,
-            ])
             ->add('contact_type', ChoiceType::class, [
                 'choices' =>
                     [
@@ -93,15 +84,6 @@ class ConservationContactType extends AbstractType
             ])
             ->add('booking_request', TextareaType::class, [
                 'required' => false,
-            ])
-            ->add('is_response', ChoiceType::class, [
-                'choices' =>
-                    [
-                        '未返信' => AnilineConf::RESPONSE_UNREPLIED,
-                        '返信あり' => AnilineConf::RESPONSE_REPLIED,
-                    ],
-                'required' => true,
-                'expanded' => false,
             ])
             ->add('contract_status', ChoiceType::class, [
                 'choices' =>

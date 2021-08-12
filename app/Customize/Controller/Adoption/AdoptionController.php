@@ -51,7 +51,8 @@ class AdoptionController extends AbstractController
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
         ConservationContactsRepository $conservationContactsRepository
-    ) {
+    )
+    {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
     }
@@ -183,7 +184,7 @@ class AdoptionController extends AbstractController
         foreach ($rootMessages as $message) {
             $lastReply = $this->conservationContactsRepository->findOneBy(
                 ['parent_message_id' => $message->getId()],
-                 ['send_date' => 'DESC']
+                ['send_date' => 'DESC']
             );
             $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
         }
@@ -354,6 +355,8 @@ class AdoptionController extends AbstractController
                         throw new HttpException\NotFoundHttpException();
                     }
                     $contact->setParentMessageId(AnilineConf::ROOT_MESSAGE_ID)
+                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
+                        ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
                         ->setCustomer($this->getUser());
