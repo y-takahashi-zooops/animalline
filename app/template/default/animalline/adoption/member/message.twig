@@ -6,7 +6,7 @@
         <div class="row">
             <div class="main-container col-12">
                 <div class="sub-title">
-                    <h1>取引履歴 - {{ rootMessage.getConservation().getConservationHouseName() ?? '' }}</h1>
+                    <h1>取引履歴 - {{ rootMessage.conservation.conservationHouseName ?? '' }}</h1>
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="sub-title d-flex justify-content-between align-items-end">
@@ -37,7 +37,7 @@
                                 返信内容
                             </div>
                             <div class="px-4">
-                                <form action="/adoption/member/message/{{ rootMessage.id }}" method="post">
+                                <form action="{{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}" method="post">
                                     <textarea class="col-12" rows="5" name="reply_message">返信メッセージ</textarea>
                                     <button type="submit" class="ec-blockBtn--cancel">送信</button>
                                 </form>

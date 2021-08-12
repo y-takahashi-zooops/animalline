@@ -47,7 +47,6 @@ class AdoptionController extends AbstractController
      */
     protected $conservationsRepository;
 
-
     /**
      * AdoptionController constructor.
      *
@@ -203,8 +202,8 @@ class AdoptionController extends AbstractController
     public function adoption_mypage(Request $request)
     {
         $customerId = $this->getUser()->getId();
-        $parent_message_id = 0;
-        $rootMessages = $this->conservationContactsRepository->findBy(['Customer' => $customerId, 'parent_message_id' => $parent_message_id]);
+        $parentMessageId = 0;
+        $rootMessages = $this->conservationContactsRepository->findBy(['Customer' => $customerId, 'parent_message_id' => $parentMessageId]);
 
         return $this->render('animalline/adoption/member/index.twig', [
             'rootMessages' => $rootMessages
@@ -214,35 +213,38 @@ class AdoptionController extends AbstractController
     /**
      * 保護団体用ユーザーページ - 取引メッセージ履歴
      *
-     * @Route("/adoption/member/message/{contact_id}", name="adoption_mypage_messages", requirements={"pet_id" = "\d+"})
+     * @Route("/adoption/member/message/{contact_id}", name="adoption_mypage_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/adoption/member/message.twig")
      */
     public function adoption_message(Request $request)
     {
-        $contact_id = $request->get('contact_id');
-        $parent_message_id = 0;
-
-        $rootMessage = $this->conservationContactsRepository->findOneBy(['id' => $contact_id, 'parent_message_id' => $parent_message_id]);
+        $contactId = $request->get('contact_id');
+        $parentMessageId = 0;
+        $rootMessage = $this->conservationContactsRepository->findOneBy(['id' => $contactId, 'parent_message_id' => $parentMessageId]);
         if (!$rootMessage) {
             throw new HttpException\NotFoundHttpException();
         }
 
-        $reply_message = $request->get('reply_message');
-        if ($reply_message) {
-            $conservationContact = new ConservationContacts();
-            $conservationContact->setCustomer($rootMessage->getCustomer());
-            $conservationContact->setConservation($rootMessage->getConservation());
-            $conservationContact->setMessageFrom(1);
-            $conservationContact->setContactType(3);
-            $conservationContact->setContactDescription($reply_message);
-            $conservationContact->setParentMessageId($rootMessage->getId());
-            $conservationContact->setSendDate(new DateTime());
-            $conservationContact->setIsResponse(1);
-            $conservationContact->setContractStatus(0);
-            $conservationContact->setReason(0);
+        $replyMessage = $request->get('reply_message');
+        if ($replyMessage) {
+            $conservationContact = (new ConservationContacts())
+                ->setCustomer($rootMessage->getCustomer())
+                ->setConservation($rootMessage->getConservation())
+                ->setMessageFrom(1)
+                ->setPet($rootMessage->getPet())
+                ->setContactType(3)
+                ->setContactDescription($replyMessage)
+                ->setParentMessageId($rootMessage->getId())
+                ->setSendDate(new DateTime())
+                ->setIsResponse(1)
+                ->setContractStatus(0)
+                ->setReason(0);
+
+            $rootMessage->setIsResponse(1);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationContact);
+            $entityManager->persist($rootMessage);
             $entityManager->flush();
         }
 

@@ -18,7 +18,7 @@
                         <div class="col-12">
                             <div class="d-sm-flex justify-content-between py-3 border adoption-border rounded">
                                 <div class="ml-5">
-                                    <h3>{{ rootMessage.getConservation().getConservationHouseName() ?? '' }}</h3>
+                                    <h3>{{ rootMessage.conservation.conservationHouseName ?? '' }}</h3>
                                     <h3><a href={{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}>{{ rootMessage.contactTitle }}</a></h3>
                                 </div>
                                 <h4 class="mr-sm-5 ml-5">返信日時：{{ rootMessage.sendDate.format('Y年m月d日　H:i') }}</h4>
