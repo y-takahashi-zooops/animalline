@@ -341,7 +341,7 @@ class AdoptionController extends AbstractController
                     if (!$pet) {
                         throw new HttpException\NotFoundHttpException();
                     }
-                    $contact->setParentMessageId(0)
+                    $contact->setParentMessageId(AnilineConf::ROOT_MESSAGE_ID)
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
                         ->setCustomer($this->getUser());
