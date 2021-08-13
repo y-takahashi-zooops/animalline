@@ -20,10 +20,7 @@ class AppTestController extends AbstractController
     {
         $form = $this->formFactory->createBuilder(FormType::class)
             ->add('image', FileType::class, [
-                'label' => 'Image',
-                'attr' => [
-                    'onchange' => 'previewFile()'
-                ]
+                'label' => 'Image'
             ])
             ->getForm();
         return [
