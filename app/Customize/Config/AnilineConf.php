@@ -41,4 +41,7 @@ final class AnilineConf
     const CONTRACT_STATUS_UNDER_NEGOTIATION = 0;
     const CONTRACT_STATUS_CONTRACT = 1;
     const CONTRACT_STATUS_NONCONTRACT = 2;
+
+    const RELEASE_STATUS_PRIVATE = 0;
+    const RELEASE_STATUS_PUBLIC = 1;
 }

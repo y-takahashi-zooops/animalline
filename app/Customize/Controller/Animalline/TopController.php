@@ -13,6 +13,10 @@
 
 namespace Customize\Controller\Animalline;
 
+use Customize\Config\AnilineConf;
+use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\BreedsRepository;
+use Eccube\Repository\Master\PrefRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,12 +25,58 @@ use Symfony\Component\Routing\Annotation\Route;
 class TopController extends AbstractController
 {
     /**
+     * @var ConservationPetsRepository
+     */
+    protected $conservationPetsRepository;
+
+    /**
+     * @var BreedsRepository
+     */
+    protected $breedsRepository;
+
+    /**
+     * @var PrefRepository
+     */
+    protected $prefRepository;
+
+    /**
+     * TopController constructor.
+     *
+     * @param ConservationPetsRepository $conservationPetsRepository
+     * @param BreedsRepository $breedsRepository
+     * @param PrefRepository $prefRepository
+     */
+    public function __construct(
+        ConservationPetsRepository $conservationPetsRepository,
+        BreedsRepository $breedsRepository,
+        PrefRepository $prefRepository
+    ) {
+        $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->breedsRepository = $breedsRepository;
+        $this->prefRepository = $prefRepository;
+    }
+
+    /**
      * @Route("/adoption/", name="adoption_top")
      * @Template("animalline/adoption/index.twig")
      */
-    public function adoption_index()
+    public function adoption_index(Request $request)
     {
-        return [];
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->breedsRepository->findAll();
+        $regions = $this->prefRepository->findAll();
+        $pets = $this->conservationPetsRepository->findBy(
+            ['pet_kind' => $petKind],
+            ['release_date' => 'DESC'],
+            4
+        );
+
+        return $this->render('animalline/adoption/index.twig', [
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions,
+            'pets' => $pets
+        ]);
     }
 
     /**
