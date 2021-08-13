@@ -53,7 +53,16 @@ $("#crop").click(function () {
         reader.readAsDataURL(blob);
         reader.onloadend = function () {
             var base64data = reader.result;
-            ////
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/test/upload_image",
+                data: {image: base64data},
+                success: function (data) {
+                    bs_modal.modal('hide');
+                    alert("success upload image");
+                }
+            });
         };
     });
 });
