@@ -76,6 +76,10 @@ class AdoptionController extends AbstractController
      */
     public function petSearchResult(PaginatorInterface $paginator, Request $request, ConservationPetsRepository $conservationPetsRepository): Response
     {
+        $breedType = $request->get('breed_type');
+        $gender = $request->get('gender');
+        $region = $request->get('region');
+
         $query = $conservationPetsRepository->findBy(
             ['release_status' => 1],
             ['release_date' => 'DESC']

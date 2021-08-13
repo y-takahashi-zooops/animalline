@@ -6,53 +6,73 @@
     <a href="/adoption/configration/login">テスト用：保護団体ログイン</a>
     <div class="search-area bg-white">
         <div class="main">
-            <nav class="nav nav-pills search-nav m-2 d-none d-sm-flex">
-                <a class="nav-item nav-link active bg-adoption px-5 py-2" href="#">
+            {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+                <nav class="nav nav-pills search-nav m-2 d-none d-sm-flex">
+                <a class="nav-item nav-link active bg-adoption px-5 py-2"
+                href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
                     <h2 class="text-white px-5">犬を探す</h2>
                 </a>
-                <a class="nav-item nav-link px-5 py-2 border" href="#">
+                <a class="nav-item nav-link px-5 py-2 border"
+                href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
                     <h2 class="color-gray-300 px-5">猫を探す</h2>
                 </a>
             </nav>
             <nav class="nav nav-pills search-nav m-4 d-flex d-sm-none">
-                <a class="nav-item nav-link active bg-adoption px-4 py-4" href="#">
+                <a class="nav-item nav-link active bg-adoption px-4 py-4"
+                href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
                     <h4 class="text-white px-5">犬を探す</h4>
                 </a>
-                <a class="nav-item nav-link px-4 py-4 border" href="#">
+                <a class="nav-item nav-link px-4 py-4 border"
+                href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
                     <h4 class="color-gray-300 px-5">猫を探す</h4>
                 </a>
             </nav>
+            {% else %}
+                <nav class="nav nav-pills search-nav m-2 d-none d-sm-flex">
+                <a class="nav-item nav-link px-5 py-2 border"
+                href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
+                    <h2 class="color-gray-300 px-5">犬を探す</h2>
+                </a>
+                <a class="nav-item nav-link active bg-adoption px-5 py-2"
+                href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
+                    <h2 class="text-white px-5">猫を探す</h2>
+                </a>
+            </nav>
+            <nav class="nav nav-pills search-nav m-4 d-flex d-sm-none">
+                <a class="nav-item nav-link px-4 py-4 border"
+                href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
+                    <h4 class="color-gray-300 px-5">犬を探す</h4>
+                </a>
+                <a class="nav-item nav-link active bg-adoption px-4 py-4"
+                href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
+                    <h4 class="text-white px-5">猫を探す</h4>
+                </a>
+            </nav>
+            {% endif %}
             <div class="m-2 p-2"></div>
-            <form>
+            <form action="{{ url('adoption_pet_search_result') }}" method="get">
                 <div class="row">
                     <div class="col-sm-5 select-container mb-2 mb-sm-none">
-                        <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect1">
-                            <option>犬種</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                        <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect1" name="breed_type">
+                            <option value="">犬種</option>
+                            {% for breed in breeds %}
+                                <option value="{{ breed.id }}">{{ breed.breedsName }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="col-sm-2 select-container mb-2 mb-sm-none">
-                        <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect2">
-                            <option>性別</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                        <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect2" name="gender">
+                            <option value="">性別</option>
+                            <option value="1">オス</option>
+                            <option value="2">メス</option>
                         </select>
                     </div>
                     <div class="col-sm-4 select-container">
-                        <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect3">
-                            <option>地域</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                        <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect3" name="region">
+                            <option value="">地域</option>
+                            {% for region in regions %}
+                                <option value="{{ region.id }}">{{ region.name }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
