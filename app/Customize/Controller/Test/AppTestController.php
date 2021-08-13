@@ -39,6 +39,9 @@ class AppTestController extends AbstractController
      */
     public function upload(Request $request)
     {
+        if (!file_exists(AnilineConf::ANILINE_IMAGE_URL_BASE . '/test/')) {
+            mkdir(AnilineConf::ANILINE_IMAGE_URL_BASE . '/test/', 0777, 'R');
+        }
         $folderPath = AnilineConf::ANILINE_IMAGE_URL_BASE . '/test/';
         $image_parts = explode(";base64,", $_POST['image']);
         $image_type_aux = explode("image/", $image_parts[0]);

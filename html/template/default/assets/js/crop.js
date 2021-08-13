@@ -1,6 +1,6 @@
 var bs_modal = $('#modal');
 var image = document.getElementById('image');
-var cropper, reader, file;
+var cropper, reader, file, size;
 
 
 $("body").on("change", "#form_image", function (e) {
@@ -30,10 +30,11 @@ bs_modal.on('shown.bs.modal', function () {
     cropper = new Cropper(image, {
         cropBoxResizable: false,
         aspectRatio: 1,
-        viewMode: 3,
+        viewMode: 2,
         preview: '.preview',
         dragMode: 'none',
-        autoCropArea: 1
+        autoCropArea: 1,
+        background: false,
     });
 }).on('hidden.bs.modal', function () {
     cropper.destroy();
@@ -42,9 +43,11 @@ bs_modal.on('shown.bs.modal', function () {
 });
 
 $("#crop").click(function () {
+    size = cropper.imageData.naturalHeight < cropper.imageData.naturalWidth ? cropper.imageData.naturalHeight : cropper.imageData.naturalWidth;
+    size = size < 1000 ? size : 1000;
     canvas = cropper.getCroppedCanvas({
-        width: 160,
-        height: 160,
+        width: size,
+        height: size,
     });
 
     canvas.toBlob(function (blob) {
