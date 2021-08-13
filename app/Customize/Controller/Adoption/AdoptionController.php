@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\ConservationContactType;
+use Customize\Service\AdoptionQueryService;
 use DateTime;
 
 class AdoptionController extends AbstractController
@@ -43,18 +44,26 @@ class AdoptionController extends AbstractController
     protected $conservationContactsRepository;
 
     /**
+     * @var AdoptionQueryService
+     */
+    protected $adoptionQueryService;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param ConservationContactsRepository $conservationContactsRepository
+     * @param AdoptionQueryService $adoptionQueryService
      */
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
-        ConservationContactsRepository $conservationContactsRepository
+        ConservationContactsRepository $conservationContactsRepository,
+        AdoptionQueryService $adoptionQueryService
     )
     {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
+        $this->adoptionQueryService = $adoptionQueryService;
     }
 
     /**
@@ -76,16 +85,9 @@ class AdoptionController extends AbstractController
      */
     public function petSearchResult(PaginatorInterface $paginator, Request $request, ConservationPetsRepository $conservationPetsRepository): Response
     {
-        $breedType = $request->get('breed_type');
-        $gender = $request->get('gender');
-        $region = $request->get('region');
-
-        $query = $conservationPetsRepository->findBy(
-            ['release_status' => 1],
-            ['release_date' => 'DESC']
-        );
+        $petResults = $this->adoptionQueryService->searchPetsResult($request);
         $pets = $paginator->paginate(
-            $query,
+            $petResults,
             $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );

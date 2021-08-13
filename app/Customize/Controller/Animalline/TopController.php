@@ -13,57 +13,42 @@
 
 namespace Customize\Controller\Animalline;
 
+use Customize\Config\AnilineConf;
+use Customize\Repository\ConservationPetsRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Customize\Repository\BreedsRepository;
-use Eccube\Repository\Master\PrefRepository;
-use Customize\Config\AnilineConf;
 
 class TopController extends AbstractController
 {
     /**
-     * @var BreedsRepository
+     * @var ConservationPetsRepository
      */
-    protected $breedsRepository;
+    protected $conservationPetsRepository;
 
     /**
-     * @var PrefRepository
-     */
-    protected $prefRepository;
-
-    /**
-     * AdoptionController constructor.
+     * TopController constructor.
      *
-     * @param BreedsRepository $breedsRepository\
-     * @param PrefRepository $prefRepository
+     * @param ConservationPetsRepository $conservationPetsRepository
      */
-
-    public function __construct(
-        BreedsRepository $breedsRepository,
-        PrefRepository $prefRepository
+    public function __construct (
+        ConservationPetsRepository     $conservationPetsRepository
     ) {
-        $this->breedsRepository = $breedsRepository;
-        $this->prefRepository = $prefRepository;
+        $this->conservationPetsRepository = $conservationPetsRepository;
     }
-
     /**
      * @Route("/adoption/", name="adoption_top")
      * @Template("animalline/adoption/index.twig")
      */
     public function adoption_index(Request $request)
     {
-        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-
-        $breeds = $this->breedsRepository->findAll();
-        $regions = $this->prefRepository->findAll();
-
-        return $this->render('animalline/adoption/index.twig', [
-            'petKind' => $petKind,
-            'breeds' => $breeds,
-            'regions' => $regions
-        ]);
+        $pets = $this->conservationPetsRepository->findBy(
+            ['pet_kind' => $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG],
+            ['release_date' => 'DESC'],
+            4
+        );
+        return $this->render('animalline/adoption/index.twig', ['pets' => $pets]);
     }
 
     /**
