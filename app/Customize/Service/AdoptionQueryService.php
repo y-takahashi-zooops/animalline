@@ -41,14 +41,19 @@ class AdoptionQueryService
                 ->setParameter('pet_kind', $request->get('pet_kind'));
         }
 
-        if ($request->get('pet_sex')) {
-            $query->andWhere('c.pet_sex = :pet_sex')
-                ->setParameter('pet_sex', $request->get('pet_sex'));
+        if ($request->get('breed_type')) {
+            $query->andWhere('c.breeds_type = :breeds_type')
+            ->setParameter('breeds_type', $request->get('breed_type'));
         }
 
-        if ($request->get('pref')) {
+        if ($request->get('gender')) {
+            $query->andWhere('c.pet_sex = :pet_sex')
+                ->setParameter('pet_sex', $request->get('gender'));
+        }
+
+        if ($request->get('region')) {
             $query->andWhere('bt.reeder_house_pref = :pref')
-                ->setParameter('pref', $request->get('pref'));
+                ->setParameter('pref', $request->get('region'));
         }
 
         return $query->addOrderBy('c.release_date', 'DESC')
