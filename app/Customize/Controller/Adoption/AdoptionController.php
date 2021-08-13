@@ -18,7 +18,6 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationContacts;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
-use Customize\Repository\ConservationsRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -44,25 +43,18 @@ class AdoptionController extends AbstractController
     protected $conservationContactsRepository;
 
     /**
-     * @var ConservationsRepository
-     */
-    protected $conservationsRepository;
-
-    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param ConservationContactsRepository $conservationContactsRepository
-     * @param ConservationsRepository $conservationsRepository
      */
     public function __construct(
-        ConservationPetsRepository $conservationPetsRepository,
-        ConservationContactsRepository $conservationContactsRepository,
-        ConservationsRepository $conservationsRepository
-    ) {
+        ConservationPetsRepository     $conservationPetsRepository,
+        ConservationContactsRepository $conservationContactsRepository
+    )
+    {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
-        $this->conservationsRepository = $conservationsRepository;
     }
 
     /**
@@ -178,21 +170,37 @@ class AdoptionController extends AbstractController
     /**
      * 保護団体管理ページTOP
      *
-     * @Route("/adoption/configration", name="adoption_configration")
+     * @Route("/adoption/configration/", name="adoption_configration")
      * @Template("animalline/adoption/configration/index.twig")
      */
     public function adoption_configration(Request $request)
     {
         $rootMessages = $this->conservationContactsRepository->findBy(
-            ['parent_message_id' => 0],
+            [
+                'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
+                'Conservation' => $this->getUser()
+            ],
             ['is_response' => 'ASC', 'send_date' => 'DESC']
         );
 
+        $lastReplies = [];
+        foreach ($rootMessages as $message) {
+            $lastReply = $this->conservationContactsRepository->findOneBy(
+                ['parent_message_id' => $message->getId()],
+                ['send_date' => 'DESC']
+            );
+            $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
+        }
+
         return $this->render(
             'animalline/adoption/configration/index.twig',
-            ['rootMessages' => $rootMessages]
+            [
+                'rootMessages' => $rootMessages,
+                'lastReplies' => $lastReplies,
+            ]
         );
     }
+
     /**
      * 保護団体管理ページ - 取引メッセージ履歴
      *
@@ -201,43 +209,42 @@ class AdoptionController extends AbstractController
      */
     public function adoption_configration_message(Request $request, $contact_id)
     {
-        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $rootMessage = $this->conservationContactsRepository->find($contact_id);
-            if (!$rootMessage) {
-                throw new HttpException\NotFoundHttpException();
-            }
-
-            $description = $request->get('contact_description');
-
-            $conservationContact = new ConservationContacts();
-            $form = $this->createFormBuilder($conservationContact)->getForm();
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted()) {
-                $conservationContact->setConservation($this->getUser())
-                    ->setMessageFrom(2)
-                    ->setPet($rootMessage->getPet())
-                    ->setContactType(3)
-                    ->setContactDescription($description)
-                    ->setParentMessageId($contact_id)
-                    ->setSendDate(new DateTime())
-                    ->setIsResponse(1)
-                    ->setContractStatus(0)
-                    ->setReason(0);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($conservationContact);
-                $entityManager->flush();
-            }
-            $messages = $this->conservationContactsRepository->findBy(
-                ['parent_message_id' => $contact_id],
-                ['send_date' => 'ASC']
-            );
-            return $this->render('animalline/adoption/configration/message.twig', [
-                'rootMessage' => $rootMessage,
-                'messages' => $messages,
-                'form' => $form->createView()
-            ]);
+        $rootMessage = $this->conservationContactsRepository->find($contact_id);
+        if (!$rootMessage) {
+            throw new HttpException\NotFoundHttpException();
         }
+
+        $description = $request->get('contact_description');
+
+        $conservationContact = new ConservationContacts();
+        $form = $this->createFormBuilder($conservationContact)->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $conservationContact->setCustomer($rootMessage->getCustomer())
+                ->setConservation($this->getUser())
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_CONFIGURATION)
+                ->setPet($rootMessage->getPet())
+                ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
+                ->setContactDescription($description)
+                ->setParentMessageId($contact_id)
+                ->setSendDate(new DateTime())
+                ->setIsResponse(AnilineConf::RESPONSE_REPLIED)
+                ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
+                ->setReason(0);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($conservationContact);
+            $entityManager->flush();
+        }
+        $messages = $this->conservationContactsRepository->findBy(
+            ['parent_message_id' => $contact_id],
+            ['send_date' => 'ASC']
+        );
+        return $this->render('animalline/adoption/configration/message.twig', [
+            'rootMessage' => $rootMessage,
+            'messages' => $messages,
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -249,12 +256,13 @@ class AdoptionController extends AbstractController
     public function adoption_mypage(Request $request)
     {
         $customerId = $this->getUser()->getId();
-        $parentMessageId = 0;
-        $rootMessages = $this->conservationContactsRepository->findBy(['Customer' => $customerId, 'parent_message_id' => $parentMessageId]);
+        $rootMessages = $this->conservationContactsRepository
+            ->findBy(['Customer' => $customerId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
 
         $lastReplies = [];
         foreach ($rootMessages as $rootMessage) {
-            $lastReply = $this->conservationContactsRepository->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
+            $lastReply = $this->conservationContactsRepository
+                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
             $lastReplies[$rootMessage->getId()] = $lastReply;
         }
 
@@ -273,8 +281,8 @@ class AdoptionController extends AbstractController
     public function adoption_message(Request $request)
     {
         $contactId = $request->get('contact_id');
-        $parentMessageId = 0;
-        $rootMessage = $this->conservationContactsRepository->findOneBy(['id' => $contactId, 'parent_message_id' => $parentMessageId]);
+        $rootMessage = $this->conservationContactsRepository
+            ->findOneBy(['id' => $contactId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
         if (!$rootMessage) {
             throw new HttpException\NotFoundHttpException();
         }
@@ -282,19 +290,19 @@ class AdoptionController extends AbstractController
         $replyMessage = $request->get('reply_message');
         if ($replyMessage) {
             $conservationContact = (new ConservationContacts())
-                ->setCustomer($rootMessage->getCustomer())
+                ->setCustomer($this->getUser())
                 ->setConservation($rootMessage->getConservation())
-                ->setMessageFrom(1)
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
                 ->setPet($rootMessage->getPet())
-                ->setContactType(3)
+                ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
                 ->setContactDescription($replyMessage)
                 ->setParentMessageId($rootMessage->getId())
                 ->setSendDate(new DateTime())
-                ->setIsResponse(1)
-                ->setContractStatus(0)
+                ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
+                ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
                 ->setReason(0);
 
-            $rootMessage->setIsResponse(1);
+            $rootMessage->setIsResponse(AnilineConf::RESPONSE_UNREPLIED);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationContact);
@@ -302,14 +310,14 @@ class AdoptionController extends AbstractController
             $entityManager->flush();
         }
 
-        $childMessages = $this->conservationContactsRepository->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
+        $childMessages = $this->conservationContactsRepository
+            ->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
 
         return $this->render('animalline/adoption/member/message.twig', [
             'rootMessage' => $rootMessage,
             'childMessages' => $childMessages
         ]);
     }
-
 
     /**
      * お問い合わせ.
@@ -322,27 +330,6 @@ class AdoptionController extends AbstractController
         $id = $request->get('pet_id');
         $contact = new ConservationContacts();
         $builder = $this->formFactory->createBuilder(ConservationContactType::class, $contact);
-
-        // if ($this->isGranted('ROLE_ADOPTION_USER')) {
-        //     /** @var Customer $user */
-        //     $user = $this->getUser();
-        //     $builder->setData(
-        //         [
-        //             'name01' => $user->getName01(),
-        //             'name02' => $user->getName02(),
-        //             'kana01' => $user->getKana01(),
-        //             'kana02' => $user->getKana02(),
-        //             'postal_code' => $user->getPostalCode(),
-        //             'pref' => $user->getPref(),
-        //             'addr01' => $user->getAddr01(),
-        //             'addr02' => $user->getAddr02(),
-        //             'phone_number' => $user->getPhoneNumber(),
-        //             'email' => $user->getEmail(),
-        //         ]
-        //     );
-        // }
-
-        // FRONT_CONTACT_INDEX_INITIALIZE
         $event = new EventArgs(
             [
                 'builder' => $builder,
@@ -371,7 +358,9 @@ class AdoptionController extends AbstractController
                     if (!$pet) {
                         throw new HttpException\NotFoundHttpException();
                     }
-                    $contact->setParentMessageId(0)
+                    $contact->setParentMessageId(AnilineConf::ROOT_MESSAGE_ID)
+                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
+                        ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
                         ->setCustomer($this->getUser());

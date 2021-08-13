@@ -28,17 +28,6 @@
                         </dl>
                         <dl>
                             <dt>
-                                {{ form_label(form.message_from, 'メッセージ送信者', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.message_from) ? ' error' }}">
-                                    {{ form_widget(form.message_from) }}
-                                    {{ form_errors(form.message_from) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
                                 {{ form_label(form.contact_type, 'コンタクト内容', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
@@ -78,17 +67,6 @@
                                 <div class="ec-input{{ has_errors(form.booking_request) ? ' error' }}">
                                     {{ form_widget(form.booking_request) }}
                                     {{ form_errors(form.booking_request) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.is_response, 'レスポンス受信フラグ', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.is_response) ? ' error' }}">
-                                    {{ form_widget(form.is_response) }}
-                                    {{ form_errors(form.is_response) }}
                                 </div>
                             </dd>
                         </dl>

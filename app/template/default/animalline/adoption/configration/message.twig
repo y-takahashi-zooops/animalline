@@ -6,7 +6,7 @@
         <div class="row">
             <div class="main-container col-12">
                 <div class="sub-title">
-                    取引履歴 - {{ rootMessage.getConservation().conservationHouseName ?? '' }}
+                    取引履歴 - {{ rootMessage.Conservation.conservationHouseName ?? '' }}
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="sub-title d-flex justify-content-between align-items-end">
@@ -15,12 +15,12 @@
                 {% for message in messages %}
                     <div class="m-1 p-1"></div>
                     <div class="row">
-                        <div class="{{ (message.getMessageFrom() == 2) ? 'col-6' : 'col-7 px-5' }}">
+                        <div class="{{ (message.messageFrom == 2) ? 'col-6' : 'col-7 px-5' }}">
                             <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
                                 <div class="ml-5">
-                                    {{ message.getContactDescription() }}
+                                    {{ message.contactDescription }}
                                 </div>
-                                <h4 class="mr-sm-5 ml-5">送信日時：{{ message.getSendDate().format('Y年m月d日 H:i') ?? '' }}</h4>
+                                <h4 class="mr-sm-5 ml-5">送信日時：{{ message.sendDate.format('Y年m月d日 H:i') ?? '' }}</h4>
                             </div>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                             </div>
                             <div class="px-4">
                                 {{ form_start(form) }}
-                                    <textarea class="col-6" rows="5" name="contact_description" placeholder="返信メッセージ"></textarea>
+                                    <textarea class="col-12" rows="5" name="contact_description" placeholder="返信メッセージ"></textarea>
                                     <button class="ec-blockBtn--cancel">送信</button>
                                 {{ form_end(form) }}
                             </div>
