@@ -31,32 +31,32 @@ class AdoptionQueryService
      */
     public function searchPetsResult($request)
     {
-        $query = $this->conservationPetsRepository->createQueryBuilder('c')
-            ->join('c.breeds_type', 'bt')
-            ->where('c.release_status = :release_status')
+        $query = $this->conservationPetsRepository->createQueryBuilder('p')
+            ->join('p.conservation_id', 'c')
+            ->where('p.release_status = :release_status')
             ->setParameter('release_status', AnilineConf::RELEASE_STATUS_PUBLIC);
 
         if ($request->get('pet_kind')) {
-            $query->andWhere('c.pet_kind = :pet_kind')
+            $query->andWhere('p.pet_kind = :pet_kind')
                 ->setParameter('pet_kind', $request->get('pet_kind'));
         }
 
         if ($request->get('breed_type')) {
-            $query->andWhere('c.breeds_type = :breeds_type')
+            $query->andWhere('p.breeds_type = :breeds_type')
             ->setParameter('breeds_type', $request->get('breed_type'));
         }
 
         if ($request->get('gender')) {
-            $query->andWhere('c.pet_sex = :pet_sex')
+            $query->andWhere('p.pet_sex = :pet_sex')
                 ->setParameter('pet_sex', $request->get('gender'));
         }
 
         if ($request->get('region')) {
-            $query->andWhere('bt.reeder_house_pref = :pref')
+            $query->andWhere('c.conservation_house_pref = :pref')
                 ->setParameter('pref', $request->get('region'));
         }
 
-        return $query->addOrderBy('c.release_date', 'DESC')
+        return $query->addOrderBy('p.release_date', 'DESC')
             ->getQuery()
             ->getResult();
     }
