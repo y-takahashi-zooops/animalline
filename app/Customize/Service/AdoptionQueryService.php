@@ -33,7 +33,7 @@ class AdoptionQueryService
     {
         $query = $this->conservationPetsRepository->createQueryBuilder('c')
             ->join('c.breeds_type', 'bt')
-            ->where('release_status = :release_status')
+            ->where('c.release_status = :release_status')
             ->setParameter('release_status', AnilineConf::RELEASE_STATUS_PUBLIC);
 
         if ($request->get('pet_kind')) {
@@ -51,6 +51,8 @@ class AdoptionQueryService
                 ->setParameter('pref', $request->get('pref'));
         }
 
-        return $query->addOrderBy('o.release_date', 'DESC');
+        return $query->addOrderBy('c.release_date', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 }
