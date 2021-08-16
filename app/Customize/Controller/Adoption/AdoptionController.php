@@ -143,7 +143,7 @@ class AdoptionController extends AbstractController
     /**
      * お気に入り一覧.
      *
-     * @Route("/adoption/favolite", name="adoption_favolite")
+     * @Route("/adoption/member/favolite", name="adoption_favolite")
      * @Template("animalline/adoption/favolite.twig")
      */
     public function favolite(Request $request)
