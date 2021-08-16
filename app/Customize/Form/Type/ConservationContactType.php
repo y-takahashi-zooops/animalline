@@ -48,16 +48,6 @@ class ConservationContactType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('conservation', EntityType::class, [
-                'class' => 'Customize\Entity\Conservations',
-                'choice_label' => function (\Customize\Entity\Conservations $conservations) {
-                    return $conservations->getId();
-                },
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-            ])
             ->add('contact_type', ChoiceType::class, [
                 'choices' =>
                     [
@@ -84,22 +74,6 @@ class ConservationContactType extends AbstractType
             ])
             ->add('booking_request', TextareaType::class, [
                 'required' => false,
-            ])
-            ->add('contract_status', ChoiceType::class, [
-                'choices' =>
-                    [
-                        '交渉中' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION,
-                        '成約 ' => AnilineConf::CONTRACT_STATUS_CONTRACT,
-                        '非成約' => AnilineConf::CONTRACT_STATUS_NONCONTRACT,
-                    ],
-                'required' => true,
-                'expanded' => false,
-            ])
-            ->add('reason', IntegerType::class, [
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-                'required' => true,
             ]);
     }
 

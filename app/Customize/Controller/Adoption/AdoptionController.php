@@ -279,6 +279,7 @@ class AdoptionController extends AbstractController
                         ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
+                        ->setConservation($pet->getConservationId())
                         ->setCustomer($this->getUser());
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($contact);
