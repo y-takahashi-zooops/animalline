@@ -54,7 +54,7 @@
                 <input type="hidden" name="pet_kind" value="{{ petKind }}">
 
                 <div class="row">
-                    <div class="col-sm-5 select-container mb-2 mb-sm-none">
+                    <div class="col-lg-5 select-container mb-2 mb-sm-none">
                         <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect1" name="breed_type">
                             <option value="">犬種</option>
                             {% for breed in breeds %}
@@ -62,14 +62,14 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-sm-2 select-container mb-2 mb-sm-none">
+                    <div class="col-lg-3 select-container mb-2 mb-sm-none">
                         <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect2" name="gender">
                             <option value="">性別</option>
                             <option value="1">男の子</option>
                             <option value="2">女の子</option>
                         </select>
                     </div>
-                    <div class="col-sm-4 select-container">
+                    <div class="col-lg-3 select-container">
                         <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect3" name="region">
                             <option value="">地域</option>
                             {% for region in regions %}
@@ -91,257 +91,46 @@
                     <div class="m-2 p-2"></div>
                     <div class="row">
                         <div class="col-sm-5 select-container mb-2 mb-sm-none">
-                            <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect4">
-                                <option>犬種</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-2 select-container mb-2 mb-sm-none">
-                            <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect5">
-                                <option>性別</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4 select-container">
-                            <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect6">
-                                <option>地域</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
+                            詳細検索条件１
                         </div>
                     </div>
                     <div class="m-2 p-2"></div>
                     <div class="row">
                         <div class="col-sm-5 select-container mb-2 mb-sm-none">
-                            <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect7">
-                                <option>犬種</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-2 select-container mb-2 mb-sm-none">
-                            <select class="form-control bg-primary w-100 p-4 h-25" id="formControlSelect8">
-                                <option>性別</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4 select-container">
-                            <select class="form-control bg-primary w-100 p-4 h-25" id="FormControlSelect9">
-                                <option>地域</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
+                            詳細検索条件２
                         </div>
                     </div>
                     <div class="m-2 p-2"></div>
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="row">
-                    <div class="col-2 col-sm-5"></div>
-                    <div class="col-8 col-sm-2">
-                        <a href="#"><button
-                                class="btn basic-btn accent-btn bg-accent text-align-center">検索する</button></a>
+                    {# <div class="col-4"></div> #}
+                    <div class="col-sm-6" style="margin: 0 auto;">
+                        <a href="#">
+                            <button class="btn basic-btn accent-btn bg-accent text-align-center">検索する</button>
+                        </a>
                     </div>
-                    <div class="col-2col-sm-5"></div>
+                    {# <div class="col-4"></div> #}
                 </div>
             </form>
         </div>
-        {# <div class="m-2 p-2"></div> #}
     </div>
-    <div class="main bg-primary">
+    <div class="bg-primary">
         <div class="m-2 p-2"></div>
         <div class="row">
-            <div class="side-container col-2">
-                <div class="search-wrap">
-                    <div class="search-list">
-                        <h3>カテゴリ</h3>
-                        <div class="m-1 p-1"></div>
-                        <ul class="pl-0">
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="m-1 p-1"></div>
-                    <div class="border"></div>
-                    <div class="m-1 p-1"></div>
-                    <div class="search-list">
-                        <h3>カテゴリ</h3>
-                        <div class="m-1 p-1"></div>
-                        <ul class="pl-0">
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="m-1 p-1"></div>
-                    <div class="border"></div>
-                    <div class="m-1 p-1"></div>
-                    <div class="search-list">
-                        <h3>カテゴリ</h3>
-                        <div class="m-1 p-1"></div>
-                        <ul class="pl-0">
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h5>カテゴリ</h5>
-                                <ul class="search-list-child pl-3">
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                    <li><a href="#">カテゴリ</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="main-container col-sm-10">
+            {% include 'side.twig' %}
+            <div class="main-container col-md-10">
                 <div class="sub-title d-flex justify-content-between align-items-end">
                     <h2>新着</h2>
+                    <a class="d-flex" href="category.html">
                         <h3 class=" color-gray-300">もっと見る</h3>
                         <div class="m-1 p-1"></div>
                         <img src="{{ asset('assets/img/arrow-icon.svg') }}">
                     </a>
                 </div>
                 <div class="m-1 p-1"></div>
-                <div class="row">
+                {# <div class="row"> #}
+                <div>
                     {% for pet in pets %}
                         <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                             <div class="catalog-card new-band">
@@ -1024,7 +813,6 @@
                             <div class="card-body text-align-center">
                                 <h4 class="color-gray-500 font-weight-600">トイプードル</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                     <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
@@ -1035,7 +823,6 @@
                             <div class="card-body text-align-center">
                                 <h4 class="color-gray-500 font-weight-600">チワワ</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                     <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
@@ -1046,7 +833,6 @@
                             <div class="card-body text-align-center">
                                 <h4 class="color-gray-500 font-weight-600">チワワ（ロング）</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                     <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
@@ -1057,7 +843,6 @@
                             <div class="card-body text-align-center">
                                 <h4 class="color-gray-500 font-weight-600">タイニープードル</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                     <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
@@ -1068,7 +853,6 @@
                             <div class="card-body text-align-center">
                                 <h4 class="color-gray-500 font-weight-600">フレンチブルドック</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                     <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
@@ -1079,7 +863,6 @@
                             <div class="card-body text-align-center">
                                 <h4 class="color-gray-500 font-weight-600">ポメラニアン</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                     <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
@@ -1090,7 +873,6 @@
                             <div class="card-body text-align-center">
                                 <h4 class="color-gray-500 font-weight-600">柴犬</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                     <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
@@ -1101,7 +883,6 @@
                             <div class="card-body text-align-center">
                                 <h4 class="color-gray-500 font-weight-600">ミニチュア<br>ダックスフンド</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                     <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
@@ -1110,9 +891,8 @@
                                 <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
                             </a>
                             <div class="card-body text-align-center">
-                                <h4 class="color-gray-500 font-weight-600">ティーカップ<br>プードル</h4>
+                                <h4 class="color-gray-500 font-weight-600">ティーカッププードル</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                     <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
@@ -1123,7 +903,6 @@
                             <div class="card-body text-align-center">
                                 <h4 class="color-gray-500 font-weight-600">豆柴</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                     <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
@@ -1134,7 +913,6 @@
                             <div class="card-body text-align-center">
                                 <h4 class="color-gray-500 font-weight-600">フレンチブルドック</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                     <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
@@ -1145,7 +923,6 @@
                             <div class="card-body text-align-center">
                                 <h4 class="color-gray-500 font-weight-600">ポメラニアン</h4>
                             </div>
-                            <div class="m-2 p-2"></div>
                         </div>
                     </div>
                 </div>
@@ -1340,20 +1117,6 @@
             $("h4:contains('男の子')").css("color", "blue");
             $("h4:contains('女の子')").css("color", "red");
         });
-
-        function toggleNav() {
-            var body = document.body;
-            var hamburger = document.getElementById('js-hamburger');
-            var blackBg = document.getElementById('js-black-bg');
-
-            hamburger.addEventListener('click', function () {
-                body.classList.toggle('nav-open');
-            });
-            blackBg.addEventListener('click', function () {
-                body.classList.remove('nav-open');
-            });
-        }
-        toggleNav();
     </script>
 {% endblock %}
     
