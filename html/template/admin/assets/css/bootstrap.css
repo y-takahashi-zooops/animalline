@@ -4374,7 +4374,7 @@ Styleguide 12.7
   color: #999 !important; }
 .text-ec-lightGray {
   color: #ccc !important; }
-@media (min-width: 576px) {
+@media (min-width: 768px) {
     .container {
       max-width: 540px; }
   .col-sm {
