@@ -2,9 +2,12 @@
 
 namespace Customize\Form\Type;
 
+use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationPets;
 use Eccube\Common\EccubeConfig;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -27,12 +30,43 @@ class ConservationPetsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('conservation_id', IntegerType::class)
-            ->add('pet_kind', IntegerType::class)
-            ->add('breeds_type', IntegerType::class)
-            ->add('pet_sex', IntegerType::class)
+            ->add('pet_kind', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
+                        '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+                    ],
+                'required' => true,
+            ])
+            ->add('breeds_type', EntityType::class, [
+                'class' => 'Customize\Entity\Breeds',
+                'choice_label' => function (\Customize\Entity\Breeds $breeds) {
+                    return $breeds->getBreedsName();
+                },
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+            ])
+            ->add('pet_sex', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '男の子' => AnilineConf::ANILINE_PET_SEX_MALE,
+                        '女の子' => AnilineConf::ANILINE_PET_SEX_FEMALE
+                    ],
+                'required' => true,
+            ])
             ->add('pet_birthday', DateType::class)
-            ->add('coat_color', IntegerType::class)
+            ->add('coat_color', EntityType::class, [
+                'class' => 'Customize\Entity\CoatColors',
+                'choice_label' => function (\Customize\Entity\CoatColors $coatColors) {
+                    return $coatColors->getCoatColorName();
+                },
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+            ])
             ->add('future_wait', IntegerType::class)
             ->add('dna_check_result', IntegerType::class)
             ->add('pr_comment', TextType::class)
