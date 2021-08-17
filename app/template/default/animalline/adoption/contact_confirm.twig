@@ -16,17 +16,6 @@
                     <div class="ec-borderedDefs">
                         <dl>
                             <dt>
-                                {{ form_label(form.conservation, '保護団体ID', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.conservation) ? ' error' }}">
-                                    {{ form.conservation.vars.data }}
-                                    {{ form_widget(form.conservation, { 'attr': {'class': 'hidden'} }) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
                                 {{ form_label(form.contact_type, 'コンタクト内容', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
@@ -66,28 +55,6 @@
                                 <div class="ec-input{{ has_errors(form.booking_request) ? ' error' }}">
                                     {{ form.booking_request.vars.data }}
                                     {{ form_widget(form.booking_request, { 'attr': {'class': 'hidden'} }) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.contract_status, '見学希望メッセージに対する成約フラグ', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.contract_status) ? ' error' }}">
-                                    {{ form.contract_status.vars.choices[form.contract_status.vars.data].label }}
-                                    {{ form_widget(form.contract_status, { 'attr': {'class': 'hidden'} }) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.reason, '非成約理由', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.reason) ? ' error' }}">
-                                    {{ form.reason.vars.data }}
-                                    {{ form_widget(form.reason, { 'attr': {'class': 'hidden'} }) }}
                                 </div>
                             </dd>
                         </dl>

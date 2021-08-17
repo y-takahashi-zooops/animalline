@@ -28,12 +28,10 @@ $("body").on("change", "#form_image", function (e) {
 
 bs_modal.on('shown.bs.modal', function () {
     cropper = new Cropper(image, {
-        cropBoxResizable: false,
         aspectRatio: 1,
         viewMode: 2,
         preview: '.preview',
         dragMode: 'none',
-        autoCropArea: 1,
         background: false,
     });
 }).on('hidden.bs.modal', function () {

@@ -63,7 +63,7 @@ class TopController extends AbstractController
     public function adoption_index(Request $request)
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breedsRepository->findAll();
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
         $regions = $this->prefRepository->findAll();
         $pets = $this->conservationPetsRepository->findBy(
             ['pet_kind' => $petKind],

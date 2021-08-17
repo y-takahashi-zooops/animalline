@@ -5,7 +5,7 @@
     --breeder-main-color: #549B35;
     --adoption-main-color: #F08300;
     --common-main-color: #1343df;
-    --bg-color: #F5F4F2;
+    --bg-color: #f5e1aa;
     --accent-color: #FF5D5D;
     --gray-500: #424242;
     --gray-400: #7C7C7C;
@@ -86,7 +86,7 @@ li {
 }
 
 header {
-    position: fixed;
+    /* position: fixed; */
     z-index: 2;
     width: 100%;
 }
@@ -161,6 +161,9 @@ th, td {
 
 .text-align-center {
     text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 auto;
 }
 
 /* 背景-START */
@@ -293,6 +296,25 @@ th, td {
 .dropdown-toggle::after {
     display: none;
 }
+
+/* サイドメニュー */
+/* .side-nav {
+    border: solid 1px var(--gray-400)
+} */
+
+.side-nav-item {
+    width: 100%;
+    border-top: solid 1px var(--gray-400);
+}
+
+.side-nav-item:first-child{
+    border: none;
+}
+
+.side-nav-item a {
+    font-weight: 600;
+}
+
 
 /*ハンバーガーメニュー*/
 .headerNav {
@@ -507,6 +529,12 @@ th, td {
 .size-card > .card-img {
     height: 150px;
     padding-top: 25%;
+}
+
+.dog-kind-name {
+    padding-right: 0;
+    padding-left: 0;
+    margin: 0 auto;
 }
 
 @media (max-width: 768px) {

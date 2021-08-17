@@ -34,7 +34,7 @@ class ConservationContacts
     /**
      * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="conservationContacts")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="conservation_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="conservation_id", referencedColumnName="id", columnDefinition="INT DEFAULT 0 NOT NULL")
      * })
      */
     private $Conservation;
@@ -88,14 +88,14 @@ class ConservationContacts
     private $is_response;
 
     /**
-     * @ORM\Column(name="contract_status", type="smallint", options={"default" = 0})
+     * @ORM\Column(name="contract_status", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $contract_status;
+    private $contract_status = 0;
 
     /**
      * @ORM\Column(name="reason", type="smallint", options={"default" = 0})
      */
-    private $reason;
+    private $reason = 0;
 
     public function getId(): ?int
     {
