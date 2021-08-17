@@ -5,10 +5,11 @@
     <br>
     <a href="{{ path('adoption_pets_index') }}">< back to list</a>
     <hr>
-    {{ include('test/adoption_pets/_form.twig') }}
+    {{ include('animalline/adoption/configration/pets/_form.twig') }}
 {% endblock %}
 
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> {# current jquery slim not support ajax #}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 <script src="{{ asset('assets/js/conservation_pets.js') }}"></script>
 {% endblock %}

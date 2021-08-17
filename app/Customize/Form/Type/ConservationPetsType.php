@@ -33,10 +33,10 @@ class ConservationPetsType extends AbstractType
         $builder
             ->add('pet_kind', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
-                        '猫' => AnilineConf::ANILINE_PET_KIND_CAT
-                    ],
+                [
+                    '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
+                    '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+                ],
                 'required' => true,
             ])
             ->add('breeds_type', EntityType::class, [
@@ -51,10 +51,10 @@ class ConservationPetsType extends AbstractType
             ])
             ->add('pet_sex', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '男の子' => AnilineConf::ANILINE_PET_SEX_MALE,
-                        '女の子' => AnilineConf::ANILINE_PET_SEX_FEMALE
-                    ],
+                [
+                    '男の子' => AnilineConf::ANILINE_PET_SEX_MALE,
+                    '女の子' => AnilineConf::ANILINE_PET_SEX_FEMALE
+                ],
                 'required' => true,
             ])
             ->add('pet_birthday', DateType::class)
@@ -76,35 +76,40 @@ class ConservationPetsType extends AbstractType
             ->add('delivery_way', TextType::class)
             ->add('thumbnail_path', FileType::class, [
                 'attr' => [
-                    'class' => 'form-inline'
+                    'class' => 'form-inline',
+                    'data-img' => 'img1'
                 ],
             ])
             ->add('image1', FileType::class, [
                 'label' => false,
                 'mapped' => false,
                 'attr' => [
-                    'class' => 'form-inline'
+                    'class' => 'form-inline',
+                    'data-img' => 'img2'
                 ],
             ])
             ->add('image2', FileType::class, [
                 'label' => false,
                 'mapped' => false,
                 'attr' => [
-                    'class' => 'form-inline'
+                    'class' => 'form-inline',
+                    'data-img' => 'img3'
                 ],
             ])
             ->add('image3', FileType::class, [
                 'label' => false,
                 'mapped' => false,
                 'attr' => [
-                    'class' => 'form-inline'
+                    'class' => 'form-inline',
+                    'data-img' => 'img4'
                 ],
             ])
             ->add('image4', FileType::class, [
                 'label' => false,
                 'mapped' => false,
                 'attr' => [
-                    'class' => 'form-inline'
+                    'class' => 'form-inline',
+                    'data-img' => 'img5'
                 ],
             ])
             ->add('release_status', IntegerType::class)
