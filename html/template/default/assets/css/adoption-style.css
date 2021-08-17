@@ -67,3 +67,11 @@
 .hidden {
     display: none !important;
 }
+
+a#favorite {
+    cursor: pointer;
+}
+
+a#favorite:hover {
+    text-decoration: underline;
+}

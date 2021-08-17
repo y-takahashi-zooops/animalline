@@ -2,29 +2,36 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-<div class="main">
+    <div class="main">
         <div class="row">
             {% include 'side.twig' %}
             <div class="main-container col-sm-9">
                 <div class="sub-title">
                     <h2 class="float-left">{{ conservationPet.breedsType.breedsName ?? '' }}</h2>
-                    <div class="col-sm-3 float-right"><a href=""><button class="">お気に入りに追加</button></a></div>
+                    <div class="col-sm-3 float-right text-right">
+                        <a id="favorite" data-id="{{ conservationPet.getConservationId().getId() }}"><span id="textBtnLike">{{ is_favorite ? 'お気に入りから削除' : 'お気に入りに追加' }}</span></a>
+                    </div>
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[0].imageUri ?? '/noimage_plugin_list.png') }}" class="card-img-top" alt="...">
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[0].imageUri ?? '/noimage_plugin_list.png') }}"
+                             class="card-img-top" alt="...">
                         <div class="d-block d-sm-none m-2 p-2"></div>
                     </div>
                     <div class="col-6 col-sm-3">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[1].imageUri ?? '/noimage_plugin_list.png') }}" class="card-img-top w-100" alt="...">
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[1].imageUri ?? '/noimage_plugin_list.png') }}"
+                             class="card-img-top w-100" alt="...">
                         <div class="m-2 p-2"></div>
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[2].imageUri ?? '/noimage_plugin_list.png') }}" class="card-img-top w-100" alt="...">
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[2].imageUri ?? '/noimage_plugin_list.png') }}"
+                             class="card-img-top w-100" alt="...">
                     </div>
                     <div class="col-6 col-sm-3">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[3].imageUri ?? '/noimage_plugin_list.png') }}" class="card-img-top w-100" alt="...">
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[3].imageUri ?? '/noimage_plugin_list.png') }}"
+                             class="card-img-top w-100" alt="...">
                         <div class="m-2 p-2"></div>
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[4].imageUri ?? '/noimage_plugin_list.png') }}" class="card-img-top w-100" alt="...">
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[4].imageUri ?? '/noimage_plugin_list.png') }}"
+                             class="card-img-top w-100" alt="...">
                     </div>
                 </div>
                 <div class="m-2 p-2"></div>
@@ -68,7 +75,9 @@
                 <div class="row">
                     <div class="col-sm-4"></div>
                     <div class="col-sm-4">
-                        <a href="{{url('adpotion_contact', {'pet_id': conservationPet.getId()}) }}"><button class="btn basic-btn adoption-btn">お問い合わせ</button></a>
+                        <a href="{{ url('adpotion_contact', {'pet_id': conservationPet.getId()}) }}">
+                            <button class="btn basic-btn adoption-btn">お問い合わせ</button>
+                        </a>
                     </div>
                     <div class="col-sm-4"></div>
                 </div>
@@ -204,25 +213,27 @@
             </div>
         </div>
     </div>
-</body>
+    </body>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
 {% endblock %}
 {% block javascript %}
-<script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{{ asset('assets/js/favorite.js') }}"></script>
+    <script>
     function toggleNav() {
-        var body = document.body;
-        var hamburger = document.getElementById('js-hamburger');
-        var blackBg = document.getElementById('js-black-bg');
+    var body = document.body;
+    var hamburger = document.getElementById('js-hamburger');
+    var blackBg = document.getElementById('js-black-bg');
 
-        hamburger.addEventListener('click', function() {
-            body.classList.toggle('nav-open');
-        });
-        blackBg.addEventListener('click', function() {
-            body.classList.remove('nav-open');
-        });
-    }
+    hamburger.addEventListener('click', function() {
+    body.classList.toggle('nav-open');
+});
+    blackBg.addEventListener('click', function() {
+    body.classList.remove('nav-open');
+});
+}
     toggleNav();
-</script>
+    </script>
 {% endblock %}

@@ -19,6 +19,30 @@ class ConservationPetsRepository extends ServiceEntityRepository
         parent::__construct($registry, ConservationPets::class);
     }
 
+    public function incrementCount(ConservationPets $entity)
+    {
+        return $this
+            ->createQueryBuilder('e')
+            ->update()
+            ->set('e.favorite_count', 'e.favorite_count + 1')
+            ->where('e.id = :id')
+            ->setParameter('id', $entity->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    public function decrementCount(ConservationPets $entity)
+    {
+        return $this
+            ->createQueryBuilder('e')
+            ->update()
+            ->set('e.favorite_count', 'case when e.favorite_count > 0 then e.favorite_count - 1 else 0 end')
+            ->where('e.id = :id')
+            ->setParameter('id', $entity->getId())
+            ->getQuery()
+            ->execute();
+    }
+
     /**
      * @return ConservationPets[] Returns an array of ConservationPets objects
      */

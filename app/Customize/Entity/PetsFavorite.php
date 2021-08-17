@@ -39,7 +39,7 @@ class PetsFavorite
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="customer_id", nullable=false)
      */
     private $customer_id;
 
