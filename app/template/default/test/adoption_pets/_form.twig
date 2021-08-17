@@ -45,12 +45,32 @@
 
     {{ form_label(form.thumbnail_path, 'Thumbnail path', { 'label_attr': {'class': 'ec-label' }}) }}
     <div class="form-inline">
-        {{ form_widget(form.thumbnail_path) }}
-        {{ form_errors(form.thumbnail_path) }}
-        {{ form_widget(form.image1) }}
-        {{ form_widget(form.image2) }}
-        {{ form_widget(form.image3) }}
-        {{ form_widget(form.image4) }}
+        <div class="preview_box mr-4">
+            {{ form_widget(form.thumbnail_path) }}
+            {{ form_errors(form.thumbnail_path) }}
+            <img class="img_preview" src="" />
+            <button class="btn_remove">Remove</button>
+        </div>
+         <div class="preview_box mr-4">
+            {{ form_widget(form.image1) }}
+            <img class="img_preview" src="" />
+            <button class="btn_remove">Remove</button>
+        </div>
+         <div class="preview_box mr-4">
+            {{ form_widget(form.image2) }}
+            <img class="img_preview" src="" />
+            <button class="btn_remove">Remove</button>
+        </div>
+         <div class="preview_box mr-4">
+            {{ form_widget(form.image3) }}
+            <img class="img_preview" src="" />
+            <button class="btn_remove">Remove</button>
+        </div>
+         <div class="preview_box">
+            {{ form_widget(form.image4) }}
+            <img class="img_preview" src="" />
+            <button class="btn_remove">Remove</button>
+        </div>
     </div>
 
     {{ form_label(form.release_status, 'Release status', { 'label_attr': {'class': 'ec-label' }}) }}
@@ -69,34 +89,34 @@
 {{ form_end(form) }}
 
 <div class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title" id="modalLabel">Crop image</h3>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="img-container">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <!--  default image where we will set the src via jquery-->
-                                    <img id="image">
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="preview"></div>
-                                </div>
-                            </div>
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalLabel">Crop image</h3>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="img-container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!--  default image where we will set the src via jquery-->
+                            <img id="image">
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="crop">Crop</button>
+                        <div class="col-md-4">
+                            <div class="preview"></div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="crop">Crop</button>
+            </div>
         </div>
+    </div>
+</div>
 
 {% block stylesheet %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
@@ -108,6 +128,29 @@
             margin-left: 25px;
             border: 1px solid red;
         }
+        .preview_box {
+            border: 1px dotted;
+            width: 150px;
+            height: 150px;
+        }
+        .img_preview {
+            display: none;
+            width: 100%;
+            height: auto;
+        }
+        .btn_remove {
+            display: none;
+            cursor: pointer;
+            padding: 0 2px;
+            color: #fff;
+            font-weight: 700;
+            background: #ff5d5d;
+            position: relative;
+            text-align: center;
+            bottom: 27px;
+            width: 100%
+        }
+
     </style>
 {% endblock %}
 

@@ -37,14 +37,14 @@ $(function () {
         document.querySelector(`#${elm.dataset.img}`).src = URL.createObjectURL(elm.files[0]);
     }
 
-    var modalId = '';
+    var inputImageId = '';
     var bs_modal = $('#modal');
     var image = document.getElementById('image');
     var cropper, reader, file, size;
     $(".form-control-file").change(function (e) {
         showImg(this);
 
-        modalId = e.target.id;
+        inputImageId = e.target.id;
         var files = e.target.files;
         var done = function (url) {
             image.src = url;
@@ -77,34 +77,52 @@ $(function () {
     }).on('hidden.bs.modal', function () {
         cropper.destroy();
         cropper = null;
-        $(modalId).val('');
+        $(`#${ inputImageId }`).val('');
     });
 
-    // $("#crop").click(function () {
-    //     size = cropper.imageData.naturalHeight < cropper.imageData.naturalWidth ? cropper.imageData.naturalHeight : cropper.imageData.naturalWidth;
-    //     size = size < 1000 ? size : 1000;
-    //     canvas = cropper.getCroppedCanvas({
-    //         width: size,
-    //         height: size,
-    //     });
+    $("#crop").click(function () {
+        console.log(cropper.imageData.naturalHeight);
+        size = cropper.imageData.naturalHeight < cropper.imageData.naturalWidth ? cropper.imageData.naturalHeight : cropper.imageData.naturalWidth;
+        size = size < 1000 ? size : 1000;
+        canvas = cropper.getCroppedCanvas({
+            width: size,
+            height: size,
+        });
 
-    //     canvas.toBlob(function (blob) {
-    //         url = URL.createObjectURL(blob);
-    //         var reader = new FileReader();
-    //         reader.readAsDataURL(blob);
-    //         reader.onloadend = function () {
-    //             var base64data = reader.result;
-    //             $.ajax({
-    //                 type: "POST",
-    //                 dataType: "json",
-    //                 url: "/test/upload_image",
-    //                 data: {image: base64data},
-    //                 success: function (data) {
-    //                     bs_modal.modal('hide');
-    //                     alert("success upload image");
-    //                 }
-    //             });
-    //         };
-    //     });
-    // });
+        canvas.toBlob(function (blob) {
+            url = URL.createObjectURL(blob);
+            var reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = function () {
+                var base64data = reader.result;
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "/test/list_adoption_pets/upload",
+                    data: {image: base64data},
+                    success: function (data) {
+                        bs_modal.modal('hide');
+                        $(`#${ inputImageId }`).hide();
+                        $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data)
+                        $(`#${ inputImageId }`).parent().find('.img_preview').show();
+                    }
+                });
+            };
+        });
+    });
+
+    $(document).on('mouseover', '.img_preview', function() {
+        $(this).parent().find('.btn_remove').show();
+    });
+
+    $(document).on('mouseout', '.img_preview', function() {
+        $(this).parent().find('.btn_remove').hide();
+    });
+
+    $(document).on('click', '.btn_remove', function(e) {
+        e.preventDefault();
+        $(this).hide();
+        $(this).parent().find('.img_preview').hide();
+        $(this).parent().find('.form-control-file').show();
+    });
 });

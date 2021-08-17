@@ -4,6 +4,7 @@ var cropper, reader, file, size;
 
 
 $("body").on("change", "#form_image", function (e) {
+    e.preventDefault();
     var files = e.target.files;
     var done = function (url) {
         image.src = url;
@@ -13,6 +14,7 @@ $("body").on("change", "#form_image", function (e) {
 
     if (files && files.length > 0) {
         file = files[0];
+        console.log(file);
 
         if (URL) {
             done(URL.createObjectURL(file));
