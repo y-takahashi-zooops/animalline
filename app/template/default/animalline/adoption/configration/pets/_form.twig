@@ -1,0 +1,63 @@
+{{ form_start(form) }}
+    {{ form_label(form.pet_kind, 'Pet kind', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.pet_kind) }}
+    {{ form_errors(form.pet_kind) }}
+
+    {{ form_label(form.breeds_type, 'Breeds type', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.breeds_type) }}
+    {{ form_errors(form.breeds_type) }}
+
+    {{ form_label(form.pet_sex, 'Pet sex', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.pet_sex) }}
+    {{ form_errors(form.pet_sex) }}
+
+    {{ form_label(form.pet_birthday, 'Pet birthday', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.pet_birthday) }}
+    {{ form_errors(form.pet_birthday) }}
+
+    {{ form_label(form.coat_color, 'Coat color', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.coat_color) }}
+    {{ form_errors(form.coat_color) }}
+
+    {{ form_label(form.future_wait, 'Future wait', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.future_wait) }}
+    {{ form_errors(form.future_wait) }}
+
+    {{ form_label(form.dna_check_result, 'Dna check result', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.dna_check_result) }}
+    {{ form_errors(form.dna_check_result) }}
+
+    {{ form_label(form.pr_comment, 'Pr comment', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.pr_comment) }}
+    {{ form_errors(form.pr_comment) }}
+
+    {{ form_label(form.description, 'Description', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.description) }}
+    {{ form_errors(form.description) }}
+
+    {{ form_label(form.delivery_time, 'Delivery time', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.delivery_time) }}
+    {{ form_errors(form.delivery_time) }}
+
+    {{ form_label(form.delivery_way, 'Delivery way', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.delivery_way) }}
+    {{ form_errors(form.delivery_way) }}
+
+    {{ form_label(form.thumbnail_path, 'Thumbnail path', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.thumbnail_path) }}
+    {{ form_errors(form.thumbnail_path) }}
+
+    {{ form_label(form.release_status, 'Release status', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.release_status) }}
+    {{ form_errors(form.release_status) }}
+
+    {{ form_label(form.release_date, 'Release date', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.release_date) }}
+    {{ form_errors(form.release_date) }}
+
+    {{ form_label(form.price, 'Price', { 'label_attr': {'class': 'ec-label' }}) }}
+    {{ form_widget(form.price) }}
+    {{ form_errors(form.price) }}
+
+<button class="btn btn-info">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

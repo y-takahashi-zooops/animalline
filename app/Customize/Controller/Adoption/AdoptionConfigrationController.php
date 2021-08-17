@@ -2,21 +2,21 @@
 
 namespace Customize\Controller\Adoption;
 
-use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationContacts;
+use Customize\Entity\ConservationPets;
+use Customize\Form\Type\ConservationPetsType;
 use Customize\Repository\ConservationContactsRepository;
-use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\ConservationsRepository;
+use Customize\Repository\BreedsRepository;
+use Customize\Repository\CoatColorsRepository;
 use Eccube\Controller\AbstractController;
-use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Eccube\Event\EccubeEvents;
-use Eccube\Event\EventArgs;
-use Customize\Form\Type\ConservationContactType;
 use DateTime;
 
 class AdoptionConfigrationController extends AbstractController
@@ -26,8 +26,7 @@ class AdoptionConfigrationController extends AbstractController
      */
     public function __construct(
         ConservationContactsRepository $conservationContactsRepository
-    )
-    {
+    ) {
         $this->conservationContactsRepository = $conservationContactsRepository;
     }
 
@@ -61,6 +60,7 @@ class AdoptionConfigrationController extends AbstractController
             [
                 'rootMessages' => $rootMessages,
                 'lastReplies' => $lastReplies,
+                'conservation' => $this->getUser()
             ]
         );
     }
@@ -111,4 +111,79 @@ class AdoptionConfigrationController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/adoption/configuration/pets/new/{conservation_id}", name="adoption_configuration_pets_new", methods={"GET","POST"})
+     */
+    public function adoption_configuration_pets_new(Request $request, ConservationsRepository $conservationsRepository): Response
+    {
+        $conservationPet = new ConservationPets();
+        $form = $this->createForm(ConservationPetsType::class, $conservationPet);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $conservation = $conservationsRepository->find($request->get('conservation_id'));
+            $conservationPet->setConservationId($conservation);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($conservationPet);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('adoption_configuration_pets_edit', ['id' => $conservationPet->getID()]);
+        }
+
+        return $this->render('animalline/adoption/configration/pets/new.twig', [
+            'adoption_pet' => $conservationPet,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/adoption/configuration/pets/edit/{id}", name="adoption_configuration_pets_edit", methods={"GET","POST"})
+     */
+    public function adoption_configuration_pets_edit(Request $request, ConservationPets $conservationPet): Response
+    {
+        $form = $this->createForm(ConservationPetsType::class, $conservationPet);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('adoption_configration');
+        }
+
+        return $this->render('animalline/adoption/configration/pets/edit.twig', [
+            'adoption_pet' => $conservationPet,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/by_pet_kind", name="by_pet_kind", methods={"GET"})
+     */
+    public function byPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
+    {
+        $petKind = $request->get('pet_kind');
+        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
+        $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
+        $formattedBreeds = [];
+        foreach ($breeds as $breed) {
+            $formattedBreeds[] = [
+                'id' => $breed->getId(),
+                'name' => $breed->getBreedsName()
+            ];
+        }
+        $formattedColors = [];
+        foreach ($colors as $color) {
+            $formattedColors[] = [
+                'id' => $color->getId(),
+                'name' => $color->getCoatColorName()
+            ];
+        }
+        $data = [
+            'breeds' => $formattedBreeds,
+            'colors' => $formattedColors
+        ];
+
+        return new JsonResponse($data);
+    }
 }

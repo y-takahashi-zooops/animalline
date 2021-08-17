@@ -1,0 +1,49 @@
+{% set site_type = 'adoption' %}
+{% extends 'ani_frame.twig' %}
+{% block main %}
+    <h1>Edit AdoptionPets</h1>
+    <br>
+    <a href="{{ path('adoption_pets_index') }}">< back to list</a>
+    <hr>
+    {{ include('test/adoption_pets/_form.twig', {'button_label': 'Update'}) }}
+{% endblock %}
+
+{% block javascript %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> {# current jquery slim not support ajax #}
+<script>
+$(function () {
+    $('#conservation_pets_pet_kind').on('change', function () {
+        const breed = $('#conservation_pets_breeds_type').val();
+        const color = $('#conservation_pets_coat_color').val();
+
+        $.ajax({
+            type: 'get',
+            url: '/test/list_adoption_pets/by_pet_kind',
+            dataType: 'json',
+            data: {
+                pet_kind: this.value
+            }
+        })
+            .done(function (data) {
+                const { breeds, colors } = data;
+                $('#conservation_pets_breeds_type').empty();
+                breeds.forEach(breed => {
+                    $('#conservation_pets_breeds_type').append(new Option(breed.name, breed.id));
+                });
+                $('#conservation_pets_coat_color').empty();
+                colors.forEach(color => {
+                    $('#conservation_pets_coat_color').append(new Option(color.name, color.id));
+                });
+
+                $('#conservation_pets_breeds_type').val(breed);
+                $('#conservation_pets_coat_color').val(color);
+            })
+            .fail(function (err) {
+                console.error(err);
+            });
+    });
+
+    $('#conservation_pets_pet_kind').trigger('change');
+});
+</script>
+{% endblock %}
