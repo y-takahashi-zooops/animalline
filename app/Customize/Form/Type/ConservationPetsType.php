@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -73,15 +74,38 @@ class ConservationPetsType extends AbstractType
             ->add('description', TextType::class)
             ->add('delivery_time', TextType::class)
             ->add('delivery_way', TextType::class)
-            ->add('thumbnail_path', TextType::class, [
+            ->add('thumbnail_path', FileType::class, [
                 'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                    'class' => 'form-inline'
                 ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                ]
+            ])
+            ->add('image1', FileType::class, [
+                'label' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'form-inline'
+                ],
+            ])
+            ->add('image2', FileType::class, [
+                'label' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'form-inline'
+                ],
+            ])
+            ->add('image3', FileType::class, [
+                'label' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'form-inline'
+                ],
+            ])
+            ->add('image4', FileType::class, [
+                'label' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'form-inline'
+                ],
             ])
             ->add('release_status', IntegerType::class)
             ->add('release_date', DateType::class)
