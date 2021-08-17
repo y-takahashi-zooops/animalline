@@ -19,22 +19,18 @@ class ConservationPetsRepository extends ServiceEntityRepository
         parent::__construct($registry, ConservationPets::class);
     }
 
-    // /**
-    //  * @return ConservationPets[] Returns an array of ConservationPets objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return ConservationPets[] Returns an array of ConservationPets objects
+     */
+
+    public function findByFavoriteCount()
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('a.favorite_count > 0')
+            ->orderBy('a.favorite_count', 'DESC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?ConservationPets

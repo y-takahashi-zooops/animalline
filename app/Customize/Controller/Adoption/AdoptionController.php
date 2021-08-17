@@ -47,7 +47,7 @@ class AdoptionController extends AbstractController
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
         ConservationContactsRepository $conservationContactsRepository,
-        AdoptionQueryService $adoptionQueryService
+        AdoptionQueryService           $adoptionQueryService
     )
     {
         $this->conservationPetsRepository = $conservationPetsRepository;
@@ -143,12 +143,19 @@ class AdoptionController extends AbstractController
     /**
      * お気に入り一覧.
      *
-     * @Route("/adoption/member/favolite", name="adoption_favolite")
-     * @Template("animalline/adoption/favolite.twig")
+     * @Route("/adoption/member/favorite", name="adoption_favorite")
+     * @Template("animalline/adoption/favorite.twig")
      */
-    public function favolite(Request $request)
+    public function favorite(PaginatorInterface $paginator, Request $request): ?Response
     {
-        return;
+        $favoritePetResults = $this->conservationPetsRepository->findByFavoriteCount();
+        $favoritePets = $paginator->paginate(
+            $favoritePetResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return $this->render('animalline/adoption/favorite.twig', ['pets' => $favoritePets]);
     }
 
     /**
@@ -162,7 +169,7 @@ class AdoptionController extends AbstractController
         return;
     }
 
-    
+
     /**
      * 保護団体用ユーザーページ
      *
