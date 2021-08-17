@@ -7,8 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\Customer;
 
 /**
- * @ORM\Table(name="ald_pets_favorite")
  * @ORM\Entity(repositoryClass=PetsFavoriteRepository::class)
+ * @ORM\Table(name="ald_pets_favorite")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
+ * @ORM\HasLifecycleCallbacks()
  */
 class PetsFavorite
 {
@@ -39,6 +42,20 @@ class PetsFavorite
      * @ORM\JoinColumn(nullable=false)
      */
     private $customer_id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
+    private $create_date;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
+     */
+    private $update_date;
 
     public function getId(): ?int
     {
@@ -89,6 +106,34 @@ class PetsFavorite
     public function setCustomerId(?Customer $customer_id): self
     {
         $this->customer_id = $customer_id;
+
+        return $this;
+    }
+
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->create_date = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Set updateDate.
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Payment
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->update_date = $updateDate;
 
         return $this;
     }
