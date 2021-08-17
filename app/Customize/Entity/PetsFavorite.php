@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\Customer;
 
 /**
+ * @ORM\Table(name="ald_pets_favorite")
  * @ORM\Entity(repositoryClass=PetsFavoriteRepository::class)
  */
 class PetsFavorite
@@ -19,24 +20,25 @@ class PetsFavorite
     private $id;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="smallint", nullable=false)
      */
     private $site_category;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="petsFavorites")
-     */
-    private $customer_id;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $pet_id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $pet_kind;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Customer::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $customer_id;
 
     public function getId(): ?int
     {
@@ -51,18 +53,6 @@ class PetsFavorite
     public function setSiteCategory(?int $site_category): self
     {
         $this->site_category = $site_category;
-
-        return $this;
-    }
-
-    public function getCustomerId(): ?Customer
-    {
-        return $this->customer_id;
-    }
-
-    public function setCustomerId(?Customer $customer_id): self
-    {
-        $this->customer_id = $customer_id;
 
         return $this;
     }
@@ -87,6 +77,18 @@ class PetsFavorite
     public function setPetKind(?int $pet_kind): self
     {
         $this->pet_kind = $pet_kind;
+
+        return $this;
+    }
+
+    public function getCustomerId(): ?Customer
+    {
+        return $this->customer_id;
+    }
+
+    public function setCustomerId(?Customer $customer_id): self
+    {
+        $this->customer_id = $customer_id;
 
         return $this;
     }

@@ -126,7 +126,7 @@ class ConservationPets
     private $conservationPetImages;
 
     /**
-     * @ORM\Column(name="favorite_count", type="integer")
+     * @ORM\Column(name="favorite_count", type="integer", options={"default" = 0})
      */
     private $favorite_count;
 
