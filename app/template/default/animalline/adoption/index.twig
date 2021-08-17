@@ -174,110 +174,38 @@
                 </div>
                 <div class="m-1 p-1"></div>
                 <div class="row">
-                    <div class="card col-sm-6 col-lg-4 col-xl-3 border-0 bg-none mb-4">
-                        <div class="catalog-card">
-                            <a href="{{url('adoption_pet_detail', {'id': '1'}) }}">
-                                <img src="{{ asset('assets/img/thumbnail.png') }}" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body bg-white">
-                                <h3 class="color-gray-500 font-weight-600">柴犬（標準）</h3>
-                                <div class="m-4"></div>
-                                <div class="d-flex">
-                                    <h4 class="mr-2">2020年12月25日生</h4>
-                                    <h4>女の子</h4>
+                    {% for pet in favoritePets %}
+                        <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
+                            <div class="catalog-card">
+                                <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
+                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
+                                         class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body bg-white">
+                                    <h3 class="color-gray-500 font-weight-600">{{ pet.getBreedsType().getBreedsName() ?? '' }}</h3>
+                                    <div class="m-4"></div>
+                                    <div class="d-flex">
+                                        <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
+                                        <h4>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h4>
+                                    </div>
+                                    <div class="mb-2"></div>
+                                    <div class="d-flex">
+                                        <h4 class="mr-3">{{ pet.getConservationId().getConservationHousePref() ?? '' }}</h4>
+                                        <h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
+                                    </div>
+                                    <div class="m-2"></div>
+                                    <h4>{{ pet.prComment }}</h4>
+                                    <div class="m-2"></div>
+                                    <h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4>
+                                    <div class="m-4"></div>
+                                    <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円（税込）</span>
+                                    </h3>
                                 </div>
-                                <div class="mb-2"></div>
-                                <div class="d-flex">
-                                    <h4 class="mr-3">埼玉県</h4>
-                                    <h4>茶色</h4>
-                                </div>
-                                <div class="m-2"></div>
-                                <h4>元気な子です！明るい性格です。</h4>
-                                <div class="m-2"></div>
-                                <h4>掲載日 2020年00月00日</h4>
-                                <div class="m-4"></div>
-                                <h3 class="color-gray-500 font-weight-600">200,000<span>円（税込）</span></h3>
                             </div>
                         </div>
-                    </div>
-                    <div class="card col-sm-6 col-lg-4 col-xl-3 border-0 bg-none mb-4">
-                        <div class="catalog-card">
-                            <a href="{{url('adoption_pet_detail', {'id': '1'}) }}">
-                                <img src="{{ asset('assets/img/thumbnail.png') }}" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body bg-white">
-                                <h3 class="color-gray-500 font-weight-600">柴犬（標準）</h3>
-                                <div class="m-4"></div>
-                                <div class="d-flex">
-                                    <h4 class="mr-2">2020年12月25日生</h4>
-                                    <h4>女の子</h4>
-                                </div>
-                                <div class="mb-2"></div>
-                                <div class="d-flex">
-                                    <h4 class="mr-3">埼玉県</h4>
-                                    <h4>茶色</h4>
-                                </div>
-                                <div class="m-2"></div>
-                                <h4>元気な子です！明るい性格です。</h4>
-                                <div class="m-2"></div>
-                                <h4>掲載日2020年00月00日</h4>
-                                <div class="m-4"></div>
-                                <h3 class="color-gray-500 font-weight-600">200,000<span>円（税込）</span></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card col-sm-6 col-lg-4 col-xl-3 border-0 bg-none mb-4">
-                        <div class="catalog-card">
-                            <a href="{{url('adoption_pet_detail', {'id': '1'}) }}">
-                                <img src="{{ asset('assets/img/thumbnail.png') }}" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body bg-white">
-                                <h3 class="color-gray-500 font-weight-600">柴犬（標準）</h3>
-                                <div class="m-4"></div>
-                                <div class="d-flex">
-                                    <h4 class="mr-2">2020年12月25日生</h4>
-                                    <h4>男の子</h4>
-                                </div>
-                                <div class="mb-2"></div>
-                                <div class="d-flex">
-                                    <h4 class="mr-3">埼玉県</h4>
-                                    <h4>茶色</h4>
-                                </div>
-                                <div class="m-2"></div>
-                                <h4>元気な子です！明るい性格です。</h4>
-                                <div class="m-2"></div>
-                                <h4>掲載日2020年00月00日</h4>
-                                <div class="m-4"></div>
-                                <h3 class="color-gray-500 font-weight-600">200,000<span>円（税込）</span></h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card col-sm-6 col-lg-4 col-xl-3 border-0 bg-none mb-4">
-                        <div class="catalog-card">
-                            <a href="{{url('adoption_pet_detail', {'id': '1'}) }}">
-                                <img src="{{ asset('assets/img/thumbnail.png') }}" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body bg-white">
-                                <h3 class="color-gray-500 font-weight-600">柴犬（標準）</h3>
-                                <div class="m-4"></div>
-                                <div class="d-flex">
-                                    <h4 class="mr-2">2020年12月25日生</h4>
-                                    <h4>男の子</h4>
-                                </div>
-                                <div class="mb-2"></div>
-                                <div class="d-flex">
-                                    <h4 class="mr-3">埼玉県</h4>
-                                    <h4>茶色</h4>
-                                </div>
-                                <div class="m-2"></div>
-                                <h4>元気な子です！明るい性格です。</h4>
-                                <div class="m-2"></div>
-                                <h4>掲載日2020年00月00日</h4>
-                                <div class="m-4"></div>
-                                <h3 class="color-gray-500 font-weight-600">200,000<span>円（税込）</span></h3>
-                            </div>
-                        </div>
-                    </div>
+                    {% else %}
+                        メッセージが見つかりません。
+                    {% endfor %}
                 </div>
                 <div class="m-2 p-2"></div>
                 {# <div class="m-4 p-4"></div> #}
