@@ -48,9 +48,10 @@ class TopController extends AbstractController
      */
     public function __construct(
         ConservationPetsRepository $conservationPetsRepository,
-        BreedsRepository $breedsRepository,
-        PrefRepository $prefRepository
-    ) {
+        BreedsRepository           $breedsRepository,
+        PrefRepository             $prefRepository
+    )
+    {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->prefRepository = $prefRepository;
@@ -65,9 +66,14 @@ class TopController extends AbstractController
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
         $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
         $regions = $this->prefRepository->findAll();
-        $pets = $this->conservationPetsRepository->findBy(
+        $newPets = $this->conservationPetsRepository->findBy(
             ['pet_kind' => $petKind],
             ['release_date' => 'DESC'],
+            4
+        );
+        $favoritePets = $this->conservationPetsRepository->findBy(
+            ['pet_kind' => $petKind],
+            ['favorite_count' => 'DESC'],
             4
         );
 
@@ -75,7 +81,8 @@ class TopController extends AbstractController
             'petKind' => $petKind,
             'breeds' => $breeds,
             'regions' => $regions,
-            'pets' => $pets
+            'newPets' => $newPets,
+            'favoritePets' => $favoritePets,
         ]);
     }
 
