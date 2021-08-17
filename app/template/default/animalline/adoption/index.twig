@@ -130,11 +130,12 @@
                 <div class="m-1 p-1"></div>
                 {# <div class="row"> #}
                 <div>
-                    {% for pet in pets %}
+                    {% for pet in newPets %}
                         <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                             <div class="catalog-card new-band">
-                                <a href="{{url('adoption_pet_detail', {'id': pet.id}) }}">
-                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}" class="card-img-top" alt="...">
+                                <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
+                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
+                                         class="card-img-top" alt="...">
                                 </a>
                                 <div class="card-body bg-white">
                                     <h3 class="color-gray-500 font-weight-600">{{ pet.getBreedsType().getBreedsName() ?? '' }}</h3>
