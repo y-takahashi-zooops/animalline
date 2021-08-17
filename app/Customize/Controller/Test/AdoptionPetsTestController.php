@@ -8,14 +8,11 @@ use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\CoatColorsRepository;
-use JsonSerializable;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("test/list_adoption_pets")
@@ -59,7 +56,7 @@ class AdoptionPetsTestController extends Controller
     }
 
     /**
-     * @Route("/by_pet_kind", name="by_pet_kind", methods={"GET"}, options={"expose"=true})
+     * @Route("/by_pet_kind", name="by_pet_kind", methods={"GET"})
      * @param Request $request
      * @param BreedsRepository $breedsRepository
      * @param CoatColorsRepository $coatColorsRepository
@@ -70,24 +67,23 @@ class AdoptionPetsTestController extends Controller
         $petKind = $request->get('pet_kind');
         $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
         $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
-
-        $breeds_formated = [];
+        $formattedBreeds = [];
         foreach ($breeds as $breed) {
-            $breeds_formated[] = [
+            $formattedBreeds[] = [
                 'id' => $breed->getId(),
                 'name' => $breed->getBreedsName()
             ];
         }
-        $colors_formated = [];
+        $formattedColors = [];
         foreach ($colors as $color) {
-            $colors_formated[] = [
+            $formattedColors[] = [
                 'id' => $color->getId(),
                 'name' => $color->getCoatColorName()
             ];
         }
         $data = [
-            'breeds' => $breeds_formated,
-            'colors' => $colors_formated
+            'breeds' => $formattedBreeds,
+            'colors' => $formattedColors
         ];
 
         return new JsonResponse($data);
