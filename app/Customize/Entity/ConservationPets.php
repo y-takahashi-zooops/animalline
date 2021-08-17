@@ -125,9 +125,20 @@ class ConservationPets
      */
     private $conservationPetImages;
 
+    /**
+     * @ORM\Column(name="favorite_count", type="integer")
+     */
+    private $favorite_count;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PetsFavorite::class, mappedBy="pet_id")
+     */
+    private $petsFavorites;
+
     public function __construct()
     {
         $this->conservationPetImages = new ArrayCollection();
+        $this->petsFavorites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -381,6 +392,48 @@ class ConservationPets
     public function setConservationId(?Conservations $conservation_id): self
     {
         $this->conservation_id = $conservation_id;
+
+        return $this;
+    }
+
+    public function getFavoriteCount(): ?int
+    {
+        return $this->favorite_count;
+    }
+
+    public function setFavoriteCount(int $favorite_count): self
+    {
+        $this->favorite_count = $favorite_count;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PetsFavorite[]
+     */
+    public function getPetsFavorites(): Collection
+    {
+        return $this->petsFavorites;
+    }
+
+    public function addPetsFavorite(PetsFavorite $petsFavorite): self
+    {
+        if (!$this->petsFavorites->contains($petsFavorite)) {
+            $this->petsFavorites[] = $petsFavorite;
+            $petsFavorite->setPetId($this);
+        }
+
+        return $this;
+    }
+
+    public function removePetsFavorite(PetsFavorite $petsFavorite): self
+    {
+        if ($this->petsFavorites->removeElement($petsFavorite)) {
+            // set the owning side to null (unless already changed)
+            if ($petsFavorite->getPetId() === $this) {
+                $petsFavorite->setPetId(null);
+            }
+        }
 
         return $this;
     }
