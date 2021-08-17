@@ -2,14 +2,14 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-<p class="font-size-16" style="margin-bottom: 20px;">
-    会員登録が完了しました。<br>
-    ここで残り情報を入力する。(保護団体名,運営者指名etc...)
-</p>
-<div class="col-md-8" style="margin: 0 auto;">
-    <a class="ec-blockBtn--action bg-adoption" style="margin-bottom: 20px;" href={{url('adoption_top')}}>{{ 'TOPへ'|trans }}</a>
-  </div>
-</body>
+    <p class="mb-4">
+        会員登録が完了しました。<br>
+        ここで残り情報を入力する。(保護団体名,運営者指名etc...)
+    </p>
+    <div class="col-md-8" style="margin: 0 auto;">
+        <a class="ec-blockBtn--action bg-adoption mb-4" href={{url('adoption_top')}}>{{ 'TOPへ'|trans }}</a>
+    </div>
+    </body>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">

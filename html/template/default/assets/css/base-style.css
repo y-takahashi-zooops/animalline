@@ -219,7 +219,8 @@ th, td {
     color: var(--gray-100);
 }
 
-.font-size-18 {
+/* pxでの指定はしない */
+/* .font-size-18 {
     font-size: 18px!important;
 }
 
@@ -237,8 +238,7 @@ th, td {
 
 .font-size-10 {
     font-size: 10px!important;
-}
-
+} */
 
 .font-weight-600 {
     font-weight: 600;
@@ -282,7 +282,8 @@ th, td {
 .main {
     max-width: 1600px;
     margin: auto;
-    padding: 2em 4em;
+    /* padding: 2em 4em; */
+    padding: 2em 2em;
 }
 
 .header-nav .nav-link.active:hover{
@@ -320,7 +321,7 @@ th, td {
 .headerNav {
     right: -100vw;
     top: 0;
-    padding-top: 40px;
+    padding-top: 65px;
     -webkit-transition: all .6s;
     transition: all .6s;
     z-index: 20;
@@ -328,7 +329,7 @@ th, td {
 }
 
 .hamburger_btn {
-    right: 10px;
+    right: -2px;
     top: 16px;
     width: 55px;
     height: 55px;
@@ -351,6 +352,13 @@ th, td {
 }
 .hamburger_line_3 {
     top: 34px;
+}
+
+.hamburger_menu_btn {
+    width: 90%;
+    margin:0 auto 10px;
+    background-color: rgb(248, 220, 160)!important;
+    border-radius: 5px;
 }
 
 .black-bg {
@@ -529,12 +537,6 @@ th, td {
 .size-card > .card-img {
     height: 150px;
     padding-top: 25%;
-}
-
-.dog-kind-name {
-    padding-right: 0;
-    padding-left: 0;
-    margin: 0 auto;
 }
 
 @media (max-width: 768px) {

@@ -3,10 +3,10 @@
 
 {% block main %}
 
-<p class="font-size-16" style="margin-bottom: 20px;">
-    ご入力いただいたメールアドレス宛に、ご本人様確認用のメールをお送りします。<br>
-    メール本文内のURLをクリックすると、本会員登録が完了となります。
-</p>
+<div class="mb-4 col-md-8" style="margin: 0 auto;">
+    <h3>ご入力いただいたメールアドレス宛に、ご本人様確認用のメールをお送りします。</h3>
+    <h3>メール本文内のURLをクリックすると、本会員登録が完了となります。</h3>
+</div>
 
 <div class="col-md-8" style="margin: 0 auto;">
     <form  method="post" action="{{ url('adoption_entry') }}" novalidate>
@@ -35,7 +35,7 @@
         </div>
 
         {{ form_widget(form._token) }}
-        <button class="ec-blockBtn--action bg-adoption" style="margin-bottom: 20px;">{{ '登録する'|trans }}</button>
+        <button class="ec-blockBtn--action bg-adoption mt-4 mb-4">{{ '登録する'|trans }}</button>
         <a class="ec-blockBtn--cancel" href="{{ url('adoption_top') }}">{{ 'キャンセル'|trans }}</a>
     </form>
 </div>
