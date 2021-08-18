@@ -135,7 +135,7 @@ class AdoptionPetsTestController extends Controller
     }
 
     /**
-     * @Route("/upload", name="adoption_pets_upload_crop_image", methods={"POST"}, options={"expose"=true})
+     * @Route("/upload", name="test_adoption_pets_upload_crop_image", methods={"POST"}, options={"expose"=true})
      * @param Request $request
      * @return JsonResponse
      */

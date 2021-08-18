@@ -80,6 +80,7 @@ class ConservationPetsType extends AbstractType
                     'class' => 'form-inline',
                     'data-img' => 'img1'
                 ],
+                'data_class' => null
             ])
             ->add('image1', FileType::class, [
                 'required' => false,
@@ -89,6 +90,7 @@ class ConservationPetsType extends AbstractType
                     'class' => 'form-inline',
                     'data-img' => 'img2'
                 ],
+                'data_class' => null
             ])
             ->add('image2', FileType::class, [
                 'required' => false,
@@ -98,6 +100,7 @@ class ConservationPetsType extends AbstractType
                     'class' => 'form-inline',
                     'data-img' => 'img3'
                 ],
+                'data_class' => null
             ])
             ->add('image3', FileType::class, [
                 'required' => false,
@@ -107,6 +110,7 @@ class ConservationPetsType extends AbstractType
                     'class' => 'form-inline',
                     'data-img' => 'img4'
                 ],
+                'data_class' => null
             ])
             ->add('image4', FileType::class, [
                 'required' => false,
@@ -116,6 +120,7 @@ class ConservationPetsType extends AbstractType
                     'class' => 'form-inline',
                     'data-img' => 'img5'
                 ],
+                'data_class' => null
             ])
             ->add('release_status', IntegerType::class)
             ->add('release_date', DateType::class)
