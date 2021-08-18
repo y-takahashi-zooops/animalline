@@ -52,7 +52,7 @@
                 <img id="img_thumbnail" class="img_preview" src="" />
             </div>
             <div style="display: grid">
-                <button class="btn_remove">画像を削除</button>
+                <button class="btn_remove conservation_pets_thumbnail_path">画像を削除</button>
             </div>
         </div>
         <div class="images">
@@ -61,8 +61,8 @@
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
-                <button class="btn_set_thumbnail">メイン画像に設定</button>
-                <button class="btn_remove">画像を削除</button>
+                <button class="btn_set_thumbnail conservation_pets_image1">メイン画像に設定</button>
+                <button class="btn_remove conservation_pets_image1">画像を削除</button>
             </div>
         </div>
         <div class="images">
@@ -71,8 +71,8 @@
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
-                <button class="btn_set_thumbnail">メイン画像に設定</button>
-                <button class="btn_remove">画像を削除</button>
+                <button class="btn_set_thumbnail conservation_pets_image2">メイン画像に設定</button>
+                <button class="btn_remove conservation_pets_image2">画像を削除</button>
             </div>
         </div>
         <div class="images">
@@ -81,8 +81,8 @@
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
-                <button class="btn_set_thumbnail">メイン画像に設定</button>
-                <button class="btn_remove">画像を削除</button>
+                <button class="btn_set_thumbnail conservation_pets_image3">メイン画像に設定</button>
+                <button class="btn_remove conservation_pets_image3">画像を削除</button>
             </div>
         </div>
         <div class="images">
@@ -91,11 +91,16 @@
                 <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
-                <button class="btn_set_thumbnail">メイン画像に設定</button>
-                <button class="btn_remove">画像を削除</button>
+                <button class="btn_set_thumbnail conservation_pets_image4">メイン画像に設定</button>
+                <button class="btn_remove conservation_pets_image4">画像を削除</button>
             </div>
         </div>
     </div>
+    <input type="hidden" name="img0" class="conservation_pets_thumbnail_path">
+    <input type="hidden" name="img1" class="conservation_pets_image1">
+    <input type="hidden" name="img2" class="conservation_pets_image2">
+    <input type="hidden" name="img3" class="conservation_pets_image3">
+    <input type="hidden" name="img4" class="conservation_pets_image4">
 
     {{ form_label(form.release_status, 'Release status', { 'label_attr': {'class': 'ec-label' }}) }}
     {{ form_widget(form.release_status) }}

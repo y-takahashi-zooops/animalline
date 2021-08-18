@@ -75,12 +75,14 @@ class ConservationPetsType extends AbstractType
             ->add('delivery_time', TextType::class)
             ->add('delivery_way', TextType::class)
             ->add('thumbnail_path', FileType::class, [
+                'required' => false,
                 'attr' => [
                     'class' => 'form-inline',
                     'data-img' => 'img1'
                 ],
             ])
             ->add('image1', FileType::class, [
+                'required' => false,
                 'label' => false,
                 'mapped' => false,
                 'attr' => [
@@ -89,6 +91,7 @@ class ConservationPetsType extends AbstractType
                 ],
             ])
             ->add('image2', FileType::class, [
+                'required' => false,
                 'label' => false,
                 'mapped' => false,
                 'attr' => [
@@ -97,6 +100,7 @@ class ConservationPetsType extends AbstractType
                 ],
             ])
             ->add('image3', FileType::class, [
+                'required' => false,
                 'label' => false,
                 'mapped' => false,
                 'attr' => [
@@ -105,6 +109,7 @@ class ConservationPetsType extends AbstractType
                 ],
             ])
             ->add('image4', FileType::class, [
+                'required' => false,
                 'label' => false,
                 'mapped' => false,
                 'attr' => [

@@ -44,4 +44,7 @@ final class AnilineConf
 
     const RELEASE_STATUS_PRIVATE = 0;
     const RELEASE_STATUS_PUBLIC = 1;
+
+    const PET_PHOTO_TYPE_IMAGE = 1;
+    const PET_PHOTO_TYPE_VIDEO = 2;
 }
