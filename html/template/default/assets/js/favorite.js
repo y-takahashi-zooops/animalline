@@ -1,4 +1,4 @@
-$("a#favorite").on("click", function () {
+$(document).on("click", ".btn-like", function () {
     if ($(this).data('login')) {
         $.ajax({
             type: "POST",
@@ -10,8 +10,12 @@ $("a#favorite").on("click", function () {
             success: function (data) {
                 if (data == 'liked') {
                     $('#textBtnLike').text('お気に入りから削除')
+                    $('svg.heart-icon path').attr('fill', '#FF424F')
+                    $('.btn-like').addClass('red-heart')
                 } else {
                     $('#textBtnLike').text('お気に入りに追加')
+                    $('svg.heart-icon path').attr('fill', 'none')
+                    $('.btn-like').removeClass('red-heart')
                 }
             }
         });
