@@ -8,7 +8,7 @@ $(function () {
     function getDataByPetKind(petKindSelect) {
         $.ajax({
             type: 'get',
-            url: '/test/list_adoption_pets/by_pet_kind',
+            url: '/pet_data_by_pet_kind',
             dataType: 'json',
             data: {
                 pet_kind: petKindSelect.value
