@@ -194,12 +194,12 @@ class AdoptionConfigrationController extends AbstractController
 
             return $this->redirectToRoute('adoption_configration');
         }
+
         $petImages = []; 
         foreach($conservationPetImage as $image) {
             $petImages[] = [
                 'image_uri' => $image->getImageUri(),
                 'sort_order' => $image->getSortOrder(),
-
             ];
         }
 
