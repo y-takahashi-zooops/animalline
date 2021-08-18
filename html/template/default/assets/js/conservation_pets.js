@@ -30,20 +30,11 @@ $(function () {
             });
     }
 
-    const el = document.getElementById('images');
-    const sortable = Sortable.create(el);
-
-    function showImg(elm) {
-        document.querySelector(`#${elm.dataset.img}`).src = URL.createObjectURL(elm.files[0]);
-    }
-
     var inputImageId = '';
     var bs_modal = $('#modal');
     var image = document.getElementById('image');
     var cropper, reader, file, size;
     $(".form-control-file").change(function (e) {
-        showImg(this);
-
         inputImageId = e.target.id;
         var files = e.target.files;
         var done = function (url) {

@@ -53,14 +53,6 @@
         {{ form_widget(form.image4) }}
     </div>
 
-    <ul id="images">
-        <li><img id="img1" src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png' }}" alt="img1"></li>
-        <li><img id="img2" src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png' }}" alt="img2"></li>
-        <li><img id="img3" src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png' }}" alt="img3"></li>
-        <li><img id="img4" src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png' }}" alt="img4"></li>
-        <li><img id="img5" src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png' }}" alt="img5"></li>
-    </ul>
-
     {{ form_label(form.release_status, 'Release status', { 'label_attr': {'class': 'ec-label' }}) }}
     {{ form_widget(form.release_status) }}
     {{ form_errors(form.release_status) }}
