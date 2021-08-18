@@ -103,12 +103,13 @@ class AdoptionController extends AbstractController
      */
     public function petDetail(Request $request)
     {
+        $isLoggedIn = (bool)$this->getUser();
         $id = $request->get('id');
-        $is_favorite = true;
+        $isFavorite = false;
         $conservationPet = $this->conservationPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
-        if (!$favorite) {
-            $is_favorite = false;
+        $favorite = $this->petsFavoriteRepository->findOneBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
+        if ($favorite) {
+            $isFavorite = true;
         }
         if (!$conservationPet) {
             throw new HttpException\NotFoundHttpException();
@@ -117,7 +118,12 @@ class AdoptionController extends AbstractController
         $images = $conservationPet->getConservationPetImages();
         return $this->render(
             'animalline/adoption/pet/detail.twig',
-            ['conservationPet' => $conservationPet, 'images' => $images, 'is_favorite' => $is_favorite]
+            [
+                'conservationPet' => $conservationPet,
+                'images' => $images,
+                'isFavorite' => $isFavorite,
+                'isLoggedIn' => $isLoggedIn
+            ]
         );
     }
 
@@ -130,25 +136,28 @@ class AdoptionController extends AbstractController
     {
         $id = $request->get('id');
         $pet = $this->conservationPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
+        $favorite = $this->petsFavoriteRepository->findOneBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
         $entityManager = $this->getDoctrine()->getManager();
         if (!$favorite) {
             $petKind = $pet->getPetKind();
             $favorite_pet = new PetsFavorite();
             $favorite_pet->setCustomerId($this->getUser())
                 ->setPetId($id)
-                ->setSiteCategory(2)
+                ->setSiteCategory(AnilineConf::SITE_CATEGORY_CONSERVATION)
                 ->setPetKind($petKind);
             $entityManager->persist($favorite_pet);
             $entityManager->flush();
 
             $this->conservationPetsRepository->incrementCount($pet);
         } else {
-            $entityManager->remove($favorite[0]);
+            $entityManager->remove($favorite);
             $entityManager->flush();
+
             $this->conservationPetsRepository->decrementCount($pet);
+
             return new JsonResponse('unliked');
         }
+
         return new JsonResponse('liked');
     }
 
