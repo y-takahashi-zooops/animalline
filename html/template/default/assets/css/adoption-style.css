@@ -64,14 +64,25 @@
 .adoption-border {
     border: 3px solid #FFAC69!important;
 }
+
 .hidden {
     display: none !important;
 }
 
-a#favorite {
+.sub-title {
+    overflow: auto;
+}
+
+.btn-like {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    display: inline-block;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 4px 0 4px 0;
     cursor: pointer;
 }
 
-a#favorite:hover {
-    text-decoration: underline;
+.btn-like:hover, .red-heart {
+    border-color: #ff7d7d;
 }
