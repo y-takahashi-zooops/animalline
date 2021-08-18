@@ -24,12 +24,20 @@ use DateTime;
 class AdoptionConfigrationController extends AbstractController
 {
     /**
+     * @var ConservationPetImageRepository
+     */
+    protected $conservationPetImageRepository;
+
+    /**
      * AdoptionConfigrationController constructor.
      */
     public function __construct(
-        ConservationContactsRepository $conservationContactsRepository
+        ConservationContactsRepository $conservationContactsRepository,
+        ConservationPetImageRepository $conservationPetImageRepository
     ) {
         $this->conservationContactsRepository = $conservationContactsRepository;
+        $this->conservationPetImageRepository = $conservationPetImageRepository;
+
     }
 
     /**
@@ -164,10 +172,10 @@ class AdoptionConfigrationController extends AbstractController
     /**
      * @Route("/adoption/configuration/pets/edit/{id}", name="adoption_configuration_pets_edit", methods={"GET","POST"})
      */
-    public function adoption_configuration_pets_edit(Request $request, ConservationPets $conservationPet, ConservationPetImageRepository $conservationPetImageRepository): Response
+    public function adoption_configuration_pets_edit(Request $request, ConservationPets $conservationPet): Response
     {
         $form = $this->createForm(ConservationPetsType::class, $conservationPet);
-        $conservationPetImage = $conservationPetImageRepository->findBy(
+        $conservationPetImage = $this->conservationPetImageRepository->findBy(
             ['conservation_pet_id'=> $conservationPet->getId()],
             ['sort_order' => 'ASC']
         );
