@@ -76,6 +76,7 @@ class ConservationPetsType extends AbstractType
             ->add('delivery_way', TextType::class)
             ->add('thumbnail_path', FileType::class, [
                 'required' => false,
+                'mapped' => false,
                 'attr' => [
                     'class' => 'form-inline',
                     'data-img' => 'img1'
