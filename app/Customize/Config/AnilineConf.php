@@ -49,4 +49,7 @@ final class AnilineConf
     const SITE_CATEGORY_CONSERVATION = 2;
 
     const NUMBER_ITEM_TOP = 4;
+
+    const PET_PHOTO_TYPE_IMAGE = 1;
+    const PET_PHOTO_TYPE_VIDEO = 2;
 }
