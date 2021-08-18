@@ -2,17 +2,17 @@
 
 namespace Customize\Entity;
 
-use Customize\Repository\ConservationPetImageRepository;
+use Customize\Repository\BreederPetImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ConservationPetImageRepository::class)
- * @ORM\Table(name="alm_conservation_pet_image")
+ * @ORM\Entity(repositoryClass=BreederPetImageRepository::class)
+ * @ORM\Table(name="alm_breeder_pet_image")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
  * @ORM\HasLifecycleCallbacks()
  */
-class ConservationPetImage
+class BreederPetImage
 {
     /**
      * @ORM\Id
@@ -22,10 +22,10 @@ class ConservationPetImage
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ConservationPets::class, inversedBy="conservationPetImages")
-     * @ORM\JoinColumn(name="conservation_pet_id", nullable=false)
+     * @ORM\ManyToOne(targetEntity=BreederPets::class, inversedBy="breederPetImages")
+     * @ORM\JoinColumn(name="breeder_pet_id", nullable=false)
      */
-    private $conservation_pet_id;
+    private $breeder_pet_id;
 
     /**
      * @ORM\Column(name="image_type", type="smallint")
@@ -42,19 +42,33 @@ class ConservationPetImage
      */
     private $sort_order;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
+    private $create_date;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
+     */
+    private $update_date;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getConservationPetId(): ?ConservationPets
+    public function getBreederPetId(): ?BreederPets
     {
-        return $this->conservation_pet_id;
+        return $this->breeder_pet_id;
     }
 
-    public function setConservationPetId(?ConservationPets $conservation_pet_id): self
+    public function setBreederPetId(?BreederPets $breeder_pet_id): self
     {
-        $this->conservation_pet_id = $conservation_pet_id;
+        $this->breeder_pet_id = $breeder_pet_id;
 
         return $this;
     }
@@ -91,6 +105,34 @@ class ConservationPetImage
     public function setSortOrder(int $sort_order): self
     {
         $this->sort_order = $sort_order;
+
+        return $this;
+    }
+
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->create_date = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Set updateDate.
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Payment
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->update_date = $updateDate;
 
         return $this;
     }

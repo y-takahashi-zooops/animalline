@@ -6,7 +6,7 @@ use Customize\Repository\MovieConvertRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=PetsFavoriteRepository::class)
+ * @ORM\Entity(repositoryClass=MovieConvertRepository::class)
  * @ORM\Table(name="ald_movie_convert")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
@@ -50,6 +50,20 @@ class MovieConvert
      * @ORM\Column(type="text", nullable=true)
      */
     private $error_reason;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
+    private $create_date;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
+     */
+    private $update_date;
 
     public function getId(): ?int
     {
@@ -124,6 +138,34 @@ class MovieConvert
     public function setErrorReason(?string $error_reason): self
     {
         $this->error_reason = $error_reason;
+
+        return $this;
+    }
+
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->create_date = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Set updateDate.
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Payment
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->update_date = $updateDate;
 
         return $this;
     }
