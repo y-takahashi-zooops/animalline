@@ -203,9 +203,9 @@ class AdoptionConfigrationController extends AbstractController
     }
 
     /**
-     * @Route("/by_pet_kind", name="by_pet_kind", methods={"GET"})
+     * @Route("/pet_data_by_pet_kind", name="pet_data_by_pet_kind", methods={"GET"})
      */
-    public function byPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
+    public function petDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
     {
         $petKind = $request->get('pet_kind');
         $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
