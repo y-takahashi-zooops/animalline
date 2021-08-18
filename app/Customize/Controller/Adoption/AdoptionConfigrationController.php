@@ -167,17 +167,18 @@ class AdoptionConfigrationController extends AbstractController
     public function adoption_configuration_pets_edit(Request $request, ConservationPets $conservationPet, ConservationPetImageRepository $conservationPetImageRepository): Response
     {
         $form = $this->createForm(ConservationPetsType::class, $conservationPet);
-        $form->handleRequest($request);
-        $petImages = $conservationPetImageRepository->findBy(
+        $conservationPetImage = $conservationPetImageRepository->findBy(
             ['conservation_pet_id'=> $conservationPet->getId()],
             ['sort_order' => 'ASC']
         );
+        $request->request->set('thumbnail_path', $request->get('img0'));
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $conservationPet->setThumbnailPath($request->get('img0'));
             $entityManager->persist($conservationPet);
-            foreach($petImages as $key => $image) {
+            foreach($conservationPetImage as $key => $image) {
                 $image->setImageUri($request->get('img' . $key));
                 $entityManager->persist($image);
             }
@@ -185,10 +186,18 @@ class AdoptionConfigrationController extends AbstractController
 
             return $this->redirectToRoute('adoption_configration');
         }
+        $petImages = []; 
+        foreach($conservationPetImage as $image) {
+            $petImages[] = [
+                'image_uri' => $image->getImageUri(),
+                'sort_order' => $image->getSortOrder(),
+
+            ];
+        }
 
         return $this->render('animalline/adoption/configration/pets/edit.twig', [
             'adoption_pet' => $conservationPet,
-            'petImages' => $petImages,
+            'pet_mages' => $petImages,
             'form' => $form->createView(),
         ]);
     }

@@ -12,14 +12,21 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> {# current jquery slim not support ajax #}
 <script src="{{ asset('assets/js/conservation_pets.js') }}"></script>
 <script>
-    var thumbnailPath = '{{ adoption_pet.thumbnailPath }}'
+    var thumbnailPath = '{{ adoption_pet.thumbnailPath }}';
+    var petImages = {{ pet_mages | json_encode | raw }};
     $(document).ready(function() {
         if (thumbnailPath) {
             $('#conservation_pets_thumbnail_path').hide();
-            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', '/' + thumbnailPath);
+            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', thumbnailPath);
             $('#conservation_pets_thumbnail_path').parent().find('img').show();
             $('#conservation_pets_thumbnail_path').parent().parent().find('button').show();
+            $(`input.conservation_pets_thumbnail_path`).val(thumbnailPath);
         }
+        petImages.forEach((p) => {
+            if (p.image_uri.length > 0) {
+                setImageToBox(p.image_uri, p.sort_order - 1)
+            }
+        });
     });
     var inputImageId = '';
     var bs_modal = $('#modal');
@@ -28,9 +35,10 @@
     function setImageToBox(image, key) {
         const id = 'conservation_pets_image' + key;
         $(`#${ id }`).hide();
-        $(`#${ id }`).parent().find('img').attr('src', '/' + image);
+        $(`#${ id }`).parent().find('img').attr('src', image);
         $(`#${ id }`).parent().find('img').show();
         $(`#${ id }`).parent().parent().find('button').show();
+        $(`input.${ id }`).val(image);
     }
     $(".form-control-file").change(function (e) {
         inputImageId = e.target.id;
@@ -95,6 +103,7 @@
                         $(`#${ inputImageId }`).parent().find('.img_preview').show();
                         $(`#${ inputImageId }`).parent().parent().find('.btn_remove').show();
                         $(`#${ inputImageId }`).parent().parent().find('.btn_set_thumbnail').show();
+                        $(`input.${ inputImageId }`).val('/' + data);
                     }
                 });
             };
@@ -107,6 +116,7 @@
         $(this).parent().find('.btn_set_thumbnail').hide();
         $(this).parent().parent().find('.img_preview').hide();
         $(this).parent().parent().find('.form-control-file').show();
+        $(`input.${ e.target.classList[1] }`).val('');
     });
 
     $(document).on('click', '.btn_set_thumbnail', function(e) {
@@ -116,6 +126,7 @@
         $('#conservation_pets_thumbnail_path').hide();
         $('#img_thumbnail').show();
         $('#img_thumbnail').parent().parent().find('.btn_remove').show();
+        $(`input.conservation_pets_thumbnail_path`).val($(`input.${ e.target.classList[1] }`).val());
     });
 </script>
 {% endblock %}

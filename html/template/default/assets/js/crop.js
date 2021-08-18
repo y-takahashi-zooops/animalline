@@ -14,7 +14,6 @@ $("body").on("change", "#form_image", function (e) {
 
     if (files && files.length > 0) {
         file = files[0];
-        console.log(file);
 
         if (URL) {
             done(URL.createObjectURL(file));
