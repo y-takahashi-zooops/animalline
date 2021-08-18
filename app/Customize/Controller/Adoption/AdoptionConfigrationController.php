@@ -37,7 +37,6 @@ class AdoptionConfigrationController extends AbstractController
     ) {
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
-
     }
 
     /**
@@ -132,15 +131,20 @@ class AdoptionConfigrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $petImage0 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img0'))->setSortOrder(1)->setConservationPetId($conservationPet);
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img0'))->setSortOrder(1)
+                ->setConservationPetId($conservationPet);
             $petImage1 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img1'))->setSortOrder(2)->setConservationPetId($conservationPet);
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img1'))->setSortOrder(2)
+                ->setConservationPetId($conservationPet);
             $petImage2 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img2'))->setSortOrder(3)->setConservationPetId($conservationPet);
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img2'))->setSortOrder(3)
+                ->setConservationPetId($conservationPet);
             $petImage3 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img3'))->setSortOrder(4)->setConservationPetId($conservationPet);
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img3'))->setSortOrder(4)
+                ->setConservationPetId($conservationPet);
             $petImage4 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img4'))->setSortOrder(5)->setConservationPetId($conservationPet);
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img4'))->setSortOrder(5)
+                ->setConservationPetId($conservationPet);
             $conservationPet->addConservationPetImage($petImage0);
             $conservationPet->addConservationPetImage($petImage1);
             $conservationPet->addConservationPetImage($petImage2);
@@ -176,7 +180,7 @@ class AdoptionConfigrationController extends AbstractController
     {
         $form = $this->createForm(ConservationPetsType::class, $conservationPet);
         $conservationPetImage = $this->conservationPetImageRepository->findBy(
-            ['conservation_pet_id'=> $conservationPet->getId()],
+            ['conservation_pet_id' => $conservationPet->getId()],
             ['sort_order' => 'ASC']
         );
         $request->request->set('thumbnail_path', $request->get('img0'));
@@ -186,7 +190,7 @@ class AdoptionConfigrationController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $conservationPet->setThumbnailPath($request->get('img0'));
             $entityManager->persist($conservationPet);
-            foreach($conservationPetImage as $key => $image) {
+            foreach ($conservationPetImage as $key => $image) {
                 $image->setImageUri($request->get('img' . $key));
                 $entityManager->persist($image);
             }
@@ -195,8 +199,8 @@ class AdoptionConfigrationController extends AbstractController
             return $this->redirectToRoute('adoption_configration');
         }
 
-        $petImages = []; 
-        foreach($conservationPetImage as $image) {
+        $petImages = [];
+        foreach ($conservationPetImage as $image) {
             $petImages[] = [
                 'image_uri' => $image->getImageUri(),
                 'sort_order' => $image->getSortOrder(),
