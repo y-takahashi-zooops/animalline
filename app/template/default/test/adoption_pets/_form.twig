@@ -44,32 +44,56 @@
     {{ form_errors(form.delivery_way) }}
 
     {{ form_label(form.thumbnail_path, 'Thumbnail path', { 'label_attr': {'class': 'ec-label' }}) }}
-    <div class="form-inline">
-        <div class="preview_box mr-4">
-            {{ form_widget(form.thumbnail_path) }}
-            {{ form_errors(form.thumbnail_path) }}
-            <img class="img_preview" src="" />
-            <button class="btn_remove">Remove</button>
+    <div class="form_img_inline">
+        <div class="images">
+            <div class="preview_box mr-4">
+                {{ form_widget(form.thumbnail_path) }}
+                {{ form_errors(form.thumbnail_path) }}
+                <img id="img_thumbnail" class="img_preview" src="" />
+            </div>
+            <div style="display: grid">
+                <button class="btn_remove">画像を削除</button>
+            </div>
         </div>
-         <div class="preview_box mr-4">
-            {{ form_widget(form.image1) }}
-            <img class="img_preview" src="" />
-            <button class="btn_remove">Remove</button>
+        <div class="images">
+            <div class="preview_box mr-4">
+                {{ form_widget(form.image1) }}
+                <img class="img_preview" src="" />
+            </div>
+            <div style="display: grid">
+                <button class="btn_set_thumbnail">メイン画像に設定</button>
+                <button class="btn_remove">画像を削除</button>
+            </div>
         </div>
-         <div class="preview_box mr-4">
-            {{ form_widget(form.image2) }}
-            <img class="img_preview" src="" />
-            <button class="btn_remove">Remove</button>
+        <div class="images">
+            <div class="preview_box mr-4">
+                {{ form_widget(form.image2) }}
+                <img class="img_preview" src="" />
+            </div>
+            <div style="display: grid">
+                <button class="btn_set_thumbnail">メイン画像に設定</button>
+                <button class="btn_remove">画像を削除</button>
+            </div>
         </div>
-         <div class="preview_box mr-4">
-            {{ form_widget(form.image3) }}
-            <img class="img_preview" src="" />
-            <button class="btn_remove">Remove</button>
+        <div class="images">
+            <div class="preview_box mr-4">
+                {{ form_widget(form.image3) }}
+                <img class="img_preview" src="" />
+            </div>
+            <div style="display: grid">
+                <button class="btn_set_thumbnail">メイン画像に設定</button>
+                <button class="btn_remove">画像を削除</button>
+            </div>
         </div>
-         <div class="preview_box">
-            {{ form_widget(form.image4) }}
-            <img class="img_preview" src="" />
-            <button class="btn_remove">Remove</button>
+        <div class="images">
+            <div class="preview_box mr-4">
+                {{ form_widget(form.image4) }}
+                <img class="img_preview" src="" />
+            </div>
+            <div style="display: grid">
+                <button class="btn_set_thumbnail">メイン画像に設定</button>
+                <button class="btn_remove">画像を削除</button>
+            </div>
         </div>
     </div>
 
@@ -138,17 +162,39 @@
             width: 100%;
             height: auto;
         }
+        .btn_set_thumbnail {
+            display: none;
+            background-color: #fbb03b;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 20px;
+            width: 150px;
+            border: 2px solid black;
+            padding: 4px;
+            margin-top: 5px;
+        }
+        .btn_set_thumbnail:hover {
+            opacity: 0.3;
+        }
         .btn_remove {
             display: none;
-            cursor: pointer;
-            padding: 0 2px;
-            color: #fff;
-            font-weight: 700;
-            background: #ff5d5d;
-            position: relative;
-            text-align: center;
-            bottom: 27px;
-            width: 100%
+            background-color: #ff1f25;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 20px;
+            width: 150px;
+            border: 2px solid black;
+            padding: 4px;
+            margin-top: 5px;
+        }
+        .btn_remove:hover {
+            opacity: 0.3;
+        }
+        .form_img_inline {
+            display: flex;
+            flex-flow: row wrap;
         }
 
     </style>

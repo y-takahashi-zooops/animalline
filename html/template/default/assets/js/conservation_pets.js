@@ -29,19 +29,4 @@ $(function () {
                 console.error(err);
             });
     }
-
-    $(document).on('mouseover', '.img_preview', function () {
-        $(this).parent().find('.btn_remove').show();
-    });
-
-    $(document).on('mouseout', '.img_preview', function () {
-        $(this).parent().find('.btn_remove').hide();
-    });
-
-    $(document).on('click', '.btn_remove', function (e) {
-        e.preventDefault();
-        $(this).hide();
-        $(this).parent().find('.img_preview').hide();
-        $(this).parent().find('.form-control-file').show();
-    });
 });
