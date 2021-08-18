@@ -68,15 +68,19 @@
                             <option value="2">女の子</option>
                         </select>
                     </div>
-                    <div class="col-md-3 select-container">
-                        <select class="form-control bg-primary w-100 p-2 h-15" id="formControlSelect3" name="region">
-                            <option value="">地域</option>
-                            {% for region in regions %}
-                                <option value="{{ region.id }}">{{ region.name }}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="col-md-3">
+                        <div class="select-container m-0">
+                            <select class="form-control bg-primary w-100 p-2 h-15" id="formControlSelect3" name="region">
+                                <option value="">都道府県</option>
+                                {% for region in regions %}
+                                    <option value="{{ region.id }}">{{ region.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input type="checkbox" name="adjacent" value="1">隣接する都道府県も検索
                     </div>
                 </div>
+                {#
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-12">
@@ -89,18 +93,24 @@
                 <div class="collapse" id="collapseExample">
                     <div class="m-2 p-2"></div>
                     <div class="row">
-                        <div class="col-sm-5 select-container mb-2 mb-sm-none">
-                            詳細検索条件１
+                        <div class="col-sm-2 select-container mb-2 mb-sm-none">
+                            <select class="form-control bg-primary w-100 p-2 h-15" id="formControlArea" name="search_area">
+                                <option value="">地域</option>
+                                <option value="1">関東</option>
+                                <option value="2">中部・東海</option>
+                                <option value="2">関西・近畿</option>
+                                <option value="2">甲信越・北陸</option>
+                                <option value="2">東北</option>
+                                <option value="2">中国</option>
+                                <option value="2">四国</option>
+                                <option value="2">九州</option>
+                                <option value="2">沖縄</option>
+                                <option value="2">北海道</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="m-2 p-2"></div>
-                    <div class="row">
-                        <div class="col-sm-5 select-container mb-2 mb-sm-none">
-                            詳細検索条件２
-                        </div>
-                    </div>
-                    <div class="m-2 p-2"></div>
                 </div>
+                #}
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     {# <div class="col-4"></div> #}
