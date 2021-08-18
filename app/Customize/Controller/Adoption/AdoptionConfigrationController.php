@@ -168,14 +168,23 @@ class AdoptionConfigrationController extends AbstractController
     {
         $form = $this->createForm(ConservationPetsType::class, $conservationPet);
         $form->handleRequest($request);
+        $petImages = $conservationPetImageRepository->findBy(
+            ['conservation_pet_id'=> $conservationPet->getId()],
+            ['sort_order' => 'ASC']
+        );
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $conservationPet->setThumbnailPath($request->get('img0'));
+            $entityManager->persist($conservationPet);
+            foreach($petImages as $key => $image) {
+                $image->setImageUri($request->get('img' . $key));
+                $entityManager->persist($image);
+            }
+            $entityManager->flush();
 
             return $this->redirectToRoute('adoption_configration');
         }
-
-        $petImages = $conservationPetImageRepository->findBy(['conservation_pet_id'=> $conservationPet->getId()]);
 
         return $this->render('animalline/adoption/configration/pets/edit.twig', [
             'adoption_pet' => $conservationPet,
