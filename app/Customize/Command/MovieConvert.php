@@ -87,7 +87,7 @@ class MovieConvert extends Command
                     $conservation = new ConservationPetImage();
                     $conservation_pet = $this->conservationPetsRepository->find($movie->getPetId());
                     if (!$conservation_pet) {
-                        throw new NotFoundHttpException("Cannot find video in queue!");
+                        throw new NotFoundHttpException("Cannot find pet!");
                     }
                     $conservation->setConservationPetId($conservation_pet)
                         ->setImageType(AnilineConf::PET_PHOTO_TYPE_VIDEO)
@@ -98,7 +98,7 @@ class MovieConvert extends Command
                     $breeder = new BreederPetImage();
                     $breeder_pet = $this->breederPetsRepository->find($movie->getPetId());
                     if (!$breeder_pet) {
-                        throw new NotFoundHttpException("Cannot find video in queue!");
+                        throw new NotFoundHttpException("Cannot find pet!");
                     }
                     $breeder->setImageUri($movie->getDistPath())
                         ->setImageType(AnilineConf::PET_PHOTO_TYPE_VIDEO)
