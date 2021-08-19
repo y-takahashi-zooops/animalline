@@ -180,7 +180,7 @@ class AdoptionConfigrationController extends AbstractController
     {
         $form = $this->createForm(ConservationPetsType::class, $conservationPet);
         $conservationPetImage = $this->conservationPetImageRepository->findBy(
-            ['conservation_pet_id' => $conservationPet->getId()],
+            ['conservation_pet_id' => $conservationPet->getId(), 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
             ['sort_order' => 'ASC']
         );
         $request->request->set('thumbnail_path', $request->get('img0'));
