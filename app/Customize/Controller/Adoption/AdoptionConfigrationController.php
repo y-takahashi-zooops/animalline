@@ -9,6 +9,7 @@ use Customize\Entity\ConservationPetImage;
 use Customize\Form\Type\ConservationPetsType;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationsRepository;
+use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\CoatColorsRepository;
 use Customize\Repository\ConservationPetImageRepository;
@@ -24,6 +25,11 @@ use DateTime;
 class AdoptionConfigrationController extends AbstractController
 {
     /**
+     * @var ConservationPetsRepository
+     */
+    protected $conservationPetsRepository;
+
+    /**
      * @var ConservationPetImageRepository
      */
     protected $conservationPetImageRepository;
@@ -33,9 +39,11 @@ class AdoptionConfigrationController extends AbstractController
      */
     public function __construct(
         ConservationContactsRepository $conservationContactsRepository,
+        ConservationPetsRepository $conservationPetsRepository,
         ConservationPetImageRepository $conservationPetImageRepository
     ) {
         $this->conservationContactsRepository = $conservationContactsRepository;
+        $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
     }
 
@@ -64,12 +72,16 @@ class AdoptionConfigrationController extends AbstractController
             $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
         }
 
+        $conservationId = $this->getUser()->getId();
+        $pets = $this->conservationPetsRepository->findBy(['conservation_id' => $conservationId], ['update_date' => 'DESC']);
+
         return $this->render(
             'animalline/adoption/configration/index.twig',
             [
                 'rootMessages' => $rootMessages,
                 'lastReplies' => $lastReplies,
-                'conservation' => $this->getUser()
+                'conservation' => $this->getUser(),
+                'pets' => $pets
             ]
         );
     }
@@ -180,7 +192,7 @@ class AdoptionConfigrationController extends AbstractController
     {
         $form = $this->createForm(ConservationPetsType::class, $conservationPet);
         $conservationPetImage = $this->conservationPetImageRepository->findBy(
-            ['conservation_pet_id' => $conservationPet->getId()],
+            ['conservation_pet_id' => $conservationPet->getId(), 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
             ['sort_order' => 'ASC']
         );
         $request->request->set('thumbnail_path', $request->get('img0'));

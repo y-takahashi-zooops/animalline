@@ -8,6 +8,7 @@ use Customize\Entity\ConservationContacts;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\ConservationPetImageRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
@@ -31,6 +32,11 @@ class AdoptionController extends AbstractController
     protected $conservationPetsRepository;
 
     /**
+     * @var ConservationPetImageRepository
+     */
+    protected $conservationPetImageRepository;
+
+    /**
      * @var ConservationContactsRepository
      */
     protected $conservationContactsRepository;
@@ -49,18 +55,20 @@ class AdoptionController extends AbstractController
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
+     * @param ConservationPetImageRepository $conservationPetImageRepository,
      * @param ConservationContactsRepository $conservationContactsRepository
      * @param AdoptionQueryService $adoptionQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
      */
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
+        ConservationPetImageRepository $conservationPetImageRepository,
         ConservationContactsRepository $conservationContactsRepository,
         AdoptionQueryService           $adoptionQueryService,
         PetsFavoriteRepository         $petsFavoriteRepository
-    )
-    {
+    ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->conservationPetImageRepository = $conservationPetImageRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
@@ -115,7 +123,8 @@ class AdoptionController extends AbstractController
             throw new HttpException\NotFoundHttpException();
         }
 
-        $images = $conservationPet->getConservationPetImages();
+        $images = $this->conservationPetImageRepository->findBy(['conservation_pet_id' => $conservationPet->getId(), 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
+
         return $this->render(
             'animalline/adoption/pet/detail.twig',
             [
