@@ -126,9 +126,9 @@ class ConservationPets
     private $conservationPetImages;
 
     /**
-     * @ORM\Column(name="favorite_count", type="integer", options={"default" = 0})
+     * @ORM\Column(name="favorite_count", type="integer", options={"default" = 0}, nullable=true)
      */
-    private $favorite_count;
+    private $favorite_count = 0;
 
     /**
      * @ORM\OneToMany(targetEntity=PetsFavorite::class, mappedBy="pet_id")

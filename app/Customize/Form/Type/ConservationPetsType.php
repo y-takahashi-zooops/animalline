@@ -123,7 +123,13 @@ class ConservationPetsType extends AbstractType
                 ],
                 'data_class' => null
             ])
-            ->add('release_status', IntegerType::class)
+            ->add('release_status', ChoiceType::class, [
+                'choices' =>
+                [
+                    '非公開' => AnilineConf::RELEASE_STATUS_PRIVATE,
+                    '公開' => AnilineConf::RELEASE_STATUS_PUBLIC
+                ]
+            ])
             ->add('release_date', DateType::class)
             ->add('price', IntegerType::class);
     }
