@@ -86,3 +86,10 @@
 .btn-like:hover, .red-heart {
     border-color: #ff7d7d;
 }
+
+.pet-set-male {
+    color: blue;
+}
+.pet-set-female {
+    color: red;
+}
