@@ -8,6 +8,8 @@ use Customize\Entity\BreederPetImage;
 use Customize\Entity\ConservationPetImage;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\ConservationPetImageRepository;
+use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\MovieConvertRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -33,17 +35,22 @@ class MovieConvert extends Command
 
     protected $breederPetsRepository;
 
+    protected $breederPetImageRepository;
+
+    protected $conservationPetImageRepository;
+
     /**
      * @var SymfonyStyle
      */
     protected $io;
 
     public function __construct(
-        EntityManagerInterface     $entityManager,
-        MovieConvertRepository     $movieConvertRepository,
-        ConservationPetsRepository $conservationPetsRepository,
-        BreederPetsRepository      $breederPetsRepository
-
+        EntityManagerInterface         $entityManager,
+        MovieConvertRepository         $movieConvertRepository,
+        ConservationPetsRepository     $conservationPetsRepository,
+        BreederPetsRepository          $breederPetsRepository,
+        BreederPetImageRepository      $breederPetImageRepository,
+        ConservationPetImageRepository $conservationPetImageRepository
     )
     {
         parent::__construct();
@@ -51,6 +58,8 @@ class MovieConvert extends Command
         $this->movieConvertRepository = $movieConvertRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->breederPetsRepository = $breederPetsRepository;
+        $this->breederPetImageRepository = $breederPetImageRepository;
+        $this->conservationPetImageRepository = $conservationPetImageRepository;
     }
 
     protected function configure()
@@ -73,40 +82,53 @@ class MovieConvert extends Command
         }
 
         foreach ($movies as $movie) {
-            $cmd = 'ffmpeg -y -i ' . $movie->getSourcePath() . ' -r 30 -vb 340k ' . $movie->getDistPath() . ' -hide_banner -loglevel error 2>&1';
+            $cmd = 'mkdir -p "' . AnilineConf::ANILINE_IMAGE_URL_BASE . '/movie/tmp/' . $movie->getSiteCategory() .
+                '/' . $movie->getPetId() . '" && ffmpeg -y -i ' . $movie->getSourcePath() . ' -r 30 -vb 340k ' .
+                $movie->getDistPath() . ' -hide_banner -loglevel error 2>&1';
             $res = exec($cmd, $errors);
             if ($res) {
                 $movie->setConvertStatus(AnilineConf::MOVIE_CONVERT_FAIL);
                 $movie->setErrorReason($res);
                 echo 'Caught exception: ', $res, "\n";
             } else {
-                $movie->setConvertStatus(AnilineConf::MOVIE_CONVERT_SUCCESS);
-                $movie->setErrorReason(null);
-
                 if ($movie->getSiteCategory() == AnilineConf::MOVIE_CONSERVATION_PET) {
-                    $conservation = new ConservationPetImage();
                     $conservation_pet = $this->conservationPetsRepository->find($movie->getPetId());
                     if (!$conservation_pet) {
-                        throw new NotFoundHttpException("Cannot find pet!");
+                        echo "Cannot find pet!\n";
+                        continue;
                     }
+                    $issetPetImage = $this->conservationPetImageRepository->findBy(['image_uri' => $movie->getDistPath()]);
+                    if ($issetPetImage) {
+                        echo "URI pet image is existed!\n";
+                        continue;
+                    }
+                    $conservation = new ConservationPetImage();
                     $conservation->setConservationPetId($conservation_pet)
                         ->setImageType(AnilineConf::PET_PHOTO_TYPE_VIDEO)
                         ->setImageUri($movie->getDistPath())
                         ->setSortOrder(0);
                     $em->persist($conservation);
                 } else {
-                    $breeder = new BreederPetImage();
                     $breeder_pet = $this->breederPetsRepository->find($movie->getPetId());
                     if (!$breeder_pet) {
-                        throw new NotFoundHttpException("Cannot find pet!");
+                        echo "Cannot find pet!\n";
+                        continue;
                     }
-                    $breeder->setImageUri($movie->getDistPath())
+                    $issetPetImage = $this->breederPetImageRepository->findBy(['image_uri' => $movie->getDistPath()]);
+                    if ($issetPetImage) {
+                        echo "URI pet image is existed!\n";
+                        continue;
+                    }
+                    $breeder = new BreederPetImage();
+                    $breeder->setBreederPetId($breeder_pet)
                         ->setImageType(AnilineConf::PET_PHOTO_TYPE_VIDEO)
-                        ->setBreederPetId($breeder_pet)
+                        ->setImageUri($movie->getDistPath())
                         ->setSortOrder(0);
                     $em->persist($breeder);
                 }
-                echo 'File has been converted!', "\n";
+                $movie->setConvertStatus(AnilineConf::MOVIE_CONVERT_SUCCESS);
+                $movie->setErrorReason(null);
+                echo "File has been converted!\n";
             }
             $em->persist($movie);
             $em->flush();

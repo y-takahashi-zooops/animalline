@@ -7,10 +7,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method AdoptionPets|null find($id, $lockMode = null, $lockVersion = null)
- * @method AdoptionPets|null findOneBy(array $criteria, array $orderBy = null)
- * @method AdoptionPets[]    findAll()
- * @method AdoptionPets[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ConservationPets|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ConservationPets|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ConservationPets[]    findAll()
+ * @method ConservationPets[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ConservationPetsRepository extends ServiceEntityRepository
 {
@@ -24,7 +24,7 @@ class ConservationPetsRepository extends ServiceEntityRepository
         return $this
             ->createQueryBuilder('e')
             ->update()
-            ->set('e.favorite_count', 'e.favorite_count + 1')
+            ->set('e.favorite_count', 'case when e.favorite_count is null then 1 else e.favorite_count + 1 end')
             ->where('e.id = :id')
             ->setParameter('id', $entity->getId())
             ->getQuery()
