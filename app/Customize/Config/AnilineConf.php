@@ -52,4 +52,11 @@ final class AnilineConf
 
     const PET_PHOTO_TYPE_IMAGE = 1;
     const PET_PHOTO_TYPE_VIDEO = 2;
+
+    const MOVIE_IN_QUEUE = 0;
+    const MOVIE_CONVERT_SUCCESS = 1;
+    const MOVIE_CONVERT_FAIL = 2;
+
+    const MOVIE_CONSERVATION_PET = 2;
+    const MOVIE_BREEDER_PET = 1;
 }
