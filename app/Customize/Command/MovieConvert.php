@@ -2,7 +2,12 @@
 
 namespace Customize\Command;
 
+use Customize\Config\AnilineConf;
 use Customize\Entity\BatchSchedule;
+use Customize\Entity\BreederPetImage;
+use Customize\Entity\ConservationPetImage;
+use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\MovieConvertRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -24,19 +29,28 @@ class MovieConvert extends Command
 
     protected $movieConvertRepository;
 
+    protected $conservationPetsRepository;
+
+    protected $breederPetsRepository;
+
     /**
      * @var SymfonyStyle
      */
     protected $io;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
-        MovieConvertRepository $movieConvertRepository
+        EntityManagerInterface     $entityManager,
+        MovieConvertRepository     $movieConvertRepository,
+        ConservationPetsRepository $conservationPetsRepository,
+        BreederPetsRepository      $breederPetsRepository
+
     )
     {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->movieConvertRepository = $movieConvertRepository;
+        $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->breederPetsRepository = $breederPetsRepository;
     }
 
     protected function configure()
@@ -52,22 +66,46 @@ class MovieConvert extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->entityManager;
-        $movies = $this->movieConvertRepository->findBy(['convert_status' => 0]);
+        $movies = $this->movieConvertRepository->findBy(['convert_status' => AnilineConf::MOVIE_IN_QUEUE]);
 
         if (!$movies) {
             throw new NotFoundHttpException("Cannot find video in queue!");
         }
 
         foreach ($movies as $movie) {
-            $cmd = 'ffmpeg -y -i ' . $movie->getSourcePath() . ' -r 30 -vb 340 ' . $movie->getDistPath() . ' -hide_banner -loglevel error 2>&1';
+            $cmd = 'ffmpeg -y -i ' . $movie->getSourcePath() . ' -r 30 -vb 340k ' . $movie->getDistPath() . ' -hide_banner -loglevel error 2>&1';
             $res = exec($cmd, $errors);
             if ($res) {
-                $movie->setConvertStatus(2);
+                $movie->setConvertStatus(AnilineConf::MOVIE_CONVERT_FAIL);
                 $movie->setErrorReason($res);
                 echo 'Caught exception: ', $res, "\n";
             } else {
-                $movie->setConvertStatus(1);
+                $movie->setConvertStatus(AnilineConf::MOVIE_CONVERT_SUCCESS);
                 $movie->setErrorReason(null);
+
+                if ($movie->getSiteCategory() == AnilineConf::MOVIE_CONSERVATION_PET) {
+                    $conservation = new ConservationPetImage();
+                    $conservation_pet = $this->conservationPetsRepository->find($movie->getPetId());
+                    if (!$conservation_pet) {
+                        throw new NotFoundHttpException("Cannot find video in queue!");
+                    }
+                    $conservation->setConservationPetId($conservation_pet)
+                        ->setImageType(AnilineConf::PET_PHOTO_TYPE_VIDEO)
+                        ->setImageUri($movie->getDistPath())
+                        ->setSortOrder(0);
+                    $em->persist($conservation);
+                } else {
+                    $breeder = new BreederPetImage();
+                    $breeder_pet = $this->breederPetsRepository->find($movie->getPetId());
+                    if (!$breeder_pet) {
+                        throw new NotFoundHttpException("Cannot find video in queue!");
+                    }
+                    $breeder->setImageUri($movie->getDistPath())
+                        ->setImageType(AnilineConf::PET_PHOTO_TYPE_VIDEO)
+                        ->setBreederPetId($breeder_pet)
+                        ->setSortOrder(0);
+                    $em->persist($breeder);
+                }
                 echo 'File has been converted!', "\n";
             }
             $em->persist($movie);
