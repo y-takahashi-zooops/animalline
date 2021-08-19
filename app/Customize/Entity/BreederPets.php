@@ -3,6 +3,8 @@
 namespace Customize\Entity;
 
 use Customize\Repository\BreederPetsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -139,6 +141,16 @@ class BreederPets
      * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
     private $update_date;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BreederPetImage::class, mappedBy="breeder_pet_id", orphanRemoval=true)
+     */
+    private $breederPetImages;
+
+    public function __construct()
+    {
+        $this->breederPetImages = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -396,7 +408,7 @@ class BreederPets
 
         return $this;
     }
-    
+
     /**
      * Set createDate.
      *
@@ -421,6 +433,36 @@ class BreederPets
     public function setUpdateDate($updateDate)
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BreederPetImage[]
+     */
+    public function getBreederPetImages(): Collection
+    {
+        return $this->breederPetImages;
+    }
+
+    public function addBreederPetImage(BreederPetImage $breederPetImage): self
+    {
+        if (!$this->breederPetImages->contains($breederPetImage)) {
+            $this->breederPetImages[] = $breederPetImage;
+            $breederPetImage->setBreederPetId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBreederPetImage(BreederPetImage $breederPetImage): self
+    {
+        if ($this->breederPetImages->removeElement($breederPetImage)) {
+            // set the owning side to null (unless already changed)
+            if ($breederPetImage->getBreederPetId() === $this) {
+                $breederPetImage->setBreederPetId(null);
+            }
+        }
 
         return $this;
     }
