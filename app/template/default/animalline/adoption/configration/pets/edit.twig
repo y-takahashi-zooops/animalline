@@ -14,6 +14,7 @@
 <script>
     var thumbnailPath = '{{ adoption_pet.thumbnailPath }}';
     var petImages = {{ pet_mages | json_encode | raw }};
+    let disabledFlag = true;
     $(document).ready(function() {
         if (thumbnailPath) {
             $('#conservation_pets_thumbnail_path').hide();
@@ -21,11 +22,10 @@
             $('#conservation_pets_thumbnail_path').parent().find('img').show();
             $('#conservation_pets_thumbnail_path').parent().parent().find('button').show();
             $(`input.conservation_pets_thumbnail_path`).val(thumbnailPath);
+            disabledFlag = false;
         }
         petImages.forEach((p) => {
-            if (p.image_uri.length > 0) {
-                setImageToBox(p.image_uri, p.sort_order - 1)
-            }
+            setImageToBox(p.image_uri, p.sort_order - 1)
         });
     });
     var inputImageId = '';
@@ -34,11 +34,16 @@
     var cropper, reader, file, size;
     function setImageToBox(image, key) {
         const id = 'conservation_pets_image' + key;
-        $(`#${ id }`).hide();
-        $(`#${ id }`).parent().find('img').attr('src', image);
-        $(`#${ id }`).parent().find('img').show();
-        $(`#${ id }`).parent().parent().find('button').show();
-        $(`input.${ id }`).val(image);
+        $(`#${ id }`).attr('disabled', disabledFlag);
+        if (image.length > 0) {
+            $(`#${ id }`).hide();
+            $(`#${ id }`).parent().find('img').attr('src', image);
+            $(`#${ id }`).parent().find('img').show();
+            $(`#${ id }`).parent().parent().find('button').show();
+            $(`input.${ id }`).val(image);
+        } else {
+            disabledFlag = true;
+        }
     }
     $(".form-control-file").change(function (e) {
         inputImageId = e.target.id;
@@ -98,11 +103,11 @@
                     data: {image: base64data},
                     success: function (data) {
                         bs_modal.modal('hide');
+                        $(`#${ inputImageId }`).parent().parent().next().find("input[type='file']").attr('disabled', false);
                         $(`#${ inputImageId }`).hide();
                         $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data)
                         $(`#${ inputImageId }`).parent().find('.img_preview').show();
-                        $(`#${ inputImageId }`).parent().parent().find('.btn_remove').show();
-                        $(`#${ inputImageId }`).parent().parent().find('.btn_set_thumbnail').show();
+                        $(`#${ inputImageId }`).parent().parent().find('button').show();
                         $(`input.${ inputImageId }`).val('/' + data);
                     }
                 });
@@ -112,21 +117,59 @@
 
     $(document).on('click', '.btn_remove', function(e) {
         e.preventDefault();
-        $(this).hide();
-        $(this).parent().find('.btn_set_thumbnail').hide();
-        $(this).parent().parent().find('.img_preview').hide();
-        $(this).parent().parent().find('.form-control-file').show();
-        $(`input.${ e.target.classList[1] }`).val('');
+        var inputFileIds = [];
+        $("[type='file']").each(function(){
+            inputFileIds.push($(this).attr("id"));
+        });
+        const index = inputFileIds.findIndex(p => p === e.target.classList[1]);
+        const sortArr = inputFileIds.slice(index + 1);
+        const imageArr = [];
+        sortArr.forEach((p) => {
+            const src = $(`input#${p}`).parent().find('.img_preview').attr('src');
+            if (src) {
+                imageArr.push({
+                    class: p,
+                    src: $(`input#${p}`).parent().find('.img_preview').attr('src')
+                });
+            } else {
+                return ;
+            }
+        });
+        if (Object.keys(imageArr).length === 0) {
+            $(this).hide();
+            $(this).parent().find('.btn_set_thumbnail').hide();
+            $(this).parent().parent().find('.img_preview').hide();
+            $(this).parent().parent().find('.form-control-file').show();
+            $(`input.${ e.target.classList[1] }`).val('');
+
+            $(this).parent().parent().next().find("input[type='file']").attr('disabled', true);
+        } else {
+            imageArr.forEach((p) => {
+                $(`#${ p.class }`).parent().parent().prev().find(".img_preview").attr('src', p.src);
+                const inputClass = $(`#${ p.class }`).parent().parent().prev().find("input[type='file']").attr('id');
+                $(`input.${ inputClass }`).val(p.src);
+            });
+            lastItem = imageArr.pop();
+            $(`#${ lastItem.class }`).show();
+            $(`#${ lastItem.class }`).parent().find(".img_preview").attr('src', '');
+            $(`#${ lastItem.class }`).parent().parent().find("button").hide();
+             $(`input.${ lastItem.class }`).val('');
+            if (lastItem.class !== inputFileIds.pop()) {
+                $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").attr('disabled', true);
+            }
+        }
     });
 
     $(document).on('click', '.btn_set_thumbnail', function(e) {
         e.preventDefault();
-        const src = $(this).parent().parent().find('.img_preview').prop('src');
-        $('#img_thumbnail').attr('src', src);
-        $('#conservation_pets_thumbnail_path').hide();
-        $('#img_thumbnail').show();
-        $('#img_thumbnail').parent().parent().find('.btn_remove').show();
-        $(`input.conservation_pets_thumbnail_path`).val($(`input.${ e.target.classList[1] }`).val());
+        const currentId = e.target.classList[1];
+        const currentSrc = $(this).parent().parent().find('.img_preview').attr('src');
+        const thumbnailSrc  = $('#img_thumbnail').attr('src');
+        $(this).parent().parent().find('.img_preview').attr('src', thumbnailSrc);
+        $(`input.${ e.target.classList[1] }`).val(thumbnailSrc);
+
+        $('#img_thumbnail').attr('src', currentSrc);
+        $(`input.conservation_pets_thumbnail_path`).val(currentSrc);
     });
 </script>
 {% endblock %}
