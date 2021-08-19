@@ -69,12 +69,12 @@ class TopController extends AbstractController
         $newPets = $this->conservationPetsRepository->findBy(
             ['pet_kind' => $petKind],
             ['release_date' => 'DESC'],
-            4
+            AnilineConf::NUMBER_ITEM_TOP
         );
         $favoritePets = $this->conservationPetsRepository->findBy(
             ['pet_kind' => $petKind],
             ['favorite_count' => 'DESC'],
-            4
+            AnilineConf::NUMBER_ITEM_TOP
         );
 
         return $this->render('animalline/adoption/index.twig', [

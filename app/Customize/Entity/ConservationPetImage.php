@@ -42,6 +42,20 @@ class ConservationPetImage
      */
     private $sort_order;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
+    private $create_date;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
+     */
+    private $update_date;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +105,34 @@ class ConservationPetImage
     public function setSortOrder(int $sort_order): self
     {
         $this->sort_order = $sort_order;
+
+        return $this;
+    }
+
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->create_date = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Set updateDate.
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Payment
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->update_date = $updateDate;
 
         return $this;
     }
