@@ -38,7 +38,7 @@
             <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                 <div class="catalog-card">
                     <a href="{{ url('adoption_configuration_pets_edit', {'id': pet.id}) }}">
-                        <img src="{{ pet.thumbnailPath ?? '/noimage_plugin_list.png' }}"
+                        <img src="{{ pet.thumbnailPath | default(app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                                 class="card-img-top" alt="...">
                     </a>
                     <div class="card-body bg-white">
