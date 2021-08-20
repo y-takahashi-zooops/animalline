@@ -55,7 +55,7 @@ class AdoptionController extends AbstractController
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
-     * @param ConservationPetImageRepository $conservationPetImageRepository,
+     * @param ConservationPetImageRepository $conservationPetImageRepository ,
      * @param ConservationContactsRepository $conservationContactsRepository
      * @param AdoptionQueryService $adoptionQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
@@ -66,7 +66,8 @@ class AdoptionController extends AbstractController
         ConservationContactsRepository $conservationContactsRepository,
         AdoptionQueryService           $adoptionQueryService,
         PetsFavoriteRepository         $petsFavoriteRepository
-    ) {
+    )
+    {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
@@ -233,6 +234,28 @@ class AdoptionController extends AbstractController
         return;
     }
 
+    /**
+     * @Route("/adoption/member/all_message", name="get_message_mypage")
+     * @Template("animalline/adoption/member/adoption_message.twig")
+     */
+    public function get_message_mypage(Request $request)
+    {
+        $customerId = $this->getUser()->getId();
+        $rootMessages = $this->conservationContactsRepository
+            ->findBy(['Customer' => $customerId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
+
+        $lastReplies = [];
+        foreach ($rootMessages as $rootMessage) {
+            $lastReply = $this->conservationContactsRepository
+                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
+            $lastReplies[$rootMessage->getId()] = $lastReply;
+        }
+
+        return $this->render('animalline/adoption/member/adoption_message.twig', [
+            'rootMessages' => $rootMessages,
+            'lastReplies' => $lastReplies
+        ]);
+    }
 
     /**
      * 保護団体用ユーザーページ
