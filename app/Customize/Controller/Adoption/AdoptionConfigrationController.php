@@ -39,12 +39,50 @@ class AdoptionConfigrationController extends AbstractController
      */
     public function __construct(
         ConservationContactsRepository $conservationContactsRepository,
-        ConservationPetsRepository $conservationPetsRepository,
+        ConservationPetsRepository     $conservationPetsRepository,
         ConservationPetImageRepository $conservationPetImageRepository
-    ) {
+    )
+    {
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
+    }
+
+    /**
+     * @Route("/adoption/configration/all_message", name=" get_message_adoption_configration")
+     * @Template("animalline/adoption/configration/get_message.twig")
+     */
+    public function get_message_adoption_configration(Request $request)
+    {
+        $rootMessages = $this->conservationContactsRepository->findBy(
+            [
+                'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
+                'Conservation' => $this->getUser()
+            ],
+            ['is_response' => 'ASC', 'send_date' => 'DESC']
+        );
+
+        $lastReplies = [];
+        foreach ($rootMessages as $message) {
+            $lastReply = $this->conservationContactsRepository->findOneBy(
+                ['parent_message_id' => $message->getId()],
+                ['send_date' => 'DESC']
+            );
+            $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
+        }
+
+        $conservationId = $this->getUser()->getId();
+        $pets = $this->conservationPetsRepository->findBy(['conservation_id' => $conservationId], ['update_date' => 'DESC']);
+
+        return $this->render(
+            'animalline/adoption/configration/get_message.twig',
+            [
+                'rootMessages' => $rootMessages,
+                'lastReplies' => $lastReplies,
+                'conservation' => $this->getUser(),
+                'pets' => $pets
+            ]
+        );
     }
 
     /**
