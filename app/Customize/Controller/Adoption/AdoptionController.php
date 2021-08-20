@@ -123,13 +123,25 @@ class AdoptionController extends AbstractController
             throw new HttpException\NotFoundHttpException();
         }
 
-        $images = $this->conservationPetImageRepository->findBy(['conservation_pet_id' => $conservationPet->getId(), 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
+        $images = $this->conservationPetImageRepository->findBy(
+            [
+                'conservation_pet_id' => $id,
+                'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE
+            ]
+        );
+        $video = $this->conservationPetImageRepository->findOneBy(
+            [
+                'conservation_pet_id' => $id,
+                'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
+            ]
+        );
 
         return $this->render(
             'animalline/adoption/pet/detail.twig',
             [
                 'conservationPet' => $conservationPet,
                 'images' => $images,
+                'video' => $video,
                 'isFavorite' => $isFavorite,
                 'isLoggedIn' => $isLoggedIn
             ]

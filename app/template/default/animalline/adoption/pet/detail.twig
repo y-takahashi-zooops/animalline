@@ -83,6 +83,17 @@
                     </div>
                 </div>
                 <div class="m-2 p-2"></div>
+                {% if video %}
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <video controls autoplay loop preload="auto">
+                                <source type="video/mp4"
+                                        src="{{ app.request.schemeAndHttpHost ~ '/' ~ video.imageUri }}">
+                            </video>
+                        </div>
+                    </div>
+                    <div class="m-2 p-2"></div>
+                {% endif %}
                 <div class="row">
                     <div class="col-sm-4"></div>
                     <div class="col-sm-4">

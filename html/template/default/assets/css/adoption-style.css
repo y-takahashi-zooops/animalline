@@ -90,6 +90,13 @@
 .pet-set-male {
     color: blue;
 }
+
 .pet-set-female {
     color: red;
+}
+
+video {
+    /* override other styles to make responsive */
+    width: 100% !important;
+    height: auto !important;
 }
