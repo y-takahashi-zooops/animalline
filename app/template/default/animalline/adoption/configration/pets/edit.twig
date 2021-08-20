@@ -137,10 +137,11 @@
                 return ;
             }
         });
-        if (Object.keys(imageArr).length === 0) {
+        if (imageArr.length === 0) {
             $(this).hide();
             $(this).parent().find('.btn_set_thumbnail').hide();
             $(this).parent().parent().find('.img_preview').hide();
+            $(this).parent().parent().find('.img_preview').attr('src', '');
             $(this).parent().parent().find('.form-control-file').show();
             $(`input.${ e.target.classList[1] }`).val('');
 
