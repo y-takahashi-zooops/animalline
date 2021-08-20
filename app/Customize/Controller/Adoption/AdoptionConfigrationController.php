@@ -115,8 +115,7 @@ class AdoptionConfigrationController extends AbstractController
                 ->setParentMessageId($contact_id)
                 ->setSendDate(new DateTime())
                 ->setIsResponse(AnilineConf::RESPONSE_REPLIED)
-                ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
-                ->setReason(0);
+                ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationContact);
             $entityManager->flush();
