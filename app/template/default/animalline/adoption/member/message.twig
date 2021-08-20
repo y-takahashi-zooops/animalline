@@ -37,6 +37,12 @@
                         </div>
                         <div class="px-4">
                             <form action="{{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}" method="post">
+                                <input type="checkbox" />交渉を終了する
+                                <select>
+                                    <option>理由1</option>
+                                    <option>理由2</option>
+                                    <option>理由3</option>
+                                </select>
                                 <textarea class="col-12" rows="5" name="reply_message" placeholder="返信メッセージ"></textarea>
                                 <button type="submit" class="ec-blockBtn--cancel">送信</button>
                             </form>
