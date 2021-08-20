@@ -6,6 +6,7 @@
     <a href="{{ path('adoption_configration') }}">< back to list</a>
     <hr>
     {{ include('animalline/adoption/configration/pets/_form.twig', {'button_label': 'Update'}) }}
+    <input hidden id="form-edit">
 {% endblock %}
 
 {% block javascript %}
