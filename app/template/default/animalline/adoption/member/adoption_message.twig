@@ -22,7 +22,7 @@
                                 </div>
                                 <div class="d-sm-flex justify-content-between w-550">
                                     <h4 class="mr-sm-5 ml-5">
-                                        状態：{{ rootMessage.getContractStatus()==0 ? '交渉中' : rootMessage.getContractStatus()==1 ? '取引終了' : '取引成立' }}</h4>
+                                        状態：{{ rootMessage.getContractStatus()==0 ? '交渉中' : rootMessage.getContractStatus()==1 ? '取引成立' : '取引終了' }}</h4>
                                     <h4 class="mr-sm-5 ml-5">
                                         返信日時：{{ lastReplies[rootMessage.id].sendDate.format('Y年m月d日　H:i') ?? 'なし。' }}</h4>
                                 </div>
