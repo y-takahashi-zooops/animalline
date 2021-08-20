@@ -6,22 +6,24 @@
     <a href="{{ path('adoption_configration') }}">< back to list</a>
     <hr>
     {{ include('animalline/adoption/configration/pets/_form.twig', {'button_label': 'Update'}) }}
+    <input hidden id="form-edit">
 {% endblock %}
 
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> {# current jquery slim not support ajax #}
 <script src="{{ asset('assets/js/conservation_pets.js') }}"></script>
 <script>
+    var subSrc = '{{ constant("Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE") }}';
     var thumbnailPath = '{{ adoption_pet.thumbnailPath }}';
     var petImages = {{ pet_mages | json_encode | raw }};
     let disabledFlag = true;
     $(document).ready(function() {
         if (thumbnailPath) {
             $('#conservation_pets_thumbnail_path').hide();
-            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', thumbnailPath);
+            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', '/' + subSrc + thumbnailPath);
             $('#conservation_pets_thumbnail_path').parent().find('img').show();
             $('#conservation_pets_thumbnail_path').parent().parent().find('button').show();
-            $(`input.conservation_pets_thumbnail_path`).val(thumbnailPath);
+            $(`input.conservation_pets_thumbnail_path`).val('/' + subSrc + thumbnailPath);
             disabledFlag = false;
         }
         petImages.forEach((p) => {
@@ -37,10 +39,10 @@
         $(`#${ id }`).attr('disabled', disabledFlag);
         if (image.length > 0) {
             $(`#${ id }`).hide();
-            $(`#${ id }`).parent().find('img').attr('src', image);
+            $(`#${ id }`).parent().find('img').attr('src', '/' + subSrc + image);
             $(`#${ id }`).parent().find('img').show();
             $(`#${ id }`).parent().parent().find('button').show();
-            $(`input.${ id }`).val(image);
+            $(`input.${ id }`).val('/' +  subSrc + image);
         } else {
             disabledFlag = true;
         }
