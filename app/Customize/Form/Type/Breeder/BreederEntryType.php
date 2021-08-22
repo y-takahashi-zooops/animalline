@@ -1,6 +1,6 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Breeder;
 
 use Eccube\Common\EccubeConfig;
 use Eccube\Form\Validator\Email;
@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AdoptionEntryType extends AbstractType
+class BreederEntryType extends AbstractType
 {
     /**
      * @var EccubeConfig
@@ -61,6 +61,6 @@ class AdoptionEntryType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'adoption_login';
+        return 'breeder_login';
     }
 }

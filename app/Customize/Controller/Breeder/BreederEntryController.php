@@ -1,17 +1,17 @@
 <?php
 //保護団体会員登録用コントローラー
 
-namespace Customize\Controller\Adoption;
+namespace Customize\Controller\Breeder;
 
-use Customize\Form\Type\AdoptionEntryType;
-use Customize\Form\Type\AdoptionLoginType;
+use Customize\Form\Type\Breeder\BreederEntryType;
+use Customize\Form\Type\Breeder\BreederLoginType;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\BaseInfo;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Eccube\Repository\BaseInfoRepository;
-use Customize\Service\MailService;
+use Customize\Service\BreederMailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception as HttpException;
@@ -25,11 +25,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Customize\Entity\Conservations;
-use Customize\Repository\ConservationsRepository;
+use Customize\Entity\Breeders;
+use Customize\Repository\BreedersRepository;
 use Customize\Config\AnilineConf;
 
-class EntryController extends AbstractController
+class BreederEntryController extends AbstractController
 {
     /**
      * @var ValidatorInterface
@@ -37,7 +37,7 @@ class EntryController extends AbstractController
     protected $recursiveValidator;
 
     /**
-     * @var MailService
+     * @var BreederMailService
      */
     protected $mailService;
 
@@ -62,29 +62,29 @@ class EntryController extends AbstractController
     protected $eventDispatcher;
 
     /**
-     * @var ConservationsRepository
+     * @var BreedersRepository
      */
-    protected $conservationsRepository;
+    protected $breedersRepository;
 
     /**
      * EntryController constructor.
      *
-     * @param MailService $mailService
+     * @param BreederMailService $mailService
      * @param BaseInfoRepository $baseInfoRepository
      * @param EncoderFactoryInterface $encoderFactory
      * @param ValidatorInterface $validatorInterface
      * @param TokenStorageInterface $tokenStorage
      * @param EventDispatcherInterface $eventDispatcher
-     * @param ConservationsRepository $conservationsRepository
+     * @param BreedersRepository $breedersRepository
      */
     public function __construct(
-        MailService $mailService,
+        BreederMailService $mailService,
         BaseInfoRepository $baseInfoRepository,
         EncoderFactoryInterface $encoderFactory,
         ValidatorInterface $validatorInterface,
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
-        ConservationsRepository $conservationsRepository
+        BreedersRepository $breedersRepository
     ) {
         $this->mailService = $mailService;
         $this->BaseInfo = $baseInfoRepository->get();
@@ -92,40 +92,40 @@ class EntryController extends AbstractController
         $this->recursiveValidator = $validatorInterface;
         $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
-        $this->conservationsRepository = $conservationsRepository;
+        $this->breedersRepository = $breedersRepository;
     }
 
     /**
      * 会員登録画面.
      *
-     * @Route("/adoption/configration/entry", name="adoption_entry")
-     * @Template("animalline/adoption/configration/entry/index.twig")
+     * @Route("/breeder/configration/entry", name="breeder_entry")
+     * @Template("animalline/breeder/configration/entry/index.twig")
      */
     public function index(Request $request)
     {
         if ($this->isGranted('ROLE_USER')) {
             log_info('認証済のためログイン処理をスキップ');
 
-            return $this->redirectToRoute('adoption_configration');
+            return $this->redirectToRoute('breeder_configration');
         }
 
-        /* @var $Conservations \Customize\Entity\Conservations */
-        $Conservation = $this->conservationsRepository->newConservation();
+        /* @var $Breeders \Customize\Entity\Breeders */
+        $Breeder = $this->breedersRepository->newBreeder();
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
-        $form = $this->createForm(AdoptionEntryType::class);
+        $form = $this->createForm(BreederEntryType::class);
 
          /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
-         $builder = $this->formFactory->createBuilder(AdoptionEntryType::class, $Conservation);
+         $builder = $this->formFactory->createBuilder(BreederEntryType::class, $Breeder);
 
          $event = new EventArgs(
              [
                  'builder' => $builder,
-                 'Customer' => $Conservation,
+                 'Customer' => $Breeder,
              ],
              $request
          );
-         $this->eventDispatcher->dispatch(AnilineConf::ANILINE_ADOPTION_ENTRY_INDEX_INITIALIZE, $event);
+         $this->eventDispatcher->dispatch(AnilineConf::ANILINE_BREEDER_ENTRY_INDEX_INITIALIZE, $event);
  
          /* @var $form \Symfony\Component\Form\FormInterface */
         $form = $builder->getForm();
@@ -134,43 +134,42 @@ class EntryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $formData = $form->getData();
-            $encoder = $this->encoderFactory->getEncoder($Conservation);
+            $encoder = $this->encoderFactory->getEncoder($Breeder);
             $salt = $encoder->createSalt();
-            $password = $encoder->encodePassword($Conservation->getPassword(), $salt);
-            $secretKey = $this->conservationsRepository->getUniqueSecretKey();
+            $password = $encoder->encodePassword($Breeder->getPassword(), $salt);
+            $secretKey = $this->breedersRepository->getUniqueSecretKey();
 
-            $Conservation
+            $Breeder
                 ->setSalt($salt)
                 ->setPassword($password)
                 ->setSecretKey($secretKey)
-                ->setEmail($formData['email']);
+                ->setEmail($formData->getEmail());
 
-            $this->entityManager->persist($Conservation);
+            $this->entityManager->persist($Breeder);
             $this->entityManager->flush();
 
             log_info('会員登録完了');
 
-            $activateUrl = $this->generateUrl('adoption_entry_activate', ['secret_key' => $Conservation->getSecretKey()], UrlGeneratorInterface::ABSOLUTE_URL);
+            $activateUrl = $this->generateUrl('breeder_entry_activate', ['secret_key' => $Breeder->getSecretKey()], UrlGeneratorInterface::ABSOLUTE_URL);
 
             // メール送信
-            $this->mailService->sendCustomerConfirmMail($Conservation, $activateUrl);
+            $this->mailService->sendCustomerConfirmMail($Breeder, $activateUrl);
 
             log_info('仮会員登録完了画面へリダイレクト');
 
-            return $this->redirectToRoute('adoption_entry_complete');
+            return $this->redirectToRoute('breeder_entry_complete');
         }
-  
+
         return [
             'form' => $form->createView(),
         ];
-
     }
 
     /**
      * 会員登録完了画面.
      *
-     * @Route("/adoption/configration/entry/complete", name="adoption_entry_complete")
-     * @Template("animalline/adoption/configration/entry/complete.twig")
+     * @Route("/breeder/configration/entry/complete", name="breeder_entry_complete")
+     * @Template("animalline/breeder/configration/entry/complete.twig")
      */
     public function complete()
     {
@@ -180,8 +179,8 @@ class EntryController extends AbstractController
     /**
      * 会員のアクティベート（本会員化）を行う.
      *
-     * @Route("/adoption/configration/entry/activate/{secret_key}", name="adoption_entry_activate")
-     * @Template("animalline/adoption/configration/entry/activate.twig")
+     * @Route("/breeder/configration/entry/activate/{secret_key}", name="breeder_entry_activate")
+     * @Template("animalline/breeder/configration/entry/activate.twig")
      */
     public function activate(Request $request, $secret_key)
     {
@@ -213,29 +212,29 @@ class EntryController extends AbstractController
     /**
      * ログイン画面.
      *
-     * @Route("/adoption/configration/login", name="adoption_login")
-     * @Template("animalline/adoption/configration/login.twig")
+     * @Route("/breeder/configration/login", name="breeder_login")
+     * @Template("animalline/breeder/configration/login.twig")
      */
     public function login(Request $request, AuthenticationUtils $utils)
     {
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             log_info('認証済のためログイン処理をスキップ');
 
-            return $this->redirectToRoute('adoption_configration');
+            return $this->redirectToRoute('breeder_configration');
         }
 
         log_info('login処理開始');
 
         /* @var $form \Symfony\Component\Form\FormInterface */
         $builder = $this->formFactory
-            ->createNamedBuilder('', AdoptionLoginType::class);
-        $builder->get('login_memory')->setData((bool) $request->getSession()->get('_security.adoption_login_memory'));
+            ->createNamedBuilder('', BreederLoginType::class);
+        $builder->get('login_memory')->setData((bool) $request->getSession()->get('_security.breeder_login_memory'));
 
         if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $Conservation = $this->getUser();
-            if ($Conservation instanceof Conservations) {
+            $Breeder = $this->getUser();
+            if ($Breeder instanceof Breeders) {
                 $builder->get('email')
-                    ->setData($Conservation->getEmail());
+                    ->setData($Breeder->getEmail());
             }
         }
 
@@ -248,7 +247,7 @@ class EntryController extends AbstractController
 
         $form = $builder->getForm();
 
-        $this->eventDispatcher->dispatch(AnilineConf::ANILINE_ADOPTION_LOGIN_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch(AnilineConf::ANILINE_BREEDER_LOGIN_INITIALIZE, $event);
 
         return [
             'error' => $utils->getLastAuthenticationError(),
@@ -268,36 +267,36 @@ class EntryController extends AbstractController
     {
         log_info('本会員登録開始');
 
-        $Conservation = $this->conservationsRepository->findOneBy(['secret_key' => $secret_key]);
-        if (is_null($Conservation)) {
+        $Breeder = $this->breedersRepository->findOneBy(['secret_key' => $secret_key]);
+        if (is_null($Breeder)) {
             throw new HttpException\NotFoundHttpException();
         }
 
-        $register_status_id = $Conservation->getRegisterStatusId();
+        $register_status_id = $Breeder->getRegisterStatusId();
 
         // すでに会員の場合は何もしない
         if ($register_status_id == AnilineConf::ANILINE_REGISTER_STATUS_ACTIVE) {
             return 0;
         }
-        $Conservation->setRegisterStatusId(AnilineConf::ANILINE_REGISTER_STATUS_ACTIVE);
-        $this->entityManager->persist($Conservation);
+        $Breeder->setRegisterStatusId(AnilineConf::ANILINE_REGISTER_STATUS_ACTIVE);
+        $this->entityManager->persist($Breeder);
         $this->entityManager->flush();
 
         log_info('本会員登録完了');
 
         $event = new EventArgs(
             [
-                'Conservation' => $Conservation,
+                'Breeder' => $Breeder,
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(AnilineConf::ANILINE_ADOPTION_LOGIN_COMPLETE, $event);
+        $this->eventDispatcher->dispatch(AnilineConf::ANILINE_BREEDER_LOGIN_COMPLETE, $event);
 
         // メール送信
-        $this->mailService->sendCustomerCompleteMail($Conservation);
+        $this->mailService->sendCustomerCompleteMail($Breeder);
 
         // 本会員登録してログイン状態にする
-        $token = new UsernamePasswordToken($Conservation->getEmail(), null, 'adoption', ['ROLE_ADOPTION_USER']);
+        $token = new UsernamePasswordToken($Breeder->getEmail(), null, 'breeder', ['ROLE_BREEDER_USER']);
         $this->tokenStorage->setToken($token);
         $request->getSession()->migrate(true);
 

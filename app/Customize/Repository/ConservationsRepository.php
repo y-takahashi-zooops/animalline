@@ -21,35 +21,6 @@ class ConservationsRepository extends ServiceEntityRepository
         parent::__construct($registry, Conservations::class);
     }
 
-    // /**
-    //  * @return Conservations[] Returns an array of Conservations objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Conservations
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
     /**
      * 新規Conservationを作成する
      *
@@ -104,7 +75,7 @@ class ConservationsRepository extends ServiceEntityRepository
     {
         return $this->findOneBy([
             'secret_key' => $secretKey,
-            'Status' => CustomerStatus::PROVISIONAL,
+            'register_status_id' => CustomerStatus::PROVISIONAL,
         ]);
     }
 
@@ -119,7 +90,7 @@ class ConservationsRepository extends ServiceEntityRepository
     {
         return $this->findOneBy([
             'email' => $email,
-            'Status' => CustomerStatus::REGULAR,
+            'register_status_id' => CustomerStatus::REGULAR,
         ]);
     }
 
@@ -134,7 +105,7 @@ class ConservationsRepository extends ServiceEntityRepository
     public function getRegularConservationByResetKey($resetKey, $email = null)
     {
         $qb = $this->createQueryBuilder('c')
-            ->where('c.reset_key = :reset_key AND c.Status = :status AND c.reset_expire >= :reset_expire')
+            ->where('c.reset_key = :reset_key AND c.register_status_id = :status AND c.reset_expire >= :reset_expire')
             ->setParameter('reset_key', $resetKey)
             ->setParameter('status', CustomerStatus::REGULAR)
             ->setParameter('reset_expire', new \DateTime());
@@ -170,7 +141,7 @@ class ConservationsRepository extends ServiceEntityRepository
      */
     public function getNonWithdrawingConservations(array $criteria = [])
     {
-        $criteria['Status'] = [
+        $criteria['register_status_id'] = [
             CustomerStatus::PROVISIONAL,
             CustomerStatus::REGULAR,
         ];

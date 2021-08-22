@@ -8,6 +8,10 @@ final class AnilineConf
     const ANILINE_ADOPTION_LOGIN_COMPLETE = 'aniline.login.complete';
     const ANILINE_ADOPTION_ENTRY_INDEX_INITIALIZE = 'aniline.adoption.entry.initialize';
 
+    const ANILINE_BREEDER_LOGIN_INITIALIZE = 'aniline.login.initialize';
+    const ANILINE_BREEDER_LOGIN_COMPLETE = 'aniline.login.complete';
+    const ANILINE_BREEDER_ENTRY_INDEX_INITIALIZE = 'aniline.breeder.entry.initialize';
+
     //画像の配置場所のベースディレクトリ
     const ANILINE_IMAGE_URL_BASE = 'html/upload/save_image';
 

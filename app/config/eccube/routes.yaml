@@ -30,3 +30,6 @@ logout:
     path: /logout
 adoption_logout:
     path: '/adoption/configration/logout'
+breeder_logout:
+    path: '/breeder/configration/logout'
+    

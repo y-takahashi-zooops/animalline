@@ -3,7 +3,11 @@
 namespace Customize\Entity;
 
 use Customize\Repository\BreedersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Customize\Config\AnilineConf;
 
 /**
  * @ORM\Table(name="alm_breeders")
@@ -12,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=BreedersRepository::class)
  */
-class Breeders
+class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 {
     /**
      * @ORM\Id
@@ -249,6 +253,21 @@ class Breeders
      * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
      */
     private $thumbnail_path;
+
+    /**
+     * @ORM\Column(name="register_status_id", type="smallint", length=5, nullable=true)
+     */
+    private $register_status_id;
+
+    /**
+     * @ORM\Column(name="salt", type="string", length=255, nullable=true)
+     */
+    private $salt;
+
+    /**
+     * @ORM\Column(name="secret_key", type="string", length=255)
+     */
+    private $secret_key;
 
     public function getId(): ?int
     {
@@ -747,6 +766,7 @@ class Breeders
         return $this;
     }
 
+    
     public function getEmail(): ?string
     {
         return $this->email;
@@ -769,6 +789,94 @@ class Breeders
         $this->thumbnail_path = $thumbnail_path;
 
         return $this;
+    }
+
+    public function setRegisterStatusId(int $register_status_id)
+    {
+        $this->register_status_id = $register_status_id;
+
+        return $this;
+    }
+
+    public function getRegisterStatusId()
+    {
+        return $this->register_status_id;
+    }
+
+    /**
+     * Set salt.
+     *
+     * @param string|null $salt
+     *
+     * @return Customer
+     */
+    public function setSalt($salt = null)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
+     * Get salt.
+     *
+     * @return string|null
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    /**
+     * Set secretKey.
+     *
+     * @param string $secretKey
+     *
+     * @return Customer
+     */
+    public function setSecretKey($secretKey)
+    {
+        $this->secret_key = $secretKey;
+
+        return $this;
+    }
+
+    /**
+     * Get secretKey.
+     *
+     * @return string
+     */
+    public function getSecretKey()
+    {
+        return $this->secret_key;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoles()
+    {
+        return ['ROLE_BREEDER_USER'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function eraseCredentials()
+    {
+    }
+
+    public function equals(UserInterface $user)
+    {
+        return $this->getUsername() == $user->getUsername();
     }
 
     /**
@@ -797,5 +905,10 @@ class Breeders
         $this->update_date = $updateDate;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getId();
     }
 }

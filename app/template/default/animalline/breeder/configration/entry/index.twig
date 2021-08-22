@@ -1,0 +1,47 @@
+{% set site_type = 'breeer' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+
+<div class="mb-4 col-md-8" style="margin: 0 auto;">
+    <h3>ご入力いただいたメールアドレス宛に、ご本人様確認用のメールをお送りします。</h3>
+    <h3>メール本文内のURLをクリックすると、本会員登録が完了となります。</h3>
+</div>
+
+<div class="col-md-8" style="margin: 0 auto;">
+    <form  method="post" action="{{ url('breeder_entry') }}" novalidate>
+        {{ form_label(form.password, 'メールアドレス', { 'label_attr': {'class': 'ec-label' }}) }}
+        <div class="ec-input{{ has_errors(form.password) ? ' error' }}">
+            <div class="ec-input{{ has_errors(form.email) ? ' error' }}">
+                {{ form_widget(form.email, { 'attr': { 'placeholder': '例：ec-cube@example.com' }}) }}
+                {{ form_errors(form.email) }}
+            </div>
+        </div>
+        {{ form_label(form.password, 'パスワード', { 'label_attr': {'class': 'ec-label' }}) }}
+        <div class="ec-input{{ has_errors(form.password.first) ? ' error' }}">
+            {{ form_widget(form.password.first, {
+                'attr': { 'placeholder': '半角英数記号%min%〜%max%文字'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }) },
+                'type': 'password'
+            }) }}
+            {{ form_errors(form.password.first) }}
+        </div>
+        {{ form_label(form.password, 'パスワード確認', { 'label_attr': {'class': 'ec-label' }}) }}
+        <div class="ec-input{{ has_errors(form.password.second) ? ' error' }}">
+            {{ form_widget(form.password.second, {
+                'attr': { 'placeholder': '確認のためもう一度入力してください'|trans },
+                'type': 'password'
+            }) }}
+            {{ form_errors(form.password.second) }}
+        </div>
+
+        {{ form_widget(form._token) }}
+        <button class="ec-blockBtn--action bg-breeder mt-4 mb-4">{{ '登録する'|trans }}</button>
+        <a class="ec-blockBtn--cancel" href="{{ url('breeder_top') }}">{{ 'キャンセル'|trans }}</a>
+    </form>
+</div>
+</body>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
