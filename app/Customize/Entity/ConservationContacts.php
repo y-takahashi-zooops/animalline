@@ -93,9 +93,12 @@ class ConservationContacts
     private $contract_status = 0;
 
     /**
-     * @ORM\Column(name="reason", type="smallint", options={"default" = 0})
+     * @ORM\ManyToOne(targetEntity=SendoffReason::class, inversedBy="conservationContacts")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="reason", referencedColumnName="id", nullable=true)
+     * })
      */
-    private $reason = 0;
+    private $reason;
 
     /**
      * @var \DateTime
@@ -272,12 +275,12 @@ class ConservationContacts
         return $this;
     }
 
-    public function getReason(): ?int
+    public function getReason(): ?SendoffReason
     {
         return $this->reason;
     }
 
-    public function setReason(int $reason): self
+    public function setReason(?SendoffReason $reason): self
     {
         $this->reason = $reason;
 

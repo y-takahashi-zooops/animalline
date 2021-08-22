@@ -6,6 +6,13 @@ $(function () {
     $('#conservation_pets_pet_kind').trigger('change');
 
     function getDataByPetKind(petKindSelect) {
+        let breed = color = null;
+        const isEdit = !!$('#form-edit').length;
+        if (isEdit) {
+            breed = $('#conservation_pets_breeds_type').val();
+            color = $('#conservation_pets_coat_color').val();
+        }
+
         $.ajax({
             type: 'get',
             url: '/pet_data_by_pet_kind',
@@ -24,6 +31,11 @@ $(function () {
                 colors.forEach(color => {
                     $('#conservation_pets_coat_color').append(new Option(color.name, color.id));
                 });
+
+                if (isEdit) {
+                    $('#conservation_pets_breeds_type').val(breed);
+                    $('#conservation_pets_coat_color').val(color);
+                }
             })
             .fail(function (err) {
                 console.error(err);

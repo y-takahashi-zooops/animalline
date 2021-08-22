@@ -39,12 +39,50 @@ class AdoptionConfigrationController extends AbstractController
      */
     public function __construct(
         ConservationContactsRepository $conservationContactsRepository,
-        ConservationPetsRepository $conservationPetsRepository,
+        ConservationPetsRepository     $conservationPetsRepository,
         ConservationPetImageRepository $conservationPetImageRepository
-    ) {
+    )
+    {
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
+    }
+
+    /**
+     * @Route("/adoption/configration/all_message", name=" get_message_adoption_configration")
+     * @Template("animalline/adoption/configration/get_message.twig")
+     */
+    public function get_message_adoption_configration(Request $request)
+    {
+        $rootMessages = $this->conservationContactsRepository->findBy(
+            [
+                'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
+                'Conservation' => $this->getUser()
+            ],
+            ['is_response' => 'ASC', 'send_date' => 'DESC']
+        );
+
+        $lastReplies = [];
+        foreach ($rootMessages as $message) {
+            $lastReply = $this->conservationContactsRepository->findOneBy(
+                ['parent_message_id' => $message->getId()],
+                ['send_date' => 'DESC']
+            );
+            $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
+        }
+
+        $conservationId = $this->getUser()->getId();
+        $pets = $this->conservationPetsRepository->findBy(['conservation_id' => $conservationId], ['update_date' => 'DESC']);
+
+        return $this->render(
+            'animalline/adoption/configration/get_message.twig',
+            [
+                'rootMessages' => $rootMessages,
+                'lastReplies' => $lastReplies,
+                'conservation' => $this->getUser(),
+                'pets' => $pets
+            ]
+        );
     }
 
     /**
@@ -115,8 +153,7 @@ class AdoptionConfigrationController extends AbstractController
                 ->setParentMessageId($contact_id)
                 ->setSendDate(new DateTime())
                 ->setIsResponse(AnilineConf::RESPONSE_REPLIED)
-                ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
-                ->setReason(0);
+                ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationContact);
             $entityManager->flush();
@@ -142,38 +179,46 @@ class AdoptionConfigrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $conservation = $conservationsRepository->find($request->get('conservation_id'));
+            $conservationPet->setConservationId($conservation);
+            $entityManager->persist($conservationPet);
+            $entityManager->flush();
+            $petId = $conservationPet->getId();
+            $img0 = $this->setImageSrc($request->get('img0'), $petId);
+            $img1 = $this->setImageSrc($request->get('img1'), $petId);
+            $img2 = $this->setImageSrc($request->get('img2'), $petId);
+            $img3 = $this->setImageSrc($request->get('img3'), $petId);
+            $img4 = $this->setImageSrc($request->get('img4'), $petId);
+
             $petImage0 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img0'))->setSortOrder(1)
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img0)->setSortOrder(1)
                 ->setConservationPetId($conservationPet);
             $petImage1 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img1'))->setSortOrder(2)
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img1)->setSortOrder(2)
                 ->setConservationPetId($conservationPet);
             $petImage2 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img2'))->setSortOrder(3)
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img2)->setSortOrder(3)
                 ->setConservationPetId($conservationPet);
             $petImage3 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img3'))->setSortOrder(4)
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img3)->setSortOrder(4)
                 ->setConservationPetId($conservationPet);
             $petImage4 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img4'))->setSortOrder(5)
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img4)->setSortOrder(5)
                 ->setConservationPetId($conservationPet);
             $conservationPet->addConservationPetImage($petImage0);
             $conservationPet->addConservationPetImage($petImage1);
             $conservationPet->addConservationPetImage($petImage2);
             $conservationPet->addConservationPetImage($petImage3);
             $conservationPet->addConservationPetImage($petImage4);
-            $conservationPet->setThumbnailPath($request->get('img0'));
+            $conservationPet->setThumbnailPath($img0);
 
-            $conservation = $conservationsRepository->find($request->get('conservation_id'));
-            $conservationPet->setConservationId($conservation);
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($conservationPet);
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
+            $entityManager->persist($conservationPet);
             $entityManager->flush();
 
             return $this->redirectToRoute('adoption_configration');
@@ -195,15 +240,21 @@ class AdoptionConfigrationController extends AbstractController
             ['conservation_pet_id' => $conservationPet->getId(), 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
             ['sort_order' => 'ASC']
         );
-        $request->request->set('thumbnail_path', $request->get('img0'));
+        $request->request->set('thumbnail_path', $conservationPet->getThumbnailPath());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $petId = $conservationPet->getId();
+            $img0 = $this->setImageSrc($request->get('img0'), $petId);
+            $img1 = $this->setImageSrc($request->get('img1'), $petId);
+            $img2 = $this->setImageSrc($request->get('img2'), $petId);
+            $img3 = $this->setImageSrc($request->get('img3'), $petId);
+            $img4 = $this->setImageSrc($request->get('img4'), $petId);
             $entityManager = $this->getDoctrine()->getManager();
-            $conservationPet->setThumbnailPath($request->get('img0'));
+            $conservationPet->setThumbnailPath($img0);
             $entityManager->persist($conservationPet);
             foreach ($conservationPetImage as $key => $image) {
-                $image->setImageUri($request->get('img' . $key));
+                $image->setImageUri(${'img' . $key});
                 $entityManager->persist($image);
             }
             $entityManager->flush();
@@ -224,6 +275,44 @@ class AdoptionConfigrationController extends AbstractController
             'pet_mages' => $petImages,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Copy image and retrieve new url of the copy
+     *
+     * @param  string $imageUrl
+     * @param  int $petId
+     * @return string
+     */
+    private function setImageSrc($imageUrl, $petId)
+    {
+        if (empty($imageUrl)) {
+            return '';
+        }
+
+        $imageUrl = ltrim($imageUrl, '/');
+        $resource = str_replace(
+            AnilineConf::ANILINE_IMAGE_URL_BASE,
+            '',
+            $imageUrl
+        );
+        $arr = explode('/', ltrim($resource, '/'));
+        if ($arr[0] === 'adoption') {
+            return $resource;
+        }
+
+        $imageName = str_replace(
+            AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/',
+            '',
+            $imageUrl
+        );
+        $subUrl = AnilineConf::ANILINE_IMAGE_URL_BASE . '/adoption/' . $petId . '/';
+        if (!file_exists($subUrl)) {
+            mkdir($subUrl, 0777, 'R');
+        }
+
+        copy($imageUrl, $subUrl . $imageName);
+        return '/adoption/' . $petId . '/' . $imageName;
     }
 
     /**

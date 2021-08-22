@@ -10,6 +10,7 @@ use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationPetImageRepository;
 use Customize\Repository\PetsFavoriteRepository;
+use Customize\Repository\SendoffReasonRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -52,26 +53,34 @@ class AdoptionController extends AbstractController
     protected $petsFavoriteRepository;
 
     /**
+     * @var SendoffReasonRepository
+     */
+    protected $sendoffReasonRepository;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
-     * @param ConservationPetImageRepository $conservationPetImageRepository,
+     * @param ConservationPetImageRepository $conservationPetImageRepository ,
      * @param ConservationContactsRepository $conservationContactsRepository
      * @param AdoptionQueryService $adoptionQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
+     * @param SendoffReasonRepository $sendoffReasonRepository
      */
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
         ConservationPetImageRepository $conservationPetImageRepository,
         ConservationContactsRepository $conservationContactsRepository,
         AdoptionQueryService           $adoptionQueryService,
-        PetsFavoriteRepository         $petsFavoriteRepository
+        PetsFavoriteRepository         $petsFavoriteRepository,
+        SendoffReasonRepository         $sendoffReasonRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
+        $this->sendoffReasonRepository = $sendoffReasonRepository;
     }
 
     /**
@@ -123,13 +132,25 @@ class AdoptionController extends AbstractController
             throw new HttpException\NotFoundHttpException();
         }
 
-        $images = $this->conservationPetImageRepository->findBy(['conservation_pet_id' => $conservationPet->getId(), 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
+        $images = $this->conservationPetImageRepository->findBy(
+            [
+                'conservation_pet_id' => $id,
+                'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE
+            ]
+        );
+        $video = $this->conservationPetImageRepository->findOneBy(
+            [
+                'conservation_pet_id' => $id,
+                'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
+            ]
+        );
 
         return $this->render(
             'animalline/adoption/pet/detail.twig',
             [
                 'conservationPet' => $conservationPet,
                 'images' => $images,
+                'video' => $video,
                 'isFavorite' => $isFavorite,
                 'isLoggedIn' => $isLoggedIn
             ]
@@ -233,6 +254,28 @@ class AdoptionController extends AbstractController
         return;
     }
 
+    /**
+     * @Route("/adoption/member/all_message", name="get_message_mypage")
+     * @Template("animalline/adoption/member/adoption_message.twig")
+     */
+    public function get_message_mypage(Request $request)
+    {
+        $customerId = $this->getUser()->getId();
+        $rootMessages = $this->conservationContactsRepository
+            ->findBy(['Customer' => $customerId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
+
+        $lastReplies = [];
+        foreach ($rootMessages as $rootMessage) {
+            $lastReply = $this->conservationContactsRepository
+                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
+            $lastReplies[$rootMessage->getId()] = $lastReply;
+        }
+
+        return $this->render('animalline/adoption/member/adoption_message.twig', [
+            'rootMessages' => $rootMessages,
+            'lastReplies' => $lastReplies
+        ]);
+    }
 
     /**
      * 保護団体用ユーザーページ
@@ -244,7 +287,13 @@ class AdoptionController extends AbstractController
     {
         $customerId = $this->getUser()->getId();
         $rootMessages = $this->conservationContactsRepository
-            ->findBy(['Customer' => $customerId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
+            ->findBy(
+                [
+                    'Customer' => $customerId,
+                    'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
+                    'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
+                ]
+            );
 
         $lastReplies = [];
         foreach ($rootMessages as $rootMessage) {
@@ -275,7 +324,8 @@ class AdoptionController extends AbstractController
         }
 
         $replyMessage = $request->get('reply_message');
-        if ($replyMessage) {
+        $isEnd = $request->get('end_negotiation');
+        if ($replyMessage || $isEnd) {
             $conservationContact = (new ConservationContacts())
                 ->setCustomer($this->getUser())
                 ->setConservation($rootMessage->getConservation())
@@ -287,9 +337,10 @@ class AdoptionController extends AbstractController
                 ->setSendDate(new DateTime())
                 ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
                 ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
-                ->setReason(0);
+                ->setReason($isEnd ? $this->sendoffReasonRepository->find($request->get('reason')) : null);
 
             $rootMessage->setIsResponse(AnilineConf::RESPONSE_UNREPLIED);
+            if ($isEnd) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationContact);
@@ -299,10 +350,13 @@ class AdoptionController extends AbstractController
 
         $childMessages = $this->conservationContactsRepository
             ->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
+        $reasons = $this->sendoffReasonRepository
+            ->findBy(['is_adoption_visible' => AnilineConf::ADOPTION_VISIBLE_SHOW]);
 
         return $this->render('animalline/adoption/member/message.twig', [
             'rootMessage' => $rootMessage,
-            'childMessages' => $childMessages
+            'childMessages' => $childMessages,
+            'reasons' => $reasons
         ]);
     }
 
@@ -315,6 +369,11 @@ class AdoptionController extends AbstractController
     public function contact(Request $request)
     {
         $id = $request->get('pet_id');
+        $pet = $this->conservationPetsRepository->find($id);
+        if (!$pet) {
+            throw new HttpException\NotFoundHttpException();
+        }
+
         $contact = new ConservationContacts();
         $builder = $this->formFactory->createBuilder(ConservationContactType::class, $contact);
         $event = new EventArgs(
@@ -341,10 +400,6 @@ class AdoptionController extends AbstractController
                     );
 
                 case 'complete':
-                    $pet = $this->conservationPetsRepository->find($id);
-                    if (!$pet) {
-                        throw new HttpException\NotFoundHttpException();
-                    }
                     $contact->setParentMessageId(AnilineConf::ROOT_MESSAGE_ID)
                         ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
                         ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)

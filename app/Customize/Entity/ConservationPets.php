@@ -285,7 +285,7 @@ class ConservationPets
 
     public function setThumbnailPath(string $thumbnail_path): self
     {
-        $this->thumbnail_path = $thumbnail_path;
+        $this->thumbnail_path = !empty($thumbnail_path) ? $thumbnail_path : null;
 
         return $this;
     }

@@ -30,15 +30,15 @@
             {% endfor %}
         </div>
     </div>
-    <h2 class="py-2">掲載中のペット</h2>
+    <h2 class="py-2 mt-4 mb-4">掲載中のペット</h2>
     <a href={{ path('adoption_configuration_pets_new', {'conservation_id': conservation.id}) }} class="btn basic-btn accent-btn bg-accent text-align-center my-1">追加</a>
 
-    <div class="row">
+    <div class="row mt-4">
         {% for pet in pets %}
             <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                 <div class="catalog-card">
                     <a href="{{ url('adoption_configuration_pets_edit', {'id': pet.id}) }}">
-                        <img src="{{ pet.thumbnailPath | default(app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
                                 class="card-img-top" alt="...">
                     </a>
                     <div class="card-body bg-white">
