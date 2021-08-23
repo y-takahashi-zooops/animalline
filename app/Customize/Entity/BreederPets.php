@@ -2,7 +2,6 @@
 
 namespace Customize\Entity;
 
-use Customize\Repository\BreederPetsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,9 +23,10 @@ class BreederPets
     private $id;
 
     /**
-     * @ORM\Column(name="breeder_id", type="integer")
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeders", inversedBy="breederPets")
+     * @ORM\JoinColumn(name="breeder_id", nullable=false)
      */
-    private $breeder_id;
+    private $breeder;
 
     /**
      * @ORM\Column(name="pet_kind", type="smallint")
@@ -34,7 +34,8 @@ class BreederPets
     private $pet_kind;
 
     /**
-     * @ORM\Column(name="breeds_type", type="integer")
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeds", inversedBy="breederPets")
+     * @ORM\JoinColumn(name="breeds_type", nullable=true)
      */
     private $breeds_type;
 
@@ -49,7 +50,8 @@ class BreederPets
     private $pet_birthday;
 
     /**
-     * @ORM\Column(name="coat_color", type="integer")
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\CoatColors", inversedBy="conservationPets")
+     * @ORM\JoinColumn(name="coat_color", nullable=true)
      */
     private $coat_color;
 
@@ -129,6 +131,16 @@ class BreederPets
     private $thumbnail_path;
 
     /**
+     * @ORM\Column(name="release_status", type="smallint", options={"default" = 0}, nullable=true)
+     */
+    private $release_status;
+
+    /**
+     * @ORM\Column(name="release_date", type="date", nullable=true)
+     */
+    private $release_date;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
@@ -163,14 +175,14 @@ class BreederPets
         return $this->id;
     }
 
-    public function getBreederId(): ?int
+    public function getBreeder(): ?Breeders
     {
-        return $this->breeder_id;
+        return $this->breeder;
     }
 
-    public function setBreederId(int $breeder_id): self
+    public function setBreeder(?Breeders $breeder): self
     {
-        $this->breeder_id = $breeder_id;
+        $this->breeder = $breeder;
 
         return $this;
     }
@@ -187,12 +199,12 @@ class BreederPets
         return $this;
     }
 
-    public function getBreedsType(): ?int
+    public function getBreedsType(): ?Breeds
     {
         return $this->breeds_type;
     }
 
-    public function setBreedsType(int $breeds_type): self
+    public function setBreedsType(Breeds $breeds_type): self
     {
         $this->breeds_type = $breeds_type;
 
@@ -223,12 +235,12 @@ class BreederPets
         return $this;
     }
 
-    public function getCoatColor(): ?int
+    public function getCoatColor(): ?CoatColors
     {
         return $this->coat_color;
     }
 
-    public function setCoatColor(int $coat_color): self
+    public function setCoatColor(?CoatColors $coat_color): self
     {
         $this->coat_color = $coat_color;
 
@@ -415,6 +427,30 @@ class BreederPets
         return $this;
     }
 
+    public function getReleaseStatus(): ?int
+    {
+        return $this->release_status;
+    }
+
+    public function setReleaseStatus(int $release_status): self
+    {
+        $this->release_status = $release_status;
+
+        return $this;
+    }
+
+    public function getReleaseDate(): ?\DateTimeInterface
+    {
+        return $this->release_date;
+    }
+
+    public function setReleaseDate(\DateTimeInterface $release_date): self
+    {
+        $this->release_date = $release_date;
+
+        return $this;
+    }
+
     /**
      * Set createDate.
      *
@@ -473,6 +509,7 @@ class BreederPets
         return $this;
     }
 
+
     /**
      * @return Collection|BreederContacts[]
      */
@@ -485,7 +522,7 @@ class BreederPets
     {
         if (!$this->breederContacts->contains($breederContact)) {
             $this->breederContacts[] = $breederContact;
-            $breederContact->setPetId($this);
+            $breederContact->setPet($this);
         }
 
         return $this;
@@ -495,8 +532,8 @@ class BreederPets
     {
         if ($this->breederContacts->removeElement($breederContact)) {
             // set the owning side to null (unless already changed)
-            if ($breederContact->getPetId() === $this) {
-                $breederContact->setPetId(null);
+            if ($breederContact->getPet() === $this) {
+                $breederContact->setPet(null);
             }
         }
 
