@@ -24,15 +24,21 @@ class BreederPets
     private $id;
 
     /**
+     * <<<<<<< HEAD
+     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederPets")
+     * @ORM\JoinColumn(name="breeder_id", nullable=false)
+     * =======
+     * @ORM\Column(name="pet_kind", type="smallint")
+     * >>>>>>> b0e56a10dbadba0ef2e545080e525eaa8243050c
+     */
+    private $pet_kind;
+
+
+    /**
      * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederPets")
      * @ORM\JoinColumn(name="breeder_id", nullable=false)
      */
-    private $breeder_id;
-
-    /**
-     * @ORM\Column(name="pet_kind", type="smallint")
-     */
-    private $pet_kind;
+    private $Breeder;
 
     /**
      * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeds", inversedBy="breederPets")
@@ -132,6 +138,16 @@ class BreederPets
     private $thumbnail_path;
 
     /**
+     * @ORM\Column(name="release_status", type="smallint", options={"default" = 0}, nullable=true)
+     */
+    private $release_status;
+
+    /**
+     * @ORM\Column(name="release_date", type="date", nullable=true)
+     */
+    private $release_date;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
@@ -151,16 +167,6 @@ class BreederPets
     private $breederPetImages;
 
     /**
-     * @ORM\Column(name="release_status", type="smallint", options={"default" = 0}, nullable=true)
-     */
-    private $release_status;
-
-    /**
-     * @ORM\Column(name="release_date", type="date", nullable=true)
-     */
-    private $release_date;
-
-    /**
      * @ORM\Column(name="favorite_count", type="integer", options={"default" = 0}, nullable=true)
      */
     private $favorite_count = 0;
@@ -170,27 +176,21 @@ class BreederPets
      */
     private $petsFavorites;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="pet_id")
+     */
+    private $breederContacts;
+
     public function __construct()
     {
         $this->breederPetImages = new ArrayCollection();
         $this->petsFavorites = new ArrayCollection();
+        $this->breederContacts = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getBreederId(): ?Breeders
-    {
-        return $this->breeder_id;
-    }
-
-    public function setBreederId(?Breeders $breeder_id): self
-    {
-        $this->breeder_id = $breeder_id;
-
-        return $this;
     }
 
     public function getPetKind(): ?int
@@ -433,6 +433,27 @@ class BreederPets
         return $this;
     }
 
+
+    public function setReleaseStatus(int $release_status): self
+    {
+        $this->release_status = $release_status;
+
+        return $this;
+    }
+
+    public function getReleaseDate(): ?\DateTimeInterface
+    {
+        return $this->release_date;
+    }
+
+    public function setReleaseDate(\DateTimeInterface $release_date): self
+    {
+        $this->release_date = $release_date;
+
+        return $this;
+    }
+
+
     /**
      * Set createDate.
      *
@@ -491,26 +512,26 @@ class BreederPets
         return $this;
     }
 
+
     public function getReleaseStatus(): ?int
     {
         return $this->release_status;
     }
 
-    public function setReleaseStatus(int $release_status): self
+    /**
+     * @return Collection|BreederContacts[]
+     */
+    public function getBreederContacts(): Collection
     {
-        $this->release_status = $release_status;
-
-        return $this;
+        return $this->breederContacts;
     }
 
-    public function getReleaseDate(): ?\DateTimeInterface
+    public function addBreederContact(BreederContacts $breederContact): self
     {
-        return $this->release_date;
-    }
-
-    public function setReleaseDate(\DateTimeInterface $release_date): self
-    {
-        $this->release_date = $release_date;
+        if (!$this->breederContacts->contains($breederContact)) {
+            $this->breederContacts[] = $breederContact;
+            $breederContact->setPetId($this);
+        }
 
         return $this;
     }
@@ -523,9 +544,21 @@ class BreederPets
     public function setFavoriteCount(int $favorite_count): self
     {
         $this->favorite_count = $favorite_count;
+        return $this;
+    }
+
+    public function removeBreederContact(BreederContacts $breederContact): self
+    {
+        if ($this->breederContacts->removeElement($breederContact)) {
+            // set the owning side to null (unless already changed)
+            if ($breederContact->getPetId() === $this) {
+                $breederContact->setPetId(null);
+            }
+        }
 
         return $this;
     }
+
 
     /**
      * @return Collection|PetsFavorite[]
@@ -553,6 +586,17 @@ class BreederPets
                 $petsFavorite->setPetId(null);
             }
         }
+        return $this;
+    }
+
+    public function getBreeder(): ?Breeders
+    {
+        return $this->Breeder;
+    }
+
+    public function setBreeder(?Breeders $Breeder): self
+    {
+        $this->Breeder = $Breeder;
 
         return $this;
     }

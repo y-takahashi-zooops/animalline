@@ -66,4 +66,6 @@ final class AnilineConf
 
     const MOVIE_CONSERVATION_PET = 2;
     const MOVIE_BREEDER_PET = 1;
+
+    const BREEDER_VISIBLE_SHOW = 1;
 }

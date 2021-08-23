@@ -1,0 +1,54 @@
+{% set site_type = 'breeder' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <div class="main">
+        <div class="row">
+            <div class="main-container col-12">
+                <div class="sub-title">
+                    取引履歴 - {{ rootMessage.breeder.breederHouseName ?? '' }}
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="sub-title d-flex justify-content-between align-items-end">
+                    <h2>{{ rootMessage.contactTitle }}</h2>
+                </div>
+                <p>{{ rootMessage.contactDescription }}</p>
+                {% for message in messages %}
+                    <div class="m-1 p-1"></div>
+                    <div class="row">
+                        <div class="{{ (message.messageFrom == 2) ? 'col-6' : 'col-7 px-5' }}">
+                            <div class="d-sm-5 justify-content-between py-3 border breeder-border rounded">
+                                <div class="ml-5">
+                                    {{ message.contactDescription }}
+                                </div>
+                                <h4 class="mr-sm-5 ml-5">送信日時：{{ message.sendDate.format('Y年m月d日 H:i') ?? '' }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="m-1 p-1"></div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="d-sm-5 justify-content-between py-3 border breeder-border rounded">
+                            <div class="px-4">
+                                返信内容
+                            </div>
+                            <div class="px-4">
+                                {{ form_start(form) }}
+                                <textarea class="col-12" rows="5" name="contact_description"
+                                          placeholder="返信メッセージ"></textarea>
+                                <button class="ec-blockBtn--cancel">送信</button>
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

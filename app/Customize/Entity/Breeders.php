@@ -270,12 +270,18 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $secret_key;
 
     /**
+     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="breeder_id")
+     */
+    private $breederContacts;
+
+    /**
      * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="breeder_id", orphanRemoval=true)
      */
     private $breederPets;
 
     public function __construct()
     {
+        $this->breederContacts = new ArrayCollection();
         $this->breederPets = new ArrayCollection();
     }
 
@@ -776,7 +782,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this;
     }
 
-    
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -919,7 +925,37 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function __toString()
     {
-        return (string) $this->getId();
+        return (string)$this->getId();
+    }
+
+    /**
+     * @return Collection|BreederContacts[]
+     */
+    public function getBreederContacts(): Collection
+    {
+        return $this->breederContacts;
+    }
+
+    public function addBreederContact(BreederContacts $breederContact): self
+    {
+        if (!$this->breederContacts->contains($breederContact)) {
+            $this->breederContacts[] = $breederContact;
+            $breederContact->setBreederId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBreederContact(BreederContacts $breederContact): self
+    {
+        if ($this->breederContacts->removeElement($breederContact)) {
+            // set the owning side to null (unless already changed)
+            if ($breederContact->getBreederId() === $this) {
+                $breederContact->setBreederId(null);
+            }
+        }
+
+        return $this;
     }
 
     /**
