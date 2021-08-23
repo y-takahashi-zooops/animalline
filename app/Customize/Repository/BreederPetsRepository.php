@@ -47,4 +47,17 @@ class BreederPetsRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @return BreederPets[] Returns an array of ConservationPets objects
+     */
+
+    public function findByFavoriteCount()
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.favorite_count > 0')
+            ->orderBy('a.favorite_count', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
