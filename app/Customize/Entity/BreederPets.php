@@ -24,9 +24,10 @@ class BreederPets
     private $id;
 
     /**
-     * @ORM\Column(name="breeder_id", type="integer")
+     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederPets")
+     * @ORM\JoinColumn(name="breeder_id", nullable=false)
      */
-    private $breeder_id;
+    private $breeder;
 
     /**
      * @ORM\Column(name="pet_kind", type="smallint")
@@ -161,18 +162,6 @@ class BreederPets
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getBreederId(): ?int
-    {
-        return $this->breeder_id;
-    }
-
-    public function setBreederId(int $breeder_id): self
-    {
-        $this->breeder_id = $breeder_id;
-
-        return $this;
     }
 
     public function getPetKind(): ?int
@@ -439,6 +428,18 @@ class BreederPets
     public function setUpdateDate($updateDate)
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+    public function getBreeder(): ?Breeders
+    {
+        return $this->breeder;
+    }
+
+    public function setBreeder(?Breeders $breeder): self
+    {
+        $this->breeder = $breeder;
 
         return $this;
     }
