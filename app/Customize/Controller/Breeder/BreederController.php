@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Customize\Repository\BreederContactsRepository;
+use Customize\Repository\SendoffReasonRepository;
+use Customize\Service\BreederQueryService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class BreederController extends AbstractController
@@ -22,6 +25,15 @@ class BreederController extends AbstractController
      * @var BreederPetsRepository
      */
     protected $breederPetsRepository;
+    /**
+     * @var BreederContactsRepository
+     */
+    protected $breederContactsRepository;
+
+    /**
+     * @var BreederQueryService
+     */
+    protected $breederQueryService;
 
     /**
      * @var PetsFavoriteRepository
@@ -29,26 +41,66 @@ class BreederController extends AbstractController
     protected $petsFavoriteRepository;
 
     /**
-     * @var BreederPetImageRepository
+     * @var SendoffReasonRepository
      */
-    protected $breederPetImageRepository;
+    protected $sendoffReasonRepository;
 
     /**
-     * BreederController constructor.
+     * AdoptionController constructor.
+     *
+     * @param BreederContactsRepository $breederContactsRepository
+     * @param BreederQueryService $breederQueryService
+     * @param PetsFavoriteRepository $petsFavoriteRepository
+     * @param SendoffReasonRepository $sendoffReasonRepository
      * @param BreederPetsRepository $breederPetsRepository,
-     * @param PetsFavoriteRepository $petsFavoriteRepository,
-     * @param BreederPetImageRepository $breederPetImageRepository
      */
     public function __construct(
-        BreederPetsRepository  $breederPetsRepository,
-        PetsFavoriteRepository $petsFavoriteRepository,
-        BreederPetImageRepository $breederPetImageRepository
+        BreederContactsRepository $breederContactsRepository,
+        BreederQueryService           $breederQueryService,
+        PetsFavoriteRepository         $petsFavoriteRepository,
+        SendoffReasonRepository         $sendoffReasonRepository,
+        BreederPetsRepository $breederPetsRepository
     ) {
-        $this->breederPetsRepository = $breederPetsRepository;
+        $this->breederContactsRepository = $breederContactsRepository;
+        $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
-        $this->breederPetImageRepository = $breederPetImageRepository;
+        $this->sendoffReasonRepository = $sendoffReasonRepository;
+        $this->breederPetsRepository = $breederPetsRepository;
     }
 
+    /**
+     * 保護団体用ユーザーページ
+     *
+     * @Route("/breeder/member/", name="breeder_mypage")
+     * @Template("animalline/breeder/member/index.twig")
+     */
+    public function breeder_mypage(Request $request)
+    {
+        $customerId = $this->getUser()->getId();
+        $rootMessages = $this->breederContactsRepository
+            ->findBy(
+                [
+                    'customer' => $customerId,
+                    'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
+                    'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
+                ]
+            );
+
+        $lastReplies = [];
+        foreach ($rootMessages as $rootMessage) {
+            $lastReply = $this->breederContactsRepository
+                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
+            $lastReplies[$rootMessage->getId()] = $lastReply;
+        }
+
+        $pets = $this->breederQueryService->findBreederFavoritePets($customerId);
+
+        return $this->render('animalline/breeder/member/index.twig', [
+            'rootMessages' => $rootMessages,
+            'lastReplies' => $lastReplies,
+            'pets' => $pets
+        ]);
+    }
 
     /**
      * ペット詳細.

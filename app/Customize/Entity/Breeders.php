@@ -269,20 +269,20 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     private $secret_key;
 
+    /*
+     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="breeder")
+     */
+    private $breederPets;
+
     /**
      * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="breeder_id")
      */
     private $breederContacts;
 
-    /**
-     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="breeder_id")
-     */
-    private $breederPets;
-
     public function __construct()
     {
-        $this->breederContacts = new ArrayCollection();
         $this->breederPets = new ArrayCollection();
+        $this->breederContacts = new ArrayCollection();
     }
 
     public function getId(): ?int

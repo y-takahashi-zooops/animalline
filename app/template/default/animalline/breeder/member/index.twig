@@ -1,0 +1,359 @@
+{% set site_type = 'breeder' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+<div class="main">
+    <div class="row">
+        <div class="main-container col-12">
+            <div class="sub-title">
+                <h1>マイページ</h1>
+            </div>
+            <div class="m-2 p-2"></div>
+            <div class="sub-title d-flex justify-content-between align-items-end">
+                <h2>交渉中のお取引</h2>
+            </div>
+            {% for rootMessage in rootMessages %}
+                <div class="m-1 p-1"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-sm-flex justify-content-between py-3 border adoption-border rounded">
+                            <div class="ml-5">
+                                <h3>{{ rootMessage.conservation.conservationHouseName ?? '' }}</h3>
+                                <h3><a href={{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}>{{ rootMessage.contactTitle }}</a></h3>
+                            </div>
+                            <h4 class="mr-sm-5 ml-5">返信日時：{{ lastReplies[rootMessage.id].sendDate.format('Y年m月d日　H:i') ?? 'なし。' }}</h4>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                メッセージが見つかりません。
+            {% endfor %}
+        
+            <div class="m-4 p-4"></div>
+            <div class="sub-title d-flex justify-content-between align-items-end">
+                <h2>お気に入り一覧</h2>
+                <a class="d-flex" href="#">
+                    <h3 class=" color-gray-300">もっと見る</h3>
+                    <div class="m-1 p-1"></div>
+                    <img src="{{ asset('assets/img/arrow-icon.svg') }}">
+                </a>
+            </div>
+            <div class="m-3 p-3"></div>
+            <div class="row">
+                {% for pet in pets %}
+                    <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
+                        <div class="catalog-card">
+                            <!-- TODO: update link -->
+                            <a href="/breeder/pet/detail/1">
+                                <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
+                                        class="card-img-top" alt="...">
+                            </a>
+                            <div class="card-body bg-primary">
+                                <h3 class="color-gray-500 font-weight-600">{{ pet.breedsType.breedsName ?? '' }}</h3>
+                                <div class="m-4"></div>
+                                <div class="d-flex">
+                                    <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
+                                    {% if(pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE')) %}
+                                        <h4 class="pet-set-male">男の子</h4>
+                                    {% else %}
+                                        <h4 class="pet-set-female">女の子</h4>
+                                    {% endif %}
+                                </div>
+                                <div class="mb-2"></div>
+                                <div class="d-flex">
+                                    <h4 class="mr-3">{{ pet.breeder.breeder_house_pref ?? '' }}</h4>
+                                    <h4>{{ pet.coatColor.coatColorName ?? '' }}</h4>
+                                </div>
+                                <div class="m-2"></div>
+                                <h4>{{ pet.prComment }}</h4>
+                                <div class="m-2"></div>
+                                <h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4>
+                                <div class="m-4"></div>
+                                <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円（税込）</span></h3>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    メッセージが見つかりません。
+                {% endfor %}
+            </div>
+            <div class="m-4 p-4"></div>
+            <div class="sub-title d-flex justify-content-between align-items-end">
+                <h2>取引ナビ</h2>
+                <a class="d-flex" href="#">
+                    <h3 class=" color-gray-300">もっと見る</h3>
+                    <div class="m-1 p-1"></div>
+                    <img src="{{ asset('assets/img/arrow-icon.svg') }}">
+                </a>
+            </div>
+            <div class="m-3 p-3"></div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-sm-flex justify-content-between py-5 border adoption-border rounded">
+                        <div class="ml-5">
+                            <h3>ブリーダー名</h3>
+                            <h3>お問い合わせ内容が入ります</h3>
+                        </div>
+                        <h4 class="mr-sm-5 ml-5">2021年00月00日　10:00</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="m-1 p-1"></div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-sm-flex justify-content-between py-5 border adoption-border rounded">
+                        <div class="ml-5">
+                            <h3>ブリーダー名</h3>
+                            <h3>お問い合わせ内容が入ります</h3>
+                        </div>
+                        <h4 class="mr-sm-5 ml-5">2021年00月00日　10:00</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="m-1 p-1"></div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-sm-flex justify-content-between py-5 border adoption-border rounded">
+                        <div class="ml-5">
+                            <h3>ブリーダー名</h3>
+                            <h3>お問い合わせ内容が入ります</h3>
+                        </div>
+                        <h4 class="mr-sm-5 ml-5">2021年00月00日　10:00</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="m-4 p-4"></div>
+            <div class="sub-title">
+                <h2>会員情報</h2>
+            </div>
+            <div class="m-4 p-4"></div>
+            <form class="p-5 bg-primary">
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">名前</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-lg">
+                            <input type="text" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                        <div class="m-1 p-1"></div>
+                        <h4 class="ml-4">例）田中太郎</h4>
+                    </div>
+
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">フリガナ</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-lg">
+                            <input type="text" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                        <div class="m-1 p-1"></div>
+                        <h4 class="ml-4">例）タナカタロウ</h4>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">ハンドルネーム</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-lg">
+                            <input type="text" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                        <div class="m-1 p-1"></div>
+                        <h4 class="ml-4">例）タロウ</h4>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">メールアドレス</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-lg">
+                            <input type="email" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                        <div class="m-1 p-1"></div>
+                        <h4 class="ml-4">※確認のためにもう一度メールアドレスを入力してください。</h4>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-1 p-1"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-lg">
+                            <input type="email" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">電話番号</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-lg">
+                            <input type="tel" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                        <div class="m-1 p-1"></div>
+                        <h4 class="ml-4">例）012301230123</h4>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">パスワード</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-lg">
+                            <input type="password" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                        <div class="m-1 p-1"></div>
+                        <h4 class="ml-4">パスワードの長さは最低6文字です。</h4>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">性別</h3>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <select class="form-control border-0 gender-form" id="exampleFormControlSelect1">
+                                <option>男性</option>
+                                <option>女性</option>
+                                <option>その他</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">生年月日</h3>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group input-group-lg">
+                            <input type="date" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">郵便番号</h3>
+                    </div>
+                    <div class="col-6 col-sm-2">
+                        <div class="input-group input-group-lg">
+                            <input type="text" name="zip31" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-2">
+                        <div class="input-group input-group-lg">
+                            <input type="text" name="zip32" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" onKeyUp="AjaxZip3.zip2addr('zip31','zip32','pref31','addr31','addr31');">
+                        </div>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">都道府県</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-lg">
+                            <input type="text" name="pref31" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">住所1</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-lg">
+                            <input type="text" name="addr31" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                        <div class="m-1 p-1"></div>
+                        <h4 class="ml-4">市区町村、番地等</h4>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-1 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <h3 class="color-gray-500 font-weight-500">住所2</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-lg">
+                            <input type="text" class="form-control border-0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+                        </div>
+                        <div class="m-1 p-1"></div>
+                        <h4 class="ml-4">アパート・マンション名、部屋番号等</h4>
+                    </div>
+                    <div class="col-1 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+                <div class="row">
+                    <div class="col-4 d-none d-sm-block"></div>
+                    <div class="col-sm-4 mb-sm-0 mb-2">
+                        <a href="#"><button class="btn basic-btn adoption-btn">会員情報を更新</button></a>
+                    </div>
+                    <div class="col-4 d-none d-sm-block"></div>
+                </div>
+                <div class="m-4 p-4"></div>
+            </form>
+            <div class="m-4 p-4"></div>
+            <div class="sub-title d-flex justify-content-between align-items-end">
+                <h2>退会する</h2>
+            </div>
+            <div class="m-3 p-3"></div>
+            <div class="d-sm-flex">
+                <a href="#"><h3 class="font-weight-500">退会する</h3></a>
+                <div class="m-2 p-2"></div>
+                <h3 class="color-accent font-weight-500">退会するとデータが削除されます。</h3>
+            </div>
+            <div class="m-4 p-4"></div>
+            <div class="row">
+                <div class="col-4 d-none d-sm-block"></div>
+                <div class="col-sm-4">
+                    <a href="#"><button class="btn basic-btn adoption-btn">ログアウトする</button></a>
+                </div>
+                <div class="col-4 d-none d-sm-block"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

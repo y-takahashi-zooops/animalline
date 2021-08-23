@@ -41,7 +41,7 @@ class BreederContacts
     private $message_from;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ConservationPets::class, inversedBy="breederContacts")
+     * @ORM\ManyToOne(targetEntity=BreederPets::class, inversedBy="breederContacts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="pet_id", referencedColumnName="id", nullable=false)
      * })
