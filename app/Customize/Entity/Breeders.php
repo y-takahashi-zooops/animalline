@@ -269,14 +269,20 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     private $secret_key;
 
-    /**
-     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="Breeder")
+    /*
+     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="breeder")
      */
     private $breederPets;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="breeder_id")
+     */
+    private $breederContacts;
 
     public function __construct()
     {
         $this->breederPets = new ArrayCollection();
+        $this->breederContacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -946,6 +952,36 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
             // set the owning side to null (unless already changed)
             if ($breederPet->getBreeder() === $this) {
                 $breederPet->setBreeder(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BreederContacts[]
+     */
+    public function getBreederContacts(): Collection
+    {
+        return $this->breederContacts;
+    }
+
+    public function addBreederContact(BreederContacts $breederContact): self
+    {
+        if (!$this->breederContacts->contains($breederContact)) {
+            $this->breederContacts[] = $breederContact;
+            $breederContact->setBreederId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBreederContact(BreederContacts $breederContact): self
+    {
+        if ($this->breederContacts->removeElement($breederContact)) {
+            // set the owning side to null (unless already changed)
+            if ($breederContact->getBreederId() === $this) {
+                $breederContact->setBreederId(null);
             }
         }
 
