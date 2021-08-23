@@ -153,10 +153,21 @@ class BreederPets
      */
     private $breederContacts;
 
+    /**
+     * @ORM\Column(name="favorite_count", type="integer", options={"default" = 0}, nullable=true)
+     */
+    private $favorite_count = 0;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PetsFavorite::class, mappedBy="pet_id")
+     */
+    private $petsFavorites;
+
     public function __construct()
     {
         $this->breederPetImages = new ArrayCollection();
         $this->breederContacts = new ArrayCollection();
+        $this->petsFavorites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -486,7 +497,7 @@ class BreederPets
     {
         if (!$this->breederContacts->contains($breederContact)) {
             $this->breederContacts[] = $breederContact;
-            $breederContact->setPetId($this);
+            $breederContact->setPet($this);
         }
 
         return $this;
@@ -496,8 +507,50 @@ class BreederPets
     {
         if ($this->breederContacts->removeElement($breederContact)) {
             // set the owning side to null (unless already changed)
-            if ($breederContact->getPetId() === $this) {
-                $breederContact->setPetId(null);
+            if ($breederContact->getPet() === $this) {
+                $breederContact->setPet(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getFavoriteCount(): ?int
+    {
+        return $this->favorite_count;
+    }
+
+    public function setFavoriteCount(int $favorite_count): self
+    {
+        $this->favorite_count = $favorite_count;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PetsFavorite[]
+     */
+    public function getPetsFavorites(): Collection
+    {
+        return $this->petsFavorites;
+    }
+
+    public function addPetsFavorite(PetsFavorite $petsFavorite): self
+    {
+        if (!$this->petsFavorites->contains($petsFavorite)) {
+            $this->petsFavorites[] = $petsFavorite;
+            $petsFavorite->setPetId($this);
+        }
+
+        return $this;
+    }
+
+    public function removePetsFavorite(PetsFavorite $petsFavorite): self
+    {
+        if ($this->petsFavorites->removeElement($petsFavorite)) {
+            // set the owning side to null (unless already changed)
+            if ($petsFavorite->getPetId() === $this) {
+                $petsFavorite->setPetId(null);
             }
         }
 
