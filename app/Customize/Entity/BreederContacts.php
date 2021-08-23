@@ -2,7 +2,6 @@
 
 namespace Customize\Entity;
 
-use Customize\Repository\BreederContactsRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\Customer;
 
@@ -17,76 +16,80 @@ class BreederContacts
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="breederContacts")
-     * @ORM\JoinColumn(name="conservation_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=false)
+     * })
      */
-    private $customer_id;
+    private $customer;
 
     /**
      * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederContacts")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="breeder_id", referencedColumnName="id", nullable=false)
      */
-    private $breeder_id;
+    private $breeder;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="message_from", type="smallint")
      */
     private $message_from;
 
     /**
-     * @ORM\ManyToOne(targetEntity=BreederPets::class, inversedBy="breederContacts")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=ConservationPets::class, inversedBy="breederContacts")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="pet_id", referencedColumnName="id", nullable=false)
+     * })
      */
-    private $pet_id;
+    private $pet;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="contact_type", type="smallint")
      */
     private $contact_type;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="contact_title", type="string", length=255, nullable=true)
      */
     private $contact_title;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="contact_description", type="string", length=255, nullable=true)
      */
     private $contact_description;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="booking_request", type="text", nullable=true)
      */
     private $booking_request;
 
     /**
-     * @ORM\Column(type="integer", options={"default" = 0})
+     * @ORM\Column(name="parent_message_id", type="integer", options={"default" = 0})
      */
     private $parent_message_id;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="send_date", type="datetime")
      */
     private $send_date;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0})
+     * @ORM\Column(name="is_response", type="smallint", options={"default" = 0})
      */
     private $is_response;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0})
+     * @ORM\Column(name="contract_status", type="smallint", options={"default" = 0})
      */
     private $contract_status;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SendoffReason::class, inversedBy="conservationContacts")
+     * @ORM\ManyToOne(targetEntity=SendoffReason::class, inversedBy="breederContacts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="reason", referencedColumnName="id", nullable=true)
      * })
@@ -112,26 +115,26 @@ class BreederContacts
         return $this->id;
     }
 
-    public function getCustomerId(): ?Customer
+    public function getCustomer(): ?Customer
     {
-        return $this->customer_id;
+        return $this->customer;
     }
 
-    public function setCustomerId(?Customer $customer_id): self
+    public function setCustomer(?Customer $customer): self
     {
-        $this->customer_id = $customer_id;
+        $this->customer = $customer;
 
         return $this;
     }
 
-    public function getBreederId(): ?Breeders
+    public function getBreeder(): ?Breeders
     {
-        return $this->breeder_id;
+        return $this->breeder;
     }
 
-    public function setBreederId(?Breeders $breeder_id): self
+    public function setBreeder(?Breeders $breeder): self
     {
-        $this->breeder_id = $breeder_id;
+        $this->breeder = $breeder;
 
         return $this;
     }
@@ -148,14 +151,14 @@ class BreederContacts
         return $this;
     }
 
-    public function getPetId(): ?BreederPets
+    public function getPet(): ?BreederPets
     {
-        return $this->pet_id;
+        return $this->pet;
     }
 
-    public function setPetId(?BreederPets $pet_id): self
+    public function setPet(?BreederPets $pet): self
     {
-        $this->pet_id = $pet_id;
+        $this->pet = $pet;
 
         return $this;
     }
