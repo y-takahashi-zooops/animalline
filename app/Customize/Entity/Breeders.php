@@ -269,6 +269,16 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     private $secret_key;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="Breeder")
+     */
+    private $breederPets;
+
+    public function __construct()
+    {
+        $this->breederPets = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -910,5 +920,35 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     public function __toString()
     {
         return (string) $this->getId();
+    }
+
+    /**
+     * @return Collection|BreederPets[]
+     */
+    public function getBreederPets(): Collection
+    {
+        return $this->breederPets;
+    }
+
+    public function addBreederPet(BreederPets $breederPet): self
+    {
+        if (!$this->breederPets->contains($breederPet)) {
+            $this->breederPets[] = $breederPet;
+            $breederPet->setBreeder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBreederPet(BreederPets $breederPet): self
+    {
+        if ($this->breederPets->removeElement($breederPet)) {
+            // set the owning side to null (unless already changed)
+            if ($breederPet->getBreeder() === $this) {
+                $breederPet->setBreeder(null);
+            }
+        }
+
+        return $this;
     }
 }
