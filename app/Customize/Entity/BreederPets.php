@@ -27,7 +27,7 @@ class BreederPets
      * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederPets")
      * @ORM\JoinColumn(name="breeder_id", nullable=false)
      */
-    private $Breeder;
+    private $breeder;
 
     /**
      * @ORM\Column(name="pet_kind", type="smallint")
@@ -428,12 +428,12 @@ class BreederPets
 
     public function getBreeder(): ?Breeders
     {
-        return $this->Breeder;
+        return $this->breeder;
     }
 
-    public function setBreeder(?Breeders $Breeder): self
+    public function setBreeder(?Breeders $breeder): self
     {
-        $this->Breeder = $Breeder;
+        $this->breeder = $breeder;
 
         return $this;
     }
