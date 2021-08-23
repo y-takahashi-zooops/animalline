@@ -147,9 +147,15 @@ class BreederPets
      */
     private $breederPetImages;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="pet_id")
+     */
+    private $breederContacts;
+
     public function __construct()
     {
         $this->breederPetImages = new ArrayCollection();
+        $this->breederContacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -461,6 +467,36 @@ class BreederPets
             // set the owning side to null (unless already changed)
             if ($breederPetImage->getBreederPetId() === $this) {
                 $breederPetImage->setBreederPetId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BreederContacts[]
+     */
+    public function getBreederContacts(): Collection
+    {
+        return $this->breederContacts;
+    }
+
+    public function addBreederContact(BreederContacts $breederContact): self
+    {
+        if (!$this->breederContacts->contains($breederContact)) {
+            $this->breederContacts[] = $breederContact;
+            $breederContact->setPetId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBreederContact(BreederContacts $breederContact): self
+    {
+        if ($this->breederContacts->removeElement($breederContact)) {
+            // set the owning side to null (unless already changed)
+            if ($breederContact->getPetId() === $this) {
+                $breederContact->setPetId(null);
             }
         }
 
