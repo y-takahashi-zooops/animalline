@@ -206,6 +206,29 @@ class BreederController extends AbstractController
      */
     public function contact(Request $request)
     {
-        return true;
+        $customerId = $this->getUser()->getId();
+        $rootMessages = $this->breederContactsRepository
+            ->findBy(
+                [
+                    'customer' => $customerId,
+                    'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
+                    'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
+                ]
+            );
+
+        $lastReplies = [];
+        foreach ($rootMessages as $rootMessage) {
+            $lastReply = $this->breederContactsRepository
+                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
+            $lastReplies[$rootMessage->getId()] = $lastReply;
+        }
+
+        $pets = $this->breederQueryService->findBreederFavoritePets($customerId);
+
+        return $this->render('animalline/breeder/member/index.twig', [
+            'rootMessages' => $rootMessages,
+            'lastReplies' => $lastReplies,
+            'pets' => $pets
+        ]);
     }
 }

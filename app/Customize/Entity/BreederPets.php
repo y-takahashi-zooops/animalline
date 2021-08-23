@@ -23,7 +23,7 @@ class BreederPets
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeders", inversedBy="breederPets")
+     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederPets")
      * @ORM\JoinColumn(name="breeder_id", nullable=false)
      */
     private $breeder;
@@ -591,5 +591,4 @@ class BreederPets
 
         return $this;
     }
-
 }
