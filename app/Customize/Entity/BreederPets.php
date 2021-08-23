@@ -2,6 +2,7 @@
 
 namespace Customize\Entity;
 
+use Customize\Repository\BreederPetsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -475,18 +476,6 @@ class BreederPets
     public function setUpdateDate($updateDate)
     {
         $this->update_date = $updateDate;
-
-        return $this;
-    }
-
-    public function getBreeder(): ?Breeders
-    {
-        return $this->breeder;
-    }
-
-    public function setBreeder(?Breeders $breeder): self
-    {
-        $this->breeder = $breeder;
 
         return $this;
     }
