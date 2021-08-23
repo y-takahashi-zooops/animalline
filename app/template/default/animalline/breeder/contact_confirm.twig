@@ -1,0 +1,100 @@
+{% set site_type = 'breeder' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <div class="ec-registerRole">
+        <div class="ec-pageHeader">
+            <h1>{{ 'お問い合わせの内容を確認ください'|trans }}</h1>
+        </div>
+        <div class="ec-off1Grid">
+            <div class="ec-off1Grid__cell">
+                <form method="post" action="{{ url('breeder_contact', {'pet_id': id}) }}">
+                    {{ form_widget(form._token) }}
+                    <p>{{ 'お問い合わせの内容は下記の通りです。ご確認してください。
+よろしければ、下部に「送信」ボタンをクリックしてください
+'|trans|nl2br }}</p>
+                    <div class="ec-borderedDefs">
+                        <dl>
+                            <dt>
+                                {{ form_label(form.contact_type, 'コンタクト内容', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.contact_type) ? ' error' }}">
+                                    {{ form.contact_type.vars.choices[form.contact_type.vars.data-1].label }}
+                                    {{ form_widget(form.contact_type, { 'attr': {'class': 'hidden'} }) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.contact_title, 'コンタクト内容タイトル', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.contact_title) ? ' error' }}">
+                                    {{ form.contact_title.vars.data }}
+                                    {{ form_widget(form.contact_title, { 'attr': {'class': 'hidden'} }) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.contact_description, 'コンタクト内容本文', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.contact_description) ? ' error' }}">
+                                    {{ form.contact_description.vars.data }}
+                                    {{ form_widget(form.contact_description, { 'attr': {'class': 'hidden'} }) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.booking_request, '見学希望日', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.booking_request) ? ' error' }}">
+                                    {{ form.booking_request.vars.data }}
+                                    {{ form_widget(form.booking_request, { 'attr': {'class': 'hidden'} }) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        {# エンティティ拡張の自動出力 #}
+                        {% for f in form if f.vars.eccube_form_options.auto_render %}
+                            {% if f.vars.eccube_form_options.form_theme %}
+                                {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                {{ form_row(f) }}
+                            {% else %}
+                                <dl>
+                                    <dt>
+                                        {{ form_label(f) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="{{ f.vars.eccube_form_options.style_class }}{{ has_errors(f) ? ' error' }}">
+                                            {{ form_widget(f) }}
+                                            {{ form_errors(f) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="ec-registerRole__actions">
+                        <div class="ec-off4Grid">
+                            <div class="ec-off4Grid__cell">
+                                <button class="basic-btn breeder-btn" type="submit" name="mode"
+                                        value="complete">{{ '送信'|trans }}</button>
+                                <br><br>
+                                <button class="basic-btn accent-btn bg-accent text-align-center" type="submit"
+                                        name="mode" value="back">{{ '戻る'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

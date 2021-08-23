@@ -35,3 +35,12 @@
 .pagination .page-link {
     color: var(--breeder-main-color)
 }
+
+.hidden {
+    display: none !important;
+}
+
+.w-550 {
+    width: 550px;
+}
+

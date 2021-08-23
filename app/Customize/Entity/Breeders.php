@@ -274,9 +274,15 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     private $breederContacts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="Breeder")
+     */
+    private $breederPets;
+
     public function __construct()
     {
         $this->breederContacts = new ArrayCollection();
+        $this->breederPets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -776,7 +782,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this;
     }
 
-    
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -919,7 +925,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function __toString()
     {
-        return (string) $this->getId();
+        return (string)$this->getId();
     }
 
     /**
@@ -946,6 +952,36 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
             // set the owning side to null (unless already changed)
             if ($breederContact->getBreederId() === $this) {
                 $breederContact->setBreederId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BreederPets[]
+     */
+    public function getBreederPets(): Collection
+    {
+        return $this->breederPets;
+    }
+
+    public function addBreederPet(BreederPets $breederPet): self
+    {
+        if (!$this->breederPets->contains($breederPet)) {
+            $this->breederPets[] = $breederPet;
+            $breederPet->setBreeder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBreederPet(BreederPets $breederPet): self
+    {
+        if ($this->breederPets->removeElement($breederPet)) {
+            // set the owning side to null (unless already changed)
+            if ($breederPet->getBreeder() === $this) {
+                $breederPet->setBreeder(null);
             }
         }
 

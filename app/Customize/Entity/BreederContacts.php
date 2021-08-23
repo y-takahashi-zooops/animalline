@@ -41,7 +41,7 @@ class BreederContacts
     private $message_from;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ConservationPets::class, inversedBy="breederContacts")
+     * @ORM\ManyToOne(targetEntity=BreederPets::class, inversedBy="breederContacts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="pet_id", referencedColumnName="id", nullable=false)
      * })
@@ -86,7 +86,7 @@ class BreederContacts
     /**
      * @ORM\Column(name="contract_status", type="smallint", options={"default" = 0})
      */
-    private $contract_status;
+    private $contract_status = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity=SendoffReason::class, inversedBy="breederContacts")

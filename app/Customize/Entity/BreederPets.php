@@ -24,14 +24,16 @@ class BreederPets
     private $id;
 
     /**
-     * @ORM\Column(name="breeder_id", type="integer")
-     */
-    private $breeder_id;
-
-    /**
      * @ORM\Column(name="pet_kind", type="smallint")
      */
     private $pet_kind;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederPets")
+     * @ORM\JoinColumn(name="breeder_id", nullable=false)
+     */
+    private $Breeder;
 
     /**
      * @ORM\Column(name="breeds_type", type="integer")
@@ -129,6 +131,16 @@ class BreederPets
     private $thumbnail_path;
 
     /**
+     * @ORM\Column(name="release_status", type="smallint", options={"default" = 0}, nullable=true)
+     */
+    private $release_status;
+
+    /**
+     * @ORM\Column(name="release_date", type="date", nullable=true)
+     */
+    private $release_date;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
@@ -161,18 +173,6 @@ class BreederPets
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getBreederId(): ?int
-    {
-        return $this->breeder_id;
-    }
-
-    public function setBreederId(int $breeder_id): self
-    {
-        $this->breeder_id = $breeder_id;
-
-        return $this;
     }
 
     public function getPetKind(): ?int
@@ -415,6 +415,31 @@ class BreederPets
         return $this;
     }
 
+    public function getReleaseStatus(): ?int
+    {
+        return $this->release_status;
+    }
+
+    public function setReleaseStatus(int $release_status): self
+    {
+        $this->release_status = $release_status;
+
+        return $this;
+    }
+
+    public function getReleaseDate(): ?\DateTimeInterface
+    {
+        return $this->release_date;
+    }
+
+    public function setReleaseDate(\DateTimeInterface $release_date): self
+    {
+        $this->release_date = $release_date;
+
+        return $this;
+    }
+
+
     /**
      * Set createDate.
      *
@@ -499,6 +524,18 @@ class BreederPets
                 $breederContact->setPetId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBreeder(): ?Breeders
+    {
+        return $this->Breeder;
+    }
+
+    public function setBreeder(?Breeders $Breeder): self
+    {
+        $this->Breeder = $Breeder;
 
         return $this;
     }
