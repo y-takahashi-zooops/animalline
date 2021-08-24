@@ -25,7 +25,7 @@
                                     <h4 class="mr-sm-5 ml-5">
                                         状態：{{ message.getContractStatus()==0 ? '交渉中' : message.getContractStatus()==1 ? '取引成立' : '取引終了' }}</h4>
                                     <h4 class="mr-sm-5 ml-5">
-                                        返信日時：{{ lastReplies[message.id].format('Y年m月d日 H:i') ?? 'なし。' }}</h4>
+                                        {{ 返信日時：.lastReplies[message.id].format('Y年m月d日 H:i') ?? '－' }}</h4>
                                 </div>
                             </div>
                         </div>

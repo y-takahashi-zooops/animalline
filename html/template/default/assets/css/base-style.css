@@ -498,7 +498,8 @@ th, td {
 
 .search-area .select-container::after {
     position: absolute;
-    top: calc(50% - 12px);
+    /* top: calc(50% - 12px); */
+    top: calc(10px);
     right: 38px;
     content: ">";
     transform: rotate(90deg) scaleY(1.414);
