@@ -57,7 +57,7 @@ class BreederController extends AbstractController
     protected $sendoffReasonRepository;
 
     /**
-     * AdoptionController constructor.
+     * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
@@ -83,8 +83,6 @@ class BreederController extends AbstractController
     }
 
     /**
-     * ペット検索結果.
-     *
      * @Route("/breeder/pet/search/result", name="breeder_pet_search_result")
      * @Template("animalline/breeder/pet/search_result.twig")
      */
@@ -101,8 +99,6 @@ class BreederController extends AbstractController
     }
 
     /**
-     * 保護団体用ユーザーページ
-     *
      * @Route("/breeder/member/", name="breeder_mypage")
      * @Template("animalline/breeder/member/index.twig")
      */
@@ -135,8 +131,6 @@ class BreederController extends AbstractController
     }
 
     /**
-     * ペット詳細.
-     *
      * @Route("/breeder/pet/detail/{id}", name="breeder_pet_detail", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/pet/detail.twig")
      */
@@ -228,7 +222,7 @@ class BreederController extends AbstractController
             $entityManager->remove($favorite);
             $entityManager->flush();
 
-            $this->conservationPetsRepository->decrementCount($pet);
+            $this->breederPetsRepository->decrementCount($pet);
 
             return new JsonResponse('unliked');
         }
@@ -237,8 +231,6 @@ class BreederController extends AbstractController
     }
 
     /**
-     * お気に入り一覧.
-     *
      * @Route("/breeder/member/favorite", name="breeder_favorite")
      * @Template("animalline/breeder/favorite.twig")
      */
@@ -255,7 +247,6 @@ class BreederController extends AbstractController
     }
 
     /**
-     *
      * @Route("/breeder/member/message/{contact_id}", name="breeder_mypage_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/breeder/member/message.twig")
      */
@@ -306,8 +297,6 @@ class BreederController extends AbstractController
     }
 
     /**
-     * お問い合わせ.
-     *
      * @Route("/breeder/member/contact/{pet_id}", name="breeder_contact", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/breeder/contact.twig")
      */
@@ -367,8 +356,6 @@ class BreederController extends AbstractController
     }
 
     /**
-     * お問い合わせ完了画面
-     *
      * @Route("/breeder/member/contact/{pet_id}/complete", name="breeder_contact_complete", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/breeder/contact_complete.twig")
      */

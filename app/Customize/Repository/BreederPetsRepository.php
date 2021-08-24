@@ -19,45 +19,40 @@ class BreederPetsRepository extends ServiceEntityRepository
         parent::__construct($registry, BreederPets::class);
     }
 
-    // /**
-    //  * @return BreederPets[] Returns an array of BreederPets objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?BreederPets
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
     /**
-     * @return BreederPets[] Returns an array of ConservationPets objects
+     * @return BreederPets[] Returns an array of BreederPets objects
      */
 
-    public function findByFavoriteCount()
+    public function findByFavoriteCount(): array
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.favorite_count > 0')
             ->orderBy('a.favorite_count', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function incrementCount(BreederPets $entity)
+    {
+        return $this
+            ->createQueryBuilder('e')
+            ->update()
+            ->set('e.favorite_count', 'case when e.favorite_count is null then 1 else e.favorite_count + 1 end')
+            ->where('e.id = :id')
+            ->setParameter('id', $entity->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    public function decrementCount(BreederPets $entity)
+    {
+        return $this
+            ->createQueryBuilder('e')
+            ->update()
+            ->set('e.favorite_count', 'case when e.favorite_count > 0 then e.favorite_count - 1 else 0 end')
+            ->where('e.id = :id')
+            ->setParameter('id', $entity->getId())
+            ->getQuery()
+            ->execute();
     }
 }

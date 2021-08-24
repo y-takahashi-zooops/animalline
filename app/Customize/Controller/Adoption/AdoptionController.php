@@ -158,14 +158,14 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/pet/detail/favorite_pet", name="favorite_pet")
+     * @Route("/adoption/pet/detail/favorite_pet", name="favorite_pet")
      * @param Request $request
      * @return JsonResponse
      */
     public function favoritePet(Request $request)
     {
         $id = $request->get('id');
-        $pet = $this->breederPetsRepository->find($id);
+        $pet = $this->conservationPetsRepository->find($id);
         $favorite = $this->petsFavoriteRepository->findOneBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
         $entityManager = $this->getDoctrine()->getManager();
         if (!$favorite) {
