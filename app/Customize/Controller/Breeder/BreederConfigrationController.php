@@ -80,7 +80,7 @@ class BreederConfigrationController extends AbstractController
         }
 
         $breederId = $this->getUser()->getId();
-        $pets = $this->breederPetsRepository->findBy(['breeder' => $breederId], ['update_date' => 'DESC']);
+        $pets = $this->breederPetsRepository->findBy(['Breeder' => $breederId], ['update_date' => 'DESC']);
 
         return $this->render(
             'animalline/breeder/configration/get_message.twig',
