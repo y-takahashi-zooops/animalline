@@ -14,7 +14,7 @@
     --gray-100: #F8F8F8;
 }
 
-.header-nav .nav-link.active{
+.header-nav .nav-link.active {
     background-color: var(--breeder-main-color);
 }
 
@@ -22,7 +22,7 @@
     color: var(--breeder-main-color);
 }
 
-.nav-pills .show>.nav-link {
+.nav-pills .show > .nav-link {
     background-color: var(--gray-200);
     color: var(--breeder-main-color);
 }
@@ -34,4 +34,73 @@
 
 .pagination .page-link {
     color: var(--breeder-main-color)
+}
+
+.bg-breeder {
+    background-color: var(--breeder-main-color) !important;
+    border: var(--breeder-main-color) !important;
+}
+
+.bg-section {
+    background-color: rgb(165, 248, 160) !important;
+}
+
+.color-breeder {
+    color: var(--breeder-main-color);
+}
+
+.breeder-btn {
+    background-color: var(--breeder-main-color);
+}
+
+.breeder-btn:hover {
+    background-color: #69ff96;
+}
+
+.breeder-border {
+    border: 3px solid #69ff96 !important;
+}
+
+.bg-sub-adoption {
+    background-color: #69ff96;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.sub-title {
+    overflow: auto;
+}
+
+.btn-like {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    display: inline-block;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 4px 0 4px 0;
+    cursor: pointer;
+}
+
+.btn-like:hover, .red-heart {
+    border-color: #ff7d7d;
+}
+
+.pet-set-male {
+    color: blue;
+}
+
+.pet-set-female {
+    color: red;
+}
+
+video {
+    /* override other styles to make responsive */
+    width: 100% !important;
+    height: auto !important;
+}
+
+.w-550 {
+    width: 550px;
 }

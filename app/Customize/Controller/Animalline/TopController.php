@@ -14,6 +14,7 @@
 namespace Customize\Controller\Animalline;
 
 use Customize\Config\AnilineConf;
+use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\BreedsRepository;
 use Eccube\Repository\Master\PrefRepository;
@@ -38,21 +39,28 @@ class TopController extends AbstractController
      * @var PrefRepository
      */
     protected $prefRepository;
+    /**
+     * @var BreederPetsRepository
+     */
+    protected $breederPetsRepository;
 
     /**
      * TopController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
+     * @param BreederPetsRepository $breederPetsRepository
      * @param BreedsRepository $breedsRepository
      * @param PrefRepository $prefRepository
      */
     public function __construct(
         ConservationPetsRepository $conservationPetsRepository,
+        BreederPetsRepository $breederPetsRepository,
         BreedsRepository           $breedsRepository,
         PrefRepository             $prefRepository
     )
     {
         $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->prefRepository = $prefRepository;
     }
@@ -90,8 +98,28 @@ class TopController extends AbstractController
      * @Route("/breeder/", name="breeder_top")
      * @Template("animalline/breeder/index.twig")
      */
-    public function breeder_index()
+    public function breeder_index(Request $request)
     {
-        return [];
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $regions = $this->prefRepository->findAll();
+        $newPets = $this->breederPetsRepository->findBy(
+            ['pet_kind' => $petKind],
+            ['release_date' => 'DESC'],
+            AnilineConf::NUMBER_ITEM_TOP
+        );
+        $favoritePets = $this->breederPetsRepository->findBy(
+            ['pet_kind' => $petKind],
+            ['favorite_count' => 'DESC'],
+            AnilineConf::NUMBER_ITEM_TOP
+        );
+
+        return $this->render('animalline/breeder/index.twig', [
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions,
+            'newPets' => $newPets,
+            'favoritePets' => $favoritePets,
+        ]);
     }
 }

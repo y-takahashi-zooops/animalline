@@ -57,9 +57,15 @@ class Breeds
      */
     private $conservationPets;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederPets", mappedBy="breeds_type")
+     */
+    private $breederPets;
+
     public function __construct()
     {
         $this->conservationPets = new ArrayCollection();
+        $this->breederPets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -155,6 +161,36 @@ class Breeds
             // set the owning side to null (unless already changed)
             if ($conservationPet->getBreedsType() === $this) {
                 $conservationPet->setBreedsType(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BreederPets[]
+     */
+    public function getBreederPets(): Collection
+    {
+        return $this->breederPets;
+    }
+
+    public function addBreederPet(BreederPets $breederPet): self
+    {
+        if (!$this->breederPets->contains($breederPet)) {
+            $this->breederPets[] = $breederPet;
+            $breederPet->setBreedsType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBreederPet(BreederPets $breederPet): self
+    {
+        if ($this->breederPets->removeElement($breederPet)) {
+            // set the owning side to null (unless already changed)
+            if ($breederPet->getBreedsType() === $this) {
+                $breederPet->setBreedsType(null);
             }
         }
 
