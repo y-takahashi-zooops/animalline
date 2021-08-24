@@ -13,6 +13,9 @@
 
 namespace Eccube\Entity;
 
+use Customize\Entity\BreederContacts;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -282,6 +285,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         private $Pref;
 
         /**
+         * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="customer_id")
+         */
+        private $breederContacts;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -292,6 +300,7 @@ if (!class_exists('\Eccube\Entity\Customer')) {
 
             $this->setBuyTimes(0);
             $this->setBuyTotal(0);
+            $this->breederContacts = new ArrayCollection();
         }
 
         /**
@@ -1147,6 +1156,36 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         public function getPoint()
         {
             return $this->point;
+        }
+
+        /**
+         * @return Collection|BreederContacts[]
+         */
+        public function getBreederContacts(): Collection
+        {
+            return $this->breederContacts;
+        }
+
+        public function addBreederContact(BreederContacts $breederContact): self
+        {
+            if (!$this->breederContacts->contains($breederContact)) {
+                $this->breederContacts[] = $breederContact;
+                $breederContact->setCustomerId($this);
+            }
+
+            return $this;
+        }
+
+        public function removeBreederContact(BreederContacts $breederContact): self
+        {
+            if ($this->breederContacts->removeElement($breederContact)) {
+                // set the owning side to null (unless already changed)
+                if ($breederContact->getCustomerId() === $this) {
+                    $breederContact->setCustomerId(null);
+                }
+            }
+
+            return $this;
         }
     }
 }

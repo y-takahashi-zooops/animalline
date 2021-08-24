@@ -19,32 +19,40 @@ class BreederPetsRepository extends ServiceEntityRepository
         parent::__construct($registry, BreederPets::class);
     }
 
-    // /**
-    //  * @return BreederPets[] Returns an array of BreederPets objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    /**
+     * @return BreederPets[] Returns an array of BreederPets objects
+     */
 
-    /*
-    public function findOneBySomeField($value): ?BreederPets
+    public function findByFavoriteCount(): array
     {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.favorite_count > 0')
+            ->orderBy('a.favorite_count', 'DESC')
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
+
+    public function incrementCount(BreederPets $entity)
+    {
+        return $this
+            ->createQueryBuilder('e')
+            ->update()
+            ->set('e.favorite_count', 'case when e.favorite_count is null then 1 else e.favorite_count + 1 end')
+            ->where('e.id = :id')
+            ->setParameter('id', $entity->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    public function decrementCount(BreederPets $entity)
+    {
+        return $this
+            ->createQueryBuilder('e')
+            ->update()
+            ->set('e.favorite_count', 'case when e.favorite_count > 0 then e.favorite_count - 1 else 0 end')
+            ->where('e.id = :id')
+            ->setParameter('id', $entity->getId())
+            ->getQuery()
+            ->execute();
+    }
 }

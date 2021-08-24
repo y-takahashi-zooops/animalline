@@ -57,11 +57,16 @@ class SendoffReason
      */
     private $conservationContacts;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederContacts", mappedBy="sendoffReason")
+     */
+    private $breederContacts;
+
     public function __construct()
     {
         $this->conservationContacts = new ArrayCollection();
+        $this->breederContacts = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -107,5 +112,10 @@ class SendoffReason
     public function getConservationContacts(): Collection
     {
         return $this->conservationContacts;
+    }
+
+    public function getBreederContacts(): Collection
+    {
+        return $this->breederContacts;
     }
 }
