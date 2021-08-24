@@ -22,7 +22,7 @@ class BreederExaminationInfo
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederExaminationInfos")
+     * @ORM\ManyToOne(targetEntity=Breeders::class)
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="breeder_id", referencedColumnName="id", nullable=false)
      * })
