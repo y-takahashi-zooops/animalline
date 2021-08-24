@@ -24,174 +24,173 @@ class BreederExaminationInfo
     /**
      * @ORM\ManyToOne(targetEntity=Breeders::class)
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="breeder_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="breeder_id", referencedColumnName="id", nullable=false, inversedBy="BreederExaminationInfos")
      * })
      */
     private $Breeder;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="pet_type", type="smallint", nullable=false)
      */
     private $pet_type;
 
-
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="pedigree_organization_other", type="string", length=255, nullable=true)
      */
     private $pedigree_organization_other;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="pedigree_organization", type="smallint", nullable=true)
      */
     private $pedigree_organization;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="breeding_pet_count", type="smallint", nullable=true)
      */
     private $breeding_pet_count;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="parent_pet_count_1", type="smallint", nullable=true)
      */
     private $parent_pet_count_1;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="parent_pet_count_2", type="string", length=255, nullable=true)
      */
     private $parent_pet_count_2;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="parent_pet_count_3", type="smallint", nullable=true)
      */
     private $parent_pet_count_3;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="parent_pet_buy_place_1", type="smallint", nullable=true)
      */
     private $parent_pet_buy_place_1;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="parent_pet_buy_place_2", type="smallint", nullable=true)
      */
     private $parent_pet_buy_place_2;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="parent_pet_buy_place_3", type="smallint", nullable=true)
      */
     private $parent_pet_buy_place_3;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="owner_worktime_ave", type="smallint", nullable=true)
      */
     private $owner_worktime_ave;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="family_staff_count", type="smallint", nullable=true)
      */
     private $family_staff_count;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="family_staff_worktime_ave", type="smallint", nullable=true)
      */
     private $family_staff_worktime_ave;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="fulltime_staff_count", type="smallint", nullable=true)
      */
     private $fulltime_staff_count;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="fulltime_staff_worktime_ave", type="smallint", nullable=true)
      */
     private $fulltime_staff_worktime_ave;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="parttime_staff_count", type="smallint", nullable=true)
      */
     private $parttime_staff_count;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="parttime_staff_worktime_ave", type="smallint", nullable=true)
      */
     private $parttime_staff_worktime_ave;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="other_staff_count", type="smallint", nullable=true)
      */
     private $other_staff_count;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="other_staff_worktime_ave", type="smallint", nullable=true)
      */
     private $other_staff_worktime_ave;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="breeding_exp_year", type="smallint", nullable=true)
      */
     private $breeding_exp_year;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="breeding_exp_month", type="smallint", nullable=true)
      */
     private $breeding_exp_month;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="is_participate_show", type="smallint", nullable=true)
      */
     private $is_participate_show;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0})
+     * @ORM\Column(name="cage_size_1", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $cage_size_1;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0})
+     * @ORM\Column(name="cage_size_2", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $cage_size_2;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0})
+     * @ORM\Column(name="cage_size_3", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $cage_size_3;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="cage_size_other", type="string", length=255, nullable=true)
      */
     private $cage_size_other;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="exercise_status", type="smallint", nullable=true)
      */
     private $exercise_status;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="exercise_status_other", type="string", length=255, nullable=true)
      */
     private $exercise_status_other;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="is_now_publising", type="smallint", nullable=true)
      */
     private $is_now_publising;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="publish_pet_count", type="smallint", nullable=true)
      */
     private $publish_pet_count;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="breeding_experience", type="smallint", nullable=true)
      */
     private $breeding_experience;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="selling_experience", type="smallint", nullable=true)
      */
     private $selling_experience;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0})
+     * @ORM\Column(name="input_status", type="smallint", nullable=false, options={"default" = 0})
      */
     private $input_status;
 
