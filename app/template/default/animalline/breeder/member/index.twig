@@ -43,9 +43,8 @@
                 {% for pet in pets %}
                     <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                         <div class="catalog-card">
-                            <!-- TODO: update link -->
-                            <a href="/breeder/pet/detail/1">
-                                <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
+                            <a href="{{ url('breeder_pet_detail', {id: pet.id}) }}">
+                                <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                         class="card-img-top" alt="...">
                             </a>
                             <div class="card-body bg-primary">
