@@ -39,7 +39,7 @@
             <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                 <div class="catalog-card">
                     <a href="{{ url('breeder_configuration_pets_edit', {'id': pet.id}) }}">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                 class="card-img-top" alt="...">
                     </a>
                     <div class="card-body bg-white">
