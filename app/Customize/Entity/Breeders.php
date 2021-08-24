@@ -207,7 +207,6 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     {
         $this->breederPets = new ArrayCollection();
         $this->breederContacts = new ArrayCollection();
-        $this->breederPets = new ArrayCollection();
     }
 
     public function getId(): ?int
