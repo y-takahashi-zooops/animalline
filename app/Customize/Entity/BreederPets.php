@@ -24,15 +24,9 @@ class BreederPets
     private $id;
 
     /**
-     * <<<<<<< HEAD
-     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederPets")
-     * @ORM\JoinColumn(name="breeder_id", nullable=false)
-     * =======
      * @ORM\Column(name="pet_kind", type="smallint")
-     * >>>>>>> b0e56a10dbadba0ef2e545080e525eaa8243050c
      */
     private $pet_kind;
-
 
     /**
      * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederPets")
@@ -433,6 +427,10 @@ class BreederPets
         return $this;
     }
 
+    public function getReleaseStatus(): ?int
+    {
+        return $this->release_status;
+    }
 
     public function setReleaseStatus(int $release_status): self
     {
@@ -452,7 +450,6 @@ class BreederPets
 
         return $this;
     }
-
 
     /**
      * Set createDate.
@@ -512,12 +509,6 @@ class BreederPets
         return $this;
     }
 
-
-    public function getReleaseStatus(): ?int
-    {
-        return $this->release_status;
-    }
-
     /**
      * @return Collection|BreederContacts[]
      */
@@ -530,7 +521,7 @@ class BreederPets
     {
         if (!$this->breederContacts->contains($breederContact)) {
             $this->breederContacts[] = $breederContact;
-            $breederContact->setPetId($this);
+            $breederContact->setPet($this);
         }
 
         return $this;
@@ -551,14 +542,13 @@ class BreederPets
     {
         if ($this->breederContacts->removeElement($breederContact)) {
             // set the owning side to null (unless already changed)
-            if ($breederContact->getPetId() === $this) {
-                $breederContact->setPetId(null);
+            if ($breederContact->getPet() === $this) {
+                $breederContact->setPet(null);
             }
         }
 
         return $this;
     }
-
 
     /**
      * @return Collection|PetsFavorite[]
@@ -586,6 +576,7 @@ class BreederPets
                 $petsFavorite->setPetId(null);
             }
         }
+
         return $this;
     }
 

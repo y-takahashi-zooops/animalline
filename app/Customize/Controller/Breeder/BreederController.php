@@ -7,13 +7,14 @@ use Customize\Service\BreederQueryService;
 use Carbon\Carbon;
 use Customize\Entity\BreederContacts;
 use Customize\Repository\BreederContactsRepository;
-use Customize\Repository\BreederPetsRepository;
-use Customize\Repository\BreederPetImageRepository;
-use Customize\Repository\PetsFavoriteRepository;
 use Customize\Repository\SendoffReasonRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Customize\Entity\PetsFavorite;
+use Customize\Repository\BreederPetImageRepository;
+use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +23,6 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\Breeder\BreederContactType;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use DateTime;
 
 class BreederController extends AbstractController
 {
@@ -42,6 +42,11 @@ class BreederController extends AbstractController
     protected $breederContactsRepository;
 
     /**
+     * @var BreederQueryService
+     */
+    protected $breederQueryService;
+
+    /**
      * @var PetsFavoriteRepository
      */
     protected $petsFavoriteRepository;
@@ -52,34 +57,29 @@ class BreederController extends AbstractController
     protected $sendoffReasonRepository;
 
     /**
-     * @var BreederQueryService
-     */
-    protected $breederQueryService;
-
-    /**
-     * BreederController constructor.
+     * AdoptionController constructor.
      *
-     * @param BreederPetsRepository $breederPetsRepository
-     * @param BreederPetImageRepository $breederPetImageRepository ,
      * @param BreederContactsRepository $breederContactsRepository
+     * @param BreederPetImageRepository $breederPetImageRepository
+     * @param BreederQueryService $breederQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
+     * @param BreederPetsRepository $breederPetsRepository,
      */
     public function __construct(
-        BreederPetsRepository     $breederPetsRepository,
-        BreederPetImageRepository $breederPetImageRepository,
         BreederContactsRepository $breederContactsRepository,
-        PetsFavoriteRepository    $petsFavoriteRepository,
-        SendoffReasonRepository   $sendoffReasonRepository,
-        BreederQueryService       $breederQueryService
-    )
-    {
-        $this->breederPetsRepository = $breederPetsRepository;
-        $this->breederPetImageRepository = $breederPetImageRepository;
+        BreederPetImageRepository $breederPetImageRepository,
+        BreederQueryService           $breederQueryService,
+        PetsFavoriteRepository         $petsFavoriteRepository,
+        SendoffReasonRepository         $sendoffReasonRepository,
+        BreederPetsRepository $breederPetsRepository
+    ) {
         $this->breederContactsRepository = $breederContactsRepository;
+        $this->breederPetImageRepository = $breederPetImageRepository;
+        $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->sendoffReasonRepository = $sendoffReasonRepository;
-        $this->breederQueryService = $breederQueryService;
+        $this->breederPetsRepository = $breederPetsRepository;
     }
 
     /**
@@ -100,6 +100,39 @@ class BreederController extends AbstractController
         return $this->render('animalline/breeder/pet/search_result.twig', ['pets' => $pets]);
     }
 
+    /**
+     * 保護団体用ユーザーページ
+     *
+     * @Route("/breeder/member/", name="breeder_mypage")
+     * @Template("animalline/breeder/member/index.twig")
+     */
+    public function breeder_mypage(Request $request)
+    {
+        $customerId = $this->getUser()->getId();
+        $rootMessages = $this->breederContactsRepository
+            ->findBy(
+                [
+                    'customer' => $customerId,
+                    'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
+                    'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
+                ]
+            );
+
+        $lastReplies = [];
+        foreach ($rootMessages as $rootMessage) {
+            $lastReply = $this->breederContactsRepository
+                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
+            $lastReplies[$rootMessage->getId()] = $lastReply;
+        }
+
+        $pets = $this->breederQueryService->findBreederFavoritePets($customerId);
+
+        return $this->render('animalline/breeder/member/index.twig', [
+            'rootMessages' => $rootMessages,
+            'lastReplies' => $lastReplies,
+            'pets' => $pets
+        ]);
+    }
 
     /**
      * ペット詳細.
@@ -137,7 +170,7 @@ class BreederController extends AbstractController
         return $this->render(
             'animalline/breeder/pet/detail.twig',
             [
-                'conservationPet' => $breederPet,
+                'breederPet' => $breederPet,
                 'images' => $images,
                 'video' => $video,
                 'isFavorite' => $isFavorite,
@@ -170,34 +203,55 @@ class BreederController extends AbstractController
     }
 
     /**
-     * 保護団体用ユーザーページ
-     *
-     * @Route("/breeder/member/", name="breeder_mypage")
-     * @Template("animalline/breeder/member/index.twig")
+     * @Route("/breeder/pet/detail/favorite_pet", name="favorite_pet")
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function breeder_mypage(Request $request)
+    public function favoritePet(Request $request)
     {
-        $customerId = $this->getUser()->getId();
-        $rootMessages = $this->breederContactsRepository
-            ->findBy(
-                [
-                    'customer' => $customerId,
-                    'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
-                    'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
-                ]
-            );
+        $id = $request->get('id');
+        $pet = $this->breederPetsRepository->find($id);
+        $favorite = $this->petsFavoriteRepository->findOneBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
+        $entityManager = $this->getDoctrine()->getManager();
+        if (!$favorite) {
+            $petKind = $pet->getPetKind();
+            $favorite_pet = new PetsFavorite();
+            $favorite_pet->setCustomerId($this->getUser())
+                ->setPetId($id)
+                ->setSiteCategory(AnilineConf::SITE_CATEGORY_BREEDER)
+                ->setPetKind($petKind);
+            $entityManager->persist($favorite_pet);
+            $entityManager->flush();
 
-        $lastReplies = [];
-        foreach ($rootMessages as $rootMessage) {
-            $lastReply = $this->breederContactsRepository
-                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
-            $lastReplies[$rootMessage->getId()] = $lastReply;
+            $this->breederPetsRepository->incrementCount($pet);
+        } else {
+            $entityManager->remove($favorite);
+            $entityManager->flush();
+
+            $this->conservationPetsRepository->decrementCount($pet);
+
+            return new JsonResponse('unliked');
         }
 
-        return $this->render('animalline/breeder/member/index.twig', [
-            'rootMessages' => $rootMessages,
-            'lastReplies' => $lastReplies
-        ]);
+        return new JsonResponse('liked');
+    }
+
+    /**
+     * お気に入り一覧.
+     *
+     * @Route("/breeder/member/favorite", name="breeder_favorite")
+     * @Template("animalline/breeder/favorite.twig")
+     */
+    public function favorite(PaginatorInterface $paginator, Request $request): ?Response
+    {
+        $favoritePetResults = $this->breederPetsRepository->findByFavoriteCount();
+        $favoritePets = $paginator->paginate(
+            $favoritePetResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return $this->render('animalline/breeder/favorite.twig', ['pets' => $favoritePets]);
     }
 
     /**
@@ -324,6 +378,5 @@ class BreederController extends AbstractController
         return $this->render('animalline/breeder/contact_complete.twig', [
             'id' => $request->get('pet_id')
         ]);
-
     }
 }

@@ -269,6 +269,11 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     private $secret_key;
 
+    /*
+     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="breeder")
+     */
+    private $breederPets;
+
     /**
      * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="breeder_id")
      */
@@ -281,6 +286,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function __construct()
     {
+        $this->breederPets = new ArrayCollection();
         $this->breederContacts = new ArrayCollection();
         $this->breederPets = new ArrayCollection();
     }
@@ -940,7 +946,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     {
         if (!$this->breederContacts->contains($breederContact)) {
             $this->breederContacts[] = $breederContact;
-            $breederContact->setBreederId($this);
+            $breederContact->setBreeder($this);
         }
 
         return $this;
@@ -950,8 +956,38 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     {
         if ($this->breederContacts->removeElement($breederContact)) {
             // set the owning side to null (unless already changed)
-            if ($breederContact->getBreederId() === $this) {
-                $breederContact->setBreederId(null);
+            if ($breederContact->getBreeder() === $this) {
+                $breederContact->setBreeder(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BreederPets[]
+     */
+    public function getBreederPets(): Collection
+    {
+        return $this->breederPets;
+    }
+
+    public function addBreederPet(BreederPets $breederPet): self
+    {
+        if (!$this->breederPets->contains($breederPet)) {
+            $this->breederPets[] = $breederPet;
+            $breederPet->setBreeder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBreederPet(BreederPets $breederPet): self
+    {
+        if ($this->breederPets->removeElement($breederPet)) {
+            // set the owning side to null (unless already changed)
+            if ($breederPet->getBreeder() === $this) {
+                $breederPet->setBreeder(null);
             }
         }
 

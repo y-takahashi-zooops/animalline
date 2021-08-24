@@ -2,7 +2,7 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-    <div class="main">
+<div class="main">
         <div class="row">
             <div class="main-container col-12">
                 <div class="sub-title">
@@ -35,9 +35,8 @@
                             </div>
                             <div class="px-4">
                                 {{ form_start(form) }}
-                                <textarea class="col-12" rows="5" name="contact_description"
-                                          placeholder="返信メッセージ"></textarea>
-                                <button class="ec-blockBtn--cancel">送信</button>
+                                    <textarea class="col-12" rows="5" name="contact_description" placeholder="返信メッセージ"></textarea>
+                                    <button class="ec-blockBtn--cancel">送信</button>
                                 {{ form_end(form) }}
                             </div>
                         </div>
@@ -46,7 +45,7 @@
             </div>
         </div>
     </div>
-    </body>
+</body>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
