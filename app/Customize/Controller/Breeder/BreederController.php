@@ -255,7 +255,6 @@ class BreederController extends AbstractController
     }
 
     /**
-     * 保護団体用ユーザーページ - 取引メッセージ履歴
      *
      * @Route("/breeder/member/message/{contact_id}", name="breeder_mypage_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/breeder/member/message.twig")
@@ -272,7 +271,7 @@ class BreederController extends AbstractController
         $replyMessage = $request->get('reply_message');
         $isEnd = $request->get('end_negotiation');
         if ($replyMessage || $isEnd) {
-            $breederContact = (new breederContacts())
+            $breederContact = (new BreederContacts())
                 ->setCustomer($this->getUser())
                 ->setbreeder($rootMessage->getbreeder())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
@@ -280,7 +279,7 @@ class BreederController extends AbstractController
                 ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
                 ->setContactDescription($replyMessage)
                 ->setParentMessageId($rootMessage->getId())
-                ->setSendDate(new DateTime())
+                ->setSendDate(Carbon::now())
                 ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
                 ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
                 ->setReason($isEnd ? $this->sendoffReasonRepository->find($request->get('reason')) : null);

@@ -562,7 +562,7 @@ class BreederPets
     {
         if (!$this->petsFavorites->contains($petsFavorite)) {
             $this->petsFavorites[] = $petsFavorite;
-            $petsFavorite->setPetId($this);
+            $petsFavorite->setPetId($this->getId());
         }
 
         return $this;

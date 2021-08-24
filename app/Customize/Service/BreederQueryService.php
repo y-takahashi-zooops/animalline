@@ -41,7 +41,7 @@ class BreederQueryService
     public function searchPetsResult($request): array
     {
         $query = $this->breederPetsRepository->createQueryBuilder('p')
-            ->join('p.breeder_id', 'c')
+            ->join('p.Breeder', 'c')
             ->where('p.release_status = :release_status')
             ->setParameter('release_status', AnilineConf::RELEASE_STATUS_PUBLIC);
 
