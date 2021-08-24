@@ -48,7 +48,6 @@ class AppTestController extends AbstractController
         $image_type = $image_type_aux[1];
         $image_base64 = base64_decode($image_parts[1]);
         $file = $folderPath . uniqid() . '.' . $image_type;
-        dump($file); die;
         file_put_contents($file, $image_base64);
         return new JsonResponse("image uploaded successfully.");
     }
