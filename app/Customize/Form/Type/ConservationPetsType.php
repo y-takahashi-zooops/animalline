@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -68,10 +69,10 @@ class ConservationPetsType extends AbstractType
                     new Assert\NotBlank(),
                 ],
             ])
-            ->add('future_wait', IntegerType::class)
+            ->add('future_wait', TextType::class)
             ->add('dna_check_result', IntegerType::class)
-            ->add('pr_comment', TextType::class)
-            ->add('description', TextType::class)
+            ->add('pr_comment', TextareaType::class)
+            ->add('description', TextareaType::class)
             ->add('delivery_time', TextType::class)
             ->add('delivery_way', TextType::class)
             ->add('thumbnail_path', FileType::class, [
