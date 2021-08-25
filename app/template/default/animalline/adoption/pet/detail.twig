@@ -58,7 +58,9 @@
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">見学地域</th>
-                                <td class="color-gray-500">{{ conservationPet.getConservation().getConservationHouseCity() ~ ' ' ~ conservationPet.getConservation().getConservationHousePref() ?? '' }}</td>
+                                {% set conservationHouse = conservationPet.Conservation.getConservationHouseByPetType(conservationPet.petKind) %}
+                                {{ dump(conservationPet.Conservation) }}
+                                <td class="color-gray-500">{{ conservationHouse.conservationHouseCity ~ ' ' ~ conservationHouse.conservationHousePref ?? '' }}</td>
                                 <th scope="row" class="text-align-center">誕生日</th>
                                 <td class="color-gray-500">{{ conservationPet.petBirthday.format('Y年m月d日') ?? '' }}</td>
                             </tr>
