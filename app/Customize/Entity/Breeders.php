@@ -208,12 +208,18 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     private $breederExaminationInfos;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BreederHouse::class, mappedBy="Breeder")
+     */
+    private $breederHouses;
+
     public function __construct()
     {
         $this->breederPets = new ArrayCollection();
         $this->breederContacts = new ArrayCollection();
         $this->breederPets = new ArrayCollection();
         $this->breederExaminationInfos = new ArrayCollection();
+        $this->breederHouses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -741,5 +747,18 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         }
 
         return $this;
+    }
+
+    public function getBreederHouseByPetType($petType)
+    {
+        $result =  new ArrayCollection();
+        foreach($this->breederHouses as $house) {
+            if ($house->getPetType() === $petType) {
+                $result = $house;
+                break;
+            }
+        }
+
+        return $result;
     }
 }

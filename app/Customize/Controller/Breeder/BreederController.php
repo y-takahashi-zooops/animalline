@@ -264,7 +264,7 @@ class BreederController extends AbstractController
         if ($replyMessage || $isEnd) {
             $breederContact = (new BreederContacts())
                 ->setCustomer($this->getUser())
-                ->setbreeder($rootMessage->getbreeder())
+                ->setbreeder($rootMessage->getBreeder())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
                 ->setPet($rootMessage->getPet())
                 ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)

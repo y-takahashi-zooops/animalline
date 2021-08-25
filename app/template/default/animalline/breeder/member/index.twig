@@ -18,7 +18,7 @@
                     <div class="col-12">
                         <div class="d-sm-flex justify-content-between py-3 border breeder-border rounded">
                             <div class="ml-5">
-                                <h3>{{ rootMessage.breeder.breederHouseName ?? '' }}</h3>
+                                <h3>{{ rootMessage.Breeder.getBreederHouseByPetType(rootMessage.pet.petKind).breederHouseName ?? '' }}</h3>
                                 <h3><a href={{ url('breeder_mypage_messages', {'contact_id': rootMessage.id}) }}>{{ rootMessage.contactTitle }}</a></h3>
                             </div>
                             <h4 class="mr-sm-5 ml-5">返信日時：{{ lastReplies[rootMessage.id].sendDate.format('Y年m月d日　H:i') ?? 'なし。' }}</h4>
@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="mb-2"></div>
                                 <div class="d-flex">
-                                    <h4 class="mr-3">{{ pet.breeder.breeder_house_pref ?? '' }}</h4>
+                                    <h4 class="mr-3">{{ pet.Breeder.getBreederHouseByPetType(pet.petKind).breederHousePref ?? '' }}</h4>
                                     <h4>{{ pet.coatColor.coatColorName ?? '' }}</h4>
                                 </div>
                                 <div class="m-2"></div>
