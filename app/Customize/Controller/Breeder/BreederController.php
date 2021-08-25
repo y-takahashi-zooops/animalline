@@ -363,31 +363,4 @@ class BreederController extends AbstractController
             'id' => $request->get('pet_id')
         ]);
     }
-
-    /**
-     * @Route("/breeder/member/baseinfo", name="breeder_baseinfo")
-     * @Template("/animalline/breeder/member/baseinfo.twig")
-     */
-    public function baseinfo(Request $request)
-    {
-        return[];
-    }
-
-    /**
-     * @Route("/breeder/member/houseinfo", name="breeder_houseinfo")
-     * @Template("/animalline/breeder/member/houseinfo.twig")
-     */
-    public function houseinfo(Request $request)
-    {
-        return[];
-    }
-
-    /**
-     * @Route("/breeder/member/examinationinfo", name="breeder_examinationinfo")
-     * @Template("/animalline/breeder/member/examinationinfo.twig")
-     */
-    public function examinationinfo(Request $request)
-    {
-        return[];
-    }
 }

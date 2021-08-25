@@ -369,4 +369,31 @@ class BreederConfigrationController extends AbstractController
         file_put_contents($file, $image_base64);
         return new JsonResponse($file);
     }
+
+    /**
+     * @Route("/breeder/configration/baseinfo", name="breeder_baseinfo")
+     * @Template("/animalline/breeder/configration/baseinfo.twig")
+     */
+    public function baseinfo(Request $request)
+    {
+        return[];
+    }
+
+    /**
+     * @Route("/breeder/configration/houseinfo/{pet_type}", name="breeder_houseinfo")
+     * @Template("/animalline/breeder/configration/houseinfo.twig")
+     */
+    public function houseinfo(Request $request)
+    {
+        return[];
+    }
+
+    /**
+     * @Route("/breeder/configration/examinationinfo/{pet_type}", name="breeder_examinationinfo")
+     * @Template("/animalline/breeder/configration/examinationinfo.twig")
+     */
+    public function examinationinfo(Request $request)
+    {
+        return[];
+    }
 }
