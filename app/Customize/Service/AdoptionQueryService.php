@@ -32,7 +32,7 @@ class AdoptionQueryService
     public function searchPetsResult($request)
     {
         $query = $this->conservationPetsRepository->createQueryBuilder('p')
-            ->join('p.conservation_id', 'c')
+            ->join('p.Conservation', 'c')
             ->where('p.release_status = :release_status')
             ->setParameter('release_status', AnilineConf::RELEASE_STATUS_PUBLIC);
 
@@ -41,9 +41,9 @@ class AdoptionQueryService
                 ->setParameter('pet_kind', $request->get('pet_kind'));
         }
 
-        if ($request->get('breed_type')) {
-            $query->andWhere('p.breeds_type = :breeds_type')
-            ->setParameter('breeds_type', $request->get('breed_type'));
+        if ($request->get('BreedType')) {
+            $query->andWhere('p.BreedsType = :BreedsType')
+            ->setParameter('BreedsType', $request->get('BreedType'));
         }
 
         if ($request->get('gender')) {
