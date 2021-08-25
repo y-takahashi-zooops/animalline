@@ -104,7 +104,7 @@ class BreederConfigrationController extends AbstractController
         $rootMessages = $this->breederContactsRepository->findBy(
             [
                 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
-                'breeder' => $this->getUser(),
+                'Breeder' => $this->getUser(),
                 'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
             ],
             ['is_response' => 'ASC', 'send_date' => 'DESC']
@@ -244,7 +244,7 @@ class BreederConfigrationController extends AbstractController
     {
         $form = $this->createForm(BreederPetsType::class, $breederPet);
         $breederPetImages = $this->breederPetImageRepository->findBy(
-            ['breeder_pet_id' => $breederPet->getId(), 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
+            ['BreederPets' => $breederPet->getId(), 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
             ['sort_order' => 'ASC']
         );
         $request->request->set('thumbnail_path', $breederPet->getThumbnailPath());
