@@ -52,7 +52,7 @@ class AdoptionQueryService
         }
 
         if ($request->get('region')) {
-            $query->andWhere('c.conservation_house_pref = :pref')
+            $query->andWhere('c.PrefId = :pref')
                 ->setParameter('pref', $request->get('region'));
         }
 
