@@ -51,7 +51,7 @@ class BreederQueryService
         }
 
         if ($request->get('breed_type')) {
-            $query->andWhere('p.BreederType = :breeds_type')
+            $query->andWhere('p.BreedType = :breeds_type')
             ->setParameter('breeds_type', $request->get('breed_type'));
         }
 
