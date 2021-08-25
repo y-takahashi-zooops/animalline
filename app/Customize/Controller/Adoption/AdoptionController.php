@@ -171,7 +171,7 @@ class AdoptionController extends AbstractController
         if (!$favorite) {
             $petKind = $pet->getPetKind();
             $favorite_pet = new PetsFavorite();
-            $favorite_pet->setCustomerId($this->getUser())
+            $favorite_pet->setCustomer($this->getUser())
                 ->setPetId($id)
                 ->setSiteCategory(AnilineConf::SITE_CATEGORY_CONSERVATION)
                 ->setPetKind($petKind);
@@ -405,7 +405,7 @@ class AdoptionController extends AbstractController
                         ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
-                        ->setConservation($pet->getConservationId())
+                        ->setConservation($pet->getConservation())
                         ->setCustomer($this->getUser());
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($contact);
