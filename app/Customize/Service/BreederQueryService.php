@@ -76,7 +76,7 @@ class BreederQueryService
             ->select('bp')
             ->innerJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'bp.id = pf.pet_id')
             ->orderBy('pf.update_date', 'DESC')
-            ->where('pf.customer_id = :customer_id')
+            ->where('pf.Customer = :customer_id')
             ->setParameter('customer_id', $customerId)
             ->getQuery()
             ->getResult();

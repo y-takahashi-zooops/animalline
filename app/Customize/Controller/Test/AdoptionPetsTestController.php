@@ -39,15 +39,15 @@ class AdoptionPetsTestController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $petImage0 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img0'))->setSortOrder(1)->setConservationPetId($conservationPet);
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img0'))->setSortOrder(1)->setConservationPet($conservationPet);
             $petImage1 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img1'))->setSortOrder(2)->setConservationPetId($conservationPet);
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img1'))->setSortOrder(2)->setConservationPet($conservationPet);
             $petImage2 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img2'))->setSortOrder(3)->setConservationPetId($conservationPet);
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img2'))->setSortOrder(3)->setConservationPet($conservationPet);
             $petImage3 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img3'))->setSortOrder(4)->setConservationPetId($conservationPet);
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img3'))->setSortOrder(4)->setConservationPet($conservationPet);
             $petImage4 = (new ConservationPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img4'))->setSortOrder(5)->setConservationPetId($conservationPet);
+                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($request->get('img4'))->setSortOrder(5)->setConservationPet($conservationPet);
             $conservationPet->addConservationPetImage($petImage0);
             $conservationPet->addConservationPetImage($petImage1);
             $conservationPet->addConservationPetImage($petImage2);
@@ -56,7 +56,7 @@ class AdoptionPetsTestController extends Controller
             $conservationPet->setThumbnailPath($request->get('img0'));
 
             $conservation = $conservationsRepository->find($request->get('conservation_id'));
-            $conservationPet->setConservationId($conservation);
+            $conservationPet->setConservation($conservation);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationPet);

@@ -53,7 +53,7 @@ class Breeds
     private $update_date;
 
     /**
-     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationPets", mappedBy="BreedType")
+     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationPets", mappedBy="BreedsType")
      */
     private $ConservationPets;
 

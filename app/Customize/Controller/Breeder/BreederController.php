@@ -108,7 +108,7 @@ class BreederController extends AbstractController
         $rootMessages = $this->breederContactsRepository
             ->findBy(
                 [
-                    'customer' => $customerId,
+                    'Customer' => $customerId,
                     'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
                     'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
                 ]
@@ -140,7 +140,7 @@ class BreederController extends AbstractController
         $id = $request->get('id');
         $isFavorite = false;
         $breederPet = $this->breederPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findOneBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
+        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         if ($favorite) {
             $isFavorite = true;
         }
@@ -205,12 +205,12 @@ class BreederController extends AbstractController
     {
         $id = $request->get('id');
         $pet = $this->breederPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findOneBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
+        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         $entityManager = $this->getDoctrine()->getManager();
         if (!$favorite) {
             $petKind = $pet->getPetKind();
             $favorite_pet = new PetsFavorite();
-            $favorite_pet->setCustomerId($this->getUser())
+            $favorite_pet->setCustomer($this->getUser())
                 ->setPetId($id)
                 ->setSiteCategory(AnilineConf::SITE_CATEGORY_BREEDER)
                 ->setPetKind($petKind);
