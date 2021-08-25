@@ -16,16 +16,6 @@
 						<h2 class="color-gray-300 text-align-center">猫を探す</h2>
 					</a>
 				</nav>
-				{# <nav class="nav nav-pills search-nav m-4 d-flex d-sm-none">
-                    <a class="nav-item nav-link active bg-breeder px-4 py-4"
-                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
-                        <h4 class="text-white px-5">犬を探す</h4>
-                    </a>
-                    <a class="nav-item nav-link px-4 py-4 border bg-white"
-                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
-                        <h4 class="color-gray-300 px-5">猫を探す</h4>
-                    </a>
-                </nav> #}
 			{% else %}
 				<nav class="nav nav-pills search-nav m-2 d-none d-flex">
 					<a class="nav-item nav-link px-5 py-2 border bg-white col-md-3"
@@ -37,16 +27,6 @@
 						<h2 class="text-white text-align-center">猫を探す</h2>
 					</a>
 				</nav>
-				{# <nav class="nav nav-pills search-nav m-4 d-flex d-sm-none">
-                    <a class="nav-item nav-link px-4 py-4 border bg-white"
-                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
-                        <h4 class="color-gray-300 px-5">犬を探す</h4>
-                    </a>
-                    <a class="nav-item nav-link active bg-breeder px-4 py-4"
-                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
-                        <h4 class="text-white px-5">猫を探す</h4>
-                    </a>
-                </nav> #}
 			{% endif %}
 			<div class="m-2 p-2"></div>
 			<form action="{{ url('breeder_pet_search_result') }}" method="get">
@@ -69,18 +49,15 @@
 							<option value="2">女の子</option>
 						</select>
 					</div>
-					<div class="col-md-3">
-						<div class="select-container m-0">
-							<select class="form-control bg-primary w-100 p-2 h-15" id="formControlSelect3"
-							        name="region">
-								<option value="">都道府県</option>
-								{% for region in regions %}
-									<option value="{{ region.id }}">{{ region.name }}</option>
-								{% endfor %}
-							</select>
-						</div>
-						<input type="checkbox" name="adjacent" value="1">隣接する都道府県も検索
-					</div>
+                    <div class="col-md-3 select-container">
+                            <select class="form-control bg-primary w-100 p-2 h-15 mb-2" id="formControlSelect3" name="region">
+                                <option value="">都道府県</option>
+                                {% for region in regions %}
+                                    <option value="{{ region.id }}">{{ region.name }}</option>
+                                {% endfor %}
+                            </select>
+                        <input type="checkbox" name="adjacent" value="1">隣接する都道府県も検索
+                    </div>
 				</div>
 				{#
 				<div class="m-2 p-2"></div>
@@ -115,13 +92,11 @@
 				#}
 				<div class="m-2 p-2"></div>
 				<div class="row">
-					{# <div class="col-4"></div> #}
 					<div class="col-sm-6" style="margin: 0 auto;">
 						<a href="#">
 							<button class="btn basic-btn accent-btn bg-accent text-align-center">検索する</button>
 						</a>
 					</div>
-					{# <div class="col-4"></div> #}
 				</div>
 			</form>
 		</div>
@@ -131,7 +106,8 @@
 		<div class="row">
 			{% include 'side.twig' %}
 			<div class="main-container col-md-9">
-				<div class="sub-title d-flex justify-content-between align-items-end">
+				{# <div class="sub-title d-flex justify-content-between align-items-end"> #}
+				<div class="d-flex justify-content-between align-items-end">
 					<h2>新着</h2>
 					<a class="d-flex" href="category.html">
 						<h3 class=" color-gray-300">もっと見る</h3>
@@ -176,8 +152,8 @@
 					{% endfor %}
 				</div>
 				<div class="m-2 p-2"></div>
-				{# <div class="m-4 p-4"></div> #}
-				<div class="sub-title d-flex justify-content-between align-items-end">
+				{# <div class="sub-title d-flex justify-content-between align-items-end"> #}
+				<div class="d-flex justify-content-between align-items-end">
 					<h2>注目のペット</h2>
 					<a class="d-flex" href="category.html">
 						<h3 class=" color-gray-300">もっと見る</h3>
@@ -222,8 +198,8 @@
 					{% endfor %}
 				</div>
 				<div class="m-2 p-2"></div>
-				{# <div class="m-4 p-4"></div> #}
-				<div class="sub-title d-flex justify-content-between align-items-end">
+				{# <div class="sub-title d-flex justify-content-between align-items-end"> #}
+				<div class="d-flex justify-content-between align-items-end">
 					<h2>犬種から探す</h2>
 					<a class="d-flex" href="category.html">
 						<h3 class=" color-gray-300">もっと見る</h3>
@@ -355,8 +331,8 @@
 					</div>
 				</div>
 				<div class="m-2 p-2"></div>
-				{# <div class="m-4 p-4"></div> #}
-				<div class="sub-title d-flex justify-content-between align-items-end">
+				{# <div class="sub-title d-flex justify-content-between align-items-end"> #}
+				<div class="d-flex justify-content-between align-items-end">
 					<h2>サイズから探す</h2>
 					<a class="d-flex" href="category.html">
 						<h3 class=" color-gray-300">もっと見る</h3>
@@ -419,10 +395,8 @@
 						</a>
 					</div>
 				</div>
-				{# <div class="m-3 p-3"></div> #}
 			</div>
 		</div>
-		{# <div class="m-4 p-4"></div> #}
 	</div>
 {% endblock %}
 
