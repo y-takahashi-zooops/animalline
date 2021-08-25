@@ -194,19 +194,19 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $update_date;
 
     /*
-     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="breeder")
+     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="Breeder")
      */
-    private $breederPets;
+    private $BreederPets;
 
     /**
-     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="breeder_id")
+     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="Breeder")
      */
-    private $breederContacts;
+    private $BreederContacts;
 
     public function __construct()
     {
-        $this->breederPets = new ArrayCollection();
-        $this->breederContacts = new ArrayCollection();
+        $this->BreederPets = new ArrayCollection();
+        $this->BreederContacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -651,13 +651,13 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     public function getBreederContacts(): Collection
     {
-        return $this->breederContacts;
+        return $this->BreederContacts;
     }
 
     public function addBreederContact(BreederContacts $breederContact): self
     {
-        if (!$this->breederContacts->contains($breederContact)) {
-            $this->breederContacts[] = $breederContact;
+        if (!$this->BreederContacts->contains($breederContact)) {
+            $this->BreederContacts[] = $breederContact;
             $breederContact->setBreeder($this);
         }
 
@@ -666,7 +666,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function removeBreederContact(BreederContacts $breederContact): self
     {
-        if ($this->breederContacts->removeElement($breederContact)) {
+        if ($this->BreederContacts->removeElement($breederContact)) {
             // set the owning side to null (unless already changed)
             if ($breederContact->getBreeder() === $this) {
                 $breederContact->setBreeder(null);
@@ -681,13 +681,13 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     public function getBreederPets(): Collection
     {
-        return $this->breederPets;
+        return $this->BreederPets;
     }
 
     public function addBreederPet(BreederPets $breederPet): self
     {
-        if (!$this->breederPets->contains($breederPet)) {
-            $this->breederPets[] = $breederPet;
+        if (!$this->BreederPets->contains($breederPet)) {
+            $this->BreederPets[] = $breederPet;
             $breederPet->setBreeder($this);
         }
 
@@ -696,7 +696,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function removeBreederPet(BreederPets $breederPet): self
     {
-        if ($this->breederPets->removeElement($breederPet)) {
+        if ($this->BreederPets->removeElement($breederPet)) {
             // set the owning side to null (unless already changed)
             if ($breederPet->getBreeder() === $this) {
                 $breederPet->setBreeder(null);

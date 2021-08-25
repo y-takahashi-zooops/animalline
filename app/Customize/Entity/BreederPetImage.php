@@ -2,7 +2,6 @@
 
 namespace Customize\Entity;
 
-use Customize\Repository\BreederPetImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,10 +21,10 @@ class BreederPetImage
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=BreederPets::class, inversedBy="breederPetImages")
+     * @ORM\ManyToOne(targetEntity=BreederPets::class, inversedBy="BreederPetImages")
      * @ORM\JoinColumn(name="breeder_pet_id", nullable=false)
      */
-    private $breeder_pet_id;
+    private $BreederPets;
 
     /**
      * @ORM\Column(name="image_type", type="smallint")
@@ -63,12 +62,12 @@ class BreederPetImage
 
     public function getBreederPetId(): ?BreederPets
     {
-        return $this->breeder_pet_id;
+        return $this->BreederPets;
     }
 
     public function setBreederPetId(?BreederPets $breeder_pet_id): self
     {
-        $this->breeder_pet_id = $breeder_pet_id;
+        $this->BreederPets = $breeder_pet_id;
 
         return $this;
     }
