@@ -2,6 +2,7 @@
 
 namespace Customize\Entity;
 
+use Customize\Repository\BreederPetsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
