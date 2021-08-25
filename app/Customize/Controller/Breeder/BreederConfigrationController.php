@@ -57,7 +57,7 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/configration/all_message", name=" get_message_breeder_configration")
+     * @Route("/breeder/configration/all_message", name="get_message_breeder_configration")
      * @Template("animalline/breeder/configration/get_message.twig")
      */
     public function get_message_breeder_configration(Request $request)

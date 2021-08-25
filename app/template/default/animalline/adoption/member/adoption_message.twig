@@ -5,9 +5,9 @@
     <div class="main">
         <div class="row">
             <div class="main-container col-12">
-                <div class="sub-title">
+                {# <div class="sub-title"> #}
                     <h1>マイページ</h1>
-                </div>
+                {# </div> #}
                 <div class="m-2 p-2"></div>
                 {% for rootMessage in rootMessages %}
                     <div class="m-1 p-1"></div>
@@ -24,7 +24,7 @@
                                     <h4 class="mr-sm-5 ml-5">
                                         状態：{{ rootMessage.getContractStatus()==0 ? '交渉中' : rootMessage.getContractStatus()==1 ? '取引成立' : '取引終了' }}</h4>
                                     <h4 class="mr-sm-5 ml-5">
-                                        返信日時：{{ lastReplies[rootMessage.id].sendDate.format('Y年m月d日　H:i') ?? 'なし。' }}</h4>
+                                        返信日時：{{ lastReplies[rootMessage.id].sendDate.format('Y年m月d日　H:i') ?? '－' }}</h4>
                                 </div>
 
                             </div>

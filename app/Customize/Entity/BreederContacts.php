@@ -3,6 +3,7 @@
 namespace Customize\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Customize\Repository\BreederContactsRepository;
 use Eccube\Entity\Customer;
 
 /**

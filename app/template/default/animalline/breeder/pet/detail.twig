@@ -51,14 +51,15 @@
                         <table class="table table-borderless">
                             <tbody>
                             <tr>
-                                <th scope="row" class="text-align-center">犬種</th>
+                                <th scope="row" class="text-align-center">種類</th>
                                 <td class="color-gray-500">{{ breederPet.breedsType.breedsName ?? '' }}</td>
                                 <th scope="row" class="text-align-center">性別</th>
                                 <td class="color-gray-500">{{ breederPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">見学地域</th>
-                                <td class="color-gray-500">{{ breederPet.breeder.breederHouseCity ~ ' ' ~ breederPet.breeder.breederHousePref ?? '' }}</td>
+                                {% set breederHouse = breederPet.Breeder.getBreederHouseByPetType(breederPet.petKind) %}
+                                <td class="color-gray-500">{{ breederHouse.breederHouseCity ~ ' ' ~ breederHouse.breederHousePref ?? '' }}</td>
                                 <th scope="row" class="text-align-center">誕生日</th>
                                 <td class="color-gray-500">{{ breederPet.petBirthday.format('Y年m月d日') ?? '' }}</td>
                             </tr>

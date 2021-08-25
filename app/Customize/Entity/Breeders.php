@@ -203,10 +203,23 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     private $BreederContacts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BreederExaminationInfo::class, mappedBy="Breeder")
+     */
+    private $breederExaminationInfos;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BreederHouse::class, mappedBy="Breeder")
+     */
+    private $breederHouses;
+
     public function __construct()
     {
         $this->BreederPets = new ArrayCollection();
         $this->BreederContacts = new ArrayCollection();
+        $this->breederPets = new ArrayCollection();
+        $this->breederExaminationInfos = new ArrayCollection();
+        $this->breederHouses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -704,5 +717,48 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|BreederExaminationInfo[]
+     */
+    public function getBreederExaminationInfos(): Collection
+    {
+        return $this->breederExaminationInfos;
+    }
+
+    public function addBreederExaminationInfo(BreederExaminationInfo $breederExaminationInfo): self
+    {
+        if (!$this->breederExaminationInfos->contains($breederExaminationInfo)) {
+            $this->breederExaminationInfos[] = $breederExaminationInfo;
+            $breederExaminationInfo->setBreeder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBreederExaminationInfo(BreederExaminationInfo $breederExaminationInfo): self
+    {
+        if ($this->breederExaminationInfos->removeElement($breederExaminationInfo)) {
+            // set the owning side to null (unless already changed)
+            if ($breederExaminationInfo->getBreeder() === $this) {
+                $breederExaminationInfo->setBreeder(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getBreederHouseByPetType($petType)
+    {
+        $result =  new ArrayCollection();
+        foreach($this->breederHouses as $house) {
+            if ($house->getPetType() === $petType) {
+                $result = $house;
+                break;
+            }
+        }
+
+        return $result;
     }
 }

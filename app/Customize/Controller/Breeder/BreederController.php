@@ -174,7 +174,7 @@ class BreederController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/member/all_message", name="get_message_mypage")
+     * @Route("/breeder/member/all_message", name="breeder_get_message_mypage")
      * @Template("animalline/breeder/member/breeder_message.twig")
      */
     public function get_message_mypage(Request $request)
@@ -197,7 +197,7 @@ class BreederController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/pet/detail/favorite_pet", name="favorite_pet")
+     * @Route("/breeder/pet/detail/favorite_pet", name="breeder_favorite_pet")
      * @param Request $request
      * @return JsonResponse
      */
@@ -264,7 +264,7 @@ class BreederController extends AbstractController
         if ($replyMessage || $isEnd) {
             $breederContact = (new BreederContacts())
                 ->setCustomer($this->getUser())
-                ->setbreeder($rootMessage->getbreeder())
+                ->setbreeder($rootMessage->getBreeder())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
                 ->setPet($rootMessage->getPet())
                 ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
