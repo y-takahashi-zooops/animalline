@@ -79,8 +79,7 @@ class BreederConfigrationController extends AbstractController
             $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
         }
 
-        $breederId = $this->getUser()->getId();
-        $pets = $this->breederPetsRepository->findBy(['Breeder' => $breederId], ['update_date' => 'DESC']);
+        $pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
 
         return $this->render(
             'animalline/breeder/configration/get_message.twig',
@@ -119,8 +118,7 @@ class BreederConfigrationController extends AbstractController
             $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
         }
 
-        $breederId = $this->getUser()->getId();
-        $pets = $this->breederPetsRepository->findBy(['Breeder' => $breederId], ['update_date' => 'DESC']);
+        $pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
 
         return $this->render(
             'animalline/breeder/configration/index.twig',
@@ -244,7 +242,7 @@ class BreederConfigrationController extends AbstractController
     {
         $form = $this->createForm(BreederPetsType::class, $breederPet);
         $breederPetImages = $this->breederPetImageRepository->findBy(
-            ['BreederPets' => $breederPet->getId(), 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
+            ['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
             ['sort_order' => 'ASC']
         );
         $request->request->set('thumbnail_path', $breederPet->getThumbnailPath());
