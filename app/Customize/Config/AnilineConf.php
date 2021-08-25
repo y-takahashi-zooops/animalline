@@ -68,4 +68,7 @@ final class AnilineConf
     const MOVIE_BREEDER_PET = 1;
 
     const BREEDER_VISIBLE_SHOW = 1;
+
+    const ANILINE_ORGANIZATION_PERSONAL = 0;
+    const ANILINE_ORGANIZATION_GROUP = 1;
 }

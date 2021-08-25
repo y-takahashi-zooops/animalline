@@ -31,9 +31,14 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $user_id;
 
     /**
-     * @ORM\Column(name="conservation_house_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="is_organization", type="smallint", nullable=true)
      */
-    private $conservation_house_name;
+    private $is_organization;
+
+    /**
+     * @ORM\Column(name="organization_name", type="string", length=255, nullable=true)
+     */
+    private $organization_name;
 
     /**
      * @ORM\Column(name="owner_name", type="string", length=255, nullable=true)
@@ -46,49 +51,54 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $owner_kana;
 
     /**
-     * @ORM\Column(name="conservation_house_zip", type="string", length=7, nullable=true)
+     * @ORM\Column(name="zip", type="string", length=7, nullable=true)
      */
-    private $conservation_house_zip;
+    private $zip;
 
     /**
-     * @ORM\Column(name="conservation_house_pref", type="string", length=10, nullable=true)
+     * @var \Eccube\Entity\Master\Pref
+     *
+     * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Pref")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="pref_id", referencedColumnName="id", nullable=true)
+     * })
      */
-    private $conservation_house_pref;
+    private $PrefId;
 
     /**
-     * @ORM\Column(name="conservation_house_city", type="string", length=10, nullable=true)
+     * @ORM\Column(name="pref", type="string", length=10, nullable=true)
      */
-    private $conservation_house_city;
+    private $pref;
 
     /**
-     * @ORM\Column(name="conservation_house_address", type="string", length=255, nullable=true)
+     * @ORM\Column(name="city", type="string", length=10, nullable=true)
      */
-    private $conservation_house_address;
+    private $city;
 
     /**
-     * @ORM\Column(name="conservation_house_building", type="string", length=255, nullable=true)
+     * @ORM\Column(name="address", type="string", length=255, nullable=true)
      */
-    private $conservation_house_building;
+    private $address;
 
     /**
-     * @ORM\Column(name="conservation_house_tel", type="string", length=11, nullable=true)
+     * @ORM\Column(name="building", type="string", length=255, nullable=true)
      */
-    private $conservation_house_tel;
+    private $building;
 
     /**
-     * @ORM\Column(name="conservation_house_fax", type="string", length=11, nullable=true)
+     * @ORM\Column(name="tel", type="string", length=11, nullable=true)
      */
-    private $conservation_house_fax;
+    private $tel;
+
+    /**
+     * @ORM\Column(name="fax", type="string", length=11, nullable=true)
+     */
+    private $fax;
 
     /**
      * @ORM\Column(name="homepage_url", type="string", length=255, nullable=true)
      */
     private $homepage_url;
-
-    /**
-     * @ORM\Column(name="sns_url", type="string", length=255, nullable=true)
-     */
-    private $sns_url;
 
     /**
      * @ORM\Column(name="is_active", type="smallint", nullable=true)
@@ -101,54 +111,9 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $examination_status;
 
     /**
-     * @ORM\Column(name="regist_reason", type="text", nullable=true)
+     * @ORM\Column(name="pr_text", type="text", nullable=true)
      */
-    private $regist_reason;
-
-    /**
-     * @ORM\Column(name="free_comment", type="text", nullable=true)
-     */
-    private $free_comment;
-
-    /**
-     * @ORM\Column(name="can_publish_count", type="smallint", nullable=true)
-     */
-    private $can_publish_count;
-
-    /**
-     * @ORM\Column(name="pet_exercise_env", type="smallint", nullable=true)
-     */
-    private $pet_exercise_env;
-
-    /**
-     * @ORM\Column(name="cage_size", type="smallint", nullable=true)
-     */
-    private $cage_size;
-
-    /**
-     * @ORM\Column(name="conservation_exp_year", type="smallint", nullable=true)
-     */
-    private $conservation_exp_year;
-
-    /**
-     * @ORM\Column(name="staff_count_1", type="smallint", nullable=true)
-     */
-    private $staff_count_1;
-
-    /**
-     * @ORM\Column(name="staff_count_2", type="smallint", nullable=true)
-     */
-    private $staff_count_2;
-
-    /**
-     * @ORM\Column(name="staff_count_3", type="smallint", nullable=true)
-     */
-    private $staff_count_3;
-
-    /**
-     * @ORM\Column(name="staff_count_4", type="smallint", nullable=true)
-     */
-    private $staff_count_4;
+    private $pr_text;
 
     /**
      * @ORM\Column(name="email", type="string", length=255, nullable=true)
@@ -195,19 +160,25 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $thumbnail_path;
 
     /**
-     * @ORM\OneToMany(targetEntity=ConservationPets::class, mappedBy="conservation_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=ConservationPets::class, mappedBy="Conservation")
      */
-    private $conservationPets;
+    private $ConservationPets;
 
     /**
-     * @ORM\OneToMany(targetEntity=ConservationContacts::class, mappedBy="conservation_id")
+     * @ORM\OneToMany(targetEntity=ConservationContacts::class, mappedBy="Conservation")
      */
-    private $conservationContacts;
+    private $ConservationContacts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ConservationsHouses::class, mappedBy="Conservation")
+     */
+    private $ConservationsHouses;
 
     public function __construct()
     {
-        $this->conservationPets = new ArrayCollection();
-        $this->conservationContacts = new ArrayCollection();
+        $this->ConservationPets = new ArrayCollection();
+        $this->ConservationContacts = new ArrayCollection();
+        $this->ConservationsHouses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -227,14 +198,26 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    public function getConservationHouseName(): ?string
+    public function getIsOrganization(): ?int
     {
-        return $this->conservation_house_name;
+        return $this->is_organization;
     }
 
-    public function setConservationHouseName(?string $conservation_house_name): self
+    public function setIsOrganization(?int $is_organization): self
     {
-        $this->conservation_house_name = $conservation_house_name;
+        $this->is_organization = $is_organization;
+
+        return $this;
+    }
+
+    public function getOrganizationName(): ?string
+    {
+        return $this->organization_name;
+    }
+
+    public function setOrganizationName(?string $organization_name): self
+    {
+        $this->organization_name = $organization_name;
 
         return $this;
     }
@@ -263,86 +246,98 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    public function getConservationHouseZip(): ?string
+    public function getZip(): ?string
     {
-        return $this->conservation_house_zip;
+        return $this->zip;
     }
 
-    public function setConservationHouseZip(?string $conservation_house_zip): self
+    public function setZip(?string $zip): self
     {
-        $this->conservation_house_zip = $conservation_house_zip;
+        $this->zip = $zip;
 
         return $this;
     }
 
-    public function getConservationHousePref(): ?string
+    public function setPrefId(\Eccube\Entity\Master\Pref $pref = null): Conservations
     {
-        return $this->conservation_house_pref;
-    }
-
-    public function setConservationHousePref(?string $conservation_house_pref): self
-    {
-        $this->conservation_house_pref = $conservation_house_pref;
+        $this->PrefId = $pref;
 
         return $this;
     }
 
-    public function getConservationHouseCity(): ?string
+    public function getPrefId(): \Eccube\Entity\Master\Pref
     {
-        return $this->conservation_house_city;
+        return $this->PrefId;
     }
 
-    public function setConservationHouseCity(?string $conservation_house_city): self
+    public function getPref(): ?string
     {
-        $this->conservation_house_city = $conservation_house_city;
+        return $this->pref;
+    }
+
+    public function setPref(?string $pref): self
+    {
+        $this->pref = $pref;
 
         return $this;
     }
 
-    public function getConservationHouseAddress(): ?string
+    public function getCity(): ?string
     {
-        return $this->conservation_house_address;
+        return $this->city;
     }
 
-    public function setConservationHouseAddress(?string $conservation_house_address): self
+    public function setCity(?string $city): self
     {
-        $this->conservation_house_address = $conservation_house_address;
+        $this->city = $city;
 
         return $this;
     }
 
-    public function getConservationHouseBuilding(): ?string
+    public function getAddress(): ?string
     {
-        return $this->conservation_house_building;
+        return $this->address;
     }
 
-    public function setConservationHouseBuilding(?string $conservation_house_building): self
+    public function setAddress(?string $address): self
     {
-        $this->conservation_house_building = $conservation_house_building;
+        $this->address = $address;
 
         return $this;
     }
 
-    public function getConservationHouseTel(): ?string
+    public function getBuilding(): ?string
     {
-        return $this->conservation_house_tel;
+        return $this->building;
     }
 
-    public function setConservationHouseTel(?string $conservation_house_tel): self
+    public function setBuilding(?string $building): self
     {
-        $this->conservation_house_tel = $conservation_house_tel;
+        $this->building = $building;
 
         return $this;
     }
 
-    public function getConservationHouseFax(): ?string
+    public function getTel(): ?string
     {
-        return $this->conservation_house_fax;
+        return $this->tel;
     }
 
-    public function setConservationHouseFax(?string $conservation_house_fax): self
+    public function setTel(?string $tel): self
     {
-        $this->conservation_house_fax = $conservation_house_fax;
+        $this->tel = $tel;
+
+        return $this;
+    }
+
+    public function getFax(): ?string
+    {
+        return $this->fax;
+    }
+
+    public function setFax(?string $fax): self
+    {
+        $this->fax = $fax;
 
         return $this;
     }
@@ -355,18 +350,6 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     public function setHomepageUrl(?string $homepage_url): self
     {
         $this->homepage_url = $homepage_url;
-
-        return $this;
-    }
-
-    public function getSnsUrl(): ?string
-    {
-        return $this->sns_url;
-    }
-
-    public function setSnsUrl(?string $sns_url): self
-    {
-        $this->sns_url = $sns_url;
 
         return $this;
     }
@@ -395,122 +378,14 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    public function getRegistReason(): ?string
+    public function getPrText(): ?string
     {
-        return $this->regist_reason;
+        return $this->pr_text;
     }
 
-    public function setRegistReason(?string $regist_reason): self
+    public function setPrText(?string $pr_text): self
     {
-        $this->regist_reason = $regist_reason;
-
-        return $this;
-    }
-
-    public function getFreeComment(): ?string
-    {
-        return $this->free_comment;
-    }
-
-    public function setFreeComment(?string $free_comment): self
-    {
-        $this->free_comment = $free_comment;
-
-        return $this;
-    }
-
-    public function getCanPublishCount(): ?int
-    {
-        return $this->can_publish_count;
-    }
-
-    public function setCanPublishCount(?int $can_publish_count): self
-    {
-        $this->can_publish_count = $can_publish_count;
-
-        return $this;
-    }
-
-    public function getPetExerciseEnv(): ?int
-    {
-        return $this->pet_exercise_env;
-    }
-
-    public function setPetExerciseEnv(?int $pet_exercise_env): self
-    {
-        $this->pet_exercise_env = $pet_exercise_env;
-
-        return $this;
-    }
-
-    public function getCageSize(): ?int
-    {
-        return $this->cage_size;
-    }
-
-    public function setCageSize(?int $cage_size): self
-    {
-        $this->cage_size = $cage_size;
-
-        return $this;
-    }
-
-    public function getConservationExpYear(): ?int
-    {
-        return $this->conservation_exp_year;
-    }
-
-    public function setConservationExpYear(?int $conservation_exp_year): self
-    {
-        $this->conservation_exp_year = $conservation_exp_year;
-
-        return $this;
-    }
-
-    public function getStaffCount1(): ?int
-    {
-        return $this->staff_count_1;
-    }
-
-    public function setStaffCount1(?int $staff_count_1): self
-    {
-        $this->staff_count_1 = $staff_count_1;
-
-        return $this;
-    }
-
-    public function getStaffCount2(): ?int
-    {
-        return $this->staff_count_2;
-    }
-
-    public function setStaffCount2(?int $staff_count_2): self
-    {
-        $this->staff_count_2 = $staff_count_2;
-
-        return $this;
-    }
-
-    public function getStaffCount3(): ?int
-    {
-        return $this->staff_count_3;
-    }
-
-    public function setStaffCount3(?int $staff_count_3): self
-    {
-        $this->staff_count_3 = $staff_count_3;
-
-        return $this;
-    }
-
-    public function getStaffCount4(): ?int
-    {
-        return $this->staff_count_4;
-    }
-
-    public function setStaffCount4(?int $staff_count_4): self
-    {
-        $this->staff_count_4 = $staff_count_4;
+        $this->pr_text = $pr_text;
 
         return $this;
     }
@@ -539,7 +414,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    public function setRegisterStatusId(int $register_status_id)
+    public function setRegisterStatusId(int $register_status_id): self
     {
         $this->register_status_id = $register_status_id;
 
@@ -556,7 +431,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      *
      * @param string|null $salt
      *
-     * @return Customer
+     * @return Conservations
      */
     public function setSalt($salt = null)
     {
@@ -580,7 +455,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      *
      * @param string $secretKey
      *
-     * @return Customer
+     * @return Conservations
      */
     public function setSecretKey($secretKey)
     {
@@ -644,7 +519,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      *
      * @param \DateTime $createDate
      *
-     * @return Payment
+     * @return Conservations
      */
     public function setCreateDate($createDate)
     {
@@ -658,7 +533,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      *
      * @param \DateTime $updateDate
      *
-     * @return Payment
+     * @return Conservations
      */
     public function setUpdateDate($updateDate)
     {
@@ -672,14 +547,14 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      */
     public function getConservationPets(): Collection
     {
-        return $this->conservationPets;
+        return $this->ConservationPets;
     }
 
     public function addConservationPet(ConservationPets $conservationPet): self
     {
-        if (!$this->conservationPets->contains($conservationPet)) {
-            $this->conservationPets[] = $conservationPet;
-            $conservationPet->setConservationId($this);
+        if (!$this->ConservationPets->contains($conservationPet)) {
+            $this->ConservationPets[] = $conservationPet;
+            $conservationPet->setConservation($this);
         }
 
         return $this;
@@ -687,10 +562,10 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
 
     public function removeConservationPet(ConservationPets $conservationPet): self
     {
-        if ($this->conservationPets->removeElement($conservationPet)) {
+        if ($this->ConservationPets->removeElement($conservationPet)) {
             // set the owning side to null (unless already changed)
-            if ($conservationPet->getConservationId() === $this) {
-                $conservationPet->setConservationId(null);
+            if ($conservationPet->getConservation() === $this) {
+                $conservationPet->setConservation(null);
             }
         }
 
@@ -702,14 +577,14 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      */
     public function getConservationContacts(): Collection
     {
-        return $this->conservationContacts;
+        return $this->ConservationContacts;
     }
 
     public function addConservationContact(ConservationContacts $conservationContact): self
     {
-        if (!$this->conservationContacts->contains($conservationContact)) {
-            $this->conservationContacts[] = $conservationContact;
-            $conservationContact->setConservationId($this);
+        if (!$this->ConservationContacts->contains($conservationContact)) {
+            $this->ConservationContacts[] = $conservationContact;
+            $conservationContact->setConservation($this);
         }
 
         return $this;
@@ -717,10 +592,10 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
 
     public function removeConservationContact(ConservationContacts $conservationContact): self
     {
-        if ($this->conservationContacts->removeElement($conservationContact)) {
+        if ($this->ConservationContacts->removeElement($conservationContact)) {
             // set the owning side to null (unless already changed)
-            if ($conservationContact->getConservationId() === $this) {
-                $conservationContact->setConservationId(null);
+            if ($conservationContact->getConservation() === $this) {
+                $conservationContact->setConservation(null);
             }
         }
 
@@ -729,6 +604,36 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
 
     public function __toString()
     {
-        return (string) $this->getId();
+        return (string)$this->getId();
+    }
+
+    /**
+     * @return Collection|ConservationsHouses[]
+     */
+    public function getConservationsHouses(): Collection
+    {
+        return $this->ConservationsHouses;
+    }
+
+    public function addConservationsHouse(ConservationsHouses $conservationsHouse): self
+    {
+        if (!$this->ConservationsHouses->contains($conservationsHouse)) {
+            $this->ConservationsHouses[] = $conservationsHouse;
+            $conservationsHouse->setConservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConservationsHouse(ConservationsHouses $conservationsHouse): self
+    {
+        if ($this->ConservationsHouses->removeElement($conservationsHouse)) {
+            // set the owning side to null (unless already changed)
+            if ($conservationsHouse->getConservation() === $this) {
+                $conservationsHouse->setConservation(null);
+            }
+        }
+
+        return $this;
     }
 }

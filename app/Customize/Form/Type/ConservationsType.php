@@ -2,10 +2,12 @@
 
 namespace Customize\Form\Type;
 
+use Customize\Config\AnilineConf;
 use Customize\Entity\Conservations;
 use Eccube\Common\EccubeConfig;
 use Eccube\Form\Validator\Email;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -32,7 +34,15 @@ class ConservationsType extends AbstractType
             ->add('user_id', IntegerType::class, [
                 'required' => false,
             ])
-            ->add('conservation_house_name', TextType::class, [
+            ->add('is_organization', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '個人' => AnilineConf::ANILINE_ORGANIZATION_PERSONAL,
+                        '団体' => AnilineConf::ANILINE_ORGANIZATION_GROUP
+                    ],
+                'required' => false,
+            ])
+            ->add('organization_name', TextType::class, [
                 'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
