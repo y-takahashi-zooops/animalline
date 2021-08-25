@@ -16,38 +16,38 @@ class MovieConvert
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="source_path", type="string", length=255)
      */
     private $source_path;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="dist_path", type="string", length=255)
      */
     private $dist_path;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(name="site_category", type="smallint")
      */
     private $site_category;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="pet_id", type="integer")
      */
     private $pet_id;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0})
+     * @ORM\Column(name="convert_status", type="smallint", options={"default" = 0})
      */
     private $convert_status;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="error_reason", type="text", nullable=true)
      */
     private $error_reason;
 

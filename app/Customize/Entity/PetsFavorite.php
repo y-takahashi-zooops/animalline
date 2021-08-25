@@ -17,23 +17,23 @@ class PetsFavorite
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="smallint", nullable=false)
+     * @ORM\Column(name="site_category", type="smallint", nullable=false)
      */
     private $site_category;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(name="pet_id", type="integer", nullable=false)
      */
     private $pet_id;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(name="pet_kind", type="integer", nullable=false)
      */
     private $pet_kind;
 
