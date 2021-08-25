@@ -206,20 +206,19 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=BreederExaminationInfo::class, mappedBy="Breeder")
      */
-    private $breederExaminationInfos;
+    private $BreederExaminationInfos;
 
     /**
      * @ORM\OneToMany(targetEntity=BreederHouse::class, mappedBy="Breeder")
      */
-    private $breederHouses;
+    private $BreederHouses;
 
     public function __construct()
     {
         $this->BreederPets = new ArrayCollection();
         $this->BreederContacts = new ArrayCollection();
-        $this->breederPets = new ArrayCollection();
-        $this->breederExaminationInfos = new ArrayCollection();
-        $this->breederHouses = new ArrayCollection();
+        $this->BreederExaminationInfos = new ArrayCollection();
+        $this->BreederHouses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -724,13 +723,13 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     public function getBreederExaminationInfos(): Collection
     {
-        return $this->breederExaminationInfos;
+        return $this->BreederExaminationInfos;
     }
 
     public function addBreederExaminationInfo(BreederExaminationInfo $breederExaminationInfo): self
     {
-        if (!$this->breederExaminationInfos->contains($breederExaminationInfo)) {
-            $this->breederExaminationInfos[] = $breederExaminationInfo;
+        if (!$this->BreederExaminationInfos->contains($breederExaminationInfo)) {
+            $this->BreederExaminationInfos[] = $breederExaminationInfo;
             $breederExaminationInfo->setBreeder($this);
         }
 
@@ -739,7 +738,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function removeBreederExaminationInfo(BreederExaminationInfo $breederExaminationInfo): self
     {
-        if ($this->breederExaminationInfos->removeElement($breederExaminationInfo)) {
+        if ($this->BreederExaminationInfos->removeElement($breederExaminationInfo)) {
             // set the owning side to null (unless already changed)
             if ($breederExaminationInfo->getBreeder() === $this) {
                 $breederExaminationInfo->setBreeder(null);
@@ -752,7 +751,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     public function getBreederHouseByPetType($petType)
     {
         $result =  new ArrayCollection();
-        foreach($this->breederHouses as $house) {
+        foreach($this->BreederHouses as $house) {
             if ($house->getPetType() === $petType) {
                 $result = $house;
                 break;
