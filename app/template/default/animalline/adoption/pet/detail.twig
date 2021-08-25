@@ -51,7 +51,7 @@
                         <table class="table table-borderless">
                             <tbody>
                             <tr>
-                                <th scope="row" class="text-align-center">犬種</th>
+                                <th scope="row" class="text-align-center">種類</th>
                                 <td class="color-gray-500">{{ conservationPet.breedsType.breedsName ?? '' }}</td>
                                 <th scope="row" class="text-align-center">性別</th>
                                 <td class="color-gray-500">{{ conservationPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</td>
@@ -105,7 +105,8 @@
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="row">
-                    <div class="col-12 sub-title">
+                    {# <div class="col-12 sub-title"> #}
+                    <div class="col-12">
                         <h2 class="font-weight-500">紹介文</h2>
                     </div>
                 </div>
@@ -117,7 +118,8 @@
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="row">
-                    <div class="col-12 sub-title">
+                    {# <div class="col-12 sub-title"> #}
+                    <div class="col-12">
                         <h2 class="font-weight-500">ブリーダー紹介</h2>
                     </div>
                 </div>

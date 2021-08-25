@@ -21,7 +21,7 @@
                                 <h3>{{ message.Conservation.conservationHouseName ?? '' }}</h3>
                                 <h3><a href={{ path('adoption_configration_messages', {'contact_id': message.id}) }}>{{ message.contactTitle }}</a></h3>
                             </div>
-                            <h4 class="mr-sm-5 ml-5">返信日時：{{ lastReplies[message.id].format('Y年m月d日 H:i') ?? 'なし。' }}</h4>
+                            <h4 class="mr-sm-5 ml-5">返信日時：{{ lastReplies[message.id].format('Y年m月d日 H:i') ?? '－' }}</h4>
                         </div>
                     </div>
                 </div>
