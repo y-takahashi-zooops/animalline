@@ -90,7 +90,7 @@ class BreederContacts
     private $contract_status = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SendoffReason::class, inversedBy="BreederContacts")
+     * @ORM\ManyToOne(targetEntity=SendoffReasons::class, inversedBy="BreederContacts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="reason", referencedColumnName="id", nullable=true)
      * })
@@ -260,12 +260,12 @@ class BreederContacts
         return $this;
     }
 
-    public function getReason(): ?SendoffReason
+    public function getReason(): ?SendoffReasons
     {
         return $this->Reason;
     }
 
-    public function setReason(?SendoffReason $reason): self
+    public function setReason(?SendoffReasons $reason): self
     {
         $this->Reason = $reason;
 

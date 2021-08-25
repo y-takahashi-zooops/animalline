@@ -93,7 +93,7 @@ class ConservationContacts
     private $contract_status = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SendoffReason::class, inversedBy="ConservationContacts")
+     * @ORM\ManyToOne(targetEntity=SendoffReasons::class, inversedBy="ConservationContacts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="reason", referencedColumnName="id", nullable=true)
      * })
@@ -275,12 +275,12 @@ class ConservationContacts
         return $this;
     }
 
-    public function getReason(): ?SendoffReason
+    public function getReason(): ?SendoffReasons
     {
         return $this->Reason;
     }
 
-    public function setReason(?SendoffReason $Reason): self
+    public function setReason(?SendoffReasons $Reason): self
     {
         $this->Reason = $Reason;
 
