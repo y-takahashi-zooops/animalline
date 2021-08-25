@@ -2,10 +2,12 @@
 
 namespace Customize\Entity;
 
+use Customize\Repository\BreedersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Eccube\Entity\Master\Pref;
 
 /**
  * @ORM\Table(name="alm_breeders")
@@ -49,9 +51,10 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $breeder_zip;
 
     /**
-     * @ORM\Column(name="breeder_pref_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Pref", inversedBy="Breeders")
+     * @ORM\JoinColumn(name="breeder_pref_id", nullable=true)
      */
-    private $breeder_pref_id;
+    private $PrefBreeder;
 
     /**
      * @ORM\Column(name="breeder_pref", type="string", length=11, nullable=true)
@@ -89,9 +92,10 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $license_zip;
 
     /**
-     * @ORM\Column(name="license_pref_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Pref", inversedBy="Breeders")
+     * @ORM\JoinColumn(name="license_pref_id", nullable=true)
      */
-    private $license_pref_id;
+    private $PrefLicense;
 
     /**
      * @ORM\Column(name="license_pref", type="string", length=10, nullable=true)
@@ -194,32 +198,31 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $update_date;
 
     /*
-     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="breeder")
+     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="Breeder")
      */
-    private $breederPets;
+    private $BreederPets;
 
     /**
-     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="breeder_id")
+     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="Breeder")
      */
-    private $breederContacts;
+    private $BreederContacts;
 
     /**
      * @ORM\OneToMany(targetEntity=BreederExaminationInfo::class, mappedBy="Breeder")
      */
-    private $breederExaminationInfos;
+    private $BreederExaminationInfos;
 
     /**
      * @ORM\OneToMany(targetEntity=BreederHouse::class, mappedBy="Breeder")
      */
-    private $breederHouses;
+    private $BreederHouses;
 
     public function __construct()
     {
-        $this->breederPets = new ArrayCollection();
-        $this->breederContacts = new ArrayCollection();
-        $this->breederPets = new ArrayCollection();
-        $this->breederExaminationInfos = new ArrayCollection();
-        $this->breederHouses = new ArrayCollection();
+        $this->BreederPets = new ArrayCollection();
+        $this->BreederContacts = new ArrayCollection();
+        $this->BreederExaminationInfos = new ArrayCollection();
+        $this->BreederHouses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -287,14 +290,14 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this;
     }
 
-    public function getBreederPrefId(): ?int
+    public function getPrefBreeder(): ?Pref
     {
-        return $this->breeder_pref_id;
+        return $this->PrefBreeder;
     }
 
-    public function setBreederPrefId(?int $breeder_pref_id): self
+    public function setPrefBreeder(?Pref $Pref): self
     {
-        $this->breeder_pref_id = $breeder_pref_id;
+        $this->PrefBreeder = $Pref;
 
         return $this;
     }
@@ -383,14 +386,14 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this;
     }
 
-    public function getLicensePrefId(): ?int
+    public function getPrefLicense(): ?Pref
     {
-        return $this->license_pref_id;
+        return $this->PrefLicense;
     }
 
-    public function setLicensePrefId(?int $license_pref_id): self
+    public function setPrefLicense(?Pref $Pref): self
     {
-        $this->license_pref_id = $license_pref_id;
+        $this->PrefLicense = $Pref;
 
         return $this;
     }
@@ -664,13 +667,13 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     public function getBreederContacts(): Collection
     {
-        return $this->breederContacts;
+        return $this->BreederContacts;
     }
 
     public function addBreederContact(BreederContacts $breederContact): self
     {
-        if (!$this->breederContacts->contains($breederContact)) {
-            $this->breederContacts[] = $breederContact;
+        if (!$this->BreederContacts->contains($breederContact)) {
+            $this->BreederContacts[] = $breederContact;
             $breederContact->setBreeder($this);
         }
 
@@ -679,7 +682,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function removeBreederContact(BreederContacts $breederContact): self
     {
-        if ($this->breederContacts->removeElement($breederContact)) {
+        if ($this->BreederContacts->removeElement($breederContact)) {
             // set the owning side to null (unless already changed)
             if ($breederContact->getBreeder() === $this) {
                 $breederContact->setBreeder(null);
@@ -694,13 +697,13 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     public function getBreederPets(): Collection
     {
-        return $this->breederPets;
+        return $this->BreederPets;
     }
 
     public function addBreederPet(BreederPets $breederPet): self
     {
-        if (!$this->breederPets->contains($breederPet)) {
-            $this->breederPets[] = $breederPet;
+        if (!$this->BreederPets->contains($breederPet)) {
+            $this->BreederPets[] = $breederPet;
             $breederPet->setBreeder($this);
         }
 
@@ -709,7 +712,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function removeBreederPet(BreederPets $breederPet): self
     {
-        if ($this->breederPets->removeElement($breederPet)) {
+        if ($this->BreederPets->removeElement($breederPet)) {
             // set the owning side to null (unless already changed)
             if ($breederPet->getBreeder() === $this) {
                 $breederPet->setBreeder(null);
@@ -724,13 +727,13 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     public function getBreederExaminationInfos(): Collection
     {
-        return $this->breederExaminationInfos;
+        return $this->BreederExaminationInfos;
     }
 
     public function addBreederExaminationInfo(BreederExaminationInfo $breederExaminationInfo): self
     {
-        if (!$this->breederExaminationInfos->contains($breederExaminationInfo)) {
-            $this->breederExaminationInfos[] = $breederExaminationInfo;
+        if (!$this->BreederExaminationInfos->contains($breederExaminationInfo)) {
+            $this->BreederExaminationInfos[] = $breederExaminationInfo;
             $breederExaminationInfo->setBreeder($this);
         }
 
@@ -739,7 +742,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function removeBreederExaminationInfo(BreederExaminationInfo $breederExaminationInfo): self
     {
-        if ($this->breederExaminationInfos->removeElement($breederExaminationInfo)) {
+        if ($this->BreederExaminationInfos->removeElement($breederExaminationInfo)) {
             // set the owning side to null (unless already changed)
             if ($breederExaminationInfo->getBreeder() === $this) {
                 $breederExaminationInfo->setBreeder(null);
@@ -752,7 +755,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     public function getBreederHouseByPetType($petType)
     {
         $result =  new ArrayCollection();
-        foreach($this->breederHouses as $house) {
+        foreach ($this->BreederHouses as $house) {
             if ($house->getPetType() === $petType) {
                 $result = $house;
                 break;

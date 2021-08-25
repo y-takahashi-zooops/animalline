@@ -71,8 +71,7 @@ class AdoptionConfigrationController extends AbstractController
             $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
         }
 
-        $conservationId = $this->getUser()->getId();
-        $pets = $this->conservationPetsRepository->findBy(['conservation_id' => $conservationId], ['update_date' => 'DESC']);
+        $pets = $this->conservationPetsRepository->findBy(['Conservation' => $this->getUser()], ['update_date' => 'DESC']);
 
         return $this->render(
             'animalline/adoption/configration/get_message.twig',
@@ -110,8 +109,7 @@ class AdoptionConfigrationController extends AbstractController
             $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
         }
 
-        $conservationId = $this->getUser()->getId();
-        $pets = $this->conservationPetsRepository->findBy(['conservation_id' => $conservationId], ['update_date' => 'DESC']);
+        $pets = $this->conservationPetsRepository->findBy(['Conservation' => $this->getUser()], ['update_date' => 'DESC']);
 
         return $this->render(
             'animalline/adoption/configration/index.twig',
@@ -181,7 +179,7 @@ class AdoptionConfigrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $conservation = $conservationsRepository->find($request->get('conservation_id'));
-            $conservationPet->setConservationId($conservation);
+            $conservationPet->setConservation($conservation);
             $entityManager->persist($conservationPet);
             $entityManager->flush();
             $petId = $conservationPet->getId();
@@ -193,19 +191,19 @@ class AdoptionConfigrationController extends AbstractController
 
             $petImage0 = (new ConservationPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img0)->setSortOrder(1)
-                ->setConservationPetId($conservationPet);
+                ->setConservationPet($conservationPet);
             $petImage1 = (new ConservationPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img1)->setSortOrder(2)
-                ->setConservationPetId($conservationPet);
+                ->setConservationPet($conservationPet);
             $petImage2 = (new ConservationPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img2)->setSortOrder(3)
-                ->setConservationPetId($conservationPet);
+                ->setConservationPet($conservationPet);
             $petImage3 = (new ConservationPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img3)->setSortOrder(4)
-                ->setConservationPetId($conservationPet);
+                ->setConservationPet($conservationPet);
             $petImage4 = (new ConservationPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img4)->setSortOrder(5)
-                ->setConservationPetId($conservationPet);
+                ->setConservationPet($conservationPet);
             $conservationPet->addConservationPetImage($petImage0);
             $conservationPet->addConservationPetImage($petImage1);
             $conservationPet->addConservationPetImage($petImage2);
@@ -237,7 +235,7 @@ class AdoptionConfigrationController extends AbstractController
     {
         $form = $this->createForm(ConservationPetsType::class, $conservationPet);
         $conservationPetImage = $this->conservationPetImageRepository->findBy(
-            ['conservation_pet_id' => $conservationPet->getId(), 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
+            ['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
             ['sort_order' => 'ASC']
         );
         $request->request->set('thumbnail_path', $conservationPet->getThumbnailPath());

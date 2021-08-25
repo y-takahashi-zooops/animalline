@@ -53,19 +53,19 @@ class SendoffReason
     private $update_date;
 
     /**
-     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationContacts", mappedBy="sendoffReason")
+     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationContacts", mappedBy="Reason")
      */
-    private $conservationContacts;
+    private $ConservationContacts;
 
     /**
-     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederContacts", mappedBy="sendoffReason")
+     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederContacts", mappedBy="Reason")
      */
-    private $breederContacts;
+    private $BreederContacts;
 
     public function __construct()
     {
-        $this->conservationContacts = new ArrayCollection();
-        $this->breederContacts = new ArrayCollection();
+        $this->ConservationContacts = new ArrayCollection();
+        $this->BreederContacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,11 +111,11 @@ class SendoffReason
 
     public function getConservationContacts(): Collection
     {
-        return $this->conservationContacts;
+        return $this->ConservationContacts;
     }
 
     public function getBreederContacts(): Collection
     {
-        return $this->breederContacts;
+        return $this->BreederContacts;
     }
 }
