@@ -17,7 +17,7 @@
                             <a href={{ path('adoption_configration_messages', {'contact_id': message.id}) }}>
                                 <div class="d-sm-flex justify-content-between py-3 border adoption-border rounded">
                                     <div class="ml-5">
-                                        <h3>{{ message.conservation.conservationHouseName ?? '' }}</h3>
+                                        <h3>{{ message.Conservation.getConservationHouseByPetType(message.pet.petKind).conservationHouseName ?? '' }}</h3>
                                         <h3>
                                             {{ message.contactTitle }}
                                         </h3>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="mb-2"></div>
                             <div class="d-flex">
-                                <h4 class="mr-3">{{ pet.Conservation.conservationHousePref ?? '' }}</h4>
+                                <h4 class="mr-3">{{ pet.Conservation.getConservationHouseByPetType(pet.petKind).conservationHousePref ?? '' }}</h4>
                                 <h4>{{ pet.CoatColor.coatColorName ?? '' }}</h4>
                             </div>
                             <div class="m-2"></div>
