@@ -204,16 +204,10 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      */
     private $conservationContacts;
 
-    /**
-     * @ORM\OneToMany(targetEntity=ConservationsHouses::class, mappedBy="Conservation")
-     */
-    private $ConservationsHouses;
-
     public function __construct()
     {
         $this->conservationPets = new ArrayCollection();
         $this->conservationContacts = new ArrayCollection();
-        $this->ConservationsHouses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -736,35 +730,5 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     public function __toString()
     {
         return (string) $this->getId();
-    }
-
-    /**
-     * @return Collection|ConservationsHouses[]
-     */
-    public function getConservationsHouses(): Collection
-    {
-        return $this->ConservationsHouses;
-    }
-
-    public function addConservationsHouse(ConservationsHouses $conservationsHouse): self
-    {
-        if (!$this->ConservationsHouses->contains($conservationsHouse)) {
-            $this->ConservationsHouses[] = $conservationsHouse;
-            $conservationsHouse->setConservation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeConservationsHouse(ConservationsHouses $conservationsHouse): self
-    {
-        if ($this->ConservationsHouses->removeElement($conservationsHouse)) {
-            // set the owning side to null (unless already changed)
-            if ($conservationsHouse->getConservation() === $this) {
-                $conservationsHouse->setConservation(null);
-            }
-        }
-
-        return $this;
     }
 }
