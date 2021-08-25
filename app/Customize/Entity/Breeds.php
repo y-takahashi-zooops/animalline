@@ -2,6 +2,7 @@
 
 namespace Customize\Entity;
 
+use Customize\Repository\BreedsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -52,7 +53,7 @@ class Breeds
     private $update_date;
 
     /**
-     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationPets", mappedBy="BreedType")
+     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationPets", mappedBy="BreedsType")
      */
     private $ConservationPets;
 
