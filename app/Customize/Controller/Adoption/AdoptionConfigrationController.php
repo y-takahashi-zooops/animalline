@@ -179,7 +179,7 @@ class AdoptionConfigrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $conservation = $conservationsRepository->find($request->get('conservation_id'));
-            $conservationPet->setConservationId($conservation);
+            $conservationPet->setConservation($conservation);
             $entityManager->persist($conservationPet);
             $entityManager->flush();
             $petId = $conservationPet->getId();
@@ -191,19 +191,19 @@ class AdoptionConfigrationController extends AbstractController
 
             $petImage0 = (new ConservationPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img0)->setSortOrder(1)
-                ->setConservationPetId($conservationPet);
+                ->setConservationPet($conservationPet);
             $petImage1 = (new ConservationPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img1)->setSortOrder(2)
-                ->setConservationPetId($conservationPet);
+                ->setConservationPet($conservationPet);
             $petImage2 = (new ConservationPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img2)->setSortOrder(3)
-                ->setConservationPetId($conservationPet);
+                ->setConservationPet($conservationPet);
             $petImage3 = (new ConservationPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img3)->setSortOrder(4)
-                ->setConservationPetId($conservationPet);
+                ->setConservationPet($conservationPet);
             $petImage4 = (new ConservationPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img4)->setSortOrder(5)
-                ->setConservationPetId($conservationPet);
+                ->setConservationPet($conservationPet);
             $conservationPet->addConservationPetImage($petImage0);
             $conservationPet->addConservationPetImage($petImage1);
             $conservationPet->addConservationPetImage($petImage2);
