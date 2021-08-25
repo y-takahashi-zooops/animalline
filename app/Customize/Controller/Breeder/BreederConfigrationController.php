@@ -36,7 +36,7 @@ class BreederConfigrationController extends AbstractController
     protected $breederPetsRepository;
 
     /**
-     * @var BreeederPetImageRepository
+     * @var BreederPetImageRepository
      */
     protected $breederPetImageRepository;
 
