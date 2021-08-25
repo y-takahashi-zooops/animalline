@@ -104,11 +104,10 @@ class BreederController extends AbstractController
      */
     public function breeder_mypage(Request $request)
     {
-        $customerId = $this->getUser()->getId();
         $rootMessages = $this->breederContactsRepository
             ->findBy(
                 [
-                    'Customer' => $customerId,
+                    'Customer' => $this->getUser(),
                     'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
                     'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
                 ]
@@ -121,7 +120,7 @@ class BreederController extends AbstractController
             $lastReplies[$rootMessage->getId()] = $lastReply;
         }
 
-        $pets = $this->breederQueryService->findBreederFavoritePets($customerId);
+        $pets = $this->breederQueryService->findBreederFavoritePets($this->getUser()->getId());
 
         return $this->render('animalline/breeder/member/index.twig', [
             'rootMessages' => $rootMessages,
@@ -150,13 +149,13 @@ class BreederController extends AbstractController
 
         $images = $this->breederPetImageRepository->findBy(
             [
-                'BreederPets' => $id,
+                'BreederPets' => $breederPet,
                 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE
             ]
         );
         $video = $this->breederPetImageRepository->findOneBy(
             [
-                'BreederPets' => $id,
+                'BreederPets' => $breederPet,
                 'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
             ]
         );
@@ -179,9 +178,8 @@ class BreederController extends AbstractController
      */
     public function get_message_mypage(Request $request)
     {
-        $customerId = $this->getUser()->getId();
         $rootMessages = $this->breederContactsRepository
-            ->findBy(['Customer' => $customerId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
+            ->findBy(['Customer' => $this->getUser(), 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
 
         $lastReplies = [];
         foreach ($rootMessages as $rootMessage) {

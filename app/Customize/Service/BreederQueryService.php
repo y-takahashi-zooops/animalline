@@ -61,7 +61,7 @@ class BreederQueryService
         }
 
         if ($request->get('region')) {
-            $query->andWhere('c.breeder_house_pref = :pref')
+            $query->andWhere('c.PrefBreeder = :pref')
                 ->setParameter('pref', $request->get('region'));
         }
 
