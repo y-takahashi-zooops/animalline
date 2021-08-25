@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="mb-2"></div>
                                     <div class="d-flex">
-                                        <h4 class="mr-3">{{ pet.Breeder.breederHousePref ?? '' }}</h4>
+                                        <h4 class="mr-3">{{ pet.Breeder.getBreederHouseByPetType(pet.petKind).breederHouseName ?? '' }}</h4>
                                         <h4>{{ pet.coatColor.coatColorName ?? '' }}</h4>
                                     </div>
                                     <div class="m-2"></div>

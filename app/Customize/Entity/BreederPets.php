@@ -2,7 +2,6 @@
 
 namespace Customize\Entity;
 
-use Customize\Repository\BreederPetsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,16 +28,16 @@ class BreederPets
     private $pet_kind;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederPets")
+     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="BreederPets")
      * @ORM\JoinColumn(name="breeder_id", nullable=false)
      */
     private $Breeder;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeds", inversedBy="breederPets")
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeds", inversedBy="BreederPets")
      * @ORM\JoinColumn(name="breeds_type", nullable=true)
      */
-    private $breeds_type;
+    private $BreedType;
 
     /**
      * @ORM\Column(name="pet_sex", type="smallint")
@@ -51,10 +50,10 @@ class BreederPets
     private $pet_birthday;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customize\Entity\CoatColors", inversedBy="breederPets")
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\CoatColors", inversedBy="BreederPets")
      * @ORM\JoinColumn(name="coat_color", nullable=true)
      */
-    private $coat_color;
+    private $CoatColor;
 
     /**
      * @ORM\Column(name="future_wait", type="smallint")
@@ -158,7 +157,7 @@ class BreederPets
     /**
      * @ORM\OneToMany(targetEntity=BreederPetImage::class, mappedBy="breeder_pet_id", orphanRemoval=true)
      */
-    private $breederPetImages;
+    private $BreederPetImages;
 
     /**
      * @ORM\Column(name="favorite_count", type="integer", options={"default" = 0}, nullable=true)
@@ -168,18 +167,18 @@ class BreederPets
     /**
      * @ORM\OneToMany(targetEntity=PetsFavorite::class, mappedBy="pet_id")
      */
-    private $petsFavorites;
+    private $PetsFavorites;
 
     /**
      * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="pet_id")
      */
-    private $breederContacts;
+    private $BreederContacts;
 
     public function __construct()
     {
-        $this->breederPetImages = new ArrayCollection();
-        $this->petsFavorites = new ArrayCollection();
-        $this->breederContacts = new ArrayCollection();
+        $this->BreederPetImages = new ArrayCollection();
+        $this->PetsFavorites = new ArrayCollection();
+        $this->BreederContacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -201,12 +200,12 @@ class BreederPets
 
     public function getBreedsType(): ?Breeds
     {
-        return $this->breeds_type;
+        return $this->BreedType;
     }
 
     public function setBreedsType(Breeds $breeds_type): self
     {
-        $this->breeds_type = $breeds_type;
+        $this->BreedType = $breeds_type;
 
         return $this;
     }
@@ -237,12 +236,12 @@ class BreederPets
 
     public function getCoatColor(): ?CoatColors
     {
-        return $this->coat_color;
+        return $this->CoatColor;
     }
 
-    public function setCoatColor(?CoatColors $coat_color): self
+    public function setCoatColor(?CoatColors $CoatColor): self
     {
-        $this->coat_color = $coat_color;
+        $this->CoatColor = $CoatColor;
 
         return $this;
     }
@@ -484,13 +483,13 @@ class BreederPets
      */
     public function getBreederPetImages(): Collection
     {
-        return $this->breederPetImages;
+        return $this->BreederPetImages;
     }
 
     public function addBreederPetImage(BreederPetImage $breederPetImage): self
     {
-        if (!$this->breederPetImages->contains($breederPetImage)) {
-            $this->breederPetImages[] = $breederPetImage;
+        if (!$this->BreederPetImages->contains($breederPetImage)) {
+            $this->BreederPetImages[] = $breederPetImage;
             $breederPetImage->setBreederPetId($this);
         }
 
@@ -499,7 +498,7 @@ class BreederPets
 
     public function removeBreederPetImage(BreederPetImage $breederPetImage): self
     {
-        if ($this->breederPetImages->removeElement($breederPetImage)) {
+        if ($this->BreederPetImages->removeElement($breederPetImage)) {
             // set the owning side to null (unless already changed)
             if ($breederPetImage->getBreederPetId() === $this) {
                 $breederPetImage->setBreederPetId(null);
@@ -514,13 +513,13 @@ class BreederPets
      */
     public function getBreederContacts(): Collection
     {
-        return $this->breederContacts;
+        return $this->BreederContacts;
     }
 
     public function addBreederContact(BreederContacts $breederContact): self
     {
-        if (!$this->breederContacts->contains($breederContact)) {
-            $this->breederContacts[] = $breederContact;
+        if (!$this->BreederContacts->contains($breederContact)) {
+            $this->BreederContacts[] = $breederContact;
             $breederContact->setPet($this);
         }
 
@@ -540,7 +539,7 @@ class BreederPets
 
     public function removeBreederContact(BreederContacts $breederContact): self
     {
-        if ($this->breederContacts->removeElement($breederContact)) {
+        if ($this->BreederContacts->removeElement($breederContact)) {
             // set the owning side to null (unless already changed)
             if ($breederContact->getPet() === $this) {
                 $breederContact->setPet(null);
@@ -555,13 +554,13 @@ class BreederPets
      */
     public function getPetsFavorites(): Collection
     {
-        return $this->petsFavorites;
+        return $this->PetsFavorites;
     }
 
     public function addPetsFavorite(PetsFavorite $petsFavorite): self
     {
-        if (!$this->petsFavorites->contains($petsFavorite)) {
-            $this->petsFavorites[] = $petsFavorite;
+        if (!$this->PetsFavorites->contains($petsFavorite)) {
+            $this->PetsFavorites[] = $petsFavorite;
             $petsFavorite->setPetId($this->getId());
         }
 
@@ -570,7 +569,7 @@ class BreederPets
 
     public function removePetsFavorite(PetsFavorite $petsFavorite): self
     {
-        if ($this->petsFavorites->removeElement($petsFavorite)) {
+        if ($this->PetsFavorites->removeElement($petsFavorite)) {
             // set the owning side to null (unless already changed)
             if ($petsFavorite->getPetId() === $this) {
                 $petsFavorite->setPetId(null);

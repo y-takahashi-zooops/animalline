@@ -2,7 +2,6 @@
 
 namespace Customize\Entity;
 
-use Customize\Repository\SendoffReasonRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -53,12 +52,12 @@ class SendoffReason
     private $update_date;
 
     /**
-     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationContacts", mappedBy="SendoffReason")
+     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationContacts", mappedBy="Reason")
      */
     private $ConservationContacts;
 
     /**
-     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederContacts", mappedBy="SendoffReason")
+     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederContacts", mappedBy="Reason")
      */
     private $BreederContacts;
 

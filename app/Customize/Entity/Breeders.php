@@ -2,12 +2,10 @@
 
 namespace Customize\Entity;
 
-use Customize\Repository\BreedersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Customize\Config\AnilineConf;
 
 /**
  * @ORM\Table(name="alm_breeders")
@@ -26,228 +24,134 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(name="breeder_house_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="breeder_name", type="string", length=255, nullable=true)
      */
-    private $breeder_house_name;
+    private $breeder_name;
 
     /**
-     * @ORM\Column(name="owner_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="breeder_kana", type="string", length=255, nullable=true)
      */
-    private $owner_name;
+    private $breeder_kana;
 
     /**
-     * @ORM\Column(name="owner_kana", type="string", length=255, nullable=true)
+     * @ORM\Column(name="breeder_tel", type="string", length=10, nullable=true)
      */
-    private $owner_kana;
+    private $breeder_tel;
 
     /**
-     * @ORM\Column(name="breeder_house_tel", type="string", length=11, nullable=true)
+     * @ORM\Column(name="breeder_fax", type="string", length=10, nullable=true)
      */
-    private $breeder_house_tel;
+    private $breeder_fax;
 
     /**
-     * @ORM\Column(name="breeder_house_fax", type="string", length=11, nullable=true)
+     * @ORM\Column(name="breeder_zip", type="string", length=7, nullable=true)
      */
-    private $breeder_house_fax;
+    private $breeder_zip;
 
     /**
-     * @ORM\Column(name="breeder_house_zip", type="string", length=7, nullable=true)
+     * @ORM\Column(name="breeder_pref_id", type="integer", nullable=true)
      */
-    private $breeder_house_zip;
+    private $breeder_pref_id;
 
     /**
-     * @ORM\Column(name="breeder_house_pref", type="string", length=10, nullable=true)
+     * @ORM\Column(name="breeder_pref", type="string", length=11, nullable=true)
      */
-    private $breeder_house_pref;
+    private $breeder_pref;
 
     /**
-     * @ORM\Column(name="breeder_house_city", type="string", length=10, nullable=true)
+     * @ORM\Column(name="breeder_city", type="string", length=11, nullable=true)
      */
-    private $breeder_house_city;
+    private $breeder_city;
 
     /**
-     * @ORM\Column(name="breeder_house_address", type="string", length=255, nullable=true)
+     * @ORM\Column(name="breeder_address", type="string", length=255, nullable=true)
      */
-    private $breeder_house_address;
+    private $breeder_address;
 
     /**
-     * @ORM\Column(name="breeder_house_building", type="string", length=255, nullable=true)
+     * @ORM\Column(name="breeder_building", type="string", length=255, nullable=true)
      */
-    private $breeder_house_building;
+    private $breeder_building;
 
     /**
-     * @ORM\Column(name="responsible_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="license_name", type="string", length=255, nullable=true)
      */
-    private $responsible_name;
+    private $license_name;
 
     /**
-     * @ORM\Column(name="responsible_kana", type="string", length=255, nullable=true)
+     * @ORM\Column(name="license_no", type="string", length=255, nullable=true)
      */
-    private $responsible_kana;
+    private $license_no;
 
     /**
-     * @ORM\Column(name="responsible_zip", type="string", length=7, nullable=true)
+     * @ORM\Column(name="license_zip", type="string", length=7, nullable=true)
      */
-    private $responsible_zip;
+    private $license_zip;
 
     /**
-     * @ORM\Column(name="responsible_pref", type="string", length=10, nullable=true)
+     * @ORM\Column(name="license_pref_id", type="integer", nullable=true)
      */
-    private $responsible_pref;
+    private $license_pref_id;
 
     /**
-     * @ORM\Column(name="responsible_city", type="string", length=10, nullable=true)
+     * @ORM\Column(name="license_pref", type="string", length=10, nullable=true)
      */
-    private $responsible_city;
+    private $license_pref;
 
     /**
-     * @ORM\Column(name="responsible_address", type="string", length=255, nullable=true)
+     * @ORM\Column(name="license_city", type="string", length=10, nullable=true)
      */
-    private $responsible_address;
+    private $license_city;
 
     /**
-     * @ORM\Column(name="office_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="license_address", type="string", length=255, nullable=true)
      */
-    private $office_name;
+    private $license_address;
 
     /**
-     * @ORM\Column(name="authorization_type", type="smallint", nullable=true)
+     * @ORM\Column(name="license_house_name", type="string", length=255, nullable=true)
      */
-    private $authorization_type;
+    private $license_house_name;
 
     /**
-     * @ORM\Column(name="pet_parent_count", type="smallint", nullable=true)
+     * @ORM\Column(name="license_manager_name", type="string", length=255, nullable=true)
      */
-    private $pet_parent_count;
+    private $license_manager_name;
 
     /**
-     * @ORM\Column(name="staff_count_1", type="smallint", nullable=true)
+     * @ORM\Column(name="license_type", type="smallint", nullable=true)
      */
-    private $staff_count_1;
+    private $license_type;
 
     /**
-     * @ORM\Column(name="staff_count_2", type="smallint", nullable=true)
+     * @ORM\Column(name="license_regist_date", type="date", length=255, nullable=true)
      */
-    private $staff_count_2;
+    private $license_regist_date;
 
     /**
-     * @ORM\Column(name="staff_count_3", type="smallint", nullable=true)
+     * @ORM\Column(name="license_expire_date", type="date", nullable=true)
      */
-    private $staff_count_3;
+    private $license_expire_date;
 
     /**
-     * @ORM\Column(name="staff_count_4", type="smallint", nullable=true)
+     * @ORM\Column(name="examination_status", type="smallint", options={"default" = 0})
      */
-    private $staff_count_4;
+    private $examination_status = 0;
 
     /**
-     * @ORM\Column(name="breed_exp_year", type="smallint", nullable=true)
+     * @ORM\Column(name="is_active", type="smallint", options={"default" = 0})
      */
-    private $breed_exp_year;
+    private $is_active = 0;
 
     /**
-     * @ORM\Column(name="is_participation_show", type="smallint", nullable=true)
-     */
-    private $is_participation_show;
-
-    /**
-     * @ORM\Column(name="cage_size", type="smallint", nullable=true)
-     */
-    private $cage_size;
-
-    /**
-     * @ORM\Column(name="pet_exercise_env", type="smallint", nullable=true)
-     */
-    private $pet_exercise_env;
-
-    /**
-     * @ORM\Column(name="can_publish_count", type="smallint", nullable=true)
-     */
-    private $can_publish_count;
-
-    /**
-     * @ORM\Column(name="self_breed_exp_year", type="smallint", nullable=true)
-     */
-    private $self_breed_exp_year;
-
-    /**
-     * @ORM\Column(name="direct_sell_exp", type="smallint", nullable=true)
-     */
-    private $direct_sell_exp;
-
-    /**
-     * @ORM\Column(name="is_pet_trade", type="smallint", nullable=true)
-     */
-    private $is_pet_trade;
-
-    /**
-     * @ORM\Column(name="sell_route", type="string", length=255, nullable=true)
-     */
-    private $sell_route;
-
-    /**
-     * @ORM\Column(name="is_full_time", type="smallint", nullable=true)
-     */
-    private $is_full_time;
-
-    /**
-     * @ORM\Column(name="homepage_url", type="string", length=255, nullable=true)
-     */
-    private $homepage_url;
-
-    /**
-     * @ORM\Column(name="sns_url", type="string", length=255, nullable=true)
-     */
-    private $sns_url;
-
-    /**
-     * @ORM\Column(name="regist_reason", type="text", nullable=true)
-     */
-    private $regist_reason;
-
-    /**
-     * @ORM\Column(name="free_comment", type="text", nullable=true)
-     */
-    private $free_comment;
-
-    /**
-     * @ORM\Column(name="introducer_name", type="string", length=255, nullable=true)
-     */
-    private $introducer_name;
-
-    /**
-     * @ORM\Column(name="examination_status", type="smallint", nullable=true)
-     */
-    private $examination_status;
-
-    /**
-     * @ORM\Column(name="is_active", type="smallint", nullable=true)
-     */
-    private $is_active;
-
-    /**
-     * @ORM\Column(name="password", type="string", length=255, nullable=true)
+     * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
 
     /**
-     * @ORM\Column(name="email", type="string", length=255, nullable=true)
+     * @ORM\Column(name="email", type="string", length=255)
      */
     private $email;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
-     */
-    private $create_date;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
-     */
-    private $update_date;
 
     /**
      * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
@@ -255,35 +159,66 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $thumbnail_path;
 
     /**
-     * @ORM\Column(name="register_status_id", type="smallint", length=5, nullable=true)
+     * @ORM\Column(name="pr_text", type="text", nullable=true)
      */
-    private $register_status_id;
+    private $pr_text;
 
     /**
-     * @ORM\Column(name="salt", type="string", length=255, nullable=true)
+     * @ORM\Column(name="regal_effort", type="text", nullable=true)
      */
-    private $salt;
+    private $regal_effort;
 
     /**
      * @ORM\Column(name="secret_key", type="string", length=255)
      */
     private $secret_key;
 
-    /*
-     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="breeder")
+    /**
+     * @ORM\Column(name="salt", type="string", length=255)
      */
-    private $breederPets;
+    private $salt;
 
     /**
-     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="breeder_id")
+     * @ORM\Column(name="register_status_id", type="smallint")
      */
-    private $breederContacts;
+    private $register_status_id;
+
+    /**
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
+    private $create_date;
+
+    /**
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
+     */
+    private $update_date;
+
+    /*
+     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="Breeder")
+     */
+    private $BreederPets;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="Breeder")
+     */
+    private $BreederContacts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BreederExaminationInfo::class, mappedBy="Breeder")
+     */
+    private $BreederExaminationInfos;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BreederHouse::class, mappedBy="Breeder")
+     */
+    private $BreederHouses;
 
     public function __construct()
     {
-        $this->breederPets = new ArrayCollection();
-        $this->breederContacts = new ArrayCollection();
-        $this->breederPets = new ArrayCollection();
+        $this->BreederPets = new ArrayCollection();
+        $this->BreederContacts = new ArrayCollection();
+        $this->BreederExaminationInfos = new ArrayCollection();
+        $this->BreederHouses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -291,458 +226,266 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this->id;
     }
 
-    public function getBreederHouseName(): ?string
+    public function getBreederName(): ?string
     {
-        return $this->breeder_house_name;
+        return $this->breeder_name;
     }
 
-    public function setBreederHouseName(?string $breeder_house_name): self
+    public function setBreederName(?string $breeder_name): self
     {
-        $this->breeder_house_name = $breeder_house_name;
-
-        return $this;
-    }
-
-    public function getOwnerName(): ?string
-    {
-        return $this->owner_name;
-    }
-
-    public function setOwnerName(?string $owner_name): self
-    {
-        $this->owner_name = $owner_name;
+        $this->breeder_name = $breeder_name;
 
         return $this;
     }
 
-    public function getOwnerKana(): ?string
+    public function getBreederKana(): ?string
     {
-        return $this->owner_kana;
+        return $this->breeder_kana;
     }
 
-    public function setOwnerKana(?string $owner_kana): self
+    public function setBreederKana(?string $breeder_kana): self
     {
-        $this->owner_kana = $owner_kana;
-
-        return $this;
-    }
-
-    public function getBreederHouseTel(): ?string
-    {
-        return $this->breeder_house_tel;
-    }
-
-    public function setBreederHouseTel(?string $breeder_house_tel): self
-    {
-        $this->breeder_house_tel = $breeder_house_tel;
+        $this->breeder_kana = $breeder_kana;
 
         return $this;
     }
 
-    public function getBreederHouseFax(): ?string
+    public function getBreederTel(): ?string
     {
-        return $this->breeder_house_fax;
+        return $this->breeder_tel;
     }
 
-    public function setBreederHouseFax(?string $breeder_house_fax): self
+    public function setBreederTel(?string $breeder_tel): self
     {
-        $this->breeder_house_fax = $breeder_house_fax;
-
-        return $this;
-    }
-
-    public function getBreederHouseZip(): ?string
-    {
-        return $this->breeder_house_zip;
-    }
-
-    public function setBreederHouseZip(?string $breeder_house_zip): self
-    {
-        $this->breeder_house_zip = $breeder_house_zip;
+        $this->breeder_tel = $breeder_tel;
 
         return $this;
     }
 
-    public function getBreederHousePref(): ?string
+    public function getBreederFax(): ?string
     {
-        return $this->breeder_house_pref;
+        return $this->breeder_fax;
     }
 
-    public function setBreederHousePref(?string $breeder_house_pref): self
+    public function setBreederFax(?string $breeder_fax): self
     {
-        $this->breeder_house_pref = $breeder_house_pref;
+        $this->breeder_fax = $breeder_fax;
 
         return $this;
     }
 
-    public function getBreederHouseCity(): ?string
+    public function getBreederZip(): ?string
     {
-        return $this->breeder_house_city;
+        return $this->breeder_zip;
     }
 
-    public function setBreederHouseCity(?string $breeder_house_city): self
+    public function setBreederZip(?string $breeder_zip): self
     {
-        $this->breeder_house_city = $breeder_house_city;
+        $this->breeder_zip = $breeder_zip;
 
         return $this;
     }
 
-    public function getBreederHouseAddress(): ?string
+    public function getBreederPrefId(): ?int
     {
-        return $this->breeder_house_address;
+        return $this->breeder_pref_id;
     }
 
-    public function setBreederHouseAddress(?string $breeder_house_address): self
+    public function setBreederPrefId(?int $breeder_pref_id): self
     {
-        $this->breeder_house_address = $breeder_house_address;
+        $this->breeder_pref_id = $breeder_pref_id;
 
         return $this;
     }
 
-    public function getBreederHouseBuilding(): ?string
+    public function getBreederPref(): ?string
     {
-        return $this->breeder_house_building;
+        return $this->breeder_pref;
     }
 
-    public function setBreederHouseBuilding(string $breeder_house_building): self
+    public function setBreederPref(?string $breeder_pref): self
     {
-        $this->breeder_house_building = $breeder_house_building;
+        $this->breeder_pref = $breeder_pref;
 
         return $this;
     }
 
-    public function getResponsibleName(): ?string
+    public function getBreederCity(): ?string
     {
-        return $this->responsible_name;
+        return $this->breeder_city;
     }
 
-    public function setResponsibleName(?string $responsible_name): self
+    public function setBreederCity(?string $breeder_city): self
     {
-        $this->responsible_name = $responsible_name;
+        $this->breeder_city = $breeder_city;
 
         return $this;
     }
 
-    public function getResponsibleKana(): ?string
+    public function getBreederAddress(): ?string
     {
-        return $this->responsible_kana;
+        return $this->breeder_address;
     }
 
-    public function setResponsibleKana(?string $responsible_kana): self
+    public function setBreederAddress(?string $breeder_address): self
     {
-        $this->responsible_kana = $responsible_kana;
+        $this->breeder_address = $breeder_address;
 
         return $this;
     }
 
-    public function getResponsibleZip(): ?string
+    public function getBreederBuilding(): ?string
     {
-        return $this->responsible_zip;
+        return $this->breeder_building;
     }
 
-    public function setResponsibleZip(?string $responsible_zip): self
+    public function setBreederBuilding(?string $breeder_building): self
     {
-        $this->responsible_zip = $responsible_zip;
+        $this->breeder_building = $breeder_building;
 
         return $this;
     }
 
-    public function getResponsiblePref(): ?string
+    public function getLicenseName(): ?string
     {
-        return $this->responsible_pref;
+        return $this->license_name;
     }
 
-    public function setResponsiblePref(?string $responsible_pref): self
+    public function setLicenseName(?string $license_name): self
     {
-        $this->responsible_pref = $responsible_pref;
+        $this->license_name = $license_name;
 
         return $this;
     }
 
-    public function getResponsibleCity(): ?string
+    public function getLicenseNo(): ?string
     {
-        return $this->responsible_city;
+        return $this->license_no;
     }
 
-    public function setResponsibleCity(?string $responsible_city): self
+    public function setLicenseNo(?string $license_no): self
     {
-        $this->responsible_city = $responsible_city;
+        $this->license_no = $license_no;
 
         return $this;
     }
 
-    public function getResponsibleAddress(): ?string
+    public function getLicenseZip(): ?string
     {
-        return $this->responsible_address;
+        return $this->license_zip;
     }
 
-    public function setResponsibleAddress(?string $responsible_address): self
+    public function setLicenseZip(?string $license_zip): self
     {
-        $this->responsible_address = $responsible_address;
+        $this->license_zip = $license_zip;
 
         return $this;
     }
 
-    public function getOfficeName(): ?string
+    public function getLicensePrefId(): ?int
     {
-        return $this->office_name;
+        return $this->license_pref_id;
     }
 
-    public function setOfficeName(?string $office_name): self
+    public function setLicensePrefId(?int $license_pref_id): self
     {
-        $this->office_name = $office_name;
+        $this->license_pref_id = $license_pref_id;
 
         return $this;
     }
 
-    public function getAuthorizationType(): ?int
+    public function getLicensePref(): ?string
     {
-        return $this->authorization_type;
+        return $this->license_pref;
     }
 
-    public function setAuthorizationType(?int $authorization_type): self
+    public function setLicensePref(?string $license_pref): self
     {
-        $this->authorization_type = $authorization_type;
+        $this->license_pref = $license_pref;
 
         return $this;
     }
 
-    public function getPetParentCount(): ?int
+    public function getLicenseCity(): ?string
     {
-        return $this->pet_parent_count;
+        return $this->license_city;
     }
 
-    public function setPetParentCount(?int $pet_parent_count): self
+    public function setLicenseCity(?string $license_city): self
     {
-        $this->pet_parent_count = $pet_parent_count;
+        $this->license_city = $license_city;
 
         return $this;
     }
 
-    public function getStaffCount1(): ?int
+    public function getLicenseAddress(): ?string
     {
-        return $this->staff_count_1;
+        return $this->license_address;
     }
 
-    public function setStaffCount1(?int $staff_count_1): self
+    public function setLicenseAddress(?string $license_address): self
     {
-        $this->staff_count_1 = $staff_count_1;
+        $this->license_address = $license_address;
 
         return $this;
     }
 
-    public function getStaffCount2(): ?int
+    public function getLicenseHouseName(): ?string
     {
-        return $this->staff_count_2;
+        return $this->license_house_name;
     }
 
-    public function setStaffCount2(?int $staff_count_2): self
+    public function setLicenseHouseName(?string $license_house_name): self
     {
-        $this->staff_count_2 = $staff_count_2;
+        $this->license_house_name = $license_house_name;
 
         return $this;
     }
 
-    public function getStaffCount3(): ?int
+    public function getLicenseManagerName(): ?string
     {
-        return $this->staff_count_3;
+        return $this->license_manager_name;
     }
 
-    public function setStaffCount3(?int $staff_count_3): self
+    public function setLicenseManagerName(?string $license_manager_name): self
     {
-        $this->staff_count_3 = $staff_count_3;
+        $this->license_manager_name = $license_manager_name;
 
         return $this;
     }
 
-    public function getStaffCount4(): ?int
+    public function getLicenseType(): ?int
     {
-        return $this->staff_count_4;
+        return $this->license_type;
     }
 
-    public function setStaffCount4(?int $staff_count_4): self
+    public function setLicenseType(?int $license_type): self
     {
-        $this->staff_count_4 = $staff_count_4;
+        $this->license_type = $license_type;
 
         return $this;
     }
 
-    public function getBreedExpYear(): ?int
+    public function getLicenseRegistDate(): ?\DateTimeInterface
     {
-        return $this->breed_exp_year;
+        return $this->license_regist_date;
     }
 
-    public function setBreedExpYear(?int $breed_exp_year): self
+    public function setLicenseRegistDate(?\DateTimeInterface $license_regist_date): self
     {
-        $this->breed_exp_year = $breed_exp_year;
+        $this->license_regist_date = $license_regist_date;
 
         return $this;
     }
 
-    public function getIsParticipationShow(): ?int
+    public function getLicenseExpireDate(): ?\DateTimeInterface
     {
-        return $this->is_participation_show;
+        return $this->license_expire_date;
     }
 
-    public function setIsParticipationShow(?int $is_participation_show): self
+    public function setLicenseExpireDate(?\DateTimeInterface $license_expire_date): self
     {
-        $this->is_participation_show = $is_participation_show;
-
-        return $this;
-    }
-
-    public function getCageSize(): ?int
-    {
-        return $this->cage_size;
-    }
-
-    public function setCageSize(?int $cage_size): self
-    {
-        $this->cage_size = $cage_size;
-
-        return $this;
-    }
-
-    public function getPetExerciseEnv(): ?int
-    {
-        return $this->pet_exercise_env;
-    }
-
-    public function setPetExerciseEnv(?int $pet_exercise_env): self
-    {
-        $this->pet_exercise_env = $pet_exercise_env;
-
-        return $this;
-    }
-
-    public function getCanPublishCount(): ?int
-    {
-        return $this->can_publish_count;
-    }
-
-    public function setCanPublishCount(?int $can_publish_count): self
-    {
-        $this->can_publish_count = $can_publish_count;
-
-        return $this;
-    }
-
-    public function getSelfBreedExpYear(): ?int
-    {
-        return $this->self_breed_exp_year;
-    }
-
-    public function setSelfBreedExpYear(?int $self_breed_exp_year): self
-    {
-        $this->self_breed_exp_year = $self_breed_exp_year;
-
-        return $this;
-    }
-
-    public function getDirectSellExp(): ?int
-    {
-        return $this->direct_sell_exp;
-    }
-
-    public function setDirectSellExp(?int $direct_sell_exp): self
-    {
-        $this->direct_sell_exp = $direct_sell_exp;
-
-        return $this;
-    }
-
-    public function getIsPetTrade(): ?int
-    {
-        return $this->is_pet_trade;
-    }
-
-    public function setIsPetTrade(?int $is_pet_trade): self
-    {
-        $this->is_pet_trade = $is_pet_trade;
-
-        return $this;
-    }
-
-    public function getSellRoute(): ?string
-    {
-        return $this->sell_route;
-    }
-
-    public function setSellRoute(?string $sell_route): self
-    {
-        $this->sell_route = $sell_route;
-
-        return $this;
-    }
-
-    public function getIsFullTime(): ?int
-    {
-        return $this->is_full_time;
-    }
-
-    public function setIsFullTime(?int $is_full_time): self
-    {
-        $this->is_full_time = $is_full_time;
-
-        return $this;
-    }
-
-    public function getHomepageUrl(): ?string
-    {
-        return $this->homepage_url;
-    }
-
-    public function setHomepageUrl(?string $homepage_url): self
-    {
-        $this->homepage_url = $homepage_url;
-
-        return $this;
-    }
-
-    public function getSnsUrl(): ?string
-    {
-        return $this->sns_url;
-    }
-
-    public function setSnsUrl(?string $sns_url): self
-    {
-        $this->sns_url = $sns_url;
-
-        return $this;
-    }
-
-    public function getRegistReason(): ?string
-    {
-        return $this->regist_reason;
-    }
-
-    public function setRegistReason(?string $regist_reason): self
-    {
-        $this->regist_reason = $regist_reason;
-
-        return $this;
-    }
-
-    public function getFreeComment(): ?string
-    {
-        return $this->free_comment;
-    }
-
-    public function setFreeComment(?string $free_comment): self
-    {
-        $this->free_comment = $free_comment;
-
-        return $this;
-    }
-
-    public function getIntroducerName(): ?string
-    {
-        return $this->introducer_name;
-    }
-
-    public function setIntroducerName(?string $introducer_name): self
-    {
-        $this->introducer_name = $introducer_name;
+        $this->license_expire_date = $license_expire_date;
 
         return $this;
     }
@@ -752,7 +495,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this->examination_status;
     }
 
-    public function setExaminationStatus(?int $examination_status): self
+    public function setExaminationStatus(int $examination_status): self
     {
         $this->examination_status = $examination_status;
 
@@ -764,7 +507,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this->is_active;
     }
 
-    public function setIsActive(?int $is_active): self
+    public function setIsActive(int $is_active): self
     {
         $this->is_active = $is_active;
 
@@ -783,13 +526,12 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this;
     }
 
-
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(?string $email): self
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -801,56 +543,43 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this->thumbnail_path;
     }
 
-    public function setThumbnailPath(string $thumbnail_path): self
+    public function setThumbnailPath(?string $thumbnail_path): self
     {
         $this->thumbnail_path = $thumbnail_path;
 
         return $this;
     }
 
-    public function setRegisterStatusId(int $register_status_id)
+    public function getPrText(): ?string
     {
-        $this->register_status_id = $register_status_id;
+        return $this->pr_text;
+    }
+
+    public function setPrText(?string $pr_text): self
+    {
+        $this->pr_text = $pr_text;
 
         return $this;
     }
 
-    public function getRegisterStatusId()
+    public function getRegalEffort(): ?string
     {
-        return $this->register_status_id;
+        return $this->regal_effort;
     }
 
-    /**
-     * Set salt.
-     *
-     * @param string|null $salt
-     *
-     * @return Customer
-     */
-    public function setSalt($salt = null)
+    public function setRegalEffort(?string $regal_effort): self
     {
-        $this->salt = $salt;
+        $this->regal_effort = $regal_effort;
 
         return $this;
     }
 
-    /**
-     * Get salt.
-     *
-     * @return string|null
-     */
-    public function getSalt()
+    public function getSecretKey()
     {
-        return $this->salt;
+        return $this->secret_key;
     }
 
-    /**
-     * Set secretKey.
-     *
-     * @param string $secretKey
-     *
-     * @return Customer
-     */
+
     public function setSecretKey($secretKey)
     {
         $this->secret_key = $secretKey;
@@ -858,14 +587,42 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this;
     }
 
-    /**
-     * Get secretKey.
-     *
-     * @return string
-     */
-    public function getSecretKey()
+    public function getSalt()
     {
-        return $this->secret_key;
+        return $this->salt;
+    }
+
+    public function setSalt($salt = null)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    public function getRegisterStatusId(): ?int
+    {
+        return $this->register_status_id;
+    }
+
+    public function setRegisterStatusId(int $register_status_id): self
+    {
+        $this->register_status_id = $register_status_id;
+
+        return $this;
+    }
+
+    public function setCreateDate($createDate)
+    {
+        $this->create_date = $createDate;
+
+        return $this;
+    }
+
+    public function setUpdateDate($updateDate)
+    {
+        $this->update_date = $updateDate;
+
+        return $this;
     }
 
     /**
@@ -896,34 +653,6 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this->getUsername() == $user->getUsername();
     }
 
-    /**
-     * Set createDate.
-     *
-     * @param \DateTime $createDate
-     *
-     * @return Payment
-     */
-    public function setCreateDate($createDate)
-    {
-        $this->create_date = $createDate;
-
-        return $this;
-    }
-
-    /**
-     * Set updateDate.
-     *
-     * @param \DateTime $updateDate
-     *
-     * @return Payment
-     */
-    public function setUpdateDate($updateDate)
-    {
-        $this->update_date = $updateDate;
-
-        return $this;
-    }
-
     public function __toString()
     {
         return (string)$this->getId();
@@ -934,13 +663,13 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     public function getBreederContacts(): Collection
     {
-        return $this->breederContacts;
+        return $this->BreederContacts;
     }
 
     public function addBreederContact(BreederContacts $breederContact): self
     {
-        if (!$this->breederContacts->contains($breederContact)) {
-            $this->breederContacts[] = $breederContact;
+        if (!$this->BreederContacts->contains($breederContact)) {
+            $this->BreederContacts[] = $breederContact;
             $breederContact->setBreeder($this);
         }
 
@@ -949,7 +678,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function removeBreederContact(BreederContacts $breederContact): self
     {
-        if ($this->breederContacts->removeElement($breederContact)) {
+        if ($this->BreederContacts->removeElement($breederContact)) {
             // set the owning side to null (unless already changed)
             if ($breederContact->getBreeder() === $this) {
                 $breederContact->setBreeder(null);
@@ -964,13 +693,13 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     public function getBreederPets(): Collection
     {
-        return $this->breederPets;
+        return $this->BreederPets;
     }
 
     public function addBreederPet(BreederPets $breederPet): self
     {
-        if (!$this->breederPets->contains($breederPet)) {
-            $this->breederPets[] = $breederPet;
+        if (!$this->BreederPets->contains($breederPet)) {
+            $this->BreederPets[] = $breederPet;
             $breederPet->setBreeder($this);
         }
 
@@ -979,7 +708,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function removeBreederPet(BreederPets $breederPet): self
     {
-        if ($this->breederPets->removeElement($breederPet)) {
+        if ($this->BreederPets->removeElement($breederPet)) {
             // set the owning side to null (unless already changed)
             if ($breederPet->getBreeder() === $this) {
                 $breederPet->setBreeder(null);
@@ -987,5 +716,48 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|BreederExaminationInfo[]
+     */
+    public function getBreederExaminationInfos(): Collection
+    {
+        return $this->BreederExaminationInfos;
+    }
+
+    public function addBreederExaminationInfo(BreederExaminationInfo $breederExaminationInfo): self
+    {
+        if (!$this->BreederExaminationInfos->contains($breederExaminationInfo)) {
+            $this->BreederExaminationInfos[] = $breederExaminationInfo;
+            $breederExaminationInfo->setBreeder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBreederExaminationInfo(BreederExaminationInfo $breederExaminationInfo): self
+    {
+        if ($this->BreederExaminationInfos->removeElement($breederExaminationInfo)) {
+            // set the owning side to null (unless already changed)
+            if ($breederExaminationInfo->getBreeder() === $this) {
+                $breederExaminationInfo->setBreeder(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getBreederHouseByPetType($petType)
+    {
+        $result =  new ArrayCollection();
+        foreach($this->BreederHouses as $house) {
+            if ($house->getPetType() === $petType) {
+                $result = $house;
+                break;
+            }
+        }
+
+        return $result;
     }
 }
