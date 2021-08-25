@@ -124,7 +124,7 @@ class AdoptionController extends AbstractController
         $id = $request->get('id');
         $isFavorite = false;
         $conservationPet = $this->conservationPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findOneBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
+        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         if ($favorite) {
             $isFavorite = true;
         }
@@ -134,13 +134,13 @@ class AdoptionController extends AbstractController
 
         $images = $this->conservationPetImageRepository->findBy(
             [
-                'conservation_pet_id' => $id,
+                'ConservationPet' => $conservationPet,
                 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE
             ]
         );
         $video = $this->conservationPetImageRepository->findOneBy(
             [
-                'conservation_pet_id' => $id,
+                'ConservationPet' => $conservationPet,
                 'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
             ]
         );
@@ -166,7 +166,7 @@ class AdoptionController extends AbstractController
     {
         $id = $request->get('id');
         $pet = $this->conservationPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findOneBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
+        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         $entityManager = $this->getDoctrine()->getManager();
         if (!$favorite) {
             $petKind = $pet->getPetKind();

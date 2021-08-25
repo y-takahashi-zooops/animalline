@@ -6,7 +6,7 @@
         <div class="row">
             <div class="main-container col-12">
                 {# <div class="sub-title"> #}
-                    <h1>マイページ</h1>
+                <h1>マイページ</h1>
                 {# </div> #}
                 <div class="m-2 p-2"></div>
                 {% for rootMessage in rootMessages %}
@@ -40,7 +40,7 @@
                     <a class="d-flex" href="#">
                         <h3 class=" color-gray-300">もっと見る</h3>
                         <div class="m-1 p-1"></div>
-                        <img src="{{ asset('assets/img/arrow-icon.svg') }}">
+                        <img src="{{ asset('assets/img/arrow-icon.svg') }}" alt="...">
                     </a>
                 </div>
                 <div class="m-3 p-3"></div>
@@ -156,7 +156,7 @@
                     <a class="d-flex" href="#">
                         <h3 class=" color-gray-300">もっと見る</h3>
                         <div class="m-1 p-1"></div>
-                        <img src="{{ asset('assets/img/arrow-icon.svg') }}">
+                        <img src="{{ asset('assets/img/arrow-icon.svg') }}" alt="...">
                     </a>
                 </div>
                 <div class="m-3 p-3"></div>
@@ -318,7 +318,8 @@
                         </div>
                         <div class="col-sm-2">
                             <div class="form-group">
-                                <select class="form-control border-0 gender-form" id="exampleFormControlSelect1">
+                                <select aria-label="gender" class="form-control border-0 gender-form"
+                                        id="exampleFormControlSelect1">
                                     <option>男性</option>
                                     <option>女性</option>
                                     <option>その他</option>
