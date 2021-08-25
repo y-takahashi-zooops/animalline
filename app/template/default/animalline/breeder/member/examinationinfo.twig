@@ -1,0 +1,737 @@
+{% set site_type = 'breeder' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <div class="ec-pageHeader">
+    <h1>{{ '犬舎・猫舎審査項目登録'|trans }}</h1>
+    </div>
+    <div class="ec-off1Grid">
+        <div class="ec-off1Grid__cell">
+            <form method="post" action="" novalidate class="h-adr">
+                <span class="p-country-name" style="display:none;">Japan</span>
+                <div class="ec-borderedDefs">
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">血統書発行団体情報</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="PedigreeIssuedGroup_1" name="PedigreeIssuedGroup" value="1" />
+                                    <label for="PedigreeIssuedGroup_1">
+                                        <span>団体名</span>
+                                    </label>
+                                </div>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">JKC</option>
+                                        <option value="2">KC</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="PedigreeIssuedGroup_2" name="PedigreeIssuedGroup" value="2" />
+                                    <label for="PedigreeIssuedGroup_2">
+                                        <span>その他</span>
+                                    </label>
+                                </div>
+                                <div class="ec-input">
+                                    <input type="text"/>
+                                </div>
+                            </div>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="PedigreeIssuedGroup_3" name="PedigreeIssuedGroup" value="3" />
+                                    <label for="PedigreeIssuedGroup_3">
+                                        <span>なし</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">飼育・保有している犬の総数</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="ec-select">     
+                                <select>
+                                    <option value="">----</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="…">…</option>
+                                    <option value="100">100</option>
+                                </select>
+                                <span>頭</span>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">親犬頭数</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="ParentPetAge_1" name="ParentPetAge" value="1" />
+                                    <label for="ParentPetAge_1">
+                                        <span>1～3歳</span>
+                                    </label>
+                                </div>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <span>頭</span>
+                                </div>
+                            </div>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="ParentPetAge_2" name="ParentPetAge" value="2" />
+                                    <label for="ParentPetAge_2">
+                                        <span>4～6歳</span>
+                                    </label>
+                                </div>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <span>頭</span>
+                                </div>
+                            </div>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="ParentPetAge_3" name="ParentPetAge" value="3" />
+                                    <label for="ParentPetAge_3">
+                                        <span>7歳以上</span>
+                                    </label>
+                                </div>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <span>頭</span>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">親犬の購入先</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="ParentPetBuyFrom_1" name="ParentPetBuyFrom" value="1" />
+                                    <label for="ParentPetBuyFrom_1">
+                                        <span>ブリーダー</span>
+                                    </label>
+                                </div>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <span>頭</span>
+                                </div>
+                            </div>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="ParentPetBuyFrom_2" name="ParentPetBuyFrom" value="2" />
+                                    <label for="ParentPetBuyFrom_2">
+                                        <span>ショップ</span>
+                                    </label>
+                                </div>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <span>頭</span>
+                                </div>
+                            </div>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="ParentPetBuyFrom_3" name="ParentPetBuyFrom" value="3" />
+                                    <label for="ParentPetBuyFrom_3">
+                                        <span>その他</span>
+                                    </label>
+                                </div>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <span>頭</span>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">飼育スタッフ構成</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="row offset-md-0">
+                                <label class="ec-label required mr-2">犬舎運営者</label>
+                                <span>1名</span>
+                            </div>
+                            <div class="row offset-md-0">
+                                <label class="required">平均労働時間：</label>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <span>時間/1週間あたり</span>
+                            </div>
+
+                            <div class="row offset-md-0">
+                                <label class="ec-label required mr-2">家族</label>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <span>名</span>
+                            </div>
+                            <div class="row offset-md-0">
+                                <label class="required">一人あたり平均労働時間：</label>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <span>時間/1週間あたり</span>
+                            </div>
+
+                            <div class="row offset-md-0">
+                                <label class="ec-label required mr-2">社員</label>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <span>名</span>
+                            </div>
+                            <div class="row offset-md-0">
+                                <label class="required">一人あたり平均労働時間：</label>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <span>時間/1週間あたり</span>
+                            </div>
+
+                            <div class="row offset-md-0">
+                                <label class="ec-label required mr-2">パート・アルバイト</label>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <span>名</span>
+                            </div>
+                            <div class="row offset-md-0">
+                                <label class="required">一人あたり平均労働時間：</label>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <span>時間/1週間あたり</span>
+                            </div>
+
+                            <div class="row offset-md-0">
+                                <label class="ec-label required mr-2">その他</label>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <span>名</span>
+                            </div>
+                            <div class="row offset-md-0">
+                                <label class="required">一人あたり平均労働時間：</label>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                <span>時間/1週間あたり</span>
+                            </div>
+
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">ブリーディング歴</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="ec-select">     
+                                <select>
+                                    <option value="">----</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="…">…</option>
+                                    <option value="100">100</option>
+                                </select>
+                                <span>年</span>
+                                <select>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                </select>
+                                <span>ヶ月</span>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">ショー参加経験</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="ec-radio">
+                                <input type="radio"  id="ShowParticipationExperience_1" name="ShowParticipationExperience" value="1" />
+                                <label for="ShowParticipationExperience_1">
+                                    <span>あり</span>
+                                </label>
+                                <input type="radio"  id="ShowParticipationExperience_2" name="ShowParticipationExperience" value="2" />
+                                <label for="ShowParticipationExperience_2">
+                                    <span>なし</span>
+                                </label>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">親犬のケージ</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="ec-checkbox">
+                            <label>
+                                <input type="checkbox" name="ParentPetCage" required="required" value="1" />
+                                <span>休憩場所としてのみ利用できる小さいサイズ(分離型)</span>
+                            </label>
+                            <br>
+                            <label>
+                                <input type="checkbox" name="ParentPetCage" required="required" value="2" />
+                                <span>休憩場所と運動スペースを兼ねることのできる大きいサイズ(一体型)</span>
+                            </label>
+                            <br>
+                            <label>
+                                <input type="checkbox" name="ParentPetCage" required="required" value="3" />
+                                <span>その他</span>
+                            </label>
+                            <div class="ec-input">
+                                <input type="text"/>
+                            </div>
+                        </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">親犬の運動状況</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="ParentPetExerciseSituation_1" name="ParentPetExerciseSituation" value="1" />
+                                    <label for="ParentPetExerciseSituation_1">
+                                        <span>毎日1回はケージから出して運動させている</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="ParentPetExerciseSituation_2" name="ParentPetExerciseSituation" value="2" />
+                                    <label for="ParentPetExerciseSituation_2">
+                                        <span>毎日ではないが、ケージから出して運動させている</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="ParentPetExerciseSituation_3" name="ParentPetExerciseSituation" value="3" />
+                                    <label for="ParentPetExerciseSituation_3">
+                                        <span>飼育スペースと運動スペースを一体型として飼育しているため、ケージから出せない</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="ParentPetExerciseSituation_4" name="ParentPetExerciseSituation" value="4" />
+                                    <label for="ParentPetExerciseSituation_4">
+                                        <span>その他</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="ec-input">
+                                <input type="text"/>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">現時点で掲載可能な子犬</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="CanBePostedPet_1" name="CanBePostedPet" value="1" />
+                                    <label for="CanBePostedPet_1">
+                                        <span>あり</span>
+                                    </label>
+                                </div>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="…">…</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <span>頭</span>
+                                </div>
+                            </div>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="CanBePostedPet_2" name="CanBePostedPet" value="2" />
+                                    <label for="CanBePostedPet_2">
+                                        <span>なし</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">自身での繁殖経験</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="ec-radio">
+                                <input type="radio"  id="BreedingExperience_1" name="BreedingExperience" value="1" />
+                                <label for="BreedingExperience_1">
+                                    <span>なし</span>
+                                </label>
+                                <input type="radio"  id="BreedingExperience_2" name="BreedingExperience" value="2" />
+                                <label for="BreedingExperience_2">
+                                    <span>1～4回</span>
+                                </label>
+                                <input type="radio"  id="BreedingExperience_3" name="BreedingExperience" value="3" />
+                                <label for="BreedingExperience_3">
+                                    <span>5～9回</span>
+                                </label>
+                                <input type="radio"  id="BreedingExperience_4" name="BreedingExperience" value="4" />
+                                <label for="BreedingExperience_4">
+                                    <span>10～19回</span>
+                                </label>
+                                <input type="radio"  id="BreedingExperience_5" name="BreedingExperience" value="5" />
+                                <label for="BreedingExperience_5">
+                                    <span>20～49回</span>
+                                </label>
+                                <input type="radio"  id="BreedingExperience_6" name="BreedingExperience" value="6" />
+                                <label for="BreedingExperience_6">
+                                    <span>50回以上</span>
+                                </label>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">直接の販売経験</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="ec-radio">
+                            <input type="radio"  id="SeleExperience_1" name="SeleExperience" value="1" />
+                            <label for="SeleExperience_1">
+                                <span>なし</span>
+                            </label>
+                            <input type="radio"  id="SeleExperience_2" name="SeleExperience" value="2" />
+                            <label for="SeleExperience_2">
+                                <span>1～4回</span>
+                            </label>
+                            <input type="radio"  id="SeleExperience_3" name="SeleExperience" value="3" />
+                            <label for="SeleExperience_3">
+                                <span>5～9回</span>
+                            </label>
+                            <input type="radio"  id="SeleExperience_4" name="SeleExperience" value="4" />
+                            <label for="SeleExperience_4">
+                                <span>10～19回</span>
+                            </label>
+                            <input type="radio"  id="SeleExperience_5" name="SeleExperience" value="5" />
+                            <label for="SeleExperience_5">
+                                <span>20～49回</span>
+                            </label>
+                            <input type="radio"  id="SeleExperience_6" name="SeleExperience" value="6" />
+                            <label for="SeleExperience_6">
+                                <span>50回以上</span>
+                            </label>
+                        </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">自家繁殖以外の生体の販売</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="CanBePostedPet_1" name="CanBePostedPet" value="1" />
+                                    <label for="CanBePostedPet_1">
+                                        <span>あり</span>
+                                    </label>
+                                </div>
+                                <div class="ec-select">     
+                                    <select>
+                                        <option value="">----</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                    <span>割</span>
+                                </div>
+                            </div>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="CanBePostedPet_2" name="CanBePostedPet" value="2" />
+                                    <label for="CanBePostedPet_2">
+                                        <span>なし</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">現在の販路</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <label class="ec-label required">生体販売をしている自己所有の店舗</label>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="SaleShop_1" name="SaleShop" value="1" />
+                                    <label for="SaleShop_1">
+                                        <span>あり</span>
+                                    </label>
+                                    <input type="radio"  id="SaleShop_2" name="SaleShop" value="2" />
+                                    <label for="SaleShop_2">
+                                        <span>なし</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <label class="ec-label required">ペットショップへの販売</label>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="SaleForPetShop_1" name="SaleForPetShop" value="1" />
+                                    <label for="SaleForPetShop_1">
+                                        <span>あり</span>
+                                    </label>
+                                    <input type="radio"  id="SaleForPetShop_2" name="SaleForPetShop" value="2" />
+                                    <label for="SaleForPetShop_2">
+                                        <span>なし</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <label class="ec-label required">ペットオークションへの販売</label>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="SaleForPetAuction_1" name="SaleForPetAuction" value="1" />
+                                    <label for="SaleForPetAuction_1">
+                                        <span>あり</span>
+                                    </label>
+                                    <input type="radio"  id="SaleForPetAuction_2" name="SaleForPetAuction" value="2" />
+                                    <label for="SaleForPetAuction_2">
+                                        <span>なし</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <label class="ec-label required">他仲介サイトの利用</label>
+                            <div class="row offset-md-0">
+                                <div class="ec-radio">
+                                    <input type="radio"  id="MediationSite_1" name="MediationSite" value="1" />
+                                    <label for="MediationSite_1">
+                                        <span>あり</span>
+                                    </label>
+                                    <input type="radio"  id="MediationSite_2" name="MediationSite" value="2" />
+                                    <label for="MediationSite_2">
+                                        <span>なし</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <label class="ec-label required">その他の販路</label>
+                            <div class="ec-input">
+                                <input type="text"/>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">専業または兼業</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="ec-radio">
+                                <input type="radio"  id="FullTimeFlag_1" name="FullTimeFlag" value="1" />
+                                <label for="FullTimeFlag_1">
+                                    <span>専業</span>
+                                </label>
+                                <input type="radio"  id="FullTimeFlag_2" name="FullTimeFlag" value="2" />
+                                <label for="FullTimeFlag_2">
+                                    <span>兼業</span>
+                                </label>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">かかりつけの動物病院名</label>
+                        </dt>
+                        <dd>
+                            <div class="ec-input">
+                                <input type="text"/>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">ホームページのURL</label>
+                        </dt>
+                        <dd>
+                            <div class="ec-input">
+                                <input type="text"/>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">SNSのURL</label>
+                        </dt>
+                        <dd>
+                            <div class="ec-input">
+                                <input type="text"/>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">当サイトを使いたいと思った理由</label><span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="ec-input">
+                                <textarea required="required" class="form-control"></textarea>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">その他補足、事務局へのコメント</label>
+                        </dt>
+                        <dd>
+                            <div class="ec-input">
+                                <textarea required="required" class="form-control"></textarea>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>
+                            <label class="ec-label required">紹介者</label>
+                        </dt>
+                        <dd>
+                            <div class="ec-input">
+                                <input type="text"/>
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="ec-registerRole__actions">
+                    <div class="ec-off4Grid">
+                        <div class="ec-off4Grid__cell">
+                            <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
+        

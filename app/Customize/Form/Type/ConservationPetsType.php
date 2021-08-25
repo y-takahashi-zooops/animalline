@@ -73,8 +73,8 @@ class ConservationPetsType extends AbstractType
             ->add('dna_check_result', IntegerType::class)
             ->add('pr_comment', TextareaType::class)
             ->add('description', TextareaType::class)
-            ->add('delivery_time', TextType::class)
-            ->add('delivery_way', TextType::class)
+            ->add('delivery_time', TextareaType::class)
+            ->add('delivery_way', TextareaType::class)
             ->add('thumbnail_path', FileType::class, [
                 'required' => false,
                 'mapped' => false,

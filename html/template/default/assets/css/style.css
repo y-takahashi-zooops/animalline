@@ -1003,6 +1003,9 @@ Styleguide 1.3.2
   padding: 10px 0 0;
   flex-wrap: wrap;
 }
+.ec-borderedDefs dl:last-child {
+  border: none;
+}
 
 .ec-borderedDefs dt, .ec-borderedDefs dd {
   padding: 0;
