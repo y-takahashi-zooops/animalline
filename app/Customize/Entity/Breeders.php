@@ -754,7 +754,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
     public function getBreederHouseByPetType($petType)
     {
-        $result =  new ArrayCollection();
+        $result =  new BreederHouse();
         foreach ($this->BreederHouses as $house) {
             if ($house->getPetType() === $petType) {
                 $result = $house;
