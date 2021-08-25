@@ -236,12 +236,12 @@ class BreederPets
 
     public function getCoatColor(): ?CoatColors
     {
-        return $this->coat_color;
+        return $this->CoatColor;
     }
 
     public function setCoatColor(?CoatColors $CoatColor): self
     {
-        $this->coat_color = $CoatColor;
+        $this->CoatColor = $CoatColor;
 
         return $this;
     }
