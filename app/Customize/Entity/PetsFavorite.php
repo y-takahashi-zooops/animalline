@@ -41,7 +41,7 @@ class PetsFavorite
      * @ORM\ManyToOne(targetEntity=Customer::class)
      * @ORM\JoinColumn(name="customer_id", nullable=false)
      */
-    private $customer_id;
+    private $Customer;
 
     /**
      * @var \DateTime
@@ -100,12 +100,12 @@ class PetsFavorite
 
     public function getCustomerId(): ?Customer
     {
-        return $this->customer_id;
+        return $this->Customer;
     }
 
-    public function setCustomerId(?Customer $customer_id): self
+    public function setCustomerId(?Customer $Customer): self
     {
-        $this->customer_id = $customer_id;
+        $this->Customer = $Customer;
 
         return $this;
     }

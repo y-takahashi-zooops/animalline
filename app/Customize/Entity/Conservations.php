@@ -195,19 +195,19 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $thumbnail_path;
 
     /**
-     * @ORM\OneToMany(targetEntity=ConservationPets::class, mappedBy="conservation_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=ConservationPets::class, mappedBy="Conservation", orphanRemoval=true)
      */
-    private $conservationPets;
+    private $ConservationPets;
 
     /**
-     * @ORM\OneToMany(targetEntity=ConservationContacts::class, mappedBy="conservation_id")
+     * @ORM\OneToMany(targetEntity=ConservationContacts::class, mappedBy="Conservation")
      */
-    private $conservationContacts;
+    private $ConservationContacts;
 
     public function __construct()
     {
-        $this->conservationPets = new ArrayCollection();
-        $this->conservationContacts = new ArrayCollection();
+        $this->ConservationPets = new ArrayCollection();
+        $this->ConservationContacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -672,25 +672,25 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      */
     public function getConservationPets(): Collection
     {
-        return $this->conservationPets;
+        return $this->ConservationPets;
     }
 
-    public function addConservationPet(ConservationPets $conservationPet): self
+    public function addConservationPet(ConservationPets $ConservationPet): self
     {
-        if (!$this->conservationPets->contains($conservationPet)) {
-            $this->conservationPets[] = $conservationPet;
-            $conservationPet->setConservationId($this);
+        if (!$this->ConservationPets->contains($ConservationPet)) {
+            $this->ConservationPets[] = $ConservationPet;
+            $ConservationPet->setConservationId($this);
         }
 
         return $this;
     }
 
-    public function removeConservationPet(ConservationPets $conservationPet): self
+    public function removeConservationPet(ConservationPets $ConservationPet): self
     {
-        if ($this->conservationPets->removeElement($conservationPet)) {
+        if ($this->ConservationPets->removeElement($ConservationPet)) {
             // set the owning side to null (unless already changed)
-            if ($conservationPet->getConservationId() === $this) {
-                $conservationPet->setConservationId(null);
+            if ($ConservationPet->getConservationId() === $this) {
+                $ConservationPet->setConservationId(null);
             }
         }
 
@@ -702,25 +702,25 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
      */
     public function getConservationContacts(): Collection
     {
-        return $this->conservationContacts;
+        return $this->ConservationContacts;
     }
 
-    public function addConservationContact(ConservationContacts $conservationContact): self
+    public function addConservationContact(ConservationContacts $ConservationContact): self
     {
-        if (!$this->conservationContacts->contains($conservationContact)) {
-            $this->conservationContacts[] = $conservationContact;
-            $conservationContact->setConservationId($this);
+        if (!$this->ConservationContacts->contains($ConservationContact)) {
+            $this->ConservationContacts[] = $ConservationContact;
+            $ConservationContact->setConservationId($this);
         }
 
         return $this;
     }
 
-    public function removeConservationContact(ConservationContacts $conservationContact): self
+    public function removeConservationContact(ConservationContacts $ConservationContact): self
     {
-        if ($this->conservationContacts->removeElement($conservationContact)) {
+        if ($this->ConservationContacts->removeElement($ConservationContact)) {
             // set the owning side to null (unless already changed)
-            if ($conservationContact->getConservationId() === $this) {
-                $conservationContact->setConservationId(null);
+            if ($ConservationContact->getConservationId() === $this) {
+                $ConservationContact->setConservationId(null);
             }
         }
 

@@ -24,10 +24,10 @@ class ConservationPets
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="conservationPets")
+     * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="ConservationPets")
      * @ORM\JoinColumn(name="conservation_id", nullable=false)
      */
-    private $conservation_id;
+    private $Conservation;
 
     /**
      * @ORM\Column(name="pet_kind", type="smallint")
@@ -35,10 +35,10 @@ class ConservationPets
     private $pet_kind;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeds", inversedBy="conservationPets")
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeds", inversedBy="ConservationPets")
      * @ORM\JoinColumn(name="breeds_type", nullable=true)
      */
-    private $breeds_type;
+    private $BreedsType;
 
     /**
      * @ORM\Column(name="pet_sex", type="smallint")
@@ -51,10 +51,10 @@ class ConservationPets
     private $pet_birthday;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customize\Entity\CoatColors", inversedBy="conservationPets")
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\CoatColors", inversedBy="ConservationPets")
      * @ORM\JoinColumn(name="coat_color", nullable=true)
      */
-    private $coat_color;
+    private $CoatColor;
 
     /**
      * @ORM\Column(name="future_wait", type="smallint")
@@ -121,9 +121,9 @@ class ConservationPets
     private $price;
 
     /**
-     * @ORM\OneToMany(targetEntity=ConservationPetImage::class, mappedBy="conservation_pet_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=ConservationPetImage::class, mappedBy="ConservationPet", orphanRemoval=true)
      */
-    private $conservationPetImages;
+    private $ConservationPetImages;
 
     /**
      * @ORM\Column(name="favorite_count", type="integer", options={"default" = 0}, nullable=true)
@@ -131,14 +131,14 @@ class ConservationPets
     private $favorite_count = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity=PetsFavorite::class, mappedBy="pet_id")
+     * @ORM\OneToMany(targetEntity=PetsFavorite::class, mappedBy="Pet")
      */
-    private $petsFavorites;
+    private $PetsFavorites;
 
     public function __construct()
     {
-        $this->conservationPetImages = new ArrayCollection();
-        $this->petsFavorites = new ArrayCollection();
+        $this->ConservationPetImages = new ArrayCollection();
+        $this->PetsFavorites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -160,12 +160,12 @@ class ConservationPets
 
     public function getBreedsType(): ?Breeds
     {
-        return $this->breeds_type;
+        return $this->BreedsType;
     }
 
-    public function setBreedsType(Breeds $breeds_type): self
+    public function setBreedsType(Breeds $BreedsType): self
     {
-        $this->breeds_type = $breeds_type;
+        $this->BreedsType = $BreedsType;
 
         return $this;
     }
@@ -196,12 +196,12 @@ class ConservationPets
 
     public function getCoatColor(): ?CoatColors
     {
-        return $this->coat_color;
+        return $this->CoatColor;
     }
 
-    public function setCoatColor(?CoatColors $coat_color): self
+    public function setCoatColor(?CoatColors $CoatColor): self
     {
-        $this->coat_color = $coat_color;
+        $this->CoatColor = $CoatColor;
 
         return $this;
     }
@@ -359,25 +359,25 @@ class ConservationPets
      */
     public function getConservationPetImages(): Collection
     {
-        return $this->conservationPetImages;
+        return $this->ConservationPetImages;
     }
 
-    public function addConservationPetImage(ConservationPetImage $conservationPetImage): self
+    public function addConservationPetImage(ConservationPetImage $ConservationPetImage): self
     {
-        if (!$this->conservationPetImages->contains($conservationPetImage)) {
-            $this->conservationPetImages[] = $conservationPetImage;
-            $conservationPetImage->setConservationPetId($this);
+        if (!$this->ConservationPetImages->contains($ConservationPetImage)) {
+            $this->ConservationPetImages[] = $ConservationPetImage;
+            $ConservationPetImage->setConservationPetId($this);
         }
 
         return $this;
     }
 
-    public function removeConservationPetImage(ConservationPetImage $conservationPetImage): self
+    public function removeConservationPetImage(ConservationPetImage $ConservationPetImage): self
     {
-        if ($this->conservationPetImages->removeElement($conservationPetImage)) {
+        if ($this->ConservationPetImages->removeElement($ConservationPetImage)) {
             // set the owning side to null (unless already changed)
-            if ($conservationPetImage->getConservationPetId() === $this) {
-                $conservationPetImage->setConservationPetId(null);
+            if ($ConservationPetImage->getConservationPetId() === $this) {
+                $ConservationPetImage->setConservationPetId(null);
             }
         }
 
@@ -386,12 +386,12 @@ class ConservationPets
 
     public function getConservationId(): ?Conservations
     {
-        return $this->conservation_id;
+        return $this->Conservation;
     }
 
-    public function setConservationId(?Conservations $conservation_id): self
+    public function setConservationId(?Conservations $Conservation): self
     {
-        $this->conservation_id = $conservation_id;
+        $this->Conservation = $Conservation;
 
         return $this;
     }
@@ -413,25 +413,25 @@ class ConservationPets
      */
     public function getPetsFavorites(): Collection
     {
-        return $this->petsFavorites;
+        return $this->PetsFavorites;
     }
 
-    public function addPetsFavorite(PetsFavorite $petsFavorite): self
+    public function addPetsFavorite(PetsFavorite $PetsFavorite): self
     {
-        if (!$this->petsFavorites->contains($petsFavorite)) {
-            $this->petsFavorites[] = $petsFavorite;
-            $petsFavorite->setPetId($this);
+        if (!$this->PetsFavorites->contains($PetsFavorite)) {
+            $this->PetsFavorites[] = $PetsFavorite;
+            $PetsFavorite->setPetId($this);
         }
 
         return $this;
     }
 
-    public function removePetsFavorite(PetsFavorite $petsFavorite): self
+    public function removePetsFavorite(PetsFavorite $PetsFavorite): self
     {
-        if ($this->petsFavorites->removeElement($petsFavorite)) {
+        if ($this->PetsFavorites->removeElement($PetsFavorite)) {
             // set the owning side to null (unless already changed)
-            if ($petsFavorite->getPetId() === $this) {
-                $petsFavorite->setPetId(null);
+            if ($PetsFavorite->getPetId() === $this) {
+                $PetsFavorite->setPetId(null);
             }
         }
 
