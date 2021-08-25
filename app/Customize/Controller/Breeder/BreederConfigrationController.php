@@ -65,7 +65,7 @@ class BreederConfigrationController extends AbstractController
         $rootMessages = $this->breederContactsRepository->findBy(
             [
                 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
-                'breeder' => $this->getUser()
+                'Breeder' => $this->getUser()
             ],
             ['is_response' => 'ASC', 'send_date' => 'DESC']
         );

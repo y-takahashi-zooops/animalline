@@ -150,13 +150,13 @@ class BreederController extends AbstractController
 
         $images = $this->breederPetImageRepository->findBy(
             [
-                'breeder_pet_id' => $id,
+                'BreederPets' => $id,
                 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE
             ]
         );
         $video = $this->breederPetImageRepository->findOneBy(
             [
-                'breeder_pet_id' => $id,
+                'BreederPets' => $id,
                 'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
             ]
         );
