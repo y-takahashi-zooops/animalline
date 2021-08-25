@@ -51,7 +51,7 @@ class BreederQueryService
         }
 
         if ($request->get('breed_type')) {
-            $query->andWhere('p.breeds_type = :breeds_type')
+            $query->andWhere('p.BreedType = :breeds_type')
             ->setParameter('breeds_type', $request->get('breed_type'));
         }
 
@@ -61,7 +61,7 @@ class BreederQueryService
         }
 
         if ($request->get('region')) {
-            $query->andWhere('c.breeder_house_pref = :pref')
+            $query->andWhere('c.PrefBreeder = :pref')
                 ->setParameter('pref', $request->get('region'));
         }
 
@@ -76,7 +76,7 @@ class BreederQueryService
             ->select('bp')
             ->innerJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'bp.id = pf.pet_id')
             ->orderBy('pf.update_date', 'DESC')
-            ->where('pf.customer_id = :customer_id')
+            ->where('pf.Customer = :customer_id')
             ->setParameter('customer_id', $customerId)
             ->getQuery()
             ->getResult();

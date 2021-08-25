@@ -2,6 +2,7 @@
 
 namespace Customize\Entity;
 
+use Customize\Repository\BreederContactsRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\Customer;
 
@@ -22,18 +23,18 @@ class BreederContacts
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="breederContacts")
+     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="BreederContacts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $customer;
+    private $Customer;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="breederContacts")
+     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="BreederContacts")
      * @ORM\JoinColumn(name="breeder_id", referencedColumnName="id", nullable=false)
      */
-    private $breeder;
+    private $Breeder;
 
     /**
      * @ORM\Column(name="message_from", type="smallint")
@@ -41,12 +42,12 @@ class BreederContacts
     private $message_from;
 
     /**
-     * @ORM\ManyToOne(targetEntity=BreederPets::class, inversedBy="breederContacts")
+     * @ORM\ManyToOne(targetEntity=BreederPets::class, inversedBy="BreederContacts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="pet_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $pet;
+    private $Pet;
 
     /**
      * @ORM\Column(name="contact_type", type="smallint")
@@ -89,12 +90,12 @@ class BreederContacts
     private $contract_status = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SendoffReason::class, inversedBy="breederContacts")
+     * @ORM\ManyToOne(targetEntity=SendoffReasons::class, inversedBy="BreederContacts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="reason", referencedColumnName="id", nullable=true)
      * })
      */
-    private $reason;
+    private $Reason;
 
     /**
      * @var \DateTime
@@ -117,24 +118,24 @@ class BreederContacts
 
     public function getCustomer(): ?Customer
     {
-        return $this->customer;
+        return $this->Customer;
     }
 
     public function setCustomer(?Customer $customer): self
     {
-        $this->customer = $customer;
+        $this->Customer = $customer;
 
         return $this;
     }
 
     public function getBreeder(): ?Breeders
     {
-        return $this->breeder;
+        return $this->Breeder;
     }
 
     public function setBreeder(?Breeders $breeder): self
     {
-        $this->breeder = $breeder;
+        $this->Breeder = $breeder;
 
         return $this;
     }
@@ -153,12 +154,12 @@ class BreederContacts
 
     public function getPet(): ?BreederPets
     {
-        return $this->pet;
+        return $this->Pet;
     }
 
     public function setPet(?BreederPets $pet): self
     {
-        $this->pet = $pet;
+        $this->Pet = $pet;
 
         return $this;
     }
@@ -259,14 +260,14 @@ class BreederContacts
         return $this;
     }
 
-    public function getReason(): ?SendoffReason
+    public function getReason(): ?SendoffReasons
     {
-        return $this->reason;
+        return $this->Reason;
     }
 
-    public function setReason(?SendoffReason $reason): self
+    public function setReason(?SendoffReasons $reason): self
     {
-        $this->reason = $reason;
+        $this->Reason = $reason;
 
         return $this;
     }

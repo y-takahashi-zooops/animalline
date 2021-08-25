@@ -22,10 +22,10 @@ class ConservationPetImage
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ConservationPets::class, inversedBy="conservationPetImages")
+     * @ORM\ManyToOne(targetEntity=ConservationPets::class, inversedBy="ConservationPetImages")
      * @ORM\JoinColumn(name="conservation_pet_id", nullable=false)
      */
-    private $conservation_pet_id;
+    private $ConservationPet;
 
     /**
      * @ORM\Column(name="image_type", type="smallint")
@@ -61,14 +61,14 @@ class ConservationPetImage
         return $this->id;
     }
 
-    public function getConservationPetId(): ?ConservationPets
+    public function getConservationPet(): ?ConservationPets
     {
-        return $this->conservation_pet_id;
+        return $this->ConservationPet;
     }
 
-    public function setConservationPetId(?ConservationPets $conservation_pet_id): self
+    public function setConservationPet(?ConservationPets $ConservationPet): self
     {
-        $this->conservation_pet_id = $conservation_pet_id;
+        $this->ConservationPet = $ConservationPet;
 
         return $this;
     }

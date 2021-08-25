@@ -2,11 +2,11 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-<div class="main">
+    <div class="main">
         <div class="row">
             <div class="main-container col-12">
                 {# <div class="sub-title"> #}
-                    <h1>取引履歴 - {{ rootMessage.Conservation.conservationHouseName ?? '' }}</h1>
+                <h1>取引履歴 - {{ rootMessage.Conservation.getConservationHouseByPetType(rootMessage.pet.petKind).conservationHouseName ?? '' }}</h1>
                 {# </div> #}
                 <div class="m-2 p-2"></div>
                 {# <div class="sub-title d-flex justify-content-between align-items-end"> #}
@@ -36,8 +36,9 @@
                             </div>
                             <div class="px-4">
                                 {{ form_start(form) }}
-                                    <textarea class="col-12" rows="5" name="contact_description" placeholder="返信メッセージ"></textarea>
-                                    <button class="ec-blockBtn--cancel">送信</button>
+                                <textarea class="col-12" rows="5" name="contact_description" aria-label="dialog-chat"
+                                          placeholder="返信メッセージ"></textarea>
+                                <button class="ec-blockBtn--cancel">送信</button>
                                 {{ form_end(form) }}
                             </div>
                         </div>
@@ -46,7 +47,6 @@
             </div>
         </div>
     </div>
-</body>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">

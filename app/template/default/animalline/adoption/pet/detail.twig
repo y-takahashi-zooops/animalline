@@ -7,7 +7,7 @@
             {% include 'side.twig' %}
             <div class="main-container col-sm-9">
                 <div class="sub-title">
-                    <h2 class="float-left">{{ conservationPet.breedsType.breedsName ?? '' }}</h2>
+                    <h2 class="float-left">{{ conservationPet.BreedsType.breedsName ?? '' }}</h2>
                     <div class="col-sm-3 float-right btn-like {{ isFavorite ? "red-heart" : "" }}"
                          data-id="{{ conservationPet.getId() }}" data-login="{{ isLoggedIn }}">
                         <a>
@@ -26,22 +26,22 @@
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[0].imageUri | length > 0 ? images[0].imageUri : '/noimage_plugin_list.png') }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[0].imageUri | default | length > 0 ? images[0].imageUri : '/noimage_plugin_list.png') }}"
                              class="card-img-top" alt="...">
                         <div class="d-block d-sm-none m-2 p-2"></div>
                     </div>
                     <div class="col-6 col-sm-3">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[1].imageUri | length > 0 ? images[1].imageUri : '/noimage_plugin_list.png') }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[1].imageUri | default | length > 0 ? images[1].imageUri : '/noimage_plugin_list.png') }}"
                              class="card-img-top w-100" alt="...">
                         <div class="m-2 p-2"></div>
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[2].imageUri | length > 0 ? images[2].imageUri : '/noimage_plugin_list.png') }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[2].imageUri | default | length > 0 ? images[2].imageUri : '/noimage_plugin_list.png') }}"
                              class="card-img-top w-100" alt="...">
                     </div>
                     <div class="col-6 col-sm-3">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[3].imageUri | length > 0 ? images[3].imageUri : '/noimage_plugin_list.png') }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[3].imageUri | default | length > 0 ? images[3].imageUri : '/noimage_plugin_list.png') }}"
                              class="card-img-top w-100" alt="...">
                         <div class="m-2 p-2"></div>
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[4].imageUri | length > 0 ? images[4].imageUri : '/noimage_plugin_list.png') }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[4].imageUri | default | length > 0 ? images[4].imageUri : '/noimage_plugin_list.png') }}"
                              class="card-img-top w-100" alt="...">
                     </div>
                 </div>
@@ -52,19 +52,20 @@
                             <tbody>
                             <tr>
                                 <th scope="row" class="text-align-center">種類</th>
-                                <td class="color-gray-500">{{ conservationPet.breedsType.breedsName ?? '' }}</td>
+                                <td class="color-gray-500">{{ conservationPet.BreedsType.breedsName ?? '' }}</td>
                                 <th scope="row" class="text-align-center">性別</th>
                                 <td class="color-gray-500">{{ conservationPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">見学地域</th>
-                                <td class="color-gray-500">{{ conservationPet.getConservationId().getConservationHouseCity() ~ ' ' ~ conservationPet.getConservationId().getConservationHousePref() ?? '' }}</td>
+                                {% set conservationHouse = conservationPet.Conservation.getConservationHouseByPetType(conservationPet.petKind) %}
+                                <td class="color-gray-500">{{ conservationHouse.conservationHouseCity ~ ' ' ~ conservationHouse.conservationHousePref ?? '' }}</td>
                                 <th scope="row" class="text-align-center">誕生日</th>
                                 <td class="color-gray-500">{{ conservationPet.petBirthday.format('Y年m月d日') ?? '' }}</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">色</th>
-                                <td class="color-gray-500">{{ conservationPet.coatColor.coatColorName ?? '' }}</td>
+                                <td class="color-gray-500">{{ conservationPet.CoatColor.coatColorName ?? '' }}</td>
                                 <th scope="row" class="text-align-center">成犬時予想</th>
                                 <td class="color-gray-500">{{ conservationPet.futureWait }}kg</td>
                             </tr>
@@ -126,7 +127,7 @@
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="breeder-img col-sm-4">
-                        <img src="{{ asset('assets/img/breeder-thumbnail.png') }}" class="w-100 mb-4 mb-sm-0">
+                        <img alt="..." src="{{ asset('assets/img/breeder-thumbnail.png') }}" class="w-100 mb-4 mb-sm-0">
                     </div>
                     <div class="breeder-info col-sm-8">
                         <h3 class="font-weight-500 color-gray-500">田中 太郎ブリーダー</h3>
@@ -134,7 +135,7 @@
                         <div class="d-flex">
                             <h6>総合評価</h6>
                             <div class="m-1 p-1"></div>
-                            <img src="{{ asset('assets/img/star-icon.svg') }}">
+                            <img alt="..." src="{{ asset('assets/img/star-icon.svg') }}">
                             <div class="m-1 p-1"></div>
                             <h6>5.00</h6>
                         </div>
@@ -237,7 +238,6 @@
             </div>
         </div>
     </div>
-    </body>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">

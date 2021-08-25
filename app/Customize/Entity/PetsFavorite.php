@@ -17,23 +17,23 @@ class PetsFavorite
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="smallint", nullable=false)
+     * @ORM\Column(name="site_category", type="smallint", nullable=false)
      */
     private $site_category;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(name="pet_id", type="integer", nullable=false)
      */
     private $pet_id;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(name="pet_kind", type="integer", nullable=false)
      */
     private $pet_kind;
 
@@ -41,7 +41,7 @@ class PetsFavorite
      * @ORM\ManyToOne(targetEntity=Customer::class)
      * @ORM\JoinColumn(name="customer_id", nullable=false)
      */
-    private $customer_id;
+    private $Customer;
 
     /**
      * @var \DateTime
@@ -98,14 +98,14 @@ class PetsFavorite
         return $this;
     }
 
-    public function getCustomerId(): ?Customer
+    public function getCustomer(): ?Customer
     {
-        return $this->customer_id;
+        return $this->Customer;
     }
 
-    public function setCustomerId(?Customer $customer_id): self
+    public function setCustomer(?Customer $Customer): self
     {
-        $this->customer_id = $customer_id;
+        $this->Customer = $Customer;
 
         return $this;
     }

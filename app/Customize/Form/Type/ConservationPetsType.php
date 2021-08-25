@@ -40,7 +40,7 @@ class ConservationPetsType extends AbstractType
                 ],
                 'required' => true,
             ])
-            ->add('breeds_type', EntityType::class, [
+            ->add('BreedsType', EntityType::class, [
                 'class' => 'Customize\Entity\Breeds',
                 'choice_label' => function (\Customize\Entity\Breeds $breeds) {
                     return $breeds->getBreedsName();
@@ -59,7 +59,7 @@ class ConservationPetsType extends AbstractType
                 'required' => true,
             ])
             ->add('pet_birthday', DateType::class)
-            ->add('coat_color', EntityType::class, [
+            ->add('CoatColor', EntityType::class, [
                 'class' => 'Customize\Entity\CoatColors',
                 'choice_label' => function (\Customize\Entity\CoatColors $coatColors) {
                     return $coatColors->getCoatColorName();

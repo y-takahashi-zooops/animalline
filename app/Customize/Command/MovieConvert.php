@@ -103,7 +103,7 @@ class MovieConvert extends Command
                         continue;
                     }
                     $conservation = new ConservationPetImage();
-                    $conservation->setConservationPetId($conservation_pet)
+                    $conservation->setConservationPet($conservation_pet)
                         ->setImageType(AnilineConf::PET_PHOTO_TYPE_VIDEO)
                         ->setImageUri($movie->getDistPath())
                         ->setSortOrder(0);

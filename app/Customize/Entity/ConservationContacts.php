@@ -16,7 +16,7 @@ class ConservationContacts
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(name="id", type="integer")
      */
     private $id;
@@ -32,7 +32,7 @@ class ConservationContacts
     private $Customer;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="conservationContacts")
+     * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="ConservationContacts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="conservation_id", referencedColumnName="id", columnDefinition="INT DEFAULT 0 NOT NULL")
      * })
@@ -93,12 +93,12 @@ class ConservationContacts
     private $contract_status = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SendoffReason::class, inversedBy="conservationContacts")
+     * @ORM\ManyToOne(targetEntity=SendoffReasons::class, inversedBy="ConservationContacts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="reason", referencedColumnName="id", nullable=true)
      * })
      */
-    private $reason;
+    private $Reason;
 
     /**
      * @var \DateTime
@@ -275,14 +275,14 @@ class ConservationContacts
         return $this;
     }
 
-    public function getReason(): ?SendoffReason
+    public function getReason(): ?SendoffReasons
     {
-        return $this->reason;
+        return $this->Reason;
     }
 
-    public function setReason(?SendoffReason $reason): self
+    public function setReason(?SendoffReasons $Reason): self
     {
-        $this->reason = $reason;
+        $this->Reason = $Reason;
 
         return $this;
     }

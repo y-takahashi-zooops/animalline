@@ -2,57 +2,59 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-<div class="main">
-    <div class="row">
-        <div class="main-container col-12">
-            {# <div class="sub-title"> #}
-                <h1>取引履歴 - {{ rootMessage.conservation.conservationHouseName ?? '' }}</h1>
-            {# </div> #}
-            <div class="m-2 p-2"></div>
-            <div class="sub-title d-flex justify-content-between align-items-end">
-                <h2>{{ rootMessage.contactTitle }}</h2>
-            </div>
-            <p>{{ rootMessage.contactDescription }}</p>
+    <div class="main">
+        <div class="row">
+            <div class="main-container col-12">
+                {# <div class="sub-title"> #}
+                <h1>取引履歴 - {{ rootMessage.Conservation.getConservationHouseByPetType(rootMessage.pet.petKind).conservationHouseName ?? '' }}</h1>
+                {# </div> #}
+                <div class="m-2 p-2"></div>
+                <div class="sub-title d-flex justify-content-between align-items-end">
+                    <h2>{{ rootMessage.contactTitle }}</h2>
+                </div>
+                <p>{{ rootMessage.contactDescription }}</p>
 
-            {% for childMessage in childMessages %}
-                <div class="m-1 p-1"></div>
-                <div class="row">
-                    <div class="{{ childMessage.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') ? 'col-6' : 'col-7 px-5' }}">
-                        <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
-                            <div class="ml-5">
-                                {{ childMessage.contactDescription }}
+                {% for childMessage in childMessages %}
+                    <div class="m-1 p-1"></div>
+                    <div class="row">
+                        <div class="{{ childMessage.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') ? 'col-6' : 'col-7 px-5' }}">
+                            <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
+                                <div class="ml-5">
+                                    {{ childMessage.contactDescription }}
+                                </div>
+                                <h4 class="mr-sm-5 ml-5">送信日時：{{ childMessage.sendDate.format('Y年m月d日　H:i') }}</h4>
                             </div>
-                            <h4 class="mr-sm-5 ml-5">送信日時：{{ childMessage.sendDate.format('Y年m月d日　H:i') }}</h4>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
 
-            <div class="m-1 p-1"></div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
-                        <div class="px-4">
-                            返信内容
-                        </div>
-                        <div class="px-4">
-                            <form action="{{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}" method="post">
-                                <input name="end_negotiation" type="checkbox" />交渉を終了する
-                                <select name="reason">
-                                    {% for reason in reasons %}
-                                        <option value="{{ reason.id }}">{{ reason.reason }}</option>
-                                    {% endfor %}
-                                </select>
-                                <textarea class="col-12" rows="5" name="reply_message" placeholder="返信メッセージ"></textarea>
-                                <button type="submit" class="ec-blockBtn--cancel">送信</button>
-                            </form>
+                <div class="m-1 p-1"></div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
+                            <div class="px-4">
+                                返信内容
+                            </div>
+                            <div class="px-4">
+                                <form action="{{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}"
+                                      method="post">
+                                    <input aria-label="reason" name="end_negotiation" type="checkbox"/>交渉を終了する
+                                    <select aria-label="reason" name="reason">
+                                        {% for reason in reasons %}
+                                            <option value="{{ reason.id }}">{{ reason.reason }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
+                                              placeholder="返信メッセージ"></textarea>
+                                    <button type="submit" class="ec-blockBtn--cancel">送信</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">

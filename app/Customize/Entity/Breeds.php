@@ -53,19 +53,19 @@ class Breeds
     private $update_date;
 
     /**
-     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationPets", mappedBy="breeds_type")
+     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationPets", mappedBy="BreedsType")
      */
-    private $conservationPets;
+    private $ConservationPets;
 
     /**
-     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederPets", mappedBy="breeds_type")
+     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederPets", mappedBy="BreedType")
      */
-    private $breederPets;
+    private $BreederPets;
 
     public function __construct()
     {
-        $this->conservationPets = new ArrayCollection();
-        $this->breederPets = new ArrayCollection();
+        $this->ConservationPets = new ArrayCollection();
+        $this->BreederPets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,13 +142,13 @@ class Breeds
      */
     public function getConservationPets(): Collection
     {
-        return $this->conservationPets;
+        return $this->ConservationPets;
     }
 
     public function addConservationPet(ConservationPets $conservationPet): self
     {
-        if (!$this->conservationPets->contains($conservationPet)) {
-            $this->conservationPets[] = $conservationPet;
+        if (!$this->ConservationPets->contains($conservationPet)) {
+            $this->ConservationPets[] = $conservationPet;
             $conservationPet->setBreedsType($this);
         }
 
@@ -157,7 +157,7 @@ class Breeds
 
     public function removeConservationPet(ConservationPets $conservationPet): self
     {
-        if ($this->conservationPets->removeElement($conservationPet)) {
+        if ($this->ConservationPets->removeElement($conservationPet)) {
             // set the owning side to null (unless already changed)
             if ($conservationPet->getBreedsType() === $this) {
                 $conservationPet->setBreedsType(null);
@@ -172,13 +172,13 @@ class Breeds
      */
     public function getBreederPets(): Collection
     {
-        return $this->breederPets;
+        return $this->BreederPets;
     }
 
     public function addBreederPet(BreederPets $breederPet): self
     {
-        if (!$this->breederPets->contains($breederPet)) {
-            $this->breederPets[] = $breederPet;
+        if (!$this->BreederPets->contains($breederPet)) {
+            $this->BreederPets[] = $breederPet;
             $breederPet->setBreedsType($this);
         }
 
@@ -187,7 +187,7 @@ class Breeds
 
     public function removeBreederPet(BreederPets $breederPet): self
     {
-        if ($this->breederPets->removeElement($breederPet)) {
+        if ($this->BreederPets->removeElement($breederPet)) {
             // set the owning side to null (unless already changed)
             if ($breederPet->getBreedsType() === $this) {
                 $breederPet->setBreedsType(null);

@@ -53,19 +53,19 @@ class CoatColors
     private $update_date;
 
     /**
-     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationPets", mappedBy="coat_color")
+     * @ORM\OneToMany(targetEntity="Customize\Entity\ConservationPets", mappedBy="CoatColor")
      */
-    private $conservationPets;
+    private $ConservationPets;
 
     /**
-     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederPets", mappedBy="coat_color")
+     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederPets", mappedBy="CoatColor")
      */
-    private $breederPets;
+    private $BreederPets;
 
     public function __construct()
     {
-        $this->conservationPets = new ArrayCollection();
-        $this->breederPets = new ArrayCollection();
+        $this->ConservationPets = new ArrayCollection();
+        $this->BreederPets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -139,11 +139,11 @@ class CoatColors
 
     public function getConservationPets(): Collection
     {
-        return $this->conservationPets;
+        return $this->ConservationPets;
     }
 
     public function getBreederPets(): Collection
     {
-        return $this->breederPets;
+        return $this->BreederPets;
     }
 }

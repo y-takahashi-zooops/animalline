@@ -104,11 +104,10 @@ class BreederController extends AbstractController
      */
     public function breeder_mypage(Request $request)
     {
-        $customerId = $this->getUser()->getId();
         $rootMessages = $this->breederContactsRepository
             ->findBy(
                 [
-                    'customer' => $customerId,
+                    'Customer' => $this->getUser(),
                     'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
                     'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
                 ]
@@ -121,7 +120,7 @@ class BreederController extends AbstractController
             $lastReplies[$rootMessage->getId()] = $lastReply;
         }
 
-        $pets = $this->breederQueryService->findBreederFavoritePets($customerId);
+        $pets = $this->breederQueryService->findBreederFavoritePets($this->getUser()->getId());
 
         return $this->render('animalline/breeder/member/index.twig', [
             'rootMessages' => $rootMessages,
@@ -140,7 +139,7 @@ class BreederController extends AbstractController
         $id = $request->get('id');
         $isFavorite = false;
         $breederPet = $this->breederPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findOneBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
+        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         if ($favorite) {
             $isFavorite = true;
         }
@@ -150,13 +149,13 @@ class BreederController extends AbstractController
 
         $images = $this->breederPetImageRepository->findBy(
             [
-                'breeder_pet_id' => $id,
+                'BreederPets' => $breederPet,
                 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE
             ]
         );
         $video = $this->breederPetImageRepository->findOneBy(
             [
-                'breeder_pet_id' => $id,
+                'BreederPets' => $breederPet,
                 'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
             ]
         );
@@ -179,9 +178,8 @@ class BreederController extends AbstractController
      */
     public function get_message_mypage(Request $request)
     {
-        $customerId = $this->getUser()->getId();
         $rootMessages = $this->breederContactsRepository
-            ->findBy(['customer' => $customerId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
+            ->findBy(['Customer' => $this->getUser(), 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
 
         $lastReplies = [];
         foreach ($rootMessages as $rootMessage) {
@@ -205,12 +203,12 @@ class BreederController extends AbstractController
     {
         $id = $request->get('id');
         $pet = $this->breederPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findOneBy(['customer_id' => $this->getUser(), 'pet_id' => $id]);
+        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         $entityManager = $this->getDoctrine()->getManager();
         if (!$favorite) {
             $petKind = $pet->getPetKind();
             $favorite_pet = new PetsFavorite();
-            $favorite_pet->setCustomerId($this->getUser())
+            $favorite_pet->setCustomer($this->getUser())
                 ->setPetId($id)
                 ->setSiteCategory(AnilineConf::SITE_CATEGORY_BREEDER)
                 ->setPetKind($petKind);
@@ -264,7 +262,7 @@ class BreederController extends AbstractController
         if ($replyMessage || $isEnd) {
             $breederContact = (new BreederContacts())
                 ->setCustomer($this->getUser())
-                ->setbreeder($rootMessage->getbreeder())
+                ->setbreeder($rootMessage->getBreeder())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
                 ->setPet($rootMessage->getPet())
                 ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)

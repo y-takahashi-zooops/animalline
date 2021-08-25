@@ -16,7 +16,7 @@
                         <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                             <div class="catalog-card">
                                 <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
-                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
+                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                          class="card-img-top" alt="Pet-image">
                                 </a>
                                 <div class="card-body bg-white">
@@ -28,7 +28,8 @@
                                     </div>
                                     <div class="mb-2"></div>
                                     <div class="d-flex">
-                                        <h4 class="mr-3">{{ pet.getConservationId().getConservationHousePref() ?? '' }}</h4>
+                                        {% set conservationHouse = pet.Conservation.getConservationHouseByPetType(pet.petKind) %}
+                                        <h4 class="mr-3">{{ conservationHouse.conservationHouseCity ~ ' ' ~ conservationHouse.conservationHousePref ?? '' }}</h4>
                                         <h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
                                     </div>
                                     <div class="m-2"></div>
