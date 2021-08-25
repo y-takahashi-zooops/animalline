@@ -132,7 +132,8 @@
                                     </div>
                                     <div class="mb-2"></div>
                                     <div class="d-flex">
-                                        <h4 class="mr-3">{{ pet.getConservation.getConservationHousePref() ?? '' }}</h4>
+                                        {% set conservationHouse = pet.Conservation.getConservationHouseByPetType(pet.petKind) %}
+                                        <h4 class="mr-3">{{ conservationHouse.conservationHouseCity ~ ' ' ~ conservationHouse.conservationHousePref ?? '' }}</h4>
                                         <h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
                                     </div>
                                     <div class="m-2"></div>
@@ -177,7 +178,8 @@
                                     </div>
                                     <div class="mb-2"></div>
                                     <div class="d-flex">
-                                        <h4 class="mr-3">{{ pet.getConservation.getConservationHousePref() ?? '' }}</h4>
+                                        {% set conservationHouse = pet.Conservation.getConservationHouseByPetType(pet.petKind) %}
+                                        <h4 class="mr-3">{{ conservationHouse.conservationHouseCity ~ ' ' ~ conservationHouse.conservationHousePref ?? '' }}</h4>
                                         <h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
                                     </div>
                                     <div class="m-2"></div>

@@ -170,7 +170,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $ConservationContacts;
 
     /**
-     * @ORM\OneToMany(targetEntity=ConservationsHouses::class, mappedBy="Conservation")
+     * @ORM\OneToMany(targetEntity=ConservationsHouse::class, mappedBy="Conservation")
      */
     private $ConservationsHouses;
 
@@ -608,14 +608,14 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     }
 
     /**
-     * @return Collection|ConservationsHouses[]
+     * @return Collection|ConservationsHouse[]
      */
     public function getConservationsHouses(): Collection
     {
         return $this->ConservationsHouses;
     }
 
-    public function addConservationsHouse(ConservationsHouses $conservationsHouse): self
+    public function addConservationsHouse(ConservationsHouse $conservationsHouse): self
     {
         if (!$this->ConservationsHouses->contains($conservationsHouse)) {
             $this->ConservationsHouses[] = $conservationsHouse;
@@ -625,7 +625,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    public function removeConservationsHouse(ConservationsHouses $conservationsHouse): self
+    public function removeConservationsHouse(ConservationsHouse $conservationsHouse): self
     {
         if ($this->ConservationsHouses->removeElement($conservationsHouse)) {
             // set the owning side to null (unless already changed)
@@ -639,7 +639,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
 
     public function getConservationHouseByPetType($petType)
     {
-        $result =  new ConservationsHouses();
+        $result =  new ConservationsHouse();
         foreach ($this->ConservationsHouses as $house) {
             if ($house->getPetType() === $petType) {
                 $result = $house;
