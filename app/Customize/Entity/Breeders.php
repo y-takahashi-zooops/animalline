@@ -2,10 +2,12 @@
 
 namespace Customize\Entity;
 
+use Customize\Repository\BreedersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Eccube\Entity\Master\Pref;
 
 /**
  * @ORM\Table(name="alm_breeders")
@@ -49,9 +51,10 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $breeder_zip;
 
     /**
-     * @ORM\Column(name="breeder_pref_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Pref", inversedBy="Breeders")
+     * @ORM\JoinColumn(name="breeder_pref_id", nullable=true)
      */
-    private $breeder_pref_id;
+    private $PrefBreeder;
 
     /**
      * @ORM\Column(name="breeder_pref", type="string", length=11, nullable=true)
@@ -89,9 +92,10 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $license_zip;
 
     /**
-     * @ORM\Column(name="license_pref_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Eccube\Entity\Master\Pref", inversedBy="Breeders")
+     * @ORM\JoinColumn(name="license_pref_id", nullable=true)
      */
-    private $license_pref_id;
+    private $PrefLicense;
 
     /**
      * @ORM\Column(name="license_pref", type="string", length=10, nullable=true)
@@ -286,14 +290,14 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this;
     }
 
-    public function getBreederPrefId(): ?int
+    public function getPrefBreeder(): ?Pref
     {
-        return $this->breeder_pref_id;
+        return $this->PrefBreeder;
     }
 
-    public function setBreederPrefId(?int $breeder_pref_id): self
+    public function setPrefBreeder(?Pref $Pref): self
     {
-        $this->breeder_pref_id = $breeder_pref_id;
+        $this->PrefBreeder = $Pref;
 
         return $this;
     }
@@ -382,14 +386,14 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this;
     }
 
-    public function getLicensePrefId(): ?int
+    public function getPrefLicense(): ?Pref
     {
-        return $this->license_pref_id;
+        return $this->PrefLicense;
     }
 
-    public function setLicensePrefId(?int $license_pref_id): self
+    public function setPrefLicense(?Pref $Pref): self
     {
-        $this->license_pref_id = $license_pref_id;
+        $this->PrefLicense = $Pref;
 
         return $this;
     }
@@ -751,7 +755,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     public function getBreederHouseByPetType($petType)
     {
         $result =  new ArrayCollection();
-        foreach($this->BreederHouses as $house) {
+        foreach ($this->BreederHouses as $house) {
             if ($house->getPetType() === $petType) {
                 $result = $house;
                 break;

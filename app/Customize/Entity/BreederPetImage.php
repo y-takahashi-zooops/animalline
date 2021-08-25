@@ -2,6 +2,7 @@
 
 namespace Customize\Entity;
 
+use Customize\Repository\BreederPetImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
