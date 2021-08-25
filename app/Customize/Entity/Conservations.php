@@ -636,4 +636,17 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
 
         return $this;
     }
+
+    public function getConservationHouseByPetType($petType)
+    {
+        $result = new ArrayCollection();
+        foreach ($this->ConservationsHouses as $house) {
+            if ($house->getPetType() === $petType) {
+                $result = $house;
+                break;
+            }
+        }
+
+        return $result;
+    }
 }
