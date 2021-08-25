@@ -108,7 +108,7 @@ class BreederController extends AbstractController
         $rootMessages = $this->breederContactsRepository
             ->findBy(
                 [
-                    'customer' => $customerId,
+                    'Customer' => $customerId,
                     'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
                     'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
                 ]
