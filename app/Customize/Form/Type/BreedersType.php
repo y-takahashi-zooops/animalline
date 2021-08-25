@@ -311,14 +311,9 @@ class BreedersType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('examination_status', IntegerType::class, [
-                'required' => false,
-            ])
-            ->add('is_active', IntegerType::class, [
-                'required' => false,
-            ])
+            ->add('examination_status', IntegerType::class)
+            ->add('is_active', IntegerType::class)
             ->add('password', PasswordType::class, [
-                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -329,7 +324,6 @@ class BreedersType extends AbstractType
                 ]
             ])
             ->add('email', EmailType::class, [
-                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
