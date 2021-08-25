@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
  * @ORM\HasLifecycleCallbacks()
  */
-class ConservationsHouses
+class ConservationsHouse
 {
     /**
      * @ORM\Id
@@ -205,9 +205,9 @@ class ConservationsHouses
      *
      * @param \Eccube\Entity\Master\Pref|null $pref
      *
-     * @return ConservationsHouses
+     * @return ConservationsHouse
      */
-    public function setConservationHousePrefId(\Eccube\Entity\Master\Pref $pref = null): ConservationsHouses
+    public function setConservationHousePrefId(\Eccube\Entity\Master\Pref $pref = null): ConservationsHouse
     {
         $this->ConservationHousePref = $pref;
 
@@ -301,9 +301,9 @@ class ConservationsHouses
      *
      * @param \DateTime $createDate
      *
-     * @return ConservationsHouses
+     * @return ConservationsHouse
      */
-    public function setCreateDate(\DateTime $createDate): ConservationsHouses
+    public function setCreateDate(\DateTime $createDate): ConservationsHouse
     {
         $this->create_date = $createDate;
 
@@ -315,9 +315,9 @@ class ConservationsHouses
      *
      * @param \DateTime $updateDate
      *
-     * @return ConservationsHouses
+     * @return ConservationsHouse
      */
-    public function setUpdateDate(\DateTime $updateDate): ConservationsHouses
+    public function setUpdateDate(\DateTime $updateDate): ConservationsHouse
     {
         $this->update_date = $updateDate;
 

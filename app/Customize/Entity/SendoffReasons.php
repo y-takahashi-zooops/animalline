@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Collection;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=SendoffReasonRepository::class)
  */
-class SendoffReason
+class SendoffReasons
 {
     /**
      * @ORM\Id
