@@ -41,9 +41,9 @@ class AdoptionQueryService
                 ->setParameter('pet_kind', $request->get('pet_kind'));
         }
 
-        if ($request->get('BreedType')) {
-            $query->andWhere('p.BreedsType = :BreedsType')
-            ->setParameter('BreedsType', $request->get('BreedType'));
+        if ($request->get('breed_type')) {
+            $query->andWhere('p.BreedsType = :breeds_type')
+            ->setParameter('breeds_type', $request->get('breed_type'));
         }
 
         if ($request->get('gender')) {
