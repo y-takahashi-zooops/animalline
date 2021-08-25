@@ -679,7 +679,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     {
         if (!$this->ConservationPets->contains($ConservationPet)) {
             $this->ConservationPets[] = $ConservationPet;
-            $ConservationPet->setConservationId($this);
+            $ConservationPet->setConservation($this);
         }
 
         return $this;
@@ -689,8 +689,8 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     {
         if ($this->ConservationPets->removeElement($ConservationPet)) {
             // set the owning side to null (unless already changed)
-            if ($ConservationPet->getConservationId() === $this) {
-                $ConservationPet->setConservationId(null);
+            if ($ConservationPet->getConservation() === $this) {
+                $ConservationPet->setConservation(null);
             }
         }
 
@@ -709,7 +709,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     {
         if (!$this->ConservationContacts->contains($ConservationContact)) {
             $this->ConservationContacts[] = $ConservationContact;
-            $ConservationContact->setConservationId($this);
+            $ConservationContact->setConservation($this);
         }
 
         return $this;
@@ -719,8 +719,8 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     {
         if ($this->ConservationContacts->removeElement($ConservationContact)) {
             // set the owning side to null (unless already changed)
-            if ($ConservationContact->getConservationId() === $this) {
-                $ConservationContact->setConservationId(null);
+            if ($ConservationContact->getConservation() === $this) {
+                $ConservationContact->setConservation(null);
             }
         }
 

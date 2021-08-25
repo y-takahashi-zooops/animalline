@@ -66,7 +66,7 @@ class ConservationPetImage
         return $this->ConservationPet;
     }
 
-    public function setConservationPetId(?ConservationPets $ConservationPet): self
+    public function setConservationPet(?ConservationPets $ConservationPet): self
     {
         $this->ConservationPet = $ConservationPet;
 

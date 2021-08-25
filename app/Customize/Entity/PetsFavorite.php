@@ -98,12 +98,12 @@ class PetsFavorite
         return $this;
     }
 
-    public function getCustomerId(): ?Customer
+    public function getCustomer(): ?Customer
     {
         return $this->Customer;
     }
 
-    public function setCustomerId(?Customer $Customer): self
+    public function setCustomer(?Customer $Customer): self
     {
         $this->Customer = $Customer;
 

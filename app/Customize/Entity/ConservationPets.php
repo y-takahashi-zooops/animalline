@@ -366,7 +366,7 @@ class ConservationPets
     {
         if (!$this->ConservationPetImages->contains($ConservationPetImage)) {
             $this->ConservationPetImages[] = $ConservationPetImage;
-            $ConservationPetImage->setConservationPetId($this);
+            $ConservationPetImage->setConservationPet($this);
         }
 
         return $this;
@@ -376,20 +376,20 @@ class ConservationPets
     {
         if ($this->ConservationPetImages->removeElement($ConservationPetImage)) {
             // set the owning side to null (unless already changed)
-            if ($ConservationPetImage->getConservationPetId() === $this) {
-                $ConservationPetImage->setConservationPetId(null);
+            if ($ConservationPetImage->getConservationPet() === $this) {
+                $ConservationPetImage->setConservationPet(null);
             }
         }
 
         return $this;
     }
 
-    public function getConservationId(): ?Conservations
+    public function getConservation(): ?Conservations
     {
         return $this->Conservation;
     }
 
-    public function setConservationId(?Conservations $Conservation): self
+    public function setConservation(?Conservations $Conservation): self
     {
         $this->Conservation = $Conservation;
 
