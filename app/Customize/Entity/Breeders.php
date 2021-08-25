@@ -136,12 +136,12 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     /**
      * @ORM\Column(name="examination_status", type="smallint", options={"default" = 0})
      */
-    private $examination_status;
+    private $examination_status = 0;
 
     /**
      * @ORM\Column(name="is_active", type="smallint", options={"default" = 0})
      */
-    private $is_active;
+    private $is_active = 0;
 
     /**
      * @ORM\Column(name="password", type="string", length=255)
