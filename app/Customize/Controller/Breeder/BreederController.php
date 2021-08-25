@@ -181,7 +181,7 @@ class BreederController extends AbstractController
     {
         $customerId = $this->getUser()->getId();
         $rootMessages = $this->breederContactsRepository
-            ->findBy(['customer' => $customerId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
+            ->findBy(['Customer' => $customerId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
 
         $lastReplies = [];
         foreach ($rootMessages as $rootMessage) {
