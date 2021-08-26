@@ -48,9 +48,10 @@ class BreederConfigrationController extends AbstractController
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
-        BreederPetsRepository $breederPetsRepository,
+        BreederPetsRepository     $breederPetsRepository,
         BreederPetImageRepository $breederPetImageRepository
-    ) {
+    )
+    {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
@@ -285,8 +286,8 @@ class BreederConfigrationController extends AbstractController
     /**
      * Copy image and retrieve new url of the copy
      *
-     * @param  string $imageUrl
-     * @param  int $petId
+     * @param string $imageUrl
+     * @param int $petId
      * @return string
      */
     private function setImageSrc($imageUrl, $petId)
@@ -376,7 +377,29 @@ class BreederConfigrationController extends AbstractController
      */
     public function baseinfo(Request $request)
     {
-        return[];
+        $builder = $this->formFactory->createBuilder(BreedersType::class);
+
+        $form = $builder->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            switch ($request->get('mode')) {
+                case 'confirm':
+                    return $this->render(
+                        '/animalline/breeder/configration/baseinfo_confirm.twig',
+                        [
+                            'form' => $form->createView(),
+                        ]
+                    );
+                case 'complete':
+                    return 0;
+            }
+        }
+//        dump($form);die;
+        return [
+            'form' => $form->createView(),
+        ];
     }
 
     /**
@@ -385,7 +408,7 @@ class BreederConfigrationController extends AbstractController
      */
     public function houseinfo(Request $request)
     {
-        return[];
+        return [];
     }
 
     /**
@@ -394,6 +417,6 @@ class BreederConfigrationController extends AbstractController
      */
     public function examinationinfo(Request $request)
     {
-        return[];
+        return [];
     }
 }
