@@ -34,8 +34,8 @@ class BreederExaminationInfoType extends AbstractType
                 'required' => true,
                 'choices' => [
                     '団体名' => 1_2,
-                    'その他' => AnilineConf::PEDIGREE_ORGANIZATION_OTHER,
                     'なし'  => AnilineConf::PEDIGREE_ORGANIZATION_NONE,
+                    'その他' => AnilineConf::PEDIGREE_ORGANIZATION_OTHER,
                 ],
                 'mapped' => false,
                 'expanded' => true,
@@ -43,6 +43,7 @@ class BreederExaminationInfoType extends AbstractType
             ->add('group_organization', ChoiceType::class, [
                 'required' => true,
                 'choices' => [
+                    '----' => '',
                     'JKC' => AnilineConf::PEDIGREE_ORGANIZATION_JKC,
                     'KC'  => AnilineConf::PEDIGREE_ORGANIZATION_KC,
                 ],
