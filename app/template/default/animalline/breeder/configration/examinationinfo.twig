@@ -7,7 +7,7 @@
     </div>
     <div class="ec-off1Grid">
         <div class="ec-off1Grid__cell">
-            <form method="post" action="" novalidate class="h-adr">
+            {{ form_start(form) }}
                 <span class="p-country-name" style="display:none;">Japan</span>
                 <div class="ec-borderedDefs">
                     <dl>
@@ -56,16 +56,8 @@
                             <label class="ec-label required">飼育・保有している犬の総数</label><span class="ec-required">必須</span>
                         </dt>
                         <dd>
-                            <div class="ec-select">     
-                                <select>
-                                    <option value="">----</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="…">…</option>
-                                    <option value="100">100</option>
-                                </select>
-                                <span>頭</span>
-                            </div>
+                            {{ form_widget(form.breeding_pet_count) }}
+                            {{ form_errors(form.breeding_pet_count) }}
                         </dd>
                     </dl>
                     <dl>
@@ -75,54 +67,39 @@
                         <dd>
                             <div class="row offset-md-0">
                                 <div class="ec-radio">
-                                    <label for="ParentPetAge_1">
+                                    <label>
                                         <span>1～3歳</span>
                                     </label>
                                 </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
+                                <div class="ec-select">
+                                    {{ form_widget(form.parent_pet_count_1) }}
+                                    {{ form_errors(form.parent_pet_count_1) }}
                                 </div>
+                                <span class="ml-1">頭</span>
                             </div>
                             <div class="row offset-md-0">
                                 <div class="ec-radio">
-                                    <label for="ParentPetAge_2">
+                                    <label>
                                         <span>4～6歳</span>
                                     </label>
                                 </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
+                                <div class="ec-select">
+                                    {{ form_widget(form.parent_pet_count_2) }}
+                                    {{ form_errors(form.parent_pet_count_2) }}
                                 </div>
+                                <span class="ml-1">頭</span>
                             </div>
                             <div class="row offset-md-0">
                                 <div class="ec-radio">
-                                    <label for="ParentPetAge_3">
+                                    <label>
                                         <span>7歳以上</span>
                                     </label>
                                 </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
+                                <div class="ec-select">
+                                    {{ form_widget(form.parent_pet_count_3) }}
+                                    {{ form_errors(form.parent_pet_count_3) }}
                                 </div>
+                                <span class="ml-1">頭</span>
                             </div>
                         </dd>
                     </dl>
@@ -137,16 +114,11 @@
                                         <span>ブリーダー</span>
                                     </label>
                                 </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
+                                <div class="ec-select">
+                                    {{ form_widget(form.parent_pet_buy_place_1) }}
+                                    {{ form_errors(form.parent_pet_buy_place_1) }}
                                 </div>
+                                <span class="ml-1">頭</span>
                             </div>
                             <div class="row offset-md-0">
                                 <div class="ec-radio">
@@ -154,16 +126,11 @@
                                         <span>ショップ</span>
                                     </label>
                                 </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
+                                <div class="ec-select">
+                                    {{ form_widget(form.parent_pet_buy_place_2) }}
+                                    {{ form_errors(form.parent_pet_buy_place_2) }}
                                 </div>
+                                <span class="ml-1">頭</span>
                             </div>
                             <div class="row offset-md-0">
                                 <div class="ec-radio">
@@ -171,16 +138,11 @@
                                         <span>その他</span>
                                     </label>
                                 </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
+                                <div class="ec-select">
+                                    {{ form_widget(form.parent_pet_buy_place_3) }}
+                                    {{ form_errors(form.parent_pet_buy_place_3) }}
                                 </div>
+                                <span class="ml-1">頭</span>
                             </div>
                         </dd>
                     </dl>
@@ -451,6 +413,12 @@
                                         <option value="">----</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">72</option>
+                                        <option value="8">8</option>
                                         <option value="…">…</option>
                                         <option value="100">100</option>
                                     </select>
@@ -502,35 +470,12 @@
                     </dl>
                     <dl>
                         <dt>
-                            <label class="ec-label required">直接の販売経験</label><span class="ec-required">必須</span>
+                            {{ form_label(form.selling_experience, '直接の販売経験', { 'label_attr': { 'class': 'ec-label required' }}) }}
+                            <span class="ec-required">必須</span>
                         </dt>
                         <dd>
-                            <div class="ec-radio">
-                            <input type="radio"  id="SeleExperience_1" name="SeleExperience" value="1" />
-                            <label for="SeleExperience_1">
-                                <span>なし</span>
-                            </label>
-                            <input type="radio"  id="SeleExperience_2" name="SeleExperience" value="2" />
-                            <label for="SeleExperience_2">
-                                <span>1～4回</span>
-                            </label>
-                            <input type="radio"  id="SeleExperience_3" name="SeleExperience" value="3" />
-                            <label for="SeleExperience_3">
-                                <span>5～9回</span>
-                            </label>
-                            <input type="radio"  id="SeleExperience_4" name="SeleExperience" value="4" />
-                            <label for="SeleExperience_4">
-                                <span>10～19回</span>
-                            </label>
-                            <input type="radio"  id="SeleExperience_5" name="SeleExperience" value="5" />
-                            <label for="SeleExperience_5">
-                                <span>20～49回</span>
-                            </label>
-                            <input type="radio"  id="SeleExperience_6" name="SeleExperience" value="6" />
-                            <label for="SeleExperience_6">
-                                <span>50回以上</span>
-                            </label>
-                        </div>
+                            {{ form_widget(form.selling_experience) }}
+                            {{ form_errors(form.selling_experience) }}
                         </dd>
                     </dl>
                     {#
@@ -722,7 +667,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}

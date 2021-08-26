@@ -4,11 +4,13 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederContacts;
+use Customize\Entity\BreederExaminationInfo;
 use Customize\Entity\BreederPetImage;
 use Customize\Entity\BreederPets;
+use Customize\Form\Type\BreederExaminationInfoType;
 use Customize\Form\Type\BreederPetsType;
-use Customize\Form\Type\BreedersType;
 use Customize\Repository\BreederContactsRepository;
+use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\BreedersRepository;
@@ -41,19 +43,27 @@ class BreederConfigrationController extends AbstractController
     protected $breederPetImageRepository;
 
     /**
+     * @var BreederExaminationInfoRepository
+     */
+    protected $breederExaminationInfoRepository;
+
+    /**
      * BreederConfigrationController constructor.
      * @param BreederContactsRepository $breederContactsRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
+     * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
         BreederPetsRepository $breederPetsRepository,
-        BreederPetImageRepository $breederPetImageRepository
+        BreederPetImageRepository $breederPetImageRepository,
+        BreederExaminationInfoRepository $breederExaminationInfoRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
+        $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
     }
 
     /**
@@ -389,11 +399,26 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/configration/examinationinfo/{pet_type}", name="breeder_examinationinfo")
+     * @Route("/breeder/configration/examinationinfo/{pet_type}", name="breeder_examinationinfo", methods={"GET","POST"})
      * @Template("/animalline/breeder/configration/examinationinfo.twig")
      */
     public function examinationinfo(Request $request)
     {
-        return[];
+        $breederExaminationInfo = $this->breederExaminationInfoRepository->findOneBy([
+            'Breeder' => $this->getUser(),
+            'pet_type' => $request->get('pet_type')
+        ]);
+        $breederExaminationInfo = $breederExaminationInfo ?? new BreederExaminationInfo();
+        $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump($request); die;
+            // TODO
+        }
+
+        return $this->render('animalline/breeder/configration/examinationinfo.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }
