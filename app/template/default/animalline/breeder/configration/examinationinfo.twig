@@ -157,124 +157,79 @@
                             </div>
                             <div class="row offset-md-0">
                                 <label class="required">平均労働時間：</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
+                                <div class="ec-select">
+                                    {{ form_widget(form.owner_worktime_ave) }}
+                                    {{ form_errors(form.owner_worktime_ave) }}
                                 </div>
-                                <span>時間/1週間あたり</span>
+                                <span class="ml-1">時間/1週間あたり</span>
                             </div>
 
                             <div class="row offset-md-0">
                                 <label class="ec-label required mr-2">家族</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
+                                <div class="ec-select">
+                                    {{ form_widget(form.family_staff_count) }}
+                                    {{ form_errors(form.family_staff_count) }}
                                 </div>
-                                <span>名</span>
+                                <span class="ml-1">名</span>
                             </div>
                             <div class="row offset-md-0">
                                 <label class="required">一人あたり平均労働時間：</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
+                                <div class="ec-select">
+                                    {{ form_widget(form.family_staff_worktime_ave) }}
+                                    {{ form_errors(form.family_staff_worktime_ave) }}
                                 </div>
-                                <span>時間/1週間あたり</span>
+                                <span class="ml-1">時間/1週間あたり</span>
                             </div>
 
                             <div class="row offset-md-0">
                                 <label class="ec-label required mr-2">社員</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
+                                <div class="ec-select">
+                                    {{ form_widget(form.fulltime_staff_count) }}
+                                    {{ form_errors(form.fulltime_staff_count) }}
                                 </div>
-                                <span>名</span>
+                                <span class="ml-1">名</span>
                             </div>
                             <div class="row offset-md-0">
                                 <label class="required">一人あたり平均労働時間：</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
+                                <div class="ec-select">
+                                    {{ form_widget(form.fulltime_staff_worktime_ave) }}
+                                    {{ form_errors(form.fulltime_staff_worktime_ave) }}
                                 </div>
-                                <span>時間/1週間あたり</span>
+                                <span class="ml-1">時間/1週間あたり</span>
                             </div>
 
                             <div class="row offset-md-0">
                                 <label class="ec-label required mr-2">パート・アルバイト</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
+                                <div class="ec-select">
+                                    {{ form_widget(form.parttime_staff_count) }}
+                                    {{ form_errors(form.parttime_staff_count) }}
                                 </div>
-                                <span>名</span>
+                                <span class="ml-1">名</span>
                             </div>
                             <div class="row offset-md-0">
                                 <label class="required">一人あたり平均労働時間：</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
+                                <div class="ec-select">
+                                    {{ form_widget(form.parttime_staff_worktime_ave) }}
+                                    {{ form_errors(form.parttime_staff_worktime_ave) }}
                                 </div>
-                                <span>時間/1週間あたり</span>
+                                <span class="ml-1">時間/1週間あたり</span>
                             </div>
 
                             <div class="row offset-md-0">
                                 <label class="ec-label required mr-2">その他</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
+                                <div class="ec-select">
+                                    {{ form_widget(form.other_staff_count) }}
+                                    {{ form_errors(form.other_staff_count) }}
                                 </div>
-                                <span>名</span>
+                                <span class="ml-1">名</span>
                             </div>
                             <div class="row offset-md-0">
                                 <label class="required">一人あたり平均労働時間：</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
+                                <div class="ec-select">
+                                    {{ form_widget(form.other_staff_worktime_ave) }}
+                                    {{ form_errors(form.other_staff_worktime_ave) }}
                                 </div>
-                                <span>時間/1週間あたり</span>
+                                <span class="ml-1">時間/1週間あたり</span>
                             </div>
 
                         </dd>
@@ -284,29 +239,12 @@
                             <label class="ec-label required">ブリーディング歴</label><span class="ec-required">必須</span>
                         </dt>
                         <dd>
-                            <div class="ec-select">     
-                                <select>
-                                    <option value="">----</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="…">…</option>
-                                    <option value="100">100</option>
-                                </select>
+                            <div class="ec-select">
+                                {{ form_widget(form.breeding_exp_year) }}
+                                {{ form_errors(form.breeding_exp_year) }}
                                 <span>年</span>
-                                <select>
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                </select>
+                                {{ form_widget(form.breeding_exp_month) }}
+                                {{ form_errors(form.breeding_exp_month) }}
                                 <span>ヶ月</span>
                             </div>
                         </dd>
@@ -335,21 +273,22 @@
                         <dd>
                             <div class="ec-checkbox">
                             <label>
-                                <input type="checkbox" name="ParentPetCage" required="required" value="1" />
+                                {{ form_widget(form.cage_size_1) }}
                                 <span>休憩場所としてのみ利用できる小さいサイズ(分離型)</span>
                             </label>
                             <br>
                             <label>
-                                <input type="checkbox" name="ParentPetCage" required="required" value="2" />
+                                {{ form_widget(form.cage_size_2) }}
                                 <span>休憩場所と運動スペースを兼ねることのできる大きいサイズ(一体型)</span>
                             </label>
                             <br>
                             <label>
-                                <input type="checkbox" name="ParentPetCage" required="required" value="3" />
+                                {{ form_widget(form.cage_size_3) }}
                                 <span>その他</span>
                             </label>
                             <div class="ec-input">
-                                <input type="text"/>
+                                {{ form_widget(form.cage_size_other) }}
+                                {{ form_errors(form.cage_size_other) }}
                             </div>
                         </div>
                         </dd>
@@ -504,16 +443,6 @@
                         </dd>
                     </dl>
 
-                    <dl>
-                        <dt>
-                            {{ form_label(form.selling_experience, '直接の販売経験', { 'label_attr': { 'class': 'ec-label required' }}) }}
-                            <span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            {{ form_widget(form.selling_experience) }}
-                            {{ form_errors(form.selling_experience) }}
-                        </dd>
-                    </dl>
                     {#
                     <dl>
                         <dt>
