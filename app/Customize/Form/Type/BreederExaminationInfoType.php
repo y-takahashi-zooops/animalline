@@ -30,8 +30,33 @@ class BreederExaminationInfoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('pedigree_organization', RadioType::class, [
+            ->add('pedigree_organization', ChoiceType::class, [
                 'required' => true,
+                'choices' => [
+                    '団体名' => 1_2,
+                    'その他' => AnilineConf::PEDIGREE_ORGANIZATION_OTHER,
+                    'なし'  => AnilineConf::PEDIGREE_ORGANIZATION_NONE,
+                ],
+                'mapped' => false,
+                'expanded' => true,
+            ])
+            ->add('group_organization', ChoiceType::class, [
+                'required' => true,
+                'choices' => [
+                    'JKC' => AnilineConf::PEDIGREE_ORGANIZATION_JKC,
+                    'KC'  => AnilineConf::PEDIGREE_ORGANIZATION_KC,
+                ],
+                'mapped' => false,
+            ])
+            ->add('pedigree_organization_other', TextType::class, [
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                ]
             ])
             ->add('breeding_pet_count', IntegerType::class, [
                 'required' => true,
@@ -88,12 +113,21 @@ class BreederExaminationInfoType extends AbstractType
                 'choices' => range(0, 11),
                 'required' => true,
             ])
+            ->add('is_participate_show', ChoiceType::class, [
+                'choices' => [
+                    'なし' => 0,
+                    'あり' => 1,
+                ],
+                'required' => true,
+            ])
             ->add('cage_size_1', CheckboxType::class, [
-                'label' => '休憩場所としてのみ利用できる小さいサイズ(分離型)',
+                'label' => false,
                 'required' => false,
             ])->add('cage_size_2', CheckboxType::class, [
+                'label' => false,
                 'required' => false,
             ])->add('cage_size_3', CheckboxType::class, [
+                'label' => false,
                 'required' => false,
             ])
             ->add('cage_size_other', TextType::class, [
