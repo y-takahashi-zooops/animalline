@@ -83,4 +83,7 @@ final class AnilineConf
     const EXPERIENCE_TO_NINETEEN = 3;
     const EXPERIENCE_TO_FORTYNINE = 4;
     const EXPERIENCE_GREATER_FIFTY = 5;
+
+    const NONE = 0;
+    const CAN_BE = 1;
 }

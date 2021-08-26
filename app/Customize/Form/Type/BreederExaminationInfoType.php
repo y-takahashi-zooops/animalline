@@ -33,7 +33,7 @@ class BreederExaminationInfoType extends AbstractType
             ->add('pedigree_organization', ChoiceType::class, [
                 'required' => true,
                 'choices' => [
-                    '団体名' => 1_2,
+                    '団体名' => 1,
                     'なし'  => AnilineConf::PEDIGREE_ORGANIZATION_NONE,
                     'その他' => AnilineConf::PEDIGREE_ORGANIZATION_OTHER,
                 ],
@@ -116,8 +116,8 @@ class BreederExaminationInfoType extends AbstractType
             ])
             ->add('is_participate_show', ChoiceType::class, [
                 'choices' => [
-                    'なし' => 0,
-                    'あり' => 1,
+                    'なし' => AnilineConf::NONE,
+                    'あり' => AnilineConf::CAN_BE,
                 ],
                 'required' => true,
             ])
@@ -142,9 +142,40 @@ class BreederExaminationInfoType extends AbstractType
                     ]),
                 ]
             ])
+            ->add('exercise_status', ChoiceType::class, [
+                'choices' => [
+                    '毎日1回はケージから出して運動させている' => 1,
+                    '毎日ではないが、ケージから出して運動させている' => 2,
+                    '飼育スペースと運動スペースを一体型として飼育しているため、ケージから出せない' => 3,
+                    'その他' => 4,
+                ],
+                'expanded' => true,
+                'required' => true,
+            ])
+            ->add('exercise_status_other', TextType::class, [
+                'required' => true,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                ]
+            ])
+            ->add('is_now_publising', ChoiceType::class, [
+                'choices' => [
+                    'なし' => AnilineConf::NONE,
+                    'あり' => AnilineConf::CAN_BE,
+                ],
+                'expanded' => true,
+                'required' => true,
+            ])
+            ->add('publish_pet_count', IntegerType::class, [
+                'required' => true,
+            ])
             ->add('breeding_experience', ChoiceType::class, [
-                'choices' =>
-                [
+                'choices' => [
                     'なし' => AnilineConf::EXPERIENCE_NONE,
                     '1～4回' => AnilineConf::EXPERIENCE_TO_FOUR,
                     '5～9回' => AnilineConf::EXPERIENCE_TO_NINE,
@@ -159,8 +190,7 @@ class BreederExaminationInfoType extends AbstractType
                 'required' => true,
             ])
             ->add('selling_experience', ChoiceType::class, [
-                'choices' =>
-                [
+                'choices' => [
                     'なし' => AnilineConf::EXPERIENCE_NONE,
                     '1～4回' => AnilineConf::EXPERIENCE_TO_FOUR,
                     '5～9回' => AnilineConf::EXPERIENCE_TO_NINE,
