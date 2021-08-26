@@ -476,27 +476,27 @@
                         </dt>
                         <dd>
                             <div id="{{ form.selling_experience.vars.id }}" class="ec-radio">
-                                <input type="radio" id="{{ form.selling_experience.vars.id ~ '0' }}" name="{{ form.selling_experience.vars.full_name }}" value="0" />
+                                <input {{ form.selling_experience.vars.value == '0' ? 'checked' : '' }} type="radio" id="{{ form.selling_experience.vars.id ~ '0' }}" name="{{ form.selling_experience.vars.full_name }}" value="0" />
                                 <label for="{{ form.selling_experience.vars.id ~ '0' }}">
                                     <span>なし</span>
                                 </label>
-                                <input type="radio" id="{{ form.selling_experience.vars.id ~ '1' }}" name="{{ form.selling_experience.vars.full_name }}" value="1" />
+                                <input {{ form.selling_experience.vars.value == '1' ? 'checked' : '' }} type="radio" id="{{ form.selling_experience.vars.id ~ '1' }}" name="{{ form.selling_experience.vars.full_name }}" value="1" />
                                 <label for="{{ form.selling_experience.vars.id ~ '1' }}">
                                     <span>1～4回</span>
                                 </label>
-                                <input type="radio"  id="{{ form.selling_experience.vars.id ~ '2' }}" name="{{ form.selling_experience.vars.full_name }}" value="2" />
+                                <input {{ form.selling_experience.vars.value == '2' ? 'checked' : '' }} type="radio"  id="{{ form.selling_experience.vars.id ~ '2' }}" name="{{ form.selling_experience.vars.full_name }}" value="2" />
                                 <label for="{{ form.selling_experience.vars.id ~ '2' }}">
                                     <span>5～9回</span>
                                 </label>
-                                <input type="radio"  id="{{ form.selling_experience.vars.id ~ '3' }}" name="{{ form.selling_experience.vars.full_name }}" value="3" />
+                                <input {{ form.selling_experience.vars.value == '3' ? 'checked' : '' }} type="radio"  id="{{ form.selling_experience.vars.id ~ '3' }}" name="{{ form.selling_experience.vars.full_name }}" value="3" />
                                 <label for="{{ form.selling_experience.vars.id ~ '3' }}">
                                     <span>10～19回</span>
                                 </label>
-                                <input type="radio"  id="{{ form.selling_experience.vars.id ~ '4' }}" name="{{ form.selling_experience.vars.full_name }}" value="4" />
+                                <input {{ form.selling_experience.vars.value == '4' ? 'checked' : '' }} type="radio"  id="{{ form.selling_experience.vars.id ~ '4' }}" name="{{ form.selling_experience.vars.full_name }}" value="4" />
                                 <label for="{{ form.selling_experience.vars.id ~ '4' }}">
                                     <span>20～49回</span>
                                 </label>
-                                <input type="radio"  id="{{ form.selling_experience.vars.id ~ '5' }}" name="{{ form.selling_experience.vars.full_name }}" value="5" />
+                                <input {{ form.selling_experience.vars.value == '5' ? 'checked' : '' }} type="radio"  id="{{ form.selling_experience.vars.id ~ '5' }}" name="{{ form.selling_experience.vars.full_name }}" value="5" />
                                 <label for="{{ form.selling_experience.vars.id ~ '5' }}">
                                     <span>50回以上</span>
                                 </label>
