@@ -350,6 +350,7 @@ class AdoptionController extends AbstractController
 
         $childMessages = $this->conservationContactsRepository
             ->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
+
         $reasons = $this->sendoffReasonRepository
             ->findBy(['is_adoption_visible' => AnilineConf::ADOPTION_VISIBLE_SHOW]);
 

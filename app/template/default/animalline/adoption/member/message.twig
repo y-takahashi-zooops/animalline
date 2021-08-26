@@ -2,21 +2,154 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-<<<<<<< HEAD
     <div class="main">
         <div class="row">
             <div class="main-container col-12">
-                {# <div class="sub-title"> #}
                 <h1>取引履歴 - {{ rootMessage.Conservation.getConservationHouseByPetType(rootMessage.pet.petKind).conservationHouseName ?? '' }}</h1>
-                {# </div> #}
-                <div class="m-2 p-2"></div>
-                {# <div class="sub-title d-flex justify-content-between align-items-end"> #}
-                <div class="d-flex justify-content-between align-items-end">
-                    <h2>{{ rootMessage.contactTitle }}</h2>
+                <div class="m-2 p-2"></div>     
+            
+                    {# ブリーダー情報 #}
+                    <div class="row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10" style="margin-left: 20px;">
+                                <h2>ペット情報</h2>
+                                <div class="m-1 p-1"></div>
+                                <div class="col-12 py-3 adoption-border">
+                                    <div class="row">
+                                        <div class="breeder-img col-sm-4">
+                                            <img alt="..." src="{{ asset('assets/img/thumbnail.png') }}" class="w-100 mb-4 mb-sm-0">
+                                        </div>
+                                        <div class="breeder-info col-sm-8">
+                                            <h2 class="font-weight-500 color-gray-500">豆柴</h2>
+                                            <div class="m-1 p-1"></div>
+                                            <div class="d-flex font-weight-500">
+                                                <h3>性別：</h3>
+                                                <h3>男の子</h3>
+                                            </div>
+                                            <div class="m-1 p-1"></div>
+                                            <div class="d-flex">
+                                                <h3>見学地域：</h3>
+                                                <h3>東京都渋谷区渋谷</h3>
+                                            </div>
+                                            <div class="m-1 p-1"></div>
+                                            <div class="d-flex">
+                                                <h3>色：</h3>
+                                                <h3>茶色</h3>
+                                            </div>
+                                            <div class="m-1 p-1"></div>
+                                            <div class="d-flex">
+                                                <h3>成犬時予想：</h3>
+                                                <h3>体重：10～12kg 体長：30cm</h3>
+                                            </div>
+                                            <div class="m-1 p-1"></div>
+                                            <div class="d-flex">
+                                                <h3>PR：</h3>
+                                                <h3>元気な子です</h3>
+                                            </div>
+                                            <div class="m-1 p-1"></div>
+                                            <div class="d-flex">
+                                                <h3>誕生日：</h3>
+                                                <h3>2012年10月10日</h3>
+                                            </div>
+                                            <div class="m-2 p-2"></div>
+                                            <a href="breederpage.html">
+                                                <h3 class="color-adoption">ペット詳細ページへ</h3>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p>{{ rootMessage.contactDescription }}</p>
 
-                {% for childMessage in childMessages %}
+                <div class="m-2 p-2"></div>
+
+                {# ブリーダー情報 #}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10" style="margin-left: 20px;">
+                                <h2>ブリーダー情報</h2>
+                                <div class="m-1 p-1"></div>
+                                <div class="col-12 py-3 adoption-border">
+                                    <div class="row">
+                                        <div class="breeder-img col-sm-4">
+                                            <img alt="..." src="{{ asset('assets/img/breeder-thumbnail.png') }}" class="w-100 mb-4 mb-sm-0">
+                                        </div>
+                                        <div class="breeder-info col-sm-8">
+                                            <h2 class="font-weight-500 color-gray-500">田中 太郎ブリーダー</h2>
+                                            <div class="m-1 p-1"></div>
+                                            <div class="d-flex">
+                                                <h3>総合評価</h3>
+                                                <div class="m-1 p-1"></div>
+                                                <img alt="..." src="{{ asset('assets/img/star-icon.svg') }}">
+                                                <div class="m-1 p-1"></div>
+                                                <h3>5.00</h3>
+                                            </div>
+                                            <div class="m-1 p-1"></div>
+                                            <div class="d-flex">
+                                                <h3>動物取扱業登録番号：</h3>
+                                                <h3>動東第000号</h3>
+                                                <div class="m-1 p-1"></div>
+                                                <h3>登録：</h3>
+                                                <h3>2021/00/00</h3>
+                                            </div>
+                                            <div class="m-1 p-1"></div>
+                                            <div class="d-flex">
+                                                <h3>有効期限：</h3>
+                                                <h3>2021/00/00</h3>
+                                                <div class="m-1 p-1"></div>
+                                                <h3>動物取扱責任者：</h3>
+                                                <h3>田中 太郎</h3>
+                                            </div>
+                                            <div class="m-1 p-1"></div>
+                                            <div class="d-flex">
+                                                <h3>犬舎所在地：</h3>
+                                                <h3>愛知県豊橋市</h3>
+                                            </div>
+                                            <div class="m-1 p-1"></div>
+                                            <div class="d-flex">
+                                                <h3>犬舎見学：</h3>
+                                                <h3>見学OK</h3>
+                                            </div>
+                                            <div class="m-2 p-2"></div>
+                                            <a href="breederpage.html">
+                                                <h3 class="color-adoption">ブリーダー詳細ページへ</h3>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-2 p-2"></div>
+
+                {# 取引メッセージ #}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10" style="margin-left: 20px;">
+                                <h2>取引メッセージ</h2>
+                                <div class="m-1 p-1"></div>
+                                <div class="col-12 py-3 adoption-border">
+                                    <div class="ml-3">
+                                        <h2 class="mb-2">{{ rootMessage.contactTitle }}</h2>
+                                        <p>{{ rootMessage.contactDescription|nl2br }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# {% for childMessage in childMessages %}
                     <div class="m-1 p-1"></div>
                     <div class="row">
                         <div class="{{ childMessage.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') ? 'col-6' : 'col-7 px-5' }}">
@@ -24,32 +157,73 @@
                                 <div class="ml-5">
                                     {{ childMessage.contactDescription }}
                                 </div>
-                                <h4 class="mr-sm-5 ml-5">送信日時：{{ childMessage.sendDate.format('Y年m月d日　H:i') }}</h4>
+                                <h3 class="mr-sm-5 ml-5">送信日時：{{ childMessage.sendDate.format('Y年m月d日　H:i') }}</h3>
                             </div>
                         </div>
                     </div>
+                {% endfor %} #}
+                
+                {# 返信メッセージ #}
+                {% for childMessage in childMessages %}
+                    <div class="m-1 p-1"></div>
+                    {% if childMessage.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') %}
+                        <div class="row">
+                            <div class="col-1 user-img">
+                                <img src="{{ asset('assets/img/testUser.png') }}">
+                            </div>
+                            <div class="col-10">
+                                <h3 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d　H:i') }}</h3>
+                                <div class="col-12 balloon-left py-3 adoption-border">
+                                    <div class="ml-3">
+                                        {{ childMessage.contactDescription|nl2br }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+                        </div>
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-10">
+                                <h3 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d　H:i') }}</h3>
+                                <div class="col-8 balloon-right py-3 adoption-border">
+                                    <div class="ml-3">
+                                        {{ childMessage.contactDescription|nl2br }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1 adoption-img">
+                                <img src="{{ asset('assets/img/breeder-thumbnail.png') }}" style="width: 40px; height:40px; border-radius: 50%;">
+                            </div>
+                        </div>
+                    {% endif %}
                 {% endfor %}
 
                 <div class="m-1 p-1"></div>
+
+                {# 返信欄・ボタン #}
                 <div class="row">
-                    <div class="col-6">
-                        <div class="d-sm-5 justify-content-between py-3 border adoption-border rounded">
-                            <div class="px-4">
-                                返信内容
-                            </div>
-                            <div class="px-4">
-                                <form action="{{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}"
-                                      method="post">
-                                    <input aria-label="reason" name="end_negotiation" type="checkbox"/>交渉を終了する
-                                    <select aria-label="reason" name="reason">
-                                        {% for reason in reasons %}
-                                            <option value="{{ reason.id }}">{{ reason.reason }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
-                                              placeholder="返信メッセージ"></textarea>
-                                    <button type="submit" class="ec-blockBtn--cancel">送信</button>
-                                </form>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10" style="margin-left: 20px;">
+                                <div class="py-3 adoption-border">
+                                    <div class="px-4">返信内容</div>
+                                    <div class="px-4">
+                                        <form action="{{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}"
+                                            method="post">
+                                            <input aria-label="reason" name="end_negotiation" type="checkbox"/>交渉を終了する
+                                            <select aria-label="reason" name="reason">
+                                                {% for reason in reasons %}
+                                                    <option value="{{ reason.id }}">{{ reason.reason }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
+                                                    placeholder="返信メッセージ"></textarea>
+                                            <button type="submit" class="ec-blockBtn--cancel">送信</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

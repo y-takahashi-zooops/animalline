@@ -5,11 +5,9 @@
     <div class="main">
         <div class="row">
             <div class="main-container col-12">
-                <div class="sub-title">
-                    <h1>取引履歴 - {{ rootMessage.Breeder.getBreederHouseByPetType(rootMessage.pet.petKind).breederHouseName ?? '' }}</h1>
-                </div>
+                <h1>取引履歴 - {{ rootMessage.Breeder.getBreederHouseByPetType(rootMessage.pet.petKind).breederHouseName ?? '' }}</h1>
                 <div class="m-2 p-2"></div>
-                <div class="sub-title d-flex justify-content-between align-items-end">
+                <div class="d-flex justify-content-between align-items-end">
                     <h2>{{ rootMessage.contactTitle }}</h2>
                 </div>
                 <p>{{ rootMessage.contactDescription }}</p>

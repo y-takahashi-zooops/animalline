@@ -40,7 +40,7 @@
                             </dt>
                             <dd>
                                 <div class="ec-input{{ has_errors(form.contact_description) ? ' error' }}">
-                                    {{ form_widget(form.contact_description) }}
+                                    {{ form_widget(form.contact_description|nl2br ) }}
                                     {{ form_errors(form.contact_description) }}
                                 </div>
                             </dd>
