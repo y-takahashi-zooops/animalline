@@ -7,12 +7,10 @@ use Customize\Entity\Breeders;
 use Eccube\Common\EccubeConfig;
 use Customize\Form\Type\AddressType;
 use Customize\Form\Type\LicenseAddressType;
-use Eccube\Form\Type\PhoneNumberType;
-use Eccube\Form\Type\PostalType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -238,6 +236,10 @@ class BreedersType extends AbstractType
                     ],
                 'required' => false,
                 'placeholder' => 'common.select'
+            ])
+            ->add('thumbnail_path', FileType::class, [
+                'required' => false,
+                'mapped' => false,
             ]);
     }
 
