@@ -142,17 +142,17 @@ class BreederExaminationInfo
     /**
      * @ORM\Column(name="cage_size_1", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $cage_size_1;
+    private $cage_size_1 = 0;
 
     /**
      * @ORM\Column(name="cage_size_2", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $cage_size_2;
+    private $cage_size_2 = 0;
 
     /**
      * @ORM\Column(name="cage_size_3", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $cage_size_3;
+    private $cage_size_3 = 0;
 
     /**
      * @ORM\Column(name="cage_size_other", type="string", length=255, nullable=true)
