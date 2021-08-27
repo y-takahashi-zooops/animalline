@@ -37,7 +37,6 @@ class BreederExaminationInfoType extends AbstractType
                     'なし'  => AnilineConf::PEDIGREE_ORGANIZATION_NONE,
                     'その他' => AnilineConf::PEDIGREE_ORGANIZATION_OTHER,
                 ],
-                'mapped' => false,
                 'expanded' => true,
             ])
             ->add('group_organization', ChoiceType::class, [
@@ -48,7 +47,6 @@ class BreederExaminationInfoType extends AbstractType
                     'JKC' => AnilineConf::PEDIGREE_ORGANIZATION_JKC,
                     'KC'  => AnilineConf::PEDIGREE_ORGANIZATION_KC,
                 ],
-                'mapped' => false,
             ])
             ->add('pedigree_organization_other', TextType::class, [
                 'disabled' => true,
@@ -190,7 +188,7 @@ class BreederExaminationInfoType extends AbstractType
                     '5～9回' => AnilineConf::EXPERIENCE_TO_NINE,
                     '10～19回' => AnilineConf::EXPERIENCE_TO_NINETEEN,
                     '20～49回' => AnilineConf::EXPERIENCE_TO_FORTYNINE,
-                    '50回以上' => AnilineConf::EXPERIENCE_NONE,
+                    '50回以上' => AnilineConf::EXPERIENCE_GREATER_FIFTY,
                 ],
                 'attr' => [
                     'class' => 'form-check-inline ec-radio'
@@ -205,7 +203,7 @@ class BreederExaminationInfoType extends AbstractType
                     '5～9回' => AnilineConf::EXPERIENCE_TO_NINE,
                     '10～19回' => AnilineConf::EXPERIENCE_TO_NINETEEN,
                     '20～49回' => AnilineConf::EXPERIENCE_TO_FORTYNINE,
-                    '50回以上' => AnilineConf::EXPERIENCE_NONE,
+                    '50回以上' => AnilineConf::EXPERIENCE_GREATER_FIFTY,
                 ],
                 'attr' => [
                     'class' => 'form-check-inline ec-radio'
