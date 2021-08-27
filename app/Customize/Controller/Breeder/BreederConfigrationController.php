@@ -4,11 +4,14 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederContacts;
+use Customize\Entity\BreederExaminationInfo;
 use Customize\Entity\BreederPetImage;
 use Customize\Entity\BreederPets;
+use Customize\Form\Type\BreederExaminationInfoType;
 use Customize\Form\Type\BreederPetsType;
 use Customize\Form\Type\BreedersType;
 use Customize\Repository\BreederContactsRepository;
+use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\BreedersRepository;
@@ -41,20 +44,27 @@ class BreederConfigrationController extends AbstractController
     protected $breederPetImageRepository;
 
     /**
+     * @var BreederExaminationInfoRepository
+     */
+    protected $breederExaminationInfoRepository;
+
+    /**
      * BreederConfigrationController constructor.
      * @param BreederContactsRepository $breederContactsRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
+     * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
-        BreederPetsRepository     $breederPetsRepository,
-        BreederPetImageRepository $breederPetImageRepository
-    )
-    {
+        BreederPetsRepository $breederPetsRepository,
+        BreederPetImageRepository $breederPetImageRepository,
+        BreederExaminationInfoRepository $breederExaminationInfoRepository
+    ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
+        $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
     }
 
     /**
@@ -412,11 +422,56 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/configration/examinationinfo/{pet_type}", name="breeder_examinationinfo")
+     * @Route("/breeder/configration/examinationinfo/{pet_type}", name="breeder_examinationinfo", methods={"GET","POST"})
      * @Template("/animalline/breeder/configration/examinationinfo.twig")
      */
     public function examinationinfo(Request $request)
     {
-        return [];
+        $petType = $request->get('pet_type');
+        $breeder = $this->getUser();
+        $breederExaminationInfo = $this->breederExaminationInfoRepository->findOneBy([
+            'Breeder' => $breeder,
+            'pet_type' => $petType
+        ]);
+        $isEdit = false;
+        if ($breederExaminationInfo) {
+            $isEdit = true;
+            if (in_array($breederExaminationInfo->getPedigreeOrganization(),
+                [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC])) {
+                $breederExaminationInfo->setGroupOrganization($breederExaminationInfo->getPedigreeOrganization());
+                $breederExaminationInfo->setPedigreeOrganization(AnilineConf::PEDIGREE_ORGANIZATION_JKC);
+            }
+        } else {
+            $breederExaminationInfo = new BreederExaminationInfo();
+        }
+
+        $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $breederExaminationInfo->setPetType($petType)
+                ->setBreeder($breeder);
+            $formRequest = $request->request->get('breeder_examination_info');
+            if ($formRequest['pedigree_organization'] == AnilineConf::PEDIGREE_ORGANIZATION_JKC) {
+                $breederExaminationInfo->setPedigreeOrganization($formRequest['group_organization']);
+            } else {
+                $breederExaminationInfo->setPedigreeOrganization($formRequest['pedigree_organization']);
+            }
+
+            if ($formRequest['pedigree_organization'] !== AnilineConf::PEDIGREE_ORGANIZATION_OTHER) {
+                $breederExaminationInfo->setPedigreeOrganizationOther(null);
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($breederExaminationInfo);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('breeder_configration');
+        }
+
+        return $this->render('animalline/breeder/configration/examinationinfo.twig', [
+            'form' => $form->createView(),
+            'isEdit' => $isEdit
+        ]);
     }
 }

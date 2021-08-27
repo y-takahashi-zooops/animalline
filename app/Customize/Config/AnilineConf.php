@@ -78,4 +78,19 @@ final class AnilineConf
     const ANILINE_LICENSE_TRAINING = 4;
     const ANILINE_LICENSE_EXHIBITION = 5;
     const ANILINE_LICENSE_OTHER = 6;
+
+    const PEDIGREE_ORGANIZATION_NONE = 0;
+    const PEDIGREE_ORGANIZATION_JKC = 1;
+    const PEDIGREE_ORGANIZATION_KC = 2;
+    const PEDIGREE_ORGANIZATION_OTHER = 3;
+
+    const EXPERIENCE_NONE = 0;
+    const EXPERIENCE_TO_FOUR = 1;
+    const EXPERIENCE_TO_NINE = 2;
+    const EXPERIENCE_TO_NINETEEN = 3;
+    const EXPERIENCE_TO_FORTYNINE = 4;
+    const EXPERIENCE_GREATER_FIFTY = 5;
+
+    const NONE = 0;
+    const CAN_BE = 1;
 }
