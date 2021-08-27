@@ -41,7 +41,6 @@ class BreederExaminationInfoType extends AbstractType
             ])
             ->add('group_organization', ChoiceType::class, [
                 'required' => false,
-                'disabled' => true,
                 'choices' => [
                     '----' => '',
                     'JKC' => AnilineConf::PEDIGREE_ORGANIZATION_JKC,
@@ -49,7 +48,6 @@ class BreederExaminationInfoType extends AbstractType
                 ],
             ])
             ->add('pedigree_organization_other', TextType::class, [
-                'disabled' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -137,7 +135,6 @@ class BreederExaminationInfoType extends AbstractType
             ])
             ->add('cage_size_other', TextType::class, [
                 'required' => false,
-                'disabled' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -159,7 +156,6 @@ class BreederExaminationInfoType extends AbstractType
             ])
             ->add('exercise_status_other', TextType::class, [
                 'required' => false,
-                'disabled' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -179,7 +175,6 @@ class BreederExaminationInfoType extends AbstractType
             ])
             ->add('publish_pet_count', IntegerType::class, [
                 'required' => false,
-                'disabled' => true
             ])
             ->add('breeding_experience', ChoiceType::class, [
                 'choices' => [
