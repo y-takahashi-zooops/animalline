@@ -348,6 +348,9 @@ class AdoptionController extends AbstractController
             $entityManager->flush();
         }
 
+        $petId = $rootMessage->getPet()->getId();
+        $pet = $this->conservationPetsRepository->find($petId);
+
         $childMessages = $this->conservationContactsRepository
             ->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
 
@@ -357,7 +360,8 @@ class AdoptionController extends AbstractController
         return $this->render('animalline/adoption/member/message.twig', [
             'rootMessage' => $rootMessage,
             'childMessages' => $childMessages,
-            'reasons' => $reasons
+            'reasons' => $reasons,
+            'pet' => $pet,
         ]);
     }
 

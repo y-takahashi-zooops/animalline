@@ -607,7 +607,7 @@ th, td {
 .balloon-left {
     position: relative;
     display: inline-block;
-    margin: 0.5em 0 1.5em 15px;
+    margin: 0.5em 0 1.5em;
     padding: 7px 10px;
     min-width: 120px;
     max-width: 100%;
@@ -647,7 +647,7 @@ th, td {
   .balloon-right {
     position: relative;
     display: inline-block;
-    margin: 0.5em 35px 1.5em 20px;
+    margin: 0.5em 0 1.5em;
     padding: 7px 10px;
     min-width: 120px;
     max-width: 100%;
@@ -689,14 +689,15 @@ th, td {
     display: flex; 
     justify-content: flex-end; 
     align-items: center; 
-    margin-left:5px
+    padding-right: 0;
 }
 
 /* 保護団体イメージ */
 .adoption-img {
     display: flex;
-    justify-content: center; 
     align-items: center;
+    padding-left: 0;
+
 }
 
 /* 文章 */
