@@ -7,22 +7,17 @@ use Customize\Entity\Breeders;
 use Eccube\Common\EccubeConfig;
 use Customize\Form\Type\AddressType;
 use Customize\Form\Type\LicenseAddressType;
-use Customize\Form\Type\KanaType;
-use Customize\Form\Type\NameType;
 use Eccube\Form\Type\PhoneNumberType;
 use Eccube\Form\Type\PostalType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
-use Eccube\Form\Validator\Email;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class BreedersType extends AbstractType
 {
@@ -39,18 +34,7 @@ class BreedersType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('breeder_name', NameType::class, [
-                'required' => true,/*
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                ]*/
-            ])
-            ->add('breeder_kana', KanaType::class, []/*, [
+            ->add('breeder_name', TextType::class, [
                 'required' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
@@ -59,31 +43,82 @@ class BreedersType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[^\s ]+$/u',
+                        'message' => 'form_error.not_contain_spaces',
+                    ]),
+                    new Assert\NotBlank()
                 ]
-            ]*/)
-            ->add('breeder_zip', PostalType::class)
+            ])
+            ->add('breeder_kana', TextType::class, [
+                'required' => true,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[ァ-ヶｦ-ﾟー]+$/u',
+                        'message' => 'form_error.kana_only',
+                    ]),
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('breeder_zip', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ]),
+                    new Assert\Length([
+                        'max' => 7,
+                    ]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'class' => 'p-postal-code',
+                    'placeholder' => 'common.postal_code_sample',
+                ],
+                'trim' => true,
+            ])
             ->add('addr', AddressType::class)
-            ->add('breeder_tel', PhoneNumberType::class, [
+            ->add('breeder_tel', TextType::class, [
                 'required' => true,
-                'attr' => [
-                    'maxlength' => 10,
-                ],
                 'constraints' => [
                     new Assert\Length([
                         'max' => 10,
                     ]),
-                ]
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'placeholder' => 'common.phone_number_sample',
+                    'maxlength' => 10,
+                ],
+                'trim' => true,
             ])
-            ->add('breeder_fax', PhoneNumberType::class, [
+            ->add('breeder_fax', TextType::class, [
                 'required' => false,
-                'attr' => [
-                    'maxlength' => 10,
-                ],
                 'constraints' => [
                     new Assert\Length([
                         'max' => 10,
                     ]),
-                ]
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ])
+                ],
+                'attr' => [
+                    'placeholder' => 'common.phone_number_sample',
+                    'maxlength' => 10,
+                ],
+                'trim' => true,
             ])
             ->add('pr_text', TextareaType::class, [
                 'required' => false,
@@ -100,6 +135,11 @@ class BreedersType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[^\s ]+$/u',
+                        'message' => 'form_error.not_contain_spaces',
+                    ]),
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('license_no', TextType::class, [
@@ -111,9 +151,27 @@ class BreedersType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
+                    new Assert\NotBlank()
                 ]
             ])
-            ->add('license_zip', PostalType::class)
+            ->add('license_zip', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ]),
+                    new Assert\Length([
+                        'max' => 7,
+                    ]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'class' => 'p-postal-code',
+                    'placeholder' => 'common.postal_code_sample',
+                ],
+                'trim' => true,
+            ])
             ->add('license_addr', LicenseAddressType::class)
             ->add('license_house_name', TextType::class, [
                 'required' => true,
@@ -124,6 +182,11 @@ class BreedersType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[^\s ]+$/u',
+                        'message' => 'form_error.not_contain_spaces',
+                    ]),
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('license_manager_name', TextType::class, [
@@ -135,33 +198,32 @@ class BreedersType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[^\s ]+$/u',
+                        'message' => 'form_error.not_contain_spaces',
+                    ]),
+                    new Assert\NotBlank()
                 ]
             ])
-            ->add('license_regist_date', BirthdayType::class, [
+            ->add('license_regist_date', DateType::class, [
                 'required' => false,
                 'input' => 'datetime',
-                'years' => range(date('Y'), date('Y') - $this->eccubeConfig['eccube_birth_max']),
+                'years' => range(date('Y'), 1990),
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
-                'constraints' => [
-                    new Assert\LessThanOrEqual([
-                        'value' => date('Y-m-d', strtotime('-1 day')),
-                        'message' => 'form_error.select_is_future_or_now_date',
-                    ]),
-                ],
             ])
-            ->add('license_expire_date', BirthdayType::class, [
+            ->add('license_expire_date', DateType::class, [
                 'required' => false,
                 'input' => 'datetime',
-                'years' => range(date('Y'), date('Y') - $this->eccubeConfig['eccube_birth_max']),
+                'years' => range(date('Y'), 1990),
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
                 'constraints' => [
-                    new Assert\LessThanOrEqual([
-                        'value' => date('Y-m-d', strtotime('-1 day')),
-                        'message' => 'form_error.select_is_future_or_now_date',
+                    new Assert\GreaterThan([
+                        'value' => date('Y-m-d', strtotime('license_regist_date')),
+                        'message' => 'Vui long nhap ngay nho hon ngay hien tai',
                     ]),
                 ],
             ])

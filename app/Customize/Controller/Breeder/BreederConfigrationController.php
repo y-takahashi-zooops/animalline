@@ -375,30 +375,23 @@ class BreederConfigrationController extends AbstractController
      * @Route("/breeder/configration/baseinfo", name="breeder_baseinfo")
      * @Template("/animalline/breeder/configration/baseinfo.twig")
      */
-    public function baseinfo(Request $request)
+    public function baseinfo(Request $request, BreedersRepository $breedersRepository)
     {
-        $builder = $this->formFactory->createBuilder(BreedersType::class);
+        $breederData = $breedersRepository->find($this->getUser());
+
+        $builder = $this->formFactory->createBuilder(BreedersType::class, $breederData);
 
         $form = $builder->getForm();
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            switch ($request->get('mode')) {
-                case 'confirm':
-                    return $this->render(
-                        '/animalline/breeder/configration/baseinfo_confirm.twig',
-                        [
-                            'form' => $form->createView(),
-                        ]
-                    );
-                case 'complete':
-                    return 0;
-            }
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($breederData);
+            $entityManager->flush();
+            return $this->redirectToRoute('breeder_configration');
         }
-//        dump($form);die;
         return [
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ];
     }
 

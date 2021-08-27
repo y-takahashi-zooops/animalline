@@ -72,11 +72,6 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $breeder_address;
 
     /**
-     * @ORM\Column(name="breeder_building", type="string", length=255, nullable=true)
-     */
-    private $breeder_building;
-
-    /**
      * @ORM\Column(name="license_name", type="string", length=255, nullable=true)
      */
     private $license_name;
@@ -334,18 +329,6 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     public function setBreederAddress(?string $breeder_address): self
     {
         $this->breeder_address = $breeder_address;
-
-        return $this;
-    }
-
-    public function getBreederBuilding(): ?string
-    {
-        return $this->breeder_building;
-    }
-
-    public function setBreederBuilding(?string $breeder_building): self
-    {
-        $this->breeder_building = $breeder_building;
 
         return $this;
     }
