@@ -65,7 +65,7 @@ class BreederHouse
      *   @ORM\JoinColumn(name="breeder_house_pref_id", referencedColumnName="id", nullable=true)
      * })
      */
-    private $BreederHousePref;
+    private $BreederHousePrefId;
 
     /**
      * @ORM\Column(name="breeder_house_pref", type="string", length=11, nullable=true)
@@ -81,11 +81,6 @@ class BreederHouse
      * @ORM\Column(name="breeder_house_address", type="string", length=255, nullable=true)
      */
     private $breeder_house_address;
-
-    /**
-     * @ORM\Column(name="breeder_house_building", type="string", length=255, nullable=true)
-     */
-    private $breeder_house_building;
 
     /**
      * @ORM\Column(name="breeder_house_front_name", type="string", length=255, nullable=true)
@@ -210,7 +205,7 @@ class BreederHouse
      */
     public function setBreederHousePrefId(\Eccube\Entity\Master\Pref $pref = null): BreederHouse
     {
-        $this->BreederHousePref = $pref;
+        $this->BreederHousePrefId = $pref;
 
         return $this;
     }
@@ -222,7 +217,7 @@ class BreederHouse
      */
     public function getBreederHousePrefId(): ?\Eccube\Entity\Master\Pref
     {
-        return $this->BreederHousePref;
+        return $this->BreederHousePrefId;
     }
 
     public function getBreederHousePref(): ?string
@@ -257,18 +252,6 @@ class BreederHouse
     public function setBreederHouseAddress(?string $breeder_house_address): self
     {
         $this->breeder_house_address = $breeder_house_address;
-
-        return $this;
-    }
-
-    public function getBreederHouseBuilding(): ?string
-    {
-        return $this->breeder_house_building;
-    }
-
-    public function setBreederHouseBuilding(?string $breeder_house_building): self
-    {
-        $this->breeder_house_building = $breeder_house_building;
 
         return $this;
     }
