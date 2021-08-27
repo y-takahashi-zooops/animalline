@@ -208,6 +208,11 @@ class BreederExaminationInfo
      */
     private $update_date;
 
+    /**
+     * @var int;
+     */
+    private $group_organization = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -647,5 +652,24 @@ class BreederExaminationInfo
         $this->update_date = $updateDate;
 
         return $this;
+    }
+
+    /**
+     * Set group_organization.
+     *
+     * @param int $groupOrganization
+     *
+     * @return int
+     */
+    public function setGroupOrganization($groupOrganization)
+    {
+        $this->group_organization = $groupOrganization;
+
+        return $this;
+    }
+
+    public function getGroupOrganization()
+    {
+        return $this->group_organization;
     }
 }

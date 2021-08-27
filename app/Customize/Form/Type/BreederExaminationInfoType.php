@@ -37,7 +37,6 @@ class BreederExaminationInfoType extends AbstractType
                     'なし'  => AnilineConf::PEDIGREE_ORGANIZATION_NONE,
                     'その他' => AnilineConf::PEDIGREE_ORGANIZATION_OTHER,
                 ],
-                'mapped' => false,
                 'expanded' => true,
             ])
             ->add('group_organization', ChoiceType::class, [
@@ -48,7 +47,6 @@ class BreederExaminationInfoType extends AbstractType
                     'JKC' => AnilineConf::PEDIGREE_ORGANIZATION_JKC,
                     'KC'  => AnilineConf::PEDIGREE_ORGANIZATION_KC,
                 ],
-                'mapped' => false,
             ])
             ->add('pedigree_organization_other', TextType::class, [
                 'disabled' => true,

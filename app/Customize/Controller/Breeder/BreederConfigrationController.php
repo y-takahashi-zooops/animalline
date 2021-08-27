@@ -410,8 +410,18 @@ class BreederConfigrationController extends AbstractController
             'Breeder' => $breeder,
             'pet_type' => $petType
         ]);
-        $isEdit = !!$breederExaminationInfo;
-        $breederExaminationInfo = $breederExaminationInfo ?? new BreederExaminationInfo();
+        $isEdit = false;
+        if ($breederExaminationInfo) {
+            $isEdit = true;
+            if (in_array($breederExaminationInfo->getPedigreeOrganization(),
+                [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC])) {
+                $breederExaminationInfo->setGroupOrganization($breederExaminationInfo->getPedigreeOrganization());
+                $breederExaminationInfo->setPedigreeOrganization(AnilineConf::PEDIGREE_ORGANIZATION_JKC);
+            }
+        } else {
+            $breederExaminationInfo = new BreederExaminationInfo();
+        }
+
         $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo);
         $form->handleRequest($request);
 
@@ -419,10 +429,14 @@ class BreederConfigrationController extends AbstractController
             $breederExaminationInfo->setPetType($petType)
                 ->setBreeder($breeder);
             $formRequest = $request->request->get('breeder_examination_info');
-            if ($formRequest['pedigree_organization'] == 1) {
+            if ($formRequest['pedigree_organization'] == AnilineConf::PEDIGREE_ORGANIZATION_JKC) {
                 $breederExaminationInfo->setPedigreeOrganization($formRequest['group_organization']);
             } else {
                 $breederExaminationInfo->setPedigreeOrganization($formRequest['pedigree_organization']);
+            }
+
+            if ($formRequest['pedigree_organization'] !== AnilineConf::PEDIGREE_ORGANIZATION_OTHER) {
+                $breederExaminationInfo->setPedigreeOrganizationOther(null);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
