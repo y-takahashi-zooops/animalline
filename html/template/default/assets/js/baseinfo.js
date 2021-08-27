@@ -1,7 +1,15 @@
-var bs_modal = $('#modal');
+$("form[name=update-baseinfo-form]").submit(function (e) {
+    e.preventDefault();
+    $('#modal').modal('show');
+});
+
+$("#confirm-yes").click(function (e) {
+    document.getElementsByName('update-baseinfo-form')[0].submit();
+});
+
+var bs_modal = $('#modal-crop');
 var image = document.getElementById('image');
 var cropper, reader, file, size;
-
 
 $("body").on("change", "#breeders_thumbnail_path", function (e) {
     e.preventDefault();
