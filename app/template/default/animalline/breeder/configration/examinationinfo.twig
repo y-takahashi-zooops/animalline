@@ -1,6 +1,8 @@
 {% set site_type = 'breeder' %}
 {% extends 'ani_frame.twig' %}
 
+ {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
 {% block main %}
     <div class="ec-pageHeader">
     <h1>{{ '犬舎・猫舎審査項目登録'|trans }}</h1>
@@ -221,13 +223,17 @@
                             <label class="ec-label required">ブリーディング歴</label><span class="ec-required">必須</span>
                         </dt>
                         <dd>
-                            <div class="ec-select">
-                                {{ form_widget(form.breeding_exp_year) }}
-                                {{ form_errors(form.breeding_exp_year) }}
-                                <span>年</span>
-                                {{ form_widget(form.breeding_exp_month) }}
-                                {{ form_errors(form.breeding_exp_month) }}
-                                <span>ヶ月</span>
+                            <div class="row offset-md-0">
+                                <div class="ec-select">
+                                    {{ form_widget(form.breeding_exp_year) }}
+                                    {{ form_errors(form.breeding_exp_year) }}
+                                </div>
+                                <span class="ml-1">年</span>
+                                <div class="ec-select ml-1">
+                                    {{ form_widget(form.breeding_exp_month) }}
+                                    {{ form_errors(form.breeding_exp_month) }}
+                                </div>
+                                <span class="ml-1">ヶ月</span>
                             </div>
                         </dd>
                     </dl>
@@ -250,25 +256,22 @@
                         </dt>
                         <dd>
                             <div class="ec-checkbox">
-                            <label>
-                                {{ form_widget(form.cage_size_1) }}
-                                <span>休憩場所としてのみ利用できる小さいサイズ(分離型)</span>
-                            </label>
-                            <br>
-                            <label>
-                                {{ form_widget(form.cage_size_2) }}
-                                <span>休憩場所と運動スペースを兼ねることのできる大きいサイズ(一体型)</span>
-                            </label>
-                            <br>
-                            <label>
-                                {{ form_widget(form.cage_size_3) }}
-                                <span>その他</span>
-                            </label>
-                            <div class="ec-input">
-                                {{ form_widget(form.cage_size_other) }}
-                                {{ form_errors(form.cage_size_other) }}
+                                <label>
+                                    {{ form_widget(form.cage_size_1) }}
+                                </label>
+                                <br>
+                                <label>
+                                    {{ form_widget(form.cage_size_2) }}
+                                </label>
+                                <br>
+                                <label>
+                                    {{ form_widget(form.cage_size_3) }}
+                                </label>
+                                <div class="ec-input">
+                                    {{ form_widget(form.cage_size_other) }}
+                                    {{ form_errors(form.cage_size_other) }}
+                                </div>
                             </div>
-                        </div>
                         </dd>
                     </dl>
                     <dl>
@@ -276,40 +279,15 @@
                             <label class="ec-label required">親犬の運動状況</label><span class="ec-required">必須</span>
                         </dt>
                         <dd>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="ParentPetExerciseSituation_1" name="ParentPetExerciseSituation" value="1" />
-                                    <label for="ParentPetExerciseSituation_1">
-                                        <span>毎日1回はケージから出して運動させている</span>
-                                    </label>
+                            <div class="ec-checkbox">
+                                <label>
+                                {{ form_widget(form.exercise_status) }}
+                                {{ form_errors(form.exercise_status) }}
+                                </label>
+                                <div class="ec-input">
+                                    {{ form_widget(form.exercise_status_other) }}
+                                    {{ form_errors(form.exercise_status_other) }}
                                 </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="ParentPetExerciseSituation_2" name="ParentPetExerciseSituation" value="2" />
-                                    <label for="ParentPetExerciseSituation_2">
-                                        <span>毎日ではないが、ケージから出して運動させている</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="ParentPetExerciseSituation_3" name="ParentPetExerciseSituation" value="3" />
-                                    <label for="ParentPetExerciseSituation_3">
-                                        <span>飼育スペースと運動スペースを一体型として飼育しているため、ケージから出せない</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="ParentPetExerciseSituation_4" name="ParentPetExerciseSituation" value="4" />
-                                    <label for="ParentPetExerciseSituation_4">
-                                        <span>その他</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="ec-input">
-                                <input type="text"/>
                             </div>
                         </dd>
                     </dl>
@@ -319,78 +297,23 @@
                         </dt>
                         <dd>
                             <div class="row offset-md-0">
-                                {{ form_widget(form.pedigree_organization) }}
-                                {{ form_errors(form.pedigree_organization) }}
+                                {{ form_widget(form.is_now_publising) }}
+                                {{ form_errors(form.is_now_publising) }}
                                 <div class="ec-radio">
-                                    {{ form_widget(form.group_organization) }}
-                                    {{ form_errors(form.group_organization) }}
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="CanBePostedPet_1" name="CanBePostedPet" value="1" />
-                                    <label for="CanBePostedPet_1">
-                                        <span>あり</span>
-                                    </label>
-                                </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">72</option>
-                                        <option value="8">8</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="CanBePostedPet_2" name="CanBePostedPet" value="2" />
-                                    <label for="CanBePostedPet_2">
-                                        <span>なし</span>
-                                    </label>
+                                    {{ form_widget(form.publish_pet_count) }}
+                                    {{ form_errors(form.publish_pet_count) }}
                                 </div>
                             </div>
                         </dd>
                     </dl>
+
                     <dl>
                         <dt>
                             <label class="ec-label required">自身での繁殖経験</label><span class="ec-required">必須</span>
                         </dt>
                         <dd>
-                            <div id="{{ form.breeding_experience.vars.id }}" class="ec-radio">
-                                <input {{ form.breeding_experience.vars.value == '0' ? 'checked' : '' }} type="radio" id="{{ form.breeding_experience.vars.id ~ '0' }}" name="{{ form.breeding_experience.vars.full_name }}" value="0" />
-                                <label for="{{ form.breeding_experience.vars.id ~ '0' }}">
-                                    <span>なし</span>
-                                </label>
-                                <input {{ form.breeding_experience.vars.value == '1' ? 'checked' : '' }} type="radio" id="{{ form.breeding_experience.vars.id ~ '1' }}" name="{{ form.breeding_experience.vars.full_name }}" value="1" />
-                                <label for="{{ form.breeding_experience.vars.id ~ '1' }}">
-                                    <span>1～4回</span>
-                                </label>
-                                <input {{ form.breeding_experience.vars.value == '2' ? 'checked' : '' }} type="radio"  id="{{ form.breeding_experience.vars.id ~ '2' }}" name="{{ form.breeding_experience.vars.full_name }}" value="2" />
-                                <label for="{{ form.breeding_experience.vars.id ~ '2' }}">
-                                    <span>5～9回</span>
-                                </label>
-                                <input {{ form.breeding_experience.vars.value == '3' ? 'checked' : '' }} type="radio"  id="{{ form.breeding_experience.vars.id ~ '3' }}" name="{{ form.breeding_experience.vars.full_name }}" value="3" />
-                                <label for="{{ form.breeding_experience.vars.id ~ '3' }}">
-                                    <span>10～19回</span>
-                                </label>
-                                <input {{ form.breeding_experience.vars.value == '4' ? 'checked' : '' }} type="radio"  id="{{ form.breeding_experience.vars.id ~ '4' }}" name="{{ form.breeding_experience.vars.full_name }}" value="4" />
-                                <label for="{{ form.breeding_experience.vars.id ~ '4' }}">
-                                    <span>20～49回</span>
-                                </label>
-                                <input {{ form.breeding_experience.vars.value == '5' ? 'checked' : '' }} type="radio"  id="{{ form.breeding_experience.vars.id ~ '5' }}" name="{{ form.breeding_experience.vars.full_name }}" value="5" />
-                                <label for="{{ form.breeding_experience.vars.id ~ '5' }}">
-                                    <span>50回以上</span>
-                                </label>
-                            </div>
+                            {{ form_widget(form.breeding_experience) }}
+                            {{ form_errors(form.breeding_experience) }}
                         </dd>
                     </dl>
 
@@ -399,32 +322,8 @@
                             <label class="ec-label required">直接の販売経験</label><span class="ec-required">必須</span>
                         </dt>
                         <dd>
-                            <div id="{{ form.selling_experience.vars.id }}" class="ec-radio">
-                                <input {{ form.selling_experience.vars.value == '0' ? 'checked' : '' }} type="radio" id="{{ form.selling_experience.vars.id ~ '0' }}" name="{{ form.selling_experience.vars.full_name }}" value="0" />
-                                <label for="{{ form.selling_experience.vars.id ~ '0' }}">
-                                    <span>なし</span>
-                                </label>
-                                <input {{ form.selling_experience.vars.value == '1' ? 'checked' : '' }} type="radio" id="{{ form.selling_experience.vars.id ~ '1' }}" name="{{ form.selling_experience.vars.full_name }}" value="1" />
-                                <label for="{{ form.selling_experience.vars.id ~ '1' }}">
-                                    <span>1～4回</span>
-                                </label>
-                                <input {{ form.selling_experience.vars.value == '2' ? 'checked' : '' }} type="radio"  id="{{ form.selling_experience.vars.id ~ '2' }}" name="{{ form.selling_experience.vars.full_name }}" value="2" />
-                                <label for="{{ form.selling_experience.vars.id ~ '2' }}">
-                                    <span>5～9回</span>
-                                </label>
-                                <input {{ form.selling_experience.vars.value == '3' ? 'checked' : '' }} type="radio"  id="{{ form.selling_experience.vars.id ~ '3' }}" name="{{ form.selling_experience.vars.full_name }}" value="3" />
-                                <label for="{{ form.selling_experience.vars.id ~ '3' }}">
-                                    <span>10～19回</span>
-                                </label>
-                                <input {{ form.selling_experience.vars.value == '4' ? 'checked' : '' }} type="radio"  id="{{ form.selling_experience.vars.id ~ '4' }}" name="{{ form.selling_experience.vars.full_name }}" value="4" />
-                                <label for="{{ form.selling_experience.vars.id ~ '4' }}">
-                                    <span>20～49回</span>
-                                </label>
-                                <input {{ form.selling_experience.vars.value == '5' ? 'checked' : '' }} type="radio"  id="{{ form.selling_experience.vars.id ~ '5' }}" name="{{ form.selling_experience.vars.full_name }}" value="5" />
-                                <label for="{{ form.selling_experience.vars.id ~ '5' }}">
-                                    <span>50回以上</span>
-                                </label>
-                            </div>
+                            {{ form_widget(form.selling_experience) }}
+                            {{ form_errors(form.selling_experience) }}
                         </dd>
                     </dl>
 

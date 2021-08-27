@@ -119,16 +119,23 @@ class BreederExaminationInfoType extends AbstractType
                     'なし' => AnilineConf::NONE,
                     'あり' => AnilineConf::CAN_BE,
                 ],
+                'attr' => [
+                    'class' => 'form-check-inline ec-radio'
+                ],
+                'expanded' => true,
                 'required' => true,
             ])
             ->add('cage_size_1', CheckboxType::class, [
-                'label' => false,
+                'attr' => [
+                    'class' => 'form-check-inline'
+                ],
+                'label' => '休憩場所としてのみ利用できる小さいサイズ(分離型)',
                 'required' => false,
             ])->add('cage_size_2', CheckboxType::class, [
-                'label' => false,
+                'label' => '休憩場所と運動スペースを兼ねることのできる大きいサイズ(一体型)',
                 'required' => false,
             ])->add('cage_size_3', CheckboxType::class, [
-                'label' => false,
+                'label' => 'その他',
                 'required' => false,
             ])
             ->add('cage_size_other', TextType::class, [
@@ -165,8 +172,8 @@ class BreederExaminationInfoType extends AbstractType
             ])
             ->add('is_now_publising', ChoiceType::class, [
                 'choices' => [
-                    'なし' => AnilineConf::NONE,
                     'あり' => AnilineConf::CAN_BE,
+                    'なし' => AnilineConf::NONE,
                 ],
                 'expanded' => true,
                 'required' => true,
@@ -184,7 +191,7 @@ class BreederExaminationInfoType extends AbstractType
                     '50回以上' => AnilineConf::EXPERIENCE_NONE,
                 ],
                 'attr' => [
-                    'class' => 'ec-radio',
+                    'class' => 'form-check-inline ec-radio'
                 ],
                 'expanded' => true,
                 'required' => true,
@@ -199,7 +206,7 @@ class BreederExaminationInfoType extends AbstractType
                     '50回以上' => AnilineConf::EXPERIENCE_NONE,
                 ],
                 'attr' => [
-                    'class' => 'ec-radio',
+                    'class' => 'form-check-inline ec-radio'
                 ],
                 'expanded' => true,
                 'required' => true,
