@@ -126,9 +126,6 @@ class BreederExaminationInfoType extends AbstractType
                 'required' => true,
             ])
             ->add('cage_size_1', CheckboxType::class, [
-                'attr' => [
-                    'class' => 'form-check-inline'
-                ],
                 'label' => '休憩場所としてのみ利用できる小さいサイズ(分離型)',
                 'required' => false,
             ])->add('cage_size_2', CheckboxType::class, [

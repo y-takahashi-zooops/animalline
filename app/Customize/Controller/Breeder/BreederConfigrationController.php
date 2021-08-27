@@ -404,17 +404,31 @@ class BreederConfigrationController extends AbstractController
      */
     public function examinationinfo(Request $request)
     {
+        $petType = $request->get('pet_type');
+        $breeder = $this->getUser();
         $breederExaminationInfo = $this->breederExaminationInfoRepository->findOneBy([
-            'Breeder' => $this->getUser(),
-            'pet_type' => $request->get('pet_type')
+            'Breeder' => $breeder,
+            'pet_type' => $petType
         ]);
         $breederExaminationInfo = $breederExaminationInfo ?? new BreederExaminationInfo();
         $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($request); die;
-            // TODO
+            $breederExaminationInfo->setPetType($petType)
+                ->setBreeder($breeder);
+            $formRequest = $request->request->get('breeder_examination_info');
+            if ($formRequest['pedigree_organization'] == 1) {
+                $breederExaminationInfo->setPedigreeOrganization($formRequest['group_organization']);
+            } else {
+                $breederExaminationInfo->setPedigreeOrganization($formRequest['pedigree_organization']);
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($breederExaminationInfo);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('breeder_configration');
         }
 
         return $this->render('animalline/breeder/configration/examinationinfo.twig', [

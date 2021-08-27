@@ -192,7 +192,7 @@ class BreederExaminationInfo
     /**
      * @ORM\Column(name="input_status", type="smallint", nullable=false, options={"default" = 0})
      */
-    private $input_status;
+    private $input_status = 0;
 
     /**
      * @var \DateTime
@@ -489,9 +489,9 @@ class BreederExaminationInfo
         return $this;
     }
 
-    public function getCageSize1(): ?int
+    public function getCageSize1(): ?bool
     {
-        return $this->cage_size_1;
+        return (bool)$this->cage_size_1;
     }
 
     public function setCageSize1(?int $cage_size_1): self
@@ -501,9 +501,9 @@ class BreederExaminationInfo
         return $this;
     }
 
-    public function getCageSize2(): ?int
+    public function getCageSize2(): ?bool
     {
-        return $this->cage_size_2;
+        return (bool)$this->cage_size_2;
     }
 
     public function setCageSize2(?int $cage_size_2): self
@@ -513,9 +513,9 @@ class BreederExaminationInfo
         return $this;
     }
 
-    public function getCageSize3(): ?int
+    public function getCageSize3(): ?bool
     {
-        return $this->cage_size_3;
+        return (bool)$this->cage_size_3;
     }
 
     public function setCageSize3(int $cage_size_3): self
