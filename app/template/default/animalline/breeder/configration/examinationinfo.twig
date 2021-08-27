@@ -5,7 +5,7 @@
 
 {% block main %}
 	<div class="ec-pageHeader">
-		<h1>{{ '犬舎・猫舎審査項目登録'|trans }}</h1>
+		<h1>{{ '犬舎・' ~ petType ~ '舎審査項目登録'|trans }}</h1>
 	</div>
 	<div class="ec-off1Grid">
 		<div class="ec-off1Grid__cell">
@@ -39,7 +39,7 @@
 				</dl>
 				<dl>
 					<dt>
-						<label class="ec-label required">飼育・保有している犬の総数</label>
+						<label class="ec-label required">飼育・保有している{{ petType }}の総数</label>
 						<span class="ec-required">必須</span>
 					</dt>
 					<dd>
@@ -51,7 +51,7 @@
 				</dl>
 				<dl>
 					<dt>
-						<label class="ec-label required">親犬頭数</label>
+						<label class="ec-label required">親{{ petType }}頭数</label>
 						<span class="ec-required">必須</span>
 					</dt>
 					<dd>
@@ -95,7 +95,7 @@
 				</dl>
 				<dl>
 					<dt>
-						<label class="ec-label required">親犬の購入先</label>
+						<label class="ec-label required">親{{ petType }}の購入先</label>
 						<span class="ec-required">必須</span>
 					</dt>
 					<dd>
@@ -144,7 +144,7 @@
 					</dt>
 					<dd>
 						<div class="row offset-md-0">
-							<label class="ec-label required mr-2">犬舎運営者</label>
+							<label class="ec-label required mr-2">{{ petType }}舎運営者</label>
 							<span>1名</span>
 						</div>
 						<div class="row offset-md-0">
@@ -262,7 +262,7 @@
 				</dl>
 				<dl>
 					<dt>
-						<label class="ec-label required">親犬のケージ</label>
+						<label class="ec-label required">親{{ petType }}のケージ</label>
 						<span class="ec-required">必須</span>
 					</dt>
 					<dd>
@@ -287,7 +287,7 @@
 				</dl>
 				<dl>
 					<dt>
-						<label class="ec-label required">親犬の運動状況</label>
+						<label class="ec-label required">親{{ petType }}の運動状況</label>
 						<span class="ec-required">必須</span>
 					</dt>
 					<dd>
@@ -305,7 +305,7 @@
 				</dl>
 				<dl>
 					<dt>
-						<label class="ec-label required">現時点で掲載可能な子犬</label>
+						<label class="ec-label required">現時点で掲載可能な子{{ petType }}</label>
 						<span class="ec-required">必須</span>
 					</dt>
 					<dd>

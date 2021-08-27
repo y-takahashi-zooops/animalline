@@ -500,7 +500,7 @@ class BreederConfigrationController extends AbstractController
                 $breederExaminationInfo->setPedigreeOrganization($formRequest['pedigree_organization']);
             }
 
-            if ($formRequest['pedigree_organization'] !== AnilineConf::PEDIGREE_ORGANIZATION_OTHER) {
+            if ($formRequest['pedigree_organization'] != AnilineConf::PEDIGREE_ORGANIZATION_OTHER) {
                 $breederExaminationInfo->setPedigreeOrganizationOther(null);
             }
 
@@ -513,7 +513,8 @@ class BreederConfigrationController extends AbstractController
 
         return $this->render('animalline/breeder/configration/examinationinfo.twig', [
             'form' => $form->createView(),
-            'isEdit' => $isEdit
+            'isEdit' => $isEdit,
+            'petType' => $petType == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫'
         ]);
     }
 }
