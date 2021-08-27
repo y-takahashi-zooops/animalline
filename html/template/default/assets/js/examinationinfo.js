@@ -51,6 +51,15 @@ $(function () {
         $('input[type=radio][name="breeder_examination_info[exercise_status]"]').trigger("change");
         $('input[type=radio][name="breeder_examination_info[is_now_publising]"]').trigger("change");
     }
+
+    $("form[name=breeder_examination_info]").submit(function (e) {
+        e.preventDefault();
+        $('#modal').modal('show');
+    });
+
+    $("#confirm-yes").click(function (e) {
+        document.getElementsByName('breeder_examination_info')[0].submit();
+    });
 });
 
 function handleChangeCageSize(caseSize1, caseSize2, caseSize3) {
