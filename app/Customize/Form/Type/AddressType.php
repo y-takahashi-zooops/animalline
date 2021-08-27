@@ -62,8 +62,7 @@ class AddressType extends AbstractType
         $builder
             ->add($options['pref_name'], PrefType::class, array_merge_recursive($options['options'], $options['pref_options']))
             ->add($options['addr01_name'], TextType::class, array_merge_recursive($options['options'], $options['addr01_options']))
-            ->add($options['addr02_name'], TextType::class, array_merge_recursive($options['options'], $options['addr02_options']))
-        ;
+            ->add($options['addr02_name'], TextType::class, array_merge_recursive($options['options'], $options['addr02_options']));
 
         $builder->setAttribute('pref_name', $options['pref_name']);
         $builder->setAttribute('addr01_name', $options['addr01_name']);
@@ -107,7 +106,7 @@ class AddressType extends AbstractType
                     'placeholder' => 'common.address_sample_02',
                 ],
             ],
-            'pref_name' => 'breeder_pref',
+            'pref_name' => 'PrefBreeder',
             'addr01_name' => 'breeder_city',
             'addr02_name' => 'breeder_address',
             'error_bubbling' => false,
@@ -118,6 +117,6 @@ class AddressType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'address';
+        return 'addr';
     }
 }

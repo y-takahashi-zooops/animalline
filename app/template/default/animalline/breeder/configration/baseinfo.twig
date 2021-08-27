@@ -56,9 +56,9 @@
                                     </div>
                                     {{ form_errors(form.breeder_zip) }}
                                 </div>
-                                <div class="ec-select{{ has_errors(form.addr.breeder_pref) ? ' error' }}">
-                                    {{ form_widget(form.addr.breeder_pref) }}
-                                    {{ form_errors(form.addr.breeder_pref) }}
+                                <div class="ec-select{{ has_errors(form.addr.PrefBreeder) ? ' error' }}">
+                                    {{ form_widget(form.addr.PrefBreeder) }}
+                                    {{ form_errors(form.addr.PrefBreeder) }}
                                 </div>
                                 <div class="ec-input{{ has_errors(form.addr.breeder_city) ? ' error' }}">
                                     {{ form_widget(form.addr.breeder_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
@@ -159,9 +159,9 @@
                                     </div>
                                     {{ form_errors(form.license_zip) }}
                                 </div>
-                                <div class="ec-select{{ has_errors(form.license_addr.license_pref) ? ' error' }}">
-                                    {{ form_widget(form.license_addr.license_pref) }}
-                                    {{ form_errors(form.license_addr.license_pref) }}
+                                <div class="ec-select{{ has_errors(form.license_addr.PrefLicense) ? ' error' }}">
+                                    {{ form_widget(form.license_addr.PrefLicense) }}
+                                    {{ form_errors(form.license_addr.PrefLicense) }}
                                 </div>
                                 <div class="ec-input{{ has_errors(form.license_addr.license_city) ? ' error' }}">
                                     {{ form_widget(form.license_addr.license_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}

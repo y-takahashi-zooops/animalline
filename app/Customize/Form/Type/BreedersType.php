@@ -222,8 +222,7 @@ class BreedersType extends AbstractType
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
                 'constraints' => [
                     new Assert\GreaterThan([
-                        'value' => date('Y-m-d', strtotime('license_regist_date')),
-                        'message' => 'Vui long nhap ngay nho hon ngay hien tai',
+                        'propertyPath' => 'parent.all[license_regist_date].data'
                     ]),
                 ],
             ])

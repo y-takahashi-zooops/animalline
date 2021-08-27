@@ -107,7 +107,7 @@ class LicenseAddressType extends AbstractType
                     'placeholder' => 'common.address_sample_02',
                 ],
             ],
-            'pref_name' => 'license_pref',
+            'pref_name' => 'PrefLicense',
             'addr01_name' => 'license_city',
             'addr02_name' => 'license_address',
             'error_bubbling' => false,
@@ -118,6 +118,6 @@ class LicenseAddressType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'address';
+        return 'license_addr';
     }
 }

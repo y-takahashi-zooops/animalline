@@ -123,7 +123,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $license_type;
 
     /**
-     * @ORM\Column(name="license_regist_date", type="date", length=255, nullable=true)
+     * @ORM\Column(name="license_regist_date", type="date", nullable=true)
      */
     private $license_regist_date;
 

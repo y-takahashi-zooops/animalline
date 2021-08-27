@@ -385,11 +385,14 @@ class BreederConfigrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $breederData->setBreederPref($breederData->getPrefBreeder());
+            $breederData->setLicensePref($breederData->getPrefLicense());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederData);
             $entityManager->flush();
             return $this->redirectToRoute('breeder_configration');
         }
+
         return [
             'form' => $form->createView()
         ];
