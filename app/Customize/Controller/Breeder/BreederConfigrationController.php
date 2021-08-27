@@ -410,6 +410,7 @@ class BreederConfigrationController extends AbstractController
             'Breeder' => $breeder,
             'pet_type' => $petType
         ]);
+        $isEdit = !!$breederExaminationInfo;
         $breederExaminationInfo = $breederExaminationInfo ?? new BreederExaminationInfo();
         $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo);
         $form->handleRequest($request);
@@ -432,7 +433,8 @@ class BreederConfigrationController extends AbstractController
         }
 
         return $this->render('animalline/breeder/configration/examinationinfo.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'isEdit' => $isEdit
         ]);
     }
 }

@@ -1,7 +1,6 @@
 $(function () {
     const ORGANIZATION_GROUP = 1;
     const ORGANIZATION_OTHER = 3;
-
     $('input[type=radio][name="breeder_examination_info[pedigree_organization]"]').on('change', (function () {
         if (this.value == ORGANIZATION_GROUP) {
             $('#breeder_examination_info_group_organization').prop('disabled', false).prop('required', true);
@@ -46,6 +45,12 @@ $(function () {
             $('#breeder_examination_info_publish_pet_count').prop('disabled', true).prop('required', false);
         }
     }));
+
+    if ($('#form-edit').length) {
+        $('input[type=radio][name="breeder_examination_info[pedigree_organization]"]').trigger("change");
+        $('input[type=radio][name="breeder_examination_info[exercise_status]"]').trigger("change");
+        $('input[type=radio][name="breeder_examination_info[is_now_publising]"]').trigger("change");
+    }
 });
 
 function handleChangeCageSize(caseSize1, caseSize2, caseSize3) {

@@ -41,7 +41,8 @@ class BreederExaminationInfoType extends AbstractType
                 'expanded' => true,
             ])
             ->add('group_organization', ChoiceType::class, [
-                'required' => true,
+                'required' => false,
+                'disabled' => true,
                 'choices' => [
                     '----' => '',
                     'JKC' => AnilineConf::PEDIGREE_ORGANIZATION_JKC,
@@ -50,6 +51,7 @@ class BreederExaminationInfoType extends AbstractType
                 'mapped' => false,
             ])
             ->add('pedigree_organization_other', TextType::class, [
+                'disabled' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -127,7 +129,7 @@ class BreederExaminationInfoType extends AbstractType
             ])
             ->add('cage_size_1', CheckboxType::class, [
                 'label' => '休憩場所としてのみ利用できる小さいサイズ(分離型)',
-                'required' => false,
+                'required' => true,
             ])->add('cage_size_2', CheckboxType::class, [
                 'label' => '休憩場所と運動スペースを兼ねることのできる大きいサイズ(一体型)',
                 'required' => false,
@@ -137,6 +139,7 @@ class BreederExaminationInfoType extends AbstractType
             ])
             ->add('cage_size_other', TextType::class, [
                 'required' => false,
+                'disabled' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -157,7 +160,8 @@ class BreederExaminationInfoType extends AbstractType
                 'required' => true,
             ])
             ->add('exercise_status_other', TextType::class, [
-                'required' => true,
+                'required' => false,
+                'disabled' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -176,7 +180,8 @@ class BreederExaminationInfoType extends AbstractType
                 'required' => true,
             ])
             ->add('publish_pet_count', IntegerType::class, [
-                'required' => true,
+                'required' => false,
+                'disabled' => true
             ])
             ->add('breeding_experience', ChoiceType::class, [
                 'choices' => [

@@ -10,6 +10,9 @@
     <div class="ec-off1Grid">
         <div class="ec-off1Grid__cell">
             {{ form_start(form) }}
+                {% if isEdit %}
+                    <input hidden id="form-edit">
+                {% endif %}
                 <span class="p-country-name" style="display:none;">Japan</span>
                 <div class="ec-borderedDefs">
                     <dl>
