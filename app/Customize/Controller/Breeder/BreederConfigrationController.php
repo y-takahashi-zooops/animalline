@@ -2,25 +2,32 @@
 
 namespace Customize\Controller\Breeder;
 
+use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederContacts;
+use Customize\Entity\BreederHouse;
 use Customize\Entity\BreederPetImage;
 use Customize\Entity\BreederPets;
+use Customize\Form\Type\Breeder\BreederHouseType;
 use Customize\Form\Type\BreederPetsType;
 use Customize\Form\Type\BreedersType;
 use Customize\Repository\BreederContactsRepository;
+use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\CoatColorsRepository;
 use Eccube\Controller\AbstractController;
+use Eccube\Event\EccubeEvents;
+use Eccube\Repository\Master\PrefRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Eccube\Event\EventArgs;
 use DateTime;
 
 class BreederConfigrationController extends AbstractController
@@ -41,19 +48,28 @@ class BreederConfigrationController extends AbstractController
     protected $breederPetImageRepository;
 
     /**
+     * @var BreederHouseRepository
+     */
+    protected $breederHouseRepository;
+
+    /**
      * BreederConfigrationController constructor.
      * @param BreederContactsRepository $breederContactsRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
+     * @param BreederHouseRepository $breederHouseRepository
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
-        BreederPetsRepository $breederPetsRepository,
-        BreederPetImageRepository $breederPetImageRepository
-    ) {
+        BreederPetsRepository     $breederPetsRepository,
+        BreederPetImageRepository $breederPetImageRepository,
+        BreederHouseRepository    $breederHouseRepository
+    )
+    {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
+        $this->breederHouseRepository = $breederHouseRepository;
     }
 
     /**
@@ -285,8 +301,8 @@ class BreederConfigrationController extends AbstractController
     /**
      * Copy image and retrieve new url of the copy
      *
-     * @param  string $imageUrl
-     * @param  int $petId
+     * @param string $imageUrl
+     * @param int $petId
      * @return string
      */
     private function setImageSrc($imageUrl, $petId)
@@ -376,7 +392,7 @@ class BreederConfigrationController extends AbstractController
      */
     public function baseinfo(Request $request)
     {
-        return[];
+        return [];
     }
 
     /**
@@ -385,7 +401,47 @@ class BreederConfigrationController extends AbstractController
      */
     public function houseinfo(Request $request)
     {
-        return[];
+        $petType = $request->get('pet_type');
+        $breederHousePet = $this->breederHouseRepository->findOneBy(['pet_type' => $petType, 'Breeder' => $this->getUser()]);
+        $breederHouse = new BreederHouse();
+        $builder = $this->formFactory->createBuilder(BreederHouseType::class, $breederHousePet??$breederHouse);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+                    if (!$breederHousePet) {
+                        $housePref = $breederHouse->getBreederHousePrefId();
+                        $breederHouse->setBreeder($this->getUser())
+                            ->setPetType($petType)
+                            ->setBreederHousePref($housePref['name']);
+                        $entityManager = $this->getDoctrine()->getManager();
+                        $entityManager->persist($breederHouse);
+                    }else{
+                        $housePref = $breederHousePet->getBreederHousePrefId();
+                        $breederHousePet->setBreederHousePref($housePref['name']);
+                        $entityManager = $this->getDoctrine()->getManager();
+                        $entityManager->persist($breederHousePet);
+                    }
+
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('breeder_house_complete', ['pet_type' => $petType]);
+        }
+        return [
+            'form' => $form->createView(),
+            'petType' => $petType,
+        ];
+    }
+
+    /**
+     * @Route("/breeder/configration/houseinfo/{pet_type}/complete", name="breeder_house_complete", requirements={"pet_id" = "\d+"})
+     * @Template("/animalline/breeder/configration/houseinfo_complete.twig")
+     */
+    public function complete(Request $request)
+    {
+        return $this->render('/animalline/breeder/configration/houseinfo_complete.twig', [
+            'petType' => $request->get('pet_type')
+        ]);
     }
 
     /**
@@ -394,6 +450,6 @@ class BreederConfigrationController extends AbstractController
      */
     public function examinationinfo(Request $request)
     {
-        return[];
+        return [];
     }
 }
