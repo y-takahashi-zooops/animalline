@@ -4,11 +4,12 @@
 
 {% block main %}
     <div class="ec-pageHeader">
-    <h1>{{ petType==1?'犬舎 情報登録':'猫舎 情報登録'|trans }}</h1>
+        <h1>{{ petType== 1?'犬舎 情報登録':'猫舎 情報登録'|trans }}</h1>
     </div>
     <div class="ec-off1Grid">
         <div class="ec-off1Grid__cell">
-            <form name="breeder-house" method="post" action="{{ url('breeder_houseinfo', {'pet_type': petType}) }}" novalidate class="h-adr">
+            <form name="breeder-house" method="post" action="{{ url('breeder_houseinfo', {'pet_type': petType}) }}"
+                  novalidate class="h-adr">
                 <span class="p-country-name" style="display:none;">Japan</span>
                 <h2>{{ petType==1?'犬舎情報':'猫舎情報' }}</h2>
                 {{ form_widget(form._token) }}
@@ -19,7 +20,7 @@
                                 {{ form_label(form.breeder_house_name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-halfInput{{ has_errors(form.breeder_house_name) ? ' error'}}">
+                                <div class="ec-halfInput{{ has_errors(form.breeder_house_name) ? ' error' }}">
                                     {{ form_widget(form.breeder_house_name, { 'attr': { 'placeholder': '運営者氏名' }}) }}
                                     {{ form_errors(form.breeder_house_name) }}
                                 </div>
@@ -75,7 +76,7 @@
                                 {{ form_label(form.breeder_house_house_tel, 'TEL', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-halfInput{{ has_errors(form.breeder_house_house_tel) ? ' error'}}">
+                                <div class="ec-halfInput{{ has_errors(form.breeder_house_house_tel) ? ' error' }}">
                                     {{ form_widget(form.breeder_house_house_tel, { 'attr': { 'placeholder': 'TEL' }}) }}
                                     {{ form_errors(form.breeder_house_house_tel) }}
                                 </div>
@@ -86,7 +87,7 @@
                                 {{ form_label(form.breeder_house_house_fax, 'FAX', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-halfInput{{ has_errors(form.breeder_house_house_fax) ? ' error'}}">
+                                <div class="ec-halfInput{{ has_errors(form.breeder_house_house_fax) ? ' error' }}">
                                     {{ form_widget(form.breeder_house_house_fax, { 'attr': { 'placeholder': 'FAX' }}) }}
                                     {{ form_errors(form.breeder_house_house_fax) }}
                                 </div>
@@ -98,7 +99,7 @@
                                 {{ form_label(form.breeder_house_front_name, '担当者名', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-halfInput{{ has_errors(form.breeder_house_front_name) ? ' error'}}">
+                                <div class="ec-halfInput{{ has_errors(form.breeder_house_front_name) ? ' error' }}">
                                     {{ form_widget(form.breeder_house_front_name, { 'attr': { 'placeholder': '担当者名' }}) }}
                                     {{ form_errors(form.breeder_house_front_name) }}
                                 </div>
@@ -109,7 +110,7 @@
                                 {{ form_label(form.breeder_house_front_tel, '担当者TEL', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-halfInput{{ has_errors(form.breeder_house_front_tel) ? ' error'}}">
+                                <div class="ec-halfInput{{ has_errors(form.breeder_house_front_tel) ? ' error' }}">
                                     {{ form_widget(form.breeder_house_front_tel, { 'attr': { 'placeholder': '担当者TEL' }}) }}
                                     {{ form_errors(form.breeder_house_front_tel) }}
                                 </div>
@@ -134,6 +135,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 {% endblock %}
 {% block javascript %}
-    <script src="{{ asset('assets/js/houseinfo.js') }}"></script>
+<script src="{{ asset('assets/js/houseinfo.js') }}"></script>
 {% endblock %}
         

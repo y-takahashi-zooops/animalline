@@ -404,44 +404,33 @@ class BreederConfigrationController extends AbstractController
         $petType = $request->get('pet_type');
         $breederHousePet = $this->breederHouseRepository->findOneBy(['pet_type' => $petType, 'Breeder' => $this->getUser()]);
         $breederHouse = new BreederHouse();
-        $builder = $this->formFactory->createBuilder(BreederHouseType::class, $breederHousePet??$breederHouse);
+        $builder = $this->formFactory->createBuilder(BreederHouseType::class, $breederHousePet ?? $breederHouse);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-                    if (!$breederHousePet) {
-                        $housePref = $breederHouse->getBreederHousePrefId();
-                        $breederHouse->setBreeder($this->getUser())
-                            ->setPetType($petType)
-                            ->setBreederHousePref($housePref['name']);
-                        $entityManager = $this->getDoctrine()->getManager();
-                        $entityManager->persist($breederHouse);
-                    }else{
-                        $housePref = $breederHousePet->getBreederHousePrefId();
-                        $breederHousePet->setBreederHousePref($housePref['name']);
-                        $entityManager = $this->getDoctrine()->getManager();
-                        $entityManager->persist($breederHousePet);
-                    }
+            if (!$breederHousePet) {
+                $housePref = $breederHouse->getBreederHousePrefId();
+                $breederHouse->setBreeder($this->getUser())
+                    ->setPetType($petType)
+                    ->setBreederHousePref($housePref['name']);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($breederHouse);
+            } else {
+                $housePref = $breederHousePet->getBreederHousePrefId();
+                $breederHousePet->setBreederHousePref($housePref['name']);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($breederHousePet);
+            }
 
-                    $entityManager->flush();
+            $entityManager->flush();
 
-                    return $this->redirectToRoute('breeder_house_complete', ['pet_type' => $petType]);
+            return $this->redirectToRoute('breeder_configration', ['pet_type' => $petType]);
         }
         return [
             'form' => $form->createView(),
             'petType' => $petType,
         ];
-    }
-
-    /**
-     * @Route("/breeder/configration/houseinfo/{pet_type}/complete", name="breeder_house_complete", requirements={"pet_id" = "\d+"})
-     * @Template("/animalline/breeder/configration/houseinfo_complete.twig")
-     */
-    public function complete(Request $request)
-    {
-        return $this->render('/animalline/breeder/configration/houseinfo_complete.twig', [
-            'petType' => $request->get('pet_type')
-        ]);
     }
 
     /**
