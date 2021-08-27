@@ -161,6 +161,10 @@ class BreederHouseType extends AbstractType
                         'type' => 'numeric',
                         'message' => 'form_error.numeric_only',
                     ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[^\s ]+$/u',
+                        'message' => 'form_error.not_contain_spaces',
+                    ]),
                     new Assert\NotBlank(),
                 ],
                 'attr' => [
