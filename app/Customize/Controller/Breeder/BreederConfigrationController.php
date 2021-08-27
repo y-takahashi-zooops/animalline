@@ -68,13 +68,15 @@ class BreederConfigrationController extends AbstractController
         BreederContactsRepository        $breederContactsRepository,
         BreederPetsRepository            $breederPetsRepository,
         BreederPetImageRepository        $breederPetImageRepository,
-        BreederExaminationInfoRepository $breederExaminationInfoRepository
+        BreederExaminationInfoRepository $breederExaminationInfoRepository,
+        BreederHouseRepository           $breederHouseRepository
     )
     {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
+        $this->breederHouseRepository = $breederHouseRepository;
     }
 
     /**
@@ -452,7 +454,8 @@ class BreederConfigrationController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_house_complete', ['pet_type' => $petType]);
+
+            return $this->redirectToRoute('breeder_configration', ['pet_type' => $petType]);
         }
         return [
             'form' => $form->createView(),
