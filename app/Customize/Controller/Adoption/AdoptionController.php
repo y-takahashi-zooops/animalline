@@ -348,15 +348,20 @@ class AdoptionController extends AbstractController
             $entityManager->flush();
         }
 
+        $petId = $rootMessage->getPet()->getId();
+        $pet = $this->conservationPetsRepository->find($petId);
+
         $childMessages = $this->conservationContactsRepository
             ->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
+
         $reasons = $this->sendoffReasonRepository
             ->findBy(['is_adoption_visible' => AnilineConf::ADOPTION_VISIBLE_SHOW]);
 
         return $this->render('animalline/adoption/member/message.twig', [
             'rootMessage' => $rootMessage,
             'childMessages' => $childMessages,
-            'reasons' => $reasons
+            'reasons' => $reasons,
+            'pet' => $pet,
         ]);
     }
 

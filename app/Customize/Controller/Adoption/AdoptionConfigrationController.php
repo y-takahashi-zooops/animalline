@@ -160,10 +160,16 @@ class AdoptionConfigrationController extends AbstractController
             ['parent_message_id' => $contact_id],
             ['send_date' => 'ASC']
         );
+
+        $petId = $rootMessage->getPet()->getId();
+        $pet = $this->conservationPetsRepository->find($petId);
+
+
         return $this->render('animalline/adoption/configration/message.twig', [
             'rootMessage' => $rootMessage,
             'messages' => $messages,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'pet' => $pet
         ]);
     }
 

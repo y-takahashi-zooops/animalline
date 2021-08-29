@@ -245,7 +245,6 @@ th, td {
 }
 
 .font-weight-500 {
-    font-weight: 500;
 }
 
 .font-weight-400 {
@@ -601,5 +600,107 @@ th, td {
     background-repeat: unset;
 }
 
+/* 取引メッセージ画面 */
 
 
+/* 吹き出し */
+.balloon-left {
+    position: relative;
+    display: inline-block;
+    margin: 0.5em 0 1.5em;
+    padding: 7px 10px;
+    min-width: 120px;
+    max-width: 100%;
+    font-size: 16px;
+    background: #FFF;
+    border: solid 3px #FFAC69;
+    box-sizing: border-box;
+  }
+  
+  .balloon-left:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -24px;
+    margin-top: -12px;
+    border: 12px solid transparent;
+    border-right: 12px solid #FFF;
+    z-index: 2;
+  }
+  
+  .balloon-left:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -30px;
+    margin-top: -14px;
+    border: 14px solid transparent;
+    border-right: 14px solid #FFAC69;
+    z-index: 1;
+  }
+  
+  .balloon-left p {
+    margin: 0;
+    padding: 0;
+  }
+
+  .balloon-right {
+    position: relative;
+    display: inline-block;
+    margin: 0.5em 0 1.5em;
+    padding: 7px 10px;
+    min-width: 120px;
+    max-width: 100%;
+    font-size: 16px;
+    background: #FFF;
+    border: solid 3px #FFAC69;
+    box-sizing: border-box;
+  }
+  
+  .balloon-right:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -24px;
+    margin-top: -12px;
+    border: 12px solid transparent;
+    border-left: 12px solid #FFF;
+    z-index: 2;
+  }
+  
+  .balloon-right:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -30px;
+    margin-top: -14px;
+    border: 14px solid transparent;
+    border-left: 14px solid #FFAC69;
+    z-index: 1;
+  }
+  
+  .balloon-right p {
+    margin: 0;
+    padding: 0;
+  }
+
+/* ユーザーイメージ */
+.user-img {
+    display: flex; 
+    justify-content: flex-end; 
+    align-items: center; 
+    padding-right: 0;
+}
+
+/* 保護団体イメージ */
+.adoption-img {
+    display: flex;
+    align-items: center;
+    padding-left: 0;
+
+}
+
+/* 文章 */
+.breeder-info  h3{
+    font-weight: 500;
+}
