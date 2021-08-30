@@ -89,6 +89,7 @@ class BreederController extends AbstractController
     public function petSearchResult(PaginatorInterface $paginator, Request $request): Response
     {
         $petResults = $this->breederQueryService->searchPetsResult($request);
+        dump($petResults);die();
         $pets = $paginator->paginate(
             $petResults,
             $request->query->getInt('page', 1),

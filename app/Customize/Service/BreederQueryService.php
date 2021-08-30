@@ -21,13 +21,14 @@ class BreederQueryService
     /**
      * BreederQueryService constructor.
      *
-     * @param BreederPetsRepository  $breederPetsRepository
+     * @param BreederPetsRepository $breederPetsRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
      */
-    public function __construct (
-        BreederPetsRepository     $breederPetsRepository,
-        PetsFavoriteRepository     $petsFavoriteRepository
-    ) {
+    public function __construct(
+        BreederPetsRepository  $breederPetsRepository,
+        PetsFavoriteRepository $petsFavoriteRepository
+    )
+    {
         $this->breederPetsRepository = $breederPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
     }
@@ -35,7 +36,7 @@ class BreederQueryService
     /**
      * Retrive breeder pets
      *
-     * @param  Object $request
+     * @param Object $request
      * @return array
      */
     public function searchPetsResult($request): array
@@ -52,7 +53,7 @@ class BreederQueryService
 
         if ($request->get('breed_type')) {
             $query->andWhere('p.BreedType = :breeds_type')
-            ->setParameter('breeds_type', $request->get('breed_type'));
+                ->setParameter('breeds_type', $request->get('breed_type'));
         }
 
         if ($request->get('gender')) {
@@ -61,8 +62,15 @@ class BreederQueryService
         }
 
         if ($request->get('region')) {
-            $query->andWhere('c.PrefBreeder = :pref')
+            $query->addSelect('bh','pa')
+                ->innerJoin('Customize\Entity\BreederHouse', 'bh', 'WITH', 'c.id = bh.Breeder')
+                ->andWhere('bh.BreederHousePrefId = :pref')
                 ->setParameter('pref', $request->get('region'));
+            if ($request->get('adjacent')) {
+                $query->leftJoin('Customize\Entity\PrefAdjacent', 'pa', 'WITH', 'bh.BreederHousePrefId = pa.pref_id')
+                    ->andWhere('pa.pref_id= :pref')
+                    ->setParameter('pref', $request->get('region'));
+            }
         }
 
         return $query->addOrderBy('p.release_date', 'DESC')
