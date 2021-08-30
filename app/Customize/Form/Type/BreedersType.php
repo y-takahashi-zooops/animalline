@@ -87,7 +87,7 @@ class BreedersType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new Assert\Length([
-                        'max' => 10,
+                        'max' => 11,
                     ]),
                     new Assert\Type([
                         'type' => 'numeric',
@@ -97,7 +97,7 @@ class BreedersType extends AbstractType
                 ],
                 'attr' => [
                     'placeholder' => 'common.phone_number_sample',
-                    'maxlength' => 10,
+                    'maxlength' => 11,
                 ],
                 'trim' => true,
             ])
@@ -105,7 +105,7 @@ class BreedersType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new Assert\Length([
-                        'max' => 10,
+                        'max' => 11,
                     ]),
                     new Assert\Type([
                         'type' => 'numeric',
@@ -114,7 +114,7 @@ class BreedersType extends AbstractType
                 ],
                 'attr' => [
                     'placeholder' => 'common.phone_number_sample',
-                    'maxlength' => 10,
+                    'maxlength' => 11,
                 ],
                 'trim' => true,
             ])
@@ -220,8 +220,13 @@ class BreedersType extends AbstractType
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
                 'constraints' => [
                     new Assert\GreaterThan([
-                        'propertyPath' => 'parent.all[license_regist_date].data'
+                        'propertyPath' => 'parent.all[license_regist_date].data',
+                        'message' => '有効期限の末日は登録年月日より大きくなければなりません。'
                     ]),
+                    new Assert\GreaterThan([
+                        'value' => date('Y-m-d'),
+                        'message' => '有効期限の末日は未来日となければなりません。'
+                    ])
                 ],
             ])
             ->add('license_type', ChoiceType::class, [
