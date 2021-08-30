@@ -214,7 +214,7 @@ class BreedersType extends AbstractType
             ->add('license_expire_date', DateType::class, [
                 'required' => false,
                 'input' => 'datetime',
-                'years' => range(date('Y'), 1990),
+                'years' => range(2050, date('Y')),
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
