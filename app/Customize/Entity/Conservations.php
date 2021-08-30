@@ -507,7 +507,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this->thumbnail_path;
     }
 
-    public function setThumbnailPath(string $thumbnail_path): self
+    public function setThumbnailPath(?string $thumbnail_path): self
     {
         $this->thumbnail_path = $thumbnail_path;
 
