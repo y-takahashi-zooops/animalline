@@ -81,11 +81,13 @@ class BreederQueryService
                     ->setParameter('pref', $request->get('region'))
                     ->select('pa.adjacent_pref_id');
 
-                $result= $queryHouse->getQuery()
-                     ->getArrayResult();
+                $result = $queryHouse->getQuery()
+                    ->getArrayResult();
                 $arr = array_column($result, 'adjacent_pref_id');
                 $query->orWhere('bh.BreederHousePrefId in (:arr)')
-                    ->setParameter('arr',$arr);
+                    ->setParameter('arr', $arr)
+                    ->andWhere('p.pet_kind = :pet_kind')
+                    ->setParameter('pet_kind', $request->get('pet_kind'));;
             }
 
         }
