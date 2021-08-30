@@ -8,6 +8,13 @@
             <div class="main-container col-12">
                 <h1>保護団体名 - 管理ページ</h1>
                 <div class="m-2 p-2"></div>
+                <h1>
+                    <a href="{{path('adoption_houseinfo',{'pet_type': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')})}}">犬舎情報登録</a>
+                </h1>
+                <h1>
+                    <a href="{{path('adoption_houseinfo',{'pet_type': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')})}}">猫舎情報登録</a>
+                </h1>
+                <div class="m-2 p-2"></div>
                 <div class="d-flex justify-content-between align-items-end">
                     <h2>交渉中のお取引</h2>
                 </div>

@@ -6,6 +6,8 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationContacts;
 use Customize\Entity\ConservationPets;
 use Customize\Entity\ConservationPetImage;
+use Customize\Entity\ConservationsHouse;
+use Customize\Form\Type\ConservationHouseType;
 use Customize\Form\Type\ConservationPetsType;
 use Customize\Form\Type\ConservationsType;
 use Customize\Repository\ConservationContactsRepository;
@@ -14,6 +16,7 @@ use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\CoatColorsRepository;
 use Customize\Repository\ConservationPetImageRepository;
+use Customize\Repository\ConservationsHousesRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,16 +39,28 @@ class AdoptionConfigrationController extends AbstractController
     protected $conservationPetImageRepository;
 
     /**
+     * @var ConservationContactsRepository
+     */
+    protected $conservationContactsRepository;
+
+    /**
+     * @var ConservationsHousesRepository
+     */
+    protected $conservationsHousesRepository;
+
+    /**
      * AdoptionConfigrationController constructor.
      */
     public function __construct(
         ConservationContactsRepository $conservationContactsRepository,
         ConservationPetsRepository     $conservationPetsRepository,
-        ConservationPetImageRepository $conservationPetImageRepository
+        ConservationPetImageRepository $conservationPetImageRepository,
+        ConservationsHousesRepository  $conservationsHousesRepository
     ) {
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
+        $this->conservationsHousesRepository = $conservationsHousesRepository;
     }
 
     /**
@@ -394,6 +409,41 @@ class AdoptionConfigrationController extends AbstractController
         return [
             'conservation' => $conservation,
             'form' => $form->createView()
+        ];
+    }
+
+    /**
+     * @Route("/adoption/configration/houseinfo/{pet_type}", name="adoption_houseinfo")
+     * @Template("/animalline/adoption/configration/houseinfo.twig")
+     */
+    public function houseinfo(Request $request)
+    {
+        $petType = $request->get('pet_type');
+        $conservationsHouse = $this->conservationsHousesRepository->findOneBy([
+            'pet_type' => $petType,
+            'Conservation' => $this->getUser()
+        ]);
+        $conservationsHouse = $conservationsHouse ?? new ConservationsHouse();
+        $form = $this->createForm(ConservationHouseType::class, $conservationsHouse);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $address = $request->get('conservation_house')['address'];
+            $conservationsHouse->setConservation($this->getUser())
+                ->setPetType($petType)
+                ->setConservationHousePref($conservationsHouse->getPref()->getName())
+                ->setConservationHouseCity($address['conservation_house_city'])
+                ->setConservationHouseAddress($address['conservation_house_address']);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($conservationsHouse);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('adoption_configration', ['pet_type' => $petType]);
+        }
+
+        return [
+            'petType' => $petType,
+            'form' => $form->createView(),
         ];
     }
 }
