@@ -3,11 +3,13 @@
 namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
+use Customize\Repository\BreedsRepository;
 use Customize\Service\BreederQueryService;
 use Carbon\Carbon;
 use Customize\Entity\BreederContacts;
 use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\SendoffReasonRepository;
+use Eccube\Repository\Master\PrefRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\BreederPetImageRepository;
@@ -57,6 +59,16 @@ class BreederController extends AbstractController
     protected $sendoffReasonRepository;
 
     /**
+     * @var BreedsRepository
+     */
+    protected $breedsRepository;
+
+    /**
+     * @var PrefRepository
+     */
+    protected $prefRepository;
+
+    /**
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
@@ -64,22 +76,27 @@ class BreederController extends AbstractController
      * @param BreederQueryService $breederQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
-     * @param BreederPetsRepository $breederPetsRepository,
+     * @param BreederPetsRepository $breederPetsRepository ,
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
         BreederPetImageRepository $breederPetImageRepository,
-        BreederQueryService           $breederQueryService,
-        PetsFavoriteRepository         $petsFavoriteRepository,
-        SendoffReasonRepository         $sendoffReasonRepository,
-        BreederPetsRepository $breederPetsRepository
-    ) {
+        BreederQueryService       $breederQueryService,
+        PetsFavoriteRepository    $petsFavoriteRepository,
+        SendoffReasonRepository   $sendoffReasonRepository,
+        BreederPetsRepository     $breederPetsRepository,
+        BreedsRepository          $breedsRepository,
+        PrefRepository            $prefRepository
+    )
+    {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->sendoffReasonRepository = $sendoffReasonRepository;
         $this->breederPetsRepository = $breederPetsRepository;
+        $this->breedsRepository = $breedsRepository;
+        $this->prefRepository = $prefRepository;
     }
 
     /**
@@ -94,8 +111,16 @@ class BreederController extends AbstractController
             $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $regions = $this->prefRepository->findAll();
 
-        return $this->render('animalline/breeder/pet/search_result.twig', ['pets' => $pets]);
+        return $this->render('animalline/breeder/pet/search_result.twig', [
+            'pets' => $pets,
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions
+        ]);
     }
 
     /**
