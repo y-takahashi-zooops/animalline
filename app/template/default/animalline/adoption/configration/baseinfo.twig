@@ -10,17 +10,17 @@
 		<div class="ec-off1Grid__cell">
 			<form method="post" action="{{ url('adoption_baseinfo') }}" novalidate class="h-adr" name="update-baseinfo-form">
 				<span class="p-country-name" style="display:none;">Japan</span>
-				<h2>ブリーダー情報</h2>
+				<h2>保全情報</h2>
 				{{ form_widget(form._token) }}
 				<div class="ec-borderedDefs">
 					<div class="mb-5">
 						<dl>
 							<dt>
-								{{ form_label(form.is_organization, 'IO', { 'label_attr': { 'class': 'ec-label' }}) }}
+								{{ form_label(form.is_organization, '組織', { 'label_attr': { 'class': 'ec-label' }}) }}
 							</dt>
 							<dd>
 								<div class="ec-halfInput{{ has_errors(form.is_organization) ? ' error' }}">
-									{{ form_widget(form.is_organization, { 'attr': { 'placeholder': 'IO' }}) }}
+									{{ form_widget(form.is_organization, { 'attr': { 'placeholder': '組織' }}) }}
 									{{ form_errors(form.is_organization) }}
 								</div>
 							</dd>
@@ -58,40 +58,43 @@
 								</div>
 							</dd>
 						</dl>
-						{# <dl>
-						                            <dt>
-						                                {{ form_label(form.addr, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
-						                            </dt>
-						                            <dd>
-						                                <div class="ec-zipInput{{ has_errors(form.breeder_zip) ? ' error' }}">
-						                                    <span>{{ '〒'|trans }}</span>
-						                                    {{ form_widget(form.breeder_zip) }}
-						                                    <div class="ec-zipInputHelp">
-						                                        <div class="ec-zipInputHelp__icon">
-						                                            <div class="ec-icon"><img
-						                                                        src="/html/template/default/assets/icon/question-white.svg"
-						                                                        alt="">
-						                                            </div>
-						                                        </div>
-						                                        <a href="https://www.post.japanpost.jp/zipcode/"
-						                                           target="_blank"><span>郵便番号検索</span></a>
-						                                    </div>
-						                                    {{ form_errors(form.breeder_zip) }}
-						                                </div>
-						                                <div class="ec-select{{ has_errors(form.addr.PrefBreeder) ? ' error' }}">
-						                                    {{ form_widget(form.addr.PrefBreeder) }}
-						                                    {{ form_errors(form.addr.PrefBreeder) }}
-						                                </div>
-						                                <div class="ec-input{{ has_errors(form.addr.breeder_city) ? ' error' }}">
-						                                    {{ form_widget(form.addr.breeder_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-						                                    {{ form_errors(form.addr.breeder_city) }}
-						                                </div>
-						                                <div class="ec-input{{ has_errors(form.addr.breeder_address) ? ' error' }}">
-						                                    {{ form_widget(form.addr.breeder_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-						                                    {{ form_errors(form.addr.breeder_address) }}
-						                                </div>
-						                            </dd>
-						                        </dl> #}
+						<dl>
+							<dt>
+								{{ form_label(form.addr, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+							</dt>
+							<dd>
+								<div class="ec-zipInput{{ has_errors(form.zip) ? ' error' }}">
+									<span>{{ '〒'|trans }}</span>
+									{{ form_widget(form.zip) }}
+									<div class="ec-zipInputHelp">
+										<div class="ec-zipInputHelp__icon">
+											<div class="ec-icon"><img src="/html/template/default/assets/icon/question-white.svg" alt="">
+											</div>
+										</div>
+										<a href="https://www.post.japanpost.jp/zipcode/" target="_blank">
+											<span>郵便番号検索</span>
+										</a>
+									</div>
+									{{ form_errors(form.zip) }}
+								</div>
+								<div class="ec-select{{ has_errors(form.addr.PrefId) ? ' error' }}">
+									{{ form_widget(form.addr.PrefId) }}
+									{{ form_errors(form.addr.PrefId) }}
+								</div>
+								<div class="ec-input{{ has_errors(form.addr.city) ? ' error' }}">
+									{{ form_widget(form.addr.city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+									{{ form_errors(form.addr.city) }}
+								</div>
+								<div class="ec-input{{ has_errors(form.addr.address) ? ' error' }}">
+									{{ form_widget(form.addr.address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+									{{ form_errors(form.addr.address) }}
+								</div>
+								<div class="ec-input{{ has_errors(form.addr.building) ? ' error' }}">
+									{{ form_widget(form.addr.building,  { 'attr': { 'placeholder': '' }}) }}
+									{{ form_errors(form.addr.building) }}
+								</div>
+							</dd>
+						</dl>
 						<dl>
 							<dt>
 								{{ form_label(form.tel, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}
@@ -138,7 +141,7 @@
 						</dl>
 						<dl>
 							<dt>
-								{{ form_label(form.thumbnail_path, 'ブリーダー画像', { 'label_attr': {'class': 'ec-label' }}) }}
+								{{ form_label(form.thumbnail_path, '保全画像', { 'label_attr': {'class': 'ec-label' }}) }}
 							</dt>
 							<dd>
 								<div class="media-body">
@@ -219,5 +222,6 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+	<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 	<script src="{{ asset('assets/js/adoption/baseinfo.js') }}"></script>
 {% endblock %}

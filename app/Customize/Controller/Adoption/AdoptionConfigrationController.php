@@ -17,6 +17,7 @@ use Customize\Repository\BreedsRepository;
 use Customize\Repository\CoatColorsRepository;
 use Customize\Repository\ConservationPetImageRepository;
 use Customize\Repository\ConservationsHousesRepository;
+use Eccube\Repository\Master\PrefRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -388,7 +389,7 @@ class AdoptionConfigrationController extends AbstractController
      * @Route("/adoption/configration/baseinfo", name="adoption_baseinfo")
      * @Template("/animalline/adoption/configration/baseinfo.twig")
      */
-    public function baseinfo(Request $request, ConservationsRepository $conservationsRepository)
+    public function baseinfo(Request $request, ConservationsRepository $conservationsRepository, PrefRepository $prefRepository)
     {
         $conservation = $conservationsRepository->find($this->getUser());
 
@@ -396,10 +397,19 @@ class AdoptionConfigrationController extends AbstractController
         $form = $builder->getForm();
         $form->handleRequest($request);
 
-        $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $conservation->setThumbnailPath($thumbnail_path);
+            $addr = $request->get('conservations');
+            $addr = $request->get('conservations')['addr'];
+            $pref = $prefRepository->find($addr['PrefId']);
+            $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
+
+            $conservation->setPrefId($pref)
+                ->setPref($pref->getName())
+                ->setCity($addr['city'])
+                ->setAddress($addr['address'])
+                ->setBuilding($addr['building'])
+                ->setThumbnailPath($thumbnail_path);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservation);
             $entityManager->flush();

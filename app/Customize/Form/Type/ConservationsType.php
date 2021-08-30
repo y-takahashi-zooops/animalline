@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Customize\Form\Type\Adoption\ConservationAddressType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -33,9 +34,6 @@ class ConservationsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // ->add('user_id', IntegerType::class, [
-            //     'required' => false,
-            // ])
             ->add('is_organization', ChoiceType::class, [
                 'choices' =>
                 [
@@ -85,6 +83,7 @@ class ConservationsType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
+            ->add('addr', ConservationAddressType::class)
             ->add('zip', TextType::class, [
                 'trim' => true,
                 'required' => false,
@@ -150,12 +149,12 @@ class ConservationsType extends AbstractType
             ->add('tel', TextType::class, [
                 'trim' => true,
                 'attr' => [
-                    'maxlength' => 10,
+                    'maxlength' => 11,
                     'placeholder' => 'common.phone_number_sample'
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => 10,
+                        'max' => 11,
                     ]),
                     new Assert\Type([
                         'type' => 'numeric',
@@ -168,12 +167,12 @@ class ConservationsType extends AbstractType
                 'trim' => true,
                 'required' => false,
                 'attr' => [
-                    'maxlength' => 10,
+                    'maxlength' => 11,
                     'placeholder' => 'common.phone_number_sample',
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => 10,
+                        'max' => 11,
                     ]),
                     new Assert\Type([
                         'type' => 'numeric',
@@ -192,9 +191,6 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            // ->add('is_active', IntegerType::class, [
-            //     'required' => false,
-            // ])
             ->add('examination_status', IntegerType::class, [
                 'required' => false,
             ])
@@ -206,12 +202,6 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            // ->add('register_status_id', IntegerType::class, [
-            //     'required' => false,
-            //     'attr' => [
-            //         'maxlength' => 5,
-            //     ],
-            // ])
             ->add('thumbnail_path', FileType::class, [
                 'required' => false,
                 'mapped' => false
