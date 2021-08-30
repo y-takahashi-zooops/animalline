@@ -1,0 +1,126 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['adoptions', 'adoptions_pet_list'] %}
+
+{% block title %}{{ 'ペット一覧'|trans }}{% endblock %}
+{% block sub_title %}{{ '保護団体管理'|trans }}{% endblock %}
+
+{# {% form_theme searchForm '@admin/Form/bootstrap_4_layout.html.twig' %} #}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+{% endblock stylesheet %}
+
+{% block javascript %}
+    <script>
+        
+    </script>
+{% endblock javascript %}
+
+{% block main %}
+    <div class="c-outsideBlock">
+        <form id='search_form' method="post" action="{{ url('admin_product') }}">
+            {# {{ form_widget(searchForm._token) }} #}
+            <div class="c-outsideBlock__contents">
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label class="col-form-label" data-tooltip="true" data-placement="top" title="情報を入力して一覧の絞り込み検索ができます。">保護団体名<i class="fa fa-question-circle fa-lg ml-1"></i></label>
+                        <input type="text" id="" name="" class="form-control" />                            
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label class="col-form-label">犬種</label>
+                        <select id="" name="" class="form-control">
+                            <option value="1">全て</option>
+                            <option value="2">柴犬</option>
+                            <option value="3">トイプードル</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+ 
+            <div class="c-outsideBlock__contents mb-5">
+                <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.search'|trans }}</button>
+            </div>
+        </form>
+    </div>
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <div class="card rounded border-0 mb-4 d-block">
+                    <div class="card-body p-0">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th class="border-top-0 pt-2 pb-2"></th>
+                                    {# TODO:クリックで昇順ソート #}
+                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">ID</a></th>
+                                    <th class="border-top-0 pt-2 pb-2">画像</th>
+                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">保護団体名</th>
+                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">犬種</th>
+                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">登録日</th>
+                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">更新日</th>
+                                    <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="ex-adoption-1">
+                                   <td class="align-middle"></td>
+                                   <td class="align-middle">1</td>
+                                   <td class="align-middle">
+                                        <img alt="..." src="{{ asset('assets/img/thumbnail.png') }}"  style="max-width: 100px">
+                                    </td>
+                                    <td class="align-middle">保護団体１</td>
+                                    <td class="align-middle">柴犬</td>
+                                    <td class="align-middle">2018/05/28 19:14</td>
+                                    <td class="align-middle">2018/05/28 19:14</td>
+                                    <td class="align-middle pr-3" colspan="3">
+                                        <div class="text-right">
+                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
+                                                <a class="btn btn-ec-actionIcon" href="">
+                                                    <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr id="ex-adoption-2">
+                                   <td class="align-middle"></td>
+                                   <td class="align-middle">2</td>
+                                   <td class="align-middle">
+                                        <img alt="..." src="{{ asset('assets/img/thumbnail.png') }}"  style="max-width: 100px">
+                                    </td>
+                                    <td class="align-middle">保護団体２</td>
+                                    <td class="align-middle">柴犬</td>
+                                    <td class="align-middle">2018/09/28 19:14</td>
+                                    <td class="align-middle">2018/09/28 19:14</td>
+                                    <td class="align-middle pr-3" colspan="3">
+                                        <div class="text-right">
+                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top"  title="ペット情報編集">
+                                                <a class="btn btn-ec-actionIcon" href="">
+                                                    <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

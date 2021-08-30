@@ -1,0 +1,35 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['breeders', 'breeders_breeder_list'] %}
+
+{% block title %}{{ '審査情報表示'|trans }}{% endblock %}
+{% block sub_title %}{{ 'ブリーダー管理'|trans }}{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+{% endblock stylesheet %}
+
+{% block javascript %}{% endblock javascript %}
+
+{% block main %}
+<div class="c-outsideBlock">
+    <div class="c-outsideBlock__contents">
+        審査情報を表示する
+    </div>
+
+    <div class="c-outsideBlock__contents mb-5">
+        <button class="btn btn-ec-conversion px-5" type="submit">{{ '審査結果登録'|trans }}</button>
+    </div>
+</div>
+{% endblock %}
+
