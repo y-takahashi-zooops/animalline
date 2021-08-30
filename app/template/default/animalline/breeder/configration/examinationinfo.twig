@@ -1,539 +1,348 @@
 {% set site_type = 'breeder' %}
 {% extends 'ani_frame.twig' %}
 
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
 {% block main %}
-    <div class="ec-pageHeader">
-    <h1>{{ '犬舎・猫舎審査項目登録'|trans }}</h1>
-    </div>
-    <div class="ec-off1Grid">
-        <div class="ec-off1Grid__cell">
-            <form method="post" action="" novalidate class="h-adr">
-                <span class="p-country-name" style="display:none;">Japan</span>
-                <div class="ec-borderedDefs">
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">血統書発行団体情報</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="PedigreeIssuedGroup_1" name="PedigreeIssuedGroup" value="1" />
-                                    <label for="PedigreeIssuedGroup_1">
-                                        <span>団体名</span>
-                                    </label>
-                                </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">JKC</option>
-                                        <option value="2">KC</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="PedigreeIssuedGroup_2" name="PedigreeIssuedGroup" value="2" />
-                                    <label for="PedigreeIssuedGroup_2">
-                                        <span>その他</span>
-                                    </label>
-                                </div>
-                                <div class="ec-input">
-                                    <input type="text"/>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="PedigreeIssuedGroup_3" name="PedigreeIssuedGroup" value="3" />
-                                    <label for="PedigreeIssuedGroup_3">
-                                        <span>なし</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">飼育・保有している犬の総数</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="ec-select">     
-                                <select>
-                                    <option value="">----</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="…">…</option>
-                                    <option value="100">100</option>
-                                </select>
-                                <span>頭</span>
-                            </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">親犬頭数</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <label for="ParentPetAge_1">
-                                        <span>1～3歳</span>
-                                    </label>
-                                </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <label for="ParentPetAge_2">
-                                        <span>4～6歳</span>
-                                    </label>
-                                </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <label for="ParentPetAge_3">
-                                        <span>7歳以上</span>
-                                    </label>
-                                </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
-                                </div>
-                            </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">親犬の購入先</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <label for="ParentPetBuyFrom_1">
-                                        <span>ブリーダー</span>
-                                    </label>
-                                </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <label for="ParentPetBuyFrom_2">
-                                        <span>ショップ</span>
-                                    </label>
-                                </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <label for="ParentPetBuyFrom_3">
-                                        <span>その他</span>
-                                    </label>
-                                </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
-                                </div>
-                            </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">飼育スタッフ構成</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="row offset-md-0">
-                                <label class="ec-label required mr-2">犬舎運営者</label>
-                                <span>1名</span>
-                            </div>
-                            <div class="row offset-md-0">
-                                <label class="required">平均労働時間：</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <span>時間/1週間あたり</span>
-                            </div>
+	<div class="ec-pageHeader">
+		<h1>{{ '犬舎・' ~ petType ~ '舎審査項目登録'|trans }}</h1>
+	</div>
+	<div class="ec-off1Grid">
+		<div class="ec-off1Grid__cell">
+			{{ form_start(form) }}
+			{% if isEdit %}
+				<input hidden id="form-edit">
+			{% endif %}
+			<span class="p-country-name" style="display:none;">Japan</span>
+			<div class="ec-borderedDefs">
+				<dl>
+					<dt>
+						<label class="ec-label required">血統書発行団体情報</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						<div class="row offset-md-0">
+							{{ form_widget(form.pedigree_organization) }}
+							{{ form_errors(form.pedigree_organization) }}
+							<div class="ec-radio">
+								{{ form_widget(form.group_organization) }}
+								{{ form_errors(form.group_organization) }}
+							</div>
+						</div>
+						<div class="row offset-md-0">
+							<div class="ec-input">
+								{{ form_widget(form.pedigree_organization_other) }}
+								{{ form_errors(form.pedigree_organization_other) }}
+							</div>
+						</div>
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<label class="ec-label required">飼育・保有している{{ petType }}の総数</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						<div class="ec-input">
+							{{ form_widget(form.breeding_pet_count) }}
+							{{ form_errors(form.breeding_pet_count) }}
+						</div>
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<label class="ec-label required">親{{ petType }}頭数</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						<div class="row offset-md-0">
+							<div class="ec-radio">
+								<label>
+									<span>1～3歳</span>
+								</label>
+							</div>
+							<div class="ec-select">
+								{{ form_widget(form.parent_pet_count_1) }}
+								{{ form_errors(form.parent_pet_count_1) }}
+							</div>
+							<span class="ml-1">頭</span>
+						</div>
+						<div class="row offset-md-0">
+							<div class="ec-radio">
+								<label>
+									<span>4～6歳</span>
+								</label>
+							</div>
+							<div class="ec-select">
+								{{ form_widget(form.parent_pet_count_2) }}
+								{{ form_errors(form.parent_pet_count_2) }}
+							</div>
+							<span class="ml-1">頭</span>
+						</div>
+						<div class="row offset-md-0">
+							<div class="ec-radio">
+								<label>
+									<span>7歳以上</span>
+								</label>
+							</div>
+							<div class="ec-select">
+								{{ form_widget(form.parent_pet_count_3) }}
+								{{ form_errors(form.parent_pet_count_3) }}
+							</div>
+							<span class="ml-1">頭</span>
+						</div>
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<label class="ec-label required">親{{ petType }}の購入先</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						<div class="row offset-md-0">
+							<div class="ec-radio">
+								<label for="ParentPetBuyFrom_1">
+									<span>ブリーダー</span>
+								</label>
+							</div>
+							<div class="ec-select">
+								{{ form_widget(form.parent_pet_buy_place_1) }}
+								{{ form_errors(form.parent_pet_buy_place_1) }}
+							</div>
+							<span class="ml-1">頭</span>
+						</div>
+						<div class="row offset-md-0">
+							<div class="ec-radio">
+								<label for="ParentPetBuyFrom_2">
+									<span>ショップ</span>
+								</label>
+							</div>
+							<div class="ec-select">
+								{{ form_widget(form.parent_pet_buy_place_2) }}
+								{{ form_errors(form.parent_pet_buy_place_2) }}
+							</div>
+							<span class="ml-1">頭</span>
+						</div>
+						<div class="row offset-md-0">
+							<div class="ec-radio">
+								<label for="ParentPetBuyFrom_3">
+									<span>その他</span>
+								</label>
+							</div>
+							<div class="ec-select">
+								{{ form_widget(form.parent_pet_buy_place_3) }}
+								{{ form_errors(form.parent_pet_buy_place_3) }}
+							</div>
+							<span class="ml-1">頭</span>
+						</div>
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<label class="ec-label required">飼育スタッフ構成</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						<div class="row offset-md-0">
+							<label class="ec-label required mr-2">{{ petType }}舎運営者</label>
+							<span>1名</span>
+						</div>
+						<div class="row offset-md-0">
+							<label class="required">平均労働時間：</label>
+							<div class="ec-select">
+								{{ form_widget(form.owner_worktime_ave) }}
+								{{ form_errors(form.owner_worktime_ave) }}
+							</div>
+							<span class="ml-1">時間/1週間あたり</span>
+						</div>
 
-                            <div class="row offset-md-0">
-                                <label class="ec-label required mr-2">家族</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <span>名</span>
-                            </div>
-                            <div class="row offset-md-0">
-                                <label class="required">一人あたり平均労働時間：</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <span>時間/1週間あたり</span>
-                            </div>
+						<div class="row offset-md-0">
+							<label class="ec-label required mr-2">家族</label>
+							<div class="ec-select">
+								{{ form_widget(form.family_staff_count) }}
+								{{ form_errors(form.family_staff_count) }}
+							</div>
+							<span class="ml-1">名</span>
+						</div>
+						<div class="row offset-md-0">
+							<label class="required">一人あたり平均労働時間：</label>
+							<div class="ec-select">
+								{{ form_widget(form.family_staff_worktime_ave) }}
+								{{ form_errors(form.family_staff_worktime_ave) }}
+							</div>
+							<span class="ml-1">時間/1週間あたり</span>
+						</div>
 
-                            <div class="row offset-md-0">
-                                <label class="ec-label required mr-2">社員</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <span>名</span>
-                            </div>
-                            <div class="row offset-md-0">
-                                <label class="required">一人あたり平均労働時間：</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <span>時間/1週間あたり</span>
-                            </div>
+						<div class="row offset-md-0">
+							<label class="ec-label required mr-2">社員</label>
+							<div class="ec-select">
+								{{ form_widget(form.fulltime_staff_count) }}
+								{{ form_errors(form.fulltime_staff_count) }}
+							</div>
+							<span class="ml-1">名</span>
+						</div>
+						<div class="row offset-md-0">
+							<label class="required">一人あたり平均労働時間：</label>
+							<div class="ec-select">
+								{{ form_widget(form.fulltime_staff_worktime_ave) }}
+								{{ form_errors(form.fulltime_staff_worktime_ave) }}
+							</div>
+							<span class="ml-1">時間/1週間あたり</span>
+						</div>
 
-                            <div class="row offset-md-0">
-                                <label class="ec-label required mr-2">パート・アルバイト</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <span>名</span>
-                            </div>
-                            <div class="row offset-md-0">
-                                <label class="required">一人あたり平均労働時間：</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <span>時間/1週間あたり</span>
-                            </div>
+						<div class="row offset-md-0">
+							<label class="ec-label required mr-2">パート・アルバイト</label>
+							<div class="ec-select">
+								{{ form_widget(form.parttime_staff_count) }}
+								{{ form_errors(form.parttime_staff_count) }}
+							</div>
+							<span class="ml-1">名</span>
+						</div>
+						<div class="row offset-md-0">
+							<label class="required">一人あたり平均労働時間：</label>
+							<div class="ec-select">
+								{{ form_widget(form.parttime_staff_worktime_ave) }}
+								{{ form_errors(form.parttime_staff_worktime_ave) }}
+							</div>
+							<span class="ml-1">時間/1週間あたり</span>
+						</div>
 
-                            <div class="row offset-md-0">
-                                <label class="ec-label required mr-2">その他</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <span>名</span>
-                            </div>
-                            <div class="row offset-md-0">
-                                <label class="required">一人あたり平均労働時間：</label>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </div>
-                                <span>時間/1週間あたり</span>
-                            </div>
+						<div class="row offset-md-0">
+							<label class="ec-label required mr-2">その他</label>
+							<div class="ec-select">
+								{{ form_widget(form.other_staff_count) }}
+								{{ form_errors(form.other_staff_count) }}
+							</div>
+							<span class="ml-1">名</span>
+						</div>
+						<div class="row offset-md-0">
+							<label class="required">一人あたり平均労働時間：</label>
+							<div class="ec-select">
+								{{ form_widget(form.other_staff_worktime_ave) }}
+								{{ form_errors(form.other_staff_worktime_ave) }}
+							</div>
+							<span class="ml-1">時間/1週間あたり</span>
+						</div>
 
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">ブリーディング歴</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="ec-select">     
-                                <select>
-                                    <option value="">----</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="…">…</option>
-                                    <option value="100">100</option>
-                                </select>
-                                <span>年</span>
-                                <select>
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                </select>
-                                <span>ヶ月</span>
-                            </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">ショー参加経験</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="ec-radio">
-                                <input type="radio"  id="ShowParticipationExperience_1" name="ShowParticipationExperience" value="1" />
-                                <label for="ShowParticipationExperience_1">
-                                    <span>あり</span>
-                                </label>
-                                <input type="radio"  id="ShowParticipationExperience_2" name="ShowParticipationExperience" value="2" />
-                                <label for="ShowParticipationExperience_2">
-                                    <span>なし</span>
-                                </label>
-                            </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">親犬のケージ</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="ec-checkbox">
-                            <label>
-                                <input type="checkbox" name="ParentPetCage" required="required" value="1" />
-                                <span>休憩場所としてのみ利用できる小さいサイズ(分離型)</span>
-                            </label>
-                            <br>
-                            <label>
-                                <input type="checkbox" name="ParentPetCage" required="required" value="2" />
-                                <span>休憩場所と運動スペースを兼ねることのできる大きいサイズ(一体型)</span>
-                            </label>
-                            <br>
-                            <label>
-                                <input type="checkbox" name="ParentPetCage" required="required" value="3" />
-                                <span>その他</span>
-                            </label>
-                            <div class="ec-input">
-                                <input type="text"/>
-                            </div>
-                        </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">親犬の運動状況</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="ParentPetExerciseSituation_1" name="ParentPetExerciseSituation" value="1" />
-                                    <label for="ParentPetExerciseSituation_1">
-                                        <span>毎日1回はケージから出して運動させている</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="ParentPetExerciseSituation_2" name="ParentPetExerciseSituation" value="2" />
-                                    <label for="ParentPetExerciseSituation_2">
-                                        <span>毎日ではないが、ケージから出して運動させている</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="ParentPetExerciseSituation_3" name="ParentPetExerciseSituation" value="3" />
-                                    <label for="ParentPetExerciseSituation_3">
-                                        <span>飼育スペースと運動スペースを一体型として飼育しているため、ケージから出せない</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="ParentPetExerciseSituation_4" name="ParentPetExerciseSituation" value="4" />
-                                    <label for="ParentPetExerciseSituation_4">
-                                        <span>その他</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="ec-input">
-                                <input type="text"/>
-                            </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">現時点で掲載可能な子犬</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="CanBePostedPet_1" name="CanBePostedPet" value="1" />
-                                    <label for="CanBePostedPet_1">
-                                        <span>あり</span>
-                                    </label>
-                                </div>
-                                <div class="ec-select">     
-                                    <select>
-                                        <option value="">----</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="…">…</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                    <span>頭</span>
-                                </div>
-                            </div>
-                            <div class="row offset-md-0">
-                                <div class="ec-radio">
-                                    <input type="radio"  id="CanBePostedPet_2" name="CanBePostedPet" value="2" />
-                                    <label for="CanBePostedPet_2">
-                                        <span>なし</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">自身での繁殖経験</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="ec-radio">
-                                <input type="radio"  id="BreedingExperience_1" name="BreedingExperience" value="1" />
-                                <label for="BreedingExperience_1">
-                                    <span>なし</span>
-                                </label>
-                                <input type="radio"  id="BreedingExperience_2" name="BreedingExperience" value="2" />
-                                <label for="BreedingExperience_2">
-                                    <span>1～4回</span>
-                                </label>
-                                <input type="radio"  id="BreedingExperience_3" name="BreedingExperience" value="3" />
-                                <label for="BreedingExperience_3">
-                                    <span>5～9回</span>
-                                </label>
-                                <input type="radio"  id="BreedingExperience_4" name="BreedingExperience" value="4" />
-                                <label for="BreedingExperience_4">
-                                    <span>10～19回</span>
-                                </label>
-                                <input type="radio"  id="BreedingExperience_5" name="BreedingExperience" value="5" />
-                                <label for="BreedingExperience_5">
-                                    <span>20～49回</span>
-                                </label>
-                                <input type="radio"  id="BreedingExperience_6" name="BreedingExperience" value="6" />
-                                <label for="BreedingExperience_6">
-                                    <span>50回以上</span>
-                                </label>
-                            </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>
-                            <label class="ec-label required">直接の販売経験</label><span class="ec-required">必須</span>
-                        </dt>
-                        <dd>
-                            <div class="ec-radio">
-                            <input type="radio"  id="SeleExperience_1" name="SeleExperience" value="1" />
-                            <label for="SeleExperience_1">
-                                <span>なし</span>
-                            </label>
-                            <input type="radio"  id="SeleExperience_2" name="SeleExperience" value="2" />
-                            <label for="SeleExperience_2">
-                                <span>1～4回</span>
-                            </label>
-                            <input type="radio"  id="SeleExperience_3" name="SeleExperience" value="3" />
-                            <label for="SeleExperience_3">
-                                <span>5～9回</span>
-                            </label>
-                            <input type="radio"  id="SeleExperience_4" name="SeleExperience" value="4" />
-                            <label for="SeleExperience_4">
-                                <span>10～19回</span>
-                            </label>
-                            <input type="radio"  id="SeleExperience_5" name="SeleExperience" value="5" />
-                            <label for="SeleExperience_5">
-                                <span>20～49回</span>
-                            </label>
-                            <input type="radio"  id="SeleExperience_6" name="SeleExperience" value="6" />
-                            <label for="SeleExperience_6">
-                                <span>50回以上</span>
-                            </label>
-                        </div>
-                        </dd>
-                    </dl>
-                    {#
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<label class="ec-label required">ブリーディング歴</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						<div class="row offset-md-0">
+							<div class="ec-select">
+								{{ form_widget(form.breeding_exp_year) }}
+								{{ form_errors(form.breeding_exp_year) }}
+							</div>
+							<span class="ml-1">年</span>
+							<div class="ec-select ml-1">
+								{{ form_widget(form.breeding_exp_month) }}
+								{{ form_errors(form.breeding_exp_month) }}
+							</div>
+							<span class="ml-1">ヶ月</span>
+						</div>
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<label class="ec-label required">ショー参加経験</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						<div class="ec-radio">
+							<div class="ec-radio">
+								{{ form_widget(form.is_participate_show) }}
+								{{ form_errors(form.is_participate_show) }}
+							</div>
+						</div>
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<label class="ec-label required">親{{ petType }}のケージ</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						<div class="ec-checkbox">
+							<label>
+								{{ form_widget(form.cage_size_1) }}
+							</label>
+							<br>
+							<label>
+								{{ form_widget(form.cage_size_2) }}
+							</label>
+							<br>
+							<label>
+								{{ form_widget(form.cage_size_3) }}
+							</label>
+							<div class="ec-input">
+								{{ form_widget(form.cage_size_other) }}
+								{{ form_errors(form.cage_size_other) }}
+							</div>
+						</div>
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<label class="ec-label required">親{{ petType }}の運動状況</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						<div class="ec-checkbox">
+							<label>
+								{{ form_widget(form.exercise_status) }}
+								{{ form_errors(form.exercise_status) }}
+							</label>
+							<div class="ec-input">
+								{{ form_widget(form.exercise_status_other) }}
+								{{ form_errors(form.exercise_status_other) }}
+							</div>
+						</div>
+					</dd>
+				</dl>
+				<dl>
+					<dt>
+						<label class="ec-label required">現時点で掲載可能な子{{ petType }}</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						<div class="row offset-md-0">
+							{{ form_widget(form.is_now_publising) }}
+							{{ form_errors(form.is_now_publising) }}
+							<div class="ec-radio">
+								{{ form_widget(form.publish_pet_count) }}
+								{{ form_errors(form.publish_pet_count) }}
+							</div>
+						</div>
+					</dd>
+				</dl>
+
+				<dl>
+					<dt>
+						<label class="ec-label required">自身での繁殖経験</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						{{ form_widget(form.breeding_experience) }}
+						{{ form_errors(form.breeding_experience) }}
+					</dd>
+				</dl>
+
+				<dl>
+					<dt>
+						<label class="ec-label required">直接の販売経験</label>
+						<span class="ec-required">必須</span>
+					</dt>
+					<dd>
+						{{ form_widget(form.selling_experience) }}
+						{{ form_errors(form.selling_experience) }}
+					</dd>
+				</dl>
+
+				{#
                     <dl>
                         <dt>
                             <label class="ec-label required">自家繁殖以外の生体の販売</label><span class="ec-required">必須</span>
@@ -713,21 +522,28 @@
                             </div>
                         </dd>
                     </dl>
-                    #}
-                </div>
-                <div class="ec-registerRole__actions">
-                    <div class="ec-off4Grid">
-                        <div class="ec-off4Grid__cell">
-                            <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+				#}
+			</div>
+			<div class="ec-registerRole__actions">
+				<div class="ec-off4Grid">
+					<div class="ec-off4Grid__cell">
+						<button class="ec-blockBtn--action" data>登録</button>
+					</div>
+				</div>
+			</div>
+			{{ form_end(form) }}
+		</div>
+	</div>
+
+    {{ include('animalline/components/_modal_confirm.twig') }}
 {% endblock %}
+
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+	<link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 {% endblock %}
-{% block javascript %}{% endblock %}
-        
+
+{% block javascript %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="{{ asset('assets/js/examinationinfo.js') }}"></script>
+{% endblock %}
