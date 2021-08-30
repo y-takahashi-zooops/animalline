@@ -7,6 +7,7 @@ use Customize\Entity\ConservationContacts;
 use Customize\Entity\ConservationPets;
 use Customize\Entity\ConservationPetImage;
 use Customize\Form\Type\ConservationPetsType;
+use Customize\Form\Type\ConservationsType;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Repository\ConservationPetsRepository;
@@ -41,8 +42,7 @@ class AdoptionConfigrationController extends AbstractController
         ConservationContactsRepository $conservationContactsRepository,
         ConservationPetsRepository     $conservationPetsRepository,
         ConservationPetImageRepository $conservationPetImageRepository
-    )
-    {
+    ) {
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
@@ -367,5 +367,33 @@ class AdoptionConfigrationController extends AbstractController
         $file = $folderPath . uniqid() . '.' . $image_type;
         file_put_contents($file, $image_base64);
         return new JsonResponse($file);
+    }
+
+    /**
+     * @Route("/adoption/configration/baseinfo", name="adoption_baseinfo")
+     * @Template("/animalline/adoption/configration/baseinfo.twig")
+     */
+    public function baseinfo(Request $request, ConservationsRepository $conservationsRepository)
+    {
+        $conservation = $conservationsRepository->find($this->getUser());
+
+        $builder = $this->formFactory->createBuilder(ConservationsType::class, $conservation);
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $conservation->setThumbnailPath($thumbnail_path);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($conservation);
+            $entityManager->flush();
+            return $this->redirectToRoute('adoption_configration');
+        }
+
+        return [
+            'conservation' => $conservation,
+            'form' => $form->createView()
+        ];
     }
 }
