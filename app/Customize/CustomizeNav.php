@@ -21,10 +21,6 @@ class CustomizeNav implements EccubeNav
 						'name' => '保護団体一覧',
 						'url' => 'admin_adoption_list',
 					],
-					'adoptions_pet_list' => [
-						'name' => 'ペット一覧',
-						'url' => 'admin_adoption_pet_list',
-					],
 				],
 			],
 			'breeders' => [
@@ -34,10 +30,6 @@ class CustomizeNav implements EccubeNav
 					'breeders_breeder_list' => [
 						'name' => 'ブリーダー一覧',
 						'url' => 'admin_breeder_list',
-					],
-					'breeders_pet_list' => [
-						'name' => 'ペット一覧',
-						'url' => 'admin_breeder_pet_list',
 					],
 				],
 			],

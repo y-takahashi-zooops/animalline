@@ -47,6 +47,15 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * @Route("/%eccube_admin_route%/adoption/house/{id}", name="admin_adoption_house", requirements={"id" = "\d+"})
+     * @Template("@admin/Adoption/house.twig")
+     */
+    public function House(Request $request)
+    {
+        return;
+    }
+
+    /**
      * @Route("/%eccube_admin_route%/adoption/examination/{id}", name="admin_adoption_examination", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/examination.twig")
      */
@@ -56,10 +65,19 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/adoption/pet_list", name="admin_adoption_pet_list")
+     * @Route("/%eccube_admin_route%/adoption/pet/list/{id}", name="admin_adoption_pet_list", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/pet/index.twig")
      */
     public function pet_index(Request $request)
+    {
+        return;
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/adoption/pet/edit/{id}", name="admin_adoption_pet_edit", requirements={"id" = "\d+"})
+     * @Template("@admin/Adoption/pet/edit.twig")
+     */
+    public function pet_edit(Request $request)
     {
         return;
     }

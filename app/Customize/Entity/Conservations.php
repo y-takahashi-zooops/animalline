@@ -111,6 +111,11 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $examination_status;
 
     /**
+     * @ORM\Column(name="handling_pet_kind", type="smallint", options={"default" = 0})
+     */
+    private $handling_pet_kind = 0;
+
+    /**
      * @ORM\Column(name="pr_text", type="text", nullable=true)
      */
     private $pr_text;
@@ -371,13 +376,25 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this->examination_status;
     }
 
+    public function setHandlingPetKind(?int $handling_pet_kind): self
+    {
+        $this->handling_pet_kind = $handling_pet_kind;
+
+        return $this;
+    }
+
+    public function getHandlingPetKind(): ?int
+    {
+        return $this->handling_pet_kind;
+    }
+
     public function setExaminationStatus(?int $examination_status): self
     {
         $this->examination_status = $examination_status;
 
         return $this;
     }
-
+    
     public function getPrText(): ?string
     {
         return $this->pr_text;

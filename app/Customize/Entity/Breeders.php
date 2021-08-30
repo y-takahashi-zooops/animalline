@@ -143,6 +143,11 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $is_active = 0;
 
     /**
+     * @ORM\Column(name="handling_pet_kind", type="smallint", options={"default" = 0})
+     */
+    private $handling_pet_kind = 0;
+
+    /**
      * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
@@ -187,6 +192,7 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
      */
     private $create_date;
 
+    
     /**
      * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
@@ -489,6 +495,18 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this;
     }
 
+    public function setHandlingPetKind(?int $handling_pet_kind): self
+    {
+        $this->handling_pet_kind = $handling_pet_kind;
+
+        return $this;
+    }
+
+    public function getHandlingPetKind(): ?int
+    {
+        return $this->handling_pet_kind;
+    }
+    
     public function getIsActive(): ?int
     {
         return $this->is_active;

@@ -47,6 +47,15 @@ class BreederController extends AbstractController
     }
 
     /**
+     * @Route("/%eccube_admin_route%/breeder/house/{id}", name="admin_breeder_house", requirements={"id" = "\d+"})
+     * @Template("@admin/Breeder/house.twig")
+     */
+    public function House(Request $request)
+    {
+        return;
+    }
+
+    /**
      * @Route("/%eccube_admin_route%/breeder/examination/{id}", name="admin_breeder_examination", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/examination.twig")
      */
@@ -56,10 +65,19 @@ class BreederController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/breeder/pet_list", name="admin_breeder_pet_list")
+     * @Route("/%eccube_admin_route%/breeder/pet/list/{id}", name="admin_breeder_pet_list", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/pet/index.twig")
      */
     public function pet_index(Request $request)
+    {
+        return;
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/adoption/pet/edit/{id}", name="admin_breeder_pet_edit", requirements={"id" = "\d+"})
+     * @Template("@admin/Breeder/pet/edit.twig")
+     */
+    public function pet_edit(Request $request)
     {
         return;
     }
