@@ -1,0 +1,67 @@
+<?php
+
+/*
+ * This file is part of EC-CUBE
+ *
+ * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ *
+ * http://www.ec-cube.co.jp/
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Customize\Controller\Admin;
+
+use Eccube\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+
+class AdoptionController extends AbstractController
+{
+    /**
+     * AdoptionController constructor.
+     *
+     */
+    public function __construct(
+    ) {
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/adoption/adoption_list", name="admin_adoption_list")
+     * @Template("@admin/Adoption/index.twig")
+     */
+    public function index(Request $request)
+    {
+        return;
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/adoption/edit/{id}", name="admin_adoption_edit", requirements={"id" = "\d+"})
+     * @Template("@admin/Adoption/edit.twig")
+     */
+    public function Edit(Request $request)
+    {
+        return;
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/adoption/examination/{id}", name="admin_adoption_examination", requirements={"id" = "\d+"})
+     * @Template("@admin/Adoption/examination.twig")
+     */
+    public function Examination(Request $request)
+    {
+        return;
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/adoption/pet_list", name="admin_adoption_pet_list")
+     * @Template("@admin/Adoption/pet/index.twig")
+     */
+    public function pet_index(Request $request)
+    {
+        return;
+    }
+
+}
