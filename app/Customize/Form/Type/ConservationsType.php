@@ -9,9 +9,12 @@ use Eccube\Form\Validator\Email;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Customize\Form\Type\Adoption\ConservationAddressType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -31,15 +34,12 @@ class ConservationsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('user_id', IntegerType::class, [
-                'required' => false,
-            ])
             ->add('is_organization', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '個人' => AnilineConf::ANILINE_ORGANIZATION_PERSONAL,
-                        '団体' => AnilineConf::ANILINE_ORGANIZATION_GROUP
-                    ],
+                [
+                    '個人' => AnilineConf::ANILINE_ORGANIZATION_PERSONAL,
+                    '団体' => AnilineConf::ANILINE_ORGANIZATION_GROUP
+                ],
                 'required' => false,
             ])
             ->add('organization_name', TextType::class, [
@@ -54,7 +54,6 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('owner_name', TextType::class, [
-                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -62,10 +61,14 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[^\s ]+$/u',
+                        'message' => 'form_error.not_contain_spaces',
+                    ]),
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('owner_kana', TextType::class, [
-                'required' => false,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -73,30 +76,36 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[ァ-ヶｦ-ﾟー]+$/u',
+                        'message' => 'form_error.kana_only',
+                    ]),
+                    new Assert\NotBlank()
                 ]
             ])
+            ->add('addr', ConservationAddressType::class)
             ->add('zip', TextType::class, [
+                'trim' => true,
                 'required' => false,
                 'attr' => [
                     'maxlength' => 7,
+                    'class' => 'p-postal-code',
+                    'placeholder' => 'common.postal_code_sample'
                 ],
                 'constraints' => [
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ]),
                     new Assert\Length([
                         'max' => 7,
-                    ]),
+                    ])
                 ]
             ])
-            ->add('PrefId', EntityType::class, [
-                'class' => '\Eccube\Entity\Master\Pref',
-                'choice_label' => function (\Eccube\Entity\Master\Pref $preId) {
-                    return $preId->getId();
-                },
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
+            ->add('PrefId', TextType::class, [
+                'required' => false,
             ])
-            ->add('pref_id', TextType::class, [
+            ->add('pref', TextType::class, [
                 'required' => false,
                 'attr' => [
                     'maxlength' => 10,
@@ -138,25 +147,37 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('tel', TextType::class, [
-                'required' => false,
+                'trim' => true,
                 'attr' => [
-                    'maxlength' => 10,
+                    'maxlength' => 11,
+                    'placeholder' => 'common.phone_number_sample'
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => 10,
+                        'max' => 11,
                     ]),
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ]),
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('fax', TextType::class, [
+                'trim' => true,
                 'required' => false,
                 'attr' => [
-                    'maxlength' => 10,
+                    'maxlength' => 11,
+                    'placeholder' => 'common.phone_number_sample',
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => 10,
+                        'max' => 11,
                     ]),
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ])
                 ]
             ])
             ->add('homepage_url', TextType::class, [
@@ -170,13 +191,10 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('is_active', IntegerType::class, [
-                'required' => false,
-            ])
             ->add('examination_status', IntegerType::class, [
                 'required' => false,
             ])
-            ->add('pr_text', TextType::class, [
+            ->add('pr_text', TextareaType::class, [
                 'required' => false,
                 'constraints' => [
                     new Assert\Length([
@@ -184,63 +202,9 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('email', EmailType::class, [
+            ->add('thumbnail_path', FileType::class, [
                 'required' => false,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
-                ],
-            ])
-            ->add('password', PasswordType::class, [
-                'required' => false,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                ]
-            ])
-            ->add('register_status_id', IntegerType::class, [
-                'required' => false,
-                'attr' => [
-                    'maxlength' => 5,
-                ],
-            ])
-            ->add('salt', TextType::class, [
-                'required' => false,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                ]
-            ])
-            ->add('secret_key', TextType::class, [
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                ]
-            ])
-            ->add('thumbnail_path', TextType::class, [
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                ]
+                'mapped' => false
             ]);
     }
 

@@ -65,7 +65,7 @@ class ConservationsHouse
      *   @ORM\JoinColumn(name="conservation_house_pref_id", referencedColumnName="id", nullable=true)
      * })
      */
-    private $ConservationHousePref;
+    private $Pref;
 
     /**
      * @ORM\Column(name="conservation_house_pref", type="string", length=11, nullable=true)
@@ -207,9 +207,9 @@ class ConservationsHouse
      *
      * @return ConservationsHouse
      */
-    public function setConservationHousePrefId(\Eccube\Entity\Master\Pref $pref = null): ConservationsHouse
+    public function setPref(\Eccube\Entity\Master\Pref $pref = null): ConservationsHouse
     {
-        $this->ConservationHousePref = $pref;
+        $this->Pref = $pref;
 
         return $this;
     }
@@ -219,9 +219,9 @@ class ConservationsHouse
      *
      * @return \Eccube\Entity\Master\Pref|null
      */
-    public function getConservationHousePrefId(): ?\Eccube\Entity\Master\Pref
+    public function getPref(): ?\Eccube\Entity\Master\Pref
     {
-        return $this->ConservationHousePref;
+        return $this->Pref;
     }
 
     public function getConservationHousePref(): ?string
