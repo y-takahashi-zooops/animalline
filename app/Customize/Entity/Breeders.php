@@ -36,12 +36,12 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $breeder_kana;
 
     /**
-     * @ORM\Column(name="breeder_tel", type="string", length=10, nullable=true)
+     * @ORM\Column(name="breeder_tel", type="string", length=11, nullable=true)
      */
     private $breeder_tel;
 
     /**
-     * @ORM\Column(name="breeder_fax", type="string", length=10, nullable=true)
+     * @ORM\Column(name="breeder_fax", type="string", length=11, nullable=true)
      */
     private $breeder_fax;
 

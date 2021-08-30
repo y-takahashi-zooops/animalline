@@ -4,6 +4,7 @@ namespace Customize\Service;
 
 use Customize\Config\AnilineConf;
 use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\PrefAdjacentRepository;
 
 class AdoptionQueryService
 {
@@ -13,20 +14,29 @@ class AdoptionQueryService
     protected $conservationPetsRepository;
 
     /**
+     * @var PrefAdjacentRepository
+     */
+    protected $prefAdjacentRepository;
+
+    /**
      * AdoptionQueryService constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
+     * @param PrefAdjacentRepository $prefAdjacentRepository
      */
-    public function __construct (
-        ConservationPetsRepository     $conservationPetsRepository
-    ) {
+    public function __construct(
+        ConservationPetsRepository $conservationPetsRepository,
+        PrefAdjacentRepository     $prefAdjacentRepository
+    )
+    {
         $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->prefAdjacentRepository = $prefAdjacentRepository;
     }
 
     /**
      * Retrive conservation pets
-     * 
-     * @param  Object $request
+     *
+     * @param Object $request
      * @return array
      */
     public function searchPetsResult($request)
@@ -43,7 +53,7 @@ class AdoptionQueryService
 
         if ($request->get('breed_type')) {
             $query->andWhere('p.BreedsType = :breeds_type')
-            ->setParameter('breeds_type', $request->get('breed_type'));
+                ->setParameter('breeds_type', $request->get('breed_type'));
         }
 
         if ($request->get('gender')) {
@@ -52,8 +62,23 @@ class AdoptionQueryService
         }
 
         if ($request->get('region')) {
-            $query->andWhere('c.PrefId = :pref')
+            $query->innerJoin('Customize\Entity\ConservationsHouse', 'ch', 'WITH', 'c.id = ch.Conservation')
+                ->andWhere('ch.Pref = :pref')
                 ->setParameter('pref', $request->get('region'));
+            if ($request->get('adjacent')) {
+                $queryHouse = $this->prefAdjacentRepository->createQueryBuilder('pa')
+                    ->andWhere('pa.pref_id = :pref')
+                    ->setParameter('pref', $request->get('region'))
+                    ->select('pa.adjacent_pref_id');
+
+                $result = $queryHouse->getQuery()
+                    ->getArrayResult();
+                $arr = array_column($result, 'adjacent_pref_id');
+                $query->orWhere('ch.Pref in (:arr)')
+                    ->setParameter('arr', $arr)
+                    ->andWhere('p.pet_kind = :pet_kind')
+                    ->setParameter('pet_kind', $request->get('pet_kind'));
+            }
         }
 
         return $query->addOrderBy('p.release_date', 'DESC')

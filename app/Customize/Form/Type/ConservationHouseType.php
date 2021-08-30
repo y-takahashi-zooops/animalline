@@ -1,25 +1,17 @@
 <?php
 
-namespace Customize\Form\Type\Breeder;
+namespace Customize\Form\Type;
 
-use Customize\Config\AnilineConf;
-use Customize\Entity\BreederHouse;
-use Customize\Entity\Breeders;
+use Customize\Entity\ConservationsHouse;
 use Eccube\Common\EccubeConfig;
-use Customize\Form\Type\AddressHouseType;
-use Eccube\Form\Type\PhoneNumberType;
-use Eccube\Form\Type\PostalType;
+use Customize\Form\Type\ConservationAddressHouseType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class BreederHouseType extends AbstractType
+class ConservationHouseType extends AbstractType
 {
     /**
      * @var EccubeConfig
@@ -34,7 +26,7 @@ class BreederHouseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('breeder_house_name', TextType::class, [
+            ->add('conservation_house_name', TextType::class, [
                 'required' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
@@ -50,7 +42,7 @@ class BreederHouseType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
-            ->add('breeder_house_kana', TextType::class, [
+            ->add('conservation_house_kana', TextType::class, [
                 'required' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
@@ -66,7 +58,7 @@ class BreederHouseType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
-            ->add('breeder_house_house_zip', TextType::class, [
+            ->add('conservation_house_house_zip', TextType::class, [
                 'required' => true,
                 'constraints' => [
                     new Assert\Type([
@@ -84,8 +76,26 @@ class BreederHouseType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('address', AddressHouseType::class)
-            ->add('breeder_house_house_tel', TextType::class, [
+            ->add('address', ConservationAddressHouseType::class)
+            ->add('conservation_house_house_tel', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 11,
+                    ]),
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'placeholder' => 'common.phone_number_sample',
+                    'maxlength' => 11,
+                ],
+                'trim' => true,
+            ])
+            ->add('conservation_house_house_fax', TextType::class, [
                 'required' => true,
                 'constraints' => [
                     new Assert\Length([
@@ -103,25 +113,7 @@ class BreederHouseType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('breeder_house_house_fax', TextType::class, [
-                'required' => true,
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => 11,
-                    ]),
-                    new Assert\Type([
-                        'type' => 'numeric',
-                        'message' => 'form_error.numeric_only',
-                    ]),
-                    new Assert\NotBlank(),
-                ],
-                'attr' => [
-                    'placeholder' => 'common.phone_number_sample',
-                    'maxlength' => 11,
-                ],
-                'trim' => true,
-            ])
-            ->add('breeder_house_front_name', TextType::class, [
+            ->add('conservation_house_front_name', TextType::class, [
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -133,7 +125,7 @@ class BreederHouseType extends AbstractType
                 ],
                 'required' => true,
             ])
-            ->add('breeder_house_front_tel', TextType::class, [
+            ->add('conservation_house_front_tel', TextType::class, [
                 'required' => true,
                 'constraints' => [
                     new Assert\Length([
@@ -161,7 +153,7 @@ class BreederHouseType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => BreederHouse::class,
+            'data_class' => ConservationsHouse::class,
         ]);
     }
 }

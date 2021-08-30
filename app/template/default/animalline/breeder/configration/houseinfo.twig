@@ -76,8 +76,8 @@
                                 {{ form_label(form.breeder_house_house_tel, 'TEL', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-halfInput{{ has_errors(form.breeder_house_house_tel) ? ' error' }}">
-                                    {{ form_widget(form.breeder_house_house_tel, { 'attr': { 'placeholder': 'TEL' }}) }}
+                                <div class="ec-telInput{{ has_errors(form.breeder_house_house_tel) ? ' error' }}">
+                                    {{ form_widget(form.breeder_house_house_tel) }}
                                     {{ form_errors(form.breeder_house_house_tel) }}
                                 </div>
                             </dd>
@@ -87,8 +87,8 @@
                                 {{ form_label(form.breeder_house_house_fax, 'FAX', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-halfInput{{ has_errors(form.breeder_house_house_fax) ? ' error' }}">
-                                    {{ form_widget(form.breeder_house_house_fax, { 'attr': { 'placeholder': 'FAX' }}) }}
+                                <div class="ec-telInput{{ has_errors(form.breeder_house_house_fax) ? ' error' }}">
+                                    {{ form_widget(form.breeder_house_house_fax) }}
                                     {{ form_errors(form.breeder_house_house_fax) }}
                                 </div>
                             </dd>
@@ -110,8 +110,8 @@
                                 {{ form_label(form.breeder_house_front_tel, '担当者TEL', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-halfInput{{ has_errors(form.breeder_house_front_tel) ? ' error' }}">
-                                    {{ form_widget(form.breeder_house_front_tel, { 'attr': { 'placeholder': '担当者TEL' }}) }}
+                                <div class="ec-telInput{{ has_errors(form.breeder_house_front_tel) ? ' error' }}">
+                                    {{ form_widget(form.breeder_house_front_tel) }}
                                     {{ form_errors(form.breeder_house_front_tel) }}
                                 </div>
                             </dd>
@@ -138,5 +138,6 @@
 <script src="{{ asset('assets/js/houseinfo.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 {% endblock %}
         

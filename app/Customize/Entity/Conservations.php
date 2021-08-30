@@ -265,7 +265,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    public function getPrefId(): \Eccube\Entity\Master\Pref
+    public function getPrefId(): ?\Eccube\Entity\Master\Pref
     {
         return $this->PrefId;
     }
@@ -414,7 +414,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    public function setRegisterStatusId(int $register_status_id): self
+    public function setRegisterStatusId(?int $register_status_id): self
     {
         $this->register_status_id = $register_status_id;
 
@@ -507,7 +507,7 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this->thumbnail_path;
     }
 
-    public function setThumbnailPath(string $thumbnail_path): self
+    public function setThumbnailPath(?string $thumbnail_path): self
     {
         $this->thumbnail_path = $thumbnail_path;
 

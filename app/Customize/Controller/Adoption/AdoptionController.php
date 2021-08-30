@@ -6,12 +6,14 @@ use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationContacts;
 use Customize\Entity\PetsFavorite;
+use Customize\Repository\BreedsRepository;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationPetImageRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Customize\Repository\SendoffReasonRepository;
 use Eccube\Controller\AbstractController;
+use Eccube\Repository\Master\PrefRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,6 +60,16 @@ class AdoptionController extends AbstractController
     protected $sendoffReasonRepository;
 
     /**
+     * @var BreedsRepository
+     */
+    protected $breedsRepository;
+
+    /**
+     * @var PrefRepository
+     */
+    protected $prefRepository;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
@@ -66,6 +78,8 @@ class AdoptionController extends AbstractController
      * @param AdoptionQueryService $adoptionQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
+     * @param BreedsRepository $breedsRepository
+     * @param PrefRepository $prefRepository
      */
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
@@ -73,14 +87,19 @@ class AdoptionController extends AbstractController
         ConservationContactsRepository $conservationContactsRepository,
         AdoptionQueryService           $adoptionQueryService,
         PetsFavoriteRepository         $petsFavoriteRepository,
-        SendoffReasonRepository         $sendoffReasonRepository
-    ) {
+        SendoffReasonRepository        $sendoffReasonRepository,
+        BreedsRepository               $breedsRepository,
+        PrefRepository                 $prefRepository
+    )
+    {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->sendoffReasonRepository = $sendoffReasonRepository;
+        $this->breedsRepository = $breedsRepository;
+        $this->prefRepository = $prefRepository;
     }
 
     /**
@@ -100,7 +119,7 @@ class AdoptionController extends AbstractController
      * @Route("/adoption/pet/search/result", name="adoption_pet_search_result")
      * @Template("animalline/adoption/pet/search_result.twig")
      */
-    public function petSearchResult(PaginatorInterface $paginator, Request $request, ConservationPetsRepository $conservationPetsRepository): Response
+    public function petSearchResult(PaginatorInterface $paginator, Request $request): Response
     {
         $petResults = $this->adoptionQueryService->searchPetsResult($request);
         $pets = $paginator->paginate(
@@ -108,8 +127,16 @@ class AdoptionController extends AbstractController
             $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $regions = $this->prefRepository->findAll();
 
-        return $this->render('animalline/adoption/pet/search_result.twig', ['pets' => $pets]);
+        return $this->render('animalline/adoption/pet/search_result.twig', [
+            'pets' => $pets,
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions
+        ]);
     }
 
     /**
