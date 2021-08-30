@@ -42,15 +42,6 @@ class CustomTopController extends AbstractController
     }
 
     /**
-     * @Route("/policy", name="ani_policy")
-     * @Template("ani_policy.twig")
-     */
-    public function policy()
-    {
-        return [];
-    }
-
-    /**
      * @Route("/terms", name="ani_terms")
      * @Template("ani_terms.twig")
      */
