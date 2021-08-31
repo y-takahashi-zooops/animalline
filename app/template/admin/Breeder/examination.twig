@@ -22,14 +22,360 @@ file that was distributed with this source code.
 {% block javascript %}{% endblock javascript %}
 
 {% block main %}
-<div class="c-outsideBlock">
-    <div class="c-outsideBlock__contents">
-        審査情報を表示する
-    </div>
-
-    <div class="c-outsideBlock__contents mb-5">
-        <button class="btn btn-ec-conversion px-5" type="submit">{{ '審査結果登録'|trans }}</button>
-    </div>
-</div>
+    <form role="form" name="form1" id="form1" method="post" action="">
+        <div class="c-contentsArea__cols">
+            <div class="c-contentsArea__primaryCol">
+                <div class="c-primaryCol">
+                    <div class="card rounded border-0 mb-4">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-inline-block">
+                                    <span class="card-title">
+                                        {{ '審査情報'|trans }}
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <a data-toggle="collapse" href="#basicConfig" aria-expanded="false"
+                                       aria-controls="basicConfig">
+                                        <i class="fa fa-angle-up fa-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse show ec-cardCollapse" id="basicConfig">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>種別</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        <select id="" name="" class="form-control">
+                                            <option value="1">犬舎</option>
+                                            <option value="2">猫舎</option>
+                                        </select>        
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>血統証発行団体</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        <span class="form-control">JKC</span>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>飼育している犬の頭数</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-2 input-group-append">
+                                            <div class="mr-4 input-group-append">
+                                                <span class="pt-2">1～3歳：</span>
+                                                <div>
+                                                    <span class="form-control">40</span>
+                                                </div>
+                                                <span class="ml-1 pt-2">頭</span>
+                                            </div>
+                                            <div class="mr-4 input-group-append">
+                                                <span class="pt-2">4～6歳：</span>
+                                                <div>
+                                                    <span class="form-control">10</span>
+                                                </div>
+                                                <span class="ml-1 pt-2">頭</span>
+                                            </div>
+                                            <div class="mr-4 input-group-append">
+                                                <span class="pt-2">7歳以上：</span>
+                                                <div>
+                                                    <span class="form-control">22</span>
+                                                </div>
+                                                <span class="ml-1 pt-2">頭</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>親件購入先</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-2 input-group-append">
+                                            <div class="mr-4 input-group-append">
+                                                <span class="pt-2">ブリーダー：</span>
+                                                <div>
+                                                    <span class="form-control">40</span>
+                                                </div>
+                                                <span class="ml-1 pt-2">頭</span>
+                                            </div>
+                                            <div class="mr-4 input-group-append">
+                                                <span class="pt-2">ショップ：</span>
+                                                <div>
+                                                    <span class="form-control">10</span>
+                                                </div>
+                                                <span class="ml-1 pt-2">頭</span>
+                                            </div>
+                                            <div class="mr-4 input-group-append">
+                                                <span class="pt-2">その他：</span>
+                                                <div>
+                                                    <span class="form-control">22</span>
+                                                </div>
+                                                <span class="ml-1 pt-2">頭</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>飼育スタッフ構成</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-2">
+                                            <div class="row offset-md-0">
+                                                <label class="ec-label required mr-2">犬舎運営者：</label>
+                                                <span>1名</span>
+                                            </div>
+                                            <div class="row offset-md-0">
+                                                <label class="pt-2">平均労働時間：</label>
+                                                <div>
+                                                    <span class="form-control">80</span>                                            
+                                                </div>
+                                                <span class="ml-1 pt-2">時間/1週間あたり</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="row offset-md-0">
+                                                <span class="pt-2 mr-2">家族：</span>
+                                                <div>
+                                                    <span class="form-control">2</span>
+                                                </div> 
+                                                <span class="pt-2">名</span>
+                                            </div>
+                                            <div class="row offset-md-0">
+                                                <label class="pt-2">平均労働時間：</label>
+                                                <div>
+                                                    <span class="form-control">80</span>                                            
+                                                </div>
+                                                <span class="ml-1 pt-2">時間/1週間あたり</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="row offset-md-0">
+                                                <span class="pt-2 mr-2">社員：</span>
+                                                <div>
+                                                    <span class="form-control">2</span>
+                                                </div> 
+                                                <span class="pt-2">名</span>
+                                            </div>
+                                            <div class="row offset-md-0">
+                                                <label class="pt-2">平均労働時間：</label>
+                                                <div>
+                                                    <span class="form-control">80</span>                                            
+                                                </div>
+                                                <span class="ml-1 pt-2">時間/1週間あたり</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="row offset-md-0">
+                                                <span class="pt-2 mr-2">パート・アルバイト：</span>
+                                                <div>
+                                                    <span class="form-control">2</span>
+                                                </div> 
+                                                <span class="pt-2">名</span>
+                                            </div>
+                                            <div class="row offset-md-0">
+                                                <label class="pt-2">平均労働時間：</label>
+                                                <div>
+                                                    <span class="form-control">80</span>                                            
+                                                </div>
+                                                <span class="ml-1 pt-2">時間/1週間あたり</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="row offset-md-0">
+                                                <span class="pt-2 mr-2">その他</span>
+                                                <div>
+                                                    <span class="form-control">2</span>
+                                                </div> 
+                                                <span class="pt-2">名</span>
+                                            </div>
+                                            <div class="row offset-md-0">
+                                                <label class="pt-2">平均労働時間：</label>
+                                                <div>
+                                                    <span class="form-control">80</span>                                            
+                                                </div>
+                                                <span class="ml-1 pt-2">時間/1週間あたり</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>ブリーディング歴</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-2 input-group-append">
+                                            <div class="mr-4 input-group-append">
+                                                <div>
+                                                    <span class="form-control">10</span>
+                                                </div>
+                                                <span class="ml-1 pt-2">年</span>
+                                                <div>
+                                                    <span class="form-control">3</span>
+                                                </div>
+                                                <span class="ml-1 pt-2">ヶ月</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>ショー参加経験</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <span>あり</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>親犬のケージ</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-2">
+                                            <div class="row offset-md-0">
+                                                <div class="ec-checkbox">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" checked="checked" disabled/> 休憩場所としてのみ利用できる小さいサイズ(分離型)
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" checked="checked" disabled/> 休憩場所と運動スペースを兼ねることのできる大きいサイズ(一体型)
+                                                        </label>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" disabled /> その他
+                                                        </label>
+                                                    </div>
+                                                    <div class="ec-input">
+                                                        <span class="form-control"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>親犬の運動状況</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-2">
+                                            <div class="row offset-md-0">
+                                                <span>毎日１回は運動</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>現時点で掲載可能な子犬</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-2 input-group-append">
+                                            <div class="mr-4 input-group-append">
+                                                <div>
+                                                    <span class="form-control">3</span>
+                                                </div>
+                                                <span class="ml-1 pt-2">頭</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>自身での繁殖経験</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-2">
+                                            <div class="row offset-md-0">
+                                                <span>5-9回</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>直接の販売経験</span>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-2">
+                                            <div class="row offset-md-0">
+                                                <span>5-9回</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        <div class="c-conversionArea">
+            <div class="c-conversionArea__container">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-6">
+                        <div class="c-conversionArea__leftBlockItem">
+                            <a class="c-baseLink" href="{{url('admin_breeder_list') }}">
+                                <i class="fa fa-backward" aria-hidden="true"></i><span>ブリーダー一覧</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div id="ex-conversion-action" class="row align-items-center justify-content-end">
+                            {# <div class="col-auto">
+                                <select id="" name="" class="form-control">
+                                    <option value="1">公開</option>
+                                    <option value="2">非公開</option>
+                                </select>  
+                            </div> #}
+                            <div class="col-auto">
+                                <button class="btn btn-ec-conversion px-5" type="submit">審査結果登録</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 {% endblock %}
+
+
 
