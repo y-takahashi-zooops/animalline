@@ -16,6 +16,15 @@ dl, ol, ul {
   margin-bottom: 0; }
 a, button {
   cursor: pointer; }
+
+.date {
+    display: flex;
+}
+
+.date select{
+    width: 100px;
+    margin-right: 20px;
+}
 /*
 コンテナー
 
