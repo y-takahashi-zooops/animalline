@@ -765,4 +765,14 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
 
         return $result;
     }
+
+    public function getCreateDate()
+    {
+        return $this->create_date;
+    }
+
+    public function getUpdateDate()
+    {
+        return $this->update_date;
+    }
 }
