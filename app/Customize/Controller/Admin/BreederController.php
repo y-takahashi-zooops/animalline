@@ -13,6 +13,8 @@
 
 namespace Customize\Controller\Admin;
 
+use Customize\Form\Type\AdminBreederType;
+use Customize\Repository\BreedersRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,8 +26,8 @@ class BreederController extends AbstractController
      * breederController constructor.
      *
      */
-    public function __construct(
-    ) {
+    public function __construct()
+    {
     }
 
     /**
@@ -41,9 +43,32 @@ class BreederController extends AbstractController
      * @Route("/%eccube_admin_route%/breeder/edit/{id}", name="admin_breeder_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/edit.twig")
      */
-    public function Edit(Request $request)
+    public function Edit(Request $request, BreedersRepository $breedersRepository)
     {
-        return;
+        $breederData = $breedersRepository->find($request->get('id'));
+
+        $builder = $this->formFactory->createBuilder(AdminBreederType::class, $breederData);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        $thumbnail_path = $request->get('thumbnail_path') ? $request->get('thumbnail_path') : $breederData->getThumbnailPath();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $breederData->setBreederPref($breederData->getPrefBreeder())
+                ->setLicensePref($breederData->getPrefLicense())
+                ->setThumbnailPath($thumbnail_path);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($breederData);
+            $entityManager->flush();
+            return $this->redirectToRoute('admin_breeder_list');
+        }
+
+        return [
+            'breederData' => $breederData,
+            'form' => $form->createView(),
+            'id' => $request->get('id')
+        ];
     }
 
     /**

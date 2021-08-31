@@ -21,6 +21,7 @@ final class AnilineConf
     const ANILINE_REGISTER_STATUS_EXIT = 3;
 
     //ペット種別
+    const ANILINE_PET_KIND_DOG_CAT = 0;
     const ANILINE_PET_KIND_DOG = 1;
     const ANILINE_PET_KIND_CAT = 2;
 
@@ -93,4 +94,11 @@ final class AnilineConf
 
     const NONE = 0;
     const CAN_BE = 1;
+
+    const EXAMINATION_STATUS_UNDER = 0;
+    const EXAMINATION_STATUS_OK = 1;
+    const EXAMINATION_STATUS_NG = 2;
+
+    const PUBLIC_FLAG_PRIVATE = 0;
+    const PUBLIC_FLAG_RELEASE = 1;
 }
