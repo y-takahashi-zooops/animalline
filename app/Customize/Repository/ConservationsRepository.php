@@ -169,17 +169,21 @@ class ConservationsRepository extends ServiceEntityRepository
                     break;
                 case 2:
                     $qb->andWhere('c.examination_status IN (:examination_status)')
-                        ->setParameter('examination_status', [1, 2]);
+                        ->setParameter('examination_status', [
+                            AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK,
+                            AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG
+                        ]);
                     break;
                 case 3:
                     $qb->andWhere('c.examination_status = :examination_status')
-                        ->setParameter('examination_status', 0);
+                        ->setParameter('examination_status', AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK);
                     break;
             }
         }
 
-        $orderField = isset($request['ordering']) ? $request['ordering'] : 'create_date';
-        return $qb->orderBy('c.' . $orderField, 'DESC')
+        $orderField = isset($request['field']) ? $request['field'] : 'create_date';
+        $direction = isset($request['direction']) ? $request['direction'] : 'DESC';
+        return $qb->orderBy('c.' . $orderField, $direction)
             ->getQuery()
             ->getResult();
     }

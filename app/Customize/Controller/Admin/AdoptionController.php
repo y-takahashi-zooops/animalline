@@ -50,15 +50,17 @@ class AdoptionController extends AbstractController
      */
     public function index(PaginatorInterface $paginator, Request $request)
     {
-        $results = $this->conservationsRepository->searchConservations($request->query->all());
+        $request = $request->query->all();
+        $results = $this->conservationsRepository->searchConservations($request);
         $conservations = $paginator->paginate(
             $results,
-            $request->query->getInt('page', 1),
+            $request['page'] ?? 1,
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
         return $this->render('@admin/Adoption/index.twig', [
             'conservations' => $conservations,
+            'direction' => !isset($request['direction']) || $request['direction'] === 'DESC' ? 'ASC' : 'DESC',
         ]);
     }
 
