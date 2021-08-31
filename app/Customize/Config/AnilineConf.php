@@ -93,4 +93,8 @@ final class AnilineConf
 
     const NONE = 0;
     const CAN_BE = 1;
+
+    const ANILINE_EXAMINATION_STATUS_NOT_CHECK = 0;
+    const ANILINE_EXAMINATION_STATUS_CHECK_OK = 1;
+    const ANILINE_EXAMINATION_STATUS_CHECK_NG = 2;
 }

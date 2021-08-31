@@ -17,24 +17,73 @@ use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Customize\Repository\BreedersRepository;
+use Customize\Config\AnilineConf;
+use Knp\Component\Pager\PaginatorInterface;
 
 class BreederController extends AbstractController
 {
+    /**
+     * @var BreedersRepository
+     */
+    protected $breedersRepository;
+
     /**
      * breederController constructor.
      *
      */
     public function __construct(
-    ) {
+        BreedersRepository $breedersRepository
+    )
+    {
+        $this->breedersRepository = $breedersRepository;
     }
 
     /**
      * @Route("/%eccube_admin_route%/breeder/breeder_list", name="admin_breeder_list")
      * @Template("@admin/Breeder/index.twig")
      */
-    public function index(Request $request)
+    public function index(PaginatorInterface $paginator, Request $request)
     {
-        return;
+        $request = $request->query->all();
+        $criteria = [];
+        if (array_key_exists('breeder_name', $request)) {
+            $criteria['breeder_name'] = $request['breeder_name'];
+        }
+
+        if (array_key_exists('examination_status', $request)) {
+            switch ($request['examination_status']) {
+                case 2:
+                    $criteria['examination_status'] = [AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK, AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG];
+                    break;
+                case 3:
+                    $criteria['examination_status'] = [AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK];
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        $order = [];
+        $order['field'] = array_key_exists('field', $request) ? $request['field'] : 'create_date';
+        $order['direction'] = array_key_exists('direction', $request) ? $request['direction'] : 'DESC';
+
+        $results = $this->breedersRepository->filterBreederAdmin($criteria, $order);
+
+        $breeders = $paginator->paginate(
+            $results,
+            array_key_exists('page', $request) ? $request['page'] : 1,
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+        $direction = 'ASC';
+        if (array_key_exists('direction', $request)) {
+            $direction = $request['direction'] == 'ASC' ? 'DESC' : 'ASC';
+        }
+
+        return $this->render('@admin/Breeder/index.twig', [
+            'breeders' => $breeders,
+            'direction' => $direction
+        ]);
     }
 
     /**
