@@ -47,7 +47,7 @@ class AdoptionController extends AbstractController
     {
         $request = $request->query->all();
         $criterial = [];
-        if (isset($request['organization_name'])) {
+        if (isset($request['organization_name']) && !empty($request['organization_name'])) {
             $criterial['organization_name'] = $request['organization_name'];
         }
 
