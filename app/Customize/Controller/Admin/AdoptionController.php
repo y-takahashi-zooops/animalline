@@ -47,19 +47,21 @@ class AdoptionController extends AbstractController
     {
         $request = $request->query->all();
         $criterial = [];
-        if ($request['organization_name']) {
+        if (isset($request['organization_name'])) {
             $criterial['organization_name'] = $request['organization_name'];
         }
 
-        switch ($request['examination_status']) {
-            case 1:
-                break;
-            case 2:
-                $criterial['examination_status'] = [1, 2];
-                break;
-            case 3:
-                $criterial['examination_status'] = 0;
-                break;
+        if (isset($request['examination_status'])) {
+            switch ($request['examination_status']) {
+                case 1:
+                    break;
+                case 2:
+                    $criterial['examination_status'] = [1, 2];
+                    break;
+                case 3:
+                    $criterial['examination_status'] = 0;
+                    break;
+            }
         }
 
         $order = isset($request['ordering']) ? [$request['ordering'] => 'DESC'] : ['create_date' => 'DESC'];
