@@ -19,10 +19,8 @@ file that was distributed with this source code.
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
 {% endblock stylesheet %}
 
-{% block javascript %}{% endblock javascript %}
-
 {% block main %}
-    <form role="form" name="form1" id="form1" method="post" action="">
+    {{ form_start(form) }}
         <div class="c-contentsArea__cols">
             <div class="c-contentsArea__primaryCol">
                 <div class="c-primaryCol">
@@ -38,7 +36,7 @@ file that was distributed with this source code.
                                 </div>
                                 <div class="col-6 text-right">
                                     <a data-toggle="collapse" href="#basicConfig" aria-expanded="false"
-                                       aria-controls="basicConfig">
+                                        aria-controls="basicConfig">
                                         <i class="fa fa-angle-up fa-lg"></i>
                                     </a>
                                 </div>
@@ -56,7 +54,8 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        {{ form_widget(form.organization_name) }}
+                                        {{ form_errors(form.organization_name) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -69,11 +68,8 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <select id="" name="" class="form-control">
-                                            <option value="0">犬・猫</option>
-                                            <option value="1">犬</option>
-                                            <option value="2">猫</option>
-                                        </select>        
+                                        {{ form_widget(form.handling_pet_kind) }}
+                                        {{ form_errors(form.handling_pet_kind) }}      
                                     </div>
                                 </div>
                                 <div class="row">
@@ -83,7 +79,8 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <img alt="..." src="{{ asset('assets/img/breeder-thumbnail.png') }}"  style="max-width: 200px">
+                                        <img alt="thumbnail_path" src="{{ form.thumbnail_path.vars.value }}"  style="max-width: 200px">
+                                        {{ form_widget(form.thumbnail_path) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -96,7 +93,8 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        {{ form_widget(form.owner_name) }}
+                                        {{ form_errors(form.owner_name) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -109,73 +107,76 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        {{ form_widget(form.owner_kana) }}
+                                        {{ form_errors(form.owner_kana) }}
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>郵便番号</span>
-                                            <span class="badge badge-primary ml-1">
+                                <div>
+                                <div class="h-adr">
+                                    <span class="p-country-name" style="display:none;">Japan</span>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(form.zip, '郵便番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                                <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-telInput{{ has_errors(form.zip) ? ' error' }}">
+                                                {{ form_widget(form.zip) }}
+                                                {{ form_errors(form.zip) }}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-2 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>都道府県</span>
-                                            <span class="badge badge-primary ml-1">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(form.addr.PrefId, '都道府県', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                                <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-select{{ has_errors(form.addr.PrefId) ? ' error' }}">
+                                                {{ form_widget(form.addr.PrefId) }}
+                                                {{ form_errors(form.addr.PrefId) }}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-2 mb-2">
-                                        <select id="" name="" class="form-control">
-                                            <option value="1">北海道</option>
-                                            <option value="2">東京都</option>
-                                            <option value="3">沖縄県</option>
-                                        </select>        
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>市区町村</span>
-                                            <span class="badge badge-primary ml-1">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(form.addr.city, '市区町村', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                                <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-input{{ has_errors(form.addr.city) ? ' error' }}">
+                                                {{ form_widget(form.addr.city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                                {{ form_errors(form.addr.city) }}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-2 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>市区町村以下住所</span>
-                                            <span class="badge badge-primary ml-1">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(form.addr.address, '市区町村以下住所', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                                <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>建物名・部屋番号</span>
+                                        <div class="col-6 mb-2">
+                                            <div class="ec-input{{ has_errors(form.addr.address) ? ' error' }}">
+                                                {{ form_widget(form.addr.address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                                {{ form_errors(form.addr.address) }}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -188,7 +189,8 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        {{ form_widget(form.tel) }}
+                                        {{ form_errors(form.tel) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -201,7 +203,8 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        {{ form_widget(form.fax) }}
+                                        {{ form_errors(form.fax) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -211,7 +214,8 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        {{ form_widget(form.homepage_url) }}
+                                        {{ form_errors(form.homepage_url) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -224,10 +228,8 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <select id="" name="" class="form-control">
-                                            <option value="1">公開</option>
-                                            <option value="2">非公開</option>
-                                        </select>        
+                                        {{ form_widget(form.is_active) }}
+                                        {{ form_errors(form.is_active) }}       
                                     </div>
                                 </div>
                                 <div class="row">
@@ -240,11 +242,8 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <select id="" name="" class="form-control">
-                                            <option value="0">審査中</option>
-                                            <option value="1">審査OK</option>
-                                            <option value="2">審査NG</option>
-                                        </select>        
+                                        {{ form_widget(form.examination_status) }}
+                                        {{ form_errors(form.examination_status) }}     
                                     </div>
                                 </div>
                                 <div class="row">
@@ -254,7 +253,8 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <textarea required="required" rows="5" class="form-control"></textarea>
+                                        {{ form_widget(form.pr_text) }}
+                                        {{ form_errors(form.pr_text) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -267,7 +267,8 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        {{ form_widget(form.email) }}
+                                        {{ form_errors(form.email) }}
                                     </div>
                                 </div>  
                             </div>
@@ -282,7 +283,7 @@ file that was distributed with this source code.
                     <div class="col-6">
                         <div class="c-conversionArea__leftBlockItem">
                             {# <a class="c-baseLink" href="#"
-                               data-action="confirm" title="{{ 'admin.common.move_to_confirm_message'|trans({'%name%' : 'admin.product.product_list'|trans }) }}">
+                                data-action="confirm" title="{{ 'admin.common.move_to_confirm_message'|trans({'%name%' : 'admin.product.product_list'|trans }) }}">
                                 <i class="fa fa-backward" aria-hidden="true"></i><span>{{ '保護団体一覧'|trans }}</span>
                             </a> #}
                             <a class="c-baseLink" href="{{ url('admin_adoption_list') }}">
@@ -300,7 +301,9 @@ file that was distributed with this source code.
                 </div>
             </div>
         </div>
-    </form>
+    {{ form_end(form) }}
 {% endblock %}
 
-
+{% block javascript %}
+	<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+{% endblock %}

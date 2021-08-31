@@ -81,11 +81,6 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $address;
 
     /**
-     * @ORM\Column(name="building", type="string", length=255, nullable=true)
-     */
-    private $building;
-
-    /**
      * @ORM\Column(name="tel", type="string", length=11, nullable=true)
      */
     private $tel;
@@ -311,18 +306,6 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this;
     }
 
-    public function getBuilding(): ?string
-    {
-        return $this->building;
-    }
-
-    public function setBuilding(?string $building): self
-    {
-        $this->building = $building;
-
-        return $this;
-    }
-
     public function getTel(): ?string
     {
         return $this->tel;
@@ -517,6 +500,26 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     public function equals(UserInterface $user)
     {
         return $this->getUsername() == $user->getUsername();
+    }
+
+    /**
+     * Get createDate.
+     *
+     * @return \DateTime
+     */
+    public function getCreateDate()
+    {
+        return $this->create_date;
+    }
+
+    /**
+     * Get updateDate.
+     *
+     * @return \DateTime
+     */
+    public function getUpdateDate()
+    {
+        return $this->update_date;
     }
 
     public function getThumbnailPath(): ?string
