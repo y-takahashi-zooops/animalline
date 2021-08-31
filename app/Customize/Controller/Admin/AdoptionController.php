@@ -13,8 +13,11 @@
 
 namespace Customize\Controller\Admin;
 
+
 use Customize\Config\AnilineConf;
 use Customize\Repository\ConservationsRepository;
+use Customize\Entity\Conservations;
+use Customize\Form\Type\Admin\ConservationsType;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -33,9 +36,11 @@ class AdoptionController extends AbstractController
      *
      * @param ConservationsRepository $conservationsRepository
      */
+
     public function __construct(
         ConservationsRepository $conservationsRepository
-    ) {
+    )
+    {
         $this->conservationsRepository = $conservationsRepository;
     }
 
@@ -61,9 +66,19 @@ class AdoptionController extends AbstractController
      * @Route("/%eccube_admin_route%/adoption/edit/{id}", name="admin_adoption_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/edit.twig")
      */
-    public function Edit(Request $request)
+    public function Edit(Request $request, Conservations $conservations)
     {
-        return;
+        $form = $this->createForm(ConservationsType::class, $conservations);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($conservations);
+            $entityManager->flush();
+        }
+        return $this->render('@admin/Adoption/edit.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -101,5 +116,4 @@ class AdoptionController extends AbstractController
     {
         return;
     }
-
 }
