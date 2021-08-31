@@ -36,7 +36,7 @@ file that was distributed with this source code.
                 <div class="row mb-2">
                     <div class="col-6">
                         <label class="col-form-label" data-tooltip="true" data-placement="top" title="情報を入力して一覧の絞り込み検索ができます。">保護団体名<i class="fa fa-question-circle fa-lg ml-1"></i></label>
-                        <input type="text" id="organization_name" name="organization_name" class="form-control" />
+                        <input type="text" id="organization_name" name="organization_name" class="form-control" value="{{ params.organization_name is defined ? params.organization_name : '' }}"/>
                     </div>
                 </div>
                 <div class="row mb-2">
