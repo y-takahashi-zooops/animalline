@@ -8,6 +8,7 @@ use Eccube\Common\EccubeConfig;
 use Customize\Form\Type\AddressType;
 use Customize\Form\Type\LicenseAddressType;
 use Eccube\Form\Type\RepeatedEmailType;
+use Eccube\Form\Validator\Email;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -252,30 +253,36 @@ class AdminBreederType extends AbstractType
             ->add('handling_pet_kind', ChoiceType::class, [
                 'choices' =>
                     [
+                        '犬・猫' => AnilineConf::ANILINE_PET_KIND_DOG_CAT,
                         '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
-                        '猫' => AnilineConf::ANILINE_PET_KIND_CAT,
+                        '猫' => AnilineConf::ANILINE_PET_KIND_CAT
                     ],
-                'required' => false,
-                'placeholder' => '犬・猫'
-            ])
-            ->add('examination_status', ChoiceType::class, [
-                'choices' =>
-                    [
-                        '審査OK' => AnilineConf::EXAMINATION_STATUS_OK,
-                        '審査NG' => AnilineConf::EXAMINATION_STATUS_NG,
-                    ],
-                'required' => false,
-                'placeholder' => '審査中'
+                'required' => true,
             ])
             ->add('is_active', ChoiceType::class, [
                 'choices' =>
                     [
-                        '非公開' => AnilineConf::PUBLIC_FLAG_PRIVATE,
                         '公開' => AnilineConf::PUBLIC_FLAG_RELEASE,
+                        '非公開' => AnilineConf::PUBLIC_FLAG_PRIVATE,
                     ],
-                'required' => false,
             ])
-            ->add('email', EmailType::class)
+            ->add('examination_status', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '審査中' => AnilineConf::EXAMINATION_STATUS_UNDER,
+                        '審査OK' => AnilineConf::EXAMINATION_STATUS_OK,
+                        '審査NG' => AnilineConf::EXAMINATION_STATUS_NG
+                    ]
+            ])
+            ->add('email', EmailType::class, [
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
+                ],
+            ])
             ->add('thumbnail_path', HiddenType::class, [
                 'required' => false
             ]);

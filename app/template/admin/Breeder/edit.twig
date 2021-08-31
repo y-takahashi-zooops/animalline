@@ -436,9 +436,9 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="ec-birth{{ has_errors(form.license_regist_date) ? ' error' }}">
-                                            {{ form_widget(form.license_regist_date.year) }}<span>/</span>
-                                            {{ form_widget(form.license_regist_date.month) }}<span>/</span>
+                                        <div class="ec-birth{{ has_errors(form.license_regist_date) ? ' error' }} date">
+                                            {{ form_widget(form.license_regist_date.year) }}
+                                            {{ form_widget(form.license_regist_date.month) }}
                                             {{ form_widget(form.license_regist_date.day) }}
                                             {{ form_errors(form.license_regist_date) }}
                                         </div>
@@ -454,9 +454,9 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="ec-birth{{ has_errors(form.license_expire_date) ? ' error' }}">
-                                            {{ form_widget(form.license_expire_date.year) }}<span>/</span>
-                                            {{ form_widget(form.license_expire_date.month) }}<span>/</span>
+                                        <div class="ec-birth{{ has_errors(form.license_expire_date) ? ' error' }} date">
+                                            {{ form_widget(form.license_expire_date.year) }}
+                                            {{ form_widget(form.license_expire_date.month) }}
                                             {{ form_widget(form.license_expire_date.day) }}
                                             {{ form_errors(form.license_expire_date) }}
                                         </div>
