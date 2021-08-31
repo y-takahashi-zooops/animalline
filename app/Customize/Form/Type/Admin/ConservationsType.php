@@ -177,9 +177,9 @@ class ConservationsType extends AbstractType
             ->add('examination_status', ChoiceType::class, [
                 'choices' =>
                 [
-                    '犬・猫' => AnilineConf::EXAMINATION_STATUS_UNDER,
-                    '犬' => AnilineConf::EXAMINATION_STATUS_OK,
-                    '猫' => AnilineConf::EXAMINATION_STATUS_NG
+                    '審査中' => AnilineConf::EXAMINATION_STATUS_UNDER,
+                    '審査OK' => AnilineConf::EXAMINATION_STATUS_OK,
+                    '審査NG' => AnilineConf::EXAMINATION_STATUS_NG
                 ]
             ])
             ->add('pr_text', TextareaType::class, [
