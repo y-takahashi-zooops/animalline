@@ -13,7 +13,10 @@
 
 namespace Customize\Controller\Admin;
 
+use Customize\Config\AnilineConf;
+use Customize\Repository\ConservationsRepository;
 use Eccube\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,20 +24,37 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdoptionController extends AbstractController
 {
     /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
      * AdoptionController constructor.
      *
+     * @param ConservationsRepository $conservationsRepository
      */
     public function __construct(
+        ConservationsRepository $conservationsRepository
     ) {
+        $this->conservationsRepository = $conservationsRepository;
     }
 
     /**
      * @Route("/%eccube_admin_route%/adoption/adoption_list", name="admin_adoption_list")
      * @Template("@admin/Adoption/index.twig")
      */
-    public function index(Request $request)
+    public function index(PaginatorInterface $paginator, Request $request)
     {
-        return;
+        $results = $this->conservationsRepository->searchConservations($request->query->all());
+        $conservations = $paginator->paginate(
+            $results,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return $this->render('@admin/Adoption/index.twig', [
+            'conservations' => $conservations,
+        ]);
     }
 
     /**

@@ -148,4 +148,39 @@ class ConservationsRepository extends ServiceEntityRepository
 
         return $this->findBy($criteria);
     }
+
+    /**
+     * Search conservation with examination_status and organization_name
+     *
+     * @param  array $request
+     * @return array
+     */
+    public function searchConservations($request)
+    {
+        $qb = $this->createQueryBuilder('c');
+        if (isset($request['organization_name']) && !empty($request['organization_name'])) {
+            $qb->andWhere('c.organization_name LIKE :organization_name')
+                ->setParameter('organization_name', '%' . $request['organization_name'] . '%');
+        }
+
+        if (isset($request['examination_status'])) {
+            switch ($request['examination_status']) {
+                case 1:
+                    break;
+                case 2:
+                    $qb->andWhere('c.examination_status IN (:examination_status)')
+                        ->setParameter('examination_status', [1, 2]);
+                    break;
+                case 3:
+                    $qb->andWhere('c.examination_status = :examination_status')
+                        ->setParameter('examination_status', 0);
+                    break;
+            }
+        }
+
+        $orderField = isset($request['ordering']) ? $request['ordering'] : 'create_date';
+        return $qb->orderBy('c.' . $orderField, 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
