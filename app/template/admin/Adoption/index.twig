@@ -67,11 +67,11 @@ file that was distributed with this source code.
                                 <tr>
                                     <th class="border-top-0 pt-2 pb-2"></th>
                                     {# TODO:クリックで昇順ソート #}
-                                    <th class="border-top-0 pt-2 pb-2"><a href ="{{ url('admin_adoption_list', params|merge({'order': 'id', 'direction': direction})) }}">ID</a></th>
+                                    <th class="border-top-0 pt-2 pb-2"><a href ="{{ url('admin_adoption_list', params|merge({'field': 'id', 'direction': direction})) }}">ID</a></th>
                                     <th class="border-top-0 pt-2 pb-2">画像</th>
-                                    <th class="border-top-0 pt-2 pb-2"><a href ="{{ url('admin_adoption_list', params|merge({'order': 'organization_name', 'direction': direction})) }}">保護団体名</a></th>
-                                    <th class="border-top-0 pt-2 pb-2"><a href ="{{ url('admin_adoption_list', params|merge({'order': 'create_date', 'direction': direction})) }}">登録日</a></th>
-                                    <th class="border-top-0 pt-2 pb-2"><a href ="{{ url('admin_adoption_list', params|merge({'order': 'update_date', 'direction': direction})) }}">更新日</a></th>
+                                    <th class="border-top-0 pt-2 pb-2"><a href ="{{ url('admin_adoption_list', params|merge({'field': 'organization_name', 'direction': direction})) }}">保護団体名</a></th>
+                                    <th class="border-top-0 pt-2 pb-2"><a href ="{{ url('admin_adoption_list', params|merge({'field': 'create_date', 'direction': direction})) }}">登録日</a></th>
+                                    <th class="border-top-0 pt-2 pb-2"><a href ="{{ url('admin_adoption_list', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a></th>
                                     <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
                                 </tr>
                             </thead>
