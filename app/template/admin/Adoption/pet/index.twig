@@ -10,7 +10,7 @@ file that was distributed with this source code.
 #}
 {% extends '@admin/default_frame.twig' %}
 
-{% set menus = ['adoptions', 'adoptions_pet_list'] %}
+{% set menus = ['adoptions', 'adoptions_adoption_list'] %}
 
 {% block title %}{{ 'ペット一覧'|trans }}{% endblock %}
 {% block sub_title %}{{ '保護団体管理'|trans }}{% endblock %}
@@ -34,8 +34,12 @@ file that was distributed with this source code.
             <div class="c-outsideBlock__contents">
                 <div class="row mb-2">
                     <div class="col-6">
-                        <label class="col-form-label" data-tooltip="true" data-placement="top" title="情報を入力して一覧の絞り込み検索ができます。">保護団体名<i class="fa fa-question-circle fa-lg ml-1"></i></label>
-                        <input type="text" id="" name="" class="form-control" />                            
+                        <label class="col-form-label">種別</label>
+                        <select id="" name="" class="form-control">
+                            <option value="1">全て</option>
+                            <option value="2">犬</option>
+                            <option value="3">猫</option>
+                        </select>                         
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -67,7 +71,7 @@ file that was distributed with this source code.
                                     {# TODO:クリックで昇順ソート #}
                                     <th class="border-top-0 pt-2 pb-2"><a href ="#">ID</a></th>
                                     <th class="border-top-0 pt-2 pb-2">画像</th>
-                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">保護団体名</th>
+                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">種別</th>
                                     <th class="border-top-0 pt-2 pb-2"><a href ="#">犬種</th>
                                     <th class="border-top-0 pt-2 pb-2"><a href ="#">登録日</th>
                                     <th class="border-top-0 pt-2 pb-2"><a href ="#">更新日</th>
@@ -81,7 +85,7 @@ file that was distributed with this source code.
                                    <td class="align-middle">
                                         <img alt="..." src="{{ asset('assets/img/thumbnail.png') }}"  style="max-width: 100px">
                                     </td>
-                                    <td class="align-middle">保護団体１</td>
+                                    <td class="align-middle">犬</td>
                                     <td class="align-middle">柴犬</td>
                                     <td class="align-middle">2018/05/28 19:14</td>
                                     <td class="align-middle">2018/05/28 19:14</td>
@@ -101,7 +105,7 @@ file that was distributed with this source code.
                                    <td class="align-middle">
                                         <img alt="..." src="{{ asset('assets/img/thumbnail.png') }}"  style="max-width: 100px">
                                     </td>
-                                    <td class="align-middle">保護団体２</td>
+                                    <td class="align-middle">犬</td>
                                     <td class="align-middle">柴犬</td>
                                     <td class="align-middle">2018/09/28 19:14</td>
                                     <td class="align-middle">2018/09/28 19:14</td>

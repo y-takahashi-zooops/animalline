@@ -74,7 +74,7 @@ class BreederController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/adoption/pet/edit/{id}", name="admin_breeder_pet_edit", requirements={"id" = "\d+"})
+     * @Route("/%eccube_admin_route%/breeder/pet/edit/{id}", name="admin_breeder_pet_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/pet/edit.twig")
      */
     public function pet_edit(Request $request)
