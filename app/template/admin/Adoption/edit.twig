@@ -61,28 +61,29 @@ file that was distributed with this source code.
                                 </div>
                                 <div class="row">
                                     <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>取り扱いペット種別</span>
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        <select id="" name="" class="form-control">
+                                            <option value="0">犬・猫</option>
+                                            <option value="1">犬</option>
+                                            <option value="2">猫</option>
+                                        </select>        
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
                                         <div class="d-inline-block" >
                                             <span>画像</span>
-                                            <br>推奨サイズ : 600px x 600px以上
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <div class="progress" style="display: none;">
-                                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <div id="thumb" class="c-form__fileUploadThumbnails clearfix ui-sortable"></div>
-                                        <p id="message"></p>
-                                        <div id="upload-zone" class="media py-5 border-ec-dashed mb-2 rounded">
-                                            <div class="media-body">
-                                                <i class="fa fa-cloud-upload fa-3x text-ec-lightGray mx-3 align-middle" aria-hidden="true"></i>
-                                                画像をドラッグ＆ドロップまたは
-                                                <input type="file" id="admin_product_product_image" name="admin_product[product_image][]" multiple="multiple" accept="image/*" style="display:none;" class="form-control-file">
-                                                
-                                                <a class="btn btn-ec-regular mr-2" onclick="$('#admin_product_product_image').click()">
-                                                    ファイルを選択
-                                                </a>
-                                            </div><!-- /.media-body -->
-                                        </div><!-- /.media -->
+                                        <img alt="..." src="{{ asset('assets/img/breeder-thumbnail.png') }}"  style="max-width: 200px">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -135,7 +136,6 @@ file that was distributed with this source code.
                                     </div>
                                     <div class="col-2 mb-2">
                                         <select id="" name="" class="form-control">
-                                            <option value="">選択してください</option>
                                             <option value="1">北海道</option>
                                             <option value="2">東京都</option>
                                             <option value="3">沖縄県</option>
@@ -281,9 +281,12 @@ file that was distributed with this source code.
                 <div class="row justify-content-between align-items-center">
                     <div class="col-6">
                         <div class="c-conversionArea__leftBlockItem">
-                            <a class="c-baseLink" href="#"
+                            {# <a class="c-baseLink" href="#"
                                data-action="confirm" title="{{ 'admin.common.move_to_confirm_message'|trans({'%name%' : 'admin.product.product_list'|trans }) }}">
                                 <i class="fa fa-backward" aria-hidden="true"></i><span>{{ '保護団体一覧'|trans }}</span>
+                            </a> #}
+                            <a class="c-baseLink" href="{{ url('admin_adoption_list') }}">
+                                <i class="fa fa-backward" aria-hidden="true"></i><span>保護団体一覧</span>
                             </a>
                         </div>
                     </div>
