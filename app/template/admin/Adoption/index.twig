@@ -83,7 +83,7 @@ file that was distributed with this source code.
                                         <td class="align-middle">
                                             <img
                                                 alt="..."
-                                                src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (conservation.thumbnailPath | default | length > 0 ? conservation.thumbnailPath : '/noimage_plugin_list.png') }}"
+                                                src="{{ app.request.schemeAndHttpHost ~ (conservation.thumbnailPath | default | length > 0 ? conservation.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                                                 style="max-width: 100px"
                                             >
                                         </td>
