@@ -4,6 +4,7 @@ namespace Customize\Form\Type\Admin;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\Conservations;
+use Customize\Form\Type\Adoption\ConservationAddressType;
 use Eccube\Common\EccubeConfig;
 use Eccube\Form\Validator\Email;
 use Symfony\Component\Form\AbstractType;
@@ -83,8 +84,10 @@ class ConservationsType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
+            ->add('addr', ConservationAddressType::class)
             ->add('zip', TextType::class, [
                 'trim' => true,
+                'required' => false,
                 'attr' => [
                     'maxlength' => 7,
                     'class' => 'p-postal-code',
@@ -98,29 +101,6 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => 7,
                     ])
-                ]
-            ])
-            ->add('PrefId', EntityType::class, [
-                'class' => 'Eccube\Entity\Master\Pref',
-                'choice_label' => function (\Eccube\Entity\Master\Pref $pref) {
-                    return $pref->getName();
-                }
-            ])
-            ->add('city', TextType::class, [
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => 10,
-                    ]),
-                ]
-            ])
-            ->add('address', TextType::class, [
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
                 ]
             ])
             ->add('tel', TextType::class, [
