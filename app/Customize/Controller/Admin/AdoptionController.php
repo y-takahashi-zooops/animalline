@@ -39,8 +39,7 @@ class AdoptionController extends AbstractController
 
     public function __construct(
         ConservationsRepository $conservationsRepository
-    )
-    {
+    ) {
         $this->conservationsRepository = $conservationsRepository;
     }
 
@@ -77,6 +76,7 @@ class AdoptionController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservations);
             $entityManager->flush();
+            return $this->redirectToRoute('admin_adoption_list');
         }
         return $this->render('@admin/Adoption/edit.twig', [
             'form' => $form->createView()

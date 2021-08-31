@@ -269,9 +269,9 @@ class AdminBreederType extends AbstractType
             ->add('examination_status', ChoiceType::class, [
                 'choices' =>
                     [
-                        '審査中' => AnilineConf::EXAMINATION_STATUS_UNDER,
-                        '審査OK' => AnilineConf::EXAMINATION_STATUS_OK,
-                        '審査NG' => AnilineConf::EXAMINATION_STATUS_NG
+                        '審査中' => AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK,
+                        '審査OK' => AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK,
+                        '審査NG' => AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG
                     ]
             ])
             ->add('email', EmailType::class, [
