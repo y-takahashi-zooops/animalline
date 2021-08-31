@@ -519,6 +519,26 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
         return $this->getUsername() == $user->getUsername();
     }
 
+    /**
+     * Get createDate.
+     *
+     * @return \DateTime
+     */
+    public function getCreateDate()
+    {
+        return $this->create_date;
+    }
+
+    /**
+     * Get updateDate.
+     *
+     * @return \DateTime
+     */
+    public function getUpdateDate()
+    {
+        return $this->update_date;
+    }
+
     public function getThumbnailPath(): ?string
     {
         return $this->thumbnail_path;
