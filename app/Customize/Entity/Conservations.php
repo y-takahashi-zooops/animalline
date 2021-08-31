@@ -81,11 +81,6 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $address;
 
     /**
-     * @ORM\Column(name="building", type="string", length=255, nullable=true)
-     */
-    private $building;
-
-    /**
      * @ORM\Column(name="tel", type="string", length=11, nullable=true)
      */
     private $tel;
@@ -307,18 +302,6 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     public function setAddress(?string $address): self
     {
         $this->address = $address;
-
-        return $this;
-    }
-
-    public function getBuilding(): ?string
-    {
-        return $this->building;
-    }
-
-    public function setBuilding(?string $building): self
-    {
-        $this->building = $building;
 
         return $this;
     }

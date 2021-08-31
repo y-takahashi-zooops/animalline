@@ -407,7 +407,6 @@ class AdoptionConfigrationController extends AbstractController
                 ->setPref($pref->getName())
                 ->setCity($addr['city'])
                 ->setAddress($addr['address'])
-                ->setBuilding($addr['building'])
                 ->setThumbnailPath($thumbnail_path);
 
             $entityManager = $this->getDoctrine()->getManager();
