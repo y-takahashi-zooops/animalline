@@ -19,7 +19,6 @@ use Customize\Repository\BreedsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Entity\Conservations;
-use Customize\Entity\ConservationPetImage;
 use Customize\Entity\ConservationPets;
 use Customize\Form\Type\Admin\ConservationPetsType;
 use Customize\Repository\CoatColorsRepository;
@@ -68,8 +67,10 @@ class AdoptionController extends AbstractController
      * AdoptionController constructor.
      *
      * @param ConservationsRepository $conservationsRepository
-     * @param ConservationPetsRepository $conservationPetsRepository
      * @param BreedsRepository $breedsRepository
+     * @param CoatColorsRepository $coatColorsRepository
+     * @param ConservationPetImageRepository $conservationPetImageRepository
+     * @param ConservationPetsRepository $conservationPetsRepository
      * @param AdoptionQueryService $adoptionQueryService
      */
 

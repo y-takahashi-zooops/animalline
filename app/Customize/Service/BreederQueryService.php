@@ -109,4 +109,41 @@ class BreederQueryService
             ->getResult();
         return $query;
     }
+
+    /**
+     * Admin breeder pets
+     *
+     * @param array $criteria
+     * @param array $order
+     * @return array
+     */
+    public function filterPetAdmin(array $criteria, array $order): array
+    {
+        $qb = $this->breederPetsRepository->createQueryBuilder('p');
+        if (!empty($criteria['id'])) {
+            $qb
+                ->andWhere('p.Breeder = :id')
+                ->setParameter('id', $criteria['id']);
+        }
+
+        if (!empty($criteria['pet_kind'])) {
+            $qb
+                ->andWhere('p.pet_kind = :pet_kind')
+                ->setParameter('pet_kind', $criteria['pet_kind']);
+        }
+
+        if (!empty($criteria['breed_type']) || $order['field'] == 'breed_type') {
+            if (!empty($criteria['breed_type'])) {
+                $qb->andWhere('p.BreedType = :breed_type')
+                    ->setParameter('breed_type', $criteria['breed_type']);
+            }
+            return $qb->join('p.BreedType', 'b')
+                ->orderBy('b.breeds_name', $order['direction'])
+                ->getQuery()
+                ->getResult();
+        }
+        return $qb->orderBy('p.' . $order['field'], $order['direction'])
+            ->getQuery()
+            ->getResult();
+    }
 }

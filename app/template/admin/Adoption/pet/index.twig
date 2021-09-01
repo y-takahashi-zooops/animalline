@@ -106,7 +106,7 @@ file that was distributed with this source code.
                                     <td class="align-middle">{{ pet.Id }}</td>
                                     <td class="align-middle">
                                         <img alt="..."
-                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (breeder.thumbnailPath | default | length > 0 ? breeder.thumbnailPath : '/noimage_plugin_list.png') }}"
+                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default | length > 0 ? pet.thumbnailPath : '/noimage_plugin_list.png') }}"
                                              style="max-width: 100px">
                                     </td>
                                     <td class="align-middle">{{ pet.petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
