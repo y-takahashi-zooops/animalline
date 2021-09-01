@@ -49,7 +49,7 @@ file that was distributed with this source code.
                 </div>
                 <div class="row mb-2">
                     <div class="col-6">
-                        <label class="col-form-label">犬種</label>
+                        <label class="col-form-label">犬種/猫種</label>
                         <select id="breed_type" name="breed_type" class="form-control">
                             <option value="0">全て</option>
                             {% for breed in breeds %}
@@ -77,24 +77,24 @@ file that was distributed with this source code.
                                 {# TODO:クリックで昇順ソート #}
                                 <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'id' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'id', 'direction': direction}) }}">ID</a>
+                                            href="{{ url('admin_adoption_pet_list', params|merge({'id': conservationId, 'field': 'id', 'direction': direction})) }}">ID</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2">画像</th>
                                 <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'pet_kind' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'pet_kind', 'direction': direction}) }}">種別</a>
+                                            href="{{ url('admin_adoption_pet_list', params|merge({'id': conservationId, 'field': 'pet_kind', 'direction': direction})) }}">種別</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'breed_type' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'breed_type', 'direction': direction}) }}">犬種</a>
+                                            href="{{ url('admin_adoption_pet_list', params|merge({'id': conservationId, 'field': 'breed_type', 'direction': direction})) }}">犬種/猫種</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'create_date', 'direction': direction}) }}">登録日</a>
+                                            href="{{ url('admin_adoption_pet_list', params|merge({'id': conservationId, 'field': 'create_date', 'direction': direction})) }}">登録日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'update_date', 'direction': direction}) }}">更新日</a>
+                                            href="{{ url('admin_adoption_pet_list', params|merge({'id': conservationId, 'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
                             </tr>
