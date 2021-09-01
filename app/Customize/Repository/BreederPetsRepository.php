@@ -66,15 +66,15 @@ class BreederPetsRepository extends ServiceEntityRepository
     public function filterBreederPetAdmin(array $criteria, array $order)
     {
         $qb = $this->createQueryBuilder('b');
-        if (isset($criteria['pet_name']) && StringUtil::isNotBlank($criteria['pet_name'])) {
+        if (!empty($criteria['pet_kind']) && count($criteria['pet_kind'])) {
             $qb
-                ->andWhere('b.pet_name LIKE :pet_name')
-                ->setParameter('pet_name', '%' . $criteria['pet_name'] . '%');
+                ->andWhere($qb->expr()->in('b.pet_kind', ':pet_kind'))
+                ->setParameter('pet_kind', $criteria['pet_kind']);
         }
-        if (!empty($criteria['examination_status']) && count($criteria['examination_status'])) {
+        if (!empty($criteria['breeds']) && count($criteria['breeds'])) {
             $qb
-                ->andWhere($qb->expr()->in('b.examination_status', ':examination_status'))
-                ->setParameter('examination_status', $criteria['examination_status']);
+                ->andWhere($qb->expr()->in('b.breeds', ':breeds'))
+                ->setParameter('breeds', $criteria['breeds']);
         }
         return $qb->orderBy('b.' . $order['field'], $order['direction'])
             ->getQuery()

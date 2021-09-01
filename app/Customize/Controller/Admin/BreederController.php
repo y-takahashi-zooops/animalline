@@ -163,7 +163,7 @@ class BreederController extends AbstractController
     {
         $request = $request->query->all();
         $criteria = [];
-        $breedsData = $breedsRepository->findAll();
+        $breeds = $breedsRepository->findAll();
 
         if (array_key_exists('pet_kind', $request)) {
             switch ($request['pet_kind']) {
@@ -197,7 +197,7 @@ class BreederController extends AbstractController
         return $this->render('@admin/Breeder/pet/index.twig', [
             'pets' => $pets,
             'direction' => $direction,
-            'breedsData' => $breedsData
+            'breeds' => $breeds
         ]);
     }
 

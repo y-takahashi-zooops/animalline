@@ -48,13 +48,8 @@ file that was distributed with this source code.
                     <div class="col-6">
                         <label class="col-form-label">犬種</label>
                         <select id="breeds" name="breeds" class="form-control">
-                            {% for breedData in breedsData %}
-                                {% set selected = '' %}
-                                <option value="{{ breedData.breeds_name }}" 
-                                    {% if params.q2q is defined and params.breeds == breedData.breeds_name %} 
-                                        selected 
-                                    {% endif %}>
-                                </option>
+                           {% for breed in breeds %}
+                                <option value="{{ breed.Id }}" {% if params.breed_type is defined and params.breed_type == breed.Id %} selected {% endif %}>{{ breed.breedsName }}</option>
                             {% endfor %}
                         </select>
                     </div>
