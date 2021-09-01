@@ -57,13 +57,7 @@ class EccubeExtension extends Extension implements PrependExtensionInterface
         // SSL強制時は, httpsのみにアクセス制限する
         $accessControl = [
             // Animalline追加設定
-            ['path' => '^/adoption/configration/entry', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
-            ['path' => '^/adoption/configration/login', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
-            ['path' => '^/adoption/configration/', 'roles' => 'ROLE_ADOPTION_USER'],
             ['path' => '^/adoption/member/', 'roles' => 'ROLE_USER'],
-            ['path' => '^/breeder/configration/entry', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
-            ['path' => '^/breeder/configration/login', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],
-            ['path' => '^/breeder/configration/', 'roles' => 'ROLE_BREEDER_USER'],
             ['path' => '^/breeder/member/', 'roles' => 'ROLE_USER'],
             // Animalline追加設定
             ['path' => '^/%eccube_admin_route%/login', 'roles' => 'IS_AUTHENTICATED_ANONYMOUSLY'],

@@ -150,7 +150,8 @@ class BreederController extends AbstractController
         return $this->render('animalline/breeder/member/index.twig', [
             'rootMessages' => $rootMessages,
             'lastReplies' => $lastReplies,
-            'pets' => $pets
+            'pets' => $pets,
+            'user' => $this->getUser(),
         ]);
     }
 
@@ -198,28 +199,6 @@ class BreederController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/member/all_message", name="breeder_get_message_mypage")
-     * @Template("animalline/breeder/member/breeder_message.twig")
-     */
-    public function get_message_mypage(Request $request)
-    {
-        $rootMessages = $this->breederContactsRepository
-            ->findBy(['Customer' => $this->getUser(), 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
-
-        $lastReplies = [];
-        foreach ($rootMessages as $rootMessage) {
-            $lastReply = $this->breederContactsRepository
-                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
-            $lastReplies[$rootMessage->getId()] = $lastReply;
-        }
-
-        return $this->render('animalline/breeder/member/breeder_message.twig', [
-            'rootMessages' => $rootMessages,
-            'lastReplies' => $lastReplies
-        ]);
-    }
-
-    /**
      * @Route("/breeder/pet/detail/favorite_pet", name="breeder_favorite_pet")
      * @param Request $request
      * @return JsonResponse
@@ -251,131 +230,6 @@ class BreederController extends AbstractController
         }
 
         return new JsonResponse('liked');
-    }
-
-    /**
-     * @Route("/breeder/member/favorite", name="breeder_favorite")
-     * @Template("animalline/breeder/favorite.twig")
-     */
-    public function favorite(PaginatorInterface $paginator, Request $request): ?Response
-    {
-        $favoritePetResults = $this->breederPetsRepository->findByFavoriteCount();
-        $favoritePets = $paginator->paginate(
-            $favoritePetResults,
-            $request->query->getInt('page', 1),
-            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
-        );
-
-        return $this->render('animalline/breeder/favorite.twig', ['pets' => $favoritePets]);
-    }
-
-    /**
-     * @Route("/breeder/member/message/{contact_id}", name="breeder_mypage_messages", requirements={"contact_id" = "\d+"})
-     * @Template("animalline/breeder/member/message.twig")
-     */
-    public function breeder_message(Request $request)
-    {
-        $contactId = $request->get('contact_id');
-        $rootMessage = $this->breederContactsRepository
-            ->findOneBy(['id' => $contactId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
-        if (!$rootMessage) {
-            throw new HttpException\NotFoundHttpException();
-        }
-
-        $replyMessage = $request->get('reply_message');
-        $isEnd = $request->get('end_negotiation');
-        if ($replyMessage || $isEnd) {
-            $breederContact = (new BreederContacts())
-                ->setCustomer($this->getUser())
-                ->setbreeder($rootMessage->getBreeder())
-                ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
-                ->setPet($rootMessage->getPet())
-                ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
-                ->setContactDescription($replyMessage)
-                ->setParentMessageId($rootMessage->getId())
-                ->setSendDate(Carbon::now())
-                ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
-                ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
-                ->setReason($isEnd ? $this->sendoffReasonRepository->find($request->get('reason')) : null);
-
-            $rootMessage->setIsResponse(AnilineConf::RESPONSE_UNREPLIED);
-            if ($isEnd) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($breederContact);
-            $entityManager->persist($rootMessage);
-            $entityManager->flush();
-        }
-
-        $childMessages = $this->breederContactsRepository
-            ->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
-        $reasons = $this->sendoffReasonRepository
-            ->findBy(['is_breeder_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
-
-        return $this->render('animalline/breeder/member/message.twig', [
-            'rootMessage' => $rootMessage,
-            'childMessages' => $childMessages,
-            'reasons' => $reasons
-        ]);
-    }
-
-    /**
-     * @Route("/breeder/member/contact/{pet_id}", name="breeder_contact", requirements={"pet_id" = "\d+"})
-     * @Template("/animalline/breeder/contact.twig")
-     */
-    public function contact(Request $request)
-    {
-        $id = $request->get('pet_id');
-        $pet = $this->breederPetsRepository->find($id);
-        if (!$pet) {
-            throw new HttpException\NotFoundHttpException();
-        }
-
-        $contact = new BreederContacts();
-        $builder = $this->formFactory->createBuilder(BreederContactType::class, $contact);
-        $event = new EventArgs(
-            [
-                'builder' => $builder,
-                'contact' => $contact
-            ],
-            $request
-        );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
-
-        $form = $builder->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($request->get('mode')) {
-                case 'confirm':
-                    return $this->render(
-                        'animalline/breeder/contact_confirm.twig',
-                        [
-                            'form' => $form->createView(),
-                            'id' => $id
-                        ]
-                    );
-
-                case 'complete':
-                    $contact->setParentMessageId(AnilineConf::ROOT_MESSAGE_ID)
-                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
-                        ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
-                        ->setSendDate(Carbon::now())
-                        ->setPet($pet)
-                        ->setBreeder($pet->getBreeder())
-                        ->setCustomer($this->getUser());
-                    $entityManager = $this->getDoctrine()->getManager();
-                    $entityManager->persist($contact);
-                    $entityManager->flush();
-
-                    return $this->redirectToRoute('breeder_contact_complete', ['pet_id' => $id]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'id' => $id
-        ];
     }
 
     /**

@@ -14,7 +14,7 @@ use Customize\Form\Type\BreedersType;
 use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Entity\BreederHouse;
-use Customize\Form\Type\Breeder\BreederHouseType;
+use Customize\Entity\Breeders;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreederPetImageRepository;
@@ -149,7 +149,7 @@ class BreederConfigrationController extends AbstractController
                 'rootMessages' => $rootMessages,
                 'lastReplies' => $lastReplies,
                 'breeder' => $this->getUser(),
-                'pets' => $pets
+                'pets' => $pets,
             ]
         );
     }
@@ -394,21 +394,26 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/configration/baseinfo", name="breeder_baseinfo")
+     * @Route("/breeder/member/baseinfo", name="breeder_baseinfo")
      * @Template("/animalline/breeder/configration/baseinfo.twig")
      */
     public function baseinfo(Request $request, BreedersRepository $breedersRepository)
     {
-        $breederData = $breedersRepository->find($this->getUser());
-
+        $user = $this->getUser();
+        
+        $breederData = $breedersRepository->find($user);
+        if(!$breederData){
+            $breederData = new Breeders;
+            $breederData->setId($user->getId());
+        }
         $builder = $this->formFactory->createBuilder(BreedersType::class, $breederData);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
 
-        $thumbnail_path = $request->get('thumbnail_path') ? $request->get('thumbnail_path') : $breederData->getThumbnailPath();
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $thumbnail_path = $request->get('thumbnail_path') ? $request->get('thumbnail_path') : $breederData->getThumbnailPath();
+
             $breederData->setBreederPref($breederData->getPrefBreeder())
                 ->setLicensePref($breederData->getPrefLicense())
                 ->setThumbnailPath($thumbnail_path);
@@ -421,45 +426,6 @@ class BreederConfigrationController extends AbstractController
         return [
             'breederData' => $breederData,
             'form' => $form->createView()
-        ];
-    }
-
-    /**
-     * @Route("/breeder/configration/houseinfo/{pet_type}", name="breeder_houseinfo")
-     * @Template("/animalline/breeder/configration/houseinfo.twig")
-     */
-    public function houseinfo(Request $request)
-    {
-        $petType = $request->get('pet_type');
-        $breederHousePet = $this->breederHouseRepository->findOneBy(['pet_type' => $petType, 'Breeder' => $this->getUser()]);
-        $breederHouse = new BreederHouse();
-        $builder = $this->formFactory->createBuilder(BreederHouseType::class, $breederHousePet ?? $breederHouse);
-
-        $form = $builder->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if (!$breederHousePet) {
-                $housePref = $breederHouse->getBreederHousePrefId();
-                $breederHouse->setBreeder($this->getUser())
-                    ->setPetType($petType)
-                    ->setBreederHousePref($housePref['name']);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($breederHouse);
-            } else {
-                $housePref = $breederHousePet->getBreederHousePrefId();
-                $breederHousePet->setBreederHousePref($housePref['name']);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($breederHousePet);
-            }
-
-            $entityManager->flush();
-
-
-            return $this->redirectToRoute('breeder_configration', ['pet_type' => $petType]);
-        }
-        return [
-            'form' => $form->createView(),
-            'petType' => $petType,
         ];
     }
 

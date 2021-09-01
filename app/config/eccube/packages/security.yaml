@@ -6,10 +6,6 @@ security:
           id: Eccube\Security\Core\Encoder\PasswordEncoder
         Eccube\Entity\Customer:
           id: Eccube\Security\Core\Encoder\PasswordEncoder
-        Customize\Entity\Conservations:
-          id: Eccube\Security\Core\Encoder\PasswordEncoder
-        Customize\Entity\Breeders:
-          id: Eccube\Security\Core\Encoder\PasswordEncoder
     providers:
         # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
         # In this example, users are stored via Doctrine in the database
@@ -19,10 +15,6 @@ security:
             id: Eccube\Security\Core\User\MemberProvider
         customer_provider:
             id: Eccube\Security\Core\User\CustomerProvider
-        adoption_provider:
-            id: Customize\Security\Core\User\AdoptionProvider
-        breeder_provider:
-            id: Customize\Security\Core\User\BreederProvider
     # https://symfony.com/doc/current/security.html#initial-security-yml-setup-authentication
     firewalls:
         dev:
@@ -45,50 +37,6 @@ security:
             logout:
                 path: admin_logout
                 target: admin_login
-        adoption:
-            pattern: '^/adoption/configration'
-            anonymous: true
-            provider: adoption_provider
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 3600
-                name: eccube_remember_me
-                remember_me_parameter: 'adoption_login_memory'
-            form_login:
-                check_path: adoption_login
-                login_path: adoption_login
-                csrf_token_generator: security.csrf.token_manager
-                default_target_path: adoption_mypage
-                username_parameter: 'email'
-                password_parameter: 'password'
-                use_forward: false
-                success_handler: eccube.security.success_handler
-                failure_handler: eccube.security.failure_handler
-            logout:
-                path: adoption_logout
-                target: adoption_top
-        breeder:
-            pattern: '^/breeder/configration'
-            anonymous: true
-            provider: breeder_provider
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 3600
-                name: eccube_breeder_remember_me
-                remember_me_parameter: 'breeder_login_memory'
-            form_login:
-                check_path: breeder_login
-                login_path: breeder_login
-                csrf_token_generator: security.csrf.token_manager
-                default_target_path: breeder_mypage
-                username_parameter: 'email'
-                password_parameter: 'password'
-                use_forward: false
-                success_handler: eccube.security.success_handler
-                failure_handler: eccube.security.failure_handler
-            logout:
-                path: breeder_logout
-                target: breeder_top
         customer:
             pattern: '^/'
             anonymous: true

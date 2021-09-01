@@ -5,7 +5,6 @@ namespace Customize\Entity;
 use Customize\Repository\BreedersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\Master\Pref;
 
@@ -16,11 +15,10 @@ use Eccube\Entity\Master\Pref;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=BreedersRepository::class)
  */
-class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
+class Breeders 
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(name="id", type="integer")
      */
     private $id;
@@ -148,16 +146,6 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $handling_pet_kind = 0;
 
     /**
-     * @ORM\Column(name="password", type="string", length=255)
-     */
-    private $password;
-
-    /**
-     * @ORM\Column(name="email", type="string", length=255)
-     */
-    private $email;
-
-    /**
      * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
      */
     private $thumbnail_path;
@@ -173,26 +161,10 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     private $regal_effort;
 
     /**
-     * @ORM\Column(name="secret_key", type="string", length=255)
-     */
-    private $secret_key;
-
-    /**
-     * @ORM\Column(name="salt", type="string", length=255)
-     */
-    private $salt;
-
-    /**
-     * @ORM\Column(name="register_status_id", type="smallint")
-     */
-    private $register_status_id;
-
-    /**
      * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
      */
     private $create_date;
 
-    
     /**
      * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
@@ -230,6 +202,12 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
     {
         return $this->id;
     }
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
 
     public function getBreederName(): ?string
     {
@@ -531,18 +509,6 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this;
     }
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
     public function getThumbnailPath(): ?string
     {
         return $this->thumbnail_path;
@@ -579,43 +545,6 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         return $this;
     }
 
-    public function getSecretKey()
-    {
-        return $this->secret_key;
-    }
-
-
-    public function setSecretKey($secretKey)
-    {
-        $this->secret_key = $secretKey;
-
-        return $this;
-    }
-
-    public function getSalt()
-    {
-        return $this->salt;
-    }
-
-    public function setSalt($salt = null)
-    {
-        $this->salt = $salt;
-
-        return $this;
-    }
-
-    public function getRegisterStatusId(): ?int
-    {
-        return $this->register_status_id;
-    }
-
-    public function setRegisterStatusId(int $register_status_id): self
-    {
-        $this->register_status_id = $register_status_id;
-
-        return $this;
-    }
-
     public function setCreateDate($createDate)
     {
         $this->create_date = $createDate;
@@ -628,39 +557,6 @@ class Breeders extends \Eccube\Entity\AbstractEntity implements UserInterface
         $this->update_date = $updateDate;
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRoles()
-    {
-        return ['ROLE_BREEDER_USER'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUsername()
-    {
-        return $this->email;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function eraseCredentials()
-    {
-    }
-
-    public function equals(UserInterface $user)
-    {
-        return $this->getUsername() == $user->getUsername();
-    }
-
-    public function __toString()
-    {
-        return (string)$this->getId();
     }
 
     /**

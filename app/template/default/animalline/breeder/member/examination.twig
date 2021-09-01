@@ -1,0 +1,51 @@
+{% set site_type = 'breeder' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+<div class="main">
+    <div class="row">
+        <div class="main-container col-12">
+            <h1>ブリーダー登録申請</h1>
+
+            <div class="row">
+                <div class="col-lg-4 col-md-12">
+                    <a href="{{url('breeder_baseinfo')}}" class="btn btn-warning btn-block mt-3" role="button">Step1 - 基本情報入力</a>
+                </div>
+                {% if step > 1 %}
+                {% if breeder.getHandlingPetKind() == 1 or breeder.getHandlingPetKind() == 3 %}
+                <div class="col-lg-4 col-md-12">
+                    <a href="{{path('breeder_houseinfo',{'pet_type': 1 ,'return_to': return_to})}}" class="btn btn-warning btn-block mt-3" role="button">Step2 - 犬舎情報登録</a>
+                </div>
+                {% endif %}
+                {% if breeder.getHandlingPetKind() == 2 or breeder.getHandlingPetKind() == 3 %}
+                <div class="col-lg-4 col-md-12">
+                    <a href="{{path('breeder_houseinfo',{'pet_type': 2 ,'return_to': return_to})}}" class="btn btn-warning btn-block mt-3" role="button">Step2 - 猫舎情報登録</a>
+                </div>
+                {% endif %}
+                {% endif %}
+                {% if step > 2 %}
+                {% if breeder.getHandlingPetKind() == 1 or breeder.getHandlingPetKind() == 3 %}
+                <div class="col-lg-4 col-md-12">
+                    <a href="{{path('breeder_examinationinfo',{'pet_type': 1})}}" class="btn btn-warning btn-block mt-3" role="button">Step3 - 犬舎審査項目登録</a>
+                </div>
+                {% endif %}
+                {% if breeder.getHandlingPetKind() == 2 or breeder.getHandlingPetKind() == 3 %}
+                <div class="col-lg-4 col-md-12">
+                    <a href="{{path('breeder_examinationinfo',{'pet_type': 2})}}" class="btn btn-warning btn-block mt-3" role="button">Step3 - 猫舎審査項目登録</a>
+                </div>
+                {% endif %}
+                {% endif %}
+                {% if step > 3 %}
+                <div class="col-lg-4 col-md-12">
+                    <a href="#" class="btn btn-warning btn-block mt-3" role="button">Step4 - 審査情報提出</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
