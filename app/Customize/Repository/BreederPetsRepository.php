@@ -55,4 +55,30 @@ class BreederPetsRepository extends ServiceEntityRepository
             ->getQuery()
             ->execute();
     }
+
+    /**
+     * Search pet with examination_status and pet_name
+     *
+     * @param array $criteria
+     * @param array $order
+     * @return array
+     */
+    public function filterBreederPetAdmin(array $criteria, array $order)
+    {
+        $qb = $this->createQueryBuilder('b');
+        if (isset($criteria['pet_name']) && StringUtil::isNotBlank($criteria['pet_name'])) {
+            $qb
+                ->andWhere('b.pet_name LIKE :pet_name')
+                ->setParameter('pet_name', '%' . $criteria['pet_name'] . '%');
+        }
+        if (!empty($criteria['examination_status']) && count($criteria['examination_status'])) {
+            $qb
+                ->andWhere($qb->expr()->in('b.examination_status', ':examination_status'))
+                ->setParameter('examination_status', $criteria['examination_status']);
+        }
+        return $qb->orderBy('b.' . $order['field'], $order['direction'])
+            ->getQuery()
+            ->getResult();
+
+    }
 }
