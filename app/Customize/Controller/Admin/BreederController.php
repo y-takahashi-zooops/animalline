@@ -162,6 +162,7 @@ class BreederController extends AbstractController
     public function pet_index(PaginatorInterface $paginator, Request $request, BreedsRepository $breedsRepository)
     {
         $criteria = [];
+        $criteria['Breeder'] = $request->get('id');
         $breeds = $breedsRepository->findAll();
 
         switch ($request->get('pet_kind')) {
