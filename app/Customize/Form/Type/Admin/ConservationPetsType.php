@@ -71,21 +71,6 @@ class ConservationPetsType extends AbstractType
             ->add('description', TextareaType::class)
             ->add('delivery_time', TextareaType::class)
             ->add('delivery_way', TextareaType::class)
-//            ->add('thumbnail_path', HiddenType::class, [
-//                'required' => false,
-//            ])
-////            ->add('image1', HiddenType::class, [
-////                'required' => false,
-////            ])
-////            ->add('image2', HiddenType::class, [
-////                'required' => false,
-////            ])
-////            ->add('image3', HiddenType::class, [
-////                'required' => false,
-////            ])
-////            ->add('image4', HiddenType::class, [
-////                'required' => false,
-////            ])
             ->add('release_status', ChoiceType::class, [
                 'choices' =>
                     [
