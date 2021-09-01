@@ -81,20 +81,20 @@ file that was distributed with this source code.
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2">画像</th>
                                 <th class="border-top-0 pt-2 pb-2"><a
-                                            class="{{ column == 'breed_type' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'breed_type', 'direction': direction})) }}">種別</a>
+                                            class="{{ column == 'pet_kind' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                            href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'pet_kind', 'direction': direction})) }}">種別</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
-                                            class="{{ column == 'pet_kind' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'pet_kind', 'direction': direction})) }}">犬種/猫種</a>
+                                            class="{{ column == 'breed_type' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                            href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'breed_type', 'direction': direction})) }}">犬種/猫種</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'create_date', 'direction': direction})) }}">登録日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
-                                            class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'create_date', 'direction': direction})) }}">更新日</a>
+                                            class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                            href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
                             </tr>
@@ -109,12 +109,8 @@ file that was distributed with this source code.
                                              src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default | length > 0 ? pet.thumbnailPath : '/noimage_plugin_list.png') }}"
                                              style="max-width: 100px">
                                     </td>
+                                    <td class="align-middle">{{ pet.petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
                                     <td class="align-middle">{{ pet.breedsType.breedsName }}</td>
-                                    {% if pet.petKind == 1 %}
-                                        <td class="align-middle">犬</td>
-                                    {% elseif pet.petKind == 2 %}
-                                        <td class="align-middle">猫</td>
-                                    {% endif %}
                                     <td class="align-middle">{{ pet.createDate|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ pet.updateDate|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle pr-3" colspan="3">
@@ -137,6 +133,9 @@ file that was distributed with this source code.
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="navigation float-right">
+                    {{ knp_pagination_render(pets) }}
                 </div>
             </div>
         </div>
