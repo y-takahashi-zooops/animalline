@@ -73,7 +73,7 @@ file that was distributed with this source code.
                                     <div class="col-2 mb-2">
                                         <select name="breeds_type" class="form-control">
                                             {% for breed in breeds %}
-                                                <option {{ breederPet.breedsType.id == breed.id ? 'selected' : '' }} value="{{ breed.id }}">{{ breed.breedsName }}</option>
+                                                <option {{ breederPet.breedsType and breederPet.breedsType.id == breed.id ? 'selected' : '' }} value="{{ breed.id }}">{{ breed.breedsName }}</option>
                                             {% endfor %}
                                         </select>        
                                     </div>
@@ -132,7 +132,7 @@ file that was distributed with this source code.
                                     <div class="col-2 mb-2">
                                         <select name="coat_color" class="form-control">
                                             {% for color in colors %}
-                                                <option {{ breederPet.coatColor.id == color.id ? 'selected' : '' }} value="{{ color.id }}">{{ color.coatColorName }}</option>
+                                                <option {{ breederPet.coatColor and breederPet.coatColor.id == color.id ? 'selected' : '' }} value="{{ color.id }}">{{ color.coatColorName }}</option>
                                             {% endfor %}
                                         </select>       
                                     </div>
