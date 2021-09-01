@@ -11,6 +11,10 @@ file that was distributed with this source code.
 {% extends '@admin/default_frame.twig' %}
 
 {% set menus = ['adoptions', 'adoptions_adoption_list'] %}
+{% set params = app.request.query.all %}
+
+{% set column = params.field is defined ? params.field : 'create_date' %}
+{% set ordering = params.direction is defined ? params.direction : 'DESC' %}
 
 {% block title %}{{ 'ペット一覧'|trans }}{% endblock %}
 {% block sub_title %}{{ '保護団体管理'|trans }}{% endblock %}
@@ -22,38 +26,40 @@ file that was distributed with this source code.
 {% endblock stylesheet %}
 
 {% block javascript %}
-    <script>
-        
-    </script>
+<script>
+
+</script>
 {% endblock javascript %}
 
 {% block main %}
     <div class="c-outsideBlock">
-        <form id='search_form' method="post" action="{{ url('admin_product') }}">
+        <form id='search_form' method="get" action="{{ url('admin_adoption_pet_list', {'id': conservationId}) }}">
             {# {{ form_widget(searchForm._token) }} #}
             <div class="c-outsideBlock__contents">
                 <div class="row mb-2">
                     <div class="col-6">
                         <label class="col-form-label">種別</label>
-                        <select id="" name="" class="form-control">
-                            <option value="1">全て</option>
-                            <option value="2">犬</option>
-                            <option value="3">猫</option>
-                        </select>                         
+                        <select id="pet_kind" name="pet_kind" class="form-control">
+                            {% set kindNames = ['全て', '犬', '猫'] %}
+                            {% for i in 0..2 %}
+                                <option value="{{ i }}" {% if params.pet_kind is defined and params.pet_kind == i %} selected {% endif %}>{{ kindNames[i] }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-6">
                         <label class="col-form-label">犬種</label>
-                        <select id="" name="" class="form-control">
-                            <option value="1">全て</option>
-                            <option value="2">柴犬</option>
-                            <option value="3">トイプードル</option>
+                        <select id="breed_type" name="breed_type" class="form-control">
+                            <option value="0">全て</option>
+                            {% for breed in breeds %}
+                                <option value="{{ breed.Id }}" {% if params.breed_type is defined and params.breed_type == breed.Id %} selected {% endif %}>{{ breed.breedsName }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
             </div>
- 
+
             <div class="c-outsideBlock__contents mb-5">
                 <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.search'|trans }}</button>
             </div>
@@ -66,62 +72,70 @@ file that was distributed with this source code.
                     <div class="card-body p-0">
                         <table class="table table-sm">
                             <thead>
-                                <tr>
-                                    <th class="border-top-0 pt-2 pb-2"></th>
-                                    {# TODO:クリックで昇順ソート #}
-                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">ID</a></th>
-                                    <th class="border-top-0 pt-2 pb-2">画像</th>
-                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">種別</th>
-                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">犬種</th>
-                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">登録日</th>
-                                    <th class="border-top-0 pt-2 pb-2"><a href ="#">更新日</th>
-                                    <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
-                                </tr>
+                            <tr>
+                                <th class="border-top-0 pt-2 pb-2"></th>
+                                {# TODO:クリックで昇順ソート #}
+                                <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'id' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'id', 'direction': direction}) }}">ID</a>
+                                </th>
+                                <th class="border-top-0 pt-2 pb-2">画像</th>
+                                <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'pet_kind' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'pet_kind', 'direction': direction}) }}">種別</a>
+                                </th>
+                                <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'breed_type' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'breed_type', 'direction': direction}) }}">犬種</a>
+                                </th>
+                                <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'create_date', 'direction': direction}) }}">登録日</a>
+                                </th>
+                                <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'update_date', 'direction': direction}) }}">更新日</a>
+                                </th>
+                                <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
+                            </tr>
                             </thead>
                             <tbody>
+                            {% for pet in pets %}
                                 <tr id="ex-adoption-1">
-                                   <td class="align-middle"></td>
-                                   <td class="align-middle">1</td>
-                                   <td class="align-middle">
-                                        <img alt="..." src="{{ asset('assets/img/thumbnail.png') }}"  style="max-width: 100px">
+                                    <td class="align-middle"></td>
+                                    <td class="align-middle">{{ pet.Id }}</td>
+                                    <td class="align-middle">
+                                        <img alt="..."
+                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (breeder.thumbnailPath | default | length > 0 ? breeder.thumbnailPath : '/noimage_plugin_list.png') }}"
+                                             style="max-width: 100px">
                                     </td>
-                                    <td class="align-middle">犬</td>
-                                    <td class="align-middle">柴犬</td>
-                                    <td class="align-middle">2018/05/28 19:14</td>
-                                    <td class="align-middle">2018/05/28 19:14</td>
+                                    <td class="align-middle">{{ pet.petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
+                                    <td class="align-middle">{{ pet.BreedsType.breedsName }}</td>
+                                    <td class="align-middle">{{ pet.createDate|date('Y/m/d H:i') }}</td>
+                                    <td class="align-middle">{{ pet.updateDate|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
-                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
-                                                <a class="btn btn-ec-actionIcon" href="{{url('admin_adoption_pet_edit', {'id': '1'}) }}">
+                                            <div class="px-1 d-inline-block text-center" data-tooltip="true"
+                                                 data-placement="top" title="ペット情報編集">
+                                                <a class="btn btn-ec-actionIcon"
+                                                   href="{{ url('admin_adoption_pet_edit', {'id': pet.Id}) }}">
                                                     <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr id="ex-adoption-2">
-                                   <td class="align-middle"></td>
-                                   <td class="align-middle">2</td>
-                                   <td class="align-middle">
-                                        <img alt="..." src="{{ asset('assets/img/thumbnail.png') }}"  style="max-width: 100px">
-                                    </td>
-                                    <td class="align-middle">犬</td>
-                                    <td class="align-middle">柴犬</td>
-                                    <td class="align-middle">2018/09/28 19:14</td>
-                                    <td class="align-middle">2018/09/28 19:14</td>
-                                    <td class="align-middle pr-3" colspan="3">
-                                        <div class="text-right">
-                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top"  title="ペット情報編集">
-                                                <a class="btn btn-ec-actionIcon" href="{{url('admin_adoption_pet_edit', {'id': '1'}) }}">
-                                                    <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
+                            {% else %}
+                                <tr>
+                                    <td colspan="8">メッセージが見つかりません</td>
                                 </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="navigation float-right">
+                    {{ knp_pagination_render(pets) }}
                 </div>
             </div>
         </div>

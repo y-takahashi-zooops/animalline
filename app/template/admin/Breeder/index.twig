@@ -11,6 +11,9 @@ file that was distributed with this source code.
 {% extends '@admin/default_frame.twig' %}
 
 {% set params = app.request.query.all %}
+{% set column = params.field is defined ? params.field : 'create_date' %}
+{% set ordering = params.direction is defined ? params.direction : 'DESC' %}
+
 {% set menus = ['breeders', 'breeders_breeder_list'] %}
 
 {% block title %}{{ 'ブリーダー一覧'|trans }}{% endblock %}
@@ -68,16 +71,20 @@ file that was distributed with this source code.
                                 <th class="border-top-0 pt-2 pb-2"></th>
                                 {# TODO:クリックで昇順ソート #}
                                 <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'id' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_breeder_list', params|merge({'field': 'id', 'direction': direction})) }}">ID</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2">画像</th>
                                 <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'breeder_name' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_breeder_list', params|merge({'field': 'breeder_name', 'direction': direction})) }}">ブリーダー名</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_breeder_list', params|merge({'field': 'create_date', 'direction': direction})) }}">登録日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_breeder_list', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>

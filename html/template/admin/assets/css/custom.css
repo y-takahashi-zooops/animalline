@@ -1,0 +1,26 @@
+.icon-up:after {
+    content: " \f062";
+}
+
+.icon-down:after {
+    content: " \f063";
+}
+
+.icon-up, .icon-down {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+}
+
+.date {
+    display: flex;
+}
+
+.date select {
+    width: 100px;
+    margin-right: 10px;
+}
