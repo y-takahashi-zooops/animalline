@@ -20,6 +20,7 @@ use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Entity\Conservations;
 use Customize\Form\Type\Admin\ConservationsType;
+use Customize\Service\AdoptionQueryService;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -44,20 +45,30 @@ class AdoptionController extends AbstractController
     protected $breedsRepository;
 
     /**
+     * @var AdoptionQueryService;
+     */
+    protected $adoptionQueryService;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationsRepository $conservationsRepository
+     * @param ConservationPetsRepository $conservationPetsRepository
+     * @param BreedsRepository $breedsRepository
+     * @param AdoptionQueryService $adoptionQueryService
      */
 
     public function __construct(
         ConservationsRepository    $conservationsRepository,
         ConservationPetsRepository $conservationPetsRepository,
-        BreedsRepository           $breedsRepository
+        BreedsRepository           $breedsRepository,
+        AdoptionQueryService       $adoptionQueryService
     )
     {
         $this->conservationsRepository = $conservationsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->breedsRepository = $breedsRepository;
+        $this->adoptionQueryService = $adoptionQueryService;
     }
 
     /**
@@ -124,7 +135,8 @@ class AdoptionController extends AbstractController
      */
     public function pet_index(PaginatorInterface $paginator, Request $request)
     {
-        $criteria['Conservation'] = $request->get('id');
+        $criteria['conservation_id'] = $request->get('id');
+
         switch ($request->get('pet_kind')) {
             case 1:
                 $criteria['pet_kind'] = AnilineConf::ANILINE_PET_KIND_DOG;
@@ -137,14 +149,16 @@ class AdoptionController extends AbstractController
         }
 
         if ($request->get('breed_type')) {
-            $criteria['BreedsType'] = $request->get('breed_type');
+            $criteria['breed_type'] = $request->get('breed_type');
         }
 
         $field = $request->get('field') ?? 'create_date';
         $direction = $request->get('direction') ?? 'DESC';
-        $order = [$field => $direction];
+        $order['field'] = $field;
+        $order['direction'] = $direction;
 
-        $results = $this->conservationPetsRepository->findBy($criteria, $order);
+
+        $results = $this->adoptionQueryService->filterPetAdmin($criteria, $order);
         $pets = $paginator->paginate(
             $results,
             $request->query->getInt('page', 1),

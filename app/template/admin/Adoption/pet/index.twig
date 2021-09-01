@@ -85,8 +85,8 @@ file that was distributed with this source code.
                                             href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'pet_kind', 'direction': direction}) }}">種別</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
-                                            class="{{ column == 'BreedsType' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'BreedsType', 'direction': direction}) }}">犬種</a>
+                                            class="{{ column == 'breed_type' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                            href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'breed_type', 'direction': direction}) }}">犬種</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
