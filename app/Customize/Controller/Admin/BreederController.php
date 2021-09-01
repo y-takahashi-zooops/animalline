@@ -165,10 +165,10 @@ class BreederController extends AbstractController
         $breeds = $breedsRepository->findAll();
 
         switch ($request->get('pet_kind')) {
-            case 2:
+            case 1:
                 $criteria['pet_kind'] = [AnilineConf::ANILINE_PET_KIND_DOG];
                 break;
-            case 3:
+            case 2:
                 $criteria['pet_kind'] = [AnilineConf::ANILINE_PET_KIND_CAT];
                 break;
             default:
