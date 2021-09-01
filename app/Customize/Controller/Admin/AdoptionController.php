@@ -15,6 +15,8 @@ namespace Customize\Controller\Admin;
 
 
 use Customize\Config\AnilineConf;
+use Customize\Repository\BreedsRepository;
+use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Entity\Conservations;
 use Customize\Form\Type\Admin\ConservationsType;
@@ -32,15 +34,30 @@ class AdoptionController extends AbstractController
     protected $conservationsRepository;
 
     /**
+     * @var ConservationPetsRepository;
+     */
+    protected $conservationPetsRepository;
+
+    /**
+     * @var BreedsRepository;
+     */
+    protected $breedsRepository;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationsRepository $conservationsRepository
      */
 
     public function __construct(
-        ConservationsRepository $conservationsRepository
-    ) {
+        ConservationsRepository    $conservationsRepository,
+        ConservationPetsRepository $conservationPetsRepository,
+        BreedsRepository           $breedsRepository
+    )
+    {
         $this->conservationsRepository = $conservationsRepository;
+        $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->breedsRepository = $breedsRepository;
     }
 
     /**
@@ -105,9 +122,43 @@ class AdoptionController extends AbstractController
      * @Route("/%eccube_admin_route%/adoption/pet/list/{id}", name="admin_adoption_pet_list", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/pet/index.twig")
      */
-    public function pet_index(Request $request)
+    public function pet_index(PaginatorInterface $paginator, Request $request)
     {
-        return;
+        $criteria['Conservation'] = $request->get('id');
+        switch ($request->get('pet_kind')) {
+            case 1:
+                $criteria['pet_kind'] = AnilineConf::ANILINE_PET_KIND_DOG;
+                break;
+            case 2:
+                $criteria['pet_kind'] = AnilineConf::ANILINE_PET_KIND_CAT;
+                break;
+            default:
+                break;
+        }
+
+        if ($request->get('breed_type')) {
+            $criteria['BreedsType'] = $request->get('breed_type');
+        }
+
+        $field = $request->get('field') ?? 'create_date';
+        $direction = $request->get('direction') ?? 'DESC';
+        $order = [$field => $direction];
+
+        $results = $this->conservationPetsRepository->findBy($criteria, $order);
+        $pets = $paginator->paginate(
+            $results,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        $breeds = $this->breedsRepository->findAll();
+
+        return $this->render('@admin/Adoption/pet/index.twig', [
+            'conservationId' => $request->get('id'),
+            'breeds' => $breeds,
+            'pets' => $pets,
+            'direction' => $request->get('direction') == 'ASC' ? 'DESC' : 'ASC'
+        ]);
     }
 
     /**

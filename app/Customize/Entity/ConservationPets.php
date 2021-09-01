@@ -437,4 +437,14 @@ class ConservationPets
 
         return $this;
     }
+
+    public function getCreateDate()
+    {
+        return $this->create_date;
+    }
+
+    public function getUpdateDate()
+    {
+        return $this->update_date;
+    }
 }
