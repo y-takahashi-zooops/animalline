@@ -62,6 +62,8 @@ class BreederPetsType extends AbstractType
                     'class' => 'form-check-inline ec-radio'
                 ],
                 'expanded' => true,
+                'required' => false,
+                'placeholder' => false
             ])
             ->add('is_selling', ChoiceType::class, [
                 'choices' => [
@@ -72,6 +74,8 @@ class BreederPetsType extends AbstractType
                     'class' => 'form-check-inline ec-radio'
                 ],
                 'expanded' => true,
+                'required' => false,
+                'placeholder' => false
             ])
             ->add('guarantee', TextareaType::class, [
                 'required' => false,
@@ -88,6 +92,8 @@ class BreederPetsType extends AbstractType
                     'class' => 'form-check-inline ec-radio'
                 ],
                 'expanded' => true,
+                'required' => false,
+                'placeholder' => false
             ])
             ->add('include_vaccine_fee', ChoiceType::class, [
                 'choices' => [
@@ -98,6 +104,8 @@ class BreederPetsType extends AbstractType
                     'class' => 'form-check-inline ec-radio'
                 ],
                 'expanded' => true,
+                'required' => false,
+                'placeholder' => false
             ])
             ->add('delivery_time', TextareaType::class, [
                 'required' => false,
