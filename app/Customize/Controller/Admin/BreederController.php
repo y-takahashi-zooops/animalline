@@ -17,6 +17,7 @@ use Customize\Form\Type\AdminBreederType;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreedsRepository;
+use Customize\Service\BreederQueryService;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,6 +44,11 @@ class BreederController extends AbstractController
     protected $breedsRepository;
 
     /**
+     * @var BreederQueryService
+     */
+    protected $breederQueryService;
+
+    /**
      * breederController constructor.
      *
      */
@@ -50,12 +56,14 @@ class BreederController extends AbstractController
     public function __construct(
         BreedersRepository $breedersRepository,
         BreederPetsRepository $breederPetsRepository,
-        BreedsRepository $breedsRepository
+        BreedsRepository $breedsRepository,
+        BreederQueryService $breederQueryService
     )
     {
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
+        $this->breederQueryService = $breederQueryService;
     }
 
     /**
@@ -159,11 +167,11 @@ class BreederController extends AbstractController
      * @Route("/%eccube_admin_route%/breeder/pet/list/{id}", name="admin_breeder_pet_list", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/pet/index.twig")
      */
-    public function pet_index(PaginatorInterface $paginator, Request $request, BreedsRepository $breedsRepository)
+    public function pet_index(PaginatorInterface $paginator, Request $request)
     {
         $criteria = [];
-        $criteria['Breeder'] = $request->get('id');
-        $breeds = $breedsRepository->findAll();
+        $criteria['id'] = $request->get('id');
+        $breeds = $this->breedsRepository->findAll();
 
         switch ($request->get('pet_kind')) {
             case 1:
@@ -178,15 +186,16 @@ class BreederController extends AbstractController
 
 
         if ($request->get('breed_type')) {
-            $criteria['BreedType'] = $request->get('breed_type');
+            $criteria['breed_type'] = $request->get('breed_type');
         }
 
         $order = [];
-        $field = $request->get('field') ??'create_date';
+        $field = $request->get('field') ?? 'create_date';
         $direction = $request->get('direction') ?? 'DESC';
-        $order = [$field=>$direction];
+        $order['field'] = $field;
+        $order['direction'] = $direction;
 
-        $results = $this->breederPetsRepository->findBy($criteria, $order);
+        $results = $this->breederQueryService->filterPetAdmin($criteria, $order);
         $pets = $paginator->paginate(
             $results,
             $request->query->getInt('page', 1),

@@ -13,6 +13,9 @@ file that was distributed with this source code.
 {% set menus = ['breeders', 'breeders_breeder_list'] %}
 {% set params = app.request.query.all %}
 
+{% set column = params.field is defined ? params.field : 'create_date' %}
+{% set ordering = params.direction is defined ? params.direction : 'DESC' %}
+
 {% block title %}{{ 'ペット一覧'|trans }}{% endblock %}
 {% block sub_title %}{{ 'ブリーダー管理'|trans }}{% endblock %}
 
@@ -30,7 +33,7 @@ file that was distributed with this source code.
 
 {% block main %}
     <div class="c-outsideBlock">
-        <form id='search_form' method="post" action="{{ url('admin_breeder_pet_list', {'id': id}) }}">
+        <form id='search_form' method="get" action="{{ url('admin_breeder_pet_list', {'id': id}) }}">
             {# {{ form_widget(searchForm._token) }} #}
             <div class="c-outsideBlock__contents">
                 <div class="row mb-2">
@@ -73,16 +76,21 @@ file that was distributed with this source code.
                                     <th class="border-top-0 pt-2 pb-2"></th>
                                     {# TODO:クリックで昇順ソート #}
                                     <th class="border-top-0 pt-2 pb-2"><a 
-                                        href ="{{ url('admin_breeder_pet_list', {'id': id, 'field': 'id', 'direction': direction}) }}">ID</a></th>
+                                    class="{{ column == 'id' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href ="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'id', 'direction': direction})) }}">ID</a></th>
                                     <th class="border-top-0 pt-2 pb-2">画像</th>
                                     <th class="border-top-0 pt-2 pb-2"><a 
-                                        href ="{{ url('admin_breeder_pet_list', {'id': id, 'field': 'breeds_type', 'direction': direction}) }}">種別</th>
+                                    class="{{ column == 'breed_type' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href ="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'breed_type', 'direction': direction})) }}">種別</a></th>
                                     <th class="border-top-0 pt-2 pb-2"><a 
-                                        href ="{{ url('admin_breeder_pet_list', {'id': id, 'field': 'pet_kind', 'direction': direction}) }}">犬種</th>
+                                    class="{{ column == 'pet_kind' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href ="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'pet_kind', 'direction': direction})) }}">犬種/猫種</a></th>
                                     <th class="border-top-0 pt-2 pb-2"><a 
-                                        href ="{{ url('admin_breeder_pet_list', {'id': id, 'field': 'create_date', 'direction': direction}) }}">登録日</th>
+                                    class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href ="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'create_date', 'direction': direction})) }}">登録日</a></th>
                                     <th class="border-top-0 pt-2 pb-2"><a 
-                                        href ="{{ url('admin_breeder_pet_list', {'id': id, 'field': 'update_date', 'direction': direction}) }}">更新日</th>
+                                    class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href ="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'create_date', 'direction': direction})) }}">更新日</a></th>
                                     <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
                                 </tr>
                             </thead>
@@ -93,7 +101,7 @@ file that was distributed with this source code.
                                    <td class="align-middle">{{ pet.Id }}</td>
                                    <td class="align-middle">
                                         <img alt="..."
-                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default | length > 0 ? pet.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default | length > 0 ? pet.thumbnailPath : '/noimage_plugin_list.png') }}"
                                              style="max-width: 100px">
                                     </td>
                                     <td class="align-middle">{{ pet.breedsType.breedsName }}</td>
@@ -113,6 +121,10 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                     </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="8">メッセージが見つかりません</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
