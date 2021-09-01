@@ -20,6 +20,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
+use Customize\Entity\BreederPets;
+use Customize\Form\Type\Admin\BreederPetsType;
+use Customize\Repository\BreederPetImageRepository;
+use Customize\Repository\BreedsRepository;
+use Customize\Repository\CoatColorsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 
 class BreederController extends AbstractController
@@ -30,15 +35,34 @@ class BreederController extends AbstractController
     protected $breedersRepository;
 
     /**
+     * @var BreedsRepository
+     */
+    protected $breedsRepository;
+
+    /**
+     * @var CoatColorsRepository
+     */
+    protected $coatColorsRepository;
+
+    /**
+     * @var BreederPetImageRepository
+     */
+    protected $breederPetImageRepository;
+
+    /**
      * breederController constructor.
      *
      */
-
     public function __construct(
-        BreedersRepository $breedersRepository
-    )
-    {
+        BreedersRepository $breedersRepository,
+        BreedsRepository $breedsRepository,
+        CoatColorsRepository $coatColorsRepository,
+        BreederPetImageRepository $breederPetImageRepository
+    ) {
         $this->breedersRepository = $breedersRepository;
+        $this->breedsRepository = $breedsRepository;
+        $this->coatColorsRepository = $coatColorsRepository;
+        $this->breederPetImageRepository = $breederPetImageRepository;
     }
 
     /**
@@ -151,9 +175,32 @@ class BreederController extends AbstractController
      * @Route("/%eccube_admin_route%/breeder/pet/edit/{id}", name="admin_breeder_pet_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/pet/edit.twig")
      */
-    public function pet_edit(Request $request)
+    public function pet_edit(Request $request, BreederPets $breederPet)
     {
-        return;
-    }
+        $form = $this->createForm(BreederPetsType::class, $breederPet);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $breederPet->setBreedsType($this->breedsRepository->find($request->get('breeds_type')));
+            $breederPet->setCoatColor($this->coatColorsRepository->find($request->get('coat_color')));
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($breederPet);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_breeder_pet_list', ['id' => $breederPet->getBreeder()->getId()]);
+        }
+
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $breederPet->getPetKind()]);
+        $colors = $this->coatColorsRepository->findBy(['pet_kind' => $breederPet->getPetKind()]);
+        $images = $this->breederPetImageRepository->findBy(['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
+
+        return [
+            'form' => $form->createView(),
+            'breederPet' => $breederPet,
+            'breeds' => $breeds,
+            'colors' => $colors,
+            'images' => $images
+        ];
+    }
 }
