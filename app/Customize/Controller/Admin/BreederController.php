@@ -161,37 +161,39 @@ class BreederController extends AbstractController
      */
     public function pet_index(PaginatorInterface $paginator, Request $request, BreedsRepository $breedsRepository)
     {
-        $request = $request->query->all();
         $criteria = [];
         $breeds = $breedsRepository->findAll();
 
-        if (array_key_exists('pet_kind', $request)) {
-            switch ($request['pet_kind']) {
-                case 2:
-                    $criteria['pet_kind'] = [AnilineConf::ANILINE_PET_KIND_DOG, AnilineConf::ANILINE_PET_KIND_CAT];
-                    break;
-                case 3:
-                    $criteria['pet_kind'] = [AnilineConf::ANILINE_PET_KIND_DOG_CAT];
-                    break;
-                default:
-                    break;
-            }
+        switch ($request->get('pet_kind')) {
+            case 2:
+                $criteria['pet_kind'] = [AnilineConf::ANILINE_PET_KIND_DOG];
+                break;
+            case 3:
+                $criteria['pet_kind'] = [AnilineConf::ANILINE_PET_KIND_CAT];
+                break;
+            default:
+                break;
+        }
+
+
+        if ($request->get('breed_type')) {
+            $criteria['BreedType'] = $request->get('breed_type');
         }
 
         $order = [];
-        $order['field'] = array_key_exists('field', $request) ? $request['field'] : 'create_date';
-        $order['direction'] = array_key_exists('direction', $request) ? $request['direction'] : 'DESC';
+        $field = $request->get('field') ??'create_date';
+        $direction = $request->get('direction') ?? 'DESC';
+        $order = [$field=>$direction];
 
-        var_dump($criteria);
-        $results = $this->breederPetsRepository->filterBreederPetAdmin($criteria, $order);
+        $results = $this->breederPetsRepository->findBy($criteria, $order);
         $pets = $paginator->paginate(
             $results,
-            array_key_exists('page', $request) ? $request['page'] : 1,
+            $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
         $direction = 'ASC';
-        if (array_key_exists('direction', $request)) {
-            $direction = $request['direction'] == 'ASC' ? 'DESC' : 'ASC';
+        if ($request->get('direction')) {
+            $direction = $request->get('direction') == 'ASC' ? 'DESC' : 'ASC';
         }
 
         return $this->render('@admin/Breeder/pet/index.twig', [

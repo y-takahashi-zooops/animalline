@@ -47,8 +47,9 @@ file that was distributed with this source code.
                 <div class="row mb-2">
                     <div class="col-6">
                         <label class="col-form-label">犬種</label>
-                        <select id="breeds" name="breeds" class="form-control">
-                           {% for breed in breeds %}
+                        <select id="breed_type" name="breed_type" class="form-control">
+                            <option value="0">全て</option>
+                            {% for breed in breeds %}
                                 <option value="{{ breed.Id }}" {% if params.breed_type is defined and params.breed_type == breed.Id %} selected {% endif %}>{{ breed.breedsName }}</option>
                             {% endfor %}
                         </select>
