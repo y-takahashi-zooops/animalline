@@ -197,6 +197,7 @@ class BreederController extends AbstractController
         }
 
         return $this->render('@admin/Breeder/pet/index.twig', [
+            'id' => $request->get('id'),
             'pets' => $pets,
             'direction' => $direction,
             'breeds' => $breeds

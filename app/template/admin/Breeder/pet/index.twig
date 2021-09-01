@@ -30,7 +30,7 @@ file that was distributed with this source code.
 
 {% block main %}
     <div class="c-outsideBlock">
-        <form id='search_form' method="post" action="{{ url('admin_breeder_pet_list', {'id': 5}) }}">
+        <form id='search_form' method="post" action="{{ url('admin_breeder_pet_list', {'id': id}) }}">
             {# {{ form_widget(searchForm._token) }} #}
             <div class="c-outsideBlock__contents">
                 <div class="row mb-2">
@@ -46,7 +46,7 @@ file that was distributed with this source code.
                 </div>
                 <div class="row mb-2">
                     <div class="col-6">
-                        <label class="col-form-label">種類</label>
+                        <label class="col-form-label">犬種</label>
                         <select id="breed_type" name="breed_type" class="form-control">
                             <option value="0">全て</option>
                             {% for breed in breeds %}
@@ -73,16 +73,16 @@ file that was distributed with this source code.
                                     <th class="border-top-0 pt-2 pb-2"></th>
                                     {# TODO:クリックで昇順ソート #}
                                     <th class="border-top-0 pt-2 pb-2"><a 
-                                        href ="{{ url('admin_breeder_pet_list', {'id': 5, 'field': 'id', 'direction': direction}) }}">ID</a></th>
+                                        href ="{{ url('admin_breeder_pet_list', {'id': id, 'field': 'id', 'direction': direction}) }}">ID</a></th>
                                     <th class="border-top-0 pt-2 pb-2">画像</th>
                                     <th class="border-top-0 pt-2 pb-2"><a 
-                                        href ="{{ url('admin_breeder_pet_list', {'id': 5, 'field': 'breeds_name', 'direction': direction}) }}">種別</th>
+                                        href ="{{ url('admin_breeder_pet_list', {'id': id, 'field': 'breeds_name', 'direction': direction}) }}">種別</th>
                                     <th class="border-top-0 pt-2 pb-2"><a 
-                                        href ="{{ url('admin_breeder_pet_list', {'id': 5, 'field': 'pet_kind', 'direction': direction}) }}">犬種</th>
+                                        href ="{{ url('admin_breeder_pet_list', {'id': id, 'field': 'pet_kind', 'direction': direction}) }}">犬種</th>
                                     <th class="border-top-0 pt-2 pb-2"><a 
-                                        href ="{{ url('admin_breeder_pet_list', {'id': 5, 'field': 'create_date', 'direction': direction}) }}">登録日</th>
+                                        href ="{{ url('admin_breeder_pet_list', {'id': id, 'field': 'create_date', 'direction': direction}) }}">登録日</th>
                                     <th class="border-top-0 pt-2 pb-2"><a 
-                                        href ="{{ url('admin_breeder_pet_list', {'id': 5, 'field': 'update_date', 'direction': direction}) }}">更新日</th>
+                                        href ="{{ url('admin_breeder_pet_list', {'id': id, 'field': 'update_date', 'direction': direction}) }}">更新日</th>
                                     <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
                                 </tr>
                             </thead>
