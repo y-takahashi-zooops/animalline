@@ -13,6 +13,9 @@ file that was distributed with this source code.
 {% set menus = ['adoptions', 'adoptions_adoption_list'] %}
 {% set params = app.request.query.all %}
 
+{% set column = params.field is defined ? params.field : 'create_date' %}
+{% set ordering = params.direction is defined ? params.direction : 'DESC' %}
+
 {% block title %}{{ 'ペット一覧'|trans }}{% endblock %}
 {% block sub_title %}{{ '保護団体管理'|trans }}{% endblock %}
 
@@ -73,19 +76,24 @@ file that was distributed with this source code.
                                 <th class="border-top-0 pt-2 pb-2"></th>
                                 {# TODO:クリックで昇順ソート #}
                                 <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'id' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'id', 'direction': direction}) }}">ID</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2">画像</th>
                                 <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'pet_kind' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'pet_kind', 'direction': direction}) }}">種別</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'BreedsType' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'BreedsType', 'direction': direction}) }}">犬種</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'create_date', 'direction': direction}) }}">登録日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
+                                            class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_adoption_pet_list', {'id': conservationId, 'field': 'update_date', 'direction': direction}) }}">更新日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
