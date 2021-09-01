@@ -15,6 +15,13 @@ namespace Customize\Controller\Admin;
 
 
 use Customize\Config\AnilineConf;
+use Customize\Entity\Breeders;
+use Customize\Entity\ConservationPetImage;
+use Customize\Form\Type\Admin\ConservationPetsType;
+use Customize\Repository\BreedsRepository;
+use Customize\Repository\CoatColorsRepository;
+use Customize\Repository\ConservationPetImageRepository;
+use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Entity\Conservations;
 use Customize\Form\Type\Admin\ConservationsType;
@@ -114,8 +121,34 @@ class AdoptionController extends AbstractController
      * @Route("/%eccube_admin_route%/adoption/pet/edit/{id}", name="admin_adoption_pet_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/pet/edit.twig")
      */
-    public function pet_edit(Request $request)
+    public function pet_edit(Request $request, ConservationPetsRepository $conservationPetsRepository, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository, ConservationPetImageRepository $conservationPetImageRepository)
     {
-        return;
+        $conservationPet = $conservationPetsRepository->find($request->get('id'));
+        $builder =  $this->formFactory->createBuilder(ConservationPetsType::class, $conservationPet);
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $coatColor = $coatColorsRepository->find($request->get('coat_color'));
+            $breedType = $breedsRepository->find($request->get('breeds_type'));
+            $conservationPet->setBreedsType($breedType)
+                    ->setCoatColor($coatColor);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($conservationPet);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_adoption_pet_list',['id'=> $request->get('id')]);
+        }
+
+        $breeds = $breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()]);
+        $colors = $coatColorsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()]);
+        $images = $conservationPetImageRepository->findBy(['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
+        return $this->render('@admin/Adoption/pet/edit.twig', [
+            'id'=>$request->get('id'),
+            'conservationPet' => $conservationPet,
+            'breeds' => $breeds,
+            'colors' => $colors,
+            'images' => $images,
+            'form' => $form->createView(),
+        ]);
     }
 }
