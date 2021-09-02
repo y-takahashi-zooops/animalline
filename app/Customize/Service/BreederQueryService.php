@@ -121,24 +121,25 @@ class BreederQueryService
     {
         $qb = $this->breederPetsRepository->createQueryBuilder('p');
         if (!empty($criteria['id'])) {
-            $qb
-                ->andWhere('p.Breeder = :id')
+            $qb->andWhere('p.Breeder = :id')
                 ->setParameter('id', $criteria['id']);
         }
 
         if (!empty($criteria['pet_kind'])) {
-            $qb
-                ->andWhere('p.pet_kind = :pet_kind')
+            $qb->andWhere('p.pet_kind = :pet_kind')
                 ->setParameter('pet_kind', $criteria['pet_kind']);
         }
 
-        if (!empty($criteria['breed_type']) || $order['field'] == 'breed_type') {
-            if (!empty($criteria['breed_type'])) {
-                $qb->andWhere('p.BreedType = :breed_type')
-                    ->setParameter('breed_type', $criteria['breed_type']);
-            }
+
+        if (!empty($criteria['breed_type'])) {
+            $qb->andWhere('p.BreedType = :breed_type')
+                ->setParameter('breed_type', $criteria['breed_type']);
+        }
+
+        if ($order['field'] == 'breed_type') {
             return $qb->join('p.BreedType', 'b')
                 ->orderBy('b.breeds_name', $order['direction'])
+                ->addOrderBy('p.create_date', $order['direction'])
                 ->getQuery()
                 ->getResult();
         }
