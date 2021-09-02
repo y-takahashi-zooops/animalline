@@ -1,9 +1,12 @@
 {% set site_type = 'breeder' %}
 {% extends 'ani_frame.twig' %}
 {% block main %}
-    <h1>Edit BreederPets</h1>
+    <h1>ペット情報編集</h1>
     <br>
-    <a href="{{ path('breeder_configration') }}">< back to list</a>
+    <a href="{{ path('breeder_configration') }}">
+        <img src="{{ asset('assets/img/arrow-icon.svg') }}" style="transform:rotate(-180deg);">
+         <span>一覧へ戻る</span>
+     </a>
     <hr>
     {{ include('animalline/breeder/configration/pets/_form.twig', {'button_label': 'Update'}) }}
     <input hidden id="form-edit">

@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -60,16 +61,40 @@ class BreederPetsType extends AbstractType
             ])
             ->add('future_wait', IntegerType::class)
             ->add('dna_check_result', IntegerType::class)
-            ->add('pr_comment', TextType::class)
-            ->add('description', TextType::class)
-            ->add('is_breeding', IntegerType::class)
-            ->add('is_selling', IntegerType::class)
-            ->add('guarantee', TextType::class)
-            ->add('is_pedigree', IntegerType::class)
-            ->add('include_vaccine_fee', IntegerType::class)
-            ->add('delivery_time', TextType::class)
-            ->add('delivery_way', TextType::class)
-            ->add('payment_method', TextType::class)
+            ->add('pr_comment', TextareaType::class)
+            ->add('description', TextareaType::class)
+            ->add('is_breeding', ChoiceType::class, [
+                'choices'  => [
+                    '可'   => '1',
+                    '不可' => '0',
+                ],
+                'expanded' => true,
+            ])
+            ->add('is_selling', ChoiceType::class, [
+                'choices'  => [
+                    '可'   => '1',
+                    '不可' => '0',
+                ],
+                'expanded' => true,
+            ])
+            ->add('guarantee', TextareaType::class)
+            ->add('is_pedigree', ChoiceType::class, [
+                'choices'  => [
+                    'あり'   => '1',
+                    'なし' => '0',
+                ],
+                'expanded' => true,
+            ])
+            ->add('include_vaccine_fee', ChoiceType::class, [
+                'choices'  => [
+                    'あり'   => '1',
+                    'なし' => '0',
+                ],
+                'expanded' => true,
+            ])
+            ->add('delivery_time', TextareaType::class)
+            ->add('delivery_way', TextareaType::class)
+            ->add('payment_method', TextareaType::class)
             ->add('reservation_fee', IntegerType::class)
             ->add('thumbnail_path', FileType::class, [
                 'required' => false,
@@ -120,14 +145,14 @@ class BreederPetsType extends AbstractType
                 ],
                 'data_class' => null
             ])
-            ->add('release_status', ChoiceType::class, [
-                'choices' =>
-                [
-                    '非公開' => AnilineConf::RELEASE_STATUS_PRIVATE,
-                    '公開' => AnilineConf::RELEASE_STATUS_PUBLIC
-                ]
-            ])
-            ->add('release_date', DateType::class)
+            // ->add('release_status', ChoiceType::class, [
+            //     'choices' =>
+            //     [
+            //         '非公開' => AnilineConf::RELEASE_STATUS_PRIVATE,
+            //         '公開' => AnilineConf::RELEASE_STATUS_PUBLIC
+            //     ]
+            // ])
+            // ->add('release_date', DateType::class)
             ->add('price', IntegerType::class);
     }
 
