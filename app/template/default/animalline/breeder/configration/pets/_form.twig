@@ -1,52 +1,35 @@
-{{ form_start(form) }}
-    {{ form_label(form.pet_kind, 'Pet kind', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.pet_kind) }}
-    {{ form_errors(form.pet_kind) }}
+{{ form_start(form, {'attr': { 'class': 'col-10', 'style': 'margin: 0 auto;' }}) }}
 
-    {{ form_label(form.breeds_type, 'Breeds type', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.breeds_type) }}
-    {{ form_errors(form.breeds_type) }}
-
-    {{ form_label(form.pet_sex, 'Pet sex', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.pet_sex) }}
-    {{ form_errors(form.pet_sex) }}
-
-    {{ form_label(form.pet_birthday, 'Pet birthday', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.pet_birthday) }}
-    {{ form_errors(form.pet_birthday) }}
-
-    {{ form_label(form.coat_color, 'Coat color', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.coat_color) }}
-    {{ form_errors(form.coat_color) }}
-
-    {{ form_label(form.future_wait, 'Future wait', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.future_wait) }}
-    {{ form_errors(form.future_wait) }}
-
-    {{ form_label(form.dna_check_result, 'Dna check result', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.dna_check_result) }}
-    {{ form_errors(form.dna_check_result) }}
-
-    {{ form_label(form.pr_comment, 'Pr comment', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.pr_comment) }}
-    {{ form_errors(form.pr_comment) }}
-
-    {{ form_label(form.description, 'Description', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.description) }}
-    {{ form_errors(form.description) }}
-
-    {{ form_label(form.delivery_time, 'Delivery time', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.delivery_time) }}
-    {{ form_errors(form.delivery_time) }}
-
-    {{ form_label(form.delivery_way, 'Delivery way', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.delivery_way) }}
-    {{ form_errors(form.delivery_way) }}
-
-    {{ form_label(form.thumbnail_path, 'Thumbnail path', { 'label_attr': {'class': 'ec-label' }}) }}
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.pet_kind, 'ペット種別', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-5">
+        {{ form_widget(form.pet_kind) }}
+        {{ form_errors(form.pet_kind) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.breeds_type, '犬種(猫種)', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        </div>
+        <div class="col-md-5">
+            {{ form_widget(form.breeds_type) }}
+            {{ form_errors(form.breeds_type) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.thumbnail_path, 'ペット画像', { 'label_attr': {'class': 'ec-label' }}) }}
+        </div>
+    </div>
     <div class="form_img_inline">
-        <div class="images">
-            <div class="preview_box mr-4">
+        <div class="col-md-1"></div>
+        <div class="images mb-3">
+            <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.thumbnail_path) }}
                 {{ form_errors(form.thumbnail_path) }}
                 <img id="img_thumbnail" class="img_preview" src="" />
@@ -55,8 +38,8 @@
                 <button class="btn_remove breeder_pets_thumbnail_path">画像を削除</button>
             </div>
         </div>
-        <div class="images">
-            <div class="preview_box mr-4">
+        <div class="images mb-3">
+            <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.image1) }}
                 <img class="img_preview" src="" />
             </div>
@@ -65,8 +48,8 @@
                 <button class="btn_remove breeder_pets_image1">画像を削除</button>
             </div>
         </div>
-        <div class="images">
-            <div class="preview_box mr-4">
+        <div class="images mb-3">
+            <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.image2) }}
                 <img class="img_preview" src="" />
             </div>
@@ -75,8 +58,8 @@
                 <button class="btn_remove breeder_pets_image2">画像を削除</button>
             </div>
         </div>
-        <div class="images">
-            <div class="preview_box mr-4">
+        <div class="images mb-3">
+            <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.image3) }}
                 <img class="img_preview" src="" />
             </div>
@@ -85,8 +68,8 @@
                 <button class="btn_remove breeder_pets_image3">画像を削除</button>
             </div>
         </div>
-        <div class="images">
-            <div class="preview_box mr-4">
+        <div class="images mb-3">
+            <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.image4) }}
                 <img class="img_preview" src="" />
             </div>
@@ -102,54 +85,225 @@
     <input type="hidden" name="img3" class="breeder_pets_image3">
     <input type="hidden" name="img4" class="breeder_pets_image4">
 
-    {{ form_label(form.release_status, 'Release status', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.release_status) }}
-    {{ form_errors(form.release_status) }}
-
-    {{ form_label(form.release_date, 'Release date', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.release_date) }}
-    {{ form_errors(form.release_date) }}
-
-    {{ form_label(form.price, 'Price', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.price) }}
-    {{ form_errors(form.price) }}
-
-    {{ form_label(form.is_breeding, 'Is breeding', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.is_breeding) }}
-    {{ form_errors(form.is_breeding) }}
-
-    {{ form_label(form.is_selling, 'Is selling', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.is_selling) }}
-    {{ form_errors(form.is_selling) }}
-
-    {{ form_label(form.guarantee, 'Guarantee', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.guarantee) }}
-    {{ form_errors(form.guarantee) }}
-
-    {{ form_label(form.is_pedigree, 'Is pedigree', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.is_pedigree) }}
-    {{ form_errors(form.is_pedigree) }}
-
-    {{ form_label(form.include_vaccine_fee, 'Include vaccine fee', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.include_vaccine_fee) }}
-    {{ form_errors(form.include_vaccine_fee) }}
-
-    {{ form_label(form.payment_method, 'Payment method', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.payment_method) }}
-    {{ form_errors(form.payment_method) }}
-
-    {{ form_label(form.reservation_fee, 'Reservation fee', { 'label_attr': {'class': 'ec-label' }}) }}
-    {{ form_widget(form.reservation_fee) }}
-    {{ form_errors(form.reservation_fee) }}
-
-<button class="btn btn-info">{{ button_label|default('Save') }}</button>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.pet_sex, '性別', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-5">
+            {{ form_widget(form.pet_sex) }}
+            {{ form_errors(form.pet_sex) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.pet_birthday, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-5 ec-select">
+            {{ form_widget(form.pet_birthday) }}
+            {{ form_errors(form.pet_birthday) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.coat_color, '毛色', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-5">
+            {{ form_widget(form.coat_color) }}
+            {{ form_errors(form.coat_color) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.future_wait, '成犬時予想体重', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-6 col-md-3 ec-input">
+            {{ form_widget(form.future_wait) }}
+            {{ form_errors(form.future_wait) }}
+        </div>
+        <div class="pt-2">
+            <span>kg</span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.dna_check_result, '遺伝子調査結果', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-5 ec-input">
+            {{ form_widget(form.dna_check_result) }}
+            {{ form_errors(form.dna_check_result) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+        {{ form_label(form.pr_comment, 'アピールポイント', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-5 ec-input">
+            {{ form_widget(form.pr_comment) }}
+            {{ form_errors(form.pr_comment) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.description, '紹介文', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-5 ec-input">
+            {{ form_widget(form.description) }}
+            {{ form_errors(form.description) }}
+        </div>
+    </div>
+    {# <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.release_status, '公開状況', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-5">
+            {{ form_widget(form.release_status) }}
+            {{ form_errors(form.release_status) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.release_date, '公開日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-5 ec-select">
+            {{ form_widget(form.release_date) }}
+            {{ form_errors(form.release_date) }}
+        </div>
+    </div> #}
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.is_breeding, '繁殖の可否', { 'label_attr': {'class': 'ec-label' }}) }}
+        </div>
+        <div class="col-md-5 form-check-inline ec-radio">
+            {{ form_widget(form.is_breeding, {'attr': {'style': 'display:flex;'}}) }}
+            {{ form_errors(form.is_breeding) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.is_selling, 'ブリーダーへの販売可否', { 'label_attr': {'class': 'ec-label' }}) }}
+        </div>
+        <div class="col-md-5 form-check-inline ec-radio">
+            {{ form_widget(form.is_selling, {'attr': {'style': 'display:flex;'}}) }}
+            {{ form_errors(form.is_selling) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.guarantee, '生体保障内容', { 'label_attr': {'class': 'ec-label' }}) }}
+        </div>
+        <div class="col-md-5 ec-input">
+            {{ form_widget(form.guarantee) }}
+            {{ form_errors(form.guarantee) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.is_pedigree, '血統書の有無', { 'label_attr': {'class': 'ec-label' }}) }}
+        </div>
+        <div class="col-md-5 form-check-inline ec-radio">
+            {{ form_widget(form.is_pedigree, {'attr': {'style': 'display:flex;'}}) }}
+            {{ form_errors(form.is_pedigree) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.include_vaccine_fee, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label' }}) }}
+        </div>
+        <div class="col-md-5 form-check-inline ec-radio">
+            {{ form_widget(form.include_vaccine_fee, {'attr': {'style': 'display:flex;'}}) }}
+            {{ form_errors(form.include_vaccine_fee) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.delivery_time, '引き渡し時期', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        </div>
+        <div class="col-md-5 ec-input">
+            {{ form_widget(form.delivery_time) }}
+            {{ form_errors(form.delivery_time) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        </div>
+        <div class="col-md-5 ec-input">
+            {{ form_widget(form.delivery_way) }}
+            {{ form_errors(form.delivery_way) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.payment_method, '支払方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        </div>
+        <div class="col-md-5 ec-input">
+            {{ form_widget(form.payment_method) }}
+            {{ form_errors(form.payment_method) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.reservation_fee, '予約金', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        </div>
+        <div class="col-md-5">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">￥ </span>
+                </div>
+                {{ form_widget(form.reservation_fee) }}
+                {{ form_errors(form.reservation_fee) }}
+            </div>
+        </div>
+    </div>    
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            {{ form_label(form.price, '価格', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        </div>
+        <div class="col-md-5">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">￥ </span>
+                </div>
+                {{ form_widget(form.price) }}
+                {{ form_errors(form.price) }}
+            </div>
+        </div>
+    </div>  
+    {# <button class="btn btn-info">{{ button_label|default('Save') }}</button> #}
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <button class="ec-blockBtn--action bg-adoption mt-4 mb-4">{{ '登録する' }}</button>
+            <a class="ec-blockBtn--cancel" href={{url('breeder_configration')}} style="color: white;">{{ '戻る' }}</a>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
 {{ form_end(form) }}
 
 <div class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="modalLabel">Crop image</h3>
+                <h3 class="modal-title" id="modalLabel">画像切り抜き</h3>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -168,8 +322,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="crop">Crop</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-primary" id="crop">切り抜き</button>
             </div>
         </div>
     </div>

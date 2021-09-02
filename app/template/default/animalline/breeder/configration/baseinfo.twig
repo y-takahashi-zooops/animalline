@@ -97,7 +97,7 @@
                                 {{ form_label(form.pr_text, '自己PR', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-telInput{{ has_errors(form.pr_text) ? ' error' }}">
+                                <div class="ec-input{{ has_errors(form.pr_text) ? ' error' }}">
                                     {{ form_widget(form.pr_text) }}
                                     {{ form_errors(form.pr_text) }}
                                 </div>
@@ -108,7 +108,7 @@
                                 {{ form_label(form.regal_effort, '動物愛護法改正への対応', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-telInput{{ has_errors(form.regal_effort) ? ' error' }}">
+                                <div class="ec-input{{ has_errors(form.regal_effort) ? ' error' }}">
                                     {{ form_widget(form.regal_effort) }}
                                     {{ form_errors(form.regal_effort) }}
                                 </div>
@@ -269,7 +269,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="modalLabel">Crop image</h3>
+                    <h3 class="modal-title" id="modalLabel">画像切り抜き</h3>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -288,8 +288,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="crop">Crop</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-primary" id="crop">切り抜き</button>
                 </div>
             </div>
         </div>
