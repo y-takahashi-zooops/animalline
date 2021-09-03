@@ -1,4 +1,4 @@
-{% set site_type = 'breeder' %}
+{% set site_type = 'adoption' %}
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
@@ -10,33 +10,33 @@
             <div class="row">
                 <div class="col-lg-4"></div>
                 <div class="col-lg-4 col-md-12">
-                    <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{url('breeder_baseinfo')}}'"> 
+                    <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{url('adoption_baseinfo')}}'"> 
                         Step1 - 基本情報入力
-                        {# <a href="{{url('breeder_baseinfo')}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step1 - 基本情報入力</a> #}
+                        {# <a href="{{url('adoption_baseinfo')}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step1 - 基本情報入力</a> #}
                     </button>
                 </div>
             </div>
 
             <input type="hidden" id="step" value="{{ step }}">
             {% if step > 1 %}
-                {% if breeder.getHandlingPetKind() == 0 or breeder.getHandlingPetKind() == 1 %}
+                {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 1 %}
                     <div class="row">
                         <div class="col-lg-4"></div>
                         <div class="col-lg-4 col-md-12">
-                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('breeder_house_info',{'pet_type': 1 })}}'"> 
+                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_house_info',{'pet_type': 1 })}}'"> 
                                 Step2 - 犬舎情報登録
-                                {# <a href="{{path('breeder_house_info',{'pet_type': 1 })}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step2 - 犬舎情報登録</a> #}
+                                {# <a href="{{path('adoption_house_info',{'pet_type': 1 })}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step2 - 犬舎情報登録</a> #}
                             </button>
                         </div>
                     </div>
                 {% endif %}
-                {% if breeder.getHandlingPetKind() == 0 or breeder.getHandlingPetKind() == 2 %}
+                {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 2 %}
                     <div class="row">
                     <div class="col-lg-4"></div>
                         <div class="col-lg-4 col-md-12">
-                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('breeder_house_info',{'pet_type': 2 })}}'"> 
+                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_house_info',{'pet_type': 2 })}}'"> 
                                 Step2 - 猫舎情報登録
-                                {# <a href="{{path('breeder_house_info',{'pet_type': 2 })}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step2 - 猫舎情報登録</a> #}
+                                {# <a href="{{path('adoption_house_info',{'pet_type': 2 })}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step2 - 猫舎情報登録</a> #}
                             </button>
                         </div>
                     </div>
@@ -44,24 +44,24 @@
             {% endif %}
 
             {% if step > 2 %}
-                {% if breeder.getHandlingPetKind() == 0 or breeder.getHandlingPetKind() == 1 %}
+                {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 1 %}
                     <div class="row">
                         <div class="col-lg-4"></div>
                         <div class="col-lg-4 col-md-12">
-                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('breeder_examination_info',{'pet_type': 1})}}'"> 
+                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_examination_info',{'pet_type': 1})}}'"> 
                                 Step3 - 犬舎審査項目登録
-                                {# <a href="{{path('breeder_examination_info',{'pet_type': 1})}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step3 - 犬舎審査項目登録</a> #}
+                                {# <a href="{{path('adoption_examination_info',{'pet_type': 1})}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step3 - 犬舎審査項目登録</a> #}
                             </button>
                         </div>
                     </div>
                 {% endif %}
-                {% if breeder.getHandlingPetKind() == 0 or breeder.getHandlingPetKind() == 2 %}
+                {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 2 %}
                     <div class="row">
                         <div class="col-lg-4"></div>
                         <div class="col-lg-4 col-md-12">
-                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('breeder_examination_info',{'pet_type': 2})}}'"> 
+                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_examination_info',{'pet_type': 2})}}'"> 
                                 Step3 - 猫舎審査項目登録
-                                {# <a href="{{path('breeder_examination_info',{'pet_type': 2})}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step3 - 犬舎審査項目登録</a> #}
+                                {# <a href="{{path('adoption_examination_info',{'pet_type': 2})}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step3 - 犬舎審査項目登録</a> #}
                             </button>
                         </div>
                     </div>
@@ -71,9 +71,9 @@
                 <div class="row">
                     <div class="col-lg-4"></div>
                     <div class="col-lg-4 col-md-12">
-                        <button type="button" id="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('breeder_examination_submit')}}'"> 
+                        <button type="button" id="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_examination_submit')}}'"> 
                             Step4 - 審査情報提出
-                            {# <a href="{{path('breeder_examination_submit')}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step4 - 審査情報提出</a> #}
+                            {# <a href="{{path('adoption_examination_submit')}}" class="btn btn-warning btn-block mt-3" role="button" name="examination_link">Step4 - 審査情報提出</a> #}
                         </button>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
 </div>
 {% endblock %}
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
 {% endblock %}
 {% block javascript %}
 <script>

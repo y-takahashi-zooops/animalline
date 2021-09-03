@@ -16,7 +16,7 @@ use Customize\Config\AnilineConf;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=ConservationsRepository::class)
  */
-class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterface
+class Conservations
 {
     /**
      * @ORM\Id
@@ -131,16 +131,6 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     private $register_status_id;
 
     /**
-     * @ORM\Column(name="salt", type="string", length=255, nullable=true)
-     */
-    private $salt;
-
-    /**
-     * @ORM\Column(name="secret_key", type="string", length=255)
-     */
-    private $secret_key;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
@@ -184,6 +174,11 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     public function getId(): ?int
     {
         return $this->id;
+    }
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getUserId(): ?int
@@ -424,54 +419,6 @@ class Conservations extends \Eccube\Entity\AbstractEntity implements UserInterfa
     public function getRegisterStatusId()
     {
         return $this->register_status_id;
-    }
-
-    /**
-     * Set salt.
-     *
-     * @param string|null $salt
-     *
-     * @return Conservations
-     */
-    public function setSalt($salt = null)
-    {
-        $this->salt = $salt;
-
-        return $this;
-    }
-
-    /**
-     * Get salt.
-     *
-     * @return string|null
-     */
-    public function getSalt()
-    {
-        return $this->salt;
-    }
-
-    /**
-     * Set secretKey.
-     *
-     * @param string $secretKey
-     *
-     * @return Conservations
-     */
-    public function setSecretKey($secretKey)
-    {
-        $this->secret_key = $secretKey;
-
-        return $this;
-    }
-
-    /**
-     * Get secretKey.
-     *
-     * @return string
-     */
-    public function getSecretKey()
-    {
-        return $this->secret_key;
     }
 
     /**

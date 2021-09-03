@@ -3,6 +3,7 @@
 namespace Customize\Service;
 
 use Customize\Config\AnilineConf;
+use Customize\Repository\PetsFavoriteRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\PrefAdjacentRepository;
 
@@ -14,6 +15,11 @@ class AdoptionQueryService
     protected $conservationPetsRepository;
 
     /**
+     * @var PetsFavoriteRepository
+     */
+    protected $petsFavoriteRepository;
+
+    /**
      * @var PrefAdjacentRepository
      */
     protected $prefAdjacentRepository;
@@ -22,14 +28,17 @@ class AdoptionQueryService
      * AdoptionQueryService constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
+     * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param PrefAdjacentRepository $prefAdjacentRepository
      */
     public function __construct(
         ConservationPetsRepository $conservationPetsRepository,
+        PetsFavoriteRepository     $petsFavoriteRepository,
         PrefAdjacentRepository     $prefAdjacentRepository
     )
     {
         $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->prefAdjacentRepository = $prefAdjacentRepository;
     }
 
@@ -85,6 +94,20 @@ class AdoptionQueryService
             ->getQuery()
             ->getResult();
     }
+
+    public function findAdoptionFavoritePets($customerId)
+    {
+        $query = $this->petsFavoriteRepository->createQueryBuilder('pf')
+            ->select('bp')
+            ->innerJoin('Customize\Entity\ConservationPets', 'bp', 'WITH', 'bp.id = pf.pet_id')
+            ->orderBy('pf.update_date', 'DESC')
+            ->where('pf.Customer = :customer_id')
+            ->setParameter('customer_id', $customerId)
+            ->getQuery()
+            ->getResult();
+        return $query;
+    }
+
 
     /**
      * Admin conservation pets

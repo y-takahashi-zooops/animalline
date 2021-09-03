@@ -64,6 +64,16 @@ class BreedersType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
+            ->add('handling_pet_kind', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '犬・猫' => AnilineConf::ANILINE_PET_KIND_DOG_CAT,
+                        '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
+                        '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+                    ],
+                'required' => false,
+                'placeholder' => 'common.select'
+            ])
             ->add('breeder_zip', TextType::class, [
                 'required' => true,
                 'constraints' => [

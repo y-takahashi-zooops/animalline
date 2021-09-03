@@ -394,7 +394,7 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/member/baseinfo", name="breeder_baseinfo")
+     * @Route("/breeder/configration/baseinfo", name="breeder_baseinfo")
      * @Template("/animalline/breeder/configration/baseinfo.twig")
      */
     public function baseinfo(Request $request, BreedersRepository $breedersRepository)
@@ -420,7 +420,7 @@ class BreederConfigrationController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederData);
             $entityManager->flush();
-            return $this->redirectToRoute('breeder_configration');
+            return $this->redirectToRoute('breeder_member');
         }
 
         return [
