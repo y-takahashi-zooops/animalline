@@ -13,7 +13,6 @@
 
 namespace Customize\Controller\Admin;
 
-use Customize\Entity\BreederExaminationInfo;
 use Customize\Entity\Breeders;
 use Customize\Form\Type\Admin\BreederExaminationInfoType;
 use Customize\Form\Type\AdminBreederType;
@@ -35,7 +34,6 @@ use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\CoatColorsRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Validator\Constraints\Length;
 
 class BreederController extends AbstractController
 {
@@ -99,8 +97,7 @@ class BreederController extends AbstractController
         BreederPetsRepository            $breederPetsRepository,
         BreederHouseRepository           $breederHouseRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository
-    )
-    {
+    ) {
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
@@ -199,7 +196,7 @@ class BreederController extends AbstractController
         $houses = $this->breederHouseRepository->findBy(['Breeder' => $breeder]);
         if (!$houses) throw new NotFoundHttpException();
         $house = $houses[0]; // show first house by default.
-        $isEnablePettype = count($houses) > 1; // only allow select pet type if breeder have both.
+        $isEnablePetType = count($houses) > 1; // only allow select pet type if breeder have both.
 
         $petType = $request->get('pet_type'); // from GET request to show house by pet type.
         if ($petType) {
@@ -223,7 +220,7 @@ class BreederController extends AbstractController
         return [
             'form' => $form->createView(),
             'house' => $house,
-            'isEnablePettype' => $isEnablePettype
+            'isEnablePetType' => $isEnablePetType
         ];
     }
 
@@ -251,7 +248,6 @@ class BreederController extends AbstractController
             'isEnablePetType' => $isEnablePetType,
             'breederExaminationInfo' => $breederExaminationInfo
         ];
-
     }
 
     /**

@@ -110,5 +110,5 @@ final class AnilineConf
     const DNA_CHECK_RESULT_1 = 1;
     const DNA_CHECK_RESULT_2 = 2;
 
-    const EXERCISE_STATUS_OTHER= 4;
+    const EXERCISE_STATUS_OTHER = 4;
 }
