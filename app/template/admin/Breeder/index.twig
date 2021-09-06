@@ -114,11 +114,12 @@ file that was distributed with this source code.
                                             </div>
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                     data-placement="top" title="犬舎・猫舎情報編集">
-                                                    <a class="btn btn-ec-actionIcon
-                                                       {% if breeder.getBreederHouseByBreederId(breeder.Id).Breeder is null %}
-                                                       disabled 
-                                                       {% endif %}"
-                                                    href="{{ url('admin_breeder_house', {'id': breeder.Id}) }}">
+                                                    <a class="btn btn-ec-actionIcon"
+                                                    {% if breeder.getBreederHouses().count() > 0 %}
+                                                        href="{{ url('admin_breeder_house', {'id': breeder.Id}) }}"
+                                                    {% else %}
+                                                        disabled
+                                                    {% endif %}>
                                                         <i class="fa fa-home fa-lg text-secondary" aria-hidden="true"></i>
                                                     </a>
                                                 </div>
@@ -132,7 +133,11 @@ file that was distributed with this source code.
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                  data-placement="top" title="審査情報表示">
                                                 <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_breeder_examination', {'id': breeder.Id}) }}">
+                                                {% if breeder.getBreederExaminationInfos().count() > 0 %}
+                                                   href="{{ url('admin_breeder_examination', {'id': breeder.Id}) }}"
+                                                {% else %}
+                                                   disabled
+                                                {% endif %}>
                                                     <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
