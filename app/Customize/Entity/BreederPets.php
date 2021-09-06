@@ -38,7 +38,7 @@ class BreederPets
      * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeds", inversedBy="BreederPets")
      * @ORM\JoinColumn(name="breeds_type", nullable=true)
      */
-    private $BreedType;
+    private $BreedsType;
 
     /**
      * @ORM\Column(name="pet_sex", type="smallint")
@@ -201,12 +201,12 @@ class BreederPets
 
     public function getBreedsType(): ?Breeds
     {
-        return $this->BreedType;
+        return $this->BreedsType;
     }
 
     public function setBreedsType(Breeds $breeds_type): self
     {
-        $this->BreedType = $breeds_type;
+        $this->BreedsType = $breeds_type;
 
         return $this;
     }

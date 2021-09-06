@@ -6,7 +6,6 @@ use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Customize\Repository\PrefAdjacentRepository;
-use setasign\Fpdi\PdfParser\CrossReference\AbstractReader;
 
 class BreederQueryService
 {
@@ -62,7 +61,7 @@ class BreederQueryService
         }
 
         if ($request->get('breed_type')) {
-            $query->andWhere('p.BreedType = :breeds_type')
+            $query->andWhere('p.BreedsType = :breeds_type')
                 ->setParameter('breeds_type', $request->get('breed_type'));
         }
 
@@ -87,9 +86,8 @@ class BreederQueryService
                 $query->orWhere('bh.BreederHousePrefId in (:arr)')
                     ->setParameter('arr', $arr)
                     ->andWhere('p.pet_kind = :pet_kind')
-                    ->setParameter('pet_kind', $request->get('pet_kind'));;
+                    ->setParameter('pet_kind', $request->get('pet_kind'));
             }
-
         }
 
         return $query->addOrderBy('p.release_date', 'DESC')
@@ -130,19 +128,19 @@ class BreederQueryService
                 ->setParameter('pet_kind', $criteria['pet_kind']);
         }
 
-
         if (!empty($criteria['breed_type'])) {
-            $qb->andWhere('p.BreedType = :breed_type')
+            $qb->andWhere('p.BreedsType = :breed_type')
                 ->setParameter('breed_type', $criteria['breed_type']);
         }
 
         if ($order['field'] == 'breed_type') {
-            return $qb->join('p.BreedType', 'b')
+            return $qb->join('p.BreedsType', 'b')
                 ->orderBy('b.breeds_name', $order['direction'])
                 ->addOrderBy('p.create_date', $order['direction'])
                 ->getQuery()
                 ->getResult();
         }
+
         return $qb->orderBy('p.' . $order['field'], $order['direction'])
             ->getQuery()
             ->getResult();

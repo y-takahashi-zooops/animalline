@@ -9,24 +9,25 @@
 
             <div class="row">
                 <div class="col-lg-4 col-md-12">
-                    <a href="{{url('breeder_baseinfo')}}" class="btn btn-warning btn-block mt-3" role="button">お気に入り一覧</a>
+                    <a href="{{url('breeder_favorite')}}" class="btn btn-warning btn-block mt-3" role="button">お気に入り一覧</a>
                 </div>
                 <div class="col-lg-4 col-md-12">
-                    <a href="#" class="btn btn-warning btn-block mt-3" role="button">取引メッセージ</a>
+                    <a href="{{url('breeder_get_message_mypage')}}" class="btn btn-warning btn-block mt-3" role="button">取引メッセージ</a>
                 </div>
             </div>
-            <div class="m-4 p-4"></div>
+            <div class="m-2 p-2"></div>
             <h3>ブリーダー登録申請</h3>
             <div class="row">
                 <div class="col-lg-4 col-md-12">
-                    <a href="{{url('breeder_mypage_examination')}}" class="btn btn-warning btn-block mt-3" role="button">ブリーダー申請を行う</a>
+                    <a href="{{url('breeder_examination')}}" class="btn btn-warning btn-block mt-3" role="button">ブリーダー申請を行う</a>
                 </div>
             </div>
+            <div class="m-4 p-4"></div>
             <div class="d-flex justify-content-between align-items-end">
                 <h2>交渉中のお取引</h2>
             </div>
+            <div class="m-1 p-1"></div>
             {% for rootMessage in rootMessages %}
-                <div class="m-1 p-1"></div>
                 <div class="row">
                     <div class="col-12">
                         <div class="d-sm-flex justify-content-between py-3 border breeder-border rounded">
@@ -51,9 +52,9 @@
                     <img src="{{ asset('assets/img/arrow-icon.svg') }}">
                 </a>
             </div>
-            <div class="m-3 p-3"></div>
-            <div class="row">
-                {% for pet in pets %}
+            <div class="m-1 p-1"></div>
+            {% for pet in pets %}
+                <div class="row">
                     <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                         <div class="catalog-card">
                             <a href="{{ url('breeder_pet_detail', {id: pet.id}) }}">
@@ -86,10 +87,10 @@
                             </div>
                         </div>
                     </div>
-                {% else %}
-                    結果が０件です。
-                {% endfor %}
-            </div>
+                </div>
+            {% else %}
+                結果が０件です。
+            {% endfor %}
         </div>
     </div>
 </div>
