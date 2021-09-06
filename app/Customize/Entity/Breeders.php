@@ -198,6 +198,14 @@ class Breeders
         $this->BreederHouses = new ArrayCollection();
     }
 
+    /**
+     * @return Collection|BreederHouses[]
+     */
+    public function getBreederHouses(): Collection
+    {
+        return $this->BreederHouses;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -13,7 +13,10 @@
 
 namespace Customize\Controller\Admin;
 
+use Customize\Entity\Breeders;
+use Customize\Form\Type\Admin\BreederExaminationInfoType;
 use Customize\Form\Type\AdminBreederType;
+use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreedsRepository;
@@ -21,10 +24,13 @@ use Customize\Service\BreederQueryService;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederPets;
+use Customize\Form\Type\Admin\BreederHouseType;
 use Customize\Form\Type\Admin\BreederPetsType;
+use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\CoatColorsRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -57,9 +63,19 @@ class BreederController extends AbstractController
     protected $breederPetsRepository;
 
     /**
+     * @var BreederHouseRepository
+     */
+    protected $breederHouseRepository;
+
+    /**
      * @var BreederQueryService
      */
     protected $breederQueryService;
+
+    /**
+     * @var BreederExaminationInfoRepository
+     */
+    protected $breederExaminationInfoRepository;
 
     /**
      * breederController constructor.
@@ -69,22 +85,27 @@ class BreederController extends AbstractController
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederQueryService $breederQueryService
      * @param BreederPetsRepository $breederPetsRepository
+     * @param BreederHouseRepository $breederHouseRepository
+     * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      */
     public function __construct(
-        BreedersRepository        $breedersRepository,
-        BreedsRepository          $breedsRepository,
-        CoatColorsRepository      $coatColorsRepository,
-        BreederPetImageRepository $breederPetImageRepository,
-        BreederQueryService       $breederQueryService,
-        BreederPetsRepository     $breederPetsRepository
-    )
-    {
+        BreedersRepository               $breedersRepository,
+        BreedsRepository                 $breedsRepository,
+        CoatColorsRepository             $coatColorsRepository,
+        BreederPetImageRepository        $breederPetImageRepository,
+        BreederQueryService              $breederQueryService,
+        BreederPetsRepository            $breederPetsRepository,
+        BreederHouseRepository           $breederHouseRepository,
+        BreederExaminationInfoRepository $breederExaminationInfoRepository
+    ) {
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->coatColorsRepository = $coatColorsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
+        $this->breederHouseRepository = $breederHouseRepository;
+        $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
     }
 
     /**
@@ -170,9 +191,37 @@ class BreederController extends AbstractController
      * @Route("/%eccube_admin_route%/breeder/house/{id}", name="admin_breeder_house", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/house.twig")
      */
-    public function House(Request $request)
+    public function House(Request $request, Breeders $breeder)
     {
-        return;
+        $houses = $this->breederHouseRepository->findBy(['Breeder' => $breeder]);
+        if (!$houses) throw new NotFoundHttpException();
+        $house = $houses[0]; // show first house by default.
+        $isEnablePetType = count($houses) > 1; // only allow select pet type if breeder have both.
+
+        $petType = $request->get('pet_type'); // from GET request to show house by pet type.
+        if ($petType) {
+            $house = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => $petType]);
+            if (!$house) throw new NotFoundHttpException();
+        }
+
+        $form = $this->createForm(BreederHouseType::class, $house);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $house->setBreederHousePref($house->getBreederHousePrefId()['name'] ?? '');
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($house);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_breeder_list');
+        }
+
+        return [
+            'form' => $form->createView(),
+            'house' => $house,
+            'isEnablePetType' => $isEnablePetType
+        ];
     }
 
     /**
@@ -181,7 +230,24 @@ class BreederController extends AbstractController
      */
     public function Examination(Request $request)
     {
-        return;
+        $breeder = $this->breedersRepository->find($request->get('id'));
+        $breederExaminationInfos = $this->breederExaminationInfoRepository->findBy(['Breeder' => $breeder]);
+        if (!$breederExaminationInfos) throw new NotFoundHttpException();
+        $breederExaminationInfo = $breederExaminationInfos[0];
+        $isEnablePetType = count($breederExaminationInfos) > 1;
+        if ($request->get('pet_type')) {
+            $breederExaminationInfo = $this->breederExaminationInfoRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => $request->get('pet_type')]);
+            if (!$breederExaminationInfo) throw new NotFoundHttpException();
+        }
+
+        $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo, ['disabled' => true]);
+        $form->handleRequest($request);
+        return [
+            'form' => $form->createView(),
+            'petType' => $breederExaminationInfo->getPetType() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫',
+            'isEnablePetType' => $isEnablePetType,
+            'breederExaminationInfo' => $breederExaminationInfo
+        ];
     }
 
     /**

@@ -120,7 +120,11 @@ file that was distributed with this source code.
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                  data-placement="top" title="犬舎・猫舎情報編集">
                                                 <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_adoption_house', {'id': conservation.id}) }}">
+                                                    {% if conservation.getConservationsHouses().count() %}
+                                                       href="{{ url('admin_adoption_house', {'id': conservation.id}) }}"
+                                                    {% else %}
+                                                       disabled
+                                                    {% endif %}>
                                                     <i class="fa fa-home fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
