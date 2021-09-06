@@ -59,6 +59,7 @@ security:
             logout:
                 path: logout
                 target: homepage
+                success_handler: eccube.security.logout_success_handler
     access_decision_manager:
         strategy: unanimous
         allow_if_all_abstain: false

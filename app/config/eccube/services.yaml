@@ -93,11 +93,16 @@ services:
         tags:
           - { name: 'data_collector', template: '@toolbar/eccube.html.twig', id: 'eccube_core', priority: -512 }
 
+    #Animalline用にカスタマイズ
     eccube.security.success_handler:
-        class: Eccube\Security\Http\Authentication\EccubeAuthenticationSuccessHandler
+        class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
 
     eccube.security.failure_handler:
         class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
+
+    # Animalline拡張
+    eccube.security.logout_success_handler:
+        class: Customize\Security\Http\Authentication\EccubeLogoutSuccessHandler
 
     # Autowiring can't guess the constructor arguments that are not type-hinted with
     # classes (e.g. container parameters) so you must define those arguments explicitly

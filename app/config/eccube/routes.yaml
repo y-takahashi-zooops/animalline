@@ -28,8 +28,4 @@ admin_logout:
     path: '/%eccube_admin_route%/logout'
 logout:
     path: /logout
-adoption_logout:
-    path: '/adoption/configration/logout'
-breeder_logout:
-    path: '/breeder/configration/logout'
     

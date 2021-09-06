@@ -35,7 +35,7 @@
                 </div>
                 <ul class="d-flex align-items-center">
                     {% if site_type == 'adoption' %}
-                        {% if is_granted('ROLE_ADOPTION_USER') %}
+                        {% if is_granted('ROLE_USER') %}
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center" href={{url('adoption_mypage')}}>
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
@@ -49,14 +49,14 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{ url('adoption_logout') }}>
+                                <a class="nav-link d-flex align-items-center" href={{ url('logout') }}>
                                     <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
                                     <h3 class="color-gray-500 font-weight-normal">ログアウト</h3>
                                 </a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center " href={{url('entry')}}>
+                                <a class="nav-link d-flex align-items-center " href="{{url('entry')}}?ReturnPath=adoption_top">
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
                                     <h3 class="color-gray-500 font-weight-normal">新規会員登録</h3>
                                 </a>
@@ -75,7 +75,7 @@
                             </li>
                         {% endif %}
                     {% elseif site_type == 'breeder' %}
-                        {% if is_granted('ROLE_BREEDER_USER') %}
+                        {% if is_granted('ROLE_USER') %}
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center" href={{url('breeder_mypage')}}>
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
@@ -89,7 +89,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{ url('breeder_logout') }}>
+                                <a class="nav-link d-flex align-items-center" href={{ url('logout') }}>
                                     <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
                                     <h3 class="color-gray-500 font-weight-normal">ログアウト</h3>
                                 </a>
@@ -143,10 +143,10 @@
             {# <nav class="headerNav bg-primary position-fixed w-100 h-100"> #}
             <nav class="headerNav bg-primary position-fixed h-100">
                 {% if site_type == 'adoption' %}
-                    {% if is_granted('ROLE_ADOPTION_USER') %}
+                    {% if is_granted('ROLE_USER') %}
                         <div class="p-2">
                             <div class="text-align-center">
-                                <a class="nav-link active hamburger_menu_btn bg-section" href={{ url('adoption_logout') }}>
+                                <a class="nav-link active hamburger_menu_btn bg-section" href={{ url('logout') }}>
                                     <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
                                     <span>ログアウト</span>
                                 </a>
@@ -187,10 +187,10 @@
                         </div>
                     {% endif %}
                 {% elseif site_type == 'breeder' %}
-                    {% if is_granted('ROLE_BREEDER_USER') %}
+                    {% if is_granted('ROLE_USER') %}
                         <div class="p-2">
                             <div class="text-align-center">
-                                <a class="nav-link active hamburger_menu_btn bg-section" href={{ url('breeder_logout') }}>
+                                <a class="nav-link active hamburger_menu_btn bg-section" href={{ url('logout') }}>
                                     <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
                                     <span>ログアウト</span>
                                 </a>
