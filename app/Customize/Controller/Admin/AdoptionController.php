@@ -201,14 +201,13 @@ class AdoptionController extends AbstractController
      */
     public function pet_edit(Request $request, ConservationPets $conservationPet)
     {
-        $builder = $this->formFactory->createBuilder(ConservationPetsType::class, $conservationPet);
-        $form = $builder->getForm();
+        $form = $this->createForm(ConservationPetsType::class, $conservationPet);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $coatColor = $this->coatColorsRepository->find($request->get('coat_color'));
-            $breedType = $this->breedsRepository->find($request->get('breeds_type'));
-            $conservationPet->setBreedsType($breedType)
-                ->setCoatColor($coatColor);
+            $conservationPet->setBreedsType($this->breedsRepository->find($request->get('breeds_type')));
+            $conservationPet->setCoatColor($this->coatColorsRepository->find($request->get('coat_color')));
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationPet);
             $entityManager->flush();
@@ -219,12 +218,13 @@ class AdoptionController extends AbstractController
         $breeds = $this->breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()]);
         $colors = $this->coatColorsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()]);
         $images = $this->conservationPetImageRepository->findBy(['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
+        
         return $this->render('@admin/Adoption/pet/edit.twig', [
+            'form' => $form->createView(),
             'conservationPet' => $conservationPet,
             'breeds' => $breeds,
             'colors' => $colors,
             'images' => $images,
-            'form' => $form->createView(),
         ]);
     }
 }

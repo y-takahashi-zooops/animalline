@@ -36,6 +36,17 @@
 								</div>
 							</dd>
 						</dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.handling_pet_kind, '取り扱いペット種別', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-select{{ has_errors(form.handling_pet_kind) ? ' error' }}">
+                                {{ form_widget(form.handling_pet_kind) }}
+                                {{ form_errors(form.handling_pet_kind) }}      
+                                </div>
+                            </dd>
+                        </dl>
 						<dl>
 							<dt>
 								{{ form_label(form.owner_name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}

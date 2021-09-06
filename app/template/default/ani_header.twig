@@ -114,6 +114,46 @@
                                 </a>
                             </li>
                         {% endif %}
+                    {% elseif site_type == 'common' %}
+                        {% if is_granted('ROLE_USER') %}
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center" href="{{url('mypage')}}">
+                                    <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
+                                    <h3 class="color-gray-500 font-weight-normal">マイページ</h3>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center" href="{{url('mypage_favorite')}}">
+                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
+                                    <h3 class="color-gray-500 font-weight-normal">お気に入り</h3>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center" href={{ url('logout') }}>
+                                    <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
+                                    <h3 class="color-gray-500 font-weight-normal">ログアウト</h3>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center " href={{url('entry')}}>
+                                    <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
+                                    <h3 class="color-gray-500 font-weight-normal">新規会員登録</h3>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center" href="{{url('mypage_favorite')}}">
+                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
+                                    <h3 class="color-gray-500 font-weight-normal">お気に入り</h3>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center" href={{url('mypage_login')}}>
+                                    <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
+                                    <h3 class="color-gray-500 font-weight-normal">ログイン</h3>
+                                </a>
+                            </li>
+                        {% endif %}
                     {% endif %}
                 </ul>
             </div>
