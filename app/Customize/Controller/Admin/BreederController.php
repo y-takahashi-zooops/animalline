@@ -24,10 +24,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederPets;
+use Customize\Entity\Breeders;
+use Customize\Form\Type\Admin\BreederHouseType;
 use Customize\Form\Type\Admin\BreederPetsType;
+use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\CoatColorsRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Validator\Constraints\Length;
 
 class BreederController extends AbstractController
 {
@@ -57,6 +62,11 @@ class BreederController extends AbstractController
     protected $breederPetsRepository;
 
     /**
+     * @var BreederHouseRepository
+     */
+    protected $breederHouseRepository;
+
+    /**
      * @var BreederQueryService
      */
     protected $breederQueryService;
@@ -69,6 +79,7 @@ class BreederController extends AbstractController
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederQueryService $breederQueryService
      * @param BreederPetsRepository $breederPetsRepository
+     * @param BreederHouseRepository $breederHouseRepository
      */
     public function __construct(
         BreedersRepository        $breedersRepository,
@@ -76,15 +87,16 @@ class BreederController extends AbstractController
         CoatColorsRepository      $coatColorsRepository,
         BreederPetImageRepository $breederPetImageRepository,
         BreederQueryService       $breederQueryService,
-        BreederPetsRepository     $breederPetsRepository
-    )
-    {
+        BreederPetsRepository     $breederPetsRepository,
+        BreederHouseRepository    $breederHouseRepository
+    ) {
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->coatColorsRepository = $coatColorsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
+        $this->breederHouseRepository = $breederHouseRepository;
     }
 
     /**
@@ -170,9 +182,37 @@ class BreederController extends AbstractController
      * @Route("/%eccube_admin_route%/breeder/house/{id}", name="admin_breeder_house", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/house.twig")
      */
-    public function House(Request $request)
+    public function House(Request $request, Breeders $breeder)
     {
-        return;
+        $houses = $this->breederHouseRepository->findBy(['Breeder' => $breeder]);
+        if (!$houses) throw new NotFoundHttpException();
+        $house = $houses[0]; // show first house by default.
+        $isEnablePettype = count($houses) > 1; // only allow select pet type if breeder have both.
+
+        $petType = $request->get('pet_type'); // from GET request to show house by pet type.
+        if ($petType) {
+            $house = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => $petType]);
+            if (!$house) throw new NotFoundHttpException();
+        }
+
+        $form = $this->createForm(BreederHouseType::class, $house);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $house->setBreederHousePref($house->getBreederHousePrefId()['name'] ?? '');
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($house);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_breeder_list');
+        }
+
+        return [
+            'form' => $form->createView(),
+            'house' => $house,
+            'isEnablePettype' => $isEnablePettype
+        ];
     }
 
     /**
