@@ -662,6 +662,19 @@ class Breeders
         return $result;
     }
 
+    public function getBreederHouseByBreederId($id)
+    {
+        $result =  new BreederHouse();
+        foreach ($this->BreederHouses as $house) {
+            if ($house->getBreeder()->id === $id) {
+                $result = $house;
+                break;
+            }
+        }
+
+        return $result;
+    }
+
     public function getCreateDate()
     {
         return $this->create_date;
