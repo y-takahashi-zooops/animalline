@@ -59,7 +59,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <select id="pet_type" name="pet_type" class="form-control" {{ isEnablePettype ? '' : 'disabled' }}>
+                                        <select id="pet_type" name="pet_type" class="form-control" {{ isEnablePetType ? '' : 'disabled' }}>
                                             {% set petTypes = ['犬舎', '猫舎'] %}
                                             {% for i in 1..2 %}
                                                 <option value="{{ i }}" {{ house.petType == i ? 'selected' : '' }}>{{ petTypes[i - 1] }}</option>

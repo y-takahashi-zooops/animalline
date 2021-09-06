@@ -198,6 +198,14 @@ class Breeders
         $this->BreederHouses = new ArrayCollection();
     }
 
+    /**
+     * @return Collection|BreederHouses[]
+     */
+    public function getBreederHouses(): Collection
+    {
+        return $this->BreederHouses;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -654,19 +662,6 @@ class Breeders
         $result =  new BreederHouse();
         foreach ($this->BreederHouses as $house) {
             if ($house->getPetType() === $petType) {
-                $result = $house;
-                break;
-            }
-        }
-
-        return $result;
-    }
-
-    public function getBreederHouseByBreederId($id)
-    {
-        $result =  new BreederHouse();
-        foreach ($this->BreederHouses as $house) {
-            if ($house->getBreeder()->id === $id) {
                 $result = $house;
                 break;
             }
