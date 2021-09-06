@@ -19,7 +19,15 @@ file that was distributed with this source code.
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
 {% endblock stylesheet %}
 
-{% block javascript %}{% endblock javascript %}
+{% block javascript %}
+<script>
+    $(function () {
+    $('#pet_type').on('change', function () {
+        location.href = `?pet_type=${this.value}`;
+    });
+});
+</script>
+{% endblock javascript %}
 
 {% block main %}
     <form role="form" name="form1" id="form1" method="post" action="">
@@ -53,10 +61,12 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <select id="" name="" class="form-control">
-                                            <option value="1">犬舎</option>
-                                            <option value="2">猫舎</option>
-                                        </select>        
+                                            <select id="pet_type" name="pet_type" class="form-control" {{ isEnablePetType ? '' : 'disabled' }}>
+                                                {% set petTypes = ['犬舎', '猫舎'] %}
+                                                {% for i in 1..2 %}
+                                                    <option value="{{ i }}" {{ breederExaminationInfo.petType == i ? 'selected' : '' }}>{{ petTypes[i - 1] }}</option>
+                                                {% endfor %}
+                                            <select>
                                     </div>
                                 </div>
                                 <div class="row mb-2">
@@ -66,13 +76,17 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <span class="form-control">JKC</span>
+                                        {% if(form.pedigree_organization.vars.data==constant('Customize\\Config\\AnilineConf::PEDIGREE_ORGANIZATION_OTHER')) %}
+                                            {{ form_widget(form.pedigree_organization_other, { 'attr': {'disable': 'disable'} }) }}
+                                        {% else %}
+                                            {{ form.pedigree_organization.vars.choices[form.pedigree_organization.vars.data].label }}
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            <span>飼育している犬の頭数</span>
+                                            <span>飼育している{{ petType }}の頭数</span>
                                         </div>
                                     </div>
                                     <div class="col">
@@ -80,21 +94,21 @@ file that was distributed with this source code.
                                             <div class="mr-4 input-group-append">
                                                 <span class="pt-2">1～3歳：</span>
                                                 <div>
-                                                    <span class="form-control">40</span>
+                                                    {{ form_widget(form.parent_pet_count_1) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">頭</span>
                                             </div>
                                             <div class="mr-4 input-group-append">
                                                 <span class="pt-2">4～6歳：</span>
                                                 <div>
-                                                    <span class="form-control">10</span>
+                                                    {{ form_widget(form.parent_pet_count_2) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">頭</span>
                                             </div>
                                             <div class="mr-4 input-group-append">
                                                 <span class="pt-2">7歳以上：</span>
                                                 <div>
-                                                    <span class="form-control">22</span>
+                                                    {{ form_widget(form.parent_pet_count_3) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">頭</span>
                                             </div>
@@ -112,21 +126,21 @@ file that was distributed with this source code.
                                             <div class="mr-4 input-group-append">
                                                 <span class="pt-2">ブリーダー：</span>
                                                 <div>
-                                                    <span class="form-control">40</span>
+                                                    {{ form_widget(form.parent_pet_buy_place_1) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">頭</span>
                                             </div>
                                             <div class="mr-4 input-group-append">
                                                 <span class="pt-2">ショップ：</span>
                                                 <div>
-                                                    <span class="form-control">10</span>
+                                                    {{ form_widget(form.parent_pet_buy_place_2) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">頭</span>
                                             </div>
                                             <div class="mr-4 input-group-append">
                                                 <span class="pt-2">その他：</span>
                                                 <div>
-                                                    <span class="form-control">22</span>
+                                                    {{ form_widget(form.parent_pet_buy_place_3) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">頭</span>
                                             </div>
@@ -142,13 +156,13 @@ file that was distributed with this source code.
                                     <div class="col">
                                         <div class="mb-2">
                                             <div class="row offset-md-0">
-                                                <label class="ec-label required mr-2">犬舎運営者：</label>
+                                                <label class="ec-label required mr-2">{{ petType }}舎運営者：</label>
                                                 <span>1名</span>
                                             </div>
                                             <div class="row offset-md-0">
                                                 <label class="pt-2">平均労働時間：</label>
                                                 <div>
-                                                    <span class="form-control">80</span>                                            
+                                                    {{ form_widget(form.owner_worktime_ave) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">時間/1週間あたり</span>
                                             </div>
@@ -157,14 +171,14 @@ file that was distributed with this source code.
                                             <div class="row offset-md-0">
                                                 <span class="pt-2 mr-2">家族：</span>
                                                 <div>
-                                                    <span class="form-control">2</span>
-                                                </div> 
+                                                    {{ form_widget(form.family_staff_count) }}
+                                                </div>
                                                 <span class="pt-2">名</span>
                                             </div>
                                             <div class="row offset-md-0">
                                                 <label class="pt-2">平均労働時間：</label>
                                                 <div>
-                                                    <span class="form-control">80</span>                                            
+                                                    {{ form_widget(form.family_staff_worktime_ave) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">時間/1週間あたり</span>
                                             </div>
@@ -173,14 +187,14 @@ file that was distributed with this source code.
                                             <div class="row offset-md-0">
                                                 <span class="pt-2 mr-2">社員：</span>
                                                 <div>
-                                                    <span class="form-control">2</span>
-                                                </div> 
+                                                    {{ form_widget(form.fulltime_staff_count) }}
+                                                </div>
                                                 <span class="pt-2">名</span>
                                             </div>
                                             <div class="row offset-md-0">
                                                 <label class="pt-2">平均労働時間：</label>
                                                 <div>
-                                                    <span class="form-control">80</span>                                            
+                                                    {{ form_widget(form.fulltime_staff_worktime_ave) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">時間/1週間あたり</span>
                                             </div>
@@ -189,14 +203,14 @@ file that was distributed with this source code.
                                             <div class="row offset-md-0">
                                                 <span class="pt-2 mr-2">パート・アルバイト：</span>
                                                 <div>
-                                                    <span class="form-control">2</span>
-                                                </div> 
+                                                    {{ form_widget(form.parttime_staff_count) }}
+                                                </div>
                                                 <span class="pt-2">名</span>
                                             </div>
                                             <div class="row offset-md-0">
                                                 <label class="pt-2">平均労働時間：</label>
                                                 <div>
-                                                    <span class="form-control">80</span>                                            
+                                                    {{ form_widget(form.parttime_staff_worktime_ave) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">時間/1週間あたり</span>
                                             </div>
@@ -205,14 +219,14 @@ file that was distributed with this source code.
                                             <div class="row offset-md-0">
                                                 <span class="pt-2 mr-2">その他</span>
                                                 <div>
-                                                    <span class="form-control">2</span>
-                                                </div> 
+                                                    {{ form_widget(form.other_staff_count) }}
+                                                </div>
                                                 <span class="pt-2">名</span>
                                             </div>
                                             <div class="row offset-md-0">
                                                 <label class="pt-2">平均労働時間：</label>
                                                 <div>
-                                                    <span class="form-control">80</span>                                            
+                                                    {{ form_widget(form.other_staff_worktime_ave) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">時間/1週間あたり</span>
                                             </div>
@@ -229,11 +243,11 @@ file that was distributed with this source code.
                                         <div class="mb-2 input-group-append">
                                             <div class="mr-4 input-group-append">
                                                 <div>
-                                                    <span class="form-control">10</span>
+                                                    {{ form_widget(form.breeding_exp_year) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">年</span>
                                                 <div>
-                                                    <span class="form-control">3</span>
+                                                    {{ form_widget(form.breeding_exp_month) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">ヶ月</span>
                                             </div>
@@ -247,36 +261,33 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <span>あり</span>
+                                        {{ form.is_participate_show.vars.choices[form.is_participate_show.vars.data].label }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            <span>親犬のケージ</span>
+                                            <span>親{{ petType }}のケージ</span>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="mb-2">
                                             <div class="row offset-md-0">
                                                 <div class="ec-checkbox">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" checked="checked" disabled/> 休憩場所としてのみ利用できる小さいサイズ(分離型)
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" checked="checked" disabled/> 休憩場所と運動スペースを兼ねることのできる大きいサイズ(一体型)
-                                                        </label>
-                                                    </div>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" disabled /> その他
-                                                        </label>
-                                                    </div>
+                                                    <label>
+                                                        {{ form_widget(form.cage_size_1) }}
+                                                    </label>
+                                                    <br>
+                                                    <label>
+                                                        {{ form_widget(form.cage_size_2) }}
+                                                    </label>
+                                                    <br>
+                                                    <label>
+                                                        {{ form_widget(form.cage_size_3) }}
+                                                    </label>
                                                     <div class="ec-input">
-                                                        <span class="form-control"></span>
+                                                        {{ form_widget(form.cage_size_other) }}
+                                                        {{ form_errors(form.cage_size_other) }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -286,13 +297,17 @@ file that was distributed with this source code.
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            <span>親犬の運動状況</span>
+                                            <span>親{{ petType }}の運動状況</span>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="mb-2">
                                             <div class="row offset-md-0">
-                                                <span>毎日１回は運動</span>
+                                                {% if(form.exercise_status.vars.data==constant('Customize\\Config\\AnilineConf::EXERCISE_STATUS_OTHER')) %}
+                                                    {{ form_widget(form.exercise_status_other) }}
+                                                {% else %}
+                                                    {{ form.exercise_status.vars.choices[form.exercise_status.vars.data-1].label }}
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>
@@ -300,14 +315,14 @@ file that was distributed with this source code.
                                 <div class="row mb-2">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            <span>現時点で掲載可能な子犬</span>
+                                            <span>現時点で掲載可能な子{{ petType }}</span>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="mb-2 input-group-append">
                                             <div class="mr-4 input-group-append">
                                                 <div>
-                                                    <span class="form-control">3</span>
+                                                    {{ form_widget(form.publish_pet_count) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">頭</span>
                                             </div>
@@ -323,7 +338,7 @@ file that was distributed with this source code.
                                     <div class="col">
                                         <div class="mb-2">
                                             <div class="row offset-md-0">
-                                                <span>5-9回</span>
+                                                {{ form.breeding_experience.vars.choices[form.breeding_experience.vars.data].label }}
                                             </div>
                                         </div>
                                     </div>
@@ -337,14 +352,14 @@ file that was distributed with this source code.
                                     <div class="col">
                                         <div class="mb-2">
                                             <div class="row offset-md-0">
-                                                <span>5-9回</span>
+                                                {{ form.selling_experience.vars.choices[form.selling_experience.vars.data].label }}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -353,7 +368,7 @@ file that was distributed with this source code.
                 <div class="row justify-content-between align-items-center">
                     <div class="col-6">
                         <div class="c-conversionArea__leftBlockItem">
-                            <a class="c-baseLink" href="{{url('admin_breeder_list') }}">
+                            <a class="c-baseLink" href="{{ url('admin_breeder_list') }}">
                                 <i class="fa fa-backward" aria-hidden="true"></i><span>ブリーダー一覧</span>
                             </a>
                         </div>
