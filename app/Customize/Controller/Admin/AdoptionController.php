@@ -139,33 +139,32 @@ class AdoptionController extends AbstractController
      */
     public function House(Request $request, Conservations $conservations)
     {
-        $issetHouseByRequest = false;
+        $conservationsHouse = null;
+        $conservationsHouses = $conservations->getConservationsHouses();
+        if (!$conservationsHouses->isEmpty()) {
+            $conservationsHouse = $conservationsHouses->first();
+        }
         if ($request->get('pet_type')) {
-            $issetHouseByRequest = !$conservations->getConservationHouseByPetType($request->query->getInt('pet_type'))->getPetType();
+            $conservationsHouse = $conservations->getConservationHouseByPetType($request->query->getInt('pet_type'));
         }
-        $emptyHouse = $conservations->getConservationsHouses()->isEmpty() || $issetHouseByRequest;
-        if (!$emptyHouse) {
-            $conservationsHouseDog = $conservations->getConservationHouseByPetType(AnilineConf::ANILINE_PET_KIND_DOG);
-            $conservationsHouseCat = $conservations->getConservationHouseByPetType(AnilineConf::ANILINE_PET_KIND_CAT);
-            $conservationsHouse = $conservations->getConservationHouseByPetType($request->query->getInt('pet_type') ?:
-                $conservationsHouseDog->getPetType() ?: $conservationsHouseCat->getPetType());
-
-            $form = $this->createForm(ConservationHouseType::class, $conservationsHouse);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $conservationsHouse->setConservationHousePref($conservationsHouse->getPref());
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($conservationsHouse);
-                $entityManager->flush();
-                return $this->redirectToRoute('admin_adoption_list');
-            }
-            return $this->render('@admin/Adoption/house.twig', [
-                'conservations' => $conservations,
-                'form' => $form->createView()
-            ]);
+        if (!$conservationsHouse || !$conservationsHouse->getId()) {
+            throw new HttpException\NotFoundHttpException();
         }
-        throw new HttpException\NotFoundHttpException();
+
+        $form = $this->createForm(ConservationHouseType::class, $conservationsHouse);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $conservationsHouse->setConservationHousePref($conservationsHouse->getPref());
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($conservationsHouse);
+            $entityManager->flush();
+            return $this->redirectToRoute('admin_adoption_list');
+        }
+        return $this->render('@admin/Adoption/house.twig', [
+            'conservations' => $conservations,
+            'form' => $form->createView()
+        ]);
     }
 
     /**
