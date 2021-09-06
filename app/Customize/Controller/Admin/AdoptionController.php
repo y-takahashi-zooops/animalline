@@ -15,6 +15,7 @@ namespace Customize\Controller\Admin;
 
 
 use Customize\Config\AnilineConf;
+use Customize\Form\Type\Admin\ConservationHouseType;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
@@ -30,6 +31,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Exception as HttpException;
 
 class AdoptionController extends AbstractController
 {
@@ -135,9 +137,35 @@ class AdoptionController extends AbstractController
      * @Route("/%eccube_admin_route%/adoption/house/{id}", name="admin_adoption_house", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/house.twig")
      */
-    public function House(Request $request)
+    public function House(Request $request, Conservations $conservations)
     {
-        return;
+        $issetHouseByRequest = false;
+        if ($request->get('pet_type')) {
+            $issetHouseByRequest = !$conservations->getConservationHouseByPetType($request->query->getInt('pet_type'))->getPetType();
+        }
+        $emptyHouse = $conservations->getConservationsHouses()->isEmpty() || $issetHouseByRequest;
+        if (!$emptyHouse) {
+            $conservationsHouseDog = $conservations->getConservationHouseByPetType(AnilineConf::ANILINE_PET_KIND_DOG);
+            $conservationsHouseCat = $conservations->getConservationHouseByPetType(AnilineConf::ANILINE_PET_KIND_CAT);
+            $conservationsHouse = $conservations->getConservationHouseByPetType($request->query->getInt('pet_type') ?:
+                $conservationsHouseDog->getPetType() ?: $conservationsHouseCat->getPetType());
+
+            $form = $this->createForm(ConservationHouseType::class, $conservationsHouse);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $conservationsHouse->setConservationHousePref($conservationsHouse->getPref());
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($conservationsHouse);
+                $entityManager->flush();
+                return $this->redirectToRoute('admin_adoption_list');
+            }
+            return $this->render('@admin/Adoption/house.twig', [
+                'conservations' => $conservations,
+                'form' => $form->createView()
+            ]);
+        }
+        throw new HttpException\NotFoundHttpException();
     }
 
     /**

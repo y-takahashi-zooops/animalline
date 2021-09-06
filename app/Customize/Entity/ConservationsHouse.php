@@ -83,11 +83,6 @@ class ConservationsHouse
     private $conservation_house_address;
 
     /**
-     * @ORM\Column(name="conservation_house_building", type="string", length=255, nullable=true)
-     */
-    private $conservation_house_building;
-
-    /**
      * @ORM\Column(name="conservation_house_front_name", type="string", length=255, nullable=true)
      */
     private $conservation_house_front_name;
@@ -256,18 +251,6 @@ class ConservationsHouse
     public function setConservationHouseAddress(?string $conservation_house_address): self
     {
         $this->conservation_house_address = $conservation_house_address;
-
-        return $this;
-    }
-
-    public function getConservationHouseBuilding(): ?string
-    {
-        return $this->conservation_house_building;
-    }
-
-    public function setConservationHouseBuilding(?string $conservation_house_building): self
-    {
-        $this->conservation_house_building = $conservation_house_building;
 
         return $this;
     }
