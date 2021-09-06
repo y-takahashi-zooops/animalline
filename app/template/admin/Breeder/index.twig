@@ -112,13 +112,16 @@ file that was distributed with this source code.
                                                     <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
-                                            <div class="px-1 d-inline-block text-center" data-tooltip="true"
-                                                 data-placement="top" title="犬舎・猫舎情報編集">
-                                                <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_breeder_house', {'id': breeder.Id}) }}">
-                                                    <i class="fa fa-home fa-lg text-secondary" aria-hidden="true"></i>
-                                                </a>
-                                            </div>
+                                                <div class="px-1 d-inline-block text-center" data-tooltip="true"
+                                                    data-placement="top" title="犬舎・猫舎情報編集">
+                                                    <a class="btn btn-ec-actionIcon
+                                                       {% if breeder.getBreederHouseByBreederId(breeder.Id).Breeder is null %}
+                                                       disabled 
+                                                       {% endif %}"
+                                                    href="{{ url('admin_breeder_house', {'id': breeder.Id}) }}">
+                                                        <i class="fa fa-home fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                  data-placement="top" title="ペット情報編集">
                                                 <a class="btn btn-ec-actionIcon"

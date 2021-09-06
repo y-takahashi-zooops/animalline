@@ -274,15 +274,15 @@ class AdminBreederType extends AbstractType
                         '審査NG' => AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG
                     ]
             ])
-            ->add('email', EmailType::class, [
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
-                ],
-            ])
+            // ->add('email', EmailType::class, [
+            //     'attr' => [
+            //         'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+            //     ],
+            //     'constraints' => [
+            //         new Assert\NotBlank(),
+            //         new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
+            //     ],
+            // ])
             ->add('thumbnail_path', HiddenType::class, [
                 'required' => false
             ]);

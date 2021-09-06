@@ -616,4 +616,17 @@ class Conservations
 
         return $result;
     }
+
+    public function getConservationHouseById($id)
+    {
+        $result =  new ConservationsHouse();
+        foreach ($this->ConservationsHouses as $house) {
+            if ($house->getConservation()->id === $id) {
+                $result = $house;
+                break;
+            }
+        }
+
+        return $result;
+    }
 }

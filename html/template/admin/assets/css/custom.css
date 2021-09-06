@@ -24,3 +24,8 @@
     width: 100px;
     margin-right: 10px;
 }
+
+a.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+}
