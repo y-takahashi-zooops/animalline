@@ -11,6 +11,7 @@ file that was distributed with this source code.
 {% extends '@admin/default_frame.twig' %}
 
 {% set menus = ['adoptions', 'adoptions_adoption_list'] %}
+{% set params = app.request.query.all %}
 
 {% block title %}{{ '犬舎・猫舎情報編集'|trans }}{% endblock %}
 {% block sub_title %}{{ '保護団体管理'|trans }}{% endblock %}
@@ -19,10 +20,27 @@ file that was distributed with this source code.
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
 {% endblock stylesheet %}
 
-{% block javascript %}{% endblock javascript %}
+{% block javascript %}
+<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+<script>
+    $(function(){
+    $('#pet-category').on('change', function () {
+        var url = $(this).val();
+        if (url) {
+            window.location = url;
+        }
+        return false;
+    });
+});
+</script>
+{% endblock javascript %}
 
 {% block main %}
-    <form role="form" name="form1" id="form1" method="post" action="">
+    <form role="form" name="adoption-house" id="adoption-house" method="post"
+          action="{{ url('admin_adoption_house', params|merge({'id': conservations, 'pet_type': params.pet_type is defined ? params.pet_type : null})) }}"
+          novalidate class="h-adr">
+        {{ form_widget(form._token) }}
+        <span class="p-country-name" style="display:none;">Japan</span>
         <div class="c-contentsArea__cols">
             <div class="c-contentsArea__primaryCol">
                 <div class="c-primaryCol">
@@ -56,10 +74,13 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <select id="" name="" class="form-control">
-                                            <option value="1">犬舎</option>
-                                            <option value="2">猫舎</option>
-                                        </select>        
+                                        <select id="pet-category" name="" class="form-control" {{ conservations.getConservationsHouses().count() < 2 ? 'disabled' }}>
+                                            {% for house in conservations.getConservationsHouses() %}
+                                                <option {{ params.pet_type is defined and params.pet_type == house.petType ? 'selected' : '' }}
+                                                        value="{{ url('admin_adoption_house', params|merge({'id': conservations, 'pet_type': house.petType})) }}">
+                                                    {{ house.petType == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬舎' : '猫舎' }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -72,7 +93,10 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        <div class="ec-halfInput{{ has_errors(form.conservation_house_name) ? ' error' }}">
+                                            {{ form_widget(form.conservation_house_name) }}
+                                            {{ form_errors(form.conservation_house_name) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -85,7 +109,10 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        <div class="ec-halfInput{{ has_errors(form.conservation_house_kana) ? ' error' }}">
+                                            {{ form_widget(form.conservation_house_kana) }}
+                                            {{ form_errors(form.conservation_house_kana) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -98,7 +125,10 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        <div class="ec-zipInput{{ has_errors(form.conservation_house_house_zip) ? ' error' }}">
+                                            {{ form_widget(form.conservation_house_house_zip) }}
+                                            {{ form_errors(form.conservation_house_house_zip) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -111,11 +141,10 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <select id="" name="" class="form-control">
-                                            <option value="1">北海道</option>
-                                            <option value="2">東京都</option>
-                                            <option value="3">沖縄県</option>
-                                        </select>        
+                                        <div class="ec-select{{ has_errors(form.address.pref) ? ' error' }}">
+                                            {{ form_widget(form.address.pref) }}
+                                            {{ form_errors(form.address.pref) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -128,7 +157,10 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        <div class="ec-input{{ has_errors(form.address.conservation_house_city) ? ' error' }}">
+                                            {{ form_widget(form.address.conservation_house_city) }}
+                                            {{ form_errors(form.address.conservation_house_city) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -141,17 +173,10 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>建物名・部屋番号</span>
+                                        <div class="ec-input{{ has_errors(form.address.conservation_house_address) ? ' error' }}">
+                                            {{ form_widget(form.address.conservation_house_address) }}
+                                            {{ form_errors(form.address.conservation_house_address) }}
                                         </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -164,7 +189,10 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        <div class="ec-halfInput{{ has_errors(form.conservation_house_house_tel) ? ' error' }}">
+                                            {{ form_widget(form.conservation_house_house_tel) }}
+                                            {{ form_errors(form.conservation_house_house_tel) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -177,7 +205,10 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        <div class="ec-halfInput{{ has_errors(form.conservation_house_house_fax) ? ' error' }}">
+                                            {{ form_widget(form.conservation_house_house_fax) }}
+                                            {{ form_errors(form.conservation_house_house_fax) }}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -191,7 +222,10 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        <div class="ec-halfInput{{ has_errors(form.conservation_house_front_name) ? ' error' }}">
+                                            {{ form_widget(form.conservation_house_front_name) }}
+                                            {{ form_errors(form.conservation_house_front_name) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -204,13 +238,16 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <input type="text" id="" name="" required="required" class="form-control">
+                                        <div class="ec-halfInput{{ has_errors(form.conservation_house_front_tel) ? ' error' }}">
+                                            {{ form_widget(form.conservation_house_front_tel) }}
+                                            {{ form_errors(form.conservation_house_front_tel) }}
+                                        </div>
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,7 +268,8 @@ file that was distributed with this source code.
                     <div class="col-6">
                         <div id="ex-conversion-action" class="row align-items-center justify-content-end">
                             <div class="col-auto">
-                                <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.registration'|trans }}</button>
+                                <button class="btn btn-ec-conversion px-5"
+                                        type="submit">{{ 'admin.common.registration'|trans }}</button>
                             </div>
                         </div>
                     </div>
