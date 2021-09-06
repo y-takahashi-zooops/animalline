@@ -2,18 +2,10 @@
 
 namespace Customize\Form\Type\Admin;
 
-use Customize\Config\AnilineConf;
 use Customize\Entity\BreederHouse;
-use Customize\Entity\Breeders;
 use Eccube\Common\EccubeConfig;
 use Customize\Form\Type\AddressHouseType;
-use Eccube\Form\Type\PhoneNumberType;
-use Eccube\Form\Type\PostalType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -35,7 +27,6 @@ class BreederHouseType extends AbstractType
     {
         $builder
             ->add('breeder_house_name', TextType::class, [
-                'required' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -51,7 +42,6 @@ class BreederHouseType extends AbstractType
                 ]
             ])
             ->add('breeder_house_kana', TextType::class, [
-                'required' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -67,7 +57,6 @@ class BreederHouseType extends AbstractType
                 ]
             ])
             ->add('breeder_house_house_zip', TextType::class, [
-                'required' => true,
                 'constraints' => [
                     new Assert\Type([
                         'type' => 'numeric',
@@ -86,7 +75,6 @@ class BreederHouseType extends AbstractType
             ])
             ->add('addr', AddressHouseType::class)
             ->add('breeder_house_house_tel', TextType::class, [
-                'required' => true,
                 'constraints' => [
                     new Assert\Length([
                         'max' => 11,
@@ -104,7 +92,6 @@ class BreederHouseType extends AbstractType
                 'trim' => true,
             ])
             ->add('breeder_house_house_fax', TextType::class, [
-                'required' => true,
                 'constraints' => [
                     new Assert\Length([
                         'max' => 11,
@@ -131,10 +118,8 @@ class BreederHouseType extends AbstractType
                     ]),
                     new Assert\NotBlank(),
                 ],
-                'required' => true,
             ])
             ->add('breeder_house_front_tel', TextType::class, [
-                'required' => true,
                 'constraints' => [
                     new Assert\Length([
                         'max' => 11,
@@ -156,7 +141,6 @@ class BreederHouseType extends AbstractType
                 'trim' => true,
             ]);
     }
-
 
     public function configureOptions(OptionsResolver $resolver)
     {
