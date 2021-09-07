@@ -21,6 +21,7 @@ use Customize\Repository\SendoffReasonRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederExaminationInfoRepository;
+use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,6 +79,11 @@ class BreederMemberController extends AbstractController
      */
     protected $breederExaminationInfoRepository;
 
+    /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
 
     /**
      * BreederController constructor.
@@ -91,6 +97,7 @@ class BreederMemberController extends AbstractController
 	 * @param BreederHouseRepository $breederHouseRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
+     * @param CustomerRepository $customerRepository
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
@@ -101,7 +108,8 @@ class BreederMemberController extends AbstractController
         PrefRepository            $prefRepository,
 		BreederHouseRepository    $breederHouseRepository,
 		BreederPetsRepository    $breederPetsRepository,
-        BreederExaminationInfoRepository $breederExaminationInfoRepository
+        BreederExaminationInfoRepository $breederExaminationInfoRepository,
+        CustomerRepository $customerRepository
     )
     {
         $this->breederContactsRepository = $breederContactsRepository;
@@ -113,6 +121,7 @@ class BreederMemberController extends AbstractController
 		$this->breederHouseRepository = $breederHouseRepository;
 		$this->breederPetsRepository = $breederPetsRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -240,6 +249,7 @@ class BreederMemberController extends AbstractController
         $form = $builder->getForm();
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
             $thumbnail_path = $request->get('thumbnail_path') ? $request->get('thumbnail_path') : $breederData->getThumbnailPath();
 
@@ -250,8 +260,21 @@ class BreederMemberController extends AbstractController
             $entityManager->persist($breederData);
             $entityManager->flush();
             return $this->redirectToRoute('breeder_examination');
-        }
+        } elseif(!$form->isSubmitted()) {
 
+            // Formが未入力の場合、Customer情報から初期情報をセット
+            if($form == null){
+                $Customer = $this->customerRepository->find($user);
+                $form->get('breeder_name')->setData($Customer->getname01().$Customer->getname02());
+                $form->get('breeder_kana')->setData($Customer->getkana01().$Customer->getkana02());
+                $form->get('breeder_zip')->setData($Customer->getPostalCode());
+                $form->get('addr')->get('PrefBreeder')->setData($Customer->getPref());
+                $form->get('addr')->get('breeder_city')->setData($Customer->getAddr01());
+                $form->get('addr')->get('breeder_address')->setData($Customer->getAddr02());
+                $form->get('breeder_tel')->setData($Customer->getPhoneNumber());
+            }
+        }
+        
         return [
             'breederData' => $breederData,
             'form' => $form->createView()
@@ -292,6 +315,7 @@ class BreederMemberController extends AbstractController
         return [
             'form' => $form->createView(),
             'petType' => $petType,
+            'breeder' => $breeder,
         ];
     }
 
