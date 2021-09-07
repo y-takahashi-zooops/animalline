@@ -249,15 +249,15 @@ class BreederController extends AbstractController
      */
     public function breeder_search(PaginatorInterface $paginator, Request $request): Response
     {
-        $breederResults = $this->breederQueryService->searchBreedersResult($request);
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $regions = $this->prefRepository->findAll();
+        $breederResults = $this->breederQueryService->searchBreedersResult($request, $petKind);
         $breeders = $paginator->paginate(
             $breederResults,
             $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
-        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
-        $regions = $this->prefRepository->findAll();
 
         return $this->render('animalline/breeder/breeder_search.twig', [
             'breeders' => $breeders,

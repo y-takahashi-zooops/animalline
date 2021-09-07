@@ -105,17 +105,12 @@ class BreederQueryService
     }
 
 
-    public function searchBreedersResult($request): array
+    public function searchBreedersResult($request, $petKind): array
     {
         $query = $this->breedersRepository->createQueryBuilder('b')
             ->innerJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.Breeder')
             ->where('bp.pet_kind = :pet_kind')
-            ->setParameter('pet_kind', $request);
-
-        if ($request->get('pet_kind')) {
-            $query->andWhere('bp.pet_kind = :pet_kind')
-                ->setParameter('pet_kind', $request->get('pet_kind'));
-        }
+            ->setParameter('pet_kind', $petKind);
 
         if ($request->get('breed_type')) {
             $query->andWhere('bp.BreedsType = :breeds_type')
