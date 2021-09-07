@@ -262,17 +262,15 @@ class BreederMemberController extends AbstractController
             return $this->redirectToRoute('breeder_examination');
         } elseif(!$form->isSubmitted()) {
 
-            // Formが未入力の場合、Customer情報から初期情報をセット
-            if($form == null){
-                $Customer = $this->customerRepository->find($user);
-                $form->get('breeder_name')->setData($Customer->getname01().$Customer->getname02());
-                $form->get('breeder_kana')->setData($Customer->getkana01().$Customer->getkana02());
-                $form->get('breeder_zip')->setData($Customer->getPostalCode());
-                $form->get('addr')->get('PrefBreeder')->setData($Customer->getPref());
-                $form->get('addr')->get('breeder_city')->setData($Customer->getAddr01());
-                $form->get('addr')->get('breeder_address')->setData($Customer->getAddr02());
-                $form->get('breeder_tel')->setData($Customer->getPhoneNumber());
-            }
+            // Customer情報から初期情報をセット
+            $Customer = $this->customerRepository->find($user);
+            $form->get('breeder_name')->setData($Customer->getname01().$Customer->getname02());
+            $form->get('breeder_kana')->setData($Customer->getkana01().$Customer->getkana02());
+            $form->get('breeder_zip')->setData($Customer->getPostalCode());
+            $form->get('addr')->get('PrefBreeder')->setData($Customer->getPref());
+            $form->get('addr')->get('breeder_city')->setData($Customer->getAddr01());
+            $form->get('addr')->get('breeder_address')->setData($Customer->getAddr02());
+            $form->get('breeder_tel')->setData($Customer->getPhoneNumber());
         }
         
         return [

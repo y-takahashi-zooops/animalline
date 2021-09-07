@@ -261,17 +261,15 @@ class AdoptionMemberController extends AbstractController
             return $this->redirectToRoute('adoption_examination');
         } elseif(!$form->isSubmitted()) {
 
-            // Formが未入力の場合、Customer情報から初期情報をセット
-            if($form == null){
-                $Customer = $this->customerRepository->find($user);
-                $form->get('owner_name')->setData($Customer->getname01().$Customer->getname02());
-                $form->get('owner_kana')->setData($Customer->getkana01().$Customer->getkana02());
-                $form->get('zip')->setData($Customer->getPostalCode());
-                $form->get('addr')->get('PrefId')->setData($Customer->getPref());
-                $form->get('addr')->get('city')->setData($Customer->getAddr01());
-                $form->get('addr')->get('address')->setData($Customer->getAddr02());
-                $form->get('tel')->setData($Customer->getPhoneNumber());
-            }
+            // Customer情報から初期情報をセット
+            $Customer = $this->customerRepository->find($user);
+            $form->get('owner_name')->setData($Customer->getname01().$Customer->getname02());
+            $form->get('owner_kana')->setData($Customer->getkana01().$Customer->getkana02());
+            $form->get('zip')->setData($Customer->getPostalCode());
+            $form->get('addr')->get('PrefId')->setData($Customer->getPref());
+            $form->get('addr')->get('city')->setData($Customer->getAddr01());
+            $form->get('addr')->get('address')->setData($Customer->getAddr02());
+            $form->get('tel')->setData($Customer->getPhoneNumber());
         }
 
         return [
@@ -315,6 +313,7 @@ class AdoptionMemberController extends AbstractController
         return [
             'form' => $form->createView(),
             'petType' => $petType,
+            'conservation' => $conservation,
         ];
     }
 
