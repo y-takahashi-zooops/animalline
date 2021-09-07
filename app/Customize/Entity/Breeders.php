@@ -70,6 +70,11 @@ class Breeders
     private $breeder_address;
 
     /**
+     * @ORM\Column(name="breeder_rank", type="decimal",  precision=2, scale=1)
+     */
+    private $breeder_rank;
+
+    /**
      * @ORM\Column(name="license_name", type="string", length=255, nullable=true)
      */
     private $license_name;
@@ -321,6 +326,18 @@ class Breeders
     public function setBreederAddress(?string $breeder_address): self
     {
         $this->breeder_address = $breeder_address;
+
+        return $this;
+    }
+
+    public function getBreederRank()
+    {
+        return $this->breeder_rank;
+    }
+
+    public function setBreederRank($breeder_rank)
+    {
+        $this->breeder_rank = $breeder_rank;
 
         return $this;
     }
