@@ -61,11 +61,12 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                            <select id="pet_type" name="pet_type" class="form-control" {{ isEnablePetType ? '' : 'disabled' }}>
-                                                {% set petTypes = ['犬舎', '猫舎'] %}
-                                                {% for i in 1..2 %}
-                                                    <option value="{{ i }}" {{ breederExaminationInfo.petType == i ? 'selected' : '' }}>{{ petTypes[i - 1] }}</option>
-                                                {% endfor %}
+                                        <select id="pet_type" name="pet_type"
+                                                class="form-control" {{ isEnablePetType ? '' : 'disabled' }}>
+                                            {% set petTypes = ['犬舎', '猫舎'] %}
+                                            {% for i in 1..2 %}
+                                                <option value="{{ i }}" {{ breederExaminationInfo.petType == i ? 'selected' : '' }}>{{ petTypes[i - 1] }}</option>
+                                            {% endfor %}
                                             <select>
                                     </div>
                                 </div>
@@ -260,8 +261,12 @@ file that was distributed with this source code.
                                             <span>ショー参加経験</span>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        {{ form.is_participate_show.vars.choices[form.is_participate_show.vars.data].label }}
+                                    <div class="col-3">
+                                        {% if(form.is_participate_show.vars.data) %}
+                                            {{ form.is_participate_show.vars.choices[form.is_participate_show.vars.data].label }}
+                                        {% else %}
+                                            <input type="text" disabled="disabled" class="form-control">
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="row">
