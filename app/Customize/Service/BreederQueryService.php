@@ -147,7 +147,7 @@ class BreederQueryService
                 ->setParameter('license', '%' . $request->get('license') .'%');
         }
 
-        return $query->addOrderBy('bh.update_date', 'DESC')
+        return $query->addOrderBy('b.update_date', 'DESC')
             ->getQuery()
             ->getResult();
     }
