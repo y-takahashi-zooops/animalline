@@ -4,6 +4,7 @@ namespace Customize\Service;
 
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\BreedersRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Customize\Repository\PrefAdjacentRepository;
 
@@ -13,6 +14,11 @@ class BreederQueryService
      * @var BreederPetsRepository
      */
     protected $breederPetsRepository;
+
+    /**
+     * @var BreedersRepository
+     */
+    protected $breedersRepository;
 
     /**
      * @var PetsFavoriteRepository
@@ -30,16 +36,19 @@ class BreederQueryService
      * @param BreederPetsRepository $breederPetsRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param PrefAdjacentRepository $prefAdjacentRepository
+     * @param BreedersRepository $breedersRepository
      */
     public function __construct(
         BreederPetsRepository  $breederPetsRepository,
         PetsFavoriteRepository $petsFavoriteRepository,
-        PrefAdjacentRepository $prefAdjacentRepository
+        PrefAdjacentRepository $prefAdjacentRepository,
+        BreedersRepository     $breedersRepository
     )
     {
         $this->breederPetsRepository = $breederPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->prefAdjacentRepository = $prefAdjacentRepository;
+        $this->breedersRepository = $breedersRepository;
     }
 
     /**
@@ -91,6 +100,49 @@ class BreederQueryService
         }
 
         return $query->addOrderBy('p.release_date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function searchBreedersResult($request, $petKind): array
+    {
+        $query = $this->breedersRepository->createQueryBuilder('b')
+            ->innerJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.Breeder')
+            ->where('bp.pet_kind = :pet_kind')
+            ->setParameter('pet_kind', $petKind);
+
+        if ($request->get('breed_type')) {
+            $query->andWhere('bp.BreedsType = :breeds_type')
+                ->setParameter('breeds_type', $request->get('breed_type'));
+        }
+
+        if ($request->get('region')) {
+            $query->innerJoin('Customize\Entity\BreederHouse', 'bh', 'WITH', 'b.id = bh.Breeder')
+                ->andWhere('bh.BreederHousePrefId = :pref')
+                ->setParameter('pref', $request->get('region'));
+            if ($request->get('adjacent')) {
+                $queryHouse = $this->prefAdjacentRepository->createQueryBuilder('pa')
+                    ->andWhere('pa.pref_id = :pref')
+                    ->setParameter('pref', $request->get('region'))
+                    ->select('pa.adjacent_pref_id');
+
+                $result = $queryHouse->getQuery()
+                    ->getArrayResult();
+                $arr = array_column($result, 'adjacent_pref_id');
+                $query->orWhere('bh.BreederHousePrefId in (:arr)')
+                    ->setParameter('arr', $arr)
+                    ->andWhere('bp.pet_kind = :pet_kind')
+                    ->setParameter('pet_kind', $request->get('pet_kind'));
+            }
+        }
+
+        if ($request->get('license')) {
+            $query->andWhere('b.license_name LIKE :license OR b.license_house_name LIKE :license')
+                ->setParameter('license', '%' . $request->get('license') .'%');
+        }
+
+        return $query->addOrderBy('b.update_date', 'DESC')
             ->getQuery()
             ->getResult();
     }

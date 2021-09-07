@@ -7,28 +7,28 @@
             {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
 				<nav class="nav nav-pills search-nav m-2 d-none d-flex">
 					<a class="nav-item nav-link active bg-breeder col-md-3"
-					   href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
+					   href="{{ url('breeder_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
 						<h2 class="text-white text-align-center">犬を飼育</h2>
 					</a>
 					<a class="nav-item nav-link border bg-white col-md-3"
-					   href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
+					   href="{{ url('breeder_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
 						<h2 class="color-gray-300 text-align-center">猫を飼育</h2>
 					</a>
 				</nav>
 			{% else %}
 				<nav class="nav nav-pills search-nav m-2 d-none d-flex">
 					<a class="nav-item nav-link px-5 py-2 border bg-white col-md-3"
-					   href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
+					   href="{{ url('breeder_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
 						<h2 class="color-gray-300 text-align-center">犬を飼育</h2>
 					</a>
 					<a class="nav-item nav-link active bg-breeder px-5 py-2 col-md-3"
-					   href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
+					   href="{{ url('breeder_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
 						<h2 class="text-white text-align-center">猫を飼育</h2>
 					</a>
 				</nav>
 			{% endif %}
 			<div class="m-2 p-2"></div>
-			<form action="{{ url('breeder_pet_search_result') }}" method="get">
+			<form action="{{ url('breeder_search') }}" method="get">
 				<input type="hidden" name="pet_kind" value="{{ petKind }}">
 
 				<div class="row">
@@ -54,7 +54,7 @@
 							%} checked {% endif %}> 隣接する都道府県も検索</label>
 					</div>
                     <div class="col-md-3">
-                        <input type="text" id="breeder_house_name" placeholder="ブリーダー名" class="form-control bg-primary w-80 p-2 h-15">
+                        <input type="text" id="breeder_house_name" placeholder="ブリーダー名" class="form-control bg-primary w-80 p-2 h-15" name="license">
                     </div>
 				</div>
 				<div class="m-2 p-2"></div>
