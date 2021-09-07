@@ -2,185 +2,118 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-    <div class="main-container col-sm-10">
-                <div class="sub-title d-sm-flex align-items-center">
-                    <h2>田中 太郎ブリーダー</h2>
-                    <div class="mr-5"></div>
-                    <div class="d-block d-sm-none m-2 p-2"></div>
-                    <h3>総合評価</h3>
-                    <div class="mr-2"></div>
-                    <img src="/html/template/default/assets/img/star-icon.svg">
-                    <div class="mr-2"></div>
-                    <h3>5.00</h3>
+    <div class="sub-title d-sm-flex align-items-center">
+        <h2>田中 太郎ブリーダー</h2>
+        <div class="mr-5"></div>
+        <div class="d-block d-sm-none m-2 p-2"></div>
+        <h3>総合評価</h3>
+        <div class="mr-2"></div>
+        <img src="/html/template/default/assets/img/star-icon.svg">
+        <div class="mr-2"></div>
+        <h3>{{ breeder.breederRank|number_format(1) }}</h3>
+    </div>
+    <div class="m-2 p-2"></div>
+    <div class="row">
+        <div class="col-sm-6">
+            <img src="{{ app.request.schemeAndHttpHost ~ (breeder.thumbnailPath | default | length > 0 ? breeder.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                 class="w-100">
+            <div class="d-block d-sm-none m-2 p-2"></div>
+        </div>
+    </div>
+    <div class="m-3 p-3"></div>
+    <div class="row">
+        <div class="breeder-info col-12">
+            <div class="d-sm-flex">
+                <div class="d-flex mr-4">
+                    <h4 class="color-gray-500">動物取扱業登録番号：</h4>
+                    <h4>{{ breeder.licenseNo }}</h4>
                 </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <img src="/html/template/default/assets/img/breeder-thumbnail.png" class="w-100">
-                        <div class="d-block d-sm-none m-2 p-2"></div>
-                    </div>
+                <div class="m-1 p-1"></div>
+                <div class="d-flex">
+                    <h4 class="color-gray-500">登録：</h4>
+                    <h4>{{ breeder.licenseRegistDate | date('Y/m/d') }}</h4>
                 </div>
-                <div class="m-3 p-3"></div>
-                <div class="row">
-                    <div class="breeder-info col-12">
-                        <div class="d-sm-flex">
-                            <div class="d-flex mr-4">
-                                <h4 class="color-gray-500">動物取扱業登録番号：</h4>
-                                <h4>動東第000号</h4>
-                            </div>
-                            <div class="m-1 p-1"></div>
-                            <div class="d-flex">
-                                <h4 class="color-gray-500">登録：</h4>
-                                <h4>2021/00/00</h4>
-                            </div>
-                        </div>
-                        <div class="m-1 p-1"></div>
-                        <div class="d-sm-flex">
-                            <div class="d-flex mr-4">
-                                <h4 class="color-gray-500">有効期限：</h4>
-                                <h4>2021/00/00</h4>
-                            </div>
-                            <div class="m-1 p-1"></div>
-                            <div class="d-flex">
-                                <h4 class="color-gray-500">動物取扱責任者：</h4>
-                                <h4>田中 太郎</h4>
-                            </div>
-                        </div>
-                        <div class="m-1 p-1"></div>
-                        <div class="d-flex">
-                            <h4 class="color-gray-500">犬舎所在地：</h4>
-                            <h4>愛知県豊橋市</h4>
-                        </div>
-                    </div>
+            </div>
+            <div class="m-1 p-1"></div>
+            <div class="d-sm-flex">
+                <div class="d-flex mr-4">
+                    <h4 class="color-gray-500">有効期限：</h4>
+                    <h4>{{ breeder.licenseExpireDate | date('Y/m/d') }}</h4>
                 </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="col-12">
-                        <p>
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。
-                        </p>
-                    </div>
+                <div class="m-1 p-1"></div>
+                <div class="d-flex">
+                    <h4 class="color-gray-500">動物取扱責任者：</h4>
+                    <h4>{{ breeder.licenseManagerName }}</h4>
                 </div>
-                <div class="m-2 p-2"></div>
-                <div class="sub-title">
-                    <h2>このブリーダーが扱うペット一覧</h2>
-                </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
-                        <div class="catalog-card">
-                            <a href="petpage.html">
-                                <img src="/html/template/default/assets/img/thumbnail.png" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body bg-white">
-                                <h5 class="color-gray-500 font-weight-600">柴犬（標準）</h5>
-                                <div class="m-4"></div>
-                                <div class="d-flex">
-                                    <h6 class="mr-2">2020年12月25日生</h6>
-                                    <h6>女の子</h6>
-                                </div>
-                                <div class="mb-2"></div>
-                                <div class="d-flex">
-                                    <h6 class="mr-3">埼玉県</h6>
-                                    <h6>茶色</h6>
-                                </div>
-                                <div class="m-2"></div>
-                                <h6>元気な子です！明るい性格です。</h6>
-                                <div class="m-2"></div>
-                                <h6>掲載日2020年00月00日</h6>
-                                <div class="m-4"></div>
-                                <h4 class="color-gray-500 font-weight-600">200,000<span>円（税込）</span></h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
-                        <div class="catalog-card">
-                            <a href="petpage.html">
-                                <img src="/html/template/default/assets/img/thumbnail.png" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body bg-white">
-                                <h5 class="color-gray-500 font-weight-600">柴犬（標準）</h5>
-                                <div class="m-4"></div>
-                                <div class="d-flex">
-                                    <h6 class="mr-2">2020年12月25日生</h6>
-                                    <h6>女の子</h6>
-                                </div>
-                                <div class="mb-2"></div>
-                                <div class="d-flex">
-                                    <h6 class="mr-3">埼玉県</h6>
-                                    <h6>茶色</h6>
-                                </div>
-                                <div class="m-2"></div>
-                                <h6>元気な子です！明るい性格です。</h6>
-                                <div class="m-2"></div>
-                                <h6>掲載日2020年00月00日</h6>
-                                <div class="m-4"></div>
-                                <h4 class="color-gray-500 font-weight-600">200,000<span>円（税込）</span></h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
-                        <div class="catalog-card">
-                            <a href="petpage.html">
-                                <img src="/html/template/default/assets/img/thumbnail.png" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body bg-white">
-                                <h5 class="color-gray-500 font-weight-600">柴犬（標準）</h5>
-                                <div class="m-4"></div>
-                                <div class="d-flex">
-                                    <h6 class="mr-2">2020年12月25日生</h6>
-                                    <h6>男の子</h6>
-                                </div>
-                                <div class="mb-2"></div>
-                                <div class="d-flex">
-                                    <h6 class="mr-3">埼玉県</h6>
-                                    <h6>茶色</h6>
-                                </div>
-                                <div class="m-2"></div>
-                                <h6>元気な子です！明るい性格です。</h6>
-                                <div class="m-2"></div>
-                                <h6>掲載日2020年00月00日</h6>
-                                <div class="m-4"></div>
-                                <h4 class="color-gray-500 font-weight-600">200,000<span>円（税込）</span></h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
-                        <div class="catalog-card">
-                            <a href="petpage.html">
-                                <img src="/html/template/default/assets/img/thumbnail.png" class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body bg-white">
-                                <h5 class="color-gray-500 font-weight-600">柴犬（標準）</h5>
-                                <div class="m-4"></div>
-                                <div class="d-flex">
-                                    <h6 class="mr-2">2020年12月25日生</h6>
-                                    <h6>男の子</h6>
-                                </div>
-                                <div class="mb-2"></div>
-                                <div class="d-flex">
-                                    <h6 class="mr-3">埼玉県</h6>
-                                    <h6>茶色</h6>
-                                </div>
-                                <div class="m-2"></div>
-                                <h6>元気な子です！明るい性格です。</h6>
-                                <div class="m-2"></div>
-                                <h6>掲載日2020年00月00日</h6>
-                                <div class="m-4"></div>
-                                <h4 class="color-gray-500 font-weight-600">200,000<span>円（税込）</span></h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div class="m-1 p-1"></div>
+            <div class="d-flex">
+                <h4 class="color-gray-500">犬舎所在地：</h4>
+                {% set breederHouseDog = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                {% set breederHouseCat = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
+                {% if (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
+                    <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' ~ ' & ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
+                {% elseif (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                    <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' }}</h4>
+                {% else %}
+                    <h4>{{ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
+                {% endif %}
             </div>
         </div>
     </div>
-</body>
+    <div class="m-2 p-2"></div>
+    <div class="row">
+        <div class="col-12">
+            <p>
+                {{ breeder.prText }}
+            </p>
+        </div>
+    </div>
+    <div class="m-2 p-2"></div>
+    <div class="sub-title">
+        <h2>このブリーダーが扱うペット一覧</h2>
+    </div>
+    <div class="m-2 p-2"></div>
+    <div class="row">
+        {% for pet in pets %}
+            <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
+                <div class="catalog-card">
+                    <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                             class="card-img-top" alt="Pet-image">
+                    </a>
+                    <div class="card-body bg-white">
+                        <h3 class="color-gray-500 font-weight-600">{{ pet.getBreedsType().getBreedsName() ?? '' }}</h3>
+                        <div class="m-4"></div>
+                        <div class="d-flex">
+                            <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
+                            <h4>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h4>
+                        </div>
+                        <div class="mb-2"></div>
+                        <div class="d-flex">
+                            {% set breederHouse = pet.Breeder.getBreederHouseByPetType(pet.petKind) %}
+                            <h4 class="mr-3">{{ breederHouse.breederHousePref ~ ' ' ~ breederHouse.breederHouseCity ?? '' }}</h4>
+                            <h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
+                        </div>
+                        <div class="m-2"></div>
+                        <h4>{{ pet.prComment }}</h4>
+                        <div class="m-2"></div>
+                        <h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4>
+                        <div class="m-4"></div>
+                        <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}
+                            <span>円（税込）</span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            メッセージが見つかりません
+        {% endfor %}
+    </div>
+    <div class="m-2 p-2"></div>
+    <div class="navigation">
+        {{ knp_pagination_render(pets) }}
+    </div>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
