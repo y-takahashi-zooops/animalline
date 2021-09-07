@@ -55,7 +55,8 @@
 							%} checked {% endif %}> 隣接する都道府県も検索</label>
 					</div>
                     <div class="col-md-3">
-                        <input type="text" id="breeder_house_name" placeholder="ブリーダー名" class="form-control bg-primary w-80 p-2 h-15" name="license">
+                        <input type="text" id="breeder_house_name" placeholder="ブリーダー名" class="form-control bg-primary w-80 p-2 h-15" name="license" 
+                               {% if params.license is defined %} value="{{ params.license }}" {% endif %}>
                     </div>
 				</div>
 				<div class="m-2 p-2"></div>
@@ -94,7 +95,7 @@
             <div class="m-1 p-1"></div>
             <div class="d-flex">
                 <h6>動物取扱業登録番号：</h6>
-                <h6>{{ breeder.licenseNo() }}</h6>
+                <h6>{{ breeder.licenseNo }}</h6>
                 <div class="m-1 p-1"></div>
                 <h6>登録：</h6>
                 <h6>{{ breeder.licenseRegistDate | date('Y/m/d') }}</h6>
