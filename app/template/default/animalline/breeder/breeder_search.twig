@@ -39,7 +39,7 @@
 							<option value="">種類</option>
 							{% for breed in breeds %}
 								<option value="{{ breed.id }}" {% if params.breed_type is defined and params.breed_type== breed.id
-								%} selected {% endif %}>{{ breeder.licenseHouseName }}ブリーダー</option>
+								%} selected {% endif %}>{{ breed.breedsName }}</option>
 							{% endfor %}
 						</select>
 					</div>
@@ -82,7 +82,7 @@
             <img src="{{ app.request.schemeAndHttpHost ~ (breeder.thumbnailPath | default | length > 0 ? breeder.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}" class="w-100 mb-4 mb-sm-0">
         </div>
         <div class="breeder-info col-sm-8">
-            <h3 class="font-weight-500 color-gray-500">{{ breeder.getBreederName() }}</h3>
+            <h3 class="font-weight-500 color-gray-500">{{ breeder.licenseHouseName }}ブリーダー</h3>
             <div class="m-1 p-1"></div>
             <div class="d-flex">
                 <h6>総合評価</h6>
