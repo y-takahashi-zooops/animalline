@@ -242,4 +242,32 @@ class BreederController extends AbstractController
             'id' => $request->get('pet_id')
         ]);
     }
+
+    /**
+     * @Route("/breeder/breeder_search", name="breeder_search")
+     * @Template("/animalline/breeder/breeder_search.twig")
+     */
+    public function breeder_search(PaginatorInterface $paginator, Request $request): Response
+    {
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $regions = $this->prefRepository->findAll();
+
+        return $this->render('animalline/breeder/breeder_search.twig', [
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions
+        ]);
+    }
+
+    /**
+     * @Route("/breeder/breeder_search/{breeder_id}", name="breeder_detail", requirements={"breeder_id" = "\d+"})
+     * @Template("/animalline/breeder/breeder_detail.twig")
+     */
+    public function breeder_detail(Request $request)
+    {
+        return $this->render('animalline/breeder/breeder_detail.twig', [
+            'id' => $request->get('breeder_id')
+        ]);
+    }
 }

@@ -7,20 +7,17 @@ use Customize\Service\AdoptionQueryService;
 use Carbon\Carbon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Form\Type\ConservationsType;
-use Customize\Form\Type\ConservationExaminationInfoType;
-use Customize\Form\Type\Adoption\ConservationHouseType;
+use Customize\Form\Type\ConservationHouseType;
 use Customize\Entity\Conservations;
 use Customize\Entity\ConservationContacts;
-use Customize\Entity\ConservationHouse;
-use Customize\Entity\ConservationExaminationInfo;
-use Customize\Form\Type\Admin\ConservationPetsType;
+use Customize\Entity\ConservationsHouse;
+use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Repository\Master\PrefRepository;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\SendoffReasonRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Repository\ConservationsHousesRepository;
-use Customize\Repository\ConservationExaminationInfoRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,12 +51,12 @@ class AdoptionMemberController extends AbstractController
     protected $sendoffReasonRepository;
 
     /**
-     * @var BreedsRepository
+     * @var ConservationsRepository
      */
     protected $conservationsRepository;
 
 	/**
-     * @var ConservationHouse
+     * @var ConservationsHouseRepository
      */
     protected $conservationsHouseRepository;
 
@@ -69,9 +66,9 @@ class AdoptionMemberController extends AbstractController
     protected $prefRepository;
     
     /**
-     * @var ConservationExaminationInfoRepository
+     * @var ConservationPetsRepository
      */
-    protected $conservationExaminationInfoRepository;
+    protected $conservationPetsRepository;
 
 
     /**
@@ -82,8 +79,9 @@ class AdoptionMemberController extends AbstractController
      * @param AdoptionQueryService $adoptionQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
-	 * @param ConservationsRepository $conservationsRepository,
-	 * @param ConservationsHousesRepository $conservationsHouseRepository,
+	 * @param ConservationsRepository $conservationsRepository
+	 * @param ConservationsHousesRepository $conservationsHouseRepository
+	 * @param ConservationPetsRepository $conservationPetsRepository
      */
     public function __construct(
         ConservationContactsRepository $conservationContactsRepository,
@@ -92,7 +90,8 @@ class AdoptionMemberController extends AbstractController
         SendoffReasonRepository $sendoffReasonRepository,
         ConservationsRepository $conservationsRepository,
         PrefRepository $prefRepository,
-		ConservationsHousesRepository $conservationsHouseRepository
+		ConservationsHousesRepository $conservationsHouseRepository,
+		ConservationPetsRepository $conservationPetsRepository
     )
     {
         $this->conservationContactsRepository = $conservationContactsRepository;
@@ -102,9 +101,13 @@ class AdoptionMemberController extends AbstractController
         $this->conservationsRepository = $conservationsRepository;
         $this->prefRepository = $prefRepository;
 		$this->conservationsHouseRepository = $conservationsHouseRepository;
+		$this->conservationPetsRepository = $conservationPetsRepository;
     }
 
     /**
+     * 
+     * マイページ
+     * 
      * @Route("/adoption/member/", name="adoption_mypage")
      * @Template("animalline/adoption/member/index.twig")
      */
@@ -137,6 +140,8 @@ class AdoptionMemberController extends AbstractController
     }
 
     /**
+     * 取引メッセージ一覧
+     * 
      * @Route("/adoption/member/all_message", name="adoption_get_message_mypage")
      * @Template("animalline/adoption/member/adoption_message.twig")
      */
@@ -180,16 +185,22 @@ class AdoptionMemberController extends AbstractController
 			$dog_house_info = $this->conservationsHouseRepository->findOneBy(["Conservation" => $conservation,"pet_type" => 1]);
 			$cat_house_info = $this->conservationsHouseRepository->findOneBy(["Conservation" => $conservation,"pet_type" => 2]);
 
-			if($handling_pet_kind == 0 && $cat_house_info && $dog_house_info){$step = 3;}
-			if($handling_pet_kind == 1 && $dog_house_info){$step = 3;}
-			if($handling_pet_kind == 2 && $cat_house_info){$step = 3;}
-			// 審査情報が登録されていればSTEP4を表示
-            $dog_examination_info = $this->conservationExaminationInfoRepository->findOneBy(["Conservation" => $conservation,"pet_type" => 1]);
-            $cat_examination_info = $this->conservationExaminationInfoRepository->findOneBy(["Conservation" => $conservation,"pet_type" => 2]);
+			// if($handling_pet_kind == 0 && $cat_house_info && $dog_house_info){$step = 3;}
+			// if($handling_pet_kind == 1 && $dog_house_info){$step = 3;}
+			// if($handling_pet_kind == 2 && $cat_house_info){$step = 3;}
 
-			if($handling_pet_kind == 0 && $dog_examination_info && $cat_examination_info ){$step = 4;}
-			if($handling_pet_kind == 1 && $dog_examination_info ){$step = 4;}
-			if($handling_pet_kind == 2 && $cat_examination_info ){$step = 4;}
+			// 審査情報が登録されていればSTEP4を表示
+            // $dog_examination_info = $this->conservationExaminationInfoRepository->findOneBy(["Conservation" => $conservation,"pet_type" => 1]);
+            // $cat_examination_info = $this->conservationExaminationInfoRepository->findOneBy(["Conservation" => $conservation,"pet_type" => 2]);
+
+			// if($handling_pet_kind == 0 && $dog_examination_info && $cat_examination_info ){$step = 4;}
+			// if($handling_pet_kind == 1 && $dog_examination_info ){$step = 4;}
+			// if($handling_pet_kind == 2 && $cat_examination_info ){$step = 4;}
+
+            // 審査情報は未実装なのでSTEP3の条件を満たしていればSTEP4を表示
+            if($handling_pet_kind == 0 && $cat_house_info && $dog_house_info){$step = 4;}
+			if($handling_pet_kind == 1 && $dog_house_info){$step = 4;}
+			if($handling_pet_kind == 2 && $cat_house_info){$step = 4;}
 
 			// 審査申請済であればSTEP5として審査中メッセージ
             $examination_status = $conservation->getExaminationStatus();
@@ -225,7 +236,6 @@ class AdoptionMemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $addr = $request->get('conservations');
             $addr = $request->get('conservations')['addr'];
             $pref = $prefRepository->find($addr['PrefId']);
             $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
@@ -239,7 +249,6 @@ class AdoptionMemberController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservation);
             $entityManager->flush();
-            // return $this->redirectToRoute('adoption_configration');
             return $this->redirectToRoute('adoption_examination');
         }
 
@@ -259,26 +268,27 @@ class AdoptionMemberController extends AbstractController
     {
         $petType = $request->get('pet_type');
         $conservation = $this->conservationsRepository->find($this->getUser());
-        $conservationHouse = $this->conservationsHouseRepository->findOneBy(['pet_type' => $petType, 'Conservation' => $conservation]);
-		if(!$conservationHouse){
-        	$conservationHouse = new ConservationHouse();
+        $conservationsHouse = $this->conservationsHouseRepository->findOneBy(['pet_type' => $petType, 'Conservation' => $conservation]);
+		if(!$conservationsHouse){
+        	$conservationsHouse = new ConservationsHouse();
 		}
-        $builder = $this->formFactory->createBuilder(ConservationHouseType::class, $conservationHouse);
+        $builder = $this->formFactory->createBuilder(ConservationHouseType::class, $conservationsHouse);
 		$conservation = $this->conservationsRepository->find($this->getUser());
 
         $form = $builder->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-			$housePref = $conservationHouse->getConservationHousePrefId();
-			$conservationHouse->setConservation($conservation)
-				->setPetType($petType)
-				->setConservationHousePref($housePref['name']);
-			$entityManager = $this->getDoctrine()->getManager();
-			$entityManager->persist($conservationHouse);
-
+            $address = $request->get('conservation_house')['address'];
+            $conservationsHouse->setConservation($conservation)
+                ->setPetType($petType)
+                ->setConservationHousePref($conservationsHouse->getPref()->getName())
+                ->setConservationHouseCity($address['conservation_house_city'])
+                ->setConservationHouseAddress($address['conservation_house_address']);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($conservationsHouse);
             $entityManager->flush();
 
-            return $this->redirectToRoute('adoption_mypage_examination');
+            return $this->redirectToRoute('adoption_examination');
         }
         return [
             'form' => $form->createView(),
@@ -294,55 +304,58 @@ class AdoptionMemberController extends AbstractController
      */
     public function examination_info(Request $request)
     {
-        $petType = $request->get('pet_type');
-        $conservation = $this->conservationsRepository->find($this->getUser());
-        $conservationExaminationInfo = $this->conservationExaminationInfoRepository->findOneBy([
-            'Conservation' => $conservation,
-            'pet_type' => $petType
-        ]);
-        $isEdit = false;
-        if ($conservationExaminationInfo) {
-            $isEdit = true;
-            if (in_array($conservationExaminationInfo->getPedigreeOrganization(),
-                [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC])) {
-                $conservationExaminationInfo->setGroupOrganization($conservationExaminationInfo->getPedigreeOrganization());
-                $conservationExaminationInfo->setPedigreeOrganization(AnilineConf::PEDIGREE_ORGANIZATION_JKC);
-            }
-        } else {
-            $conservationExaminationInfo = new ConservationExaminationInfo();
-        }
 
-        $form = $this->createForm(ConservationExaminationInfoType::class, $conservationExaminationInfo);
-        $form->handleRequest($request);
+        // 審査情報はアンケート的な意味合いで実装する。
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $conservationExaminationInfo->setPetType($petType)
-                ->setConservation($conservation);
-            $formRequest = $request->request->get('adoption_examination_info');
-            if ($formRequest['pedigree_organization'] == AnilineConf::PEDIGREE_ORGANIZATION_JKC) {
-                $conservationExaminationInfo->setPedigreeOrganization($formRequest['group_organization']);
-            } else {
-                $conservationExaminationInfo->setPedigreeOrganization($formRequest['pedigree_organization']);
-            }
+        // $petType = $request->get('pet_type');
+        // $conservation = $this->conservationsRepository->find($this->getUser());
+        // $conservationExaminationInfo = $this->conservationExaminationInfoRepository->findOneBy([
+        //     'Conservation' => $conservation,
+        //     'pet_type' => $petType
+        // ]);
+        // $isEdit = false;
+        // if ($conservationExaminationInfo) {
+        //     $isEdit = true;
+        //     if (in_array($conservationExaminationInfo->getPedigreeOrganization(),
+        //         [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC])) {
+        //         $conservationExaminationInfo->setGroupOrganization($conservationExaminationInfo->getPedigreeOrganization());
+        //         $conservationExaminationInfo->setPedigreeOrganization(AnilineConf::PEDIGREE_ORGANIZATION_JKC);
+        //     }
+        // } else {
+        //     $conservationExaminationInfo = new ConservationExaminationInfo();
+        // }
 
-            if ($formRequest['pedigree_organization'] != AnilineConf::PEDIGREE_ORGANIZATION_OTHER) {
-                $conservationExaminationInfo->setPedigreeOrganizationOther(null);
-            }
+        // $form = $this->createForm(ConservationExaminationInfoType::class, $conservationExaminationInfo);
+        // $form->handleRequest($request);
 
-            $conservationExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_INPUT_COMPLETE);
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     $conservationExaminationInfo->setPetType($petType)
+        //         ->setConservation($conservation);
+        //     $formRequest = $request->request->get('adoption_examination_info');
+        //     if ($formRequest['pedigree_organization'] == AnilineConf::PEDIGREE_ORGANIZATION_JKC) {
+        //         $conservationExaminationInfo->setPedigreeOrganization($formRequest['group_organization']);
+        //     } else {
+        //         $conservationExaminationInfo->setPedigreeOrganization($formRequest['pedigree_organization']);
+        //     }
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($conservationExaminationInfo);
-            $entityManager->flush();
+        //     if ($formRequest['pedigree_organization'] != AnilineConf::PEDIGREE_ORGANIZATION_OTHER) {
+        //         $conservationExaminationInfo->setPedigreeOrganizationOther(null);
+        //     }
 
-            return $this->redirectToRoute('adoption_mypage_examination');
-        }
+        //     $conservationExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_INPUT_COMPLETE);
 
-        return $this->render('animalline/adoption/member/examination_info.twig', [
-            'form' => $form->createView(),
-            'isEdit' => $isEdit,
-            'petType' => $petType == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫'
-        ]);
+        //     $entityManager = $this->getDoctrine()->getManager();
+        //     $entityManager->persist($conservationExaminationInfo);
+        //     $entityManager->flush();
+
+        //     return $this->redirectToRoute('adoption_examination');
+        // }
+
+        // return $this->render('animalline/adoption/member/examination_info.twig', [
+        //     'form' => $form->createView(),
+        //     'isEdit' => $isEdit,
+        //     'petType' => $petType == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫'
+        // ]);
     }
 
     /**
@@ -354,29 +367,31 @@ class AdoptionMemberController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         
-        // ブリーダーの審査ステータスを変更
+        // 保護団体の審査ステータスを変更
 		$conservation = $this->conservationsRepository->find($this->getUser());
         $conservation->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK);
 
         $entityManager->persist($conservation);
         
-        // 犬舎・猫舎両方のパターンがあるため配列で取得
-        $conservationExaminationInfos = $this->conservationExaminationInfoRepository->findBy([
-            'Conservation' => $conservation,
-        ]);
+        // // 犬舎・猫舎両方のパターンがあるため配列で取得
+        // $conservationExaminationInfos = $this->conservationExaminationInfoRepository->findBy([
+        //     'Conservation' => $conservation,
+        // ]);
         
-        // 審査情報のそれぞれの審査ステータスを変更
-        foreach($conservationExaminationInfos as $conservationExaminationInfo){
-            $conservationExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_SUBMIT);  
-            $entityManager->persist($conservationExaminationInfo);
-        }
+        // // 審査情報のそれぞれの審査ステータスを変更
+        // foreach($conservationExaminationInfos as $conservationExaminationInfo){
+        //     $conservationExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_SUBMIT);  
+        //     $entityManager->persist($conservationExaminationInfo);
+        // }
         
         $entityManager->flush();
 
-        return $this->redirectToRoute('adoption_mypage_examination');
+        return $this->redirectToRoute('adoption_examination');
     }
 
     /**
+     * お気に入り一覧画面
+     * 
      * @Route("/adoption/member/favorite", name="adoption_favorite")
      * @Template("animalline/adoption/favorite.twig")
      */
