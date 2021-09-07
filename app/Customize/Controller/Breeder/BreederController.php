@@ -13,6 +13,7 @@ use Eccube\Repository\Master\PrefRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\BreederPetImageRepository;
+use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Controller\AbstractController;
@@ -25,9 +26,15 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\Breeder\BreederContactType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederController extends AbstractController
 {
+    /**
+     * @var BreedersRepository
+     */
+    protected $breedersRepository;
+
     /**
      * @var BreederPetsRepository
      */
@@ -76,7 +83,8 @@ class BreederController extends AbstractController
      * @param BreederQueryService $breederQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
-     * @param BreederPetsRepository $breederPetsRepository ,
+     * @param BreedersRepository $breedersRepository
+     * @param BreederPetsRepository $breederPetsRepository
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
@@ -84,16 +92,17 @@ class BreederController extends AbstractController
         BreederQueryService       $breederQueryService,
         PetsFavoriteRepository    $petsFavoriteRepository,
         SendoffReasonRepository   $sendoffReasonRepository,
+        BreedersRepository        $breedersRepository,
         BreederPetsRepository     $breederPetsRepository,
         BreedsRepository          $breedsRepository,
         PrefRepository            $prefRepository
-    )
-    {
+    ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->sendoffReasonRepository = $sendoffReasonRepository;
+        $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->prefRepository = $prefRepository;
@@ -264,10 +273,24 @@ class BreederController extends AbstractController
      * @Route("/breeder/breeder_search/{breeder_id}", name="breeder_detail", requirements={"breeder_id" = "\d+"})
      * @Template("/animalline/breeder/breeder_detail.twig")
      */
-    public function breeder_detail(Request $request)
+    public function breeder_detail(Request $request, $breeder_id, PaginatorInterface $paginator)
     {
-        return $this->render('animalline/breeder/breeder_detail.twig', [
-            'id' => $request->get('breeder_id')
+        $breeder = $this->breedersRepository->find($breeder_id);
+        if (!$breeder) throw new NotFoundHttpException();
+
+        $petResults = $this->breederPetsRepository->findBy([
+            'Breeder' => $breeder,
+            'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC
         ]);
+        $pets = $paginator->paginate(
+            $petResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return compact(
+            'breeder',
+            'pets'
+        );
     }
 }
