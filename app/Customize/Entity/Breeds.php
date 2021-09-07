@@ -58,7 +58,7 @@ class Breeds
     private $ConservationPets;
 
     /**
-     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederPets", mappedBy="BreedType")
+     * @ORM\OneToMany(targetEntity="Customize\Entity\BreederPets", mappedBy="BreedsType")
      */
     private $BreederPets;
 

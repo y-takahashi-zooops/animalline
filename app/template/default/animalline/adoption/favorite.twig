@@ -7,9 +7,10 @@
             {% include 'side.twig' %}
             <div class="main-container col-sm-9">
                 <h2>お気に入り一覧</h2>
-                <div class="m-3 p-3"></div>
-                <div class="row">
-                    {% for pet in pets %}
+                <div class="m-1 p-1"></div>
+                {% for pet in pets %}
+                    <div class="m-2 p-2"></div>
+                    <div class="row">
                         <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                             <div class="catalog-card">
                                 <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
@@ -38,10 +39,10 @@
                                 </div>
                             </div>
                         </div>
-                    {% else %}
-                        メッセージが見つかりません
-                    {% endfor %}
-                </div>
+                    </div>
+                {% else %}
+                    お気に入りが登録されていません
+                {% endfor %}
                 <div class="m-2 p-2"></div>
                 <div class="navigation">
                     {{ knp_pagination_render(pets) }}

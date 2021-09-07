@@ -13,6 +13,7 @@ use Customize\Entity\Breeders;
 use Customize\Entity\BreederContacts;
 use Customize\Entity\BreederHouse;
 use Customize\Entity\BreederExaminationInfo;
+use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Repository\Master\PrefRepository;
 use Customize\Repository\BreederContactsRepository;
@@ -53,7 +54,7 @@ class BreederMemberController extends AbstractController
     protected $sendoffReasonRepository;
 
     /**
-     * @var BreedsRepository
+     * @var BreedersRepository
      */
     protected $breedersRepository;
 
@@ -68,6 +69,11 @@ class BreederMemberController extends AbstractController
     protected $prefRepository;
     
     /**
+     * @var BreederPetsRepository
+     */
+    protected $breederPetsRepository;
+
+    /**
      * @var BreederExaminationInfoRepository
      */
     protected $breederExaminationInfoRepository;
@@ -81,8 +87,9 @@ class BreederMemberController extends AbstractController
      * @param BreederQueryService $breederQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
-	 * @param BreedersRepository $breedersRepository,
-	 * @param BreederHouseRepository $breederHouseRepository,
+	 * @param BreedersRepository $breedersRepository
+	 * @param BreederHouseRepository $breederHouseRepository
+     * @param BreederPetsRepository $breederPetsRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      */
     public function __construct(
@@ -93,6 +100,7 @@ class BreederMemberController extends AbstractController
         BreedersRepository        $breedersRepository,
         PrefRepository            $prefRepository,
 		BreederHouseRepository    $breederHouseRepository,
+		BreederPetsRepository    $breederPetsRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository
     )
     {
@@ -103,10 +111,14 @@ class BreederMemberController extends AbstractController
         $this->breedersRepository = $breedersRepository;
         $this->prefRepository = $prefRepository;
 		$this->breederHouseRepository = $breederHouseRepository;
+		$this->breederPetsRepository = $breederPetsRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
     }
 
     /**
+     * 
+     * マイページ
+     * 
      * @Route("/breeder/member/", name="breeder_mypage")
      * @Template("animalline/breeder/member/index.twig")
      */
@@ -139,6 +151,8 @@ class BreederMemberController extends AbstractController
     }
 
     /**
+     * 取引メッセージ一覧
+     * 
      * @Route("/breeder/member/all_message", name="breeder_get_message_mypage")
      * @Template("animalline/breeder/member/breeder_message.twig")
      */
@@ -163,7 +177,7 @@ class BreederMemberController extends AbstractController
     /**
      * ブリーダー登録申請画面
      * 
-     * @Route("/breeder/member/examination", name="breeder_mypage_examination")
+     * @Route("/breeder/member/examination", name="breeder_examination")
      * @Template("animalline/breeder/member/examination.twig")
      */
     public function examination(Request $request)
@@ -235,7 +249,7 @@ class BreederMemberController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederData);
             $entityManager->flush();
-            return $this->redirectToRoute('breeder_mypage_examination');
+            return $this->redirectToRoute('breeder_examination');
         }
 
         return [
@@ -273,7 +287,7 @@ class BreederMemberController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_mypage_examination');
+            return $this->redirectToRoute('breeder_examination');
         }
         return [
             'form' => $form->createView(),
@@ -330,7 +344,7 @@ class BreederMemberController extends AbstractController
             $entityManager->persist($breederExaminationInfo);
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_mypage_examination');
+            return $this->redirectToRoute('breeder_examination');
         }
 
         return $this->render('animalline/breeder/member/examination_info.twig', [
@@ -368,7 +382,7 @@ class BreederMemberController extends AbstractController
         
         $entityManager->flush();
 
-        return $this->redirectToRoute('breeder_mypage_examination');
+        return $this->redirectToRoute('breeder_examination');
     }
 
     /**

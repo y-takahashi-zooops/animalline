@@ -1,0 +1,143 @@
+{% form_theme form 'Form/form_div_layout.twig' %}
+{% set site_type = 'adoption' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <div class="ec-pageHeader">
+        <h1>{{ petType== 1?'犬舎 情報登録':'猫舎 情報登録'|trans }}</h1>
+    </div>
+    <div class="ec-off1Grid">
+        <div class="ec-off1Grid__cell">
+            <form name="adoption-house" method="post" action="{{ url('adoption_house_info', {'pet_type': petType}) }}"
+                  novalidate class="h-adr">
+                <span class="p-country-name" style="display:none;">Japan</span>
+                <h2>{{ petType == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')?'犬舎情報':'猫舎情報' }}</h2>
+                {{ form_widget(form._token) }}
+                <div class="ec-borderedDefs">
+                    <div class="mb-5">
+                        <dl>
+                            <dt>
+                                {{ form_label(form.conservation_house_name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-halfInput{{ has_errors(form.conservation_house_name) ? ' error' }}">
+                                    {{ form_widget(form.conservation_house_name, { 'attr': { 'placeholder': 'お名前' }}) }}
+                                    {{ form_errors(form.conservation_house_name) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.conservation_house_kana, 'お名前(カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-halfInput{{ has_errors(form.conservation_house_kana) ? ' error' }}">
+                                    {{ form_widget(form.conservation_house_kana, { 'attr': { 'placeholder': 'お名前（カナ）' }}) }}
+                                    {{ form_errors(form.conservation_house_kana) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-zipInput{{ has_errors(form.conservation_house_house_zip) ? ' error' }}">
+                                    <span>{{ '〒'|trans }}</span>
+                                    {{ form_widget(form.conservation_house_house_zip) }}
+                                    <div class="ec-zipInputHelp">
+                                        <div class="ec-zipInputHelp__icon">
+                                            <div class="ec-icon"><img
+                                                        src="/html/template/default/assets/icon/question-white.svg"
+                                                        alt="">
+                                            </div>
+                                        </div>
+                                        <a href="https://www.post.japanpost.jp/zipcode/"
+                                           target="_blank"><span>郵便番号検索</span></a>
+                                    </div>
+                                    {{ form_errors(form.conservation_house_house_zip) }}
+                                </div>
+                                <div class="ec-select{{ has_errors(form.address.pref) ? ' error' }}">
+                                    {{ form_widget(form.address.pref) }}
+                                    {{ form_errors(form.address.pref) }}
+                                </div>
+                                <div class="ec-input{{ has_errors(form.address.conservation_house_city) ? ' error' }}">
+                                    {{ form_widget(form.address.conservation_house_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                    {{ form_errors(form.address.conservation_house_city) }}
+                                </div>
+                                <div class="ec-input{{ has_errors(form.address.conservation_house_address) ? ' error' }}">
+                                    {{ form_widget(form.address.conservation_house_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                    {{ form_errors(form.address.conservation_house_address) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.conservation_house_house_tel, 'TEL', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-halfInput{{ has_errors(form.conservation_house_house_tel) ? ' error' }}">
+                                    {{ form_widget(form.conservation_house_house_tel) }}
+                                    {{ form_errors(form.conservation_house_house_tel) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.conservation_house_house_fax, 'FAX', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-halfInput{{ has_errors(form.conservation_house_house_fax) ? ' error' }}">
+                                    {{ form_widget(form.conservation_house_house_fax) }}
+                                    {{ form_errors(form.conservation_house_house_fax) }}
+                                </div>
+                            </dd>
+                        </dl>
+
+                        <dl>
+                            <dt>
+                                {{ form_label(form.conservation_house_front_name, '担当者名', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-halfInput{{ has_errors(form.conservation_house_front_name) ? ' error' }}">
+                                    {{ form_widget(form.conservation_house_front_name, { 'attr': { 'placeholder': '担当者名' }}) }}
+                                    {{ form_errors(form.conservation_house_front_name) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.conservation_house_front_tel, '担当者TEL', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-halfInput{{ has_errors(form.conservation_house_front_tel) ? ' error' }}">
+                                    {{ form_widget(form.conservation_house_front_tel) }}
+                                    {{ form_errors(form.conservation_house_front_tel) }}
+                                </div>
+                            </dd>
+                        </dl>
+
+                    </div>
+                </div>
+                <div class="ec-registerRole__actions">
+                    <div class="ec-off4Grid">
+                        <div class="ec-off4Grid__cell">
+                            <button class="ec-blockBtn--action" data>登録</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {{ include('animalline/components/_modal_confirm.twig') }}
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}
+<script src="{{ asset('assets/js/conservation_house.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+{% endblock %}
+        

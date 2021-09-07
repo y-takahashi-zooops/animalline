@@ -26,11 +26,6 @@ class Conservations
     private $id;
 
     /**
-     * @ORM\Column(name="user_id", type="integer", nullable=true)
-     */
-    private $user_id;
-
-    /**
      * @ORM\Column(name="is_organization", type="smallint", nullable=true)
      */
     private $is_organization;
@@ -98,7 +93,7 @@ class Conservations
     /**
      * @ORM\Column(name="is_active", type="smallint", nullable=true)
      */
-    private $is_active;
+    private $is_active = 0;
 
     /**
      * @ORM\Column(name="examination_status", type="smallint", nullable=true)
@@ -114,21 +109,6 @@ class Conservations
      * @ORM\Column(name="pr_text", type="text", nullable=true)
      */
     private $pr_text;
-
-    /**
-     * @ORM\Column(name="email", type="string", length=255, nullable=true)
-     */
-    private $email;
-
-    /**
-     * @ORM\Column(name="password", type="string", length=255, nullable=true)
-     */
-    private $password;
-
-    /**
-     * @ORM\Column(name="register_status_id", type="smallint", length=5, nullable=true)
-     */
-    private $register_status_id;
 
     /**
      * @var \DateTime
@@ -181,17 +161,6 @@ class Conservations
         return $this;
     }
 
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(?int $user_id): self
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
 
     public function getIsOrganization(): ?int
     {
@@ -383,42 +352,6 @@ class Conservations
         $this->pr_text = $pr_text;
 
         return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(?string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    public function setRegisterStatusId(?int $register_status_id): self
-    {
-        $this->register_status_id = $register_status_id;
-
-        return $this;
-    }
-
-    public function getRegisterStatusId()
-    {
-        return $this->register_status_id;
     }
 
     /**

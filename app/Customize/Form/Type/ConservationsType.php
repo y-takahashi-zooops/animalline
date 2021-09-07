@@ -53,6 +53,16 @@ class ConservationsType extends AbstractType
                     ]),
                 ]
             ])
+            ->add('handling_pet_kind', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '犬・猫' => AnilineConf::ANILINE_PET_KIND_DOG_CAT,
+                        '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
+                        '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+                    ],
+                'required' => false,
+                'placeholder' => 'common.select'
+            ])
             ->add('owner_name', TextType::class, [
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],

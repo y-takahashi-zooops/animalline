@@ -55,7 +55,7 @@
                                     <option value="{{ region.id }}">{{ region.name }}</option>
                                 {% endfor %}
                             </select>
-                        <input type="checkbox" name="adjacent" value="1">隣接する都道府県も検索
+                        <input type="checkbox" name="adjacent" value="1" class="mr-1">隣接する都道府県も検索
                     </div>
                 </div>
                 {#
@@ -159,8 +159,8 @@
                     </a>
                 </div>
                 <div class="m-1 p-1"></div>
-                <div class="row pl-3">
-                    {% for pet in favoritePets %}
+                {% for pet in favoritePets %}
+                    <div class="row pl-3">
                         <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                             <div class="catalog-card">
                                 <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
@@ -190,10 +190,10 @@
                                 </div>
                             </div>
                         </div>
-                    {% else %}
-                        結果が０件です。
-                    {% endfor %}
-                </div>
+                    </div>
+                {% else %}
+                    結果が０件です。
+                {% endfor %}
                 <div class="m-2 p-2"></div>
                 <div class="d-flex justify-content-between align-items-end">
                     <h2>犬種から探す</h2>

@@ -3,8 +3,8 @@
 namespace Customize\Service;
 
 use Customize\Config\AnilineConf;
-use Customize\Repository\PetsFavoriteRepository;
 use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\PetsFavoriteRepository;
 use Customize\Repository\PrefAdjacentRepository;
 
 class AdoptionQueryService
@@ -33,8 +33,8 @@ class AdoptionQueryService
      */
     public function __construct(
         ConservationPetsRepository $conservationPetsRepository,
-        PetsFavoriteRepository     $petsFavoriteRepository,
-        PrefAdjacentRepository     $prefAdjacentRepository
+        PetsFavoriteRepository $petsFavoriteRepository,
+        PrefAdjacentRepository $prefAdjacentRepository
     )
     {
         $this->conservationPetsRepository = $conservationPetsRepository;
@@ -107,7 +107,6 @@ class AdoptionQueryService
             ->getResult();
         return $query;
     }
-
 
     /**
      * Admin conservation pets

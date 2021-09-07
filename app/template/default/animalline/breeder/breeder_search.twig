@@ -1,0 +1,142 @@
+{% set site_type = 'breeder' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <div class="search-area bg-section rounded-lg">
+		<div class="main">
+            {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+				<nav class="nav nav-pills search-nav m-2 d-none d-flex">
+					<a class="nav-item nav-link active bg-breeder col-md-3"
+					   href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
+						<h2 class="text-white text-align-center">犬を飼育</h2>
+					</a>
+					<a class="nav-item nav-link border bg-white col-md-3"
+					   href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
+						<h2 class="color-gray-300 text-align-center">猫を飼育</h2>
+					</a>
+				</nav>
+			{% else %}
+				<nav class="nav nav-pills search-nav m-2 d-none d-flex">
+					<a class="nav-item nav-link px-5 py-2 border bg-white col-md-3"
+					   href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
+						<h2 class="color-gray-300 text-align-center">犬を飼育</h2>
+					</a>
+					<a class="nav-item nav-link active bg-breeder px-5 py-2 col-md-3"
+					   href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
+						<h2 class="text-white text-align-center">猫を飼育</h2>
+					</a>
+				</nav>
+			{% endif %}
+			<div class="m-2 p-2"></div>
+			<form action="{{ url('breeder_pet_search_result') }}" method="get">
+				<input type="hidden" name="pet_kind" value="{{ petKind }}">
+
+				<div class="row">
+					<div class="col-md-5 select-container mb-2 mb-sm-none">
+						<select class="form-control bg-primary w-100 p-2 h-15" id="formControlSelect1"
+								name="breed_type">
+							<option value="">種類</option>
+							{% for breed in breeds %}
+								<option value="{{ breed.id }}" {% if params.breed_type is defined and params.breed_type== breed.id
+								%} selected {% endif %}>{{ breed.breedsName }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="col-md-3 select-container">
+						<select class="form-control bg-primary w-100 p-2 h-15 mb-2" id="formControlSelect3" name="region">
+							<option value="">都道府県</option>
+							{% for region in regions %}
+								<option value="{{ region.id }}" {% if params.region is defined and params.region == region.id
+								%} selected {% endif %}>{{ region.name }}</option>
+							{% endfor %}
+						</select>
+						<label><input type="checkbox" name="adjacent" value="1" {% if params.adjacent is defined and params.adjacent == 1
+							%} checked {% endif %}> 隣接する都道府県も検索</label>
+					</div>
+                    <div class="col-md-3">
+                        <input type="text" id="breeder_house_name" placeholder="ブリーダー名" class="form-control bg-primary w-80 p-2 h-15">
+                    </div>
+				</div>
+				<div class="m-2 p-2"></div>
+				<div class="row">
+					<div class="col-sm-6" style="margin: 0 auto;">
+						<a href="#">
+							<button class="btn basic-btn accent-btn bg-accent text-align-center">検索する</button>
+						</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+    <div class="m-4 p-4"></div>
+    <div class="row">
+        <div class="col-12 sub-title">
+            <h2 class="font-weight-500">検索結果</h2>
+        </div>
+    </div>
+    <div class="m-2 p-2"></div>
+    <div class="row">
+        <div class="breeder-img col-sm-4">
+            <img src="/html/template/default/assets/img/breeder-thumbnail.png" class="w-100 mb-4 mb-sm-0">
+        </div>
+        <div class="breeder-info col-sm-8">
+            <h3 class="font-weight-500 color-gray-500">田中 太郎ブリーダー</h3>
+            <div class="m-1 p-1"></div>
+            <div class="d-flex">
+                <h6>総合評価</h6>
+                <div class="m-1 p-1"></div>
+                <img src="/html/template/default/assets/img/star-icon.svg">
+                <div class="m-1 p-1"></div>
+                <h6>5.00</h6>
+            </div>
+            <div class="m-1 p-1"></div>
+            <div class="d-flex">
+                <h6>動物取扱業登録番号：</h6>
+                <h6>動東第000号</h6>
+                <div class="m-1 p-1"></div>
+                <h6>登録：</h6>
+                <h6>2021/00/00</h6>
+            </div>
+            <div class="m-1 p-1"></div>
+            <div class="d-flex">
+                <h6>有効期限：</h6>
+                <h6>2021/00/00</h6>
+                <div class="m-1 p-1"></div>
+                <h6>動物取扱責任者：</h6>
+                <h6>田中 太郎</h6>
+            </div>
+            <div class="m-1 p-1"></div>
+            <div class="d-flex">
+                <h6>犬舎所在地：</h6>
+                <h6>愛知県豊橋市</h6>
+            </div>
+            <div class="m-1 p-1"></div>
+            <div class="d-flex">
+                <h6>犬舎見学：</h6>
+                <h6>見学OK</h6>
+            </div>
+            <div class="m-2 p-2"></div>
+            <a href="{{ url('breeder_detail', {'breeder_id': 1}) }}">
+                <h4 class="color-adoption">ブリーダー詳細ページへ</h4>
+            </a>
+        </div>
+    </div>
+    <div class="m-2 p-2"></div>
+    <div class="row">
+        <div class="col-12">
+            <p>
+                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                テキストが入ります。テキストが入ります。
+            </p>
+        </div>
+    </div>
+</body>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
