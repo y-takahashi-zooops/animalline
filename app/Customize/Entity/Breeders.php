@@ -70,7 +70,7 @@ class Breeders
     private $breeder_address;
 
     /**
-     * @ORM\Column(name="breeder_rank", type="decimal",  precision=2, scale=1)
+     * @ORM\Column(name="breeder_rank", type="decimal",  nullable=true, precision=2, scale=1,  options={"default":0})
      */
     private $breeder_rank;
 
