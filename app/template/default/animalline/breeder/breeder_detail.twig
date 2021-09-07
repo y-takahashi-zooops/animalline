@@ -3,7 +3,7 @@
 
 {% block main %}
     <div class="sub-title d-sm-flex align-items-center">
-        <h2>田中 太郎ブリーダー</h2>
+        <h2>{{ breeder.licenseHouseName }}ブリーダー</h2>
         <div class="mr-5"></div>
         <div class="d-block d-sm-none m-2 p-2"></div>
         <h3>総合評価</h3>
@@ -52,7 +52,7 @@
                 {% set breederHouseDog = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
                 {% set breederHouseCat = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
                 {% if (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
-                    <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' ~ ' & ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
+                    <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' ~ ' ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
                 {% elseif (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
                     <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' }}</h4>
                 {% else %}
