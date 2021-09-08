@@ -65,12 +65,12 @@ class BreederContactHeader
     private $booking_request;
 
     /**
-     * @ORM\Column(name="send_date", type="datetime")
+     * @ORM\Column(name="send_date", type="datetime", nullable=false)
      */
     private $send_date;
 
     /**
-     * @ORM\Column(name="last_message_date", type="datetime", nullable=false)
+     * @ORM\Column(name="last_message_date", type="datetime", nullable=true)
      */
     private $last_message_date;
 
