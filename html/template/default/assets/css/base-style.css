@@ -602,7 +602,6 @@ th, td {
 
 /* 取引メッセージ画面 */
 
-
 /* 吹き出し */
 .balloon-left {
     position: relative;
@@ -613,7 +612,6 @@ th, td {
     max-width: 100%;
     font-size: 16px;
     background: #FFF;
-    border: solid 3px #FFAC69;
     box-sizing: border-box;
   }
   
@@ -635,7 +633,6 @@ th, td {
     left: -30px;
     margin-top: -14px;
     border: 14px solid transparent;
-    border-right: 14px solid #FFAC69;
     z-index: 1;
   }
   
@@ -653,7 +650,6 @@ th, td {
     max-width: 100%;
     font-size: 16px;
     background: #FFF;
-    border: solid 3px #FFAC69;
     box-sizing: border-box;
   }
   
@@ -675,7 +671,6 @@ th, td {
     right: -30px;
     margin-top: -14px;
     border: 14px solid transparent;
-    border-left: 14px solid #FFAC69;
     z-index: 1;
   }
   
@@ -693,7 +688,8 @@ th, td {
 }
 
 /* 保護団体イメージ */
-.adoption-img {
+.adoption-img,
+.breeder-img {
     display: flex;
     align-items: center;
     padding-left: 0;
@@ -759,4 +755,16 @@ th, td {
 	font-weight: 900;
 	content: '\f002';
 	margin-right: 5px;
+}
+#review_recommend_level {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+#review_recommend_level label {
+    position: relative;
+    bottom: 18px;
+    left: 20px;
+    line-height: 0;
 }

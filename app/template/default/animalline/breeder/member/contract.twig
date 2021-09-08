@@ -1,0 +1,115 @@
+{% set site_type = 'breeder' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+
+    <div class="ec-registerRole">
+        <div class="ec-pageHeader">
+            <h1>ブリーダーを評価</h1>
+        </div>
+        <div class="ec-off1Grid">
+            <div class="ec-off1Grid__cell">
+                <form method="post" action="#">
+                    <p class="ec-para-nomal">
+                        お取引をしたブリーダーについて、お客様のご感想をお聞かせください。
+                    </p>
+                    <div class="ec-borderedDefs">
+                        <dl>
+                            <dt>
+                                <label class="ec-label required">
+                                    おすすめレベル
+                                                                    
+                                </label>
+                                <span class="ec-required">
+                                    必須
+                                                                    
+                                </span>
+                            </dt>
+                            <dd>
+                                <div class="ec-radio">
+                                    <div id="review_recommend_level">
+                                        <input type="radio" id="review_recommend_level_0" name="review[recommend_level]" required="required" value="5" />
+                                        <label for="review_recommend_level_0">
+                                            <span>
+                                                ★★★★★
+                                            </span>
+                                        </label>
+                                        <input type="radio" id="review_recommend_level_1" name="review[recommend_level]" required="required" value="4" />
+                                        <label for="review_recommend_level_1">
+                                            <span>
+                                                ★★★★
+                                            </span>
+                                        </label>
+                                        <input type="radio" id="review_recommend_level_2" name="review[recommend_level]" required="required" value="3" />
+                                        <label for="review_recommend_level_2">
+                                            <span>
+                                                ★★★
+                                            </span>
+                                        </label>
+                                        <input type="radio" id="review_recommend_level_3" name="review[recommend_level]" required="required" value="2" />
+                                        <label for="review_recommend_level_3">
+                                            <span>
+                                                ★★
+                                            </span>
+                                        </label>
+                                        <input type="radio" id="review_recommend_level_4" name="review[recommend_level]" required="required" value="1" />
+                                        <label for="review_recommend_level_4">
+                                            <span>
+                                                ★
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                <label class="ec-label required" for="review_comment">コメント</label>
+                                <span class="ec-required">必須</span>
+                            </dt>
+                            <dd>
+                                <div class="ec-input">
+                                    <textarea id="review_comment" name="review[comment]" required="required" maxlength="3000"></textarea>
+
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                <label class="ec-label" for="breeders_thumbnail_path">画像</label>
+                            </dt>
+                            <dd>
+                                <div class="media-body">
+                                    <img id="img_thumbnail"
+                                         class="img_preview mb-2 hidden"
+                                         src="" alt="..."
+                                         style="width: 200px; border: 1px solid #ddd;"/>
+                                    <input type="file"  id="breeders_thumbnail_path" name="breeders[thumbnail_path]" accept="image/*" style="display:none;" />
+                                    
+                                    <input type="hidden" name="thumbnail_path" id="breeder_src_path">
+                                </div>
+                                <a class="btn btn-ec-regular mr-2" onclick="$('#breeders_thumbnail_path').click()">
+                                    ファイルを選択
+                                </a>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="ec-registerRole__actions">
+                        <div class="ec-off4Grid">
+                            <div class="ec-off4Grid__cell">
+                                {# <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">確認ページへ</button> #}
+                                <a class="ec-blockBtn--action" href="{{url('breeder_contract_confirm') }}">確認ページへ</a>
+                                <a class="ec-blockBtn--cancel" href="{{url('breeder_message', {'id': 1}) }}">戻る</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
