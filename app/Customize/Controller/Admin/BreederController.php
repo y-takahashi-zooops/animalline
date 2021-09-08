@@ -280,16 +280,17 @@ class BreederController extends AbstractController
         $Customer = $this->customerRepository->find($breederId);
         if (!$Customer) throw new NotFoundHttpException();
 
+        $comment = $request->get('examination_result_comment');
         $data = [
-            'name' => $Customer->getName01() . ' ' . $Customer->getName02(),
-            'examination_comment' => '<span id="ex-comment">' . $request->get('examination_result_comment') . '</span>'
+            'name' => "{$Customer->getName01()} {$Customer->getName02()}",
+            'examination_comment' => "<span id='ex-comment'>{$comment}</span>"
         ];
 
         if ($request->isMethod('POST')) {
             $result = (int)$request->get('examination_result');
             $examination->setExaminationResult($result)
-                ->setExaminationResultComment($request->get('examination_result_comment'));
-            $data['examination_comment'] = $request->get('examination_result_comment');
+                ->setExaminationResultComment($comment);
+            $data['examination_comment'] = $comment;
             if ($result === AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
                 $this->mailService->sendBreederExaminationMailAccept($Customer, $data);
                 $Customer->setIsBreeder(1);

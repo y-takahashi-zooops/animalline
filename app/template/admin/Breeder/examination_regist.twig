@@ -31,19 +31,13 @@ file that was distributed with this source code.
 
 <script>
     const RESULT_OK = 1;
-    result = document.getElementById('examination_result').value
-    if (result == RESULT_OK) $('#ex-ok').show(); else $('#ex-ng').show();
+    if ($('examination_result').val() == RESULT_OK) $('#ex-ok').show();
+    else $('#ex-ng').show();
 
     $('#examination_result').on('change', function () {
-        const result = this.value;
-        $('#examination_result_comment').prop('disabled', result == RESULT_OK);
-        if (result == RESULT_OK) {
-            $('#ex-ng').hide();
-            $('#ex-ok').show();
-        } else {
-            $('#ex-ok').hide();
-            $('#ex-ng').show();
-        }
+        $('#examination_result_comment').prop('disabled', this.value == RESULT_OK);
+        $('#ex-ng').toggle();
+        $('#ex-ok').toggle();
     });
 
     $("#confirm").on('click', function() {
