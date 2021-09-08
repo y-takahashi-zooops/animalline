@@ -162,10 +162,10 @@ class BreederMemberController extends AbstractController
     /**
      * 取引メッセージ一覧
      * 
-     * @Route("/breeder/member/all_message", name="breeder_get_message_mypage")
+     * @Route("/breeder/member/all_message", name="breeder_all_message")
      * @Template("animalline/breeder/member/breeder_message.twig")
      */
-    public function get_message_mypage(Request $request)
+    public function all_message(Request $request)
     {
         $rootMessages = $this->breederContactsRepository
             ->findBy(['Customer' => $this->getUser(), 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
@@ -181,6 +181,55 @@ class BreederMemberController extends AbstractController
             'rootMessages' => $rootMessages,
             'lastReplies' => $lastReplies
         ]);
+    }
+
+    /**
+     * 取引メッセージ画面
+     * 
+     * @Route("/breeder/member/message/{id}", name="breeder_message")
+     * @Template("animalline/breeder/member/message.twig")
+     */
+    public function message(Request $request)
+    {
+        $user = $this->getUser();
+        $Customer = $this->customerRepository->find($user);
+
+        return[
+            'Customer' => $Customer,
+        ];
+    }
+
+    /**
+     * 成約画面
+     * 
+     * @Route("/breeder/member/contract", name="breeder_contract")
+     * @Template("animalline/breeder/member/contract.twig")
+     */
+    public function contract(Request $request)
+    {
+        return[];
+    }
+
+    /**
+     * 成約確認画面
+     * 
+     * @Route("/breeder/member/contract/confirm", name="breeder_contract_confirm")
+     * @Template("animalline/breeder/member/contract_confirm.twig")
+     */
+    public function contract_confirm(Request $request)
+    {
+        return[];
+    }
+
+    /**
+     * 成約完了画面
+     * 
+     * @Route("/breeder/member/contract/complete", name="breeder_contract_complete")
+     * @Template("animalline/breeder/member/contract_complete.twig")
+     */
+    public function contract_complete(Request $request)
+    {
+        return[];
     }
 
     /**
