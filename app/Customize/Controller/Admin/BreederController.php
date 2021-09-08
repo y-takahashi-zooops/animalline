@@ -285,7 +285,7 @@ class BreederController extends AbstractController
         }
 
         $data = [
-            'name' => $customer->getName01() . ' ' . $customer->getName02(),
+            'name' => "{$customer->getName01()} {$customer->getName02()}",
             'examination_comment' => $examination->getExaminationResultComment()
         ];
 
