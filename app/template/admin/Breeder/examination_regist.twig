@@ -17,23 +17,36 @@ file that was distributed with this source code.
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+    <style>
+        #ex-ok, #ex-ng {
+            white-space: pre-wrap;
+            display: none;
+        }
+    </style>
 {% endblock stylesheet %}
 
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+    result = document.getElementById('examination_result').value
+    if (result == 1) $('#ex-ok').show(); else $('#ex-ng').show();
+
     $('#examination_result').change(function () {
         result = document.getElementById('examination_result').value
-
         if( result ==  1){
             $('#examination_result_comment').attr('disabled', true);
+            $('#ex-ng').hide();
+            $('#ex-ok').show();
         } else {
             $('#examination_result_comment').attr('disabled', false);
+            $('#ex-ok').hide();
+            $('#ex-ng').show();
         }
     });
 
     document.getElementById("confirm").onclick = function() {
+        $('#ex-comment').text($('#examination_result_comment').val());
         $('#modal').modal('show');
     };
 

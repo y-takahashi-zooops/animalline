@@ -26,11 +26,12 @@ file that was distributed with this source code.
                     <td class="container-padding content" align="left" style="border-collapse:collapse;padding-left:24px;padding-right:24px;padding-top:12px;padding-bottom:12px;background-color:#ffffff;">
                         <br>
                         <div class="mail_title" style="font-family:Helvetica, Arial, sans-serif;font-size:18px;font-weight:600;color:#374550;">
-                            メールタイトル
+                            審査結果通知
                         </div>
                         <br>
-                        <div class="mail-detail" style="font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;text-align:left;color:#333333;">                            
-                            メール本文<br/>
+                        <div class="mail-detail" style="font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;text-align:left;color:#333333;">
+                            <pre id="ex-ok">{{ include('Mail/breeder_examination_ok.twig') }}</pre>
+                            <pre id="ex-ng">{{ include('Mail/breeder_examination_ng.twig') }}</pre>
                         </div>
                     </td>
                 </tr>
