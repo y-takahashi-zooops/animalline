@@ -45,62 +45,62 @@ class BreederContactHeader
     private $Pet;
 
     /**
-     * @ORM\Column(type="smallint", nullable=false)
+     * @ORM\Column(name="contact_type", type="smallint", nullable=false)
      */
     private $contact_type;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="contact_title", type="string", length=255, nullable=true)
      */
     private $contact_title;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="contact_description", type="text", nullable=true)
      */
     private $contact_description;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="booking_request", type="text", nullable=true)
      */
     private $booking_request;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="send_date", type="datetime")
      */
     private $send_date;
 
     /**
-     * @ORM\Column(type="datetime", nullable=false)
+     * @ORM\Column(name="last_message_date", type="datetime", nullable=false)
      */
     private $last_message_date;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0}, nullable=false)
+     * @ORM\Column(name="contract_status", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $contract_status;
 
     /**
-     * @ORM\Column(type="string", length=255, options={"default" = 0}, nullable=true)
+     * @ORM\Column(name="sendoff_reason", type="string", length=255, options={"default" = 0}, nullable=true)
      */
     private $sendoff_reason;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0}, nullable=false)
+     * @ORM\Column(name="customer_check", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $customer_check;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0}, nullable=false)
+     * @ORM\Column(name="breeder_check", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $breeder_check;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 1}, nullable=false)
+     * @ORM\Column(name="breeder_new_msg", type="smallint", options={"default" = 1}, nullable=false)
      */
     private $breeder_new_msg;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0}, nullable=false)
+     * @ORM\Column(name="customer_new_msg", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $customer_new_msg;
 

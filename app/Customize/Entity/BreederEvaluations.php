@@ -29,22 +29,22 @@ class BreederEvaluations
 
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="evaluation_value", type="integer", nullable=false)
      */
     private $evaluation_value;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="evaluation_title", type="string", length=255, nullable=false)
      */
     private $evaluation_title;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="evaluation_message", type="text", nullable=false)
      */
     private $evaluation_message;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="image_path", type="string", length=255, nullable=true)
      */
     private $image_path;
 
