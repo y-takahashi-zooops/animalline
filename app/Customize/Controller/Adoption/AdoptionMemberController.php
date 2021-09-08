@@ -28,7 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
-use Customize\Form\Type\Adoption\ConservationContactType;
+use Customize\Form\Type\ConservationContactType;
 
 class AdoptionMemberController extends AbstractController
 {

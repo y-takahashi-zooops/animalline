@@ -11,7 +11,7 @@ use Customize\Form\Type\BreederExaminationInfoType;
 use Customize\Form\Type\Breeder\BreederHouseType;
 use Customize\Entity\Breeders;
 use Customize\Entity\BreederContacts;
-use Customiz\Entity\BreederContactHeader;
+use Customize\Entity\BreederContactHeader;
 use Customize\Entity\BreederHouse;
 use Customize\Entity\BreederExaminationInfo;
 use Customize\Repository\BreederPetsRepository;

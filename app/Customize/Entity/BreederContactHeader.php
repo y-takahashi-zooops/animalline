@@ -70,39 +70,39 @@ class BreederContactHeader
     private $send_date;
 
     /**
-     * @ORM\Column(name="last_message_date", type="datetime", nullable=false)
+     * @ORM\Column(name="last_message_date", type="datetime", nullable=true)
      */
     private $last_message_date;
 
     /**
      * @ORM\Column(name="contract_status", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $contract_status;
+    private $contract_status = 0;
 
     /**
      * @ORM\Column(name="sendoff_reason", type="string", length=255, options={"default" = 0}, nullable=true)
      */
-    private $sendoff_reason;
+    private $sendoff_reason = 0;
 
     /**
      * @ORM\Column(name="customer_check", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $customer_check;
+    private $customer_check = 0;
 
     /**
      * @ORM\Column(name="breeder_check", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $breeder_check;
+    private $breeder_check = 0;
 
     /**
      * @ORM\Column(name="breeder_new_msg", type="smallint", options={"default" = 1}, nullable=false)
      */
-    private $breeder_new_msg;
+    private $breeder_new_msg = 1;
 
     /**
      * @ORM\Column(name="customer_new_msg", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $customer_new_msg;
+    private $customer_new_msg = 0;
 
     /**
      * @var \DateTime

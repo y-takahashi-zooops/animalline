@@ -81,32 +81,32 @@ class ConservationContactHeader
     /**
      * @ORM\Column(name="contract_status", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $contract_status;
+    private $contract_status = 0;
 
     /**
      * @ORM\Column(name="sendoff_reason", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $sendoff_reason;
+    private $sendoff_reason = 0;
 
     /**
      * @ORM\Column(name="customer_check", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $customer_check;
+    private $customer_check = 0;
 
     /**
      * @ORM\Column(name="conservation_check", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $conservation_check;
+    private $conservation_check = 0;
 
     /**
      * @ORM\Column(name="conservation_new_msg", type="smallint", options={"default" = 1}, nullable=false)
      */
-    private $conservation_new_msg;
+    private $conservation_new_msg = 1;
 
     /**
      * @ORM\Column(name="customer_new_msg", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $customer_new_msg;
+    private $customer_new_msg = 0;
 
     /**
      * @var \DateTime
