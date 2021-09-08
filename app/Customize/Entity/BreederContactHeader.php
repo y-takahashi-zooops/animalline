@@ -65,7 +65,7 @@ class BreederContactHeader
     private $booking_request;
 
     /**
-     * @ORM\Column(name="send_date", type="datetime")
+     * @ORM\Column(name="send_date", type="datetime", nullable=false)
      */
     private $send_date;
 
