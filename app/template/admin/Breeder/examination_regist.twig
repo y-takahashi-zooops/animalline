@@ -72,8 +72,8 @@ file that was distributed with this source code.
                             </div>
                             <div class="col-10">
                                 <textarea id="examination_result_comment" name="examination_result_comment" class="form-control" rows="15"
-                                    {{ examination.examinationResult == 1 ? 'disabled' : '' }}
-                                    >{{ examination.examinationResult == 1 ? '審査に関する情報のお問い合わせにはお答えできません' : examination.examinationResultComment }}</textarea>
+                                    {{ examination.examinationResult != 2 ? 'disabled' : '' }}
+                                    >{{ examination.examinationResult != 2 ? '審査に関する情報のお問い合わせにはお答えできません' : examination.examinationResultComment }}</textarea>
                             </div>
                         </div>
                     </div>
