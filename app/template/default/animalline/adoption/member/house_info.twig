@@ -39,7 +39,10 @@
                         </dl>
                         <dl>
                             <dt>
-                                {{ form_label(form.address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                <div>
+                                    {{ form_label(form.address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                </div>    
+                                <button class="btn btn-ec-regular mb-2" id="copy" type="button">保護団体情報コピー</button>
                             </dt>
                             <dd>
                                 <div class="ec-zipInput{{ has_errors(form.conservation_house_house_zip) ? ' error' }}">
@@ -56,18 +59,22 @@
                                            target="_blank"><span>郵便番号検索</span></a>
                                     </div>
                                     {{ form_errors(form.conservation_house_house_zip) }}
+                                    <input type="hidden" id="Zip" value={{conservation.zip}}>
                                 </div>
                                 <div class="ec-select{{ has_errors(form.address.pref) ? ' error' }}">
                                     {{ form_widget(form.address.pref) }}
                                     {{ form_errors(form.address.pref) }}
+                                    <input type="hidden" id="Pref" value={{conservation.PrefId.Id}}>
                                 </div>
                                 <div class="ec-input{{ has_errors(form.address.conservation_house_city) ? ' error' }}">
                                     {{ form_widget(form.address.conservation_house_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
                                     {{ form_errors(form.address.conservation_house_city) }}
+                                    <input type="hidden" id="City" value={{conservation.city}}>
                                 </div>
                                 <div class="ec-input{{ has_errors(form.address.conservation_house_address) ? ' error' }}">
                                     {{ form_widget(form.address.conservation_house_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
                                     {{ form_errors(form.address.conservation_house_address) }}
+                                    <input type="hidden" id="Address" value={{conservation.address}}>
                                 </div>
                             </dd>
                         </dl>
@@ -139,5 +146,15 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+
+<script>
+    document.getElementById("copy").onclick = function() {
+        // ブリーダー情報をライセンス情報にコピー
+        document.getElementById("conservation_house_conservation_house_house_zip").value = document.getElementById("Zip").value 
+        document.getElementById("conservation_house_address_pref").value = document.getElementById("Pref").value 
+        document.getElementById("conservation_house_address_conservation_house_city").value = document.getElementById("City").value 
+        document.getElementById("conservation_house_address_conservation_house_address").value = document.getElementById("Address").value 
+    };
+</script>
 {% endblock %}
         

@@ -251,6 +251,15 @@ class BreederController extends AbstractController
     }
 
     /**
+     * @Route("/%eccube_admin_route%/breeder/examination/regist/{id}", name="admin_breeder_examination_regist", requirements={"id" = "\d+"})
+     * @Template("@admin/Breeder/examination_regist.twig")
+     */
+    public function Examination_regist(Request $request)
+    {
+        return;
+    }
+
+    /**
      * @Route("/%eccube_admin_route%/breeder/pet/list/{id}", name="admin_breeder_pet_list", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/pet/index.twig")
      */
