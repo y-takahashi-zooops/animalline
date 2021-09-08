@@ -70,6 +70,11 @@ class Breeders
     private $breeder_address;
 
     /**
+     * @ORM\Column(name="breeder_rank", type="decimal", nullable=false, precision=2, scale=1,  options={"default":0})
+     */
+    private $breeder_rank;
+
+    /**
      * @ORM\Column(name="license_name", type="string", length=255, nullable=true)
      */
     private $license_name;
@@ -176,9 +181,9 @@ class Breeders
     private $BreederPets;
 
     /**
-     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="Breeder")
+     * @ORM\OneToMany(targetEntity=BreederContactHeader::class, mappedBy="Breeder")
      */
-    private $BreederContacts;
+    private $BreederContactHeader;
 
     /**
      * @ORM\OneToMany(targetEntity=BreederExaminationInfo::class, mappedBy="Breeder")
@@ -193,7 +198,7 @@ class Breeders
     public function __construct()
     {
         $this->BreederPets = new ArrayCollection();
-        $this->BreederContacts = new ArrayCollection();
+        $this->BreederContactHeader = new ArrayCollection();
         $this->BreederExaminationInfos = new ArrayCollection();
         $this->BreederHouses = new ArrayCollection();
     }
@@ -321,6 +326,18 @@ class Breeders
     public function setBreederAddress(?string $breeder_address): self
     {
         $this->breeder_address = $breeder_address;
+
+        return $this;
+    }
+
+    public function getBreederRank()
+    {
+        return $this->breeder_rank;
+    }
+
+    public function setBreederRank($breeder_rank)
+    {
+        $this->breeder_rank = $breeder_rank;
 
         return $this;
     }
@@ -568,29 +585,29 @@ class Breeders
     }
 
     /**
-     * @return Collection|BreederContacts[]
+     * @return Collection|BreederContactHeader[]
      */
-    public function getBreederContacts(): Collection
+    public function getBreederContactHeader(): Collection
     {
-        return $this->BreederContacts;
+        return $this->BreederContactHeader;
     }
 
-    public function addBreederContact(BreederContacts $breederContact): self
+    public function addBreederContactHeader(BreederContactHeader $breederContactHeader): self
     {
-        if (!$this->BreederContacts->contains($breederContact)) {
-            $this->BreederContacts[] = $breederContact;
-            $breederContact->setBreeder($this);
+        if (!$this->BreederContactHeader->contains($breederContactHeader)) {
+            $this->BreederContactHeader[] = $breederContactHeader;
+            $breederContactHeader->setBreeder($this);
         }
 
         return $this;
     }
 
-    public function removeBreederContact(BreederContacts $breederContact): self
+    public function removeBreederContactHeader(BreederContactHeader $breederContactHeader): self
     {
-        if ($this->BreederContacts->removeElement($breederContact)) {
+        if ($this->BreederContactHeader->removeElement($breederContactHeader)) {
             // set the owning side to null (unless already changed)
-            if ($breederContact->getBreeder() === $this) {
-                $breederContact->setBreeder(null);
+            if ($breederContactHeader->getBreeder() === $this) {
+                $breederContactHeader->setBreeder(null);
             }
         }
 

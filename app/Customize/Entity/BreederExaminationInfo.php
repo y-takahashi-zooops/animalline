@@ -195,6 +195,16 @@ class BreederExaminationInfo
     private $input_status = 0;
 
     /**
+     * @ORM\Column(name="examination_result", type="smallint", nullable=false, options={"default" = 0})
+     */
+    private $examination_result = 0;
+
+    /**
+     * @ORM\Column(name="examination_result_comment", type="text", nullable=true)
+     */
+    private $examination_result_comment;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
@@ -622,6 +632,30 @@ class BreederExaminationInfo
     public function setInputStatus(int $input_status): self
     {
         $this->input_status = $input_status;
+
+        return $this;
+    }
+
+    public function getExaminationResult(): ?int
+    {
+        return $this->examination_result;
+    }
+
+    public function setExaminationResult(int $examination_result): self
+    {
+        $this->examination_result = $examination_result;
+
+        return $this;
+    }
+
+    public function getExaminationResultComment(): ?string
+    {
+        return $this->examination_result_comment;
+    }
+
+    public function setExaminationResultComment(?string $examination_result_comment): self
+    {
+        $this->examination_result_comment = $examination_result_comment;
 
         return $this;
     }

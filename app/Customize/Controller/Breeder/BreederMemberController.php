@@ -11,6 +11,7 @@ use Customize\Form\Type\BreederExaminationInfoType;
 use Customize\Form\Type\Breeder\BreederHouseType;
 use Customize\Entity\Breeders;
 use Customize\Entity\BreederContacts;
+use Customize\Entity\BreederContactHeader;
 use Customize\Entity\BreederHouse;
 use Customize\Entity\BreederExaminationInfo;
 use Customize\Repository\BreederPetsRepository;
@@ -485,7 +486,7 @@ class BreederMemberController extends AbstractController
             throw new HttpException\NotFoundHttpException();
         }
 
-        $contact = new BreederContacts();
+        $contact = new BreederContactHeader();
         $builder = $this->formFactory->createBuilder(BreederContactType::class, $contact);
         $event = new EventArgs(
             [
@@ -511,9 +512,7 @@ class BreederMemberController extends AbstractController
                     );
 
                 case 'complete':
-                    $contact->setParentMessageId(AnilineConf::ROOT_MESSAGE_ID)
-                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
-                        ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
+                    $contact
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
                         ->setBreeder($pet->getBreeder())

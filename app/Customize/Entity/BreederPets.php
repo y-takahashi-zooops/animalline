@@ -171,15 +171,21 @@ class BreederPets
     private $PetsFavorites;
 
     /**
-     * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="pet_id")
+     * @ORM\OneToMany(targetEntity=BreederContactHeader::class, mappedBy="pet_id")
      */
-    private $BreederContacts;
+    private $BreederContactHeader;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BreederEvaluations::class, mappedBy="pet_id")
+     */
+    private $BreederEvaluations;
 
     public function __construct()
     {
         $this->BreederPetImages = new ArrayCollection();
         $this->PetsFavorites = new ArrayCollection();
-        $this->BreederContacts = new ArrayCollection();
+        $this->BreederContactHeader = new ArrayCollection();
+        $this->BreederEvaluations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -510,21 +516,29 @@ class BreederPets
     }
 
     /**
-     * @return Collection|BreederContacts[]
+     * @return Collection|BreederContactHeader[]
      */
-    public function getBreederContacts(): Collection
+    public function getBreederContactHeader(): Collection
     {
-        return $this->BreederContacts;
+        return $this->BreederContactHeader;
     }
 
-    public function addBreederContact(BreederContacts $breederContact): self
+    public function addBreederContactHeader(BreederContactHeader $breederContactHeader): self
     {
-        if (!$this->BreederContacts->contains($breederContact)) {
-            $this->BreederContacts[] = $breederContact;
-            $breederContact->setPet($this);
+        if (!$this->BreederContactHeader->contains($breederContactHeader)) {
+            $this->BreederContactHeader[] = $breederContactHeader;
+            $breederContactHeader->setPet($this);
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|BreederEvaluations[]
+     */
+    public function getBreederEvaluations(): Collection
+    {
+        return $this->BreederEvaluations;
     }
 
     public function getFavoriteCount(): ?int
@@ -538,12 +552,12 @@ class BreederPets
         return $this;
     }
 
-    public function removeBreederContact(BreederContacts $breederContact): self
+    public function removeBreederContactHeader(BreederContactHeader $breederContactHeader): self
     {
-        if ($this->BreederContacts->removeElement($breederContact)) {
+        if ($this->BreederContactHeader->removeElement($breederContactHeader)) {
             // set the owning side to null (unless already changed)
-            if ($breederContact->getPet() === $this) {
-                $breederContact->setPet(null);
+            if ($breederContactHeader->getPet() === $this) {
+                $breederContactHeader->setPet(null);
             }
         }
 

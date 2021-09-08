@@ -22,45 +22,15 @@ class ConservationContacts
     private $id;
 
     /**
-     * @var \Eccube\Entity\Customer
-     *
-     * @ORM\ManyToOne(targetEntity="Eccube\Entity\Customer")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=false)
-     * })
+     * @ORM\ManyToOne(targetEntity=ConservationContactHeader::class, inversedBy="ConservationContacts")
+     * @ORM\JoinColumn(name="header_id", nullable=false)
      */
-    private $Customer;
+    private $ConservationHeader;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="ConservationContacts")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="conservation_id", referencedColumnName="id", columnDefinition="INT DEFAULT 0 NOT NULL")
-     * })
-     */
-    private $Conservation;
-
-    /**
-     * @ORM\Column(name="message_from", type="smallint")
+     * @ORM\Column(name="message_from", type="smallint", nullable=false)
      */
     private $message_from;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=ConservationPets::class)
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="pet_id", referencedColumnName="id", nullable=false)
-     * })
-     */
-    private $Pet;
-
-    /**
-     * @ORM\Column(name="contact_type", type="smallint")
-     */
-    private $contact_type;
-
-    /**
-     * @ORM\Column(name="contact_title", type="string", length=255, nullable=true)
-     */
-    private $contact_title;
 
     /**
      * @ORM\Column(name="contact_description", type="text", nullable=true)
@@ -68,37 +38,9 @@ class ConservationContacts
     private $contact_description;
 
     /**
-     * @ORM\Column(name="booking_request", type="text", nullable=true)
-     */
-    private $booking_request;
-
-    /**
-     * @ORM\Column(name="parent_message_id", type="integer", options={"default" = 0})
-     */
-    private $parent_message_id;
-
-    /**
-     * @ORM\Column(name="send_date", type="datetime")
+     * @ORM\Column(name="send_date", type="datetime", nullable=false)
      */
     private $send_date;
-
-    /**
-     * @ORM\Column(name="is_response", type="smallint", options={"default" = 0})
-     */
-    private $is_response;
-
-    /**
-     * @ORM\Column(name="contract_status", type="smallint", options={"default" = 0}, nullable=false)
-     */
-    private $contract_status = 0;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=SendoffReasons::class, inversedBy="ConservationContacts")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="reason", referencedColumnName="id", nullable=true)
-     * })
-     */
-    private $Reason;
 
     /**
      * @var \DateTime
@@ -119,38 +61,14 @@ class ConservationContacts
         return $this->id;
     }
 
-    /**
-     * Set customer.
-     *
-     * @param \Eccube\Entity\Customer|null $customer
-     *
-     * @return ConservationContacts
-     */
-    public function setCustomer(\Eccube\Entity\Customer $customer = null)
+    public function getConservationHeader(): ?ConservationContactHeader
     {
-        $this->Customer = $customer;
-
-        return $this;
+        return $this->ConservationHeader;
     }
 
-    /**
-     * Get customer.
-     *
-     * @return \Eccube\Entity\Customer|null
-     */
-    public function getCustomer()
+    public function setConservationHeader(?ConservationContactHeader $ConservationHeader): self
     {
-        return $this->Customer;
-    }
-
-    public function getConservation(): ?Conservations
-    {
-        return $this->Conservation;
-    }
-
-    public function setConservation(?Conservations $conservation): self
-    {
-        $this->Conservation = $conservation;
+        $this->ConservationHeader = $ConservationHeader;
 
         return $this;
     }
@@ -167,42 +85,6 @@ class ConservationContacts
         return $this;
     }
 
-    public function getPet(): ?ConservationPets
-    {
-        return $this->Pet;
-    }
-
-    public function setPet(?ConservationPets $pet): self
-    {
-        $this->Pet = $pet;
-
-        return $this;
-    }
-
-    public function getContactType(): ?int
-    {
-        return $this->contact_type;
-    }
-
-    public function setContactType(int $contact_type): self
-    {
-        $this->contact_type = $contact_type;
-
-        return $this;
-    }
-
-    public function getContactTitle(): ?string
-    {
-        return $this->contact_title;
-    }
-
-    public function setContactTitle(?string $contact_title): self
-    {
-        $this->contact_title = $contact_title;
-
-        return $this;
-    }
-
     public function getContactDescription(): ?string
     {
         return $this->contact_description;
@@ -215,30 +97,6 @@ class ConservationContacts
         return $this;
     }
 
-    public function getBookingRequest(): ?string
-    {
-        return $this->booking_request;
-    }
-
-    public function setBookingRequest(?string $booking_request): self
-    {
-        $this->booking_request = $booking_request;
-
-        return $this;
-    }
-
-    public function getParentMessageId(): ?int
-    {
-        return $this->parent_message_id;
-    }
-
-    public function setParentMessageId(int $parent_message_id): self
-    {
-        $this->parent_message_id = $parent_message_id;
-
-        return $this;
-    }
-
     public function getSendDate(): ?\DateTimeInterface
     {
         return $this->send_date;
@@ -247,42 +105,6 @@ class ConservationContacts
     public function setSendDate(\DateTimeInterface $send_date): self
     {
         $this->send_date = $send_date;
-
-        return $this;
-    }
-
-    public function getIsResponse(): ?int
-    {
-        return $this->is_response;
-    }
-
-    public function setIsResponse(int $is_response): self
-    {
-        $this->is_response = $is_response;
-
-        return $this;
-    }
-
-    public function getContractStatus(): ?int
-    {
-        return $this->contract_status;
-    }
-
-    public function setContractStatus(int $contract_status): self
-    {
-        $this->contract_status = $contract_status;
-
-        return $this;
-    }
-
-    public function getReason(): ?SendoffReasons
-    {
-        return $this->Reason;
-    }
-
-    public function setReason(?SendoffReasons $Reason): self
-    {
-        $this->Reason = $Reason;
 
         return $this;
     }

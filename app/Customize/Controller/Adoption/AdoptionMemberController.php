@@ -10,6 +10,7 @@ use Customize\Form\Type\ConservationsType;
 use Customize\Form\Type\ConservationHouseType;
 use Customize\Entity\Conservations;
 use Customize\Entity\ConservationContacts;
+use Customize\Entity\ConservationContactHeader;
 use Customize\Entity\ConservationsHouse;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
@@ -27,7 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
-use Customize\Form\Type\Adoption\ConservationContactType;
+use Customize\Form\Type\ConservationContactType;
 
 class AdoptionMemberController extends AbstractController
 {
@@ -490,7 +491,7 @@ class AdoptionMemberController extends AbstractController
             throw new HttpException\NotFoundHttpException();
         }
 
-        $contact = new ConservationContacts();
+        $contact = new ConservationContactHeader();
         $builder = $this->formFactory->createBuilder(ConservationContactType::class, $contact);
         $event = new EventArgs(
             [
@@ -516,9 +517,7 @@ class AdoptionMemberController extends AbstractController
                     );
 
                 case 'complete':
-                    $contact->setParentMessageId(AnilineConf::ROOT_MESSAGE_ID)
-                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
-                        ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
+                    $contact
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
                         ->setConservation($pet->getConservation())
