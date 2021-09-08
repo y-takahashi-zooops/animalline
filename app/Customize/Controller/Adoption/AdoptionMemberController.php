@@ -123,6 +123,7 @@ class AdoptionMemberController extends AbstractController
      */
     public function adoption_mypage(Request $request)
     {
+        /*
         $rootMessages = $this->conservationContactsRepository
             ->findBy(
                 [
@@ -138,12 +139,13 @@ class AdoptionMemberController extends AbstractController
                 ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
             $lastReplies[$rootMessage->getId()] = $lastReply;
         }
+        */
 
         $pets = $this->adoptionQueryService->findAdoptionFavoritePets($this->getUser()->getId());
 
         return $this->render('animalline/adoption/member/index.twig', [
-            'rootMessages' => $rootMessages,
-            'lastReplies' => $lastReplies,
+            //'rootMessages' => $rootMessages,
+            //'lastReplies' => $lastReplies,
             'pets' => $pets,
             'user' => $this->getUser(),
         ]);

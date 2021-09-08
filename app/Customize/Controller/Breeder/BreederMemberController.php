@@ -134,6 +134,7 @@ class BreederMemberController extends AbstractController
      */
     public function breeder_mypage(Request $request)
     {
+        /*
         $rootMessages = $this->breederContactsRepository
             ->findBy(
                 [
@@ -149,12 +150,12 @@ class BreederMemberController extends AbstractController
                 ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
             $lastReplies[$rootMessage->getId()] = $lastReply;
         }
-
+        */
         $pets = $this->breederQueryService->findBreederFavoritePets($this->getUser()->getId());
 
         return $this->render('animalline/breeder/member/index.twig', [
-            'rootMessages' => $rootMessages,
-            'lastReplies' => $lastReplies,
+            //'rootMessages' => $rootMessages,
+            //'lastReplies' => $lastReplies,
             'pets' => $pets,
             'user' => $this->getUser(),
         ]);
