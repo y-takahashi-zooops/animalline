@@ -49,64 +49,78 @@ class ConservationContactHeader
     private $Pet;
 
     /**
-     * @ORM\Column(type="smallint", nullable=false)
+     * @ORM\Column(name="contact_type", type="smallint", nullable=false)
      */
     private $contact_type;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="contact_title", type="string", length=255, nullable=true)
      */
     private $contact_title;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="contact_description", type="text", nullable=true)
      */
     private $contact_description;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="booking_request", type="text", nullable=true)
      */
     private $booking_request;
 
     /**
-     * @ORM\Column(type="datetime", nullable=false)
+     * @ORM\Column(name="send_date", type="datetime", nullable=false)
      */
     private $send_date;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(name="last_message_date", type="datetime", nullable=true)
      */
     private $last_message_date;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0}, nullable=false)
+     * @ORM\Column(name="contract_status", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $contract_status;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0}, nullable=false)
+     * @ORM\Column(name="sendoff_reason", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $sendoff_reason;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0}, nullable=false)
+     * @ORM\Column(name="customer_check", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $customer_check;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0}, nullable=false)
+     * @ORM\Column(name="conservation_check", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $conservation_check;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 1}, nullable=false)
+     * @ORM\Column(name="conservation_new_msg", type="smallint", options={"default" = 1}, nullable=false)
      */
     private $conservation_new_msg;
 
     /**
-     * @ORM\Column(type="smallint", options={"default" = 0}, nullable=false)
+     * @ORM\Column(name="customer_new_msg", type="smallint", options={"default" = 0}, nullable=false)
      */
     private $customer_new_msg;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
+    private $create_date;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
+     */
+    private $update_date;
 
     /**
      * @ORM\OneToMany(targetEntity=ConservationContacts::class, mappedBy="ConservationContactHeader")
@@ -309,5 +323,33 @@ class ConservationContactHeader
     public function getConservationContacts(): Collection
     {
         return $this->ConservationContacts;
+    }
+
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->create_date = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Set updateDate.
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Payment
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->update_date = $updateDate;
+
+        return $this;
     }
 }

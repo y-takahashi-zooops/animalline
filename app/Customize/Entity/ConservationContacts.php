@@ -28,7 +28,7 @@ class ConservationContacts
     private $ConservationHeader;
 
     /**
-     * @ORM\Column(name="message_from", type="smallint")
+     * @ORM\Column(name="message_from", type="smallint", nullable=false)
      */
     private $message_from;
 
@@ -38,7 +38,7 @@ class ConservationContacts
     private $contact_description;
 
     /**
-     * @ORM\Column(name="send_date", type="datetime")
+     * @ORM\Column(name="send_date", type="datetime", nullable=false)
      */
     private $send_date;
 
