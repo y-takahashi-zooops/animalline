@@ -4,6 +4,7 @@ namespace Customize\Controller\Adoption;
 
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
+use Customize\Entity\ConservationContactHeader;
 use Customize\Entity\ConservationContacts;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\BreedsRepository;
@@ -406,7 +407,7 @@ class AdoptionController extends AbstractController
             throw new HttpException\NotFoundHttpException();
         }
 
-        $contact = new ConservationContacts();
+        $contact = new ConservationContactHeader();
         $builder = $this->formFactory->createBuilder(ConservationContactType::class, $contact);
         $event = new EventArgs(
             [
@@ -432,9 +433,7 @@ class AdoptionController extends AbstractController
                     );
 
                 case 'complete':
-                    $contact->setParentMessageId(AnilineConf::ROOT_MESSAGE_ID)
-                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
-                        ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
+                    $contact
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
                         ->setConservation($pet->getConservation())
@@ -443,7 +442,7 @@ class AdoptionController extends AbstractController
                     $entityManager->persist($contact);
                     $entityManager->flush();
 
-                    return $this->redirectToRoute('adpotion_contact_complete', ['pet_id' => $id]);
+                    return $this->redirectToRoute('adoption_contact_complete', ['pet_id' => $id]);
             }
         }
 
@@ -456,7 +455,7 @@ class AdoptionController extends AbstractController
     /**
      * お問い合わせ完了画面
      *
-     * @Route("/adoption/member/contact/{pet_id}/complete", name="adpotion_contact_complete", requirements={"pet_id" = "\d+"})
+     * @Route("/adoption/member/contact/{pet_id}/complete", name="adoption_contact_complete", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/adoption/contact_complete.twig")
      */
     public function complete(Request $request)

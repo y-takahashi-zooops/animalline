@@ -13,7 +13,7 @@
 
 namespace Eccube\Entity;
 
-use Customize\Entity\BreederContacts;
+use Customize\Entity\BreederContactHeader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -287,9 +287,9 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         private $Pref;
 
         /**
-         * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="customer_id")
+         * @ORM\OneToMany(targetEntity=BreederContactHeader::class, mappedBy="customer_id")
          */
-        private $breederContacts;
+        private $breederContactHeader;
 
         /**
          * Constructor
@@ -302,7 +302,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 
             $this->setBuyTimes(0);
             $this->setBuyTotal(0);
-            $this->breederContacts = new ArrayCollection();
+            $this->breederContactHeader = new ArrayCollection();
         }
 
         /**
@@ -1170,29 +1170,29 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         }
 
         /**
-         * @return Collection|BreederContacts[]
+         * @return Collection|breederContactHeader[]
          */
-        public function getBreederContacts(): Collection
+        public function getBreederContactHeader(): Collection
         {
-            return $this->breederContacts;
+            return $this->breederContactHeader;
         }
 
-        public function addBreederContact(BreederContacts $breederContact): self
+        public function addBreederContactHeader(BreederContactHeader $breederContactHeader): self
         {
-            if (!$this->breederContacts->contains($breederContact)) {
-                $this->breederContacts[] = $breederContact;
-                $breederContact->setCustomerId($this);
+            if (!$this->breederContactHeader->contains($breederContactHeader)) {
+                $this->breederContactHeader[] = $breederContactHeader;
+                $breederContactHeader->setCustomerId($this);
             }
 
             return $this;
         }
 
-        public function removeBreederContact(BreederContacts $breederContact): self
+        public function removeBreederContactHeader(BreederContactHeader $breederContactHeader): self
         {
-            if ($this->breederContacts->removeElement($breederContact)) {
+            if ($this->breederContactHeader->removeElement($breederContactHeader)) {
                 // set the owning side to null (unless already changed)
-                if ($breederContact->getCustomerId() === $this) {
-                    $breederContact->setCustomerId(null);
+                if ($breederContactHeader->getCustomerId() === $this) {
+                    $breederContactHeader->setCustomerId(null);
                 }
             }
 
