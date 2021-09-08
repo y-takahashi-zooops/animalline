@@ -27,25 +27,24 @@ file that was distributed with this source code.
         result = document.getElementById('examination_result').value
 
         if( result ==  1){
-            $('#mailarea').attr('disabled', true);
+            $('#examination_result_comment').attr('disabled', true);
         } else {
-            $('#mailarea').attr('disabled', false);
+            $('#examination_result_comment').attr('disabled', false);
         }
     });
 
-    document.getElementById("submit").onclick = function() {
-    $('#modal').modal('show');
+    document.getElementById("confirm").onclick = function() {
+        $('#modal').modal('show');
     };
 
-    document.getElementById("confirm-yes").onclick = function() {
-    $('#modal').modal('hide');
-    };
+    $("#confirm-yes").on('click', function (e) {
+        document.getElementsByName('form-examination-regist')[0].submit();
+    });
 </script>
-
 {% endblock javascript %}
 
 {% block main %}
-<form name="form1" role="form" class="form-horizontal" id="form1" method="post" action="">
+<form name="form-examination-regist" role="form" class="form-horizontal" id="form-examination-regist" method="post" action="">
 {# {{ form_widget(form._token) }} #}
     <div class="c-contentsArea__cols">
         <div class="c-contentsArea__primaryCol">
@@ -58,9 +57,11 @@ file that was distributed with this source code.
                                 <span>審査結果</span>
                             </div>
                             <div class="col-2 ec-select">
-                                <select id="examination_result" name="" class="form-control">
-                                    <option value="1">許可</option>
-                                    <option value="2">拒否</option>
+                                <select id="examination_result" name="examination_result" class="form-control">
+                                    {% set results = ['許可', '拒否'] %}
+                                    {% for i in 1..2 %}
+                                        <option value="{{ i }}" {{ examination.examinationResult == i ? 'selected' : '' }}>{{ results[i - 1] }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
@@ -70,7 +71,9 @@ file that was distributed with this source code.
                                 <span class="badge badge-primary ml-1">{{ 'admin.common.required'|trans }}</span>
                             </div>
                             <div class="col-10">
-                                <textarea id="mailarea" name="" class="form-control" rows="15" disabled>審査に関する情報のお問い合わせにはお答えできません</textarea>
+                                <textarea id="examination_result_comment" name="examination_result_comment" class="form-control" rows="15"
+                                    {{ examination.examinationResult == 1 ? 'disabled' : '' }}
+                                    >{{ examination.examinationResult == 1 ? '審査に関する情報のお問い合わせにはお答えできません' : examination.examinationResultComment }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -83,7 +86,7 @@ file that was distributed with this source code.
             <div class="row justify-content-between align-items-center">
                 <div class="col-6">
                     <div class="c-conversionArea__leftBlockItem">
-                        <a class="c-baseLink" href='{{path('admin_breeder_examination',{'id': 1})}}'>
+                        <a class="c-baseLink" href='{{ path('admin_breeder_examination', {'id': examination.breeder.id}) }}'>
                             <i class="fa fa-backward" aria-hidden="true"></i><span>審査情報表示</span>
                         </a>
                     </div>
@@ -91,7 +94,7 @@ file that was distributed with this source code.
                 <div class="col-6">
                     <div id="ex-conversion-action" class="row align-items-center justify-content-end">
                         <div class="col-auto">
-                            <button class="btn btn-ec-conversion px-5" id="submit" type="button">{{ 'admin.common.confirm'|trans }}</button>
+                            <button class="btn btn-ec-conversion px-5" id="confirm" type="button">{{ 'admin.common.confirm'|trans }}</button>
                         </div>
                     </div>
                 </div>
@@ -101,6 +104,3 @@ file that was distributed with this source code.
 </form>
 {{ include('animalline/components/_modal_mail_confirm.twig') }}
 {% endblock %}
-
-
-

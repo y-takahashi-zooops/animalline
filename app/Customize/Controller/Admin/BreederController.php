@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
+use Customize\Entity\BreederExaminationInfo;
 use Customize\Entity\BreederPets;
 use Customize\Form\Type\Admin\BreederHouseType;
 use Customize\Form\Type\Admin\BreederPetsType;
@@ -254,9 +255,22 @@ class BreederController extends AbstractController
      * @Route("/%eccube_admin_route%/breeder/examination/regist/{id}", name="admin_breeder_examination_regist", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/examination_regist.twig")
      */
-    public function Examination_regist(Request $request)
+    public function Examination_regist(Request $request, BreederExaminationInfo $examination)
     {
-        return;
+        if ($request->isMethod('POST')) {
+            $examination->setExaminationResult((int)$request->get('examination_result'))
+                ->setExaminationResultComment($request->get('examination_result_comment'));
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($examination);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_breeder_examination', ['id' => $examination->getBreeder()->getId()]);
+        }
+
+        return compact(
+            'examination'
+        );
     }
 
     /**
