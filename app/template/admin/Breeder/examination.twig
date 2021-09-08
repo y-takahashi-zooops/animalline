@@ -155,7 +155,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <div class="mb-2">
+                                        <div class="mb-3">
                                             <div class="row offset-md-0">
                                                 <label class="ec-label required mr-2">{{ petType }}舎運営者：</label>
                                                 <span>1名</span>
@@ -168,15 +168,15 @@ file that was distributed with this source code.
                                                 <span class="ml-1 pt-2">時間/1週間あたり</span>
                                             </div>
                                         </div>
-                                        <div class="mb-2">
-                                            <div class="row offset-md-0">
+                                        <div class="mb-3">
+                                            <div class="row offset-md-0 mb-2">
                                                 <span class="pt-2 mr-2">家族：</span>
                                                 <div>
                                                     {{ form_widget(form.family_staff_count) }}
                                                 </div>
                                                 <span class="pt-2">名</span>
                                             </div>
-                                            <div class="row offset-md-0">
+                                            <div class="row offset-md-0 mb-2">
                                                 <label class="pt-2">平均労働時間：</label>
                                                 <div>
                                                     {{ form_widget(form.family_staff_worktime_ave) }}
@@ -184,15 +184,15 @@ file that was distributed with this source code.
                                                 <span class="ml-1 pt-2">時間/1週間あたり</span>
                                             </div>
                                         </div>
-                                        <div class="mb-2">
-                                            <div class="row offset-md-0">
+                                        <div class="mb-3">
+                                            <div class="row offset-md-0 mb-2">
                                                 <span class="pt-2 mr-2">社員：</span>
                                                 <div>
                                                     {{ form_widget(form.fulltime_staff_count) }}
                                                 </div>
                                                 <span class="pt-2">名</span>
                                             </div>
-                                            <div class="row offset-md-0">
+                                            <div class="row offset-md-0 mb-2">
                                                 <label class="pt-2">平均労働時間：</label>
                                                 <div>
                                                     {{ form_widget(form.fulltime_staff_worktime_ave) }}
@@ -200,15 +200,15 @@ file that was distributed with this source code.
                                                 <span class="ml-1 pt-2">時間/1週間あたり</span>
                                             </div>
                                         </div>
-                                        <div class="mb-2">
-                                            <div class="row offset-md-0">
+                                        <div class="mb-3">
+                                            <div class="row offset-md-0 mb-2">
                                                 <span class="pt-2 mr-2">パート・アルバイト：</span>
                                                 <div>
                                                     {{ form_widget(form.parttime_staff_count) }}
                                                 </div>
                                                 <span class="pt-2">名</span>
                                             </div>
-                                            <div class="row offset-md-0">
+                                            <div class="row offset-md-0 mb-2">
                                                 <label class="pt-2">平均労働時間：</label>
                                                 <div>
                                                     {{ form_widget(form.parttime_staff_worktime_ave) }}
@@ -216,15 +216,15 @@ file that was distributed with this source code.
                                                 <span class="ml-1 pt-2">時間/1週間あたり</span>
                                             </div>
                                         </div>
-                                        <div class="mb-2">
-                                            <div class="row offset-md-0">
+                                        <div class="mb-3">
+                                            <div class="row offset-md-0 mb-2">
                                                 <span class="pt-2 mr-2">その他</span>
                                                 <div>
                                                     {{ form_widget(form.other_staff_count) }}
                                                 </div>
                                                 <span class="pt-2">名</span>
                                             </div>
-                                            <div class="row offset-md-0">
+                                            <div class="row offset-md-0 mb-2">
                                                 <label class="pt-2">平均労働時間：</label>
                                                 <div>
                                                     {{ form_widget(form.other_staff_worktime_ave) }}
@@ -380,14 +380,8 @@ file that was distributed with this source code.
                     </div>
                     <div class="col-6">
                         <div id="ex-conversion-action" class="row align-items-center justify-content-end">
-                            {# <div class="col-auto">
-                                <select id="" name="" class="form-control">
-                                    <option value="1">公開</option>
-                                    <option value="2">非公開</option>
-                                </select>  
-                            </div> #}
                             <div class="col-auto">
-                                <button class="btn btn-ec-conversion px-5" type="submit">審査結果登録</button>
+                                <button class="btn btn-ec-conversion px-5" type="button" onclick="location.href='{{path('admin_breeder_examination_regist',{'id': 1})}}'">審査結果登録</button>
                             </div>
                         </div>
                     </div>
@@ -396,6 +390,3 @@ file that was distributed with this source code.
         </div>
     </form>
 {% endblock %}
-
-
-
