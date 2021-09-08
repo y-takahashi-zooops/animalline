@@ -135,9 +135,9 @@ class Conservations
     private $ConservationPets;
 
     /**
-     * @ORM\OneToMany(targetEntity=ConservationContacts::class, mappedBy="Conservation")
+     * @ORM\OneToMany(targetEntity=ConservationContactHeader::class, mappedBy="Conservation")
      */
-    private $ConservationContacts;
+    private $ConservationContactHeader;
 
     /**
      * @ORM\OneToMany(targetEntity=ConservationsHouse::class, mappedBy="Conservation")
@@ -147,7 +147,7 @@ class Conservations
     public function __construct()
     {
         $this->ConservationPets = new ArrayCollection();
-        $this->ConservationContacts = new ArrayCollection();
+        $this->ConservationContactHeader = new ArrayCollection();
         $this->ConservationsHouses = new ArrayCollection();
     }
 
@@ -473,29 +473,29 @@ class Conservations
     }
 
     /**
-     * @return Collection|ConservationContacts[]
+     * @return Collection|ConservationContactHeader[]
      */
-    public function getConservationContacts(): Collection
+    public function getConservationContactHeader(): Collection
     {
-        return $this->ConservationContacts;
+        return $this->ConservationContactHeader;
     }
 
-    public function addConservationContact(ConservationContacts $conservationContact): self
+    public function addConservationContactHeader(ConservationContactHeader $conservationContactHeader): self
     {
-        if (!$this->ConservationContacts->contains($conservationContact)) {
-            $this->ConservationContacts[] = $conservationContact;
-            $conservationContact->setConservation($this);
+        if (!$this->ConservationContactHeader->contains($conservationContactHeader)) {
+            $this->conservationContactHeader[] = $conservationContactHeader;
+            $conservationContactHeader->setConservation($this);
         }
 
         return $this;
     }
 
-    public function removeConservationContact(ConservationContacts $conservationContact): self
+    public function removeConservationContactHeader(ConservationContactHeader $conservationContactHeader): self
     {
-        if ($this->ConservationContacts->removeElement($conservationContact)) {
+        if ($this->ConservationContactHeader->removeElement($conservationContactHeader)) {
             // set the owning side to null (unless already changed)
-            if ($conservationContact->getConservation() === $this) {
-                $conservationContact->setConservation(null);
+            if ($conservationContactHeader->getConservation() === $this) {
+                $conservationContactHeader->setConservation(null);
             }
         }
 

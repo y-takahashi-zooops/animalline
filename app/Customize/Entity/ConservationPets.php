@@ -135,10 +135,16 @@ class ConservationPets
      */
     private $PetsFavorites;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ConservationContactHeader::class, mappedBy="Pet")
+     */
+    private $ConservationHeader;
+
     public function __construct()
     {
         $this->ConservationPetImages = new ArrayCollection();
         $this->PetsFavorites = new ArrayCollection();
+        $this->ConservationHeader = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -436,6 +442,14 @@ class ConservationPets
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|ConservationHeader[]
+     */
+    public function ConservationHeader(): Collection
+    {
+        return $this->ConservationHeader;
     }
 
     public function getCreateDate()
