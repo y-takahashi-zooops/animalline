@@ -653,7 +653,7 @@ class BreederExaminationInfo
         return $this->examination_result_comment;
     }
 
-    public function setExaminationResultComment(string $examination_result_comment): self
+    public function setExaminationResultComment(?string $examination_result_comment): self
     {
         $this->examination_result_comment = $examination_result_comment;
 
