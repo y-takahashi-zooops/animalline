@@ -27,13 +27,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
-use Customize\Entity\BreederExaminationInfo;
 use Customize\Entity\BreederPets;
+use Customize\Entity\BreederExaminationInfo;
 use Customize\Form\Type\Admin\BreederHouseType;
 use Customize\Form\Type\Admin\BreederPetsType;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\CoatColorsRepository;
+use Eccube\Repository\CustomerRepository;
 use Knp\Component\Pager\PaginatorInterface;
 
 class BreederController extends AbstractController
@@ -79,6 +80,11 @@ class BreederController extends AbstractController
     protected $breederExaminationInfoRepository;
 
     /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
      * breederController constructor.
      * @param BreedersRepository $breedersRepository
      * @param BreedsRepository $breedsRepository
@@ -88,6 +94,7 @@ class BreederController extends AbstractController
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederHouseRepository $breederHouseRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
+     * @param CustomerRepository $customerRepository
      */
     public function __construct(
         BreedersRepository               $breedersRepository,
@@ -97,7 +104,8 @@ class BreederController extends AbstractController
         BreederQueryService              $breederQueryService,
         BreederPetsRepository            $breederPetsRepository,
         BreederHouseRepository           $breederHouseRepository,
-        BreederExaminationInfoRepository $breederExaminationInfoRepository
+        BreederExaminationInfoRepository $breederExaminationInfoRepository,
+        CustomerRepository               $customerRepository
     ) {
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -107,6 +115,7 @@ class BreederController extends AbstractController
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederHouseRepository = $breederHouseRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -257,19 +266,32 @@ class BreederController extends AbstractController
      */
     public function Examination_regist(Request $request, BreederExaminationInfo $examination)
     {
+        $breederId = $examination->getBreeder()->getId();
+        $customer = $this->customerRepository->find($breederId);
+        if (!$customer) throw new NotFoundHttpException();
+
         if ($request->isMethod('POST')) {
-            $examination->setExaminationResult((int)$request->get('examination_result'))
+            $result = (int)$request->get('examination_result');
+            $examination->setExaminationResult($result)
                 ->setExaminationResultComment($request->get('examination_result_comment'));
+            if ($result === AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) $customer->setIsBreeder(1);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($examination);
+            $entityManager->persist($customer);
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin_breeder_examination', ['id' => $examination->getBreeder()->getId()]);
+            return $this->redirectToRoute('admin_breeder_examination', ['id' => $breederId]);
         }
 
+        $data = [
+            'name' => $customer->getName01() . ' ' . $customer->getName02(),
+            'examination_comment' => $examination->getExaminationResultComment()
+        ];
+
         return compact(
-            'examination'
+            'examination',
+            'data'
         );
     }
 
