@@ -28,12 +28,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederPets;
+use Customize\Entity\BreederExaminationInfo;
 use Customize\Form\Type\Admin\BreederHouseType;
 use Customize\Form\Type\Admin\BreederPetsType;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\CoatColorsRepository;
+use Eccube\Repository\CustomerRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Customize\Service\MailService;
 
 class BreederController extends AbstractController
 {
@@ -78,6 +81,16 @@ class BreederController extends AbstractController
     protected $breederExaminationInfoRepository;
 
     /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
+     * @var MailService
+     */
+    protected $mailService;
+
+    /**
      * breederController constructor.
      * @param BreedersRepository $breedersRepository
      * @param BreedsRepository $breedsRepository
@@ -87,6 +100,8 @@ class BreederController extends AbstractController
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederHouseRepository $breederHouseRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
+     * @param CustomerRepository $customerRepository
+     * @param MailService $mailService
      */
     public function __construct(
         BreedersRepository               $breedersRepository,
@@ -96,7 +111,9 @@ class BreederController extends AbstractController
         BreederQueryService              $breederQueryService,
         BreederPetsRepository            $breederPetsRepository,
         BreederHouseRepository           $breederHouseRepository,
-        BreederExaminationInfoRepository $breederExaminationInfoRepository
+        BreederExaminationInfoRepository $breederExaminationInfoRepository,
+        CustomerRepository               $customerRepository,
+        MailService                      $mailService
     ) {
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -106,6 +123,8 @@ class BreederController extends AbstractController
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederHouseRepository = $breederHouseRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
+        $this->customerRepository = $customerRepository;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -254,9 +273,42 @@ class BreederController extends AbstractController
      * @Route("/%eccube_admin_route%/breeder/examination/regist/{id}", name="admin_breeder_examination_regist", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/examination_regist.twig")
      */
-    public function Examination_regist(Request $request)
+    public function Examination_regist(Request $request, BreederExaminationInfo $examination)
     {
-        return;
+        $breederId = $examination->getBreeder()->getId();
+        /** @var $Customer \Eccube\Entity\Customer */
+        $Customer = $this->customerRepository->find($breederId);
+        if (!$Customer) throw new NotFoundHttpException();
+
+        $data = [
+            'name' => $Customer->getName01() . ' ' . $Customer->getName02(),
+            'examination_comment' => '<span id="ex-comment">' . $request->get('examination_result_comment') . '</span>'
+        ];
+
+        if ($request->isMethod('POST')) {
+            $result = (int)$request->get('examination_result');
+            $examination->setExaminationResult($result)
+                ->setExaminationResultComment($request->get('examination_result_comment'));
+            $data['examination_comment'] = $request->get('examination_result_comment');
+            if ($result === AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
+                $this->mailService->sendBreederExaminationMailAccept($Customer, $data);
+                $Customer->setIsBreeder(1);
+            } else {
+                $this->mailService->sendBreederExaminationMailReject($Customer, $data);
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($examination);
+            $entityManager->persist($Customer);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_breeder_examination', ['id' => $breederId]);
+        }
+
+        return compact(
+            'examination',
+            'data'
+        );
     }
 
     /**
