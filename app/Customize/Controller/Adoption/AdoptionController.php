@@ -141,7 +141,38 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * ペット詳細.
+     * 保護団体用ユーザーページ
+     *
+     * @Route("/adoption/member/", name="adoption_mypage")
+     * @Template("animalline/adoption/member/index.twig")
+     */
+    public function adoption_mypage(Request $request)
+    {
+        $customerId = $this->getUser()->getId();
+        $rootMessages = $this->conservationContactsRepository
+            ->findBy(
+                [
+                    'Customer' => $customerId,
+                    'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
+                    'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
+                ]
+            );
+
+        $lastReplies = [];
+        foreach ($rootMessages as $rootMessage) {
+            $lastReply = $this->conservationContactsRepository
+                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
+            $lastReplies[$rootMessage->getId()] = $lastReply;
+        }
+
+        return $this->render('animalline/adoption/member/index.twig', [
+            'rootMessages' => $rootMessages,
+            'lastReplies' => $lastReplies
+        ]);
+    }
+
+    /**
+     * ペット詳細
      *
      * @Route("/adoption/pet/detail/{id}", name="adoption_pet_detail", requirements={"id" = "\d+"})
      * @Template("animalline/adoption/pet/detail.twig")
@@ -219,7 +250,6 @@ class AdoptionController extends AbstractController
         return new JsonResponse('liked');
     }
 
-
     /**
      * よくある質問.
      *
@@ -251,6 +281,32 @@ class AdoptionController extends AbstractController
     public function viewhist(Request $request)
     {
         return;
+    }
+
+    /**
+     * 保護団体検索 
+     * 
+     * @Route("/adoption/adoption_search", name="adoption_search")
+     * @Template("/animalline/adoption/adoption_search.twig")
+     */
+    public function breeder_search(PaginatorInterface $paginator, Request $request): Response
+    {
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $regions = $this->prefRepository->findAll();
+        $adoptionResults = $this->adoptionQueryService->searchAdoptionsResult($request, $petKind);
+        $adoptions = $paginator->paginate(
+            $adoptionResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return $this->render('animalline/adoption/adoption_search.twig', [
+            'adoptions' => $adoptions,
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions
+        ]);
     }
 
     /**
@@ -305,36 +361,7 @@ class AdoptionController extends AbstractController
         ]);
     }
 
-    /**
-     * 保護団体用ユーザーページ
-     *
-     * @Route("/adoption/member/", name="adoption_mypage")
-     * @Template("animalline/adoption/member/index.twig")
-     */
-    public function adoption_mypage(Request $request)
-    {
-        $customerId = $this->getUser()->getId();
-        $rootMessages = $this->conservationContactsRepository
-            ->findBy(
-                [
-                    'Customer' => $customerId,
-                    'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
-                    'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
-                ]
-            );
-
-        $lastReplies = [];
-        foreach ($rootMessages as $rootMessage) {
-            $lastReply = $this->conservationContactsRepository
-                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
-            $lastReplies[$rootMessage->getId()] = $lastReply;
-        }
-
-        return $this->render('animalline/adoption/member/index.twig', [
-            'rootMessages' => $rootMessages,
-            'lastReplies' => $lastReplies
-        ]);
-    }
+  
 
     /**
      * 保護団体用ユーザーページ - 取引メッセージ履歴

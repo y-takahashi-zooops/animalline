@@ -13,7 +13,6 @@
     --gray-200: #F0F0F0;
     --gray-100: #F8F8F8;
 }
- 
 
 .bg-adoption {
     background-color: var(--adoption-main-color)!important;
@@ -41,7 +40,7 @@
     color: var(--adoption-main-color);
 }
 
-.header-nav .nav-link.active{
+.header-nav .nav-link.active {
     background-color: var(--adoption-main-color);
 }
 
@@ -49,7 +48,7 @@
     color: var(--adoption-main-color);
 }
 
-.nav-pills .show>.nav-link {
+.nav-pills .show > .nav-link {
     background-color: var(--gray-200);
     color: var(--adoption-main-color);
 }
@@ -115,21 +114,12 @@ video {
     width: 550px;
 }
 
-
 /* 吹き出し */
-.balloon-left {
-    border: solid 3px #FFAC69;
-  }
   
 .balloon-left:after {
     border-right: 14px solid #FFAC69;
 }
   
-.balloon-right {
-    border: solid 3px #FFAC69;
-}
-  
 .balloon-right:after {
     border-left: 14px solid #FFAC69;
 }
-

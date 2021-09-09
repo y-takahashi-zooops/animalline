@@ -3,419 +3,409 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-	<div class="search-area bg-section rounded-lg">
-		<div class="main">
-			{% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-				<nav class="nav nav-pills search-nav m-2 d-none d-flex">
-					<a class="nav-item nav-link active bg-breeder col-md-3"
-					   href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
-						<h2 class="text-white text-align-center">犬を探す</h2>
-					</a>
-					<a class="nav-item nav-link border bg-white col-md-3"
-					   href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
-						<h2 class="color-gray-300 text-align-center">猫を探す</h2>
-					</a>
-				</nav>
-			{% else %}
-				<nav class="nav nav-pills search-nav m-2 d-none d-flex">
-					<a class="nav-item nav-link px-5 py-2 border bg-white col-md-3"
-					   href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
-						<h2 class="color-gray-300 text-align-center">犬を探す</h2>
-					</a>
-					<a class="nav-item nav-link active bg-breeder px-5 py-2 col-md-3"
-					   href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
-						<h2 class="text-white text-align-center">猫を探す</h2>
-					</a>
-				</nav>
-			{% endif %}
-			<div class="m-2 p-2"></div>
-			<form action="{{ url('breeder_pet_search_result') }}" method="get">
-				<input type="hidden" name="pet_kind" value="{{ petKind }}">
-				
-				<div class="row">
-					<div class="col-md-5 select-container mb-2 mb-sm-none">
-						<select class="form-control bg-primary w-100 p-2 h-15" id="formControlSelect1"
-						        name="breed_type">
-							<option value="">種類</option>
-							{% for breed in breeds %}
-								<option value="{{ breed.id }}">{{ breed.breedsName }}</option>
-							{% endfor %}
-						</select>
-					</div>
-					<div class="col-md-3 select-container mb-2 mb-sm-none">
-						<select class="form-control bg-primary w-100 p-2 h-15" id="formControlSelect2" name="gender">
-							<option value="">性別</option>
-							<option value="1">男の子</option>
-							<option value="2">女の子</option>
-						</select>
-					</div>
+    <div class="section-search">
+        <div class="main">
+            {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+                <nav class="nav nav-pills search-nav m-2 d-none d-flex">
+                    <a class="nav-item nav-link active bg-breeder col-md-3"
+                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
+                        <h2 class="text-white text-align-center">犬を探す</h2>
+                    </a>
+                    <a class="nav-item nav-link border bg-white col-md-3"
+                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
+                        <h2 class="color-gray-300 text-align-center">猫を探す</h2>
+                    </a>
+                </nav>
+            {% else %}
+                <nav class="nav nav-pills search-nav m-2 d-none d-flex">
+                    <a class="nav-item nav-link px-5 py-2 border bg-white col-md-3"
+                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
+                        <h2 class="color-gray-300 text-align-center">犬を探す</h2>
+                    </a>
+                    <a class="nav-item nav-link active bg-breeder px-5 py-2 col-md-3"
+                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
+                        <h2 class="text-white text-align-center">猫を探す</h2>
+                    </a>
+                </nav>
+            {% endif %}
+            <div class="m-2 p-2"></div>
+            <form action="{{ url('breeder_pet_search_result') }}" method="get">
+                <input type="hidden" name="pet_kind" value="{{ petKind }}">
+                <div class="row">
+                    <div class="col-md-5 select-container mb-2 mb-sm-none">
+                        <select class="form_dropdown w-100" id="formControlSelect1" name="breed_type">
+                            <option value="">種類</option>
+                            {% for breed in breeds %}
+                                <option value="{{ breed.id }}">{{ breed.breedsName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3 select-container mb-2 mb-sm-none">
+                        <select class="form_dropdown w-100" id="formControlSelect2" name="gender">
+                            <option value="">性別</option>
+                            <option value="1">男の子</option>
+                            <option value="2">女の子</option>
+                        </select>
+                    </div>
                     <div class="col-md-3 select-container">
-                            <select class="form-control bg-primary w-100 p-2 h-15 mb-2" id="formControlSelect3" name="region">
+                        <select class="form_dropdown w-100" id="formControlSelect3" name="region">
                                 <option value="">都道府県</option>
                                 {% for region in regions %}
                                     <option value="{{ region.id }}">{{ region.name }}</option>
                                 {% endfor %}
-                            </select>
-                        <input type="checkbox" name="adjacent" value="1" class="mr-1">隣接する都道府県も検索
+                        </select>
+                        <input type="checkbox" name="adjacent" value="1" class="mr-1">隣の都道府県も検索
                     </div>
-				</div>
-				{#
-				<div class="m-2 p-2"></div>
-				<div class="row">
-					<div class="col-12">
-						<a data-toggle="collapse" href="#collapseExample" aria-expanded="false"
-							aria-controls="collapseExample" class="text-align-center">
-							<h4>詳細検索</h4>
-						</a>
-					</div>
-				</div>
-				<div class="collapse" id="collapseExample">
-					<div class="m-2 p-2"></div>
-					<div class="row">
-						<div class="col-sm-2 select-container mb-2 mb-sm-none">
-							<select class="form-control bg-primary w-100 p-2 h-15" id="formControlArea" name="search_area">
-								<option value="">地域</option>
-								<option value="1">関東</option>
-								<option value="2">中部・東海</option>
-								<option value="2">関西・近畿</option>
-								<option value="2">甲信越・北陸</option>
-								<option value="2">東北</option>
-								<option value="2">中国</option>
-								<option value="2">四国</option>
-								<option value="2">九州</option>
-								<option value="2">沖縄</option>
-								<option value="2">北海道</option>
-							</select>
-						</div>
-					</div>
-				</div>
-				#}
-				<div class="m-2 p-2"></div>
-				<div class="row">
-					<div class="col-sm-6" style="margin: 0 auto;">
-						<a href="#">
-							<button class="btn basic-btn accent-btn bg-accent text-align-center">検索する</button>
-						</a>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
-	<div class="bg-primary">
-		<div class="m-2 p-2"></div>
-		<div class="row">
-			{% include 'side.twig' %}
-			<div class="main-container col-md-9">
-				<div class="d-flex justify-content-between align-items-end">
-					<h2>新着</h2>
-					<a class="d-flex" href="category.html">
-						<h3 class=" color-gray-300">もっと見る</h3>
-						<div class="m-1 p-1"></div>
-						<img src="{{ asset('assets/img/arrow-icon.svg') }}">
-					</a>
-				</div>
-				<div class="m-1 p-1"></div>
-				{% for pet in newPets %}
-					<div class="row">
-						<div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
-							<div class="catalog-card new-band">
-								<a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
-									<img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
-									     class="card-img-top" alt="...">
-								</a>
-								<div class="card-body bg-white">
-									<h3 class="color-gray-500 font-weight-600">{{ pet.getBreedsType().getBreedsName() ?? '' }}</h3>
-									<div class="m-4"></div>
-									<div class="d-flex">
-										<h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
-										<h4>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h4>
-									</div>
-									<div class="mb-2"></div>
-									<div class="d-flex">
-										{% set breederHouse = pet.Breeder.getBreederHouseByPetType(pet.petKind) %}
-										<h4 class="mr-3">{{ breederHouse.breederHousePref ~ ' ' ~ breederHouse.breederHouseCity ?? '' }}</h4>
-										<h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
-									</div>
-									<div class="m-2"></div>
-									<h4>{{ pet.prComment }}</h4>
-									<div class="m-2"></div>
-									<h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4>
-									<div class="m-4"></div>
-									<h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円（税込）</span>
-									</h3>
-								</div>
-							</div>
-						</div>
-					</div>
-				{% else %}
-					結果が０件です。
-				{% endfor %}
-				<div class="m-2 p-2"></div>
-				<div class="d-flex justify-content-between align-items-end">
-					<h2>注目のペット</h2>
-					<a class="d-flex" href="category.html">
-						<h3 class=" color-gray-300">もっと見る</h3>
-						<div class="m-1 p-1"></div>
-						<img src="{{ asset('assets/img/arrow-icon.svg') }}">
-					</a>
-				</div>
-				<div class="m-1 p-1"></div>
-				{% for pet in favoritePets %}
-					<div class="row">
-						<div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
-							<div class="catalog-card">
-								<a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
-									<img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
-									     class="card-img-top" alt="...">
-								</a>
-								<div class="card-body bg-white">
-									<h3 class="color-gray-500 font-weight-600">{{ pet.getBreedsType().getBreedsName() ?? '' }}</h3>
-									<div class="m-4"></div>
-									<div class="d-flex">
-										<h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
-										<h4>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h4>
-									</div>
-									<div class="mb-2"></div>
-									<div class="d-flex">
-										{% set breederHouse = pet.Breeder.getBreederHouseByPetType(pet.petKind) %}
-										<h4 class="mr-3">{{ breederHouse.breederHouseCity ~ ' ' ~ breederHouse.breederHousePref ?? '' }}</h4>
-										<h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
-									</div>
-									<div class="m-2"></div>
-									<h4>{{ pet.prComment }}</h4>
-									<div class="m-2"></div>
-									<h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4>
-									<div class="m-4"></div>
-									<h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円（税込）</span>
-									</h3>
-								</div>
-							</div>
-						</div>
-				</div>
-				{% else %}
-					結果が０件です。
-				{% endfor %}
-				<div class="m-2 p-2"></div>
-				<div class="d-flex justify-content-between align-items-end">
-					<h2>犬種から探す</h2>
-					<a class="d-flex" href="category.html">
-						<h3 class=" color-gray-300">もっと見る</h3>
-						<div class="m-1 p-1"></div>
-						<img src="{{ asset('assets/img/arrow-icon.svg') }}">
-					</a>
-				</div>
-				<div class="m-1 p-1"></div>
-				<div class="row">
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">トイプードル</h4>
-							</div>
-						</div>
-					</div>
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">チワワ</h4>
-							</div>
-						</div>
-					</div>
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">チワワ（ロング）</h4>
-							</div>
-						</div>
-					</div>
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">タイニープードル</h4>
-							</div>
-						</div>
-					</div>
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">フレンチブルドック</h4>
-							</div>
-						</div>
-					</div>
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">ポメラニアン</h4>
-							</div>
-						</div>
-					</div>
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">柴犬</h4>
-							</div>
-						</div>
-					</div>
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">ミニチュア<br>ダックスフンド</h4>
-							</div>
-						</div>
-					</div>
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">ティーカッププードル</h4>
-							</div>
-						</div>
-					</div>
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">豆柴</h4>
-							</div>
-						</div>
-					</div>
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">フレンチブルドック</h4>
-							</div>
-						</div>
-					</div>
-					<div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
-						<div class="breed-card">
-							<a href="category.html">
-								<img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
-							</a>
-							<div class="card-body text-align-center">
-								<h4 class="color-gray-500 font-weight-600">ポメラニアン</h4>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="m-2 p-2"></div>
-				<div class="d-flex justify-content-between align-items-end">
-					<h2>サイズから探す</h2>
-					<a class="d-flex" href="category.html">
-						<h3 class=" color-gray-300">もっと見る</h3>
-						<div class="m-1 p-1"></div>
-						<img src="{{ asset('assets/img/arrow-icon.svg') }}">
-					</a>
-				</div>
-				<div class="m-1 p-1"></div>
-				<div class="row">
-					<div class="card col-6 col-md-3 border-0 bg-none mb-4 mb-md-0">
-						<a href="category.html">
-							<div class="size-card bg-white">
-								<div class="card-img w-100 text-align-center">
-									<img src="{{ asset('assets/img/dog-silhouette-xs.svg') }}"
-									     class="d-inline-block  vertical-align-middle">
-								</div>
-								<div class="card-body">
-									<h4 class="text-align-center font-weight-600 color-gray-500">超小型犬</h4>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="card col-6 col-md-3 border-0 bg-none mb-4 mb-md-0">
-						<a href="category.html">
-							<div class="size-card bg-white">
-								<div class="card-img w-100 text-align-center">
-									<img src="{{ asset('assets/img/dog-silhouette-s.svg') }}"
-									     class="d-inline-block  vertical-align-middle">
-								</div>
-								<div class="card-body">
-									<h4 class="text-align-center font-weight-600 color-gray-500">小型犬</h4>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="card col-6 col-md-3 border-0 bg-none mb-4 mb-md-0">
-						<a href="category.html">
-							<div class="size-card bg-white">
-								<div class="card-img w-100 text-align-center">
-									<img src="{{ asset('assets/img/dog-silhouette-m.svg') }}"
-									     class="d-inline-block  vertical-align-middle">
-								</div>
-								<div class="card-body">
-									<h4 class="text-align-center font-weight-600 color-gray-500">中型犬</h4>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="card col-6 col-md-3 border-0 bg-none">
-						<a href="category.html">
-							<div class="size-card bg-white">
-								<div class="card-img w-100 text-align-center">
-									<img src="{{ asset('assets/img/dog-silhouette-l.svg') }}"
-									     class="d-inline-block  vertical-align-middle">
-								</div>
-								<div class="card-body">
-									<h4 class="text-align-center font-weight-600 color-gray-500">大型犬</h4>
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                </div>
+                <div class="row">
+                    <div style="margin: 0 auto;">
+                        <a href="#">
+                            <button class="search_button bg-accent mt-3">検索する</button>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="bg-primary">
+        <div class="m-2 p-2"></div>
+        <div class="row">
+            {% include 'side.twig' %}
+            <div class="main-container col-md-9">
+                {# 新着 #}
+                <div class="d-flex justify-content-between align-items-end">
+                    <h2>新着</h2>
+                </div>
+                <div class="section-sub-content">
+                    <div class="m-1 p-1"></div>
+                    <div class="row pl-3">
+                        {% for pet in newPets %}
+                            <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
+                                <div class="catalog-card new-band">
+                                    <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
+                                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
+                                            class="card-img-top" alt="...">
+                                    </a>
+                                    <div class="card-body bg-white">
+                                        <h3 class="color-gray-500 font-weight-600">{{ pet.getBreedsType().getBreedsName() ?? '' }}</h3>
+                                        <div class="m-4"></div>
+                                        <div class="d-flex">
+                                            <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
+                                            <h4>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h4>
+                                        </div>
+                                        <div class="mb-2"></div>
+                                        <div class="d-flex">
+                                            {% set breederHouse = pet.Breeder.getBreederHouseByPetType(pet.petKind) %}
+                                            <h4 class="mr-3">{{ breederHouse.breederHousePref ~ ' ' ~ breederHouse.breederHouseCity ?? '' }}</h4>
+                                            <h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
+                                        </div>
+                                        <div class="m-2"></div>
+                                        <h4>{{ pet.prComment }}</h4>
+                                        <div class="m-2"></div>
+                                        <h4>掲載日：{{ pet.releaseDate|date('Y年m月d日') }}</h4>
+                                        <div class="m-4"></div>
+                                        <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円（税込）</span>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            結果が０件です。
+                        {% endfor %}
+                    </div>
+                </div>
+                {# 新着　END #}
+                <div class="m-2 p-2"></div>
+                {# 注目のペット #}
+                <div class="d-flex justify-content-between align-items-end">
+                    <h2>注目のペット</h2>
+                </div>
+                <div class="section-sub-content">
+                    <div class="m-1 p-1"></div>
+                    <div class="row pl-3">
+                        {% for pet in favoritePets %}
+                            <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
+                                <div class="catalog-card">
+                                    <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
+                                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
+                                            class="card-img-top" alt="...">
+                                    </a>
+                                    <div class="card-body bg-white">
+                                        <h3 class="color-gray-500 font-weight-600">{{ pet.getBreedsType().getBreedsName() ?? '' }}</h3>
+                                        <div class="m-4"></div>
+                                        <div class="d-flex">
+                                            <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
+                                            <h4>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h4>
+                                        </div>
+                                        <div class="mb-2"></div>
+                                        <div class="d-flex">
+                                            {% set breederHouse = pet.Breeder.getBreederHouseByPetType(pet.petKind) %}
+                                            <h4 class="mr-3">{{ breederHouse.breederHousePref ~ ' ' ~ breederHouse.breederHouseCity ?? '' }}</h4>
+                                            <h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
+                                        </div>
+                                        <div class="m-2"></div>
+                                        <h4>{{ pet.prComment }}</h4>
+                                        <div class="m-2"></div>
+                                        <h4>掲載日：{{ pet.releaseDate|date('Y年m月d日') }}</h4>
+                                        <div class="m-4"></div>
+                                        <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円（税込）</span>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            結果が０件です。
+                        {% endfor %}
+                    </div>
+                </div>
+                {# 注目のペット END #}
+                <div class="m-2 p-2"></div>
+                {# 特集 #}
+                <div class="card-deck">
+                    <div class="card">
+                        <div class="row no-gutters">
+                            <img class="card-img-top" src="{{ asset('assets/img/blank.png') }}" alt="Card image">
+                            <div class="card-body">
+                                <h4 class="card-title">しつけから消耗品まで</h4>
+                                <p class="card-text">ペットに関わる様々な商品・サービスを提供しています。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="row no-gutters">
+                            <img class="card-img-top" src="{{ asset('assets/img/blank.png') }}" alt="Card image">
+                            <div class="card-body">
+                                <h4 class="card-title">しつけから消耗品まで</h4>
+                                <p class="card-text">ペットに関わる様々な商品・サービスを提供しています。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="row no-gutters">
+                            <img class="card-img-top" src="{{ asset('assets/img/blank.png') }}" alt="Card image">
+                            <div class="card-body">
+                                <h4 class="card-title">しつけから消耗品まで</h4>
+                                <p class="card-text">ペットに関わる様々な商品・サービスを提供しています。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# 特集 END #}
+                <div class="m-2 p-2"></div>
+                <div class="d-flex justify-content-between align-items-end">
+                    <h2>犬種から探す</h2>
+                </div>
+                {# 犬種から探す #}
+                <div class="section-sub-content">
+                    <div class="m-1 p-1"></div>
+                    <div class="row">
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">トイプードル</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">チワワ</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">チワワ（ロング）</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">タイニープードル</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">フレンチブルドック</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">ポメラニアン</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">柴犬</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">ミニチュア<br>ダックスフンド</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">ティーカッププードル</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">豆柴</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">フレンチブルドック</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card col-6 col-sm-4 col-md-2 border-0 bg-none">
+                            <div class="breed-card">
+                                <a href="category.html">
+                                    <img src="{{ asset('assets/img/blank.png') }}" class="card-img-top" alt="...">
+                                </a>
+                                <div class="card-body text-align-center">
+                                    <h4 class="color-gray-500 font-weight-600">ポメラニアン</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {# 犬種から探す END #}
+                <div class="m-2 p-2"></div>
+                {# サイズから探す #}
+                <div class="d-flex justify-content-between align-items-end">
+                    <h2>サイズから探す</h2>
+                </div>
+                <div class="section-sub-content">
+                    <div class="m-1 p-1"></div>
+                    <div class="row">
+                        <div class="card col-6 col-md-3 border-0 bg-none mb-4 mb-md-0">
+                            <a href="category.html">
+                                <div class="size-card bg-white">
+                                    <div class="card-img w-100 text-align-center">
+                                        <img src="{{ asset('assets/img/dog-silhouette-xs.svg') }}" class="d-inline-block  vertical-align-middle">
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="text-align-center font-weight-600 color-gray-500">超小型犬</h4>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="card col-6 col-md-3 border-0 bg-none mb-4 mb-md-0">
+                            <a href="category.html">
+                                <div class="size-card bg-white">
+                                    <div class="card-img w-100 text-align-center">
+                                        <img src="{{ asset('assets/img/dog-silhouette-s.svg') }}" class="d-inline-block  vertical-align-middle">
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="text-align-center font-weight-600 color-gray-500">小型犬</h4>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="card col-6 col-md-3 border-0 bg-none mb-4 mb-md-0">
+                            <a href="category.html">
+                                <div class="size-card bg-white">
+                                    <div class="card-img w-100 text-align-center">
+                                        <img src="{{ asset('assets/img/dog-silhouette-m.svg') }}" class="d-inline-block  vertical-align-middle">
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="text-align-center font-weight-600 color-gray-500">中型犬</h4>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="card col-6 col-md-3 border-0 bg-none">
+                            <a href="category.html">
+                                <div class="size-card bg-white">
+                                    <div class="card-img w-100 text-align-center">
+                                        <img src="{{ asset('assets/img/dog-silhouette-l.svg') }}" class="d-inline-block  vertical-align-middle">
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="text-align-center font-weight-600 color-gray-500">大型犬</h4>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {# サイズから探す END #}
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block stylesheet %}
-	<link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 {% endblock %}
 
 {% block javascript %}
-<script>
-let area = ['Hokkaido', 'Tohoku', 'Kanto', 'Tokai', 'Kosinetsu', 'Kansai', 'Shikoku', 'Chugoku', 'Kyushu'];
-for (let i = 0; i < area.length; i++) {
-    const area1 = document.getElementById(area[i]);
-    area1.addEventListener('mouseover', () => {
-        area1.setAttribute('style', 'opacity: 0.5');
-    })
-    area1.addEventListener('mouseleave', () => {
-        area1.setAttribute('style', 'opacity: 1');
-    })
-}
+    <script>
+        let area = ['Hokkaido', 'Tohoku', 'Kanto', 'Tokai', 'Kosinetsu', 'Kansai', 'Shikoku', 'Chugoku', 'Kyushu'];
+        for (let i = 0; i < area.length; i++) {
+            const area1 = document.getElementById(area[i]);
+            area1.addEventListener('mouseover', () => {
+                area1.setAttribute('style', 'opacity: 0.5');
+            })
+            area1.addEventListener('mouseleave', () => {
+                area1.setAttribute('style', 'opacity: 1');
+            })
+        }
 
-$(function () {
-    $("h4:contains('男の子')").css("color", "blue");
-    $("h4:contains('女の子')").css("color", "red");
-});
-</script>
+        $(function () {
+            $("h4:contains('男の子')").css("color", "blue");
+            $("h4:contains('女の子')").css("color", "red");
+        });
+    </script>
 {% endblock %}

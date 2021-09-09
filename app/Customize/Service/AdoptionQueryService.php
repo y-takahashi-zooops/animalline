@@ -4,6 +4,7 @@ namespace Customize\Service;
 
 use Customize\Config\AnilineConf;
 use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\ConservationsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Customize\Repository\PrefAdjacentRepository;
 
@@ -13,6 +14,11 @@ class AdoptionQueryService
      * @var ConservationPetsRepository
      */
     protected $conservationPetsRepository;
+
+    /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
 
     /**
      * @var PetsFavoriteRepository
@@ -28,18 +34,21 @@ class AdoptionQueryService
      * AdoptionQueryService constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
+     * @param ConservationsRepository $conservationsRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param PrefAdjacentRepository $prefAdjacentRepository
      */
     public function __construct(
         ConservationPetsRepository $conservationPetsRepository,
         PetsFavoriteRepository $petsFavoriteRepository,
-        PrefAdjacentRepository $prefAdjacentRepository
+        PrefAdjacentRepository $prefAdjacentRepository,
+        ConservationsRepository $conservationsRepository
     )
     {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->prefAdjacentRepository = $prefAdjacentRepository;
+        $this->conservationsRepository = $conservationsRepository;
     }
 
     /**
@@ -95,11 +104,54 @@ class AdoptionQueryService
             ->getResult();
     }
 
+    public function searchAdoptionsResult($request, $petKind): array
+    {
+        $query = $this->conservationsRepository->createQueryBuilder('c')
+            ->innerJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'c.id = cp.Conservation')
+            ->where('cp.pet_kind = :pet_kind')
+            ->setParameter('pet_kind', $petKind);
+
+        if ($request->get('breed_type')) {
+            $query->andWhere('cp.BreedsType = :breeds_type')
+                ->setParameter('breeds_type', $request->get('breed_type'));
+        }
+
+        if ($request->get('region')) {
+            $query->innerJoin('Customize\Entity\ConservationHouse', 'ch', 'WITH', 'c.id = ch.Conservation')
+                ->andWhere('ch.ConservationHousePrefId = :pref')
+                ->setParameter('pref', $request->get('region'));
+            if ($request->get('adjacent')) {
+                $queryHouse = $this->prefAdjacentRepository->createQueryBuilder('pa')
+                    ->andWhere('pa.pref_id = :pref')
+                    ->setParameter('pref', $request->get('region'))
+                    ->select('pa.adjacent_pref_id');
+
+                $result = $queryHouse->getQuery()
+                    ->getArrayResult();
+                $arr = array_column($result, 'adjacent_pref_id');
+                $query->orWhere('ch.ConservationHousePrefId in (:arr)')
+                    ->setParameter('arr', $arr)
+                    ->andWhere('cp.pet_kind = :pet_kind')
+                    ->setParameter('pet_kind', $request->get('pet_kind'));
+            }
+        }
+
+        if ($request->get('license')) {
+            // $query->andWhere('c.license_name LIKE :license OR c.license_house_name LIKE :license')
+            $query->andWhere('c.organization_name LIKE :license')
+                ->setParameter('license', '%' . $request->get('license') .'%');
+        }
+
+        return $query->addOrderBy('c.update_date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findAdoptionFavoritePets($customerId)
     {
         $query = $this->petsFavoriteRepository->createQueryBuilder('pf')
-            ->select('bp')
-            ->innerJoin('Customize\Entity\ConservationPets', 'bp', 'WITH', 'bp.id = pf.pet_id')
+            ->select('cp')
+            ->innerJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'cp.id = pf.pet_id')
             ->orderBy('pf.update_date', 'DESC')
             ->where('pf.Customer = :customer_id')
             ->setParameter('customer_id', $customerId)
