@@ -13,6 +13,7 @@
 
 namespace Eccube\Entity;
 
+use Customize\Entity\ConservationContactHeader;
 use Customize\Entity\BreederContacts;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -283,6 +284,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
          * })
          */
         private $Pref;
+
+        /**
+         * @ORM\OneToMany(targetEntity=ConservationContactHeader::class, mappedBy="Customer")
+         */
+        private $ConservationContactHeader;
 
         /**
          * @ORM\OneToMany(targetEntity=BreederContacts::class, mappedBy="customer_id")

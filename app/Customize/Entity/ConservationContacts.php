@@ -97,12 +97,12 @@ class ConservationContacts
         return $this;
     }
 
-    public function getSendDate(): ?\DateTimeInterface
+    public function getSendDate(): ?\DateTime
     {
         return $this->send_date;
     }
 
-    public function setSendDate(\DateTimeInterface $send_date): self
+    public function setSendDate(\DateTime $send_date): self
     {
         $this->send_date = $send_date;
 

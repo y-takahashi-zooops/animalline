@@ -282,6 +282,7 @@ class AdoptionController extends AbstractController
         return;
     }
 
+    // TODO: confirm remove
     /**
      * @Route("/adoption/member/all_message", name="get_message_mypage")
      * @Template("animalline/adoption/member/adoption_message.twig")
@@ -336,6 +337,7 @@ class AdoptionController extends AbstractController
         ]);
     }
 
+    // TODO: confirm remove
     /**
      * 保護団体用ユーザーページ - 取引メッセージ履歴
      *
