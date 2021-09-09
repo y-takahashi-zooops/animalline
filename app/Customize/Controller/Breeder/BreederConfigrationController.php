@@ -234,7 +234,7 @@ class BreederConfigrationController extends AbstractController
                 ->setSendoffReason($reasonCancel);
 
             $breederContact = (new BreederContacts())
-                ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_CONFIGURATION)
                 ->setContactDescription('今回の取引非成立となりました')
                 ->setSendDate(Carbon::now())
                 ->setBreederHeader($rootMessage);
