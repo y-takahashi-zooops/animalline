@@ -477,20 +477,39 @@ class AdoptionMemberController extends AbstractController
             $entityManager->flush();
         }
 
+        $childMessages = $this->conservationContactsRepository->findBy(['ConservationHeader' => $rootMessage], ['send_date' => 'ASC']);
         $pet = $rootMessage->getPet();
         $conservation = $rootMessage->getConservation();
-        $childMessages = $this->conservationContactsRepository->findBy(['ConservationHeader' => $rootMessage], ['send_date' => 'ASC']);
         $reasons = $this->sendoffReasonRepository->findBy(['is_adoption_visible' => AnilineConf::ADOPTION_VISIBLE_SHOW]);
 
         $Customer = $this->getUser();
         return [
             'rootMessage' => $rootMessage,
             'childMessages' => $childMessages,
-            'reasons' => $reasons,
             'pet' => $pet,
             'conservation' => $conservation,
-            'Customer' => $Customer
+            'reasons' => $reasons
         ];
+    }
+
+    /**
+     * 保護団体用ユーザーページ - 取引メッセージ履歴
+     *
+     * @Route("/adoption/member/message/{id}/contract", name="adoption_message_contract", requirements={"id" = "\d+"})
+     * @Template("animalline/adoption/member/message.twig")
+     */
+    public function adoption_message_contract(Request $request, ConservationContactHeader $rootMessage)
+    {
+        $currentStatus = $rootMessage->getContractStatus();
+        if ($currentStatus === AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITING_CONFIRM);
+        else if ($currentStatus === AnilineConf::CONTRACT_STATUS_WAITING_CONFIRM) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT);
+        $rootMessage->setCustomerCheck(1);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($rootMessage);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('adoption_mypage_messages', ['id' => $rootMessage->getId()]);
     }
 
     /**
@@ -513,26 +532,6 @@ class AdoptionMemberController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($rootMessage);
         $entityManager->persist($conservationContact);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('adoption_mypage_messages', ['id' => $rootMessage->getId()]);
-    }
-
-    /**
-     * 保護団体用ユーザーページ - 取引メッセージ履歴
-     *
-     * @Route("/adoption/member/message/{id}/contract", name="adoption_message_contract", requirements={"id" = "\d+"})
-     * @Template("animalline/adoption/member/message.twig")
-     */
-    public function adoption_message_contract(Request $request, ConservationContactHeader $rootMessage)
-    {
-        $currentStatus = $rootMessage->getContractStatus();
-        if ($currentStatus === AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITING_CONFIRM);
-        else if ($currentStatus === AnilineConf::CONTRACT_STATUS_WAITING_CONFIRM) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT);
-        $rootMessage->setCustomerCheck(1);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($rootMessage);
         $entityManager->flush();
 
         return $this->redirectToRoute('adoption_mypage_messages', ['id' => $rootMessage->getId()]);

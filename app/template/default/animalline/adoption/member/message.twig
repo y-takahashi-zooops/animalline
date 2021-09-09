@@ -17,10 +17,7 @@
                         <div class="col-12 py-3 adoption-border">
                             <div class="row">
                                 <div class="breeder-img col-sm-4">
-                                    <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
-                                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
-                                        class="w-100 mb-4 mb-sm-0" alt="...">
-                                    </a>
+                                    <img alt="..." src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}" class="w-100 mb-4 mb-sm-0">
                                 </div>
                                 <div class="breeder-info col-sm-8">
                                     <h2 class="font-weight-500 color-gray-500">{{ pet.BreedsType.breedsName ?? '' }}</h2>
@@ -66,63 +63,24 @@
 
                 <div class="m-2 p-2"></div>
 
-                {# ブリーダー情報 #}
+                {# ブリーダ情報 #}
                 <div class="row mb-2">
                     <div class="col-1"></div>
                     <div class="col-12 col-sm-10">
-                        <h2>ブリーダー情報</h2>
+                        <h2>ブリーダ情報</h2>
                         <div class="m-1 p-1"></div>
                         <div class="col-12 py-3 adoption-border">
                             <div class="row">
                                 <div class="breeder-img col-sm-4">
-                                    <img alt="..." src="{{ asset('assets/img/breeder-thumbnail.png') }}" class="w-100 mb-4 mb-sm-0">
+                                    <img alt="..." src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (conservation.thumbnailPath ?? '/noimage_plugin_list.png') }}" class="w-100 mb-4 mb-sm-0">
                                 </div>
                                 <div class="breeder-info col-sm-8">
-                                    <h2 class="font-weight-500 color-gray-500">田中 太郎ブリーダー</h2>
-                                    <div class="m-1 p-1"></div>
-                                    <div class="d-flex">
-                                        <h4>総合評価</h4>
-                                        <div class="m-1 p-1"></div>
-                                        <img alt="..." src="{{ asset('assets/img/star-icon.svg') }}">
-                                        <div class="m-1 p-1"></div>
-                                        <h4>5.00</h4>
-                                    </div>
-                                    <div class="m-1 p-1"></div>
-                                    <div class="d-flex">
-                                        <h4>動物取扱業登録番号：</h4>
-                                        <h4>動東第000号</h4>
-                                        <div class="m-1 p-1"></div>
-
-                                    </div>
+                                    <h2 class="font-weight-500 color-gray-500">{{ conservation.ownerName }}</h2>
                                     <div class="m-1 p-1"></div>
                                     <div class="d-flex">
                                         <h4>登録：</h4>
-                                        <h4>2021/00/00</h4>
+                                        <h4>{{ conservation.createDate|date('Y年m月d日') }}</h4>
                                     </div>
-                                    <div class="m-1 p-1"></div>
-                                    <div class="d-flex">
-                                        <h4>有効期限：</h4>
-                                        <h4>2021/00/00</h4>
-                                    </div>
-                                    <div class="m-1 p-1"></div>
-                                    <div class="d-flex">
-                                        <h4>動物取扱責任者：</h4>
-                                        <h4>田中 太郎</h4>
-                                    </div>
-                                    <div class="m-1 p-1"></div>
-                                    <div class="d-flex">
-                                        <h4>犬舎所在地：</h4>
-                                        <h4>愛知県豊橋市</h4>
-                                    </div>
-                                    <div class="m-1 p-1"></div>
-                                    <div class="d-flex">
-                                        <h4>犬舎見学：</h4>
-                                        <h4>見学OK</h4>
-                                    </div>
-                                    <div class="m-2 p-2"></div>
-                                    <a href="breederpage.html">
-                                        <h4 class="color-adoption">ブリーダー詳細ページへ</h4>
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -200,16 +158,6 @@
                             <form action="#" method="post">
                                 <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
                                     placeholder="返信メッセージ"></textarea>
-                                    {# <input aria-label="reason" name="end_negotiation" type="radio"/>交渉を終了する
-                                <select aria-label="reason" name="reason" class="ec-select">
-                                    <option>非成約理由１</option>
-                                    <option>非成約理由２</option>
-                                    <option>非成約理由３</option>
-                                    <option>非成約理由４</option>
-                                    {% for reason in reasons %}
-                                        <option value="{{ reason.id }}">{{ reason.reason }}</option>
-                                    {% endfor %}
-                                </select> #}
                                 <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">送信</button>
 
                                 <div class="d-flex">
