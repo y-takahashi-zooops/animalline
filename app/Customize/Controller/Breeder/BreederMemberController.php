@@ -3,6 +3,7 @@
 namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
+use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Service\BreederQueryService;
 use Carbon\Carbon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -36,6 +37,11 @@ use Customize\Form\Type\Breeder\BreederContactType;
 class BreederMemberController extends AbstractController
 {
     /**
+     * @var BreederContactHeaderRepository
+     */
+    protected $breederContactHeaderRepository;
+
+    /**
      * @var BreederContactsRepository
      */
     protected $breederContactsRepository;
@@ -60,7 +66,7 @@ class BreederMemberController extends AbstractController
      */
     protected $breedersRepository;
 
-	/**
+    /**
      * @var BreederHouse
      */
     protected $breederHouseRepository;
@@ -69,7 +75,7 @@ class BreederMemberController extends AbstractController
      * @var PrefRepository
      */
     protected $prefRepository;
-    
+
     /**
      * @var BreederPetsRepository
      */
@@ -90,27 +96,28 @@ class BreederMemberController extends AbstractController
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
-     * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederQueryService $breederQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
-	 * @param BreedersRepository $breedersRepository
-	 * @param BreederHouseRepository $breederHouseRepository
+     * @param BreedersRepository $breedersRepository
+     * @param PrefRepository $prefRepository
+     * @param BreederHouseRepository $breederHouseRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      * @param CustomerRepository $customerRepository
      */
     public function __construct(
-        BreederContactsRepository $breederContactsRepository,
-        BreederQueryService       $breederQueryService,
-        PetsFavoriteRepository    $petsFavoriteRepository,
-        SendoffReasonRepository   $sendoffReasonRepository,
-        BreedersRepository        $breedersRepository,
-        PrefRepository            $prefRepository,
-		BreederHouseRepository    $breederHouseRepository,
-		BreederPetsRepository    $breederPetsRepository,
+        BreederContactsRepository        $breederContactsRepository,
+        BreederQueryService              $breederQueryService,
+        PetsFavoriteRepository           $petsFavoriteRepository,
+        SendoffReasonRepository          $sendoffReasonRepository,
+        BreedersRepository               $breedersRepository,
+        PrefRepository                   $prefRepository,
+        BreederHouseRepository           $breederHouseRepository,
+        BreederPetsRepository            $breederPetsRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
-        CustomerRepository $customerRepository
+        CustomerRepository               $customerRepository,
+        BreederContactHeaderRepository   $breederContactHeaderRepository
     )
     {
         $this->breederContactsRepository = $breederContactsRepository;
@@ -119,16 +126,17 @@ class BreederMemberController extends AbstractController
         $this->sendoffReasonRepository = $sendoffReasonRepository;
         $this->breedersRepository = $breedersRepository;
         $this->prefRepository = $prefRepository;
-		$this->breederHouseRepository = $breederHouseRepository;
-		$this->breederPetsRepository = $breederPetsRepository;
+        $this->breederHouseRepository = $breederHouseRepository;
+        $this->breederPetsRepository = $breederPetsRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
         $this->customerRepository = $customerRepository;
+        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
     }
 
     /**
-     * 
+     *
      * マイページ
-     * 
+     *
      * @Route("/breeder/member/", name="breeder_mypage")
      * @Template("animalline/breeder/member/index.twig")
      */
@@ -163,135 +171,204 @@ class BreederMemberController extends AbstractController
 
     /**
      * 取引メッセージ一覧
-     * 
+     *
      * @Route("/breeder/member/all_message", name="breeder_all_message")
      * @Template("animalline/breeder/member/breeder_message.twig")
      */
     public function all_message(Request $request)
     {
-        $rootMessages = $this->breederContactsRepository
-            ->findBy(['Customer' => $this->getUser(), 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
-
-        $lastReplies = [];
-        foreach ($rootMessages as $rootMessage) {
-            $lastReply = $this->breederContactsRepository
-                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
-            $lastReplies[$rootMessage->getId()] = $lastReply;
-        }
+        $listMessages = $this->breederContactHeaderRepository->findBy(['Customer' => $this->getUser()], ['last_message_date' => 'DESC']);
 
         return $this->render('animalline/breeder/member/breeder_message.twig', [
-            'rootMessages' => $rootMessages,
-            'lastReplies' => $lastReplies
+            'listMessages' => $listMessages
         ]);
     }
 
     /**
      * 取引メッセージ画面
-     * 
+     *
      * @Route("/breeder/member/message/{id}", name="breeder_message")
      * @Template("animalline/breeder/member/message.twig")
      */
-    public function message(Request $request)
+    public function message(Request $request, BreederContactHeader $msgHeader)
     {
+        $isAcceptContract = $request->get('accept-contract');
+        $reasonCancel = $request->get('reason');
+        $replyMessage = $request->get('reply_message');
+        if ($replyMessage) {
+            $breederContact = (new BreederContacts())
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
+                ->setContactDescription($replyMessage)
+                ->setSendDate(Carbon::now())
+                ->setBreederHeader($msgHeader);
+
+            $msgHeader->setBreederNewMsg(1)
+                ->setLastMessageDate(Carbon::now());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($breederContact);
+            $entityManager->persist($msgHeader);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('breeder_message', ['id' => $msgHeader->getId()]);
+        }
+        if ($reasonCancel) {
+            $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT)
+                ->setBreederNewMsg(1)
+                ->setSendoffReason($reasonCancel);
+
+            $breederContact = (new BreederContacts())
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
+                ->setContactDescription('今回の取引非成立となりました')
+                ->setSendDate(Carbon::now())
+                ->setBreederHeader($msgHeader);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($msgHeader);
+            $entityManager->persist($breederContact);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('breeder_all_message');
+        }
+        if ($isAcceptContract) {
+            switch ($msgHeader->getContractStatus()) {
+                case AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION:
+                    $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
+                        ->setCustomerCheck(1);
+                    break;
+                case AnilineConf::CONTRACT_STATUS_WAITCONTRACT:
+                    $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
+                        ->setCustomerCheck(1);
+                    break;
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($msgHeader);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('breeder_contract');
+        }
+
         $user = $this->getUser();
         $Customer = $this->customerRepository->find($user);
+        $listMsg = $this->breederContactsRepository->findBy(['BreederHeader' => $msgHeader], ['send_date' => 'ASC']);
+        $reasons = $this->sendoffReasonRepository->findBy(['is_breeder_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
 
-        return[
+        return $this->render('animalline/breeder/member/message.twig', [
             'Customer' => $Customer,
-        ];
+            'pet' => $msgHeader->getPet(),
+            'breeder' => $msgHeader->getBreeder(),
+            'message' => $msgHeader,
+            'listMsg' => $listMsg,
+            'reasons' => $reasons
+        ]);
     }
 
     /**
      * 成約画面
-     * 
+     *
      * @Route("/breeder/member/contract", name="breeder_contract")
      * @Template("animalline/breeder/member/contract.twig")
      */
     public function contract(Request $request)
     {
-        return[];
+        return [];
     }
 
     /**
      * 成約確認画面
-     * 
+     *
      * @Route("/breeder/member/contract/confirm", name="breeder_contract_confirm")
      * @Template("animalline/breeder/member/contract_confirm.twig")
      */
     public function contract_confirm(Request $request)
     {
-        return[];
+        return [];
     }
 
     /**
      * 成約完了画面
-     * 
+     *
      * @Route("/breeder/member/contract/complete", name="breeder_contract_complete")
      * @Template("animalline/breeder/member/contract_complete.twig")
      */
     public function contract_complete(Request $request)
     {
-        return[];
+        return [];
     }
 
     /**
      * ブリーダー登録申請画面
-     * 
+     *
      * @Route("/breeder/member/examination", name="breeder_examination")
      * @Template("animalline/breeder/member/examination.twig")
      */
     public function examination(Request $request)
     {
         $user = $this->getUser();
-		$breeder = $this->breedersRepository->find($user);
+        $breeder = $this->breedersRepository->find($user);
 
-		$step = 1;
+        $step = 1;
 
-		// 基本情報が登録済みであればSTEP2を表示
-		if($breeder){
-			$step = 2;
+        // 基本情報が登録済みであればSTEP2を表示
+        if ($breeder) {
+            $step = 2;
 
-			// 基本情報の取扱ペットに対応する犬舎・猫舎情報が登録されていればSTEP3を表示
-			$handling_pet_kind = $breeder->getHandlingPetKind();
-			$dog_house_info = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder,"pet_type" => 1]);
-			$cat_house_info = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder,"pet_type" => 2]);
+            // 基本情報の取扱ペットに対応する犬舎・猫舎情報が登録されていればSTEP3を表示
+            $handling_pet_kind = $breeder->getHandlingPetKind();
+            $dog_house_info = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 1]);
+            $cat_house_info = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 2]);
 
-			if($handling_pet_kind == 0 && $cat_house_info && $dog_house_info){$step = 3;}
-			if($handling_pet_kind == 1 && $dog_house_info){$step = 3;}
-			if($handling_pet_kind == 2 && $cat_house_info){$step = 3;}
-			// 審査情報が登録されていればSTEP4を表示
-            $dog_examination_info = $this->breederExaminationInfoRepository->findOneBy(["Breeder" => $breeder,"pet_type" => 1]);
-            $cat_examination_info = $this->breederExaminationInfoRepository->findOneBy(["Breeder" => $breeder,"pet_type" => 2]);
+            if ($handling_pet_kind == 0 && $cat_house_info && $dog_house_info) {
+                $step = 3;
+            }
+            if ($handling_pet_kind == 1 && $dog_house_info) {
+                $step = 3;
+            }
+            if ($handling_pet_kind == 2 && $cat_house_info) {
+                $step = 3;
+            }
+            // 審査情報が登録されていればSTEP4を表示
+            $dog_examination_info = $this->breederExaminationInfoRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 1]);
+            $cat_examination_info = $this->breederExaminationInfoRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 2]);
 
-			if($handling_pet_kind == 0 && $dog_examination_info && $cat_examination_info ){$step = 4;}
-			if($handling_pet_kind == 1 && $dog_examination_info ){$step = 4;}
-			if($handling_pet_kind == 2 && $cat_examination_info ){$step = 4;}
+            if ($handling_pet_kind == 0 && $dog_examination_info && $cat_examination_info) {
+                $step = 4;
+            }
+            if ($handling_pet_kind == 1 && $dog_examination_info) {
+                $step = 4;
+            }
+            if ($handling_pet_kind == 2 && $cat_examination_info) {
+                $step = 4;
+            }
 
-			// 審査申請済であればSTEP5として審査中メッセージ
+            // 審査申請済であればSTEP5として審査中メッセージ
             $examination_status = $breeder->getExaminationStatus();
-            if($examination_status == 1){$step = 5;}
+            if ($examination_status == 1) {
+                $step = 5;
+            }
 
-			// 審査結果が出ていれば審査結果を表示
-		}
+            // 審査結果が出ていれば審査結果を表示
+        }
         return $this->render('animalline/breeder/member/examination.twig', [
             'user' => $user,
-			'breeder' => $breeder,
-			'step' => $step,
+            'breeder' => $breeder,
+            'step' => $step,
         ]);
     }
 
     /**
      * 基本情報編集画面
-     * 
+     *
      * @Route("/breeder/member/baseinfo", name="breeder_baseinfo")
      * @Template("/animalline/breeder/member/base_info.twig")
      */
     public function base_info(Request $request, BreedersRepository $breedersRepository)
     {
         $user = $this->getUser();
-        
+
         $breederData = $breedersRepository->find($user);
-        if(!$breederData){
+        if (!$breederData) {
             $breederData = new Breeders;
             $breederData->setId($user->getId());
         }
@@ -311,28 +388,28 @@ class BreederMemberController extends AbstractController
             $entityManager->persist($breederData);
             $entityManager->flush();
             return $this->redirectToRoute('breeder_examination');
-        } elseif(!$form->isSubmitted()) {
+        } elseif (!$form->isSubmitted()) {
 
             // Customer情報から初期情報をセット
             $Customer = $this->customerRepository->find($user);
-            $form->get('breeder_name')->setData($Customer->getname01().$Customer->getname02());
-            $form->get('breeder_kana')->setData($Customer->getkana01().$Customer->getkana02());
+            $form->get('breeder_name')->setData($Customer->getname01() . $Customer->getname02());
+            $form->get('breeder_kana')->setData($Customer->getkana01() . $Customer->getkana02());
             $form->get('breeder_zip')->setData($Customer->getPostalCode());
             $form->get('addr')->get('PrefBreeder')->setData($Customer->getPref());
             $form->get('addr')->get('breeder_city')->setData($Customer->getAddr01());
             $form->get('addr')->get('breeder_address')->setData($Customer->getAddr02());
             $form->get('breeder_tel')->setData($Customer->getPhoneNumber());
         }
-        
+
         return [
             'breederData' => $breederData,
             'form' => $form->createView()
         ];
     }
 
-	/**
+    /**
      * 犬舎・猫舎情報編集画面
-     * 
+     *
      * @Route("/breeder/member/house_info/{pet_type}", name="breeder_house_info")
      * @Template("/animalline/breeder/member/house_info.twig")
      */
@@ -341,21 +418,21 @@ class BreederMemberController extends AbstractController
         $petType = $request->get('pet_type');
         $breeder = $this->breedersRepository->find($this->getUser());
         $breederHouse = $this->breederHouseRepository->findOneBy(['pet_type' => $petType, 'Breeder' => $breeder]);
-		if(!$breederHouse){
-        	$breederHouse = new BreederHouse();
-		}
+        if (!$breederHouse) {
+            $breederHouse = new BreederHouse();
+        }
         $builder = $this->formFactory->createBuilder(BreederHouseType::class, $breederHouse);
-		$breeder = $this->breedersRepository->find($this->getUser());
+        $breeder = $this->breedersRepository->find($this->getUser());
 
         $form = $builder->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-			$housePref = $breederHouse->getBreederHousePrefId();
-			$breederHouse->setBreeder($breeder)
-				->setPetType($petType)
-				->setBreederHousePref($housePref['name']);
-			$entityManager = $this->getDoctrine()->getManager();
-			$entityManager->persist($breederHouse);
+            $housePref = $breederHouse->getBreederHousePrefId();
+            $breederHouse->setBreeder($breeder)
+                ->setPetType($petType)
+                ->setBreederHousePref($housePref['name']);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($breederHouse);
 
             $entityManager->flush();
 
@@ -370,7 +447,7 @@ class BreederMemberController extends AbstractController
 
     /**
      * 審査情報編集画面
-     * 
+     *
      * @Route("/breeder/member/examination_info/{pet_type}", name="breeder_examination_info", methods={"GET","POST"})
      * @Template("/animalline/breeder/member/examination_info.twig")
      */
@@ -429,30 +506,30 @@ class BreederMemberController extends AbstractController
 
     /**
      * 審査結果提出
-     * 
+     *
      * @Route("/breeder/member/examination/submit", name="breeder_examination_submit")
      */
     public function examination_submit(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        
+
         // ブリーダーの審査ステータスを変更
-		$breeder = $this->breedersRepository->find($this->getUser());
+        $breeder = $this->breedersRepository->find($this->getUser());
         $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK);
 
         $entityManager->persist($breeder);
-        
+
         // 犬舎・猫舎両方のパターンがあるため配列で取得
         $breederExaminationInfos = $this->breederExaminationInfoRepository->findBy([
             'Breeder' => $breeder,
         ]);
-        
+
         // 審査情報のそれぞれの審査ステータスを変更
-        foreach($breederExaminationInfos as $breederExaminationInfo){
-            $breederExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_SUBMIT);  
+        foreach ($breederExaminationInfos as $breederExaminationInfo) {
+            $breederExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_SUBMIT);
             $entityManager->persist($breederExaminationInfo);
         }
-        
+
         $entityManager->flush();
 
         return $this->redirectToRoute('breeder_examination');
