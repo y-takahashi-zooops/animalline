@@ -177,6 +177,7 @@ class BreederConfigrationController extends AbstractController
      */
     public function breeder_configration_message(Request $request, $contact_id)
     {
+        $isScroll = false;
         $isAcceptContract = $request->get('accept-contract');
         $reasonCancel = $request->get('reason');
         $replyMessage = $request->get('reply_message');
@@ -203,8 +204,7 @@ class BreederConfigrationController extends AbstractController
             $entityManager->persist($breederContact);
             $entityManager->persist($rootMessage);
             $entityManager->flush();
-
-            return $this->redirectToRoute('breeder_configration_messages', ['contact_id' => $rootMessage->getId()]);
+            $isScroll = true;
         }
 
         if ($isAcceptContract) {
@@ -251,7 +251,8 @@ class BreederConfigrationController extends AbstractController
         return $this->render('animalline/breeder/configration/message.twig', [
             'rootMessage' => $rootMessage,
             'messages' => $messages,
-            'reasons' => $reasons
+            'reasons' => $reasons,
+            'isScroll' => $isScroll
         ]);
     }
 

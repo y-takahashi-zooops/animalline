@@ -33,11 +33,11 @@ class BreederEvaluationsType extends AbstractType
         $builder
             ->add('evaluation_value', ChoiceType::class, [
                 'choices' => [
-                    '★★★★★' => 5,
-                    '★★★★' => 4,
-                    '★★★' => 3,
-                    '★★' => 2,
                     '★' => 1,
+                    '★★' => 2,
+                    '★★★' => 3,
+                    '★★★★' => 4,
+                    '★★★★★' => 5,
                 ],
                 'expanded' => true,
                 'required' => true,

@@ -5,9 +5,10 @@
     <div class="main">
         <div class="row">
             <div class="main-container col-12">
-                <h1>取引履歴 {{ rootMessage.Conservation.getConservationHouseByPetType(rootMessage.pet.petKind).conservationHouseName ?? '' }}</h1>
-                <div class="m-2 p-2"></div>     
-            
+                <h1>
+                    取引履歴 {{ rootMessage.Conservation.getConservationHouseByPetType(rootMessage.pet.petKind).conservationHouseName ?? '' }}</h1>
+                <div class="m-2 p-2"></div>
+
                 {# ペット情報 #}
                 <div class="row">
                     <div class="col-1"></div>
@@ -16,12 +17,12 @@
                         <div class="m-1 p-1"></div>
                         <div class="col-12 py-3 adoption-border">
                             <div class="row">
-                                <div class="breeder-img col-sm-4">
+                                <div class="adoption-img col-sm-4">
                                     <img alt="..."
-                                        src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
-                                        class="w-100 mb-4 mb-sm-0">
+                                         src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                         class="w-100 mb-4 mb-sm-0">
                                 </div>
-                                <div class="breeder-info col-sm-8">
+                                <div class="adoption-info col-sm-8">
                                     <h2 class="font-weight-500 color-gray-500">{{ pet.BreedsType.breedsName ?? '' }}</h2>
                                     <div class="m-1 p-1"></div>
                                     <div class="d-flex font-weight-500">
@@ -73,12 +74,12 @@
                         <div class="m-1 p-1"></div>
                         <div class="col-12 py-3 adoption-border">
                             <div class="row">
-                                <div class="breeder-img col-sm-4">
+                                <div class="adoption-img col-sm-4">
                                     <img alt="..."
-                                        src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (conservation.thumbnailPath | default('/noimage_plugin_list.png')) }}"
-                                        class="w-100 mb-4 mb-sm-0">
+                                         src="{{ conservation.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                         class="w-100 mb-4 mb-sm-0">
                                 </div>
-                                <div class="breeder-info col-sm-8">
+                                <div class="adoption-info col-sm-8">
                                     <h2 class="font-weight-500 color-gray-500">{{ conservation.ownerName }}</h2>
                                     <div class="m-1 p-1"></div>
                                     <div class="d-flex">
@@ -119,13 +120,14 @@
                 {# 返信メッセージ #}
                 {% for childMessage in childMessages %}
                     {# ユーザーからの返信 #}
-                    {% if childMessage.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') %}
+                    {% if childMessage.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_CONFIGURATION') %}
                         <div class="row">
                             <div class="col-1 user-img">
-                                <img src="{{ asset('assets/img/testUser.png') }}">
+                                <img src="{{ rootMessage.Conservation.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                     style="width: 40px; height:40px; border-radius: 50%;">
                             </div>
                             <div class="col-10">
-                                <h4 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d　H:i') }}</h4>
+                                <h4 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d H:i') }}</h4>
                                 <div class="col-12 balloon-left py-3 adoption-border">
                                     <div class="ml-3">
                                         {{ childMessage.contactDescription|nl2br }}
@@ -133,12 +135,12 @@
                                 </div>
                             </div>
                         </div>
-                    {# 保護団体からの返信 #}
+                        {# 保護団体からの返信 #}
                     {% else %}
                         <div class="row">
                             <div class="col-sm-1"></div>
                             <div class="col-10">
-                                <h4 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d　H:i') }}</h4>
+                                <h4 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d H:i') }}</h4>
                                 <div class="col-8 balloon-right py-3 adoption-border">
                                     <div class="ml-3">
                                         {{ childMessage.contactDescription|nl2br }}
@@ -146,7 +148,8 @@
                                 </div>
                             </div>
                             <div class="col-1 adoption-img">
-                                <img src="{{ asset('assets/img/breeder-thumbnail.png') }}" style="width: 40px; height:40px; border-radius: 50%;">
+                                <img src="{{ asset('assets/img/testUser.png') }}"
+                                     style="width: 40px; height:40px; border-radius: 50%;">
                             </div>
                         </div>
                     {% endif %}
@@ -156,33 +159,35 @@
 
                 {# 返信欄・ボタン #}
                 {% if rootMessage.contractStatus not in constant('Customize\\Config\\AnilineConf::CONTRACT_STATUSES_ENABLE') %}
-                    <div class="row" id="chat-area">
-                    <div class="col-1"></div>
-                    <div class="col-12 col-sm-10">
-                        <div class="py-3">
-                            <form action="#" method="post">
-                                <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
-                                    placeholder="返信メッセージ"></textarea>
-                                <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">送信</button>
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-12 col-sm-10">
+                            <div class="py-3">
+                                <form action="{{ path('adoption_mypage_messages', {'id': rootMessage.id}) }}"
+                                      method="post">
+                                <textarea {{ isScroll ? 'autofocus' }} aria-label="dialog-chat" class="col-12" rows="5"
+                                                                       name="reply_message"
+                                                                       placeholder="返信メッセージ"></textarea>
+                                    <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">送信</button>
 
-                                <div class="d-flex">
-                                    <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">成約</button>
-                                    <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">取引をキャンセルする</button>
-                                </div>
-                            </form>
+                                    <div class="d-flex">
+                                        <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">成約
+                                        </button>
+                                        <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">
+                                            取引をキャンセルする
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
                 {% endif %}
             </div>
         </div>
     </div>
 
-    {% if isScroll %}
-        <span hidden id="is-scroll"></span>
-    {% endif %}
-
-    <div class="modal fade" id="modal_contract" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal_contract" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -199,13 +204,15 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
-                    <a href="{{ url('adoption_message_contract', {'id': rootMessage.id}) }}" class="btn btn-primary">はい</a>
+                    <a href="{{ url('adoption_message_contract', {'id': rootMessage.id}) }}"
+                       class="btn btn-primary">はい</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="modal_cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal_cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -215,7 +222,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url('adoption_message_cancel', {'id': rootMessage.id}) }}" method="post" id="form-cancel">
+                    <form action="{{ url('adoption_message_cancel', {'id': rootMessage.id}) }}" method="post"
+                          id="form-cancel">
                         <div class="mb-2">
                             <span>お取引をキャンセルします。</span><br>
                             <span>キャンセル理由を以下から選択してください。</span><br>
@@ -240,15 +248,13 @@
 {% endblock %}
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('assets/js/message_scroll.js') }}"></script>
-
 <script>
-	$("#cancel").on('click', function () {
-        $('#modal_cancel').modal('show');
-    });
+    $("#cancel").on('click', function () {
+    $('#modal_cancel').modal('show');
+});
 
     $("#contract").on('click', function () {
-        $('#modal_contract').modal('show');
-    });
+    $('#modal_contract').modal('show');
+});
 </script>
 {% endblock %}

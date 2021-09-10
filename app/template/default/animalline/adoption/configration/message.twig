@@ -159,7 +159,7 @@
                                 </div>
                             </div>
                             <div class="col-1 adoption-img">
-                                <img src="{{ adoption.thumbnailPath | default(constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                <img src="{{ rootMessage.Conservation.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                                      style="width: 40px; height:40px; border-radius: 50%;">
                             </div>
                         </div>
@@ -211,7 +211,7 @@
                         <div class="py-3">
                             <form action="{{ path('adoption_configration_messages', {'contact_id': rootMessage.id}) }}"
                                   method="post">
-                                <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
+                                <textarea {{ isScroll ? 'autofocus' }} aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
                                           placeholder="返信メッセージ"></textarea>
                                 {# <input aria-label="reason" name="end_negotiation" type="radio"/>交渉を終了する
                                 <select aria-label="reason" name="reason" class="ec-select">

@@ -22,7 +22,7 @@
                             </dt>
                             <dd>
                                 <div class="ec-radio">
-                                    {{ form.evaluation_value.vars.data }} ★
+                                    {{ form.evaluation_value.vars.choices[form.evaluation_value.vars.data-1].label }}
                                     {{ form_widget(form.evaluation_value, { 'attr': {'class': 'hidden'} }) }}
                                 </div>
                             </dd>

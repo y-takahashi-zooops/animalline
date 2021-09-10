@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="col-12">
                             <a href="{{ url('breeder_message', {'id': message.Id}) }}">
-                                <div class="d-sm-flex justify-content-between py-5 border breeder-border rounded bg-white">
+                                <div class="d-sm-flex justify-content-between py-3 border breeder-border rounded bg-white">
                                     <div class="ml-5">
                                         <h3>{{ message.Breeder.breederName ?? '' }}</h3>
                                         <h3>{{ message.contactTitle ?? '' }}</h3>
@@ -21,7 +21,7 @@
                                             {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
                                             状態：{{ status[message.contractStatus] }}
                                         </h4>
-                                        <h4 class="mr-sm-5 ml-5 text-right">{{ message.lastMessageDate | date('Y年m月d日 H:i') }}
+                                        <h4 class="mr-sm-5 ml-5 text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}
                                             <br>
                                             {{ message.customerNewMsg ? '未読あり' }}
                                         </h4>

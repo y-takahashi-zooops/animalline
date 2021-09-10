@@ -166,6 +166,7 @@ class AdoptionConfigrationController extends AbstractController
      */
     public function adoption_configration_message(Request $request, $contact_id)
     {
+        $isScroll = false;
         $isAcceptContract = $request->get('accept-contract');
         $reasonCancel = $request->get('reason');
         $replyMessage = $request->get('reply_message');
@@ -191,8 +192,7 @@ class AdoptionConfigrationController extends AbstractController
             $entityManager->persist($conservationContact);
             $entityManager->persist($rootMessage);
             $entityManager->flush();
-
-            return $this->redirectToRoute('adoption_configration_messages', ['contact_id' => $rootMessage->getId()]);
+            $isScroll = true;
         }
 
         if ($isAcceptContract) {
@@ -239,7 +239,8 @@ class AdoptionConfigrationController extends AbstractController
         return $this->render('animalline/adoption/configration/message.twig', [
             'rootMessage' => $rootMessage,
             'messages' => $messages,
-            'reasons' => $reasons
+            'reasons' => $reasons,
+            'isScroll' => $isScroll
         ]);
     }
 

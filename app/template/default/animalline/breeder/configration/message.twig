@@ -143,7 +143,7 @@
                                 </div>
                             </div>
                             <div class="col-1 breeder-img">
-                                <img src="{{ breeder.thumbnailPath | default(constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                <img src="{{ rootMessage.Breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                                      style="width: 40px; height:40px; border-radius: 50%;">
                             </div>
                         </div>
@@ -154,28 +154,30 @@
 
                 {# 返信欄・ボタン #}
                 {% if (rootMessage.contractStatus  not in [constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_CONTRACT'), constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_NONCONTRACT')]) %}
-                <div class="row">
-                    <div class="col-1"></div>
-                    <div class="col-12 col-sm-10">
-                        <div class="py-3">
-                            <form action="{{ path('breeder_configration_messages', {'contact_id': rootMessage.id}) }}"
-                                  method="post">
-                                <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-12 col-sm-10">
+                            <div class="py-3">
+                                <form action="{{ path('breeder_configration_messages', {'contact_id': rootMessage.id}) }}"
+                                      method="post">
+                                <textarea {{ isScroll ? 'autofocus' }} aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
                                           placeholder="返信メッセージ"></textarea>
-                                <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4" name="mode" value="submit" id="submit">
-                                    送信
-                                </button>
+                                    <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4" name="mode"
+                                            value="submit" id="submit">
+                                        送信
+                                    </button>
 
-                                <div class="d-flex">
-                                    <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">成約
-                                    </button>
-                                    <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">取引をキャンセルする
-                                    </button>
-                                </div>
-                            </form>
+                                    <div class="d-flex">
+                                        <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">成約
+                                        </button>
+                                        <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">
+                                            取引をキャンセルする
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
                 {% endif %}
             </div>
         </div>

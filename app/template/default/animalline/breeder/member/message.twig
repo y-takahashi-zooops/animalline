@@ -72,7 +72,7 @@
                                 <div class="row">
                                     <div class="breeder-img col-sm-4">
                                         <img alt="..."
-                                             src="{{ breeder.thumbnailPath | default(constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                             src="{{ breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                                              class="w-100 mb-4 mb-sm-0">
                                     </div>
                                     <div class="breeder-info col-sm-8">
@@ -210,7 +210,7 @@
                             <div class="py-3">
                                 <form action="{{ url('breeder_message', {'id': message.id}) }}" method="post"
                                       name="breeder-msg-form">
-                                <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
+                                <textarea {{ isScroll ? 'autofocus' }} aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
                                           placeholder="返信メッセージ"></textarea>
                                     <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">送信</button>
 
@@ -245,14 +245,13 @@
 {% endblock %}
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-    document.getElementById("cancel").onclick = function() {
-    $('#modal_cancel').modal('show');
-};
-
-    let el = document.getElementById("contract");
-    if (el) {
+    if (document.getElementById("cancel")) {
+    document.getElementById("cancel").onclick = function () {
+        $('#modal_cancel').modal('show');
+    };
+}
+    if (document.getElementById("contract")) {
     document.getElementById("contract").onclick = function () {
         $('#modal_contract').modal('show');
     };

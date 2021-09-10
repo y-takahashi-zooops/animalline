@@ -202,6 +202,7 @@ class BreederMemberController extends AbstractController
      */
     public function message(Request $request, BreederContactHeader $msgHeader)
     {
+        $isScroll = false;
         $msgHeader->setCustomerNewMsg(0);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($msgHeader);
@@ -223,8 +224,7 @@ class BreederMemberController extends AbstractController
             $entityManager->persist($breederContact);
             $entityManager->persist($msgHeader);
             $entityManager->flush();
-
-            return $this->redirectToRoute('breeder_message', ['id' => $msgHeader->getId()]);
+            $isScroll = true;
         }
         if ($reasonCancel) {
             $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT)
@@ -257,7 +257,8 @@ class BreederMemberController extends AbstractController
             'breeder' => $msgHeader->getBreeder(),
             'message' => $msgHeader,
             'listMsg' => $listMsg,
-            'reasons' => $reasons
+            'reasons' => $reasons,
+            'isScroll' => $isScroll
         ]);
     }
 
