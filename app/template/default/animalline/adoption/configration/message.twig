@@ -203,6 +203,8 @@
                 {% endfor %} #}
 
                 {# 返信欄・ボタン #}
+                {% if rootMessage.contractStatus == constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION')
+                   or rootMessage.contractStatus == constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_WAITCONTRACT')%}
                 <div class="row">
                     <div class="col-1"></div>
                     <div class="col-12 col-sm-10">
@@ -235,6 +237,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

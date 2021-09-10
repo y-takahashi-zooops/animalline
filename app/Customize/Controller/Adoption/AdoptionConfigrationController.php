@@ -196,11 +196,11 @@ class AdoptionConfigrationController extends AbstractController
         }
 
         if ($isAcceptContract) {
-            if ($rootMessage->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
+            if ($rootMessage->getContractStatus() === AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
                 $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
                     ->setConservationCheck(1);
             }
-            if ($rootMessage->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT) {
+            if ($rootMessage->getContractStatus() === AnilineConf::CONTRACT_STATUS_WAITCONTRACT) {
                 $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setConservationCheck(1);
             }
