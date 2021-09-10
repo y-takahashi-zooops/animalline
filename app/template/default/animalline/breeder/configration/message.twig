@@ -73,7 +73,7 @@
                                 <div class="row">
                                     <div class="breeder-img col-sm-4">
                                         <img alt="..."
-                                             src="{{ asset('assets/img/testUser.png') | default(constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                             src="{{ asset('assets/img/testUser.png') | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                                              class="w-100 mb-4 mb-sm-0">
                                     </div>
                                     <div class="breeder-info col-sm-8">
