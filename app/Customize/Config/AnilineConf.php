@@ -47,11 +47,15 @@ final class AnilineConf
     const CONTRACT_STATUS_WAITING_CONFIRM = 1;
     const CONTRACT_STATUS_CONTRACT = 2;
     const CONTRACT_STATUS_NONCONTRACT = 3;
-    const CONTRACT_STATUS = [
+    const CONTRACT_STATUSES = [
         self::CONTRACT_STATUS_UNDER_NEGOTIATION => '交渉中',
         self::CONTRACT_STATUS_WAITING_CONFIRM => '成約確認待ち',
         self::CONTRACT_STATUS_CONTRACT => '成約',
         self::CONTRACT_STATUS_NONCONTRACT => '非成約'
+    ];
+    const CONTRACT_STATUSES_ENABLE = [
+        self::CONTRACT_STATUS_CONTRACT,
+        self::CONTRACT_STATUS_NONCONTRACT
     ];
 
     const ADOPTION_VISIBLE_HIDE = 0;

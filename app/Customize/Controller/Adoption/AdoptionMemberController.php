@@ -168,17 +168,9 @@ class AdoptionMemberController extends AbstractController
     {
         $rootMessages = $this->conservationContactHeaderRepository->findBy(['Customer' => $this->getUser()], ['last_message_date' => 'DESC']);
 
-        $lastReplies = [];
-        foreach ($rootMessages as $rootMessage) {
-            $lastReply = $this->conservationContactsRepository
-                ->findOneBy(['ConservationHeader' => $rootMessage->getId()], ['send_date' => 'DESC']);
-            $lastReplies[$rootMessage->getId()] = $lastReply;
-        }
-
-        return $this->render('animalline/adoption/member/adoption_message.twig', [
-            'rootMessages' => $rootMessages,
-            'lastReplies' => $lastReplies
-        ]);
+        return compact(
+            'rootMessages'
+        );
     }
 
     /**
@@ -463,7 +455,7 @@ class AdoptionMemberController extends AbstractController
                 ->setContactDescription($replyMessage)
                 ->setSendDate($now);
 
-            $rootMessage->getCustomerNewMsg(1);
+            $rootMessage->setConservationNewMsg(1);
             $rootMessage->setLastMessageDate($now);
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -482,14 +474,13 @@ class AdoptionMemberController extends AbstractController
         $conservation = $rootMessage->getConservation();
         $reasons = $this->sendoffReasonRepository->findBy(['is_adoption_visible' => AnilineConf::ADOPTION_VISIBLE_SHOW]);
 
-        $Customer = $this->getUser();
-        return [
-            'rootMessage' => $rootMessage,
-            'childMessages' => $childMessages,
-            'pet' => $pet,
-            'conservation' => $conservation,
-            'reasons' => $reasons
-        ];
+        return compact(
+            'rootMessage',
+            'childMessages',
+            'pet',
+            'conservation',
+            'reasons',
+        );
     }
 
     /**
@@ -498,7 +489,7 @@ class AdoptionMemberController extends AbstractController
      * @Route("/adoption/member/message/{id}/contract", name="adoption_message_contract", requirements={"id" = "\d+"})
      * @Template("animalline/adoption/member/message.twig")
      */
-    public function adoption_message_contract(Request $request, ConservationContactHeader $rootMessage)
+    public function adoption_message_contract(ConservationContactHeader $rootMessage)
     {
         $currentStatus = $rootMessage->getContractStatus();
         if ($currentStatus === AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITING_CONFIRM);

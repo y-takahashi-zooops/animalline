@@ -17,7 +17,9 @@
                         <div class="col-12 py-3 adoption-border">
                             <div class="row">
                                 <div class="breeder-img col-sm-4">
-                                    <img alt="..." src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}" class="w-100 mb-4 mb-sm-0">
+                                    <img alt="..."
+                                        src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                        class="w-100 mb-4 mb-sm-0">
                                 </div>
                                 <div class="breeder-info col-sm-8">
                                     <h2 class="font-weight-500 color-gray-500">{{ pet.BreedsType.breedsName ?? '' }}</h2>
@@ -72,7 +74,9 @@
                         <div class="col-12 py-3 adoption-border">
                             <div class="row">
                                 <div class="breeder-img col-sm-4">
-                                    <img alt="..." src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (conservation.thumbnailPath ?? '/noimage_plugin_list.png') }}" class="w-100 mb-4 mb-sm-0">
+                                    <img alt="..."
+                                        src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (conservation.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                        class="w-100 mb-4 mb-sm-0">
                                 </div>
                                 <div class="breeder-info col-sm-8">
                                     <h2 class="font-weight-500 color-gray-500">{{ conservation.ownerName }}</h2>
@@ -151,7 +155,8 @@
                 <div class="m-1 p-1"></div>
 
                 {# 返信欄・ボタン #}
-                <div class="row">
+                {% if rootMessage.contractStatus not in constant('Customize\\Config\\AnilineConf::CONTRACT_STATUSES_ENABLE') %}
+                    <div class="row">
                     <div class="col-1"></div>
                     <div class="col-12 col-sm-10">
                         <div class="py-3">
@@ -168,6 +173,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -232,14 +238,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-	document.getElementById("cancel").onclick = function () {
-$('#modal_cancel').modal('show');
-};
+	$("#cancel").on('click', function () {
+        $('#modal_cancel').modal('show');
+    });
 
-document.getElementById("contract").onclick = function () {
-$('#modal_contract').modal('show');
-};
-
-$("#confirm-yes").click(function (e) {});
+    $("#contract").on('click', function () {
+        $('#modal_contract').modal('show');
+    });
 </script>
 {% endblock %}
