@@ -445,6 +445,7 @@ class AdoptionMemberController extends AbstractController
      */
     public function adoption_message(Request $request, ConservationContactHeader $rootMessage)
     {
+        $isScroll = false;
         if ($request->isMethod('POST')) {
             $replyMessage = $request->get('reply_message');
             $now = new DateTime();
@@ -462,6 +463,8 @@ class AdoptionMemberController extends AbstractController
             $entityManager->persist($conservationContact);
             $entityManager->persist($rootMessage);
             $entityManager->flush();
+
+            $isScroll = true;
         } else if ($rootMessage->getCustomerNewMsg()) {
             $rootMessage->setCustomerNewMsg(0);
             $entityManager = $this->getDoctrine()->getManager();
@@ -480,6 +483,7 @@ class AdoptionMemberController extends AbstractController
             'pet',
             'conservation',
             'reasons',
+            'isScroll'
         );
     }
 
