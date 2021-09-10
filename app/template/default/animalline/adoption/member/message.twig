@@ -156,7 +156,7 @@
 
                 {# 返信欄・ボタン #}
                 {% if rootMessage.contractStatus not in constant('Customize\\Config\\AnilineConf::CONTRACT_STATUSES_ENABLE') %}
-                    <div class="row">
+                    <div class="row" id="chat-area">
                     <div class="col-1"></div>
                     <div class="col-12 col-sm-10">
                         <div class="py-3">
@@ -245,5 +245,10 @@
     $("#contract").on('click', function () {
         $('#modal_contract').modal('show');
     });
+
+    $(function(){
+        location.href = "#"; //required to work around a bug in WebKit (Chrome / Safari)
+        location.href = "#chat-area";
+    })
 </script>
 {% endblock %}
