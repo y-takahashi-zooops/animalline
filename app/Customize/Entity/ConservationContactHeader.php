@@ -33,10 +33,8 @@ class ConservationContactHeader
     private $Customer;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="ConservationContacts")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="conservation_id", referencedColumnName="id", nullable=false)
-     * })
+     * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="ConservationContactHeader")
+     * @ORM\JoinColumn(name="conservation_id", nullable=false)
      */
     private $Conservation;
 

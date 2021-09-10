@@ -14,6 +14,7 @@
 namespace Eccube\Entity;
 
 use Customize\Entity\BreederContactHeader;
+use Customize\Entity\ConservationContactHeader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -290,6 +291,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         private $breederContactHeader;
 
         /**
+         * @ORM\OneToMany(targetEntity=ConservationContactHeader::class, mappedBy="customer_id")
+         */
+        private $conservationContactHeader;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -301,6 +307,7 @@ if (!class_exists('\Eccube\Entity\Customer')) {
             $this->setBuyTimes(0);
             $this->setBuyTotal(0);
             $this->breederContactHeader = new ArrayCollection();
+            $this->conservationContactHeader = new ArrayCollection();
         }
 
         /**
@@ -1182,6 +1189,36 @@ if (!class_exists('\Eccube\Entity\Customer')) {
                 // set the owning side to null (unless already changed)
                 if ($breederContactHeader->getCustomerId() === $this) {
                     $breederContactHeader->setCustomerId(null);
+                }
+            }
+
+            return $this;
+        }
+
+        /**
+         * @return Collection|ConservationContactHeader[]
+         */
+        public function getConservationContactHeader(): Collection
+        {
+            return $this->conservationContactHeader;
+        }
+
+        public function addConservationContactHeader(ConservationContactHeader $conservationContactHeader): self
+        {
+            if (!$this->conservationContactHeader->contains($conservationContactHeader)) {
+                $this->conservationContactHeader[] = $conservationContactHeader;
+                $conservationContactHeader->setCustomerId($this);
+            }
+
+            return $this;
+        }
+
+        public function removeConservationContactHeader(ConservationContactHeader $conservationContactHeader): self
+        {
+            if ($this->conservationContactHeader->removeElement($conservationContactHeader)) {
+                // set the owning side to null (unless already changed)
+                if ($conservationContactHeader->getCustomerId() === $this) {
+                    $conservationContactHeader->setCustomerId(null);
                 }
             }
 
