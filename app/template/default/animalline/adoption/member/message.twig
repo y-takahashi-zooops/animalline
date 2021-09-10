@@ -128,7 +128,7 @@
                         style="width: 40px; height:40px; border-radius: 50%;">
                 </div>
                 <div class="col-10">
-                    <h4 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d H:i') }}</h4>
+                    <h4 style="text-align: right;">{{ childMessage.sendDate| date('Y/m/d H:i') }}</h4>
                     <div class="col-12 balloon-left py-3 adoption-border">
                         <div class="ml-3">
                             {{ childMessage.contactDescription|nl2br }}
@@ -141,7 +141,7 @@
             <div class="row">
                 <div class="col-sm-1"></div>
                 <div class="col-10">
-                    <h4 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d H:i') }}</h4>
+                    <h4 style="text-align: right;">{{ childMessage.sendDate | date('Y/m/d H:i') }}</h4>
                     <div class="col-8 balloon-right py-3 adoption-border">
                         <div class="ml-3">
                             {{ childMessage.contactDescription|nl2br }}
