@@ -16,35 +16,34 @@ class Supplier
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(name="id", type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=5, nullable="false")
+     * @ORM\Column(name="supplier_code", type="string", length=5, nullable=false)
      */
     private $supplier_code;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable="false")
+     * @ORM\Column(name="supplier_name", type="string", length=20, nullable=false)
      */
     private $supplier_name;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
      */
     private $create_date;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
     private $update_date;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $discriminator_type;
 
     public function getId(): ?int
     {
@@ -75,39 +74,13 @@ class Supplier
         return $this;
     }
 
-    public function getCreateDate(): ?\DateTimeInterface
+    public function getCreateDate()
     {
         return $this->create_date;
     }
 
-    public function setCreateDate(?\DateTimeInterface $create_date): self
-    {
-        $this->create_date = $create_date;
-
-        return $this;
-    }
-
-    public function getUpdateDate(): ?\DateTimeInterface
+    public function getUpdateDate()
     {
         return $this->update_date;
-    }
-
-    public function setUpdateDate(?\DateTimeInterface $update_date): self
-    {
-        $this->update_date = $update_date;
-
-        return $this;
-    }
-
-    public function getDiscriminatorType(): ?string
-    {
-        return $this->discriminator_type;
-    }
-
-    public function setDiscriminatorType(?string $discriminator_type): self
-    {
-        $this->discriminator_type = $discriminator_type;
-
-        return $this;
     }
 }
