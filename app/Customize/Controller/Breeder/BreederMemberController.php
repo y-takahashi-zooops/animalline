@@ -3,7 +3,10 @@
 namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
+use Customize\Entity\BreederEvaluations;
+use Customize\Form\Type\BreederEvaluationsType;
 use Customize\Repository\BreederContactHeaderRepository;
+use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
 use Carbon\Carbon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -36,6 +39,11 @@ use Customize\Form\Type\Breeder\BreederContactType;
 
 class BreederMemberController extends AbstractController
 {
+    /**
+     * @var BreederEvaluationsRepository
+     */
+    protected $breederEvaluationsRepository;
+
     /**
      * @var BreederContactHeaderRepository
      */
@@ -117,8 +125,10 @@ class BreederMemberController extends AbstractController
         BreederPetsRepository            $breederPetsRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         CustomerRepository               $customerRepository,
-        BreederContactHeaderRepository   $breederContactHeaderRepository
-    ) {
+        BreederContactHeaderRepository   $breederContactHeaderRepository,
+        BreederEvaluationsRepository     $breederEvaluationsRepository
+    )
+    {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
@@ -130,6 +140,7 @@ class BreederMemberController extends AbstractController
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
         $this->customerRepository = $customerRepository;
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
+        $this->breederEvaluationsRepository = $breederEvaluationsRepository;
     }
 
     /**
@@ -245,7 +256,7 @@ class BreederMemberController extends AbstractController
             $entityManager->persist($msgHeader);
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_contract');
+            return $this->redirectToRoute('breeder_contract', ['pet_id' => $msgHeader->getPet()->getId()]);
         }
 
         $user = $this->getUser();
@@ -266,24 +277,56 @@ class BreederMemberController extends AbstractController
     /**
      * 成約画面
      *
-     * @Route("/breeder/member/contract", name="breeder_contract")
+     * @Route("/breeder/member/contract/{pet_id}", name="breeder_contract", requirements={"pet_id" = "\d+"})
      * @Template("animalline/breeder/member/contract.twig")
      */
     public function contract(Request $request)
     {
-        $avgEvaluation = $this->breederQueryService->calculateBreederRank($this->getUser()->getId());
-        return [];
-    }
+        $pet_id = $request->get('pet_id');
+        $pet = $this->breederPetsRepository->find($pet_id);
+        if (!$pet) {
+            throw new HttpException\NotFoundHttpException();
+        }
 
-    /**
-     * 成約確認画面
-     *
-     * @Route("/breeder/member/contract/confirm", name="breeder_contract_confirm")
-     * @Template("animalline/breeder/member/contract_confirm.twig")
-     */
-    public function contract_confirm(Request $request)
-    {
-        return [];
+        $pet_rate = $this->breederEvaluationsRepository->findOneBy(['Pet' => $pet]);
+        if ($pet_rate) {
+            return $this->redirectToRoute('breeder_all_message');
+        }
+
+        $contract = new BreederEvaluations();
+        $builder = $this->formFactory->createBuilder(BreederEvaluationsType::class, $contract);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        $thumbnail_path = $request->get('thumbnail_path') ?? '';
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            switch ($request->get('mode')) {
+                case 'confirm':
+                    return $this->render(
+                        'animalline/breeder/member/contract_confirm.twig',
+                        [
+                            'form' => $form->createView(),
+                            'pet_id' => $pet_id,
+                            'thumbnail_path' => $thumbnail_path
+                        ]
+                    );
+
+                case 'complete':
+                    $contract->setPet($pet)->setImagePath($thumbnail_path);
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($contract);
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('breeder_contract_complete', ['pet_id' => $pet_id]);
+            }
+        }
+        return [
+            'form' => $form->createView(),
+            'pet_id' => $pet_id,
+            'thumbnail_path' => $thumbnail_path
+        ];
     }
 
     /**
@@ -294,6 +337,7 @@ class BreederMemberController extends AbstractController
      */
     public function contract_complete(Request $request)
     {
+        $avgEvaluation = $this->breederQueryService->calculateBreederRank($this->getUser()->getId());
         return [];
     }
 

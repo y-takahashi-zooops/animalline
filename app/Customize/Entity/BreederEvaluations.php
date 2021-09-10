@@ -79,18 +79,6 @@ class BreederEvaluations
         return $this;
     }
 
-    public function getPetId(): ?int
-    {
-        return $this->pet_id;
-    }
-
-    public function setPetId(int $pet_id): self
-    {
-        $this->pet_id = $pet_id;
-
-        return $this;
-    }
-
     public function getEvaluationValue(): ?int
     {
         return $this->evaluation_value;
