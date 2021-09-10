@@ -169,18 +169,6 @@ class BreederContactHeader
         return $this;
     }
 
-    public function getPetId(): ?int
-    {
-        return $this->pet_id;
-    }
-
-    public function setPetId(int $pet_id): self
-    {
-        $this->pet_id = $pet_id;
-
-        return $this;
-    }
-
     public function getContactType(): ?int
     {
         return $this->contact_type;

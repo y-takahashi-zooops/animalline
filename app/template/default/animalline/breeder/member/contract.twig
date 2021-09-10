@@ -1,5 +1,6 @@
 {% set site_type = 'breeder' %}
 {% extends 'ani_frame.twig' %}
+{% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
 
 {% block main %}
 
@@ -9,69 +10,44 @@
         </div>
         <div class="ec-off1Grid">
             <div class="ec-off1Grid__cell">
-                <form method="post" action="#">
+                <form method="post" action="{{ url('breeder_contract', {'pet_id': pet_id}) }}" novalidate
+                      name="contract-form">
+                    {{ form_widget(form._token) }}
                     <p class="ec-para-nomal">
                         お取引をしたブリーダーについて、お客様のご感想をお聞かせください。
                     </p>
                     <div class="ec-borderedDefs">
                         <dl>
                             <dt>
-                                <label class="ec-label required">
-                                    おすすめレベル
-                                                                    
-                                </label>
-                                <span class="ec-required">
-                                    必須
-                                                                    
-                                </span>
+                                <label class="ec-label required">おすすめレベル</label>
+                                <span class="ec-required">必須</span>
+                            </dt>
+                            <dd class="ec-radio{{ has_errors(form.evaluation_value) ? ' error' }}">
+                                {{ form_widget(form.evaluation_value) }}
+                                {{ form_errors(form.evaluation_value) }}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                <label class="ec-label required">タイトル</label>
+                                <span class="ec-required">必須</span>
                             </dt>
                             <dd>
-                                <div class="ec-radio">
-                                    <div id="review_recommend_level">
-                                        <input type="radio" id="review_recommend_level_0" name="review[recommend_level]" required="required" value="5" />
-                                        <label for="review_recommend_level_0">
-                                            <span>
-                                                ★★★★★
-                                            </span>
-                                        </label>
-                                        <input type="radio" id="review_recommend_level_1" name="review[recommend_level]" required="required" value="4" />
-                                        <label for="review_recommend_level_1">
-                                            <span>
-                                                ★★★★
-                                            </span>
-                                        </label>
-                                        <input type="radio" id="review_recommend_level_2" name="review[recommend_level]" required="required" value="3" />
-                                        <label for="review_recommend_level_2">
-                                            <span>
-                                                ★★★
-                                            </span>
-                                        </label>
-                                        <input type="radio" id="review_recommend_level_3" name="review[recommend_level]" required="required" value="2" />
-                                        <label for="review_recommend_level_3">
-                                            <span>
-                                                ★★
-                                            </span>
-                                        </label>
-                                        <input type="radio" id="review_recommend_level_4" name="review[recommend_level]" required="required" value="1" />
-                                        <label for="review_recommend_level_4">
-                                            <span>
-                                                ★
-                                            </span>
-                                        </label>
-                                    </div>
-
+                                <div class="ec-input{{ has_errors(form.evaluation_title) ? ' error' }}">
+                                    {{ form_widget(form.evaluation_title) }}
+                                    {{ form_errors(form.evaluation_title) }}
                                 </div>
                             </dd>
                         </dl>
                         <dl>
                             <dt>
-                                <label class="ec-label required" for="review_comment">コメント</label>
+                                <label class="ec-label required">コメント</label>
                                 <span class="ec-required">必須</span>
                             </dt>
                             <dd>
-                                <div class="ec-input">
-                                    <textarea id="review_comment" name="review[comment]" required="required" maxlength="3000"></textarea>
-
+                                <div class="ec-input{{ has_errors(form.evaluation_message) ? ' error' }}">
+                                    {{ form_widget(form.evaluation_message) }}
+                                    {{ form_errors(form.evaluation_message) }}
                                 </div>
                             </dd>
                         </dl>
@@ -82,15 +58,15 @@
                             <dd>
                                 <div class="media-body">
                                     <img id="img_thumbnail"
-                                         class="img_preview mb-2 hidden"
-                                         src="" alt="..."
-                                         style="width: 200px; border: 1px solid #ddd;"/>
-                                    <input type="file"  id="breeders_thumbnail_path" name="breeders[thumbnail_path]" accept="image/*" style="display:none;" />
-                                    
-                                    <input type="hidden" name="thumbnail_path" id="breeder_src_path">
+                                         class="img_preview mb-2 {{ not thumbnail_path ? 'hidden' }}"
+                                         src="{{ thumbnail_path }}" style="width: 200px; border: 1px solid #ddd;"/>
+                                    {{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;' } }) }}
+                                    {{ form_errors(form.thumbnail_path) }}
+                                    <input type="hidden" name="thumbnail_path" value="{{ thumbnail_path }}">
                                 </div>
-                                <a class="btn btn-ec-regular mr-2" onclick="$('#breeders_thumbnail_path').click()">
-                                    ファイルを選択
+                                <a class="btn btn-ec-regular mr-2"
+                                   onclick="$('#breeder_evaluations_thumbnail_path').click()">
+                                    {{ 'admin.common.file_select'|trans }}
                                 </a>
                             </dd>
                         </dl>
@@ -98,9 +74,9 @@
                     <div class="ec-registerRole__actions">
                         <div class="ec-off4Grid">
                             <div class="ec-off4Grid__cell">
-                                {# <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">確認ページへ</button> #}
-                                <a class="ec-blockBtn--action" href="{{url('breeder_contract_confirm') }}">確認ページへ</a>
-                                <a class="ec-blockBtn--cancel" href="{{url('breeder_message', {'id': 1}) }}">戻る</a>
+                                <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">確認ページへ
+                                </button>
+                                <a class="ec-blockBtn--cancel" href="{{ url('breeder_message', {'id': 1}) }}">戻る</a>
                             </div>
                         </div>
                     </div>
@@ -108,8 +84,63 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" id="modal-crop" tabindex="-1"
+         role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalLabel">画像切り抜き</h3>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="img-container">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <!--  default image where we will set the src via jquery-->
+                                <img id="image" alt="">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="preview"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <button type="button" class="btn btn-primary" id="crop">切り抜き</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <style>
+        .ec-radio .form-check {
+            display: flex;
+            align-items: center;
+        }
+
+        img#image {
+            display: block;
+            max-width: 100%;
+        }
+
+        .preview {
+            overflow: hidden;
+            width: 200px;
+            height: 200px;
+            margin-left: 25px;
+            border: 1px solid red;
+        }
+    </style>
 {% endblock %}
-{% block javascript %}{% endblock %}
+{% block javascript %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+<script src="{{ asset('assets/js/contract.js') }}"></script>
+{% endblock %}

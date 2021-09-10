@@ -44,12 +44,13 @@ final class AnilineConf
     const RESPONSE_REPLIED = 1;
 
     const CONTRACT_STATUS_UNDER_NEGOTIATION = 0;
-    const CONTRACT_STATUS_WAITING_CONFIRM = 1;
+    const CONTRACT_STATUS_WAITCONTRACT = 1;
     const CONTRACT_STATUS_CONTRACT = 2;
     const CONTRACT_STATUS_NONCONTRACT = 3;
+
     const CONTRACT_STATUSES = [
         self::CONTRACT_STATUS_UNDER_NEGOTIATION => '交渉中',
-        self::CONTRACT_STATUS_WAITING_CONFIRM => '成約確認待ち',
+        self::CONTRACT_STATUS_WAITCONTRACT => '成約確認待ち',
         self::CONTRACT_STATUS_CONTRACT => '成約',
         self::CONTRACT_STATUS_NONCONTRACT => '非成約'
     ];
