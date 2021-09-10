@@ -210,7 +210,7 @@
                             <form action="{{ path('breeder_configration_messages', {'contact_id': rootMessage.id}) }}"
                                   method="post">
                                 <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
-                                          placeholder="返信メッセージ"></textarea>
+                                          placeholder="返信メッセージ" {{ isHidden ? 'disabled' : '' }}></textarea>
                                 {# <input aria-label="reason" name="end_negotiation" type="radio"/>交渉を終了する
                                 <select aria-label="reason" name="reason" class="ec-select">
                                     <option>非成約理由１</option>
@@ -221,14 +221,14 @@
                                         <option value="{{ reason.id }}">{{ reason.reason }}</option>
                                     {% endfor %}
                                 </select> #}
-                                <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4" name="mode" value="submit">
+                                <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4" name="mode" value="submit" id="submit" {{ isHidden ? 'disabled' : '' }}>
                                     送信
                                 </button>
 
                                 <div class="d-flex">
-                                    <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">成約
+                                    <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract" {{ isHidden ? 'disabled' : '' }}>成約
                                     </button>
-                                    <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">取引をキャンセルする
+                                    <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel" {{ isHidden ? 'disabled' : '' }}>取引をキャンセルする
                                     </button>
                                 </div>
                             </form>
@@ -268,6 +268,14 @@
 });
     $("#confirm-yes").click(function (e) {
     $("form[name='contract-accept-form']").submit();
+});
+</script>
+<script>
+    $(document).ready(function() {
+    $("#submit").submit(function() {
+        console.log(111);
+    $('html, body').scrollTop($(document).height());
+    });
 });
 </script>
 {% endblock %}
