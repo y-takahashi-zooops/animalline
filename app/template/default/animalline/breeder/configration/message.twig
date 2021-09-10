@@ -78,26 +78,10 @@
                                     </div>
                                     <div class="breeder-info col-sm-8">
                                         <div class="m-1 p-1"></div>
-                                        {# <div class="d-flex"> #}
-                                        {# <h4>総合評価</h4> #}
-                                        {# <div class="m-1 p-1"></div> #}
-                                        {# <img alt="..." src="{{ asset('assets/img/star-icon.svg') }}"> #}
-                                        {# <div class="m-1 p-1"></div> #}
-                                        {# <h4>{{ breeder.breederRank }}</h4> #}
-                                        {# </div> #}
                                         <div class="m-1 p-1"></div>
                                         <div class="m-1 p-1"></div>
                                         <div class="m-1 p-1"></div>
                                         <div class="m-1 p-1"></div>
-                                        {# <div class="d-flex"> #}
-                                        {# <h4>犬舎見学：</h4> #}
-                                        {# {% set ex_status = ['審査前', '審査中', '審査OK', '審査NG'] %} #}
-                                        {# <h4>{{ ex_status[breeder.examinationStatus] }}</h4> #}
-                                        {# </div> #}
-                                        {# <div class="m-2 p-2"></div> #}
-                                        {# <a href="{{ url('breeder_detail', {'breeder_id': breeder.Id}) }}"> #}
-                                        {# <h4 class="color-breeder">ブリーダー詳細ページへ</h4> #}
-                                        {# </a> #}
                                     </div>
                                 </div>
                             </div>
@@ -168,41 +152,8 @@
                     <p class="text-center">結果が０件です。</p>
                 {% endfor %}
 
-                {# 返信メッセージ #}
-                {# {% for childMessage in childMessages %}
-                    {% if childMessage.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') %}
-                        <div class="row">
-                            <div class="col-1 user-img">
-                                <img src="{{ asset('assets/img/testUser.png') }}">
-                            </div>
-                            <div class="col-10">
-                                <h4 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d　H:i') }}</h4>
-                                <div class="col-12 balloon-left py-3 breeder-border">
-                                    <div class="ml-3">
-                                        {{ childMessage.contactDescription|nl2br }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="row">
-                            <div class="col-sm-1"></div>
-                            <div class="col-10">
-                                <h4 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d　H:i') }}</h4>
-                                <div class="col-8 balloon-right py-3 breeder-border">
-                                    <div class="ml-3">
-                                        {{ childMessage.contactDescription|nl2br }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-1 breeder-img">
-                                <img src="{{ asset('assets/img/breeder-thumbnail.png') }}" style="width: 40px; height:40px; border-radius: 50%;">
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %} #}
-
                 {# 返信欄・ボタン #}
+                {% if (message.contractStatus  not in [constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_CONTRACT'), constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_NONCONTRACT')]) %}
                 <div class="row">
                     <div class="col-1"></div>
                     <div class="col-12 col-sm-10">
@@ -211,16 +162,6 @@
                                   method="post">
                                 <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
                                           placeholder="返信メッセージ" {{ isHidden ? 'disabled' : '' }}></textarea>
-                                {# <input aria-label="reason" name="end_negotiation" type="radio"/>交渉を終了する
-                                <select aria-label="reason" name="reason" class="ec-select">
-                                    <option>非成約理由１</option>
-                                    <option>非成約理由２</option>
-                                    <option>非成約理由３</option>
-                                    <option>非成約理由４</option>
-                                     {% for reason in reasons %}
-                                        <option value="{{ reason.id }}">{{ reason.reason }}</option>
-                                    {% endfor %}
-                                </select> #}
                                 <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4" name="mode" value="submit" id="submit" {{ isHidden ? 'disabled' : '' }}>
                                     送信
                                 </button>
@@ -235,6 +176,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -268,14 +210,6 @@
 });
     $("#confirm-yes").click(function (e) {
     $("form[name='contract-accept-form']").submit();
-});
-</script>
-<script>
-    $(document).ready(function() {
-    $("#submit").submit(function() {
-        console.log(111);
-    $('html, body').scrollTop($(document).height());
-    });
 });
 </script>
 {% endblock %}

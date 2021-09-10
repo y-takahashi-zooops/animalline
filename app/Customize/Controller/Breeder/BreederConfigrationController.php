@@ -190,11 +190,6 @@ class BreederConfigrationController extends AbstractController
         if (!$rootMessage) {
             throw new HttpException\NotFoundHttpException();
         }
-        if ($rootMessage->getContractStatus() == AnilineConf::CONTRACT_STATUS_NONCONTRACT or $rootMessage->getContractStatus() == AnilineConf::CONTRACT_STATUS_CONTRACT) {
-            $isHidden = true;
-        } else {
-            $isHidden = false;
-        }
         $rootMessage->setBreederNewMsg(0);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($rootMessage);
@@ -261,8 +256,7 @@ class BreederConfigrationController extends AbstractController
         return $this->render('animalline/breeder/configration/message.twig', [
             'rootMessage' => $rootMessage,
             'messages' => $messages,
-            'reasons' => $reasons,
-            'isHidden' => $isHidden
+            'reasons' => $reasons
         ]);
     }
 
