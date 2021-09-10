@@ -706,7 +706,8 @@ class BreederMemberController extends AbstractController
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
                         ->setBreeder($pet->getBreeder())
-                        ->setCustomer($this->getUser());
+                        ->setCustomer($this->getUser())
+                        ->setLastMessageDate(Carbon::now());
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($contact);
                     $entityManager->flush();

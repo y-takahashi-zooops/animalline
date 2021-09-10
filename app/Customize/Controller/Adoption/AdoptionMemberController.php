@@ -101,16 +101,17 @@ class AdoptionMemberController extends AbstractController
      */
     public function __construct(
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
-        ConservationContactsRepository $conservationContactsRepository,
-        AdoptionQueryService $adoptionQueryService,
-        PetsFavoriteRepository $petsFavoriteRepository,
-        SendoffReasonRepository $sendoffReasonRepository,
-        ConservationsRepository $conservationsRepository,
-        PrefRepository $prefRepository,
-        ConservationsHousesRepository $conservationsHouseRepository,
-        ConservationPetsRepository $conservationPetsRepository,
-        CustomerRepository $customerRepository
-    ) {
+        ConservationContactsRepository      $conservationContactsRepository,
+        AdoptionQueryService                $adoptionQueryService,
+        PetsFavoriteRepository              $petsFavoriteRepository,
+        SendoffReasonRepository             $sendoffReasonRepository,
+        ConservationsRepository             $conservationsRepository,
+        PrefRepository                      $prefRepository,
+        ConservationsHousesRepository       $conservationsHouseRepository,
+        ConservationPetsRepository          $conservationPetsRepository,
+        CustomerRepository                  $customerRepository
+    )
+    {
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
@@ -574,7 +575,8 @@ class AdoptionMemberController extends AbstractController
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
                         ->setConservation($pet->getConservation())
-                        ->setCustomer($this->getUser());
+                        ->setCustomer($this->getUser())
+                        ->setLastMessageDate(Carbon::now());
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($contact);
                     $entityManager->flush();
