@@ -21,7 +21,7 @@
                                             {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
                                             状態：{{ status[message.contractStatus] }}
                                         </h4>
-                                        <h4 class="mr-sm-5 ml-5 text-right">{{ message.sendDate | date('Y年m月d日 H:i') }}
+                                        <h4 class="mr-sm-5 ml-5 text-right">{{ message.lastMessageDate | date('Y年m月d日 H:i') }}
                                             <br>
                                             {{ message.customerNewMsg ? '未読あり' }}
                                         </h4>

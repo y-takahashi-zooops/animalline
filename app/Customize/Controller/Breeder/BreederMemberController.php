@@ -202,7 +202,11 @@ class BreederMemberController extends AbstractController
      */
     public function message(Request $request, BreederContactHeader $msgHeader)
     {
-        $isAcceptContract = $request->get('accept-contract');
+        $msgHeader->setCustomerNewMsg(0);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($msgHeader);
+        $entityManager->flush();
+
         $reasonCancel = $request->get('reason');
         $replyMessage = $request->get('reply_message');
         if ($replyMessage) {
@@ -225,7 +229,8 @@ class BreederMemberController extends AbstractController
         if ($reasonCancel) {
             $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT)
                 ->setBreederNewMsg(1)
-                ->setSendoffReason($reasonCancel);
+                ->setSendoffReason($reasonCancel)
+                ->setLastMessageDate(Carbon::now());
 
             $breederContact = (new BreederContacts())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
@@ -239,24 +244,6 @@ class BreederMemberController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('breeder_all_message');
-        }
-        if ($isAcceptContract) {
-            switch ($msgHeader->getContractStatus()) {
-                case AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION:
-                    $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
-                        ->setCustomerCheck(1);
-                    break;
-                case AnilineConf::CONTRACT_STATUS_WAITCONTRACT:
-                    $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
-                        ->setCustomerCheck(1);
-                    break;
-            }
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($msgHeader);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('breeder_contract', ['pet_id' => $msgHeader->getPet()->getId()]);
         }
 
         $user = $this->getUser();
@@ -332,13 +319,42 @@ class BreederMemberController extends AbstractController
     /**
      * 成約完了画面
      *
-     * @Route("/breeder/member/contract/complete", name="breeder_contract_complete")
+     * @Route("/breeder/member/contract/complete/{pet_id}", name="breeder_contract_complete", requirements={"pet_id" = "\d+"})
      * @Template("animalline/breeder/member/contract_complete.twig")
      */
     public function contract_complete(Request $request)
     {
-        $avgEvaluation = $this->breederQueryService->calculateBreederRank($this->getUser()->getId());
-        return [];
+        $pet = $this->breederPetsRepository->find($request->get('pet_id'));
+        if (!$pet) {
+            throw new HttpException\NotFoundHttpException();
+        }
+        $breeder = $pet->getBreeder();
+        $avgEvaluation = $this->breederQueryService->calculateBreederRank($breeder->getId());
+        $breeder->setBreederRank($avgEvaluation);
+
+        $msgHeader = $this->breederContactHeaderRepository->findOneBy([
+            'Customer' => $this->getUser(),
+            'Breeder' => $breeder,
+            'Pet' => $pet
+        ]);
+        if (!$msgHeader) {
+            throw new HttpException\NotFoundHttpException();
+        }
+        switch ($msgHeader->getContractStatus()) {
+            case AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION:
+                $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT);
+                break;
+            case AnilineConf::CONTRACT_STATUS_WAITCONTRACT:
+                $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT);
+                break;
+        }
+        $msgHeader->setCustomerCheck(1);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($breeder);
+        $entityManager->persist($msgHeader);
+        $entityManager->flush();
+
+        return $this->render('animalline/breeder/member/contract_complete.twig');
     }
 
     /**
