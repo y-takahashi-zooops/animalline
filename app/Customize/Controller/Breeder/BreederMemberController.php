@@ -118,8 +118,7 @@ class BreederMemberController extends AbstractController
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         CustomerRepository               $customerRepository,
         BreederContactHeaderRepository   $breederContactHeaderRepository
-    )
-    {
+    ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
@@ -272,6 +271,7 @@ class BreederMemberController extends AbstractController
      */
     public function contract(Request $request)
     {
+        $avgEvaluation = $this->breederQueryService->calculateBreederRank($this->getUser()->getId());
         return [];
     }
 
@@ -462,8 +462,10 @@ class BreederMemberController extends AbstractController
         $isEdit = false;
         if ($breederExaminationInfo) {
             $isEdit = true;
-            if (in_array($breederExaminationInfo->getPedigreeOrganization(),
-                [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC])) {
+            if (in_array(
+                $breederExaminationInfo->getPedigreeOrganization(),
+                [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC]
+            )) {
                 $breederExaminationInfo->setGroupOrganization($breederExaminationInfo->getPedigreeOrganization());
                 $breederExaminationInfo->setPedigreeOrganization(AnilineConf::PEDIGREE_ORGANIZATION_JKC);
             }
