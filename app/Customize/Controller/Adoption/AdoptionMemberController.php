@@ -110,8 +110,7 @@ class AdoptionMemberController extends AbstractController
         ConservationsHousesRepository       $conservationsHouseRepository,
         ConservationPetsRepository          $conservationPetsRepository,
         CustomerRepository                  $customerRepository
-    )
-    {
+    ) {
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
@@ -497,8 +496,8 @@ class AdoptionMemberController extends AbstractController
     public function adoption_message_contract(ConservationContactHeader $rootMessage)
     {
         $currentStatus = $rootMessage->getContractStatus();
-        if ($currentStatus === AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITING_CONFIRM);
-        else if ($currentStatus === AnilineConf::CONTRACT_STATUS_WAITING_CONFIRM) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT);
+        if ($currentStatus === AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT);
+        else if ($currentStatus === AnilineConf::CONTRACT_STATUS_WAITCONTRACT) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT);
         $rootMessage->setCustomerCheck(1);
 
         $entityManager = $this->getDoctrine()->getManager();
