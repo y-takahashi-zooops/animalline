@@ -153,7 +153,7 @@
                 {% endfor %}
 
                 {# 返信欄・ボタン #}
-                {% if (message.contractStatus  not in [constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_CONTRACT'), constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_NONCONTRACT')]) %}
+                {% if (rootMessage.contractStatus  not in [constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_CONTRACT'), constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_NONCONTRACT')]) %}
                 <div class="row">
                     <div class="col-1"></div>
                     <div class="col-12 col-sm-10">
@@ -161,15 +161,15 @@
                             <form action="{{ path('breeder_configration_messages', {'contact_id': rootMessage.id}) }}"
                                   method="post">
                                 <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
-                                          placeholder="返信メッセージ" {{ isHidden ? 'disabled' : '' }}></textarea>
-                                <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4" name="mode" value="submit" id="submit" {{ isHidden ? 'disabled' : '' }}>
+                                          placeholder="返信メッセージ"></textarea>
+                                <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4" name="mode" value="submit" id="submit">
                                     送信
                                 </button>
 
                                 <div class="d-flex">
-                                    <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract" {{ isHidden ? 'disabled' : '' }}>成約
+                                    <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">成約
                                     </button>
-                                    <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel" {{ isHidden ? 'disabled' : '' }}>取引をキャンセルする
+                                    <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">取引をキャンセルする
                                     </button>
                                 </div>
                             </form>
