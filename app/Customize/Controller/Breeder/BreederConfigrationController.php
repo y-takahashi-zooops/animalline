@@ -122,32 +122,32 @@ class BreederConfigrationController extends AbstractController
      * @Template("animalline/breeder/configration/index.twig")
      */
     public function breeder_configration(Request $request)
-    {
-        $rootMessages = $this->breederContactsRepository->findBy(
-            [
-                'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
-                'Breeder' => $this->getUser(),
-                'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
-            ],
-            ['is_response' => 'ASC', 'send_date' => 'DESC']
-        );
+     {
+        // $rootMessages = $this->breederContactsRepository->findBy(
+        //     [
+        //         'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
+        //         'Breeder' => $this->getUser(),
+        //         'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
+        //     ],
+        //     ['is_response' => 'ASC', 'send_date' => 'DESC']
+        // );
 
-        $lastReplies = [];
-        foreach ($rootMessages as $message) {
-            $lastReply = $this->breederContactsRepository->findOneBy(
-                ['parent_message_id' => $message->getId()],
-                ['send_date' => 'DESC']
-            );
-            $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
-        }
+        // $lastReplies = [];
+        // foreach ($rootMessages as $message) {
+        //     $lastReply = $this->breederContactsRepository->findOneBy(
+        //         ['parent_message_id' => $message->getId()],
+        //         ['send_date' => 'DESC']
+        //     );
+        //     $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
+        // }
 
         $pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
 
         return $this->render(
             'animalline/breeder/configration/index.twig',
             [
-                'rootMessages' => $rootMessages,
-                'lastReplies' => $lastReplies,
+                // 'rootMessages' => $rootMessages,
+                // 'lastReplies' => $lastReplies,
                 'breeder' => $this->getUser(),
                 'pets' => $pets,
             ]

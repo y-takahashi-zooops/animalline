@@ -2,7 +2,7 @@
 
 {% extends 'ani_frame.twig' %}
 
-{% block main %}  
+{% block main %}
     <div class="section-search">
         <div class="main">
             {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
@@ -31,7 +31,6 @@
             <div class="m-2 p-2"></div>
             <form action="{{ url('adoption_pet_search_result') }}" method="get">
                 <input type="hidden" name="pet_kind" value="{{ petKind }}">
-
                 <div class="row">
                     <div class="col-md-5 select-container mb-2 mb-sm-none">
                         <select class="form_dropdown w-100" id="formControlSelect1" name="breed_type">
@@ -49,7 +48,7 @@
                         </select>
                     </div>
                     <div class="col-md-3 select-container">
-                            <select class="form_dropdown w-100" id="formControlSelect3" name="region">
+                        <select class="form_dropdown w-100" id="formControlSelect3" name="region">
                                 <option value="">都道府県</option>
                                 {% for region in regions %}
                                     <option value="{{ region.id }}">{{ region.name }}</option>
@@ -61,7 +60,7 @@
                 <div class="row">
                     <div style="margin: 0 auto;">
                         <a href="#">
-                            <button class="search_button bg-accent">検索する</button>
+                            <button class="search_button bg-accent mt-3">検索する</button>
                         </a>
                     </div>
                 </div>
@@ -103,7 +102,7 @@
                                         <div class="m-2"></div>
                                         <h4>{{ pet.prComment }}</h4>
                                         <div class="m-2"></div>
-                                        <h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4>
+                                        <h4>掲載日：{{ pet.releaseDate|date('Y年m月d日') }}</h4>
                                         <div class="m-4"></div>
                                         <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円（税込）</span>
                                         </h3>
@@ -118,14 +117,13 @@
                 {# 新着　END #}
                 <div class="m-2 p-2"></div>
                 {# 注目のペット #}
-                
                 <div class="d-flex justify-content-between align-items-end">
                     <h2>注目のペット</h2>
                 </div>
                 <div class="section-sub-content">
                     <div class="m-1 p-1"></div>
-                    {% for pet in favoritePets %}
-                        <div class="row pl-3">
+                    <div class="row pl-3">
+                        {% for pet in favoritePets %}
                             <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
                                 <div class="catalog-card">
                                     <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
@@ -142,7 +140,7 @@
                                         <div class="mb-2"></div>
                                         <div class="d-flex">
                                             {% set conservationHouse = pet.Conservation.getConservationHouseByPetType(pet.petKind) %}
-                                            <h4 class="mr-3">{{ conservationHouse.conservationHouseCity ~ ' ' ~ conservationHouse.conservationHousePref ?? '' }}</h4>
+                                            <h4 class="mr-3">{{ conservationHouse.conservationHousePref ~ ' ' ~ conservationHouse.conservationHouseCity ?? '' }}</h4>
                                             <h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
                                         </div>
                                         <div class="m-2"></div>
@@ -155,10 +153,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    {% else %}
-                        結果が０件です。
-                    {% endfor %}
+                            {% else %}
+                            結果が０件です。
+                        {% endfor %}
+                    </div>
                 </div>
                 {# 注目のペット END #}
                 <div class="m-2 p-2"></div>
@@ -360,7 +358,7 @@
                             <a href="category.html">
                                 <div class="size-card bg-white">
                                     <div class="card-img w-100 text-align-center">
-                                    <img src="{{ asset('assets/img/dog-silhouette-m.svg') }}" class="d-inline-block  vertical-align-middle">
+                                        <img src="{{ asset('assets/img/dog-silhouette-m.svg') }}" class="d-inline-block  vertical-align-middle">
                                     </div>
                                     <div class="card-body">
                                         <h4 class="text-align-center font-weight-600 color-gray-500">中型犬</h4>
@@ -411,4 +409,3 @@
         });
     </script>
 {% endblock %}
-    

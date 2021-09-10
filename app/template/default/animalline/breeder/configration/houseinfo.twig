@@ -8,7 +8,7 @@
     </div>
     <div class="ec-off1Grid">
         <div class="ec-off1Grid__cell">
-            <form name="breeder-house" method="post" action="{{ url('breeder_houseinfo', {'pet_type': petType, 'return_to': return_to}) }}"
+            <form name="breeder-house" method="post" action="{{ url('breeder_house_info', {'pet_type': petType, 'return_to': return_to}) }}"
                   novalidate class="h-adr">
                 <span class="p-country-name" style="display:none;">Japan</span>
                 <h2>{{ petType==1?'犬舎情報':'猫舎情報' }}</h2>

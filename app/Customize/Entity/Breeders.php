@@ -72,7 +72,7 @@ class Breeders
     /**
      * @ORM\Column(name="breeder_rank", type="decimal", nullable=false, precision=2, scale=1,  options={"default":0})
      */
-    private $breeder_rank;
+    private $breeder_rank = 0;
 
     /**
      * @ORM\Column(name="license_name", type="string", length=255, nullable=true)

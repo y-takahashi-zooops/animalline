@@ -104,7 +104,6 @@ class BreederQueryService
             ->getResult();
     }
 
-
     public function searchBreedersResult($request, $petKind): array
     {
         $query = $this->breedersRepository->createQueryBuilder('b')
