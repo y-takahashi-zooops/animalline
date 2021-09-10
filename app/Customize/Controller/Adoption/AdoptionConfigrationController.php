@@ -137,21 +137,12 @@ class AdoptionConfigrationController extends AbstractController
             ['is_response' => 'ASC', 'send_date' => 'DESC']
         );
 
-        $lastReplies = [];
-        foreach ($rootMessages as $message) {
-            $lastReply = $this->conservationContactsRepository->findOneBy(
-                ['send_date' => 'DESC']
-            );
-            $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
-        }
-
         $pets = $this->conservationPetsRepository->findBy(['Conservation' => $this->getUser()], ['update_date' => 'DESC']);
 
         return $this->render(
             'animalline/adoption/configration/index.twig',
             [
                 'rootMessages' => $rootMessages,
-                'lastReplies' => $lastReplies,
                 'conservation' => $this->getUser(),
                 'pets' => $pets
             ]
@@ -200,7 +191,7 @@ class AdoptionConfigrationController extends AbstractController
                 $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT )
                     ->setConservationCheck(1);
             }
-            if ($rootMessage->getContractStatus() === AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $rootMessage->getCustomerCheck() === 1) {
+            if ($rootMessage->getContractStatus() === AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $rootMessage->getConservationCheck() === 1) {
                 $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setConservationCheck(1);
             }
