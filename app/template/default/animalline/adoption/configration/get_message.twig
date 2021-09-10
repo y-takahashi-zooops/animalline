@@ -28,7 +28,7 @@
                                             状態：{{ message.getContractStatus()==0 ? '交渉中' : message.getContractStatus()==1 ? '成約確認待ち' : message.getContractStatus()==2 ? '成約 ': '非成約' }}</h4>
                                         <div>
                                             <h4 class="mr-sm-5 ml-5">
-                                                返信日時：{{ lastReplies[message.id].format('Y年m月d日 H:i') ?? 'なし。' }}</h4>
+                                                返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}</h4>
                                             <h4 class="mr-sm-5 ml-5 float-right">{{ message.getConservationNewMsg() == 1?'未読あり':'' }}</h4>
                                         </div>
                                     </div>
@@ -77,7 +77,7 @@
                             <div class="m-4"></div>
                             <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}
                                 <span>円（税込）</span></h3>
-                            <a href={{ path('conservation_configuration_pets_edit', {'id': pet.id}) }} class="btn basic-btn
+                            <a href={{ path('adoption_configuration_pets_edit', {'id': pet.id}) }} class="btn basic-btn
                                btn-primary text-align-center my-2">編集</a>
                         </div>
                     </div>

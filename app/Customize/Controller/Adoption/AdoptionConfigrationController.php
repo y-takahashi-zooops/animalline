@@ -103,15 +103,9 @@ class AdoptionConfigrationController extends AbstractController
             ['send_date' => 'DESC']
         );
 
-        $lastReplies = [];
         $name = [];
         foreach ($rootMessages as $message) {
-            $lastReply = $this->conservationContactsRepository->findOneBy(
-                ['ConservationHeader' => $message],
-                ['send_date' => 'DESC']
-            );
             $name[$message->getId()] = "{$message->getCustomer()->getName01()} {$message->getCustomer()->getName02()}";
-            $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
         }
 
         $pets = $this->conservationPetsRepository->findBy(['Conservation' => $this->getUser()], ['update_date' => 'DESC']);
@@ -120,7 +114,6 @@ class AdoptionConfigrationController extends AbstractController
             'animalline/adoption/configration/get_message.twig',
             [
                 'rootMessages' => $rootMessages,
-                'lastReplies' => $lastReplies,
                 'conservation' => $this->getUser(),
                 'pets' => $pets,
                 'name' => $name
