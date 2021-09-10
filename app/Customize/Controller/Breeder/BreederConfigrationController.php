@@ -116,12 +116,7 @@ class BreederConfigrationController extends AbstractController
         $lastReplies = [];
         $name = [];
         foreach ($rootMessages as $message) {
-            $lastReply = $this->breederContactsRepository->findOneBy(
-                ['BreederHeader' => $message],
-                ['send_date' => 'DESC']
-            );
             $name[$message->getId()] = "{$message->getCustomer()->getName01()} {$message->getCustomer()->getName02()}";
-            $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
         }
 
         $pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
@@ -130,7 +125,6 @@ class BreederConfigrationController extends AbstractController
             'animalline/breeder/configration/get_message.twig',
             [
                 'rootMessages' => $rootMessages,
-                'lastReplies' => $lastReplies,
                 'name' => $name,
                 'breeder' => $this->getUser(),
                 'pets' => $pets
@@ -204,7 +198,8 @@ class BreederConfigrationController extends AbstractController
                 ->setContactDescription($description)
                 ->setSendDate(new DateTime());
             $entityManager = $this->getDoctrine()->getManager();
-            $rootMessage->setCustomerNewMsg(1);
+            $rootMessage->setCustomerNewMsg(1)
+                        ->setLastMessageDate(Carbon::now());
             $entityManager->persist($breederContact);
             $entityManager->persist($rootMessage);
             $entityManager->flush();

@@ -180,6 +180,7 @@
             </div>
         </div>
     </div>
+
     <form action="{{ url('breeder_configration_messages', {'contact_id': rootMessage.id}) }}" method="post"
           name="contract-cancel-form">
         {{ include('animalline/components/_modal_contract_cancel.twig') }}
@@ -195,6 +196,7 @@
 {% endblock %}
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
     document.getElementById("cancel").onclick = function() {
     $('#modal_cancel').modal('show');
