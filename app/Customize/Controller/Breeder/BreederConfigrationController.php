@@ -139,7 +139,7 @@ class BreederConfigrationController extends AbstractController
      * @Template("animalline/breeder/configration/index.twig")
      */
     public function breeder_configration(Request $request)
-     {
+    {
         // $rootMessages = $this->breederContactsRepository->findBy(
         //     [
         //         'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
@@ -200,7 +200,7 @@ class BreederConfigrationController extends AbstractController
                 ->setSendDate(new DateTime());
             $entityManager = $this->getDoctrine()->getManager();
             $rootMessage->setCustomerNewMsg(1)
-                        ->setLastMessageDate(Carbon::now());
+                ->setLastMessageDate(Carbon::now());
             $entityManager->persist($breederContact);
             $entityManager->persist($rootMessage);
             $entityManager->flush();
@@ -212,7 +212,7 @@ class BreederConfigrationController extends AbstractController
                 $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
                     ->setBreederCheck(1);
             }
-            if ($rootMessage->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT) {
+            if ($rootMessage->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $rootMessage->getCustomerCheck() == 1) {
                 $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setBreederCheck(1);
             }

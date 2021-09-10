@@ -275,6 +275,14 @@ class BreederMemberController extends AbstractController
         if (!$pet) {
             throw new HttpException\NotFoundHttpException();
         }
+        $msgHeader = $this->breederContactHeaderRepository->findOneBy([
+            'Customer' => $this->getUser(),
+            'Breeder' => $pet->getBreeder(),
+            'Pet' => $pet
+        ]);
+        if (!$msgHeader) {
+            throw new HttpException\NotFoundHttpException();
+        }
 
         $pet_rate = $this->breederEvaluationsRepository->findOneBy(['Pet' => $pet]);
         if ($pet_rate) {
@@ -313,7 +321,8 @@ class BreederMemberController extends AbstractController
         return [
             'form' => $form->createView(),
             'pet_id' => $pet_id,
-            'thumbnail_path' => $thumbnail_path
+            'thumbnail_path' => $thumbnail_path,
+            'msg_id' => $msgHeader->getId()
         ];
     }
 

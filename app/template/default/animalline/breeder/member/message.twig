@@ -169,7 +169,7 @@
                     {% if (msg.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_CONFIGURATION')) %}
                         <div class="row">
                             <div class="col-1 user-img">
-                                <img src="{{ breeder.thumbnailPath | default(constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                <img src="{{ breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                                      style="width: 40px; height:40px; border-radius: 50%;">
                             </div>
                             <div class="col-10">
@@ -216,7 +216,7 @@
 
                                     <div class="d-flex">
                                         {% if Customer.isbreeder == 0 %}
-                                            <button type="button" class="ec-blockBtn--action mt-2 mr-2"
+                                            <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--action mt-2 mr-2"
                                                     onclick="location.href='{{ url('breeder_contract', {'pet_id': message.pet.id}) }}'">
                                                 成約
                                             </button>
