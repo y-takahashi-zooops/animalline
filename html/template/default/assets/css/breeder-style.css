@@ -14,6 +14,32 @@
     --gray-100: #F8F8F8;
 }
 
+.bg-breeder {
+    background-color: var(--breeder-main-color)!important;
+    border: var(--breeder-main-color)!important;
+}
+
+.bg-sub-breeder {
+    background-color: #69ff96;
+}
+
+.section-search {
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--breeder-main-color)!important;
+}
+
+.section-sub-content {
+    border-style: solid;
+    border-width: 2px 0px 0px 0px;
+    border-color: var(--breeder-main-color)!important;
+}
+
+.color-breeder {
+    color: var(--breeder-main-color);
+}
+
 .header-nav .nav-link.active {
     background-color: var(--breeder-main-color);
 }
@@ -27,6 +53,14 @@
     color: var(--breeder-main-color);
 }
 
+.breeder-btn {
+    background-color: var(--breeder-main-color);
+}
+
+.breeder-btn:hover {
+    background-color: #69ff96;
+}
+
 .pagination .page-item.active .page-link {
     background-color: var(--breeder-main-color);
     border-color: var(--breeder-main-color);
@@ -36,33 +70,8 @@
     color: var(--breeder-main-color)
 }
 
-.bg-breeder {
-    background-color: var(--breeder-main-color) !important;
-    border: var(--breeder-main-color) !important;
-}
-
-.bg-section {
-    background-color: rgb(167, 230, 162) !important;
-}
-
-.color-breeder {
-    color: var(--breeder-main-color);
-}
-
-.breeder-btn {
-    background-color: var(--breeder-main-color);
-}
-
-.breeder-btn:hover {
-    background-color: #69ff96;
-}
-
 .breeder-border {
     border: 3px solid #69ff96 !important;
-}
-
-.bg-sub-adoption {
-    background-color: #69ff96;
 }
 
 .hidden {
@@ -113,5 +122,4 @@ video {
   
 .balloon-right:after {
     border-left: 14px solid #69ff96;
-  }
-  
+}  

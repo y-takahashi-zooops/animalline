@@ -43,8 +43,7 @@ class BreederQueryService
         PetsFavoriteRepository $petsFavoriteRepository,
         PrefAdjacentRepository $prefAdjacentRepository,
         BreedersRepository     $breedersRepository
-    )
-    {
+    ) {
         $this->breederPetsRepository = $breederPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->prefAdjacentRepository = $prefAdjacentRepository;
@@ -104,7 +103,6 @@ class BreederQueryService
             ->getResult();
     }
 
-
     public function searchBreedersResult($request, $petKind): array
     {
         $query = $this->breedersRepository->createQueryBuilder('b')
@@ -139,7 +137,7 @@ class BreederQueryService
 
         if ($request->get('license')) {
             $query->andWhere('b.license_name LIKE :license OR b.license_house_name LIKE :license')
-                ->setParameter('license', '%' . $request->get('license') .'%');
+                ->setParameter('license', '%' . $request->get('license') . '%');
         }
 
         return $query->addOrderBy('b.update_date', 'DESC')
@@ -158,6 +156,20 @@ class BreederQueryService
             ->getQuery()
             ->getResult();
         return $query;
+    }
+
+    public function calculateBreederRank($breederId): float
+    {
+        $result = $this->breedersRepository->createQueryBuilder('b')
+            ->join('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.Breeder')
+            ->join('Customize\Entity\BreederEvaluations', 'be', 'WITH', 'be.Pet = bp.id')
+            ->where('b.id = :breeder_id')
+            ->setParameter('breeder_id', $breederId)
+            ->select('avg(be.evaluation_value) as avg_evaluation')
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return round($result['avg_evaluation'], 1);
     }
 
     /**

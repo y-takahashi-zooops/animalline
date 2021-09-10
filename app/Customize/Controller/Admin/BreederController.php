@@ -289,7 +289,19 @@ class BreederController extends AbstractController
         if ($request->isMethod('POST')) {
             $result = (int)$request->get('examination_result');
             $examination->setExaminationResult($result)
-                ->setExaminationResultComment($comment);
+                ->setExaminationResultComment($comment)
+                ->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_COMPLETE);
+
+            $breeder = $this->breedersRepository->find($breederId);
+            // $handling_pet_kind = $breeder->getHandlingPetKind();
+            
+            // breederの審査ステータスを変更
+            if( $result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK ){
+                $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK);
+            } elseif( $result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_NG ) {
+                $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG);
+            }
+        
             $data['examination_comment'] = $comment;
             if ($result === AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
                 $this->mailService->sendBreederExaminationMailAccept($Customer, $data);
@@ -303,6 +315,7 @@ class BreederController extends AbstractController
             $entityManager->persist($Customer);
             $entityManager->flush();
 
+            $this->addSuccess('審査結果を登録しました。', 'admin');
             return $this->redirectToRoute('admin_breeder_examination', ['id' => $breederId]);
         }
 

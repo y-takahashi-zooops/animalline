@@ -133,6 +133,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * ブリーダー用ユーザーページ
+     *
      * @Route("/breeder/member/", name="breeder_mypage")
      * @Template("animalline/breeder/member/index.twig")
      */
@@ -165,6 +167,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * ペット詳細
+     *
      * @Route("/breeder/pet/detail/{id}", name="breeder_pet_detail", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/pet/detail.twig")
      */
@@ -253,6 +257,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * ブリーダー検索
+     * 
      * @Route("/breeder/breeder_search", name="breeder_search")
      * @Template("/animalline/breeder/breeder_search.twig")
      */

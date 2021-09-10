@@ -44,12 +44,13 @@ final class AnilineConf
     const RESPONSE_REPLIED = 1;
 
     const CONTRACT_STATUS_UNDER_NEGOTIATION = 0;
-    const CONTRACT_STATUS_WAITING_CONFIRM = 1;
+    const CONTRACT_STATUS_WAITCONTRACT = 1;
     const CONTRACT_STATUS_CONTRACT = 2;
     const CONTRACT_STATUS_NONCONTRACT = 3;
+
     const CONTRACT_STATUSES = [
         self::CONTRACT_STATUS_UNDER_NEGOTIATION => '交渉中',
-        self::CONTRACT_STATUS_WAITING_CONFIRM => '成約確認待ち',
+        self::CONTRACT_STATUS_WAITCONTRACT => '成約確認待ち',
         self::CONTRACT_STATUS_CONTRACT => '成約',
         self::CONTRACT_STATUS_NONCONTRACT => '非成約'
     ];
@@ -106,18 +107,22 @@ final class AnilineConf
     const NONE = 0;
     const CAN_BE = 1;
 
+    // 審査結果(breedes)
     const ANILINE_EXAMINATION_STATUS_NOT_SUBMIT = 0;    // 審査前
     const ANILINE_EXAMINATION_STATUS_NOT_CHECK = 1;     // 審査中
     const ANILINE_EXAMINATION_STATUS_CHECK_OK = 2;      // 審査OK
     const ANILINE_EXAMINATION_STATUS_CHECK_NG = 3;      // 審査NG
 
+    // 審査結果(breeder_examination_info)
     const ANILINE_EXAMINATION_RESULT_NOT_DECISION = 0;  // 審査決定前
     const ANILINE_EXAMINATION_RESULT_DECISION_OK = 1;   // 審査通過
     const ANILINE_EXAMINATION_RESULT_DECISION_NG = 2;   // 審査拒否
 
+    // 入力状態
     const ANILINE_INPUT_STATUS_INPUT_NOT_COMPLETE = 0;  // 入力未完了
     const ANILINE_INPUT_STATUS_INPUT_COMPLETE = 1;      // 入力完了
-    const ANILINE_INPUT_STATUS_SUBMIT = 2;              // 審査中 or 完了
+    const ANILINE_INPUT_STATUS_SUBMIT = 2;              // 審査中
+    const ANILINE_INPUT_STATUS_COMPLETE = 3;            // 完了
 
     const PUBLIC_FLAG_PRIVATE = 0;
     const PUBLIC_FLAG_RELEASE = 1;
