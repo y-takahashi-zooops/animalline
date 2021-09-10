@@ -179,7 +179,8 @@ class AdoptionConfigrationController extends AbstractController
                 ->setContactDescription($description)
                 ->setSendDate(new DateTime());
             $entityManager = $this->getDoctrine()->getManager();
-            $rootMessage->setCustomerNewMsg(1);
+            $rootMessage->setCustomerNewMsg(1)
+                        ->setLastMessageDate(Carbon::now());
             $entityManager->persist($conservationContact);
             $entityManager->persist($rootMessage);
             $entityManager->flush();
@@ -187,13 +188,15 @@ class AdoptionConfigrationController extends AbstractController
         }
 
         if ($isAcceptContract) {
-            if ($rootMessage->getContractStatus() === AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
-                $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT )
+            switch ($rootMessage->getContractStatus()) {
+                case AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION:
+                    $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT )
                     ->setConservationCheck(1);
-            }
-            if ($rootMessage->getContractStatus() === AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $rootMessage->getConservationCheck() === 1) {
-                $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
+                    break;
+                case AnilineConf::CONTRACT_STATUS_WAITCONTRACT:
+                    $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT )
                     ->setConservationCheck(1);
+                    break;
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($rootMessage);

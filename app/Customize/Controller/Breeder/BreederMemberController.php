@@ -284,8 +284,8 @@ class BreederMemberController extends AbstractController
             throw new HttpException\NotFoundHttpException();
         }
 
-        $pet_rate = $this->breederEvaluationsRepository->findOneBy(['Pet' => $pet]);
-        if ($pet_rate) {
+        $petRate = $this->breederEvaluationsRepository->findOneBy(['Pet' => $pet]);
+        if ($petRate) {
             return $this->redirectToRoute('breeder_all_message');
         }
 
