@@ -45,6 +45,14 @@ class CustomizeNav implements EccubeNav
 					],
 				],
 			],
+			'order' => [
+				'children' => [
+					'shipping_instructions' => [
+						'name' => '出荷指示管理',
+						'url' => 'admin_shipping_instructions',
+					],
+				],
+			],
 		];
 	}
 }
