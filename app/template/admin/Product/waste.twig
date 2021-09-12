@@ -12,8 +12,8 @@ file that was distributed with this source code.
 
 {% set menus = ['product', 'waste'] %}
 
-{% block title %}{{ 'admin.product.category_management'|trans }}{% endblock %}
-{% block sub_title %}廃棄管理{% endblock %}
+{% block title %}廃棄管理{% endblock %}
+{% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
 
 {% block javascript %}
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.core.min.js', 'admin') }}"></script>
@@ -26,5 +26,92 @@ file that was distributed with this source code.
 {% block stylesheet %}{% endblock %}
 
 {% block main %}
-    廃棄管理
+    <div class="c-outsideBlock">
+        <form id='search_form' method="post" action="#">
+            <div class="c-outsideBlock__contents">
+                <div class="row justify-content-start">
+                    <div class="col-6">
+                        <div class="mb-2">
+                            <label class="col-form-label" data-tooltip="true" data-placement="top" title="情報を入力して一覧の絞り込み検索ができます。">商品名・JANコード<i class="fa fa-question-circle fa-lg ml-1"></i></label>
+                            <input type="text" id="admin_search_product_id" name="admin_search_product[id]" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="c-outsideBlock__contents mb-5">
+                <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.search'|trans }}</button>
+            </div>
+        </form>
+    </div>
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <form id="form_bulk" method="POST" action="">
+                    <div class="card rounded border-0 mb-4 d-block">
+                        <div class="card-body p-0">
+                            <table class="table table-sm">
+                                <thead>
+                                <tr>
+                                    <th class="border-top-0 pt-2 pb-2">{{ 'admin.product.product_id__short'|trans }}</th>
+                                    <th class="border-top-0 pt-2 pb-2">{{ 'admin.product.name'|trans }}</th>
+                                    <th class="border-top-0 pt-2 pb-2">廃棄日</th>
+                                    <th class="border-top-0 pt-2 pb-2">廃棄数量</th>
+                                    <th class="border-top-0 pt-2 pb-2">廃棄理由</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="align-middle">1</td>
+                                        <td class="align-middle">
+                                            商品1
+                                        </td>
+                                        <td class="align-middle">
+                                            2021/09/10
+                                        </td>
+                                        <td class="align-middle">
+                                            20
+                                        </td>
+                                        <td class="align-middle">
+                                            廃棄理由1
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="align-middle">2</td>
+                                        <td class="align-middle">
+                                            商品2
+                                        </td>
+                                        <td class="align-middle">
+                                            2021/09/10
+                                        </td>
+                                        <td class="align-middle">
+                                            40
+                                        </td>
+                                        <td class="align-middle">
+                                            廃棄理由2
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="align-middle">3</td>
+                                        <td class="align-middle">
+                                            商品3
+                                        </td>
+                                        <td class="align-middle">
+                                            2021/09/10
+                                        </td>
+                                        <td class="align-middle">
+                                            30
+                                        </td>
+                                        <td class="align-middle">
+                                            廃棄理由3
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
+
