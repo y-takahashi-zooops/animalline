@@ -15,6 +15,7 @@ use Customize\Entity\ConservationsHouse;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Repository\Master\PrefRepository;
+use Customize\Repository\ConservationContactHeaderRepository;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\SendoffReasonRepository;
 use Customize\Repository\ConservationsRepository;
@@ -29,9 +30,15 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\ConservationContactType;
+use DateTime;
 
 class AdoptionMemberController extends AbstractController
 {
+    /**
+     * @var ConservationContactHeaderRepository
+     */
+    protected $conservationContactHeaderRepository;
+
     /**
      * @var ConservationContactsRepository
      */
@@ -57,7 +64,7 @@ class AdoptionMemberController extends AbstractController
      */
     protected $conservationsRepository;
 
-	/**
+    /**
      * @var ConservationsHouseRepository
      */
     protected $conservationsHouseRepository;
@@ -66,12 +73,12 @@ class AdoptionMemberController extends AbstractController
      * @var PrefRepository
      */
     protected $prefRepository;
-    
+
     /**
      * @var ConservationPetsRepository
      */
     protected $conservationPetsRepository;
-    
+
     /**
      * @var CustomerRepository
      */
@@ -81,37 +88,39 @@ class AdoptionMemberController extends AbstractController
     /**
      * ConservationController constructor.
      *
+     * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      * @param ConservationContactsRepository $conservationContactsRepository
      * @param ConservationPetImageRepository $conservationPetImageRepository
      * @param AdoptionQueryService $adoptionQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
-	 * @param ConservationsRepository $conservationsRepository
-	 * @param ConservationsHousesRepository $conservationsHouseRepository
-	 * @param ConservationPetsRepository $conservationPetsRepository
-	 * @param CustomerRepository $customerRepository
+     * @param ConservationsRepository $conservationsRepository
+     * @param ConservationsHousesRepository $conservationsHouseRepository
+     * @param ConservationPetsRepository $conservationPetsRepository
+     * @param CustomerRepository $customerRepository
      */
     public function __construct(
-        ConservationContactsRepository $conservationContactsRepository,
-        AdoptionQueryService $adoptionQueryService,
-        PetsFavoriteRepository $petsFavoriteRepository,
-        SendoffReasonRepository $sendoffReasonRepository,
-        ConservationsRepository $conservationsRepository,
-        PrefRepository $prefRepository,
-		ConservationsHousesRepository $conservationsHouseRepository,
-		ConservationPetsRepository $conservationPetsRepository,
-		CustomerRepository $customerRepository
-    )
-    {
+        ConservationContactHeaderRepository $conservationContactHeaderRepository,
+        ConservationContactsRepository      $conservationContactsRepository,
+        AdoptionQueryService                $adoptionQueryService,
+        PetsFavoriteRepository              $petsFavoriteRepository,
+        SendoffReasonRepository             $sendoffReasonRepository,
+        ConservationsRepository             $conservationsRepository,
+        PrefRepository                      $prefRepository,
+        ConservationsHousesRepository       $conservationsHouseRepository,
+        ConservationPetsRepository          $conservationPetsRepository,
+        CustomerRepository                  $customerRepository
+    ) {
+        $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->sendoffReasonRepository = $sendoffReasonRepository;
         $this->conservationsRepository = $conservationsRepository;
         $this->prefRepository = $prefRepository;
-		$this->conservationsHouseRepository = $conservationsHouseRepository;
-		$this->conservationPetsRepository = $conservationPetsRepository;
-		$this->customerRepository = $customerRepository;
+        $this->conservationsHouseRepository = $conservationsHouseRepository;
+        $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -152,27 +161,16 @@ class AdoptionMemberController extends AbstractController
     }
 
     /**
-     * 取引メッセージ一覧
-     * 
      * @Route("/adoption/member/all_message", name="adoption_get_message_mypage")
      * @Template("animalline/adoption/member/adoption_message.twig")
      */
-    public function get_message_mypage(Request $request)
+    public function get_message_mypage()
     {
-        $rootMessages = $this->conservationContactsRepository
-            ->findBy(['Customer' => $this->getUser(), 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
+        $rootMessages = $this->conservationContactHeaderRepository->findBy(['Customer' => $this->getUser()], ['last_message_date' => 'DESC']);
 
-        $lastReplies = [];
-        foreach ($rootMessages as $rootMessage) {
-            $lastReply = $this->conservationContactsRepository
-                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
-            $lastReplies[$rootMessage->getId()] = $lastReply;
-        }
-
-        return $this->render('animalline/adoption/member/adoption_message.twig', [
-            'rootMessages' => $rootMessages,
-            'lastReplies' => $lastReplies
-        ]);
+        return compact(
+            'rootMessages'
+        );
     }
 
     /**
@@ -184,46 +182,54 @@ class AdoptionMemberController extends AbstractController
     public function examination(Request $request)
     {
         $user = $this->getUser();
-		$conservation = $this->conservationsRepository->find($user);
+        $conservation = $this->conservationsRepository->find($user);
 
-		$step = 1;
+        $step = 1;
 
-		// 基本情報が登録済みであればSTEP2を表示
-		if($conservation){
-			$step = 2;
+        // 基本情報が登録済みであればSTEP2を表示
+        if ($conservation) {
+            $step = 2;
 
-			// 基本情報の取扱ペットに対応する犬舎・猫舎情報が登録されていればSTEP3を表示
-			$handling_pet_kind = $conservation->getHandlingPetKind();
-			$dog_house_info = $this->conservationsHouseRepository->findOneBy(["Conservation" => $conservation,"pet_type" => 1]);
-			$cat_house_info = $this->conservationsHouseRepository->findOneBy(["Conservation" => $conservation,"pet_type" => 2]);
+            // 基本情報の取扱ペットに対応する犬舎・猫舎情報が登録されていればSTEP3を表示
+            $handling_pet_kind = $conservation->getHandlingPetKind();
+            $dog_house_info = $this->conservationsHouseRepository->findOneBy(["Conservation" => $conservation, "pet_type" => 1]);
+            $cat_house_info = $this->conservationsHouseRepository->findOneBy(["Conservation" => $conservation, "pet_type" => 2]);
 
-			// if($handling_pet_kind == 0 && $cat_house_info && $dog_house_info){$step = 3;}
-			// if($handling_pet_kind == 1 && $dog_house_info){$step = 3;}
-			// if($handling_pet_kind == 2 && $cat_house_info){$step = 3;}
+            // if($handling_pet_kind == 0 && $cat_house_info && $dog_house_info){$step = 3;}
+            // if($handling_pet_kind == 1 && $dog_house_info){$step = 3;}
+            // if($handling_pet_kind == 2 && $cat_house_info){$step = 3;}
 
-			// 審査情報が登録されていればSTEP4を表示
+            // 審査情報が登録されていればSTEP4を表示
             // $dog_examination_info = $this->conservationExaminationInfoRepository->findOneBy(["Conservation" => $conservation,"pet_type" => 1]);
             // $cat_examination_info = $this->conservationExaminationInfoRepository->findOneBy(["Conservation" => $conservation,"pet_type" => 2]);
 
-			// if($handling_pet_kind == 0 && $dog_examination_info && $cat_examination_info ){$step = 4;}
-			// if($handling_pet_kind == 1 && $dog_examination_info ){$step = 4;}
-			// if($handling_pet_kind == 2 && $cat_examination_info ){$step = 4;}
+            // if($handling_pet_kind == 0 && $dog_examination_info && $cat_examination_info ){$step = 4;}
+            // if($handling_pet_kind == 1 && $dog_examination_info ){$step = 4;}
+            // if($handling_pet_kind == 2 && $cat_examination_info ){$step = 4;}
 
             // 審査情報は未実装なのでSTEP3の条件を満たしていればSTEP4を表示
-            if($handling_pet_kind == 0 && $cat_house_info && $dog_house_info){$step = 4;}
-			if($handling_pet_kind == 1 && $dog_house_info){$step = 4;}
-			if($handling_pet_kind == 2 && $cat_house_info){$step = 4;}
+            if ($handling_pet_kind == 0 && $cat_house_info && $dog_house_info) {
+                $step = 4;
+            }
+            if ($handling_pet_kind == 1 && $dog_house_info) {
+                $step = 4;
+            }
+            if ($handling_pet_kind == 2 && $cat_house_info) {
+                $step = 4;
+            }
 
-			// 審査申請済であればSTEP5として審査中メッセージ
+            // 審査申請済であればSTEP5として審査中メッセージ
             $examination_status = $conservation->getExaminationStatus();
-            if($examination_status == 1){$step = 5;}
+            if ($examination_status == 1) {
+                $step = 5;
+            }
 
-			// 審査結果が出ていれば審査結果を表示
-		}
+            // 審査結果が出ていれば審査結果を表示
+        }
         return $this->render('animalline/adoption/member/examination.twig', [
             'user' => $user,
-			'conservation' => $conservation,
-			'step' => $step,
+            'conservation' => $conservation,
+            'step' => $step,
         ]);
     }
 
@@ -236,9 +242,9 @@ class AdoptionMemberController extends AbstractController
     public function base_info(Request $request, ConservationsRepository $conservationsRepository, PrefRepository $prefRepository)
     {
         $user = $this->getUser();
-        
+
         $conservation = $conservationsRepository->find($user);
-        if(!$conservation){
+        if (!$conservation) {
             $conservation = new Conservations;
             $conservation->setId($user->getId());
         }
@@ -262,12 +268,12 @@ class AdoptionMemberController extends AbstractController
             $entityManager->persist($conservation);
             $entityManager->flush();
             return $this->redirectToRoute('adoption_examination');
-        } elseif(!$form->isSubmitted()) {
+        } elseif (!$form->isSubmitted()) {
 
             // Customer情報から初期情報をセット
             $Customer = $this->customerRepository->find($user);
-            $form->get('owner_name')->setData($Customer->getname01().$Customer->getname02());
-            $form->get('owner_kana')->setData($Customer->getkana01().$Customer->getkana02());
+            $form->get('owner_name')->setData($Customer->getname01() . $Customer->getname02());
+            $form->get('owner_kana')->setData($Customer->getkana01() . $Customer->getkana02());
             $form->get('zip')->setData($Customer->getPostalCode());
             $form->get('addr')->get('PrefId')->setData($Customer->getPref());
             $form->get('addr')->get('city')->setData($Customer->getAddr01());
@@ -281,7 +287,7 @@ class AdoptionMemberController extends AbstractController
         ];
     }
 
-	/**
+    /**
      * 犬舎・猫舎情報編集画面
      * 
      * @Route("/adoption/member/house_info/{pet_type}", name="adoption_house_info")
@@ -292,11 +298,11 @@ class AdoptionMemberController extends AbstractController
         $petType = $request->get('pet_type');
         $conservation = $this->conservationsRepository->find($this->getUser());
         $conservationsHouse = $this->conservationsHouseRepository->findOneBy(['pet_type' => $petType, 'Conservation' => $conservation]);
-		if(!$conservationsHouse){
-        	$conservationsHouse = new ConservationsHouse();
-		}
+        if (!$conservationsHouse) {
+            $conservationsHouse = new ConservationsHouse();
+        }
         $builder = $this->formFactory->createBuilder(ConservationHouseType::class, $conservationsHouse);
-		$conservation = $this->conservationsRepository->find($this->getUser());
+        $conservation = $this->conservationsRepository->find($this->getUser());
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -390,24 +396,24 @@ class AdoptionMemberController extends AbstractController
     public function examination_submit(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        
+
         // 保護団体の審査ステータスを変更
-		$conservation = $this->conservationsRepository->find($this->getUser());
+        $conservation = $this->conservationsRepository->find($this->getUser());
         $conservation->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK);
 
         $entityManager->persist($conservation);
-        
+
         // // 犬舎・猫舎両方のパターンがあるため配列で取得
         // $conservationExaminationInfos = $this->conservationExaminationInfoRepository->findBy([
         //     'Conservation' => $conservation,
         // ]);
-        
+
         // // 審査情報のそれぞれの審査ステータスを変更
         // foreach($conservationExaminationInfos as $conservationExaminationInfo){
         //     $conservationExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_SUBMIT);  
         //     $entityManager->persist($conservationExaminationInfo);
         // }
-        
+
         $entityManager->flush();
 
         return $this->redirectToRoute('adoption_examination');
@@ -432,53 +438,98 @@ class AdoptionMemberController extends AbstractController
     }
 
     /**
-     * @Route("/adoption/member/message/{contact_id}", name="adoption_mypage_messages", requirements={"contact_id" = "\d+"})
+     * 保護団体用ユーザーページ - 取引メッセージ履歴
+     *
+     * @Route("/adoption/member/message/{id}", name="adoption_mypage_messages", requirements={"id" = "\d+"})
      * @Template("animalline/adoption/member/message.twig")
      */
-    public function adoption_message(Request $request)
+    public function adoption_message(Request $request, ConservationContactHeader $rootMessage)
     {
-        $contactId = $request->get('contact_id');
-        $rootMessage = $this->conservationContactsRepository
-            ->findOneBy(['id' => $contactId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
-        if (!$rootMessage) {
-            throw new HttpException\NotFoundHttpException();
-        }
+        $isScroll = false;
+        if ($request->isMethod('POST')) {
+            $replyMessage = $request->get('reply_message');
+            $now = new DateTime();
 
-        $replyMessage = $request->get('reply_message');
-        $isEnd = $request->get('end_negotiation');
-        if ($replyMessage || $isEnd) {
             $conservationContact = (new ConservationContacts())
-                ->setCustomer($this->getUser())
-                ->setconservation($rootMessage->getConservation())
+                ->setConservationHeader($rootMessage)
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
-                ->setPet($rootMessage->getPet())
-                ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
                 ->setContactDescription($replyMessage)
-                ->setParentMessageId($rootMessage->getId())
-                ->setSendDate(Carbon::now())
-                ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
-                ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
-                ->setReason($isEnd ? $this->sendoffReasonRepository->find($request->get('reason')) : null);
+                ->setSendDate($now);
 
-            $rootMessage->setIsResponse(AnilineConf::RESPONSE_UNREPLIED);
-            if ($isEnd) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
+            $rootMessage->setConservationNewMsg(1);
+            $rootMessage->setLastMessageDate($now);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationContact);
             $entityManager->persist($rootMessage);
             $entityManager->flush();
+
+            $isScroll = true;
+        } else if ($rootMessage->getCustomerNewMsg()) {
+            $rootMessage->setCustomerNewMsg(0);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($rootMessage);
+            $entityManager->flush();
         }
 
-        $childMessages = $this->conservationContactsRepository
-            ->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
-        $reasons = $this->sendoffReasonRepository
-            ->findBy(['is_conservation_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
+        $childMessages = $this->conservationContactsRepository->findBy(['ConservationHeader' => $rootMessage], ['send_date' => 'ASC']);
+        $pet = $rootMessage->getPet();
+        $conservation = $rootMessage->getConservation();
+        $reasons = $this->sendoffReasonRepository->findBy(['is_adoption_visible' => AnilineConf::ADOPTION_VISIBLE_SHOW]);
 
-        return $this->render('animalline/adoption/member/message.twig', [
-            'rootMessage' => $rootMessage,
-            'childMessages' => $childMessages,
-            'reasons' => $reasons
-        ]);
+        return compact(
+            'rootMessage',
+            'childMessages',
+            'pet',
+            'conservation',
+            'reasons',
+            'isScroll'
+        );
+    }
+
+    /**
+     * 保護団体用ユーザーページ - 取引メッセージ履歴
+     *
+     * @Route("/adoption/member/message/{id}/contract", name="adoption_message_contract", requirements={"id" = "\d+"})
+     * @Template("animalline/adoption/member/message.twig")
+     */
+    public function adoption_message_contract(ConservationContactHeader $rootMessage)
+    {
+        $currentStatus = $rootMessage->getContractStatus();
+        if ($currentStatus === AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT);
+        else if ($currentStatus === AnilineConf::CONTRACT_STATUS_WAITCONTRACT) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT);
+        $rootMessage->setCustomerCheck(1);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($rootMessage);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('adoption_mypage_messages', ['id' => $rootMessage->getId()]);
+    }
+
+    /**
+     * 保護団体用ユーザーページ - 取引メッセージ履歴
+     *
+     * @Route("/adoption/member/message/{id}/cancel", name="adoption_message_cancel", requirements={"id" = "\d+"})
+     * @Template("animalline/adoption/member/message.twig")
+     */
+    public function adoption_message_cancel(Request $request, ConservationContactHeader $rootMessage)
+    {
+        $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
+        $rootMessage->setSendoffReason($request->get('reason'));
+
+        $conservationContact = (new ConservationContacts())
+            ->setConservationHeader($rootMessage)
+            ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
+            ->setContactDescription('今回の取引非成立となりました')
+            ->setSendDate(new DateTime());
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($rootMessage);
+        $entityManager->persist($conservationContact);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('adoption_mypage_messages', ['id' => $rootMessage->getId()]);
     }
 
     /**
@@ -523,7 +574,8 @@ class AdoptionMemberController extends AbstractController
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
                         ->setConservation($pet->getConservation())
-                        ->setCustomer($this->getUser());
+                        ->setCustomer($this->getUser())
+                        ->setLastMessageDate(Carbon::now());
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($contact);
                     $entityManager->flush();

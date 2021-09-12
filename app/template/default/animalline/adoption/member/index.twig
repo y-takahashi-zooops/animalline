@@ -9,51 +9,33 @@
 
             <div class="row">
                 <div class="col-lg-4 col-md-12">
-                    <a href="{{url('adoption_favorite')}}" class="btn btn-warning btn-block mt-3" role="button">お気に入り一覧</a>
+                    <a href="{{url('adoption_favorite')}}" class="btn btn-warning btn-block mt-3"
+                        role="button">お気に入り一覧</a>
                 </div>
                 <div class="col-lg-4 col-md-12">
-                    <a href="{{url('adoption_get_message_mypage')}}" class="btn btn-warning btn-block mt-3" role="button">取引メッセージ</a>
+                    <a href="{{url('adoption_get_message_mypage')}}" class="btn btn-warning btn-block mt-3"
+                        role="button">取引メッセージ</a>
                 </div>
             </div>
             <div class="m-2 p-2"></div>
             <h3>保護団体登録申請</h3>
             <div class="row">
                 <div class="col-lg-4 col-md-12">
-                    <a href="{{url('adoption_examination')}}" class="btn btn-warning btn-block mt-3" role="button">保護団体申請を行う</a>
+                    <a href="{{url('adoption_examination')}}" class="btn btn-warning btn-block mt-3"
+                        role="button">保護団体申請を行う</a>
                 </div>
             </div>
-            {% if user.is_breeder == 1 %}
-                <div class="m-2 p-2"></div>
-                <h1>保護団体様管理メニュー</h1>
+            {% if user.isConservation == 1 %}
+            <div class="m-2 p-2"></div>
+            <h1>保護団体様管理メニュー</h1>
 
-                <div class="row">
-                    <div class="col-lg-4 col-md-12">
-                        <a href="{{url('get_message_breeder_configration')}}" class="btn btn-warning btn-block mt-3" role="button">問い合わせ対応</a>
-                    </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-12">
+                    <a href="{{url('get_message_adoption_configration')}}" class="btn btn-warning btn-block mt-3"
+                        role="button">問い合わせ対応</a>
                 </div>
-            {% endif %}
-            {#
-            <div class="m-4 p-4"></div>
-            <div class="d-flex justify-content-between align-items-end">
-                <h2>交渉中のお取引</h2>
             </div>
-            <div class="m-1 p-1"></div>
-            {% for rootMessage in rootMessages %}
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-sm-flex justify-content-between py-3 border adoption-border rounded">
-                            <div class="ml-5">
-                                <h3>{{ rootMessage.Breeder.getBreederHouseByPetType(rootMessage.pet.petKind).adoptionHouseName ?? '' }}</h3>
-                                <h3><a href={{ url('adoption_mypage_messages', {'contact_id': rootMessage.id}) }}>{{ rootMessage.contactTitle }}</a></h3>
-                            </div>
-                            <h4 class="mr-sm-5 ml-5">返信日時：{{ lastReplies[rootMessage.id].sendDate.format('Y年m月d日　H:i') ?? 'なし。' }}</h4>
-                        </div>
-                    </div>
-                </div>
-            {% else %}
-                結果が０件です。
-            {% endfor %}
-            #}
+            {% endif %}
 
             <div class="m-4 p-4"></div>
             <div class="d-flex justify-content-between align-items-end">
@@ -66,48 +48,51 @@
             </div>
             <div class="m-1 p-1"></div>
             {% for pet in pets %}
-                <div class="row">
-                    <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
-                        <div class="catalog-card">
-                            <a href="{{ url('adoption_pet_detail', {id: pet.id}) }}">
-                                <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
-                                        class="card-img-top" alt="...">
-                            </a>
-                            <div class="card-body bg-primary">
-                                <h3 class="color-gray-500 font-weight-600">{{ pet.breedsType.breedsName ?? '' }}</h3>
-                                <div class="m-4"></div>
-                                <div class="d-flex">
-                                    <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
-                                    {% if(pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE')) %}
-                                        <h4 class="pet-set-male">男の子</h4>
-                                    {% else %}
-                                        <h4 class="pet-set-female">女の子</h4>
-                                    {% endif %}
-                                </div>
-                                <div class="mb-2"></div>
-                                <div class="d-flex">
-                                    {% set conservationHouse = pet.Breeder.getBreederHouseByPetType(pet.petKind) %}
-									<h4 class="mr-3">{{ conservationHouse.conservationHouseCity ~ ' ' ~ conservationHouse.conservationHousePref ?? '' }}</h4>
-                                    <h4>{{ pet.coatColor.coatColorName ?? '' }}</h4>
-                                </div>
-                                <div class="m-2"></div>
-                                <h4>{{ pet.prComment }}</h4>
-                                <div class="m-2"></div>
-                                <h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4>
-                                <div class="m-4"></div>
-                                <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円（税込）</span></h3>
+            <div class="row">
+                <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
+                    <div class="catalog-card">
+                        <a href="{{ url('adoption_pet_detail', {id: pet.id}) }}">
+                            <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                class="card-img-top" alt="...">
+                        </a>
+                        <div class="card-body bg-primary">
+                            <h3 class="color-gray-500 font-weight-600">{{ pet.breedsType.breedsName ?? '' }}</h3>
+                            <div class="m-4"></div>
+                            <div class="d-flex">
+                                <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
+                                {% if(pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE')) %}
+                                <h4 class="pet-set-male">男の子</h4>
+                                {% else %}
+                                <h4 class="pet-set-female">女の子</h4>
+                                {% endif %}
                             </div>
+                            <div class="mb-2"></div>
+                            <div class="d-flex">
+                                {% set conservationHouse = pet.Conservation.getConservationHouseByPetType(pet.petKind)
+                                %}
+                                <h4 class="mr-3">{{ conservationHouse.conservationHouseCity ~ ' ' ~
+                                    conservationHouse.conservationHousePref ?? '' }}</h4>
+                                <h4>{{ pet.coatColor.coatColorName ?? '' }}</h4>
+                            </div>
+                            <div class="m-2"></div>
+                            <h4>{{ pet.prComment }}</h4>
+                            <div class="m-2"></div>
+                            <h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4>
+                            <div class="m-4"></div>
+                            <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0)
+                                }}<span>円（税込）</span></h3>
                         </div>
                     </div>
                 </div>
+            </div>
             {% else %}
-                結果が０件です。
+            結果が０件です。
             {% endfor %}
         </div>
     </div>
 </div>
 {% endblock %}
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
 {% endblock %}
 {% block javascript %}{% endblock %}

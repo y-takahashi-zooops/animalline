@@ -1,4 +1,5 @@
-<div class="modal fade" id="modal_cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -13,15 +14,14 @@
                     <span>キャンセル理由を以下から選択してください。</span><br>
                 </div>
                 <select aria-label="reason" name="reason" class="ec-select">
-                    <option>非成約理由１</option>
-                    <option>非成約理由２</option>
-                    <option>非成約理由３</option>
-                    <option>非成約理由４</option>
+                    {% for reason in reasons %}
+                        <option value="{{ reason.id }}">{{ reason.reason }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
-                <button id="confirm-yes" type="button" class="btn btn-primary">はい</button>
+                <button id="confirm-yes-cancel" type="button" class="btn btn-primary">はい</button>
             </div>
         </div>
     </div>

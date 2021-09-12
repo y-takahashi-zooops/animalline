@@ -13,7 +13,9 @@
 
 namespace Eccube\Entity;
 
+use Customize\Entity\ShippingScheduleHeader;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\Master\TaxType;
@@ -598,6 +600,11 @@ if (!class_exists('\Eccube\Entity\Order')) {
         private $OrderStatus;
 
         /**
+         * @ORM\OneToMany(targetEntity=ShippingScheduleHeader::class, mappedBy="Order")
+         */
+        private $ShippingScheduleHeaders;
+
+        /**
          * Constructor
          */
         public function __construct(\Eccube\Entity\Master\OrderStatus $orderStatus = null)
@@ -615,6 +622,7 @@ if (!class_exists('\Eccube\Entity\Order')) {
             $this->OrderItems = new \Doctrine\Common\Collections\ArrayCollection();
             $this->Shippings = new \Doctrine\Common\Collections\ArrayCollection();
             $this->MailHistories = new \Doctrine\Common\Collections\ArrayCollection();
+            $this->ShippingScheduleHeaders = new ArrayCollection();
         }
 
         /**
@@ -1787,6 +1795,36 @@ if (!class_exists('\Eccube\Entity\Order')) {
             }
 
             return $quantity;
+        }
+
+        /**
+         * @return Collection|ShippingScheduleHeader[]
+         */
+        public function getShippingScheduleHeaders(): Collection
+        {
+            return $this->ShippingScheduleHeaders;
+        }
+
+        public function addShippingScheduleHeader(ShippingScheduleHeader $shippingScheduleHeader): self
+        {
+            if (!$this->ShippingScheduleHeaders->contains($shippingScheduleHeader)) {
+                $this->ShippingScheduleHeaders[] = $shippingScheduleHeader;
+                $shippingScheduleHeader->setOrder($this);
+            }
+
+            return $this;
+        }
+
+        public function removeShippingScheduleHeader(ShippingScheduleHeader $shippingScheduleHeader): self
+        {
+            if ($this->ShippingScheduleHeaders->removeElement($shippingScheduleHeader)) {
+                // set the owning side to null (unless already changed)
+                if ($shippingScheduleHeader->getOrder() === $this) {
+                    $shippingScheduleHeader->setOrder(null);
+                }
+            }
+
+            return $this;
         }
     }
 }

@@ -7,47 +7,33 @@
             <div class="main-container col-12">
                 <h1>取引メッセージ一覧</h1>
                 <div class="m-3 p-3"></div>
-                <div class="row">
-                    <div class="col-12">
-                        <a href="{{url('breeder_message', {'id': 1}) }}">
-                            <div class="d-sm-flex justify-content-between py-5 border breeder-border rounded bg-white">
-                                <div class="ml-5">
-                                    <h3>ブリーダー名</h3>
-                                    <h3>お問い合わせ内容が入ります</h3>
+                {% for message in listMessages %}
+                    <div class="row">
+                        <div class="col-12">
+                            <a href="{{ url('breeder_message', {'id': message.Id}) }}">
+                                <div class="d-sm-flex justify-content-between py-3 border breeder-border rounded bg-white">
+                                    <div class="ml-5">
+                                        <h3>{{ message.Breeder.breederName ?? '' }}</h3>
+                                        <h3>{{ message.contactTitle ?? '' }}</h3>
+                                    </div>
+                                    <div class="d-sm-flex justify-content-between w-550">
+                                        <h4 class="mr-sm-5 ml-5">
+                                            {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
+                                            状態：{{ status[message.contractStatus] }}
+                                        </h4>
+                                        <h4 class="mr-sm-5 ml-5 text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}
+                                            <br>
+                                            {{ message.customerNewMsg ? '未読あり' }}
+                                        </h4>
+                                    </div>
                                 </div>
-                                <h4 class="mr-sm-5 ml-5">2021年00月00日　10:00</h4>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="m-1 p-1"></div>
-                <div class="row">
-                    <div class="col-12">
-                        <a href="{{url('breeder_message', {'id': 1}) }}">
-                            <div class="d-sm-flex justify-content-between py-5 border breeder-border rounded bg-white">
-                                <div class="ml-5">
-                                    <h3>ブリーダー名</h3>
-                                    <h3>お問い合わせ内容が入ります</h3>
-                                </div>
-                                <h4 class="mr-sm-5 ml-5">2021年00月00日　10:00</h4>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="m-1 p-1"></div>
-                <div class="row">
-                    <div class="col-12">
-                        <a href="{{url('breeder_message', {'id': 1}) }}">
-                            <div class="d-sm-flex justify-content-between py-5 border breeder-border rounded bg-white">
-                                <div class="ml-5">
-                                    <h3>ブリーダー名</h3>
-                                    <h3>お問い合わせ内容が入ります</h3>
-                                </div>
-                                <h4 class="mr-sm-5 ml-5">2021年00月00日　10:00</h4>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                    <div class="m-1 p-1"></div>
+                {% else %}
+                    結果が０件です。
+                {% endfor %}
             </div>
         </div>
     </div>

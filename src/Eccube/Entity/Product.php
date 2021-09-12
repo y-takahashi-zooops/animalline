@@ -13,7 +13,9 @@
 
 namespace Eccube\Entity;
 
+use Customize\Entity\ItemWaste;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 if (!class_exists('\Eccube\Entity\Product')) {
@@ -545,6 +547,11 @@ if (!class_exists('\Eccube\Entity\Product')) {
         private $Status;
 
         /**
+         * @ORM\OneToMany(targetEntity=ItemWaste::class, mappedBy="Product")
+         */
+        private $ItemWastes;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -554,6 +561,7 @@ if (!class_exists('\Eccube\Entity\Product')) {
             $this->ProductImage = new \Doctrine\Common\Collections\ArrayCollection();
             $this->ProductTag = new \Doctrine\Common\Collections\ArrayCollection();
             $this->CustomerFavoriteProducts = new \Doctrine\Common\Collections\ArrayCollection();
+            $this->ItemWastes = new ArrayCollection();
         }
 
         public function __clone()
@@ -1050,6 +1058,36 @@ if (!class_exists('\Eccube\Entity\Product')) {
         public function getStatus()
         {
             return $this->Status;
+        }
+
+        /**
+         * @return Collection|ItemWaste[]
+         */
+        public function getItemWastes(): Collection
+        {
+            return $this->ItemWastes;
+        }
+
+        public function addItemWaste(ItemWaste $itemWaste): self
+        {
+            if (!$this->ItemWastes->contains($itemWaste)) {
+                $this->ItemWastes[] = $itemWaste;
+                $itemWaste->setProduct($this);
+            }
+
+            return $this;
+        }
+
+        public function removeItemWaste(ItemWaste $itemWaste): self
+        {
+            if ($this->ItemWastes->removeElement($itemWaste)) {
+                // set the owning side to null (unless already changed)
+                if ($itemWaste->getProduct() === $this) {
+                    $itemWaste->setProduct(null);
+                }
+            }
+
+            return $this;
         }
     }
 }
