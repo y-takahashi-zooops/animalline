@@ -132,6 +132,8 @@ class AdoptionMemberController extends AbstractController
      */
     public function adoption_mypage(Request $request)
     {
+        $user = $this->getUser();
+        $conservation = $this->conservationsRepository->find($user);
         /*
         $rootMessages = $this->conservationContactsRepository
             ->findBy(
@@ -155,6 +157,7 @@ class AdoptionMemberController extends AbstractController
         return $this->render('animalline/adoption/member/index.twig', [
             //'rootMessages' => $rootMessages,
             //'lastReplies' => $lastReplies,
+            'conservation' => $conservation,
             'pets' => $pets,
             'user' => $this->getUser(),
         ]);
@@ -260,6 +263,7 @@ class AdoptionMemberController extends AbstractController
 
             $conservation->setPrefId($pref)
                 ->setPref($pref->getName())
+                ->setId($user->getId())
                 ->setCity($addr['city'])
                 ->setAddress($addr['address'])
                 ->setThumbnailPath($thumbnail_path);
@@ -588,5 +592,24 @@ class AdoptionMemberController extends AbstractController
             'form' => $form->createView(),
             'id' => $id
         ];
+    }
+
+    /**
+     * 取扱ペット一覧TOP
+     *
+     * @Route("/adoption/member/pet_list", name="adoption_pet_list")
+     * @Template("animalline/adoption/member/pet_list.twig")
+     */
+    public function adoption_configration(Request $request)
+     {
+        $pets = $this->conservationPetsRepository->findBy(['Conservation' => $this->getUser()], ['update_date' => 'DESC']);
+
+        return $this->render(
+            'animalline/adoption/member/pet_list.twig',
+            [
+                'conservation' => $this->getUser(),
+                'pets' => $pets,
+            ]
+        );
     }
 }

@@ -6,7 +6,7 @@
     <div class="main">
         <div class="row">
             <div class="main-container col-12">
-                <h1>保護団体名 - 管理ページ</h1>
+                <h1>問合せ一覧</h1>
                 <div class="m-2 p-2"></div>
                 {% for message in rootMessages %}
                     <div class="m-1 p-1"></div>
@@ -40,6 +40,7 @@
                 {% endfor %}
             </div>
         </div>
+        {#
         <h2 class="py-2 mt-4 mb-4">掲載中のペット</h2>
         <a href={{ path('breeder_configuration_pets_new', {'breeder_id': breeder.id}) }} class="btn basic-btn
            accent-btn bg-accent text-align-center my-1">追加</a>
@@ -85,6 +86,7 @@
                 結果が０件です。
             {% endfor %}
         </div>
+        #}
     </div>
 {% endblock %}
 

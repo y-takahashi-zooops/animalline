@@ -27,6 +27,23 @@
                 <div class="m-2 p-2"></div>
                 <h1>ブリーダー様管理メニュー</h1>
 
+                {% if breeder %}
+                    <div class="row">
+                        <div class="col-lg-4 col-md-12">
+                            <a href="{{url('breeder_baseinfo',{'return_path': "breeder_mypage"})}}" class="btn btn-warning btn-block mt-3" role="button">基本情報編集</a>
+                        </div>
+                        {% if breeder.getHandlingPetKind() == 0 or breeder.getHandlingPetKind() == 1 %}
+                            <div class="col-lg-4 col-md-12">
+                                <a href="{{path('breeder_house_info',{'pet_type': 1 ,'return_path': "breeder_mypage"})}}" class="btn btn-warning btn-block mt-3" role="button">犬舎情報登録</a>
+                            </div>
+                        {% endif %}
+                        {% if breeder.getHandlingPetKind() == 0 or breeder.getHandlingPetKind() == 2 %}
+                            <div class="col-lg-4 col-md-12">
+                                <a href="{{path('breeder_house_info',{'pet_type': 2, 'return_path': "breeder_mypage" })}}" class="btn btn-warning btn-block mt-3" role="button">猫舎情報登録</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
                 <div class="row">
                     <div class="col-lg-4 col-md-12">
                         <a href="{{url('get_message_breeder_configration')}}" class="btn btn-warning btn-block mt-3" role="button">問い合わせ対応</a>

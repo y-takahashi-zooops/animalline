@@ -118,8 +118,8 @@ class BreederConfigrationController extends AbstractController
         foreach ($rootMessages as $message) {
             $name[$message->getId()] = "{$message->getCustomer()->getName01()} {$message->getCustomer()->getName02()}";
         }
-
-        $pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
+        
+        //$pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
 
         return $this->render(
             'animalline/breeder/configration/get_message.twig',
@@ -127,7 +127,7 @@ class BreederConfigrationController extends AbstractController
                 'rootMessages' => $rootMessages,
                 'name' => $name,
                 'breeder' => $this->getUser(),
-                'pets' => $pets
+                //'pets' => $pets
             ]
         );
     }

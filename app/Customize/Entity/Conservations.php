@@ -20,7 +20,6 @@ class Conservations
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(name="id", type="integer")
      */
     private $id;

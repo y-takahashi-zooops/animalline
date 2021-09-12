@@ -1,0 +1,45 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-sm-3">
+        <a href="{{ url('breeder_top') }}"><img class="img-responsive" src="{{ asset('assets/img/logo_breeder.png') }}"></a>
+    </div>
+    <div class="col-sm-2"></div>
+    <div class="col-sm-3">
+        <a href="{{ url('adoption_top') }}"><img class="img-responsive" src="{{ asset('assets/img/logo_adoption.png') }}"></a>
+    </div>
+    <div class="col-sm-2"></div>
+</div>
+<div class="ec-footerRole" style="margin-top: 0px">
+    <div class="ec-footerRole__inner">
+        <ul class="ec-footerNavi">
+            <li class="ec-footerNavi__link">
+                <a href="{{ url('help_about') }}">{{ '当サイトについて'|trans }}</a>
+            </li>
+            <li class="ec-footerNavi__link">
+                <a href="{{ url('help_privacy') }}">{{ 'プライバシーポリシー'|trans }}</a>
+            </li>
+            <li class="ec-footerNavi__link">
+                <a href="{{ url('help_tradelaw') }}">{{ '特定商取引法に基づく表記'|trans }}</a>
+            </li>
+            <li class="ec-footerNavi__link">
+                <a href="{{ url('contact') }}">{{ 'お問い合わせ'|trans }}</a>
+            </li>
+        </ul>
+        <div class="ec-footerTitle">
+            <div class="ec-footerTitle__logo">
+                <a href="{{ url('homepage') }}">{{ BaseInfo.shop_name }}</a>
+            </div>
+            <div class="ec-footerTitle__copyright">copyright (c) {{ BaseInfo.shop_name }} all rights reserved.</div>
+        </div>
+    </div>
+</div>

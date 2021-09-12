@@ -70,7 +70,7 @@ class ConservationPetsType extends AbstractType
                 ],
             ])
             ->add('future_wait', IntegerType::class)
-            ->add('dna_check_result', IntegerType::class)
+            //->add('dna_check_result', IntegerType::class)
             ->add('pr_comment', TextareaType::class)
             ->add('description', TextareaType::class)
             ->add('delivery_time', TextareaType::class)
@@ -123,7 +123,8 @@ class ConservationPetsType extends AbstractType
                     'data-img' => 'img5'
                 ],
                 'data_class' => null
-            ])
+            ]);
+            /*
             ->add('release_status', ChoiceType::class, [
                 'choices' =>
                 [
@@ -133,6 +134,7 @@ class ConservationPetsType extends AbstractType
             ])
             ->add('release_date', DateType::class)
             ->add('price', IntegerType::class);
+            */
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -20,7 +20,7 @@
 }
 
 .bg-sub-breeder {
-    background-color: #69ff96;
+    background-color: #49bb6b;
 }
 
 .section-search {
@@ -58,7 +58,7 @@
 }
 
 .breeder-btn:hover {
-    background-color: #69ff96;
+    background-color: #49bb6b;
 }
 
 .pagination .page-item.active .page-link {
@@ -71,7 +71,7 @@
 }
 
 .breeder-border {
-    border: 3px solid #69ff96 !important;
+    border: 3px solid var(--breeder-main-color) !important;
 }
 
 .hidden {
@@ -117,9 +117,9 @@ video {
 /* 吹き出し */
   
 .balloon-left:after {
-    border-right: 14px solid #69ff96;
+    border-right: 14px solid #49bb6b;
 }
   
 .balloon-right:after {
-    border-left: 14px solid #69ff96;
+    border-left: 14px solid #49bb6b;
 }  

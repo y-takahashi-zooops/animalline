@@ -152,6 +152,8 @@ class BreederMemberController extends AbstractController
      */
     public function breeder_mypage(Request $request)
     {
+        $user = $this->getUser();
+        $breeder = $this->breedersRepository->find($user);
         /*
         $rootMessages = $this->breederContactsRepository
             ->findBy(
@@ -174,6 +176,7 @@ class BreederMemberController extends AbstractController
         return $this->render('animalline/breeder/member/index.twig', [
             //'rootMessages' => $rootMessages,
             //'lastReplies' => $lastReplies,
+            'breeder' => $breeder,
             'pets' => $pets,
             'user' => $this->getUser(),
         ]);
@@ -435,6 +438,12 @@ class BreederMemberController extends AbstractController
      */
     public function base_info(Request $request, BreedersRepository $breedersRepository)
     {
+        //リダイレクト先設定
+        $return_path = $request->get('return_path');
+        if($return_path == ""){
+            $return_path = "breeder_examination";
+        }
+        
         $user = $this->getUser();
 
         $breederData = $breedersRepository->find($user);
@@ -457,7 +466,7 @@ class BreederMemberController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederData);
             $entityManager->flush();
-            return $this->redirectToRoute('breeder_examination');
+            return $this->redirectToRoute($return_path);
         } elseif (!$form->isSubmitted()) {
 
             // Customer情報から初期情報をセット
@@ -472,6 +481,7 @@ class BreederMemberController extends AbstractController
         }
 
         return [
+            'return_path' => $return_path,
             'breederData' => $breederData,
             'form' => $form->createView()
         ];
@@ -485,6 +495,12 @@ class BreederMemberController extends AbstractController
      */
     public function house_info(Request $request)
     {
+        //リダイレクト先設定
+        $return_path = $request->get('return_path');
+        if($return_path == ""){
+            $return_path = "breeder_examination";
+        }
+
         $petType = $request->get('pet_type');
         $breeder = $this->breedersRepository->find($this->getUser());
         $breederHouse = $this->breederHouseRepository->findOneBy(['pet_type' => $petType, 'Breeder' => $breeder]);
@@ -506,9 +522,10 @@ class BreederMemberController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_examination');
+            return $this->redirectToRoute($return_path);
         }
         return [
+            'return_path' => $return_path,
             'form' => $form->createView(),
             'petType' => $petType,
             'breeder' => $breeder,

@@ -251,6 +251,9 @@ class AdoptionConfigrationController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $conservation = $conservationsRepository->find($request->get('conservation_id'));
             $conservationPet->setConservation($conservation);
+            $conservationPet->setDnaCheckResult(0);
+            $conservationPet->setReleaseStatus(1);
+            $conservationPet->setPrice(0);
             $entityManager->persist($conservationPet);
             $entityManager->flush();
             $petId = $conservationPet->getId();
@@ -290,7 +293,7 @@ class AdoptionConfigrationController extends AbstractController
             $entityManager->persist($conservationPet);
             $entityManager->flush();
 
-            return $this->redirectToRoute('adoption_configration');
+            return $this->redirectToRoute('adoption_pet_list');
         }
 
         return $this->render('animalline/adoption/configration/pets/new.twig', [
@@ -328,7 +331,7 @@ class AdoptionConfigrationController extends AbstractController
             }
             $entityManager->flush();
 
-            return $this->redirectToRoute('adoption_configration');
+            return $this->redirectToRoute('adoption_pet_list');
         }
 
         $petImages = [];

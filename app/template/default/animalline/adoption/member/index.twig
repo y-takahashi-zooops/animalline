@@ -28,15 +28,34 @@
             {% if user.isConservation == 1 %}
             <div class="m-2 p-2"></div>
             <h1>保護団体様管理メニュー</h1>
-
+            <div class="row">
+                    {% if conservation %}
+                        <div class="col-lg-4 col-md-12">
+                            <a href="{{url('adoption_baseinfo',{'return_path': "adoption_mypage"})}}" class="btn btn-warning btn-block mt-3" role="button">基本情報編集</a>
+                        </div>
+                        {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 1 %}
+                            <div class="col-lg-4 col-md-12">
+                                <a href="{{path('adoption_house_info',{'pet_type': 1 ,'return_path': "adoption_mypage"})}}" class="btn btn-warning btn-block mt-3" role="button">犬舎情報登録</a>
+                            </div>
+                        {% endif %}
+                        {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 2 %}
+                            <div class="col-lg-4 col-md-12">
+                                <a href="{{path('adoption_house_info',{'pet_type': 2, 'return_path': "adoption_mypage" })}}" class="btn btn-warning btn-block mt-3" role="button">猫舎情報登録</a>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
             <div class="row">
                 <div class="col-lg-4 col-md-12">
                     <a href="{{url('get_message_adoption_configration')}}" class="btn btn-warning btn-block mt-3"
                         role="button">問い合わせ対応</a>
                 </div>
+                <div class="col-lg-4 col-md-12">
+                    <a href="{{url('adoption_pet_list')}}" class="btn btn-warning btn-block mt-3" role="button">ペット管理</a>
+                </div>
             </div>
             {% endif %}
-
+            {#
             <div class="m-4 p-4"></div>
             <div class="d-flex justify-content-between align-items-end">
                 <h2>お気に入り一覧</h2>
@@ -89,6 +108,7 @@
             結果が０件です。
             {% endfor %}
         </div>
+        #}
     </div>
 </div>
 {% endblock %}
