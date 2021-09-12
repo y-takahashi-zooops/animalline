@@ -210,6 +210,8 @@ class BreederConfigrationController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $breeder = $breedersRepository->find($request->get('breeder_id'));
             $breederPet->setBreeder($breeder);
+            $breederPet->setDnaCheckResult(0);
+            $breederPet->setReleaseStatus(1);
             $entityManager->persist($breederPet);
             $entityManager->flush();
             $petId = $breederPet->getId();
@@ -250,7 +252,7 @@ class BreederConfigrationController extends AbstractController
             $entityManager->persist($breederPet);
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_configration');
+            return $this->redirectToRoute('breeder_pet_list');
         }
 
         return $this->render('animalline/breeder/configration/pets/new.twig', [
@@ -287,7 +289,7 @@ class BreederConfigrationController extends AbstractController
             }
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_configration');
+            return $this->redirectToRoute('breeder_pet_list');
         }
 
         $petImages = [];

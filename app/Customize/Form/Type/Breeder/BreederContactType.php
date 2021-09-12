@@ -53,7 +53,6 @@ class BreederContactType extends AbstractType
                     [
                         '問い合わせ' => AnilineConf::CONTACT_TYPE_INQUIRY,
                         '見学希望' => AnilineConf::CONTACT_TYPE_VISIT_REQUEST,
-                        '返信' => AnilineConf::CONTACT_TYPE_REPLY,
                     ],
                 'required' => true,
                 'expanded' => false,

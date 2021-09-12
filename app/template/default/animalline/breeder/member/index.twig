@@ -31,6 +31,9 @@
                     <div class="col-lg-4 col-md-12">
                         <a href="{{url('get_message_breeder_configration')}}" class="btn btn-warning btn-block mt-3" role="button">問い合わせ対応</a>
                     </div>
+                    <div class="col-lg-4 col-md-12">
+                        <a href="{{url('breeder_pet_list')}}" class="btn btn-warning btn-block mt-3" role="button">ペット管理</a>
+                    </div>
                 </div>
             {% endif %}
             {#
@@ -55,6 +58,8 @@
                 結果が０件です。
             {% endfor %}
             #}
+
+            {#
             <div class="m-4 p-4"></div>
             <div class="d-flex justify-content-between align-items-end">
                 <h2>お気に入り一覧</h2>
@@ -103,6 +108,7 @@
             {% else %}
                 結果が０件です。
             {% endfor %}
+            #}
         </div>
     </div>
 </div>

@@ -60,7 +60,7 @@ class BreederPetsType extends AbstractType
                 ],
             ])
             ->add('future_wait', IntegerType::class)
-            ->add('dna_check_result', IntegerType::class)
+            //->add('dna_check_result', IntegerType::class)
             ->add('pr_comment', TextareaType::class)
             ->add('description', TextareaType::class)
             ->add('is_breeding', ChoiceType::class, [

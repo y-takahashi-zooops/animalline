@@ -580,4 +580,23 @@ class BreederMemberController extends AbstractController
             'id' => $id
         ];
     }
+
+    /**
+     * 取扱ペット一覧TOP
+     *
+     * @Route("/breeder/member/pet_list", name="breeder_pet_list")
+     * @Template("animalline/breeder/member/pet_list.twig")
+     */
+    public function breeder_configration(Request $request)
+     {
+        $pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
+
+        return $this->render(
+            'animalline/breeder/member/pet_list.twig',
+            [
+                'breeder' => $this->getUser(),
+                'pets' => $pets,
+            ]
+        );
+    }
 }

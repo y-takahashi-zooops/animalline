@@ -62,7 +62,7 @@ class BreederPets
     private $future_wait;
 
     /**
-     * @ORM\Column(name="dna_check_result", type="integer")
+     * @ORM\Column(name="dna_check_result", type="integer", options={"default" = 0})
      */
     private $dna_check_result;
 

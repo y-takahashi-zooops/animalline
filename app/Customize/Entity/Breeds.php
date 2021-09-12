@@ -34,6 +34,11 @@ class Breeds
     private $breeds_name;
 
     /**
+     * @ORM\Column(name="size_code", type="smallint")
+     */
+    private $size_code;
+
+    /**
      * @ORM\Column(name="sort_order", type="integer")
      */
     private $sort_order;
@@ -109,6 +114,18 @@ class Breeds
         return $this;
     }
 
+    public function getSizeCode(): ?int
+    {
+        return $this->size_code;
+    }
+
+    public function setSizeCode(int $size_code): self
+    {
+        $this->size_code = $size_code;
+
+        return $this;
+    }
+    
     /**
      * Set createDate.
      *
