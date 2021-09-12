@@ -2,12 +2,12 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-<div class="main">
+    <div class="main">
         <div class="row">
             <div class="main-container col-12">
                 <h1>取引メッセージ</h1>
-                <div class="m-2 p-2"></div>     
-            
+                <div class="m-2 p-2"></div>
+
                 {# ペット情報 #}
                 <div class="row">
                     <div class="col-1"></div>
@@ -17,9 +17,9 @@
                         <div class="col-12 py-3 breeder-border bg-white">
                             <div class="row">
                                 <div class="breeder-img col-sm-4">
-                                    <a href="{{ url('breeder_pet_detail', {'id': 1}) }}">
-                                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
-                                        class="w-100 mb-4 mb-sm-0" alt="...">
+                                    <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}" class="w-100">
+                                        <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                             class="w-100 mb-4 mb-sm-0" alt="...">
                                     </a>
                                 </div>
                                 <div class="breeder-info col-sm-8">
@@ -27,30 +27,30 @@
                                     <div class="m-1 p-1"></div>
                                     <div class="d-flex font-weight-500">
                                         <h4>性別：</h4>
-                                        <h4>男の子</h4>
+                                        <h4>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h4>
                                     </div>
                                     <div class="m-1 p-1"></div>
                                     <div class="d-flex">
                                         <h4>色：</h4>
-                                        <h4>赤色</h4>
+                                        <h4>{{ pet.CoatColor.coatColorName ?? '' }}</h4>
                                     </div>
                                     <div class="m-1 p-1"></div>
                                     <div class="d-flex">
                                         <h4>成犬時予想体重：</h4>
-                                        <h4>10kg</h4>
+                                        <h4>{{ pet.futureWait }}kg</h4>
                                     </div>
                                     <div class="m-1 p-1"></div>
                                     <div class="d-flex">
                                         <h4>PR：</h4>
-                                        <h4>PRコメント</h4>
+                                        <h4>{{ pet.prComment }}</h4>
                                     </div>
                                     <div class="m-1 p-1"></div>
                                     <div class="d-flex">
                                         <h4>誕生日：</h4>
-                                        <h4>2018年12月25日生</h4>
+                                        <h4>{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
                                     </div>
                                     <div class="m-2 p-2"></div>
-                                    <a href="{{ url('breeder_pet_detail', {'id': 1}) }}">
+                                    <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
                                         <h4 class="color-breeder">ペット詳細ページへ</h4>
                                     </a>
                                 </div>
@@ -71,52 +71,64 @@
                             <div class="col-12 py-3 breeder-border bg-white">
                                 <div class="row">
                                     <div class="breeder-img col-sm-4">
-                                        <img alt="..." src="{{ asset('assets/img/breeder-thumbnail.png') }}" class="w-100 mb-4 mb-sm-0">
+                                        <img alt="..."
+                                             src="{{ breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                             class="w-100 mb-4 mb-sm-0">
                                     </div>
                                     <div class="breeder-info col-sm-8">
-                                        <h2 class="font-weight-500 color-gray-500">田中 太郎ブリーダー</h2>
+                                        <h2 class="font-weight-500 color-gray-500">{{ breeder.licenseHouseName }}
+                                            ブリーダー</h2>
                                         <div class="m-1 p-1"></div>
                                         <div class="d-flex">
                                             <h4>総合評価</h4>
                                             <div class="m-1 p-1"></div>
                                             <img alt="..." src="{{ asset('assets/img/star-icon.svg') }}">
                                             <div class="m-1 p-1"></div>
-                                            <h4>5.00</h4>
+                                            <h4>{{ breeder.breederRank }}</h4>
                                         </div>
                                         <div class="m-1 p-1"></div>
                                         <div class="d-flex">
                                             <h4>動物取扱業登録番号：</h4>
-                                            <h4>動東第000号</h4>
+                                            <h4>{{ breeder.licenseNo }}</h4>
                                             <div class="m-1 p-1"></div>
 
                                         </div>
                                         <div class="m-1 p-1"></div>
                                         <div class="d-flex">
                                             <h4>登録：</h4>
-                                            <h4>2021/00/00</h4>
+                                            <h4>{{ breeder.licenseRegistDate | date('Y/m/d') }}</h4>
                                         </div>
                                         <div class="m-1 p-1"></div>
                                         <div class="d-flex">
                                             <h4>有効期限：</h4>
-                                            <h4>2021/00/00</h4>
+                                            <h4>{{ breeder.licenseExpireDate | date('Y/m/d') }}</h4>
                                         </div>
                                         <div class="m-1 p-1"></div>
                                         <div class="d-flex">
                                             <h4>動物取扱責任者：</h4>
-                                            <h4>田中 太郎</h4>
+                                            <h4>{{ breeder.licenseManagerName }}</h4>
                                         </div>
                                         <div class="m-1 p-1"></div>
                                         <div class="d-flex">
                                             <h4>犬舎所在地：</h4>
-                                            <h4>愛知県豊橋市</h4>
+                                            {% set breederHouseDog = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                            {% set breederHouseCat = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
+                                            {% if (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
+                                                <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' ~ ' ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
+                                            {% elseif (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                                <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' }}</h4>
+                                            {% else %}
+                                                <h4>{{ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
+                                            {% endif %}
                                         </div>
                                         <div class="m-1 p-1"></div>
                                         <div class="d-flex">
                                             <h4>犬舎見学：</h4>
-                                            <h4>見学OK</h4>
+                                            {% set ex_status = ['審査前', '審査中', '審査OK', '審査NG'] %}
+                                            <h4>{{ ex_status[breeder.examinationStatus] }}</h4>
                                         </div>
                                         <div class="m-2 p-2"></div>
-                                        <a href="breederpage.html">
+                                        <a href="{{ url('breeder_detail', {'breeder_id': breeder.id}) }}">
                                             <h4 class="color-breeder">ブリーダー詳細ページへ</h4>
                                         </a>
                                     </div>
@@ -145,54 +157,26 @@
                         <div class="m-1 p-1"></div>
                         <div class="col-12 py-3 breeder-border bg-white">
                             <div class="ml-3">
-                                <h2 class="mb-2">問い合わせタイトル</h2>
-                                <h4 class="mb-2 font-weight-400">問い合わせメッセージ</h4>
-                                <h4 class="mb-2 font-weight-400">訪問希望日</h4>
+                                <h2 class="mb-2">{{ message.contactTitle }}</h2>
+                                <h4 class="mb-2 font-weight-400">{{ message.contactDescription }}</h4>
+                                <h4 class="mb-2 font-weight-400">{{ message.bookingRequest }}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-1 user-img">
-                        <img src="{{ asset('assets/img/testUser.png') }}">
-                    </div>
-                    <div class="col-10">
-                        <h4 style="text-align: right;">2021/09/01 10:00</h4>
-                        <div class="col-12 balloon-left py-3 breeder-border">
-                            <div class="ml-3">
-                                ユーザーからの返信１
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-1"></div>
-                    <div class="col-10">
-                        <h4 style="text-align: right;">2021/09/01 11:00</h4>
-                        <div class="col-8 balloon-right py-3 breeder-border">
-                            <div class="ml-3">
-                                ブリーダーからの返信１
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-1 breeder-img">
-                        <img src="{{ asset('assets/img/breeder-thumbnail.png') }}" style="width: 40px; height:40px; border-radius: 50%;">
-                    </div>
-                </div>
-
-                {# 返信メッセージ #}
-                {# {% for childMessage in childMessages %}
-                    {% if childMessage.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') %}
+                {% for msg in listMsg %}
+                    {% if (msg.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_CONFIGURATION')) %}
                         <div class="row">
                             <div class="col-1 user-img">
-                                <img src="{{ asset('assets/img/testUser.png') }}">
+                                <img src="{{ breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                     style="width: 40px; height:40px; border-radius: 50%;">
                             </div>
                             <div class="col-10">
-                                <h4 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d　H:i') }}</h4>
+                                <h4 style="text-align: right;">{{ msg.sendDate | date('Y/m/d H:i') }}</h4>
                                 <div class="col-12 balloon-left py-3 breeder-border">
                                     <div class="ml-3">
-                                        {{ childMessage.contactDescription|nl2br }}
+                                        {{ msg.contactDescription }}
                                     </div>
                                 </div>
                             </div>
@@ -201,75 +185,80 @@
                         <div class="row">
                             <div class="col-sm-1"></div>
                             <div class="col-10">
-                                <h4 style="text-align: right;">{{ childMessage.sendDate.format('Y/m/d　H:i') }}</h4>
+                                <h4 style="text-align: right;">{{ msg.sendDate | date('Y/m/d H:i') }}</h4>
                                 <div class="col-8 balloon-right py-3 breeder-border">
                                     <div class="ml-3">
-                                        {{ childMessage.contactDescription|nl2br }}
+                                        {{ msg.contactDescription }}
                                     </div>
                                 </div>
                             </div>
                             <div class="col-1 breeder-img">
-                                <img src="{{ asset('assets/img/breeder-thumbnail.png') }}" style="width: 40px; height:40px; border-radius: 50%;">
+                                <img src="{{ asset('assets/img/testUser.png') }}"
+                                     style="width: 40px; height:40px; border-radius: 50%;">
                             </div>
                         </div>
                     {% endif %}
-                {% endfor %} #}
+                {% else %}
+                    <p class="text-center">結果が０件です。</p>
+                {% endfor %}
 
                 {# 返信欄・ボタン #}
-                <div class="row">
-                    <div class="col-1"></div>
-                    <div class="col-12 col-sm-10">
-                        <div class="py-3">
-                            <form action="#" method="post">
-                                <textarea aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
-                                        placeholder="返信メッセージ"></textarea>
-                                 {# <input aria-label="reason" name="end_negotiation" type="radio"/>交渉を終了する
-                                <select aria-label="reason" name="reason" class="ec-select">
-                                    <option>非成約理由１</option>
-                                    <option>非成約理由２</option>
-                                    <option>非成約理由３</option>
-                                    <option>非成約理由４</option>
-                                     {% for reason in reasons %}
-                                        <option value="{{ reason.id }}">{{ reason.reason }}</option>
-                                    {% endfor %}
-                                </select> #}
-                                <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">送信</button>
+                {% if (message.contractStatus  not in [constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_CONTRACT'), constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_NONCONTRACT')]) %}
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-12 col-sm-10">
+                            <div class="py-3">
+                                <form action="{{ url('breeder_message', {'id': message.id}) }}" method="post"
+                                      name="breeder-msg-form">
+                                <textarea {{ isScroll ? 'autofocus' }} aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
+                                          placeholder="返信メッセージ"></textarea>
+                                    <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">送信</button>
 
-                                <div class="d-flex">
-                                    {% if Customer.isbreeder == 0 %}
-                                        <button type="button" class="ec-blockBtn--action mt-2 mr-2" onclick="location.href='{{url('breeder_contract')}}'">成約</button>
-                                    {% else %}
-                                        <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">成約</button>
-                                    {% endif %}
-                                    <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">取引をキャンセルする</button>
-                                </div>
-                            </form>
+                                    <div class="d-flex">
+                                        {% if Customer.isbreeder == 0 %}
+                                            <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--action mt-2 mr-2"
+                                                    onclick="location.href='{{ url('breeder_contract', {'pet_id': message.pet.id}) }}'">
+                                                成約
+                                            </button>
+                                        {% else %}
+                                            <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">成約
+                                            </button>
+                                        {% endif %}
+                                        <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">
+                                            取引をキャンセルする
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>
-    {{ include('animalline/components/_modal_contract_cancel.twig') }}
-    {{ include('animalline/components/_modal_contract.twig') }}
+    <form action="{{ url('breeder_message', {'id': message.id}) }}" method="post" name="contract-cancel-form">
+        {{ include('animalline/components/_modal_contract_cancel.twig') }}
+    </form>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 {% endblock %}
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-    
-    document.getElementById("cancel").onclick = function() {
+    if (document.getElementById("cancel")) {
+    document.getElementById("cancel").onclick = function () {
         $('#modal_cancel').modal('show');
     };
-    
-    document.getElementById("contract").onclick = function() {
+}
+    if (document.getElementById("contract")) {
+    document.getElementById("contract").onclick = function () {
         $('#modal_contract').modal('show');
     };
-    
-    $("#confirm-yes").click(function (e) {
-    });
+}
+
+    $("#confirm-yes-cancel").click(function (e) {
+    $("form[name='contract-cancel-form']").submit();
+});
 </script>
 {% endblock %}

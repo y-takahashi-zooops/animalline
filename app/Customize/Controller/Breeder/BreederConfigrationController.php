@@ -2,7 +2,9 @@
 
 namespace Customize\Controller\Breeder;
 
+use Carbon\Carbon;
 use Customize\Config\AnilineConf;
+use Customize\Entity\BreederContactHeader;
 use Customize\Entity\BreederContacts;
 
 use Customize\Entity\BreederExaminationInfo;
@@ -11,6 +13,7 @@ use Customize\Entity\BreederPets;
 use Customize\Form\Type\BreederExaminationInfoType;
 use Customize\Form\Type\BreederPetsType;
 use Customize\Form\Type\BreedersType;
+use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Entity\BreederHouse;
@@ -21,6 +24,7 @@ use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\CoatColorsRepository;
+use Customize\Repository\SendoffReasonRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +40,11 @@ class BreederConfigrationController extends AbstractController
      * @var BreederContactsRepository
      */
     protected $breederContactsRepository;
+
+    /**
+     * @var BreederContactHeaderRepository
+     */
+    protected $breederContactHeaderRepository;
 
     /**
      * @var BreederPetsRepository
@@ -57,26 +66,38 @@ class BreederConfigrationController extends AbstractController
      */
     protected $breederHouseRepository;
 
+
+    /**
+     * @var SendoffReasonRepository
+     */
+    protected $sendoffReasonRepository;
+
     /**
      * BreederConfigrationController constructor.
      * @param BreederContactsRepository $breederContactsRepository
+     * @param BreederContactHeaderRepository $breederContactHeaderRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
+     * @param SendoffReasonRepository $sendoffReasonRepository
      */
     public function __construct(
         BreederContactsRepository        $breederContactsRepository,
+        BreederContactHeaderRepository   $breederContactHeaderRepository,
         BreederPetsRepository            $breederPetsRepository,
         BreederPetImageRepository        $breederPetImageRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
-        BreederHouseRepository           $breederHouseRepository
+        BreederHouseRepository           $breederHouseRepository,
+        SendoffReasonRepository          $sendoffReasonRepository
     )
     {
         $this->breederContactsRepository = $breederContactsRepository;
+        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
         $this->breederHouseRepository = $breederHouseRepository;
+        $this->sendoffReasonRepository = $sendoffReasonRepository;
     }
 
     /**
@@ -85,21 +106,17 @@ class BreederConfigrationController extends AbstractController
      */
     public function get_message_breeder_configration(Request $request)
     {
-        $rootMessages = $this->breederContactsRepository->findBy(
+        $rootMessages = $this->breederContactHeaderRepository->findBy(
             [
-                'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
                 'Breeder' => $this->getUser()
             ],
-            ['is_response' => 'ASC', 'send_date' => 'DESC']
+            ['last_message_date' => 'DESC']
         );
 
         $lastReplies = [];
+        $name = [];
         foreach ($rootMessages as $message) {
-            $lastReply = $this->breederContactsRepository->findOneBy(
-                ['parent_message_id' => $message->getId()],
-                ['send_date' => 'DESC']
-            );
-            $lastReplies[$message->getId()] = $lastReply ? $lastReply->getSendDate() : null;
+            $name[$message->getId()] = "{$message->getCustomer()->getName01()} {$message->getCustomer()->getName02()}";
         }
 
         $pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
@@ -108,7 +125,7 @@ class BreederConfigrationController extends AbstractController
             'animalline/breeder/configration/get_message.twig',
             [
                 'rootMessages' => $rootMessages,
-                'lastReplies' => $lastReplies,
+                'name' => $name,
                 'breeder' => $this->getUser(),
                 'pets' => $pets
             ]
@@ -122,7 +139,7 @@ class BreederConfigrationController extends AbstractController
      * @Template("animalline/breeder/configration/index.twig")
      */
     public function breeder_configration(Request $request)
-     {
+    {
         // $rootMessages = $this->breederContactsRepository->findBy(
         //     [
         //         'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
@@ -160,47 +177,90 @@ class BreederConfigrationController extends AbstractController
      */
     public function breeder_configration_message(Request $request, $contact_id)
     {
-        $rootMessage = $this->breederContactsRepository->find($contact_id);
+        $isScroll = false;
+        $isAcceptContract = $request->get('accept-contract');
+        $reasonCancel = $request->get('reason');
+        $replyMessage = $request->get('reply_message');
+        $rootMessage = $this->breederContactHeaderRepository->find($contact_id);
         if (!$rootMessage) {
             throw new HttpException\NotFoundHttpException();
         }
-
-        $description = $request->get('contact_description');
+        $rootMessage->setBreederNewMsg(0);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($rootMessage);
+        $entityManager->flush();
+        $description = $request->get('reply_message');
 
         $breederContact = new BreederContacts();
-        $form = $this->createFormBuilder($breederContact)->getForm();
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            $breederContact->setCustomer($rootMessage->getCustomer())
-                ->setBreeder($this->getUser())
+        if ($replyMessage) {
+            $breederContact->setBreederHeader($rootMessage)
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_CONFIGURATION)
-                ->setPet($rootMessage->getPet())
-                ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
                 ->setContactDescription($description)
-                ->setParentMessageId($contact_id)
-                ->setSendDate(new DateTime())
-                ->setIsResponse(AnilineConf::RESPONSE_REPLIED)
-                ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION);
+                ->setSendDate(new DateTime());
             $entityManager = $this->getDoctrine()->getManager();
+            $rootMessage->setCustomerNewMsg(1)
+                ->setLastMessageDate(Carbon::now());
+            $entityManager->persist($breederContact);
+            $entityManager->persist($rootMessage);
+            $entityManager->flush();
+            $isScroll = true;
+        }
+
+        if ($isAcceptContract) {
+            if ($rootMessage->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
+                $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
+                    ->setBreederCheck(1);
+            }
+            if ($rootMessage->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $rootMessage->getCustomerCheck() == 1) {
+                $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
+                    ->setBreederCheck(1);
+            }
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($rootMessage);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('breeder_configration_messages', ['contact_id' => $rootMessage->getId()]);
+        }
+
+        if ($reasonCancel) {
+            $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT)
+                ->setCustomerNewMsg(1)
+                ->setSendoffReason($reasonCancel);
+
+            $breederContact = (new BreederContacts())
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_CONFIGURATION)
+                ->setContactDescription('今回の取引非成立となりました')
+                ->setSendDate(Carbon::now())
+                ->setBreederHeader($rootMessage);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($rootMessage);
             $entityManager->persist($breederContact);
             $entityManager->flush();
+
+            return $this->redirectToRoute('get_message_breeder_configration');
         }
+
         $messages = $this->breederContactsRepository->findBy(
-            ['parent_message_id' => $contact_id],
+            ['BreederHeader' => $contact_id],
             ['send_date' => 'ASC']
         );
+        $reasons = $this->sendoffReasonRepository->findBy(['is_breeder_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
+
         return $this->render('animalline/breeder/configration/message.twig', [
             'rootMessage' => $rootMessage,
             'messages' => $messages,
-            'form' => $form->createView()
+            'reasons' => $reasons,
+            'isScroll' => $isScroll
         ]);
     }
 
     /**
      * @Route("/breeder/configration/pets/new/{breeder_id}", name="breeder_configuration_pets_new", methods={"GET","POST"})
      */
-    public function breeder_configuration_pets_new(Request $request, BreedersRepository $breedersRepository): Response
+    public
+    function breeder_configuration_pets_new(Request $request, BreedersRepository $breedersRepository): Response
     {
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet);
@@ -263,7 +323,8 @@ class BreederConfigrationController extends AbstractController
     /**
      * @Route("/breeder/configration/pets/edit/{id}", name="breeder_configuration_pets_edit", methods={"GET","POST"})
      */
-    public function breeder_configuration_pets_edit(Request $request, BreederPets $breederPet): Response
+    public
+    function breeder_configuration_pets_edit(Request $request, BreederPets $breederPet): Response
     {
         $form = $this->createForm(BreederPetsType::class, $breederPet);
         $breederPetImages = $this->breederPetImageRepository->findBy(
@@ -314,7 +375,8 @@ class BreederConfigrationController extends AbstractController
      * @param int $petId
      * @return string
      */
-    private function setImageSrc($imageUrl, $petId)
+    private
+    function setImageSrc($imageUrl, $petId)
     {
         if (empty($imageUrl)) {
             return '';
@@ -348,7 +410,8 @@ class BreederConfigrationController extends AbstractController
     /**
      * @Route("/breeder_pet_data_by_pet_kind", name="breeder_pet_data_by_pet_kind", methods={"GET"})
      */
-    public function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
+    public
+    function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
     {
         $petKind = $request->get('pet_kind');
         $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
@@ -380,7 +443,8 @@ class BreederConfigrationController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function upload(Request $request)
+    public
+    function upload(Request $request)
     {
         if (!file_exists(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/')) {
             mkdir(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/', 0777, 'R');
@@ -399,12 +463,13 @@ class BreederConfigrationController extends AbstractController
      * @Route("/breeder/configration/baseinfo", name="breeder_baseinfo")
      * @Template("/animalline/breeder/configration/baseinfo.twig")
      */
-    public function baseinfo(Request $request, BreedersRepository $breedersRepository)
+    public
+    function baseinfo(Request $request, BreedersRepository $breedersRepository)
     {
         $user = $this->getUser();
-        
+
         $breederData = $breedersRepository->find($user);
-        if(!$breederData){
+        if (!$breederData) {
             $breederData = new Breeders;
             $breederData->setId($user->getId());
         }
@@ -435,7 +500,8 @@ class BreederConfigrationController extends AbstractController
      * @Route("/breeder/configration/examinationinfo/{pet_type}", name="breeder_examinationinfo", methods={"GET","POST"})
      * @Template("/animalline/breeder/configration/examinationinfo.twig")
      */
-    public function examinationinfo(Request $request)
+    public
+    function examinationinfo(Request $request)
     {
         $petType = $request->get('pet_type');
         $breeder = $this->getUser();

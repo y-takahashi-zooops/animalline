@@ -13,6 +13,9 @@
 
 namespace Eccube\Entity;
 
+use Customize\Entity\ShippingSchedule;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\Master\OrderItemType;
 use Eccube\Entity\Master\RoundingType;
@@ -313,6 +316,16 @@ if (!class_exists('\Eccube\Entity\OrderItem')) {
          * })
          */
         private $OrderItemType;
+
+        /**
+         * @ORM\OneToMany(targetEntity=ShippingSchedule::class, mappedBy="OrderDetail")
+         */
+        private $ShippingSchedules;
+
+        public function __construct()
+        {
+            $this->ShippingSchedules = new ArrayCollection();
+        }
 
         /**
          * Get id.
@@ -851,6 +864,36 @@ if (!class_exists('\Eccube\Entity\OrderItem')) {
         public function getOrderItemType()
         {
             return $this->OrderItemType;
+        }
+
+        /**
+         * @return Collection|ShippingSchedule[]
+         */
+        public function getShippingSchedules(): Collection
+        {
+            return $this->ShippingSchedules;
+        }
+
+        public function addShippingSchedule(ShippingSchedule $shippingSchedule): self
+        {
+            if (!$this->ShippingSchedules->contains($shippingSchedule)) {
+                $this->ShippingSchedules[] = $shippingSchedule;
+                $shippingSchedule->setOrderDetail($this);
+            }
+
+            return $this;
+        }
+
+        public function removeShippingSchedule(ShippingSchedule $shippingSchedule): self
+        {
+            if ($this->ShippingSchedules->removeElement($shippingSchedule)) {
+                // set the owning side to null (unless already changed)
+                if ($shippingSchedule->getOrderDetail() === $this) {
+                    $shippingSchedule->setOrderDetail(null);
+                }
+            }
+
+            return $this;
         }
     }
 }
