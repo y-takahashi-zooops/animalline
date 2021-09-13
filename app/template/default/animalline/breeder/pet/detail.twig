@@ -69,9 +69,6 @@
                                 <th scope="row" class="text-align-center">血統書の有無</th>
                                 <td class="color-gray-500">{{ breederPet.getIsPedigree() == 0 ? '無' : '有' }}</td>
                             </tr>
-                            <th scope="row" class="text-align-center" style="vertical-align: middle;">PR</th>
-                            <td colspan="3" class="color-gray-500">{{ breederPet.prComment }}</td>
-                            </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">ワクチン代の有無</th>
                                 <td class="color-gray-500">{{ breederPet.getIncludeVaccineFee() == 0 ? '無' : '有' }}</td>
@@ -81,10 +78,14 @@
                             <tr>
                                 <th scope="row" class="text-align-center">ブリーダーへの販売可否</th>
                                 <td class="color-gray-500">{{ breederPet.getIsSelling() == 0 ? '否' : '可' }}</td>
-                                {% if (breederPet.BreedsType.getPetKind() == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                {% if (breederPet.getPetKind() == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
                                     <th scope="row" class="text-align-center">成犬時予想</th>
                                     <td class="color-gray-500">{{ breederPet.futureWait }}kg</td>
                                 {% endif %}
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-align-center" style="vertical-align: middle;">PR</th>
+                                <td colspan="3" class="color-gray-500">{{ breederPet.prComment }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -244,7 +245,7 @@
                         </div>
                         <div class="m-2 p-2"></div>
                         <a href="{{ url('breeder_detail', {'breeder_id':breederPet.Breeder.id}) }}">
-                            <h6 class="color-breeder">ブリーダー詳細ページへ</h6>
+                            <h4 class="color-breeder">ブリーダー詳細ページへ</h4>
                         </a>
                     </div>
                 </div>
