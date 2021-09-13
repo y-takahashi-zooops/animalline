@@ -74,13 +74,13 @@
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">ワクチン代の有無</th>
-                                <td class="color-gray-500">{{ breederPet.getIncludeVaccineFee() }}</td>
+                                <td class="color-gray-500">{{ breederPet.getIncludeVaccineFee() == 0 ? '無' : '有' }}</td>
                                 <th scope="row" class="text-align-center">繁殖の可否</th>
-                                <td class="color-gray-500">{{ breederPet.getIsBreeding() == 0 ? '無' : '有' }}</td>
+                                <td class="color-gray-500">{{ breederPet.getIsBreeding() == 0 ? '否' : '可' }}</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="text-align-center">ブリーダーへの販売可否</th>
-                                <td class="color-gray-500">{{ breederPet.getIsSelling() == 0 ? '無' : '有' }}</td>
+                                <td class="color-gray-500">{{ breederPet.getIsSelling() == 0 ? '否' : '可' }}</td>
                                 {% if (breederPet.BreedsType.getPetKind() == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
                                     <th scope="row" class="text-align-center">成犬時予想</th>
                                     <td class="color-gray-500">{{ breederPet.futureWait }}kg</td>
@@ -144,6 +144,25 @@
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-12">
+                        <h2 class="font-weight-500">取引条件: </h2>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <p>
+                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                            テキストが入ります。テキストが入ります。
+                        </p>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
                         <h2 class="font-weight-500">引き渡し時期: </h2>
                     </div>
                 </div>
@@ -175,7 +194,7 @@
                 <div class="row">
                     <div class="breeder-img col-sm-4">
                         <img alt="..."
-                             src="{{ breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                             src="{{ breederPet.Breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                              class="w-100 mb-4 mb-sm-0">
                     </div>
                     <div class="breeder-info col-sm-8">
@@ -194,12 +213,12 @@
                             <h6>{{ breederPet.Breeder.getLicenseNo() }}</h6>
                             <div class="m-1 p-1"></div>
                             <h6>登録：</h6>
-                            <h6>{{ breederPet.Breeder.getLicenseRegistDate()|date('Y/m/d H:i') }}</h6>
+                            <h6>{{ breederPet.Breeder.getLicenseRegistDate()|date('Y/m/d') }}</h6>
                         </div>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>有効期限：</h6>
-                            <h6>{{ breederPet.Breeder.getLicenseExpireDate()|date('Y/m/d H:i') }}</h6>
+                            <h6>{{ breederPet.Breeder.getLicenseExpireDate()|date('Y/m/d') }}</h6>
                             <div class="m-1 p-1"></div>
                             <h6>動物取扱責任者：</h6>
                             <h6>{{ breederPet.Breeder.getLicenseManagerName() }}</h6>
