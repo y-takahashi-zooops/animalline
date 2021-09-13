@@ -3,7 +3,6 @@
 namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
-use Customize\Repository\BreedsRepository;
 use Customize\Service\BreederQueryService;
 use Carbon\Carbon;
 use Customize\Entity\BreederContacts;
@@ -66,11 +65,6 @@ class BreederController extends AbstractController
     protected $sendoffReasonRepository;
 
     /**
-     * @var BreedsRepository
-     */
-    protected $breedsRepository;
-
-    /**
      * @var PrefRepository
      */
     protected $prefRepository;
@@ -94,7 +88,6 @@ class BreederController extends AbstractController
         SendoffReasonRepository   $sendoffReasonRepository,
         BreedersRepository        $breedersRepository,
         BreederPetsRepository     $breederPetsRepository,
-        BreedsRepository          $breedsRepository,
         PrefRepository            $prefRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
@@ -104,7 +97,6 @@ class BreederController extends AbstractController
         $this->sendoffReasonRepository = $sendoffReasonRepository;
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
-        $this->breedsRepository = $breedsRepository;
         $this->prefRepository = $prefRepository;
     }
 
@@ -265,7 +257,7 @@ class BreederController extends AbstractController
     public function breeder_search(PaginatorInterface $paginator, Request $request): Response
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
         $breederResults = $this->breederQueryService->searchBreedersResult($request, $petKind);
         $breeders = $paginator->paginate(
