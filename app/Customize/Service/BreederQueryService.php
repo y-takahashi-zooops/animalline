@@ -91,7 +91,7 @@ class BreederQueryService
                 ->setParameter('pet_kind', $request->get('pet_kind'));
         }
 
-        if ($request->get('size_code') && $request->get('pet_kind') == 1) {
+        if ($request->get('size_code') && $request->get('pet_kind') == AnilineConf::ANILINE_PET_KIND_DOG) {
             $query->join('p.BreedsType', 'b')
                 ->andWhere('b.size_code = :size_code')
                 ->setParameter('size_code', $request->get('size_code'));
