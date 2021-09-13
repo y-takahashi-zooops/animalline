@@ -66,12 +66,25 @@
                             <tr>
                                 <th scope="row" class="text-align-center">色</th>
                                 <td class="color-gray-500">{{ breederPet.coatColor.coatColorName ?? '' }}</td>
-                                <th scope="row" class="text-align-center">成犬時予想</th>
-                                <td class="color-gray-500">{{ breederPet.futureWait }}kg</td>
+                                <th scope="row" class="text-align-center">血統書の有無</th>
+                                <td class="color-gray-500">{{ breederPet.getIsPedigree() }}</td>
+                            </tr>
+                            <th scope="row" class="text-align-center">PR</th>
+                            <td colspan="2" class="color-gray-500">{{ breederPet.prComment }}</td>
                             </tr>
                             <tr>
-                                <th scope="row" class="text-align-center">PR</th>
-                                <td colspan="2" class="color-gray-500">{{ breederPet.prComment }}</td>
+                                <th scope="row" class="text-align-center">ワクチン代の有無</th>
+                                <td class="color-gray-500">{{ breederPet.getIncludeVaccineFee() }}</td>
+                                <th scope="row" class="text-align-center">繁殖の可否</th>
+                                <td class="color-gray-500">{{ breederPet.getIsBreeding }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-align-center">ブリーダーへの販売可否</th>
+                                <td class="color-gray-500">{{ breederPet.getIsSelling() }}</td>
+                                {% if (breederPet.BreedsType.getPetKind() == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                    <th scope="row" class="text-align-center">成犬時予想</th>
+                                    <td class="color-gray-500">{{ breederPet.futureWait }}kg</td>
+                                {% endif %}
                             </tr>
                             </tbody>
                         </table>
@@ -114,6 +127,10 @@
                 <div class="row">
                     <div class="col-12">
                         <p>{{ breederPet.description }}</p>
+                        <p>生体保障内容: {{ breederPet.getGuarantee() }}</p>
+                        <p>取引条件: {{ breederPet.getGuarantee() }}</p>
+                        <p>引き渡し時期: {{ breederPet.getDeliveryTime() }}</p>
+                        <p>支払方法: {{ breederPet.getPaymentMethod() }}</p>
                     </div>
                 </div>
                 <div class="m-2 p-2"></div>
@@ -135,33 +152,42 @@
                             <div class="m-1 p-1"></div>
                             <img src="{{ asset('assets/img/star-icon.svg') }}">
                             <div class="m-1 p-1"></div>
-                            <h6>5.00</h6>
+                            <h6>{{ breederPet.Breeder.getBreederRank() }}</h6>
                         </div>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>動物取扱業登録番号：</h6>
-                            <h6>動東第000号</h6>
+                            <h6>{{ breederPet.Breeder.getLicenseType() }}</h6>
                             <div class="m-1 p-1"></div>
                             <h6>登録：</h6>
-                            <h6>2021/00/00</h6>
+                            <h6>{{ breederPet.Breeder.getLicenseRegistDate()|date('Y年m月d日') }}</h6>
                         </div>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>有効期限：</h6>
-                            <h6>2021/00/00</h6>
+                            <h6>{{ breederPet.Breeder.getLicenseExpireDate()|date('Y年m月d日') }}</h6>
                             <div class="m-1 p-1"></div>
                             <h6>動物取扱責任者：</h6>
-                            <h6>田中 太郎</h6>
+                            <h6>{{ breederPet.Breeder.getLicenseManagerName()|date('Y年m月d日') }}</h6>
                         </div>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>犬舎所在地：</h6>
-                            <h6>愛知県豊橋市</h6>
+                            {% set breederHouseDog = breederPet.Breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                            {% set breederHouseCat = breederPet.Breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
+                            {% if (breederPet.Breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
+                                <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' ~ ' ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
+                            {% elseif (breederPet.Breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' }}</h4>
+                            {% else %}
+                                <h4>{{ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
+                            {% endif %}
                         </div>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>犬舎見学：</h6>
-                            <h6>見学OK</h6>
+                            {% set ex_status = ['審査前', '審査中', '審査OK', '審査NG'] %}
+                            <h4>{{ ex_status[breederPet.Breeder.examinationStatus] }}</h4>
                         </div>
                         <div class="m-2 p-2"></div>
                         <a href="breederpage.html">
@@ -186,15 +212,10 @@
                 <div class="row">
                     <div class="col-12 bg-primary">
                         <div class="col-12">
-                            <h2 class="font-weight-500">注意事項</h2>
+                            <h2 class="font-weight-500">自己PR</h2>
                             <div class="m-2 p-2"></div>
                             <p>
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。
+                                {{ breederPet.Breeder.getPrText() }}
                             </p>
                         </div>
                     </div>
@@ -203,15 +224,10 @@
                 <div class="row">
                     <div class="col-12 bg-primary">
                         <div class="col-12">
-                            <h2 class="font-weight-500">取引条件</h2>
+                            <h2 class="font-weight-500">動物愛護法改正への対応</h2>
                             <div class="m-2 p-2"></div>
                             <p>
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。
+                                {{ breederPet.Breeder.getRegalEffort() }}
                             </p>
                         </div>
                     </div>
