@@ -118,7 +118,7 @@ class BreederConfigrationController extends AbstractController
         foreach ($rootMessages as $message) {
             $name[$message->getId()] = "{$message->getCustomer()->getName01()} {$message->getCustomer()->getName02()}";
         }
-        
+
         //$pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
 
         return $this->render(
@@ -259,8 +259,7 @@ class BreederConfigrationController extends AbstractController
     /**
      * @Route("/breeder/configration/pets/new/{breeder_id}", name="breeder_configuration_pets_new", methods={"GET","POST"})
      */
-    public
-    function breeder_configuration_pets_new(Request $request, BreedersRepository $breedersRepository): Response
+    public function breeder_configuration_pets_new(Request $request, BreedersRepository $breedersRepository): Response
     {
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet);
@@ -323,8 +322,7 @@ class BreederConfigrationController extends AbstractController
     /**
      * @Route("/breeder/configration/pets/edit/{id}", name="breeder_configuration_pets_edit", methods={"GET","POST"})
      */
-    public
-    function breeder_configuration_pets_edit(Request $request, BreederPets $breederPet): Response
+    public function breeder_configuration_pets_edit(Request $request, BreederPets $breederPet): Response
     {
         $form = $this->createForm(BreederPetsType::class, $breederPet);
         $breederPetImages = $this->breederPetImageRepository->findBy(
@@ -410,8 +408,7 @@ class BreederConfigrationController extends AbstractController
     /**
      * @Route("/breeder_pet_data_by_pet_kind", name="breeder_pet_data_by_pet_kind", methods={"GET"})
      */
-    public
-    function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
+    public function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
     {
         $petKind = $request->get('pet_kind');
         $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
@@ -443,8 +440,7 @@ class BreederConfigrationController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public
-    function upload(Request $request)
+    public function upload(Request $request)
     {
         if (!file_exists(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/')) {
             mkdir(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/', 0777, 'R');
@@ -463,8 +459,7 @@ class BreederConfigrationController extends AbstractController
      * @Route("/breeder/configration/baseinfo", name="breeder_baseinfo")
      * @Template("/animalline/breeder/configration/baseinfo.twig")
      */
-    public
-    function baseinfo(Request $request, BreedersRepository $breedersRepository)
+    public function baseinfo(Request $request, BreedersRepository $breedersRepository)
     {
         $user = $this->getUser();
 
@@ -500,8 +495,7 @@ class BreederConfigrationController extends AbstractController
      * @Route("/breeder/configration/examinationinfo/{pet_type}", name="breeder_examinationinfo", methods={"GET","POST"})
      * @Template("/animalline/breeder/configration/examinationinfo.twig")
      */
-    public
-    function examinationinfo(Request $request)
+    public function examinationinfo(Request $request)
     {
         $petType = $request->get('pet_type');
         $breeder = $this->getUser();

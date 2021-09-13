@@ -26,22 +26,22 @@
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[0].imageUri | default | length > 0 ? images[0].imageUri : '/noimage_plugin_list.png') }}"
+                        <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[0].imageUri | default('/noimage_plugin_list.png')) }}"
                              class="card-img-top" alt="...">
                         <div class="d-block d-sm-none m-2 p-2"></div>
                     </div>
                     <div class="col-6 col-sm-3">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[1].imageUri | default | length > 0 ? images[1].imageUri : '/noimage_plugin_list.png') }}"
+                        <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[1].imageUri |default('/noimage_plugin_list.png')) }}"
                              class="card-img-top w-100" alt="...">
                         <div class="m-2 p-2"></div>
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[2].imageUri | default | length > 0 ? images[2].imageUri : '/noimage_plugin_list.png') }}"
+                        <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[2].imageUri |default('/noimage_plugin_list.png')) }}"
                              class="card-img-top w-100" alt="...">
                     </div>
                     <div class="col-6 col-sm-3">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[3].imageUri | default | length > 0 ? images[3].imageUri : '/noimage_plugin_list.png') }}"
+                        <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[3].imageUri |default('/noimage_plugin_list.png')) }}"
                              class="card-img-top w-100" alt="...">
                         <div class="m-2 p-2"></div>
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[4].imageUri | default | length > 0 ? images[4].imageUri : '/noimage_plugin_list.png') }}"
+                        <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[4].imageUri |default('/noimage_plugin_list.png')) }}"
                              class="card-img-top w-100" alt="...">
                     </div>
                 </div>
@@ -66,12 +66,14 @@
                             <tr>
                                 <th scope="row" class="text-align-center">色</th>
                                 <td class="color-gray-500">{{ conservationPet.CoatColor.coatColorName ?? '' }}</td>
-                                <th scope="row" class="text-align-center">成犬時予想</th>
-                                <td class="color-gray-500">{{ conservationPet.futureWait }}kg</td>
+                                {% if (conservationPet.petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                    <th scope="row" class="text-align-center">成犬時予想</th>
+                                    <td class="color-gray-500">{{ conservationPet.futureWait }}kg</td>
+                                {% endif %}
                             </tr>
                             <tr>
-                                <th scope="row" class="text-align-center">PR</th>
-                                <td colspan="2" class="color-gray-500">{{ conservationPet.prComment }}</td>
+                                <th scope="row" class="text-align-center" style="vertical-align: middle;">PR</th>
+                                <td colspan="3" class="color-gray-500">{{ conservationPet.prComment }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -119,53 +121,56 @@
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-12">
-                        <h2 class="font-weight-500">ブリーダー紹介</h2>
+                        <h2 class="font-weight-500">引き渡し時期</h2>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <p>{{ conservationPet.deliveryTime }}</p>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="font-weight-500">保護団体紹介</h2>
                     </div>
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="breeder-img col-sm-4">
-                        <img alt="..." src="{{ asset('assets/img/breeder-thumbnail.png') }}" class="w-100 mb-4 mb-sm-0">
+                        <img alt="..."
+                             src="{{ (conservationPet.Conservation.thumbnailPath | default(constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png')) }}"
+                             class="w-100 mb-4 mb-sm-0">
                     </div>
                     <div class="breeder-info col-sm-8">
-                        <h3 class="font-weight-500 color-gray-500">田中 太郎ブリーダー</h3>
-                        <div class="m-1 p-1"></div>
-                        <div class="d-flex">
-                            <h6>総合評価</h6>
-                            <div class="m-1 p-1"></div>
-                            <img alt="..." src="{{ asset('assets/img/star-icon.svg') }}">
-                            <div class="m-1 p-1"></div>
-                            <h6>5.00</h6>
-                        </div>
-                        <div class="m-1 p-1"></div>
-                        <div class="d-flex">
-                            <h6>動物取扱業登録番号：</h6>
-                            <h6>動東第000号</h6>
-                            <div class="m-1 p-1"></div>
-                            <h6>登録：</h6>
-                            <h6>2021/00/00</h6>
-                        </div>
-                        <div class="m-1 p-1"></div>
-                        <div class="d-flex">
-                            <h6>有効期限：</h6>
-                            <h6>2021/00/00</h6>
-                            <div class="m-1 p-1"></div>
-                            <h6>動物取扱責任者：</h6>
-                            <h6>田中 太郎</h6>
-                        </div>
+                        <h3 class="font-weight-500 color-gray-500">{{ conservationPet.Conservation.organizationName }}</h3>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>犬舎所在地：</h6>
-                            <h6>愛知県豊橋市</h6>
+                            {% set houseDog = conservationPet.Conservation.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                            {% set houseCat = conservationPet.Conservation.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
+                            {% if (conservationPet.Conservation.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
+                                <h6>{{ houseDog.conservationHousePref ~ houseDog.conservationHouseCity ?? '' ~ ' ' ~ houseCat.conservationHousePref ~ houseCat.conservationHouseCity ?? '' }}</h6>
+                            {% elseif (conservationPet.Conservation.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                <h6>{{ houseDog.conservationHousePref ~ houseDog.conservationHouseCity ?? '' }}</h6>
+                            {% else %}
+                                <h6>{{ houseCat.conservationHousePref ~ houseCat.conservationHouseCity ?? '' }}</h6>
+                            {% endif %}
                         </div>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
-                            <h6>犬舎見学：</h6>
-                            <h6>見学OK</h6>
+                            <h6>運営者指名：</h6>
+                            <h6>{{ conservationPet.Conservation.ownerName }}</h6>
+                        </div>
+                        <div class="m-1 p-1"></div>
+                        <div class="d-flex">
+                            <h6>ホームページの URL 任意：</h6>
+                            <h6>{{ conservationPet.Conservation.homepageUrl }}</h6>
                         </div>
                         <div class="m-2 p-2"></div>
-                        <a href="breederpage.html">
-                            <h4 class="color-adoption">ブリーダー詳細ページへ</h4>
+                        <a href="conservationpage.html">
+                            <h4 class="color-adoption">保護団体詳細ページへ</h4>
                         </a>
                     </div>
                 </div>
@@ -186,49 +191,10 @@
                 <div class="row">
                     <div class="col-12 bg-primary">
                         <div class="col-12">
-                            <h2 class="font-weight-500">注意事項</h2>
+                            <h2 class="font-weight-500">自己PR</h2>
                             <div class="m-2 p-2"></div>
                             <p>
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="col-12 bg-primary">
-                        <div class="col-12">
-                            <h2 class="font-weight-500">取引条件</h2>
-                            <div class="m-2 p-2"></div>
-                            <p>
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="col-12 bg-primary">
-                        <div class="col-12">
-                            <h2 class="font-weight-500">その他</h2>
-                            <div class="m-2 p-2"></div>
-                            <p>
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。
+                                {{ conservationPet.Conservation.prText }}
                             </p>
                         </div>
                     </div>

@@ -91,8 +91,7 @@ class AdoptionController extends AbstractController
         SendoffReasonRepository        $sendoffReasonRepository,
         BreedsRepository               $breedsRepository,
         PrefRepository                 $prefRepository
-    )
-    {
+    ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
@@ -129,7 +128,7 @@ class AdoptionController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
 
         return $this->render('animalline/adoption/pet/search_result.twig', [
@@ -362,7 +361,7 @@ class AdoptionController extends AbstractController
     //     ]);
     // }
 
-  
+
 
     // TODO: confirm remove
     // /**

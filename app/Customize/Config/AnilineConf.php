@@ -131,4 +131,10 @@ final class AnilineConf
     const DNA_CHECK_RESULT_2 = 2;
 
     const EXERCISE_STATUS_OTHER = 4;
+
+    //犬のサイズ
+    const ANILINE_DOG_SIZE_TINNY = 1;
+    const ANILINE_DOG_SIZE_SMALL = 2;
+    const ANILINE_DOG_SIZE_MEDIUM = 3;
+    const ANILINE_DOG_SIZE_BIG = 4;
 }

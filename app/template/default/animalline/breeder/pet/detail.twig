@@ -66,12 +66,26 @@
                             <tr>
                                 <th scope="row" class="text-align-center">色</th>
                                 <td class="color-gray-500">{{ breederPet.coatColor.coatColorName ?? '' }}</td>
-                                <th scope="row" class="text-align-center">成犬時予想</th>
-                                <td class="color-gray-500">{{ breederPet.futureWait }}kg</td>
+                                <th scope="row" class="text-align-center">血統書の有無</th>
+                                <td class="color-gray-500">{{ breederPet.getIsPedigree() == 0 ? '無' : '有' }}</td>
                             </tr>
                             <tr>
-                                <th scope="row" class="text-align-center">PR</th>
-                                <td colspan="2" class="color-gray-500">{{ breederPet.prComment }}</td>
+                                <th scope="row" class="text-align-center">ワクチン代の有無</th>
+                                <td class="color-gray-500">{{ breederPet.getIncludeVaccineFee() == 0 ? '無' : '有' }}</td>
+                                <th scope="row" class="text-align-center">繁殖の可否</th>
+                                <td class="color-gray-500">{{ breederPet.getIsBreeding() == 0 ? '否' : '可' }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-align-center">ブリーダーへの販売可否</th>
+                                <td class="color-gray-500">{{ breederPet.getIsSelling() == 0 ? '否' : '可' }}</td>
+                                {% if (breederPet.getPetKind() == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                    <th scope="row" class="text-align-center">成犬時予想</th>
+                                    <td class="color-gray-500">{{ breederPet.futureWait }}kg</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-align-center" style="vertical-align: middle;">PR</th>
+                                <td colspan="3" class="color-gray-500">{{ breederPet.prComment }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -119,52 +133,118 @@
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-12">
+                        <h2 class="font-weight-500">生体保障内容: </h2>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <p>{{ breederPet.getGuarantee() }}</p>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="font-weight-500">取引条件: </h2>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <p>
+                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
+                            テキストが入ります。テキストが入ります。
+                        </p>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="font-weight-500">引き渡し時期: </h2>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <p>{{ breederPet.getDeliveryTime() }}</p>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="font-weight-500">支払方法: </h2>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
+                        <p>{{ breederPet.getPaymentMethod() }}</p>
+                    </div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="row">
+                    <div class="col-12">
                         <h2 class="font-weight-500">ブリーダー紹介</h2>
                     </div>
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="breeder-img col-sm-4">
-                        <img src="{{ asset('assets/img/breeder-thumbnail.png') }}" class="w-100 mb-4 mb-sm-0">
+                        <img alt="..."
+                             src="{{ breederPet.Breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                             class="w-100 mb-4 mb-sm-0">
                     </div>
                     <div class="breeder-info col-sm-8">
-                        <h3 class="font-weight-500 color-gray-500">田中 太郎ブリーダー</h3>
+                        <h3 class="font-weight-500 color-gray-500">{{ breederPet.Breeder.getLicenseHouseName() }}</h3>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>総合評価</h6>
                             <div class="m-1 p-1"></div>
                             <img src="{{ asset('assets/img/star-icon.svg') }}">
                             <div class="m-1 p-1"></div>
-                            <h6>5.00</h6>
+                            <h6>{{ breederPet.Breeder.getBreederRank() }}</h6>
                         </div>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>動物取扱業登録番号：</h6>
-                            <h6>動東第000号</h6>
+                            <h6>{{ breederPet.Breeder.getLicenseNo() }}</h6>
                             <div class="m-1 p-1"></div>
                             <h6>登録：</h6>
-                            <h6>2021/00/00</h6>
+                            <h6>{{ breederPet.Breeder.getLicenseRegistDate()|date('Y/m/d') }}</h6>
                         </div>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>有効期限：</h6>
-                            <h6>2021/00/00</h6>
+                            <h6>{{ breederPet.Breeder.getLicenseExpireDate()|date('Y/m/d') }}</h6>
                             <div class="m-1 p-1"></div>
                             <h6>動物取扱責任者：</h6>
-                            <h6>田中 太郎</h6>
+                            <h6>{{ breederPet.Breeder.getLicenseManagerName() }}</h6>
                         </div>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>犬舎所在地：</h6>
-                            <h6>愛知県豊橋市</h6>
+                            {% set breederHouseDog = breederPet.Breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                            {% set breederHouseCat = breederPet.Breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
+                            {% if (breederPet.Breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
+                                <h6>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' ~ ' ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h6>
+                            {% elseif (breederPet.Breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                <h6>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' }}</h6>
+                            {% else %}
+                                <h6>{{ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h6>
+                            {% endif %}
                         </div>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>犬舎見学：</h6>
-                            <h6>見学OK</h6>
+                            {% set ex_status = ['審査前', '審査中', '審査OK', '審査NG'] %}
+                            <h6>{{ ex_status[breederPet.Breeder.examinationStatus] }}</h6>
                         </div>
                         <div class="m-2 p-2"></div>
-                        <a href="breederpage.html">
+                        <a href="{{ url('breeder_detail', {'breeder_id':breederPet.Breeder.id}) }}">
                             <h4 class="color-breeder">ブリーダー詳細ページへ</h4>
                         </a>
                     </div>
@@ -186,15 +266,10 @@
                 <div class="row">
                     <div class="col-12 bg-primary">
                         <div class="col-12">
-                            <h2 class="font-weight-500">注意事項</h2>
+                            <h2 class="font-weight-500">自己PR</h2>
                             <div class="m-2 p-2"></div>
                             <p>
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。
+                                {{ breederPet.Breeder.getPrText() }}
                             </p>
                         </div>
                     </div>
@@ -203,15 +278,10 @@
                 <div class="row">
                     <div class="col-12 bg-primary">
                         <div class="col-12">
-                            <h2 class="font-weight-500">取引条件</h2>
+                            <h2 class="font-weight-500">動物愛護法改正への対応</h2>
                             <div class="m-2 p-2"></div>
                             <p>
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。
+                                {{ breederPet.Breeder.getRegalEffort() }}
                             </p>
                         </div>
                     </div>
@@ -219,18 +289,6 @@
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-12 bg-primary">
-                        <div class="col-12">
-                            <h2 class="font-weight-500">その他</h2>
-                            <div class="m-2 p-2"></div>
-                            <p>
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                                テキストが入ります。テキストが入ります。
-                            </p>
-                        </div>
                     </div>
                 </div>
             </div>
