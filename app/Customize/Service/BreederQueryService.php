@@ -91,6 +91,12 @@ class BreederQueryService
                 ->setParameter('pet_kind', $request->get('pet_kind'));
         }
 
+        if ($request->get('size_code') && $request->get('pet_kind') == 1) {
+            $query->join('p.BreedsType', 'b')
+                ->andWhere('b.size_code = :size_code')
+                ->setParameter('size_code', $request->get('size_code'));
+        }
+
         if ($request->get('breed_type')) {
             $query->andWhere('p.BreedsType = :breeds_type')
                 ->setParameter('breeds_type', $request->get('breed_type'));
