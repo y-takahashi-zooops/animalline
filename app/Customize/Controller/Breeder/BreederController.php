@@ -121,7 +121,7 @@ class BreederController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
 
         return $this->render('animalline/breeder/pet/search_result.twig', [

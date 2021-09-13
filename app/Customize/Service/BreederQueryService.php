@@ -6,6 +6,7 @@ use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\PetsFavoriteRepository;
+use Customize\Repository\BreedsRepository;
 use Customize\Repository\PrefAdjacentRepository;
 
 class BreederQueryService
@@ -26,6 +27,11 @@ class BreederQueryService
     protected $petsFavoriteRepository;
 
     /**
+     * @var BreedsRepository
+     */
+    protected $breedsRepository;
+
+    /**
      * @var PrefAdjacentRepository
      */
     protected $prefAdjacentRepository;
@@ -35,19 +41,36 @@ class BreederQueryService
      *
      * @param BreederPetsRepository $breederPetsRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
+     * @param BreedsRepository $breedsRepository
      * @param PrefAdjacentRepository $prefAdjacentRepository
      * @param BreedersRepository $breedersRepository
      */
     public function __construct(
         BreederPetsRepository  $breederPetsRepository,
         PetsFavoriteRepository $petsFavoriteRepository,
+        BreedsRepository $breedsRepository,
         PrefAdjacentRepository $prefAdjacentRepository,
         BreedersRepository     $breedersRepository
     ) {
         $this->breederPetsRepository = $breederPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
+        $this->breedsRepository = $breedsRepository;
         $this->prefAdjacentRepository = $prefAdjacentRepository;
         $this->breedersRepository = $breedersRepository;
+    }
+
+    public function getBreedsHavePet($petKind): array
+    {
+        $result = $this->breedsRepository->createQueryBuilder('b')
+            ->select()
+            ->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.BreedsType')
+            ->where('b.pet_kind = :pet_kind and bp.BreedsType is not null')
+            ->setParameter('pet_kind', $petKind)
+            ->orderBy('b.sort_order', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return $result;
     }
 
     /**
