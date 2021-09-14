@@ -26,6 +26,9 @@ use Eccube\Entity\ProductClass;
 use Eccube\Entity\ProductImage;
 use Eccube\Entity\ProductStock;
 use Eccube\Entity\ProductTag;
+use Customize\Entity\Supplier;
+use Customize\Form\Type\Admin\SupplierType;
+use Customize\Repository\SupplierRepository;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Admin\ProductType;
@@ -90,6 +93,11 @@ class ProductController extends BaseProductController
     protected $productRepository;
 
     /**
+     * @var SupplierRepository
+     */
+    protected $supplierRepository;
+
+    /**
      * @var BaseInfo
      */
     protected $BaseInfo;
@@ -122,6 +130,7 @@ class ProductController extends BaseProductController
      * @param PageMaxRepository $pageMaxRepository
      * @param ProductStatusRepository $productStatusRepository
      * @param TagRepository $tagRepository
+     * @param SupplierRepository $supplierRepository
      */
     public function __construct(
         CsvExportService $csvExportService,
@@ -133,7 +142,8 @@ class ProductController extends BaseProductController
         BaseInfoRepository $baseInfoRepository,
         PageMaxRepository $pageMaxRepository,
         ProductStatusRepository $productStatusRepository,
-        TagRepository $tagRepository
+        TagRepository $tagRepository,
+        SupplierRepository $supplierRepository
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -145,6 +155,7 @@ class ProductController extends BaseProductController
         $this->pageMaxRepository = $pageMaxRepository;
         $this->productStatusRepository = $productStatusRepository;
         $this->tagRepository = $tagRepository;
+        $this->supplierRepository = $supplierRepository;
     }
 
     /**
@@ -1061,7 +1072,56 @@ class ProductController extends BaseProductController
      */
     public function supplier(Request $request)
     {
-        return[];
+        $idDestroy = $request->get('id-destroy');
+        if ($idDestroy) {
+            $supplier = $this->supplierRepository->find($request->get('id-destroy'));
+            $issetProduct = $this->productClassRepository->findBy(['supplier_code' => $supplier->getSupplierCode()]);
+            if (!$issetProduct) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($supplier);
+                $entityManager->flush();
+            }
+            return $this->redirectToRoute('admin_product_supplier');
+        }
+        $supplierNew = new Supplier();
+
+        $form = $this->createForm(SupplierType::class, $supplierNew);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($supplierNew);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_product_supplier');
+        }
+
+        $suppliers = $this->supplierRepository->findAll();
+        $formUpdate = [];
+        foreach ($suppliers as $supplier) {
+            $uniqueFormName = 'Form' . $supplier->getId();
+            $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, SupplierType::class, $supplier);
+            $formUpdate[$uniqueFormName] = $formHandle;
+        }
+        $formUpdateView = [];
+        foreach ($formUpdate as $formName => $formHandle) {
+            if ($request->get('supplier-id')) {
+                $supplier = $this->supplierRepository->find($request->get('supplier-id'));
+                $formHandle->handleRequest($request);
+                if ($formHandle->isSubmitted() && $formHandle->isValid()) {
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($supplier);
+                    $entityManager->flush();
+                }
+            }
+            $formUpdateView[$formName] = $formHandle->createView();
+        }
+
+        return $this->render('@admin/Product/supplier.twig', [
+            'suppliers' => $suppliers,
+            'form' => $form->createView(),
+            'form_update' => $formUpdateView
+        ]);
     }
 
     /**
@@ -1070,9 +1130,8 @@ class ProductController extends BaseProductController
      */
     public function waste(Request $request)
     {
-        return[];
+        return [];
     }
-
 
 
 }

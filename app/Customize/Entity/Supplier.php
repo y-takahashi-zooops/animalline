@@ -22,7 +22,7 @@ class Supplier
     private $id;
 
     /**
-     * @ORM\Column(name="supplier_code", type="string", length=5, nullable=false)
+     * @ORM\Column(name="supplier_code", type="string", unique=true, length=5, nullable=false)
      */
     private $supplier_code;
 
@@ -74,13 +74,31 @@ class Supplier
         return $this;
     }
 
-    public function getCreateDate()
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
     {
-        return $this->create_date;
+        $this->create_date = $createDate;
+
+        return $this;
     }
 
-    public function getUpdateDate()
+    /**
+     * Set updateDate.
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Payment
+     */
+    public function setUpdateDate($updateDate)
     {
-        return $this->update_date;
+        $this->update_date = $updateDate;
+
+        return $this;
     }
 }
