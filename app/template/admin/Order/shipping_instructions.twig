@@ -23,16 +23,78 @@ file that was distributed with this source code.
         $('#modal_cancel').modal('show');
     };
     document.getElementById("detail").onclick = function() {
+        getSchedulesbyHeader(1);
         $('#modal_detail').modal('show');
-    };
-    document.getElementById("detail_detail").onclick = function() {
-        $('#modal_detail').modal('hide');
-        $('#modal_detail_detail').modal('show');
     };
     document.getElementById("return").onclick = function() {
         $('#modal_detail').modal('show');
         $('#modal_detail_detail').modal('hide');
     };
+
+    function getSchedulesbyHeader(headerId) {
+        $('#list-schedule').empty();
+
+        $.ajax({
+            url: '/aniconfig/shipping_schedules_by_header',
+            type: 'get',
+            dataType: 'json',
+            data: {
+                headerId
+            }
+        })
+        .done(function (data) {
+            data.forEach(item => {
+                const row = `
+                    <tr>
+                        <td class="align-middle text-center">${item.schedule_id}</td>
+                        <td class="align-middle text-center">${item.product_name}</td>
+                        <td class="align-middle text-center">${item.quantity}</td>
+                        <td class="align-middle pr-3">
+                            <div class="text-right">
+                                <div class="px-1 d-inline-block">
+                                    <button class="btn btn-ec-actionIcon confirmationModal"
+                                        data-tooltip="true" data-placement="top" title="詳細情報表示" id="detail_detail"
+                                        onclick="showScheduleDetail(${item.schedule_id})">
+                                        <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>`;
+                $('#list-schedule').append(row);
+            });
+        })
+        .fail(function (err) {
+            console.error(err);
+        });
+    }
+
+    function showScheduleDetail(scheduleId) {
+        getSchedule(scheduleId);
+        $('#modal_detail').modal('hide');
+        $('#modal_detail_detail').modal('show');
+    };
+
+    function getSchedule(scheduleId) {
+        $('#schedule_id').text('');
+        $('#warehouse_code').text('');
+
+        $.ajax({
+            url: '/aniconfig/shipping_schedule',
+            type: 'get',
+            dataType: 'json',
+            data: {
+                scheduleId
+            }
+        })
+        .done(function (data) {
+            $('#schedule_id').text(data.schedule_id);
+            $('#warehouse_code').text(data.warehouse_code);
+        })
+        .fail(function (err) {
+            console.error(err);
+        });
+    }
 </script>
 
 {% endblock %}
@@ -151,29 +213,7 @@ file that was distributed with this source code.
                         <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
                     </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="align-middle text-center">
-                                1
-                            </td>
-                            <td class="align-middle text-center">
-                                商品名1
-                            </td>
-                            <td class="align-middle text-center">
-                                1
-                            </td>
-                            <td class="align-middle pr-3">
-                                <div class="text-right">
-                                    <div class="px-1 d-inline-block">
-                                        <button class="btn btn-ec-actionIcon confirmationModal"
-                                            data-tooltip="true" data-placement="top" title="詳細情報表示" id="detail_detail">
-                                            <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
+                    <tbody id="list-schedule"></tbody>
                 </table>
             </div>
             <div class="modal-footer">
@@ -204,7 +244,7 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                             <div class="col">
-                                <p>1</p>
+                                <p id="schedule_id"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -214,7 +254,7 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                             <div class="col">
-                                <p>1</p>
+                                <p id="warehouse_code"></p>
                             </div>
                         </div>
                     </div>

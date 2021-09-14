@@ -13,6 +13,7 @@
 
 namespace Customize\Controller\Admin\Order;
 
+use Customize\Repository\ShippingScheduleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eccube\Entity\Order;
 use Eccube\Entity\OrderItem;
@@ -39,6 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Eccube\Controller\Admin\Order\ShippingController as BaseShippingController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ShippingController extends BaseShippingController
 {
@@ -352,5 +354,43 @@ class ShippingController extends BaseShippingController
     public function detail(Request $request)
     {
         return [];
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/shipping_schedules_by_header", name="get_shipping_schedules_by_header", methods={"GET"})
+     */
+    public function getShippingSchedulesByHeader(Request $request, ShippingScheduleRepository $shippingScheduleRepository)
+    {
+        $headerId = $request->get('headerId');
+        $schedules = $shippingScheduleRepository->findBy(['header_id' => $headerId]);
+
+        $data = [];
+        foreach ($schedules as $schedule) {
+            $item = [
+                'schedule_id' => $schedule->getId(),
+                'product_name' => $schedule->getOrderDetail()->getProductClass()->getProduct()->getName() ?? '',
+                'quantity' => $schedule->getOrderDetail()->getQuantity(),
+                'warehouse_code' => $schedule->getWarehouseCode()
+            ];
+            $data[] = $item;
+        }
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/shipping_schedule", name="get_shipping_schedule", methods={"GET"})
+     */
+    public function getShippingSchedule(Request $request, ShippingScheduleRepository $shippingScheduleRepository)
+    {
+        $scheduleId = $request->get('scheduleId');
+        if (!$schedule = $shippingScheduleRepository->find($scheduleId)) throw new NotFoundHttpException();
+
+        $data = [
+            'schedule_id' => $scheduleId,
+            'warehouse_code' => $schedule->getWarehouseCode()
+        ];
+
+        return new JsonResponse($data);
     }
 }
