@@ -6,6 +6,7 @@ use Customize\Config\AnilineConf;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Repository\PetsFavoriteRepository;
+use Customize\Repository\BreedsRepository;
 use Customize\Repository\PrefAdjacentRepository;
 
 class AdoptionQueryService
@@ -26,6 +27,11 @@ class AdoptionQueryService
     protected $petsFavoriteRepository;
 
     /**
+     * @var BreedsRepository
+     */
+    protected $breedsRepository;
+
+    /**
      * @var PrefAdjacentRepository
      */
     protected $prefAdjacentRepository;
@@ -36,19 +42,35 @@ class AdoptionQueryService
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param ConservationsRepository $conservationsRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
+     * @param BreedsRepository $breedsRepository
      * @param PrefAdjacentRepository $prefAdjacentRepository
      */
     public function __construct(
         ConservationPetsRepository $conservationPetsRepository,
         PetsFavoriteRepository $petsFavoriteRepository,
+        BreedsRepository $breedsRepository,
         PrefAdjacentRepository $prefAdjacentRepository,
         ConservationsRepository $conservationsRepository
-    )
-    {
+    ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
+        $this->breedsRepository = $breedsRepository;
         $this->prefAdjacentRepository = $prefAdjacentRepository;
         $this->conservationsRepository = $conservationsRepository;
+    }
+
+    public function getBreedsHavePet($petKind): array
+    {
+        $result = $this->breedsRepository->createQueryBuilder('b')
+            ->select()
+            ->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'b.id = cp.BreedsType')
+            ->where('b.pet_kind = :pet_kind and cp.BreedsType is not null')
+            ->setParameter('pet_kind', $petKind)
+            ->orderBy('b.sort_order', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return $result;
     }
 
     /**
@@ -67,6 +89,12 @@ class AdoptionQueryService
         if ($request->get('pet_kind')) {
             $query->andWhere('p.pet_kind = :pet_kind')
                 ->setParameter('pet_kind', $request->get('pet_kind'));
+        }
+
+        if ($request->get('size_code') && $request->get('pet_kind') == AnilineConf::ANILINE_PET_KIND_DOG) {
+            $query->join('p.BreedsType', 'b')
+                ->andWhere('b.size_code = :size_code')
+                ->setParameter('size_code', $request->get('size_code'));
         }
 
         if ($request->get('breed_type')) {
@@ -139,7 +167,7 @@ class AdoptionQueryService
         if ($request->get('license')) {
             // $query->andWhere('c.license_name LIKE :license OR c.license_house_name LIKE :license')
             $query->andWhere('c.organization_name LIKE :license')
-                ->setParameter('license', '%' . $request->get('license') .'%');
+                ->setParameter('license', '%' . $request->get('license') . '%');
         }
 
         return $query->addOrderBy('c.update_date', 'DESC')

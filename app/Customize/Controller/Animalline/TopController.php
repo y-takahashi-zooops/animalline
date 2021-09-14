@@ -16,7 +16,8 @@ namespace Customize\Controller\Animalline;
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
-use Customize\Repository\BreedsRepository;
+use Customize\Service\AdoptionQueryService;
+use Customize\Service\BreederQueryService;
 use Eccube\Repository\Master\PrefRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -31,9 +32,14 @@ class TopController extends AbstractController
     protected $conservationPetsRepository;
 
     /**
-     * @var BreedsRepository
+     * @var AdoptionQueryService
      */
-    protected $breedsRepository;
+    protected $adoptionQueryService;
+
+    /**
+     * @var BreederQueryService
+     */
+    protected $breederQueryService;
 
     /**
      * @var PrefRepository
@@ -49,19 +55,21 @@ class TopController extends AbstractController
      *
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param BreederPetsRepository $breederPetsRepository
-     * @param BreedsRepository $breedsRepository
+     * @param AdoptionQueryService $adoptionQueryService
+     * @param BreederQueryService $breederQueryService
      * @param PrefRepository $prefRepository
      */
     public function __construct(
         ConservationPetsRepository $conservationPetsRepository,
         BreederPetsRepository $breederPetsRepository,
-        BreedsRepository           $breedsRepository,
-        PrefRepository             $prefRepository
-    )
-    {
+        AdoptionQueryService $adoptionQueryService,
+        BreederQueryService $breederQueryService,
+        PrefRepository $prefRepository
+    ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->breederPetsRepository = $breederPetsRepository;
-        $this->breedsRepository = $breedsRepository;
+        $this->adoptionQueryService = $adoptionQueryService;
+        $this->breederQueryService = $breederQueryService;
         $this->prefRepository = $prefRepository;
     }
 
@@ -72,7 +80,7 @@ class TopController extends AbstractController
     public function adoption_index(Request $request)
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
         $newPets = $this->conservationPetsRepository->findBy(
             ['pet_kind' => $petKind],
@@ -101,7 +109,7 @@ class TopController extends AbstractController
     public function breeder_index(Request $request)
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
         $newPets = $this->breederPetsRepository->findBy(
             ['pet_kind' => $petKind],
