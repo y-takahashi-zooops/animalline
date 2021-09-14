@@ -13,7 +13,6 @@
 
 namespace Customize\Controller\Admin\Order;
 
-
 use Customize\Entity\ShippingScheduleHeader;
 use Customize\Repository\ShippingScheduleHeaderRepository;
 use Customize\Repository\ShippingScheduleRepository;
@@ -122,8 +121,7 @@ class ShippingController extends BaseShippingController
         OrderStateMachine                $orderStateMachine,
         PurchaseFlow                     $orderPurchaseFlow,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository
-    )
-    {
+    ) {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
         $this->categoryRepository = $categoryRepository;
