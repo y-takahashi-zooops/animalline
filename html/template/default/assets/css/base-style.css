@@ -768,3 +768,41 @@ th, td {
     left: 20px;
     line-height: 0;
 }
+
+.petList {
+    width:100%;
+    margin:0;
+    padding:0;
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-box;
+    display:-webkit-flexbox;
+    display:-moz-flexbox;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:-ms-flex;
+    display:flex;
+    -webkit-box-lines:multiple;
+    -moz-box-lines:multiple;
+    -webkit-flex-wrap:wrap;
+    -moz-flex-wrap:wrap;
+    -ms-flex-wrap:wrap;
+    flex-wrap:wrap;
+}
+.petList li {
+    padding-bottom: 35px;
+    position: relative;
+}
+.petList li p {
+    font-size:90%;
+    margin-bottom: 0.25rem
+}
+.petList .price {
+    /* text-align: center; */
+    padding: 0;
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
