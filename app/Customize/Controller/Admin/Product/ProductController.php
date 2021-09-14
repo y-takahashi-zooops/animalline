@@ -1072,23 +1072,66 @@ class ProductController extends BaseProductController
      */
     public function supplier(Request $request)
     {
-        $supplier = new Supplier();
-        $form = $this->createForm(SupplierType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $formRequest = $request->request->get('supplier');
-            $supplier->setSupplierName($formRequest['supplier_name'])
-                     ->setSupplierCode($formRequest['supplier_code']);
+        if ($request->get('id-destroy')) {
+            $supplier = $this->supplierRepository->find($request->get('id-destroy'));
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($supplier);
+            $entityManager->remove($supplier);
             $entityManager->flush();
+            return $this->redirectToRoute('admin_product_supplier');
+        }
+        $supplierNew = new Supplier();
+
+        $form = $this->createForm(SupplierType::class, $supplierNew);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($supplierNew);
+            $entityManager->flush();
+
+//            return $this->redirectToRoute('admin_product_supplier');
         }
 
         $suppliers = $this->supplierRepository->findAll();
+        $formUpdate = [];
+        foreach ($suppliers as $supplier) {
+            $uniqueFormName = 'Form' . $supplier->getId(); //Use some unique data to generate the form name.
+            $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, SupplierType::class, $supplier);
+            $formUpdate[$uniqueFormName] = $formHandle;
+        }
+        $formUpdateView = [];
+        foreach ($formUpdate as $formName => $formHandle) {
+            if ($request->get('supplier-id')) {
+                $supplier = $this->supplierRepository->find($request->get('supplier-id'));
+                $formHandle->handleRequest($request);
+                if ($formHandle->isSubmitted() && $formHandle->isValid()) {
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($supplier);
+                    $entityManager->flush();
+
+//                    return $this->redirectToRoute('conservations_index');
+                }
+            }
+            //Create the view *after* calling handleRequest, so data is updated to the form, even if, say, there are validation errors.
+            $formUpdateView[$formName] = $formHandle->createView();
+        }
+
+
+
         return $this->render('@admin/Product/supplier.twig', [
             'suppliers' => $suppliers,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'form_update' => $formUpdateView
         ]);
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/product/supplier/{id}/edit", name="admin_product_supplier_edit")
+     * @Template("@admin/Product/supplier.twig")
+     */
+    public function supplier_edit(Request $request, Supplier $supplier)
+    {
+
     }
 
     /**
@@ -1097,9 +1140,8 @@ class ProductController extends BaseProductController
      */
     public function waste(Request $request)
     {
-        return[];
+        return [];
     }
-
 
 
 }

@@ -26,27 +26,25 @@ class SupplierType extends AbstractType
     {
         $builder
             ->add('supplier_name', TextType::class, [
+                'required' => true,
                 'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                    'maxlength' => 20,
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
+                        'max' => 20,
                     ]),
                     new Assert\NotBlank()
                 ]
             ])
             ->add('supplier_code', TextType::class, [
+                'required' => true,
                 'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                    'maxlength' => 5,
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'max' => 5,
                     ]),
                     new Assert\NotBlank()
                 ]
