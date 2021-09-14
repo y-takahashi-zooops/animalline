@@ -57,7 +57,7 @@ class BreederPets
     private $CoatColor;
 
     /**
-     * @ORM\Column(name="future_wait", type="smallint")
+     * @ORM\Column(name="future_wait", type="smallint", nullable=true)
      */
     private $future_wait;
 
@@ -119,7 +119,7 @@ class BreederPets
     /**
      * @ORM\Column(name="reservation_fee", type="integer")
      */
-    private $reservation_fee;
+    private $reservation_fee = 0;
 
     /**
      * @ORM\Column(name="price", type="integer")

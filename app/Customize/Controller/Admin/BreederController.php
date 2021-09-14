@@ -293,7 +293,6 @@ class BreederController extends AbstractController
                 ->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_COMPLETE);
 
             $breeder = $this->breedersRepository->find($breederId);
-            // $handling_pet_kind = $breeder->getHandlingPetKind();
             
             // breederの審査ステータスを変更
             if( $result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK ){

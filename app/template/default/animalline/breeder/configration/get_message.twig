@@ -8,85 +8,8 @@
             <div class="main-container col-12">
                 <h1>問合せ一覧</h1>
                 <div class="m-2 p-2"></div>
-                {% for message in rootMessages %}
-                    <div class="m-1 p-1"></div>
-                    <div class="row">
-                        <div class="col-12">
-                            <a href={{ path('breeder_configration_messages', {'contact_id': message.id}) }}>
-                                <div class="d-sm-flex justify-content-between py-3 border breeder-border rounded">
-                                    <div class="ml-5">
-                                        <h3>
-                                            {{ name[message.id] }}
-                                        </h3>
-                                        <h3>
-                                            {{ message.contactTitle }}
-                                        </h3>
-                                    </div>
-                                    <div class="d-sm-flex justify-content-between w-550">
-                                        <h4 class="mr-sm-5 ml-5">
-                                            状態：{{ message.getContractStatus()==0 ? '交渉中' : message.getContractStatus()==1 ? '成約確認待ち' : message.getContractStatus()==2 ? '成約 ': '非成約' }}</h4>
-                                        <div>
-                                            <h4 class="mr-sm-5 ml-5">
-                                                返信日時：{{ message.getLastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}</h4>
-                                            <h4 class="mr-sm-5 ml-5 float-right">{{ message.getBreederNewMsg() == 1?'未読あり':'' }}</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                {% else %}
-                    結果が０件です。
-                {% endfor %}
             </div>
         </div>
-        {#
-        <h2 class="py-2 mt-4 mb-4">掲載中のペット</h2>
-        <a href={{ path('breeder_configuration_pets_new', {'breeder_id': breeder.id}) }} class="btn basic-btn
-           accent-btn bg-accent text-align-center my-1">追加</a>
-
-        <div class="row mt-4">
-            {% for pet in pets %}
-                <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
-                    <div class="catalog-card">
-                        <a href="{{ url('breeder_configuration_pets_edit', {'id': pet.id}) }}">
-                            <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
-                                 class="card-img-top" alt="...">
-                        </a>
-                        <div class="card-body bg-white">
-                            <h3 class="color-gray-500 font-weight-600">{{ pet.breedsType.breedsName ?? '' }}</h3>
-                            <div class="m-4"></div>
-                            <div class="d-flex">
-                                <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
-                                {% if(pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE')) %}
-                                    <h4 class="pet-set-male">男の子</h4>
-                                {% else %}
-                                    <h4 class="pet-set-female">女の子</h4>
-                                {% endif %}
-                            </div>
-                            <div class="mb-2"></div>
-                            <div class="d-flex">
-                                {% set breederHouse = pet.Breeder.getBreederHouseByPetType(pet.petKind) %}
-                                <h4 class="mr-3">{{ breederHouse.breederHousePref ~ ' ' ~ breederHouse.breederHouseCity ?? '' }}</h4>
-                                <h4>{{ pet.coatColor.coatColorName ?? '' }}</h4>
-                            </div>
-                            <div class="m-2"></div>
-                            <h4>{{ pet.prComment }}</h4>
-                            <div class="m-2"></div>
-                            <h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4>
-                            <div class="m-4"></div>
-                            <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}
-                                <span>円（税込）</span></h3>
-                            <a href={{ path('breeder_configuration_pets_edit', {'id': pet.id}) }} class="btn basic-btn
-                               btn-primary text-align-center my-2">編集</a>
-                        </div>
-                    </div>
-                </div>
-            {% else %}
-                結果が０件です。
-            {% endfor %}
-        </div>
-        #}
     </div>
 {% endblock %}
 

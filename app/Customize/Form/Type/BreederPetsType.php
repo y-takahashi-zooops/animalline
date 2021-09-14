@@ -6,8 +6,6 @@ use Customize\Entity\BreederPets;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,20 +14,33 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints as Assert;
 use Customize\Config\AnilineConf;
+use Customize\Repository\BreedersRepository;
+use Symfony\Component\Security\Core\User\User;
 
 class BreederPetsType extends AbstractType
 {
+
+    /**
+     * @var BreedersRepository
+     */
+    protected $breedersRepository;
+
+    public function __construct(BreedersRepository $breedersRepository)
+    {
+        $this->breedersRepository = $breedersRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('pet_kind', ChoiceType::class, [
-                'choices' =>
-                [
-                    '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
-                    '猫' => AnilineConf::ANILINE_PET_KIND_CAT
-                ],
-                'required' => true,
-            ])
+            // ->add('pet_kind', ChoiceType::class, [
+            //     'choices' =>
+            //     [
+            //         '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
+            //         '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+            //     ],
+            //     'required' => true,
+            // ])
             ->add('breeds_type', EntityType::class, [
                 'class' => 'Customize\Entity\Breeds',
                 'choice_label' => function (\Customize\Entity\Breeds $breeds) {
@@ -48,7 +59,10 @@ class BreederPetsType extends AbstractType
                 ],
                 'required' => true,
             ])
-            ->add('pet_birthday', DateType::class)
+            ->add('pet_birthday', DateType::class, [
+                'data' => new \DateTime(),
+                'years' => range(date('Y'), 1990),
+            ])
             ->add('coat_color', EntityType::class, [
                 'class' => 'Customize\Entity\CoatColors',
                 'choice_label' => function (\Customize\Entity\CoatColors $coatColors) {
@@ -154,12 +168,34 @@ class BreederPetsType extends AbstractType
             // ])
             // ->add('release_date', DateType::class)
             ->add('price', IntegerType::class);
+
+            $customer = $options['customer'];
+            $breeder = $this->breedersRepository->find($customer);
+            $handling_pet_kind = $breeder->getHandlingPetKind();
+            if( $handling_pet_kind == 0 ){
+                $choices = [
+                    '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
+                    '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+                ];
+            } elseif( $handling_pet_kind == 1 ){
+                $choices = ['犬' => AnilineConf::ANILINE_PET_KIND_DOG,];
+            } elseif( $handling_pet_kind == 2 ){
+                $choices = ['猫' => AnilineConf::ANILINE_PET_KIND_CAT];
+            }
+
+            $builder
+            ->add('pet_kind', ChoiceType::class, [
+                'choices' => $choices,
+                'required' => true,
+            ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => BreederPets::class,
+            'customer' => null
         ]);
     }
 }

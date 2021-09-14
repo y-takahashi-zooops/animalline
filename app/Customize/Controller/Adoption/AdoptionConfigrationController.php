@@ -129,20 +129,20 @@ class AdoptionConfigrationController extends AbstractController
      */
     public function adoption_configration(Request $request)
     {
-        $rootMessages = $this->conservationContactsRepository->findBy(
-            [
-                'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
-                'Conservation' => $this->getUser()
-            ],
-            ['is_response' => 'ASC', 'send_date' => 'DESC']
-        );
+        // $rootMessages = $this->conservationContactsRepository->findBy(
+        //     [
+        //         'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
+        //         'Conservation' => $this->getUser()
+        //     ],
+        //     ['is_response' => 'ASC', 'send_date' => 'DESC']
+        // );
 
         $pets = $this->conservationPetsRepository->findBy(['Conservation' => $this->getUser()], ['update_date' => 'DESC']);
 
         return $this->render(
             'animalline/adoption/configration/index.twig',
             [
-                'rootMessages' => $rootMessages,
+                // 'rootMessages' => $rootMessages,
                 'conservation' => $this->getUser(),
                 'pets' => $pets
             ]
