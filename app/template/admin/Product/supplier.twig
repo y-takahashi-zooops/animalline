@@ -29,6 +29,12 @@ file that was distributed with this source code.
         $('input[name=id-destroy').val(id);
         $('#DeleteModal').modal('show');
     };
+
+    $(".btn-ec-delete").on('click', function() {
+        setTimeout (function () {
+            $('#DeleteModal').modal('hide');
+        }, 2000);
+    });
 </script>
 {% endblock %}
 
@@ -90,8 +96,7 @@ file that was distributed with this source code.
                                                 </a>
                                                 <div class="d-inline-block mr-2" data-tooltip="true"
                                                      data-placement="top" title="削除">
-                                                    <a class="btn btn-ec-actionIcon"
-                                                       onclick="destroy({{ supplier.id }})">
+                                                    <a class="btn btn-ec-actionIcon" {{ supplier.is_destroy ? 'disabled' : 'onclick=destroy('~supplier.id~')' }}>
                                                         <i class="fa fa-close fa-lg text-secondary"></i>
                                                     </a>
                                                 </div>
@@ -105,11 +110,9 @@ file that was distributed with this source code.
                                             <div class="col-auto align-items-center">
                                                 {{ form_widget(form_update['Form'~supplier.id].supplier_name) }}
                                                 {{ form_errors(form_update['Form'~supplier.id].supplier_name) }}
-                                                {# <input type="text" required="required" name="supplier-name" data-origin-value="{{ supplier.supplierName }}" class="form-control" value="{{ supplier.supplierName }}" /> #}
                                             </div>
                                             <div class="col-auto align-self-center"><span>仕入先コード</span></div>
                                             <div class="col-auto align-items-center">
-                                                {# <input type="text" disabled data-origin-value="{{ supplier.supplierCode }}" class="form-control" value="{{ supplier.supplierCode }}" /> #}
                                                 {{ form_widget(form_update['Form'~supplier.id].supplier_code,  { 'attr': { 'readonly': 'true' }}) }}
                                                 {{ form_errors(form_update['Form'~supplier.id].supplier_code) }}
                                             </div>
@@ -157,6 +160,9 @@ file that was distributed with this source code.
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="navigation float-right">
+                    {{ knp_pagination_render(suppliers) }}
                 </div>
             </div>
         </div>

@@ -13,6 +13,7 @@
 
 namespace Customize\Controller\Admin\Product;
 
+use Customize\Config\AnilineConf;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
 use Eccube\Controller\AbstractController;
@@ -46,6 +47,7 @@ use Eccube\Service\CsvExportService;
 use Eccube\Util\CacheUtil;
 use Eccube\Util\FormUtil;
 use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Filesystem\Filesystem;
@@ -1070,7 +1072,7 @@ class ProductController extends BaseProductController
      * @Route("/%eccube_admin_route%/product/supplier", name="admin_product_supplier")
      * @Template("@admin/Product/supplier.twig")
      */
-    public function supplier(Request $request)
+    public function supplier(Request $request, PaginatorInterface $paginator)
     {
         $idDestroy = $request->get('id-destroy');
         if ($idDestroy) {
@@ -1102,6 +1104,7 @@ class ProductController extends BaseProductController
             $uniqueFormName = 'Form' . $supplier->getId();
             $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, SupplierType::class, $supplier);
             $formUpdate[$uniqueFormName] = $formHandle;
+            $supplier->is_destroy = (bool)$this->productClassRepository->findBy(['supplier_code' => $supplier->getSupplierCode()]);
         }
         $formUpdateView = [];
         foreach ($formUpdate as $formName => $formHandle) {
@@ -1117,8 +1120,14 @@ class ProductController extends BaseProductController
             $formUpdateView[$formName] = $formHandle->createView();
         }
 
+        $results = $paginator->paginate(
+            $suppliers,
+            $request->query->getInt('page') ?: 1,
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
         return $this->render('@admin/Product/supplier.twig', [
-            'suppliers' => $suppliers,
+            'suppliers' => $results,
             'form' => $form->createView(),
             'form_update' => $formUpdateView
         ]);
