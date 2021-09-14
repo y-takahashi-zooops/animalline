@@ -13,6 +13,8 @@
 
 namespace Customize\Controller\Admin\Order;
 
+use Customize\Entity\ShippingScheduleHeader;
+use Customize\Repository\ShippingScheduleHeaderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eccube\Entity\Order;
 use Eccube\Entity\OrderItem;
@@ -88,6 +90,11 @@ class ShippingController extends BaseShippingController
     protected $purchaseFlow;
 
     /**
+     * @var ShippingScheduleHeaderRepository
+     */
+    protected $shippingScheduleHeaderRepository;
+
+    /**
      * EditController constructor.
      *
      * @param MailService $mailService
@@ -99,18 +106,21 @@ class ShippingController extends BaseShippingController
      * @param SerializerInterface $serializer
      * @param OrderStateMachine $orderStateMachine
      * @param PurchaseFlow $orderPurchaseFlow
+     * @param ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository
      */
     public function __construct(
-        MailService $mailService,
-        OrderItemRepository $orderItemRepository,
-        CategoryRepository $categoryRepository,
-        DeliveryRepository $deliveryRepository,
-        TaxRuleService $taxRuleService,
-        ShippingRepository $shippingRepository,
-        SerializerInterface $serializer,
-        OrderStateMachine $orderStateMachine,
-        PurchaseFlow $orderPurchaseFlow
-    ) {
+        MailService                      $mailService,
+        OrderItemRepository              $orderItemRepository,
+        CategoryRepository               $categoryRepository,
+        DeliveryRepository               $deliveryRepository,
+        TaxRuleService                   $taxRuleService,
+        ShippingRepository               $shippingRepository,
+        SerializerInterface              $serializer,
+        OrderStateMachine                $orderStateMachine,
+        PurchaseFlow                     $orderPurchaseFlow,
+        ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository
+    )
+    {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
         $this->categoryRepository = $categoryRepository;
@@ -120,6 +130,7 @@ class ShippingController extends BaseShippingController
         $this->serializer = $serializer;
         $this->orderStateMachine = $orderStateMachine;
         $this->purchaseFlow = $orderPurchaseFlow;
+        $this->shippingScheduleHeaderRepository = $shippingScheduleHeaderRepository;
     }
 
     /**
@@ -340,7 +351,11 @@ class ShippingController extends BaseShippingController
      */
     public function instructions(Request $request)
     {
-        return [];
+        $shippingScheduleHeaders = $this->shippingScheduleHeaderRepository->findAll();
+
+        return compact(
+            'shippingScheduleHeaders'
+        );
     }
 
     /**
@@ -349,8 +364,10 @@ class ShippingController extends BaseShippingController
      * @Route("/%eccube_admin_route%/shipping/detail/{id}", requirements={"id" = "\d+"}, name="admin_shipping_detail")
      * @Template("@admin/Order/shipping_detail.twig")
      */
-    public function detail(Request $request)
+    public function detail(Request $request, ShippingScheduleHeader $shippingScheduleHeader)
     {
-        return [];
+        return compact(
+            'shippingScheduleHeader'
+        );
     }
 }

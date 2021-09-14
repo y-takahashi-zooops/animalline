@@ -20,19 +20,19 @@ file that was distributed with this source code.
 
 <script>
     document.getElementById("cancel").onclick = function() {
-        $('#modal_cancel').modal('show');
-    };
+    $('#modal_cancel').modal('show');
+};
     document.getElementById("detail").onclick = function() {
-        $('#modal_detail').modal('show');
-    };
+    $('#modal_detail').modal('show');
+};
     document.getElementById("detail_detail").onclick = function() {
-        $('#modal_detail').modal('hide');
-        $('#modal_detail_detail').modal('show');
-    };
+    $('#modal_detail').modal('hide');
+    $('#modal_detail_detail').modal('show');
+};
     document.getElementById("return").onclick = function() {
-        $('#modal_detail').modal('show');
-        $('#modal_detail_detail').modal('hide');
-    };
+    $('#modal_detail').modal('show');
+    $('#modal_detail_detail').modal('hide');
+};
 </script>
 
 {% endblock %}
@@ -57,40 +57,48 @@ file that was distributed with this source code.
                                 </tr>
                                 </thead>
                                 <tbody>
+                                {% for shippingScheduleHeader in shippingScheduleHeaders %}
                                     <tr>
-                                    <td class="align-middle text-center">
-                                            1
+                                        <td class="align-middle text-center">
+                                            {{ shippingScheduleHeader.id }}
                                         </td>
                                         <td class="align-middle text-center">
-                                            テスト太郎
+                                            {{ shippingScheduleHeader.customerName }}
                                         </td>
                                         <td class="align-middle text-center">
-                                            2021/9/10
+                                            {{ shippingScheduleHeader.shippingDateSchedule|date('Y/m/d') }}
                                         </td>
                                         <td class="align-middle text-center">
-                                            2021/9/10
+                                            {{ shippingScheduleHeader.wmsSendDate|date('Y/m/d') }}
                                         </td>
                                         <td class="align-middle pr-3">
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block">
                                                     <a class="btn btn-ec-actionIcon confirmationModal"
-                                                        data-tooltip="true" data-placement="top" title="詳細情報表示" href="{{url('admin_shipping_detail', {'id': 1}) }}">
-                                                        <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
+                                                       data-tooltip="true" data-placement="top" title="詳細情報表示"
+                                                       href="{{ url('admin_shipping_detail', {'id': shippingScheduleHeader.id}) }}">
+                                                        <i class="fa fa-file fa-lg text-secondary"
+                                                           aria-hidden="true"></i>
                                                     </a>
                                                 </div>
                                                 <div class="px-1 d-inline-block">
-                                                    <button type="button" class="btn btn-ec-actionIcon" id="detail" data-tooltip="true" data-placement="top" title="明細表示">
-                                                        <i class="fa fa-table fa-lg text-secondary" aria-hidden="true"></i>
+                                                    <button type="button" class="btn btn-ec-actionIcon" id="detail"
+                                                            data-tooltip="true" data-placement="top" title="明細表示">
+                                                        <i class="fa fa-table fa-lg text-secondary"
+                                                           aria-hidden="true"></i>
                                                     </button>
                                                 </div>
                                                 <div class="px-1 d-inline-block">
-                                                    <button type="button" class="btn btn-ec-actionIcon" id="cancel" data-tooltip="true" data-placement="top" title="出荷指示解除">
-                                                        <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
+                                                    <button type="button" class="btn btn-ec-actionIcon" id="cancel"
+                                                            data-tooltip="true" data-placement="top" title="出荷指示解除">
+                                                        <i class="fa fa-close fa-lg text-secondary"
+                                                           aria-hidden="true"></i>
                                                     </button>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                             <div class="row justify-content-md-center mb-4"></div>
@@ -102,56 +110,58 @@ file that was distributed with this source code.
     </div>
 
     {# 出荷指示解除モーダル #}
-    <div class="modal fade" id="modal_cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">出荷指示解除</h3>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-2">
-                    <span>出荷指示を解除します。</span><br>
-                    <span>解除理由を以下から選択してください。</span><br>
+    <div class="modal fade" id="modal_cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">出荷指示解除</h3>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <select aria-label="reason" name="reason" class="ec-select">
-                    <option>出荷指示解除理由１</option>
-                    <option>出荷指示解除理由２</option>
-                    <option>出荷指示解除理由３</option>
-                    <option>出荷指示解除理由４</option>
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
-                <button id="confirm-yes" type="button" class="btn btn-primary">はい</button>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <span>出荷指示を解除します。</span><br>
+                        <span>解除理由を以下から選択してください。</span><br>
+                    </div>
+                    <select aria-label="reason" name="reason" class="ec-select">
+                        <option>出荷指示解除理由１</option>
+                        <option>出荷指示解除理由２</option>
+                        <option>出荷指示解除理由３</option>
+                        <option>出荷指示解除理由４</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>
+                    <button id="confirm-yes" type="button" class="btn btn-primary">はい</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-{# 明細表示モーダル #}
-<div class="modal fade" id="modal_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">明細情報</h3>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-sm">
-                    <thead>
-                    <tr>
-                        <th class="border-top-0 pt-2 pb-2 text-center">ID</th>
-                        <th class="border-top-0 pt-2 pb-2 text-center">商品名</th>
-                        <th class="border-top-0 pt-2 pb-2 text-center">数量</th>
-                        <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
+    {# 明細表示モーダル #}
+    <div class="modal fade" id="modal_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">明細情報</h3>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th class="border-top-0 pt-2 pb-2 text-center">ID</th>
+                            <th class="border-top-0 pt-2 pb-2 text-center">商品名</th>
+                            <th class="border-top-0 pt-2 pb-2 text-center">数量</th>
+                            <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         <tr>
                             <td class="align-middle text-center">
                                 1
@@ -166,67 +176,70 @@ file that was distributed with this source code.
                                 <div class="text-right">
                                     <div class="px-1 d-inline-block">
                                         <button class="btn btn-ec-actionIcon confirmationModal"
-                                            data-tooltip="true" data-placement="top" title="詳細情報表示" id="detail_detail">
+                                                data-tooltip="true" data-placement="top" title="詳細情報表示"
+                                                id="detail_detail">
                                             <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
                                         </button>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-{# 明細詳細表示モーダル #}
-<div class="modal fade" id="modal_detail_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">明細情報詳細</h3>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+    {# 明細詳細表示モーダル #}
+    <div class="modal fade" id="modal_detail_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">明細情報詳細</h3>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
                 <div class="modal-body">
                     <div class="collapse show ec-cardCollapse" id="basicConfig">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="d-inline-block" data-tooltip="true" data-placement="top" title="自動的に採番される商品のIDです。">
-                                    <span>ID</span>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-inline-block" data-tooltip="true" data-placement="top"
+                                         title="自動的に採番される商品のIDです。">
+                                        <span>ID</span>
                                         <i class="fa fa-question-circle fa-lg ml-1"></i>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>1</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>1</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="d-inline-block">
-                                    <span>warehouse_code</span>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-inline-block">
+                                        <span>warehouse_code</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <p>1</p>
+                                <div class="col">
+                                    <p>1</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="return" class="btn btn-secondary" data-bs-dismiss="modal">戻る</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                <div class="modal-footer">
+                    <button type="button" id="return" class="btn btn-secondary" data-bs-dismiss="modal">戻る</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
 
 
