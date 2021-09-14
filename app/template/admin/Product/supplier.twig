@@ -43,7 +43,7 @@ file that was distributed with this source code.
                         <div class="card rounded border-0">
                             <ul class="list-group list-group-flush sortable-container">
                                 <li class="list-group-item">
-                                    {{ form_start(form, {'attr': { 'class': 'form-row', 'id': 'form1' }}) }}
+                                    {{ form_start(form, {'attr': { 'class': 'form-row', 'id': 'form-create' }}) }}
                                     <div class="col-auto align-self-center">
                                         <span>仕入先名</span></div>
                                     <div class="col-3 mr-2">
@@ -74,7 +74,7 @@ file that was distributed with this source code.
                                 {% for supplier in suppliers %}
                                     <li id="ex-class_name-2" class="list-group-item sortable-item"
                                         data-class-name-id="2" data-sort-no="2">
-                                        <div class="row justify-content-around mode-view"
+                                        <div class="row justify-content-around mode-view {{ form_errors(form_update['Form'~supplier.id].supplier_name) ? 'd-none' : '' }}"
                                              id="mode-view-{{ supplier.id }}">
                                             <div class="col-1 d-flex align-items-center">{{ supplier.id }}</div>
                                             <div class="col-4 d-flex align-items-center">
@@ -97,7 +97,7 @@ file that was distributed with this source code.
                                                 </div>
                                             </div>
                                         </div>
-                                        <form class="form-row  mode-edit" method="post" action="#"
+                                        <form class="form-row {{ form_errors(form_update['Form'~supplier.id].supplier_name) ? '' : 'd-none' }} mode-edit" method="post" action=""
                                               id="mode-edit-{{ supplier.id }}">
                                             {{ form_widget(form_update['Form'~supplier.id]._token) }}
                                             <input type="hidden" name="supplier-id" value="{{ supplier.id }}">
@@ -110,7 +110,7 @@ file that was distributed with this source code.
                                             <div class="col-auto align-self-center"><span>仕入先コード</span></div>
                                             <div class="col-auto align-items-center">
                                                 {# <input type="text" disabled data-origin-value="{{ supplier.supplierCode }}" class="form-control" value="{{ supplier.supplierCode }}" /> #}
-                                                {{ form_widget(form_update['Form'~supplier.id].supplier_code,  { 'attr': { 'disabled': 'disabled' }}) }}
+                                                {{ form_widget(form_update['Form'~supplier.id].supplier_code,  { 'attr': { 'readonly': 'true' }}) }}
                                                 {{ form_errors(form_update['Form'~supplier.id].supplier_code) }}
                                             </div>
                                             <div class="col-auto align-items-center">
