@@ -13,6 +13,7 @@
 
 namespace Customize\Controller\Admin\Order;
 
+use Customize\Config\AnilineConf;
 use Customize\Entity\ShippingScheduleHeader;
 use Customize\Repository\ShippingScheduleHeaderRepository;
 use Customize\Repository\ShippingScheduleRepository;
@@ -31,6 +32,7 @@ use Eccube\Service\OrderStateMachine;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\TaxRuleService;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -128,7 +130,8 @@ class ShippingController extends BaseShippingController
         PurchaseFlow                     $orderPurchaseFlow,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
         ShippingScheduleRepository       $shippingScheduleRepository
-    ) {
+    )
+    {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
         $this->categoryRepository = $categoryRepository;
@@ -358,10 +361,14 @@ class ShippingController extends BaseShippingController
      * @Route("/%eccube_admin_route%/shipping/instructions", name="admin_shipping_instructions")
      * @Template("@admin/Order/shipping_instructions.twig")
      */
-    public function instructions(Request $request)
+    public function instructions(PaginatorInterface $paginator, Request $request)
     {
-        $shippingScheduleHeaders = $this->shippingScheduleHeaderRepository->findAll();
-
+        $shippingScheduleHeaderList = $this->shippingScheduleHeaderRepository->findAll();
+        $shippingScheduleHeaders = $paginator->paginate(
+            $shippingScheduleHeaderList,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
         return compact(
             'shippingScheduleHeaders'
         );
