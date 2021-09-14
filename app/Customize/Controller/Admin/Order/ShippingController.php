@@ -97,6 +97,11 @@ class ShippingController extends BaseShippingController
     protected $shippingScheduleHeaderRepository;
 
     /**
+     * @var ShippingScheduleRepository
+     */
+    protected $shippingScheduleRepository;
+
+    /**
      * EditController constructor.
      *
      * @param MailService $mailService
@@ -109,6 +114,7 @@ class ShippingController extends BaseShippingController
      * @param OrderStateMachine $orderStateMachine
      * @param PurchaseFlow $orderPurchaseFlow
      * @param ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository
+     * @param ShippingScheduleRepository $shippingScheduleRepository
      */
     public function __construct(
         MailService                      $mailService,
@@ -120,7 +126,8 @@ class ShippingController extends BaseShippingController
         SerializerInterface              $serializer,
         OrderStateMachine                $orderStateMachine,
         PurchaseFlow                     $orderPurchaseFlow,
-        ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository
+        ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
+        ShippingScheduleRepository       $shippingScheduleRepository
     ) {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
@@ -132,6 +139,7 @@ class ShippingController extends BaseShippingController
         $this->orderStateMachine = $orderStateMachine;
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->shippingScheduleHeaderRepository = $shippingScheduleHeaderRepository;
+        $this->shippingScheduleRepository = $shippingScheduleRepository;
     }
 
     /**
@@ -375,10 +383,10 @@ class ShippingController extends BaseShippingController
     /**
      * @Route("/%eccube_admin_route%/shipping_schedules_by_header", name="get_shipping_schedules_by_header", methods={"GET"})
      */
-    public function getShippingSchedulesByHeader(Request $request, ShippingScheduleRepository $shippingScheduleRepository)
+    public function getShippingSchedulesByHeader(Request $request)
     {
         $headerId = $request->get('headerId');
-        $schedules = $shippingScheduleRepository->findBy(['header_id' => $headerId]);
+        $schedules = $this->shippingScheduleRepository->findBy(['header_id' => $headerId]);
 
         $data = [];
         foreach ($schedules as $schedule) {
@@ -397,10 +405,10 @@ class ShippingController extends BaseShippingController
     /**
      * @Route("/%eccube_admin_route%/shipping_schedule", name="get_shipping_schedule", methods={"GET"})
      */
-    public function getShippingSchedule(Request $request, ShippingScheduleRepository $shippingScheduleRepository)
+    public function getShippingSchedule(Request $request)
     {
         $scheduleId = $request->get('scheduleId');
-        if (!$schedule = $shippingScheduleRepository->find($scheduleId)) throw new NotFoundHttpException();
+        if (!$schedule = $this->shippingScheduleRepository->find($scheduleId)) throw new NotFoundHttpException();
 
         $data = [
             'schedule_id' => $scheduleId,

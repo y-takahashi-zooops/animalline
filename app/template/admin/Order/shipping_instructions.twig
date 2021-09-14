@@ -18,20 +18,20 @@ file that was distributed with this source code.
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script defer>
-    document.getElementById("cancel").onclick = function () {
+    $('#cancel').on('click', function () {
         $('#modal_cancel').modal('show');
-    };
-    document.getElementById("detail").onclick = function () {
-        getSchedulesbyHeader($(this).data('id'));
-        $('#modal_detail').modal('show');
-    };
-    document.getElementById("return").onclick = function () {
+    });
+    $('#return').on('click', function () {
         $('#modal_detail').modal('show');
         $('#modal_detail_detail').modal('hide');
-    };
+    });
 
+    function showSchedule(headerId) {
+        getSchedulesbyHeader(headerId);
+        $('#modal_detail').modal('show');
+    };
     function getSchedulesbyHeader(headerId) {
-        $('#list-schedule').empty();
+        $('#list-schedule').text('ローディング');
 
         $.ajax({
             url: '/aniconfig/shipping_schedules_by_header',
@@ -42,6 +42,8 @@ file that was distributed with this source code.
             }
         })
             .done(function (data) {
+                $('#list-schedule').empty();
+
                 data.forEach(item => {
                     const row = `
                     <tr>
@@ -64,6 +66,7 @@ file that was distributed with this source code.
                 });
             })
             .fail(function (err) {
+                $('#list-schedule').text('エラー');
                 console.error(err);
             });
     }
@@ -73,8 +76,8 @@ file that was distributed with this source code.
         $('#modal_detail').modal('hide');
         $('#modal_detail_detail').modal('show');
     };
-
     function getSchedule(scheduleId) {
+        $('#alert-schedule-detail').text('ローディング');
         $('#schedule_id').text('');
         $('#warehouse_code').text('');
 
@@ -89,8 +92,10 @@ file that was distributed with this source code.
             .done(function (data) {
                 $('#schedule_id').text(data.schedule_id);
                 $('#warehouse_code').text(data.warehouse_code);
+                $('#alert-schedule-detail').text('');
             })
             .fail(function (err) {
+                $('#alert-schedule-detail').text('エラー');
                 console.error(err);
             });
     }
@@ -143,6 +148,7 @@ file that was distributed with this source code.
                                             </div>
                                             <div class="px-1 d-inline-block">
                                                 <button type="button" class="btn btn-ec-actionIcon" id="detail"
+                                                    onclick="showSchedule({{ shippingScheduleHeader.id }})"
                                                     data-id="{{ shippingScheduleHeader.id }}" data-tooltip="true"
                                                     data-placement="top" title="明細表示">
                                                     <i class="fa fa-table fa-lg text-secondary" aria-hidden="true"></i>
@@ -266,6 +272,8 @@ file that was distributed with this source code.
                                 <p id="warehouse_code"></p>
                             </div>
                         </div>
+
+                        <span id="alert-schedule-detail"></span>
                     </div>
                 </div>
             </div>
