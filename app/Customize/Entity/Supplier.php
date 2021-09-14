@@ -4,6 +4,7 @@ namespace Customize\Entity;
 
 use Customize\Repository\SupplierRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="alm_supplier")
@@ -11,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\DiscriminatorColumn(name="discriminator_type", type="string", length=255)
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=SupplierRepository::class)
+ * @UniqueEntity(fields={"supplier_code"}, message="仕入先コードが既に存在しました。")
  */
 class Supplier
 {
