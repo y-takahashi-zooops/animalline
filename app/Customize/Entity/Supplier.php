@@ -22,7 +22,7 @@ class Supplier
     private $id;
 
     /**
-     * @ORM\Column(name="supplier_code", type="string", length=5, nullable=false)
+     * @ORM\Column(name="supplier_code", type="string", unique=true, length=5, nullable=false)
      */
     private $supplier_code;
 
