@@ -17,22 +17,88 @@ file that was distributed with this source code.
 
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-    document.getElementById("cancel").onclick = function() {
+<script defer>
+    $('#cancel').on('click', function () {
         $('#modal_cancel').modal('show');
-    };
-    document.getElementById("detail").onclick = function() {
+    });
+    $('#return').on('click', function () {
+        $('#modal_detail').modal('show');
+        $('#modal_detail_detail').modal('hide');
+    });
+
+    function showSchedule(headerId) {
+        getSchedulesbyHeader(headerId);
         $('#modal_detail').modal('show');
     };
-    document.getElementById("detail_detail").onclick = function() {
+    function getSchedulesbyHeader(headerId) {
+        $('#list-schedule').text('ローディング');
+
+        $.ajax({
+            url: '/aniconfig/shipping_schedules_by_header',
+            type: 'get',
+            dataType: 'json',
+            data: {
+                headerId
+            }
+        })
+            .done(function (data) {
+                $('#list-schedule').empty();
+
+                data.forEach(item => {
+                    const row = `
+                    <tr>
+                        <td class="align-middle text-center">${item.schedule_id}</td>
+                        <td class="align-middle text-center">${item.product_name}</td>
+                        <td class="align-middle text-center">${item.quantity}</td>
+                        <td class="align-middle pr-3">
+                            <div class="text-right">
+                                <div class="px-1 d-inline-block">
+                                    <button class="btn btn-ec-actionIcon confirmationModal"
+                                        data-tooltip="true" data-placement="top" title="詳細情報表示" id="detail_detail"
+                                        onclick="showScheduleDetail(${item.schedule_id})">
+                                        <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>`;
+                    $('#list-schedule').append(row);
+                });
+            })
+            .fail(function (err) {
+                $('#list-schedule').text('エラー');
+                console.error(err);
+            });
+    }
+
+    function showScheduleDetail(scheduleId) {
+        getSchedule(scheduleId);
         $('#modal_detail').modal('hide');
         $('#modal_detail_detail').modal('show');
     };
-    document.getElementById("return").onclick = function() {
-        $('#modal_detail').modal('show');
-        $('#modal_detail_detail').modal('hide');
-    };
+    function getSchedule(scheduleId) {
+        $('#alert-schedule-detail').text('ローディング');
+        $('#schedule_id').text('');
+        $('#warehouse_code').text('');
+
+        $.ajax({
+            url: '/aniconfig/shipping_schedule',
+            type: 'get',
+            dataType: 'json',
+            data: {
+                scheduleId
+            }
+        })
+            .done(function (data) {
+                $('#schedule_id').text(data.schedule_id);
+                $('#warehouse_code').text(data.warehouse_code);
+                $('#alert-schedule-detail').text('');
+            })
+            .fail(function (err) {
+                $('#alert-schedule-detail').text('エラー');
+                console.error(err);
+            });
+    }
 </script>
 
 {% endblock %}
@@ -40,14 +106,14 @@ file that was distributed with this source code.
 {% block stylesheet %}{% endblock %}
 
 {% block main %}
-    <div class="c-contentsArea__cols">
-        <div class="c-contentsArea__primaryCol">
-            <div class="c-primaryCol">
-                <form id="form_bulk" method="POST" action="">
-                    <div class="card rounded border-0 mb-4 d-block">
-                        <div class="card-body p-0">
-                            <table class="table table-sm" id="search_result">
-                                <thead>
+<div class="c-contentsArea__cols">
+    <div class="c-contentsArea__primaryCol">
+        <div class="c-primaryCol">
+            <form id="form_bulk" method="POST" action="">
+                <div class="card rounded border-0 mb-4 d-block">
+                    <div class="card-body p-0">
+                        <table class="table table-sm" id="search_result">
+                            <thead>
                                 <tr>
                                     <th class="border-top-0 pt-2 pb-2 text-center">ID</th>
                                     <th class="border-top-0 pt-2 pb-2 text-center">注文者</th>
@@ -55,54 +121,65 @@ file that was distributed with this source code.
                                     <th class="border-top-0 pt-2 pb-2 text-center">出荷実績</th>
                                     <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
+                            </thead>
+                            <tbody>
+                                {% for shippingScheduleHeader in shippingScheduleHeaders %}
+                                <tr>
                                     <td class="align-middle text-center">
-                                            1
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            テスト太郎
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            2021/9/10
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            2021/9/10
-                                        </td>
-                                        <td class="align-middle pr-3">
-                                            <div class="text-right">
-                                                <div class="px-1 d-inline-block">
-                                                    <a class="btn btn-ec-actionIcon confirmationModal"
-                                                        data-tooltip="true" data-placement="top" title="詳細情報表示" href="{{url('admin_shipping_detail', {'id': 1}) }}">
-                                                        <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
-                                                    </a>
-                                                </div>
-                                                <div class="px-1 d-inline-block">
-                                                    <button type="button" class="btn btn-ec-actionIcon" id="detail" data-tooltip="true" data-placement="top" title="明細表示">
-                                                        <i class="fa fa-table fa-lg text-secondary" aria-hidden="true"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="px-1 d-inline-block">
-                                                    <button type="button" class="btn btn-ec-actionIcon" id="cancel" data-tooltip="true" data-placement="top" title="出荷指示解除">
-                                                        <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
-                                                    </button>
-                                                </div>
+                                        {{ shippingScheduleHeader.id }}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        {{ shippingScheduleHeader.customerName }}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        {{ shippingScheduleHeader.shippingDateSchedule|date('Y/m/d') }}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        {{ shippingScheduleHeader.wmsSendDate|date('Y/m/d') }}
+                                    </td>
+                                    <td class="align-middle pr-3">
+                                        <div class="text-right">
+                                            <div class="px-1 d-inline-block">
+                                                <a class="btn btn-ec-actionIcon confirmationModal" data-tooltip="true"
+                                                    data-placement="top" title="詳細情報表示"
+                                                    href="{{ url('admin_shipping_detail', {'id': shippingScheduleHeader.id}) }}">
+                                                    <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
                                             </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="row justify-content-md-center mb-4"></div>
-                        </div>
+                                            <div class="px-1 d-inline-block">
+                                                <button type="button" class="btn btn-ec-actionIcon" id="detail"
+                                                    onclick="showSchedule({{ shippingScheduleHeader.id }})"
+                                                    data-id="{{ shippingScheduleHeader.id }}" data-tooltip="true"
+                                                    data-placement="top" title="明細表示">
+                                                    <i class="fa fa-table fa-lg text-secondary" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                            <div class="px-1 d-inline-block">
+                                                <button type="button" class="btn btn-ec-actionIcon" id="cancel"
+                                                    data-tooltip="true" data-placement="top" title="出荷指示解除">
+                                                    <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="row justify-content-md-center mb-4"></div>
                     </div>
-                </form>
+                </div>
+            </form>
+            <div class="navigation float-right">
+                {{ knp_pagination_render(shippingScheduleHeaders) }}
             </div>
         </div>
     </div>
+</div>
 
-    {# 出荷指示解除モーダル #}
-    <div class="modal fade" id="modal_cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{# 出荷指示解除モーダル #}
+<div class="modal fade" id="modal_cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -132,7 +209,8 @@ file that was distributed with this source code.
 </div>
 
 {# 明細表示モーダル #}
-<div class="modal fade" id="modal_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -144,36 +222,14 @@ file that was distributed with this source code.
             <div class="modal-body">
                 <table class="table table-sm">
                     <thead>
-                    <tr>
-                        <th class="border-top-0 pt-2 pb-2 text-center">ID</th>
-                        <th class="border-top-0 pt-2 pb-2 text-center">商品名</th>
-                        <th class="border-top-0 pt-2 pb-2 text-center">数量</th>
-                        <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
                         <tr>
-                            <td class="align-middle text-center">
-                                1
-                            </td>
-                            <td class="align-middle text-center">
-                                商品名1
-                            </td>
-                            <td class="align-middle text-center">
-                                1
-                            </td>
-                            <td class="align-middle pr-3">
-                                <div class="text-right">
-                                    <div class="px-1 d-inline-block">
-                                        <button class="btn btn-ec-actionIcon confirmationModal"
-                                            data-tooltip="true" data-placement="top" title="詳細情報表示" id="detail_detail">
-                                            <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
+                            <th class="border-top-0 pt-2 pb-2 text-center">ID</th>
+                            <th class="border-top-0 pt-2 pb-2 text-center">商品名</th>
+                            <th class="border-top-0 pt-2 pb-2 text-center">数量</th>
+                            <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
                         </tr>
-                    </tbody>
+                    </thead>
+                    <tbody id="list-schedule"></tbody>
                 </table>
             </div>
             <div class="modal-footer">
@@ -184,7 +240,8 @@ file that was distributed with this source code.
 </div>
 
 {# 明細詳細表示モーダル #}
-<div class="modal fade" id="modal_detail_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_detail_detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -193,18 +250,19 @@ file that was distributed with this source code.
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-                <div class="modal-body">
-                    <div class="collapse show ec-cardCollapse" id="basicConfig">
+            <div class="modal-body">
+                <div class="collapse show ec-cardCollapse" id="basicConfig">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-6">
-                                <div class="d-inline-block" data-tooltip="true" data-placement="top" title="自動的に採番される商品のIDです。">
+                                <div class="d-inline-block" data-tooltip="true" data-placement="top"
+                                    title="自動的に採番される商品のIDです。">
                                     <span>ID</span>
-                                        <i class="fa fa-question-circle fa-lg ml-1"></i>
+                                    <i class="fa fa-question-circle fa-lg ml-1"></i>
                                 </div>
                             </div>
                             <div class="col">
-                                <p>1</p>
+                                <p id="schedule_id"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -214,19 +272,20 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                             <div class="col">
-                                <p>1</p>
+                                <p id="warehouse_code"></p>
                             </div>
                         </div>
+
+                        <span id="alert-schedule-detail"></span>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="return" class="btn btn-secondary" data-bs-dismiss="modal">戻る</button>
+                <button type="button" id="return" class="btn btn-secondary" data-bs-dismiss="modal">戻る
+                </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-
-

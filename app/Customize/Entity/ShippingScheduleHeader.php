@@ -413,6 +413,11 @@ class ShippingScheduleHeader
         return $this;
     }
 
+    public function getCreateDate(): ?\DateTimeInterface
+    {
+        return $this->create_date;
+    }
+
     /**
      * Set updateDate.
      *
@@ -425,5 +430,10 @@ class ShippingScheduleHeader
         $this->update_date = $updateDate;
 
         return $this;
+    }
+
+    public function getUpdateDate(): ?\DateTimeInterface
+    {
+        return $this->update_date;
     }
 }
