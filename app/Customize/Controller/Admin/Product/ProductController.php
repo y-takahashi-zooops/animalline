@@ -26,6 +26,9 @@ use Eccube\Entity\ProductClass;
 use Eccube\Entity\ProductImage;
 use Eccube\Entity\ProductStock;
 use Eccube\Entity\ProductTag;
+use Customize\Entity\Supplier;
+use Customize\Form\Type\Admin\SupplierType;
+use Customize\Repository\SupplierRepository;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Admin\ProductType;
@@ -90,6 +93,11 @@ class ProductController extends BaseProductController
     protected $productRepository;
 
     /**
+     * @var SupplierRepository
+     */
+    protected $supplierRepository;
+
+    /**
      * @var BaseInfo
      */
     protected $BaseInfo;
@@ -122,6 +130,7 @@ class ProductController extends BaseProductController
      * @param PageMaxRepository $pageMaxRepository
      * @param ProductStatusRepository $productStatusRepository
      * @param TagRepository $tagRepository
+     * @param SupplierRepository $supplierRepository
      */
     public function __construct(
         CsvExportService $csvExportService,
@@ -133,7 +142,8 @@ class ProductController extends BaseProductController
         BaseInfoRepository $baseInfoRepository,
         PageMaxRepository $pageMaxRepository,
         ProductStatusRepository $productStatusRepository,
-        TagRepository $tagRepository
+        TagRepository $tagRepository,
+        SupplierRepository $supplierRepository
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -145,6 +155,7 @@ class ProductController extends BaseProductController
         $this->pageMaxRepository = $pageMaxRepository;
         $this->productStatusRepository = $productStatusRepository;
         $this->tagRepository = $tagRepository;
+        $this->supplierRepository = $supplierRepository;
     }
 
     /**
@@ -1061,7 +1072,23 @@ class ProductController extends BaseProductController
      */
     public function supplier(Request $request)
     {
-        return[];
+        $supplier = new Supplier();
+        $form = $this->createForm(SupplierType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formRequest = $request->request->get('supplier');
+            $supplier->setSupplierName($formRequest['supplier_name'])
+                     ->setSupplierCode($formRequest['supplier_code']);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($supplier);
+            $entityManager->flush();
+        }
+
+        $suppliers = $this->supplierRepository->findAll();
+        return $this->render('@admin/Product/supplier.twig', [
+            'suppliers' => $suppliers,
+            'form' => $form->createView()
+        ]);
     }
 
     /**

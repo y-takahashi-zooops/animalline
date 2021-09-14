@@ -50,22 +50,25 @@ file that was distributed with this source code.
                     <div class="card rounded border-0">
                         <ul class="list-group list-group-flush sortable-container">
                             <li class="list-group-item">
-                                <form role="form" class="form-row" name="form1" id="form1" method="post" action="#">
-                                    <div class="col-auto align-self-center"><span>仕入先名</span></div>
+                                {{ form_start(form, {'attr': { 'class': 'form-row', 'id': 'form1' }}) }}
+                                    <div class="col-auto align-self-center">
+                                    <span>仕入先名</span></div>
                                     <div class="col-3 mr-2">
-                                        <input type="text" required="required" class="form-control" />
+                                        {{ form_widget(form.supplier_name) }}
+                                        {{ form_errors(form.supplier_name) }}
                                     </div>
                                     <div class="col-auto align-self-center" data-tooltip="true" data-placement="top" title="5桁での入力をお願いします。">
                                         <span>仕入先コード</span>
                                         <i class="fa fa-question-circle fa-lg ml-1"></i>
                                     </div>
                                     <div class="col-3">
-                                        <input type="text" class="form-control" />
+                                        {{ form_widget(form.supplier_code) }}
+                                        {{ form_errors(form.supplier_code) }}
                                     </div>
                                     <div class="col-auto">
                                         <button class="btn btn-ec-regular" type="submit">新規作成</button>
                                     </div>
-                                </form>
+                                {{ form_end(form) }}
                             </li>
                             <li class="list-group-item">
                                 <div class="row">
@@ -75,13 +78,14 @@ file that was distributed with this source code.
                                 </div>
                             </li>
                             <li id="ex-class_name-2" class="list-group-item sortable-item" data-class-name-id="2" data-sort-no="2">
+                            {% for supplier in suppliers %}
                                 <div class="row justify-content-around mode-view" id="mode-view">
-                                    <div class="col-1 d-flex align-items-center">1</div>
+                                    <div class="col-1 d-flex align-items-center">{{ supplier.id }}</div>
                                     <div class="col-4 d-flex align-items-center">
-                                        <span>仕入先1</span>
+                                        <span>{{ supplier.supplierName }}</span>
                                     </div>
                                     <div class="col d-flex align-items-center">
-                                        <span>00001</span>
+                                        <span>{{ supplier.supplierCode }}</span>
                                     </div>
                                     <div class="col-auto text-right">
                                         <a class="btn btn-ec-actionIcon mr-2 action-edit" data-tooltip="true" data-placement="top" title="編集" id="edit">
@@ -97,11 +101,11 @@ file that was distributed with this source code.
                                 <form class="form-row d-none mode-edit" method="post" action="#" id="mode-edit">
                                     <div class="col-auto align-self-center"><span>仕入先名</span></div>
                                     <div class="col-auto align-items-center">
-                                        <input type="text" required="required" data-origin-value="仕入先1" class="form-control" value="仕入先1" />
+                                        <input type="text" required="required" data-origin-value="{{ supplier.supplierName }}" class="form-control" value="{{ supplier.supplierName }}" />
                                     </div>
                                     <div class="col-auto align-self-center"><span>仕入先コード</span></div>
                                     <div class="col-auto align-items-center">
-                                        <input type="text" data-origin-value="00001" class="form-control" value="00001" />
+                                        <input type="text" data-origin-value="{{ supplier.supplierCode }}" class="form-control" value="{{ supplier.supplierCode }}" />
                                         
                                     </div>
                                     <div class="col-auto align-items-center">
@@ -111,6 +115,7 @@ file that was distributed with this source code.
                                         <button class="btn btn-ec-sub action-edit-cancel" type="button" id="cancel">キャンセル</button>
                                     </div>
                                 </form>
+                            {% endfor %}
                             </li>
                         </ul>
                         <!-- 削除モーダル -->
