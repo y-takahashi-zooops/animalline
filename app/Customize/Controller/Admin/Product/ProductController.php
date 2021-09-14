@@ -1143,4 +1143,12 @@ class ProductController extends BaseProductController
     }
 
 
+    /**
+     * @Route("/%eccube_admin_route%/product/waste/{id}", requirements={"id" = "\d+"}, name="admin_product_waste_regist")
+     * @Template("@admin/Product/waste_regist.twig")
+     */
+    public function waste_regist(Request $request)
+    {
+        return[];
+    }
 }

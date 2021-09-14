@@ -20,7 +20,16 @@ file that was distributed with this source code.
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.widget.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.mouse.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.sortable.min.js', 'admin') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script>
+        $(".delete").on('click', function() {
+            $('#DeleteModal').modal('show');
+        });
+        $("#search").on('click', function() {
+            $('#ProductModal').modal('show');
+        });
+    </script>
 {% endblock %}
 
 {% block stylesheet %}{% endblock %}
@@ -32,14 +41,89 @@ file that was distributed with this source code.
                 <div class="row justify-content-start">
                     <div class="col-6">
                         <div class="mb-2">
-                            <label class="col-form-label" data-tooltip="true" data-placement="top" title="情報を入力して一覧の絞り込み検索ができます。">商品名・JANコード<i class="fa fa-question-circle fa-lg ml-1"></i></label>
+                            <label class="col-form-label">期間選択</label>
+                            <div class="d-flex align-items-center">
+                                <div class="ec-select">
+                                    <div class="form-inline">           
+                                        <select class="form-control mr-2">
+                                            <option value="2016">2016</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2021">2021</option>
+                                        </select>
+                                        /
+                                        <select class="form-control ml-2">
+                                            <option value="1">01</option>
+                                            <option value="2">02</option>
+                                            <option value="3">03</option>
+                                            <option value="4">04</option>
+                                            <option value="5">05</option>
+                                            <option value="6">06</option>
+                                            <option value="7">07</option>
+                                            <option value="8">08</option>
+                                            <option value="9">09</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-auto text-center"><span>〜</span></div>
+                                <div class="ec-select">
+                                    <div class="form-inline">           
+                                        <select class="form-control mr-2">
+                                            <option value="2016">2016</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2021">2021</option>
+                                        </select>
+                                        /
+                                        <select class="form-control ml-2">
+                                            <option value="1">01</option>
+                                            <option value="2">02</option>
+                                            <option value="3">03</option>
+                                            <option value="4">04</option>
+                                            <option value="5">05</option>
+                                            <option value="6">06</option>
+                                            <option value="7">07</option>
+                                            <option value="8">08</option>
+                                            <option value="9">09</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="c-outsideBlock__contents mb-3">
+                <button class="btn btn-ec-conversion px-5" type="submit">表示更新</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="c-outsideBlock">
+        <form id='search_form' method="post" action="#">
+            <div class="c-outsideBlock__contents">
+                <div class="row justify-content-start">
+                    <div class="col-6">
+                        <div class="mb-2">
+                            <label class="col-form-label" data-tooltip="true" data-placement="top" title="情報を入力して商品の絞りこみ・廃棄情報の登録ができます。">商品名・JANコード<i class="fa fa-question-circle fa-lg ml-1"></i></label>
                             <input type="text" id="admin_search_product_id" name="admin_search_product[id]" class="form-control">
                         </div>
                     </div>
                 </div>
             </div>
             <div class="c-outsideBlock__contents mb-5">
-                <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.search'|trans }}</button>
+                {# <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.search'|trans }}</button> #}
+                <button type="button" class="btn btn-ec-conversion px-5" id="search">{{ 'admin.common.search'|trans }}</button>
             </div>
         </form>
     </div>
@@ -52,16 +136,17 @@ file that was distributed with this source code.
                             <table class="table table-sm">
                                 <thead>
                                 <tr>
-                                    <th class="border-top-0 pt-2 pb-2">{{ 'admin.product.product_id__short'|trans }}</th>
+                                    <th class="border-top-0 pt-2 pb-2 pl-4">{{ 'admin.product.product_id__short'|trans }}</th>
                                     <th class="border-top-0 pt-2 pb-2">{{ 'admin.product.name'|trans }}</th>
                                     <th class="border-top-0 pt-2 pb-2">廃棄日</th>
                                     <th class="border-top-0 pt-2 pb-2">廃棄数量</th>
                                     <th class="border-top-0 pt-2 pb-2">廃棄理由</th>
+                                    <th class="border-top-0 pt-2 pb-2 pr-2"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="align-middle">1</td>
+                                        <td class="align-middle pl-4">1</td>
                                         <td class="align-middle">
                                             商品1
                                         </td>
@@ -74,9 +159,18 @@ file that was distributed with this source code.
                                         <td class="align-middle">
                                             廃棄理由1
                                         </td>
+                                        <td>
+                                            <div class="col-auto text-right">
+                                                <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top" title="削除">
+                                                    <a class="btn btn-ec-actionIcon delete">
+                                                        <i class="fa fa-close fa-lg text-secondary"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td class="align-middle">2</td>
+                                        <td class="align-middle pl-4">2</td>
                                         <td class="align-middle">
                                             商品2
                                         </td>
@@ -89,9 +183,18 @@ file that was distributed with this source code.
                                         <td class="align-middle">
                                             廃棄理由2
                                         </td>
+                                        <td>
+                                            <div class="col-auto text-right">
+                                                <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top" title="削除">
+                                                    <a class="btn btn-ec-actionIcon delete">
+                                                        <i class="fa fa-close fa-lg text-secondary"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td class="align-middle">3</td>
+                                        <td class="align-middle pl-4">3</td>
                                         <td class="align-middle">
                                             商品3
                                         </td>
@@ -104,12 +207,106 @@ file that was distributed with this source code.
                                         <td class="align-middle">
                                             廃棄理由3
                                         </td>
+                                        <td>
+                                            <div class="col-auto text-right">
+                                                <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top" title="削除">
+                                                    <a class="btn btn-ec-actionIcon delete">
+                                                        <i class="fa fa-close fa-lg text-secondary"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 削除モーダル -->
+    <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog"
+    aria-labelledby="DeleteModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold">
+                        {{ 'admin.common.delete_modal__title'|trans }}
+                    </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <p class="text-left modal-message">削除します。よろしいですか？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        {{ 'admin.common.cancel'|trans }}
+                    </button>
+                    <a class="btn btn-ec-delete" href="#">
+                        {{ 'admin.common.delete'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {# 明細表示モーダル #}
+    <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">商品情報</h3>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th class="border-top-0 pt-2 pb-2 text-center">ID</th>
+                            <th class="border-top-0 pt-2 pb-2 text-center">商品名</th>
+                            <th class="border-top-0 pt-2 pb-2 text-center">在庫数</th>
+                            <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="align-middle text-center">
+                                    1
+                                </td>
+                                <td class="align-middle text-center">
+                                    商品名1
+                                </td>
+                                <td class="align-middle text-center">
+                                    1
+                                </td>
+                                <td class="align-middle pr-3">
+                                    <div class="text-right">
+                                        <div class="px-1 d-inline-block">
+                                            {# <button class="btn btn-ec-actionIcon confirmationModal"
+                                                data-tooltip="true" data-placement="top" title="廃棄情報登録">
+                                                <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
+                                            </button> #}
+                                            <a class="btn btn-ec-actionIcon confirmationModal"
+                                            data-tooltip="true" data-placement="top" title="廃棄情報登録" href="{{url('admin_product_waste_regist', {'id': 1}) }}">
+                                                <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                </div>
             </div>
         </div>
     </div>
