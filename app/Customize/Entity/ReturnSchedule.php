@@ -27,7 +27,7 @@ class ReturnSchedule
      * @ORM\ManyToOne(targetEntity=ReturnScheduleHeader::class, inversedBy="ReturnSchedule")
      * @ORM\JoinColumn(name="header_id", nullable=false)
      */
-    private $header_id;
+    private $ReturnScheduleHeader;
 
     /**
      * @ORM\Column(name="product_class_id", type="integer", nullable=true)
@@ -106,7 +106,7 @@ class ReturnSchedule
 
     public function getReturnScheduleHeader(): ?ReturnScheduleHeader
     {
-        return $this->ConservationHeader;
+        return $this->ReturnScheduleHeader;
     }
 
     public function setReturnScheduleHeader(?ReturnScheduleHeader $ReturnScheduleHeader): self
@@ -232,6 +232,20 @@ class ReturnSchedule
     public function setRemarkText(?string $remark_text): self
     {
         $this->remark_text = $remark_text;
+
+        return $this;
+    }
+
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->create_date = $createDate;
 
         return $this;
     }
