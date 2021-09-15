@@ -11,7 +11,7 @@ use Eccube\Annotation\EntityExtension;
 trait ProductTrait
 {
     /**
-    * @ORM\Column(name="quantity_box",type="smallint", nullable=false, options={"default":0})
+    * @ORM\Column(name="quantity_box",type="integer", nullable=false, options={"default":0})
     */
     public $quantity_box;
 
@@ -23,7 +23,7 @@ trait ProductTrait
     /**
     * Set quantity_box.
     *
-    * @param string $quantity_box
+    * @param integer $quantity_box
     *
     * @return Product
     */
