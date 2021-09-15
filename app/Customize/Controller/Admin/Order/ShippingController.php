@@ -13,6 +13,10 @@
 
 namespace Customize\Controller\Admin\Order;
 
+use Customize\Config\AnilineConf;
+use Customize\Entity\ShippingScheduleHeader;
+use Customize\Repository\ShippingScheduleHeaderRepository;
+use Customize\Repository\ShippingScheduleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eccube\Entity\Order;
 use Eccube\Entity\OrderItem;
@@ -28,6 +32,7 @@ use Eccube\Service\OrderStateMachine;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\TaxRuleService;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -39,6 +44,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Eccube\Controller\Admin\Order\ShippingController as BaseShippingController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ShippingController extends BaseShippingController
 {
@@ -88,6 +94,16 @@ class ShippingController extends BaseShippingController
     protected $purchaseFlow;
 
     /**
+     * @var ShippingScheduleHeaderRepository
+     */
+    protected $shippingScheduleHeaderRepository;
+
+    /**
+     * @var ShippingScheduleRepository
+     */
+    protected $shippingScheduleRepository;
+
+    /**
      * EditController constructor.
      *
      * @param MailService $mailService
@@ -99,18 +115,23 @@ class ShippingController extends BaseShippingController
      * @param SerializerInterface $serializer
      * @param OrderStateMachine $orderStateMachine
      * @param PurchaseFlow $orderPurchaseFlow
+     * @param ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository
+     * @param ShippingScheduleRepository $shippingScheduleRepository
      */
     public function __construct(
-        MailService $mailService,
-        OrderItemRepository $orderItemRepository,
-        CategoryRepository $categoryRepository,
-        DeliveryRepository $deliveryRepository,
-        TaxRuleService $taxRuleService,
-        ShippingRepository $shippingRepository,
-        SerializerInterface $serializer,
-        OrderStateMachine $orderStateMachine,
-        PurchaseFlow $orderPurchaseFlow
-    ) {
+        MailService                      $mailService,
+        OrderItemRepository              $orderItemRepository,
+        CategoryRepository               $categoryRepository,
+        DeliveryRepository               $deliveryRepository,
+        TaxRuleService                   $taxRuleService,
+        ShippingRepository               $shippingRepository,
+        SerializerInterface              $serializer,
+        OrderStateMachine                $orderStateMachine,
+        PurchaseFlow                     $orderPurchaseFlow,
+        ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
+        ShippingScheduleRepository       $shippingScheduleRepository
+    )
+    {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
         $this->categoryRepository = $categoryRepository;
@@ -120,6 +141,8 @@ class ShippingController extends BaseShippingController
         $this->serializer = $serializer;
         $this->orderStateMachine = $orderStateMachine;
         $this->purchaseFlow = $orderPurchaseFlow;
+        $this->shippingScheduleHeaderRepository = $shippingScheduleHeaderRepository;
+        $this->shippingScheduleRepository = $shippingScheduleRepository;
     }
 
     /**
@@ -338,9 +361,17 @@ class ShippingController extends BaseShippingController
      * @Route("/%eccube_admin_route%/shipping/instructions", name="admin_shipping_instructions")
      * @Template("@admin/Order/shipping_instructions.twig")
      */
-    public function instructions(Request $request)
+    public function instructions(PaginatorInterface $paginator, Request $request)
     {
-        return [];
+        $shippingScheduleHeaderList = $this->shippingScheduleHeaderRepository->findAll();
+        $shippingScheduleHeaders = $paginator->paginate(
+            $shippingScheduleHeaderList,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+        return compact(
+            'shippingScheduleHeaders'
+        );
     }
 
     /**
@@ -349,8 +380,48 @@ class ShippingController extends BaseShippingController
      * @Route("/%eccube_admin_route%/shipping/detail/{id}", requirements={"id" = "\d+"}, name="admin_shipping_detail")
      * @Template("@admin/Order/shipping_detail.twig")
      */
-    public function detail(Request $request)
+    public function detail(Request $request, ShippingScheduleHeader $shippingScheduleHeader)
     {
-        return [];
+        return compact(
+            'shippingScheduleHeader'
+        );
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/shipping_schedules_by_header", name="get_shipping_schedules_by_header", methods={"GET"})
+     */
+    public function getShippingSchedulesByHeader(Request $request)
+    {
+        $headerId = $request->get('headerId');
+        $schedules = $this->shippingScheduleRepository->findBy(['header_id' => $headerId]);
+
+        $data = [];
+        foreach ($schedules as $schedule) {
+            $item = [
+                'schedule_id' => $schedule->getId(),
+                'product_name' => $schedule->getOrderDetail()->getProductClass()->getProduct()->getName() ?? '',
+                'quantity' => $schedule->getOrderDetail()->getQuantity(),
+                'warehouse_code' => $schedule->getWarehouseCode()
+            ];
+            $data[] = $item;
+        }
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/shipping_schedule", name="get_shipping_schedule", methods={"GET"})
+     */
+    public function getShippingSchedule(Request $request)
+    {
+        $scheduleId = $request->get('scheduleId');
+        if (!$schedule = $this->shippingScheduleRepository->find($scheduleId)) throw new NotFoundHttpException();
+
+        $data = [
+            'schedule_id' => $scheduleId,
+            'warehouse_code' => $schedule->getWarehouseCode()
+        ];
+
+        return new JsonResponse($data);
     }
 }

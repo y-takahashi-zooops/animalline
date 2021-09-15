@@ -16,7 +16,7 @@ file that was distributed with this source code.
 {% block sub_title %}{{ 'admin.order.order_management'|trans }}{% endblock %}
 
 {% block javascript %}
-    <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.core.min.js', 'admin') }}"></script>
+<script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.core.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.widget.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.mouse.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.sortable.min.js', 'admin') }}"></script>
@@ -26,267 +26,270 @@ file that was distributed with this source code.
 {% block stylesheet %}{% endblock %}
 
 {% block main %}
-<div class="c-contentsArea__cols">
-    <div class="c-contentsArea__primaryCol">
-        <div class="c-primaryCol">
-            <div class="card rounded border-0 mb-4">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="d-inline-block">
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <div class="card rounded border-0 mb-4">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="d-inline-block">
                                 <span class="card-title">
                                     出荷情報詳細
                                 </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-4 text-right">
-                            <a data-toggle="collapse" href="#basicConfig" aria-expanded="false" aria-controls="basicConfig">
-                                <i class="fa fa-angle-up fa-lg"></i>
-                            </a>
+                            <div class="col-4 text-right">
+                                <a data-toggle="collapse" href="#basicConfig" aria-expanded="false"
+                                   aria-controls="basicConfig">
+                                    <i class="fa fa-angle-up fa-lg"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="collapse show ec-cardCollapse" id="basicConfig">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block" data-tooltip="true" data-placement="top" title="自動的に採番される商品のIDです。">
-                                    <span>ID</span>
+                    <div class="collapse show ec-cardCollapse" id="basicConfig">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block" data-tooltip="true" data-placement="top"
+                                         title="自動的に採番される商品のIDです。">
+                                        <span>ID</span>
                                         <i class="fa fa-question-circle fa-lg ml-1"></i>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.id }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>1</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>shipping_date_schedule</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>shipping_date_schedule</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.shippingDateSchedule|date('Y/m/d') }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>2021/09/10</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>arrival_date_schedule</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>arrival_date_schedule</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.arrivalDateSchedule|date('Y/m/d') }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>2021/09/10</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>arrival_time_code_schedule</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>arrival_time_code_schedule</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.arrivalTimeCodeSchedule }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>12:00</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>customer_name</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>customer_name</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.customerName }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>テスト太郎</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>customer_zip</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>customer_zip</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.customerZip }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>123-4567</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>customer_address</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>customer_address</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.customerAddress }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>東京都XXX区XXX X-X-X</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>customer_tel</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>customer_tel</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.customerTel }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>080-0000-0000</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>total_price</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>total_price</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.totalPrice }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>4,000</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>discounted price</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>discounted price</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.discountedPrice }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>0</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>tax_price</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>tax_price</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.taxPrice }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>400</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>postage_price</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>postage_price</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.postagePrice }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>1,000</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>total_weight</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>total_weight</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.totalWeight }}kg</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>10kg</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>wms_ship_no</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>wms_ship_no</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.wmsShipNo }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>000001</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>shipping_units</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>shipping_units</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.shippingUnits }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>shipping_date</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>shipping_date</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.shippingDate|date('Y/m/d') }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>2021/09/10</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>delivery_slip_no</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>delivery_slip_no</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.deliverySlipNo }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>000001</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>wms_send_date</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>wms_send_date</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.wmsSendDate|date('Y/m/d') }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>2021/09/10</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>wms_recive_date</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>wms_recive_date</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.wmsReciveDate|date('Y/m/d') }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>2021/09/10</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>is_cancel</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>is_cancel</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.isCancel == 1 ? '有' : '無' }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>－</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>cancel_reason</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>cancel_reason</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.cancelReason }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>－</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>order_id</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>order_id</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.Order.id }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>1</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>create_date</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>create_date</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.createDate|date('Y/m/d') }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <p>2021/09/10 12:00</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="d-inline-block">
-                                    <span>update_date</span>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>update_date</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <p>2021/09/10 12:00</p>
+                                <div class="col">
+                                    <p>{{ shippingScheduleHeader.updateDate|date('Y/m/d') }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -294,7 +297,4 @@ file that was distributed with this source code.
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
-
-
