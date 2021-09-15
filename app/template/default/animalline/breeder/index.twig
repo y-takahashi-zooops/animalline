@@ -9,22 +9,22 @@
                 <nav class="nav nav-pills search-nav m-2 d-none d-flex">
                     <a class="nav-item nav-link active bg-breeder col-md-3"
                     href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
-                        <h2 class="text-white text-align-center">犬を探す</h2>
+                        <h4 class="text-white text-align-center">犬を探す</h4>
                     </a>
                     <a class="nav-item nav-link border bg-white col-md-3"
                     href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
-                        <h2 class="color-gray-300 text-align-center">猫を探す</h2>
+                        <h4 class="color-gray-300 text-align-center">猫を探す</h4>
                     </a>
                 </nav>
             {% else %}
                 <nav class="nav nav-pills search-nav m-2 d-none d-flex">
                     <a class="nav-item nav-link border bg-white col-md-3"
                     href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
-                        <h2 class="color-gray-300 text-align-center">犬を探す</h2>
+                        <h4 class="color-gray-300 text-align-center">犬を探す</h4>
                     </a>
                     <a class="nav-item nav-link active bg-breeder col-md-3"
                     href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
-                        <h2 class="text-white text-align-center">猫を探す</h2>
+                        <h4 class="text-white text-align-center">猫を探す</h4>
                     </a>
                 </nav>
             {% endif %}
@@ -141,7 +141,7 @@
                         {% for pet in favoritePets %}
                             <li class="col-sm-6 col-lg-4 col-xl-3 border-0 bg-none mb-4">
                                 <div class="catalog-card new-band">
-                                    <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}"><img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}" alt="画像説明"></a>
+                                    <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}"><img class="w-100" src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}" alt="画像説明"></a>
                                 </div>
                                 <h3 class="color-gray-500 font-weight-600 mt-3 mb-3">{{ pet.getBreedsType().getBreedsName() ?? '' }}</h3>
                                 <p>{{ pet.petBirthday|date('Y年m月d日') }}生</p>

@@ -15,7 +15,12 @@
 }
 
 /*DOM*/
-
+html {
+    max-width:1170px;
+    min-width:600px;
+    margin: auto;
+    font-size: min(2.25vw,18px);
+}
 body {
     margin: 0;
     font-family: "Hiragino Sans", "ヒラギノ角ゴ Pro W3", "ヒラギノ角ゴ Pro W6", "ヒラギノ角ゴ Pro W7", "Hiragino Kaku Gothic Pro", "Noto Sans JP", "游ゴシック", helvetica, arial, sans-serif!important;
@@ -31,43 +36,43 @@ h1,h2,h3,h4,h5,h6,p {
 }
 
 h1 {
-    font-size: 36px;
+    font-size: 1.6rem;
     font-weight: 600;
     color: var(--gray-500);
 }
 
 h2 {
-    font-size: 24px;
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--gray-500);
 }
 
 h3 {
-    font-size: 18px;
+    font-size: 1.2rem;
     font-weight: 600;
     color: var(--gray-400);
 }
 
 h4 {
-    font-size: 14px;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--gray-400);
 }
 
 h5 {
-    font-size: 12px;
+    font-size: 0.8rem;
     font-weight: 300;
     color: var(--gray-400);
 }
 
 h6 {
-    font-size: 10px;
+    font-size: 1rem;
     font-weight: 300;
     color: var(--gray-400);
 }
 
 p {
-    font-size: 14px;
+    font-size: 1.4rem;
     color: var(--gray-400);
 }
 

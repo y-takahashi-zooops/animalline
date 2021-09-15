@@ -2,6 +2,7 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
+    {#
     <div id="carouselExampleFade" class="carousel slide carousel-fade mb-4" data-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -23,45 +24,104 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
-
-    <div class="row mt-2 card-group">
-        <div class="card  p-3 m-1">
-            <img src="{{ asset('assets/img/logo_breeder.png') }}" class="card-img-top pt-2">
+    #}
+    <div class="w-100 position-relative">
+        <img src="{{ asset('assets/img/lp-breeder-main-image.png') }}" class="w-100 position-relative">
+        <div class="main-image-view position-absolute text-white">
+            <h1 class="text-white">遺伝病ゼロの世界を目指して</h1>
+            アニマルラインはペットの遺伝病ゼロを目指して<br />全頭DNA検査を実施しています。
+        </div>
+    </div>
+    <div class="row mt-5 d-flex align-items-center">
+        <div class="col">
+            <img src="{{ asset('assets/img/logo_breeder.png') }}" class="w-75 d-block mx-auto">
             <div classs="card-body">
-                Animallineブリーダーサイト説明本文Animallineブリーダーサイト説明本文Animallineブリーダーサイト説明本文Animallineブリーダーサイト説明本文
+                AnimallineBreeder は自慢の子犬・子猫をお譲りしたいブリーダーと、ブリーダーから直接子犬・子猫をご購入したい 方を つなぐマッチングサイトです。
             </div>
             <a href="{{url('breeder_top')}}" class="btn btn-success btn-block mt-3" role="button">検索する</a>
         </div>
-        <div class="card  p-3 m-1">
-            <img src="{{ asset('assets/img/logo_adoption.png') }}" class="card-img-top pt-2">
-            <div classs="card-body">
-                Animalline保護団体サイト説明本文Animalline保護団体サイト説明本文Animalline保護団体サイト説明本文Animalline保護団体サイト説明本文
-            </div>
+        <div class="col">
+            <img src="{{ asset('assets/img/top_breeder.jpg') }}" class="card-img-top pt-2">
+        </div>
+    </div>
 
+    <div class="row mt-5 d-flex align-items-center">
+        <div class="col">
+            <img src="{{ asset('assets/img/top_adoption.jpg') }}" class="card-img-top pt-2">
+        </div>
+        <div class="col">
+            <img src="{{ asset('assets/img/logo_adoption.png') }}" class="w-75 d-block mx-auto">
+            <div classs="card-body">
+                Animalline Adoption は飼い主のいない保護犬猫の里親を探している方と、保護犬猫の里親になりたい 方を つなぐマッチングサイトです。
+            </div>
             <a href="{{url('adoption_top')}}" class="btn btn-warning btn-block mt-3" role="button">検索する</a>
         </div>
     </div>
 
-    <div class="row mt-2 card-group">
-        <div class="card p-3 m-1">
+    <div class="row mt-5 d-flex align-items-center">
+        <div class="col">
+            <img src="{{ asset('assets/img/common/logo.png') }}" class="w-75 d-block mx-auto">
+            <div classs="card-body">
+                しつけから消耗品まで、ペットに関わる様々な商品・サービスを提供しています。
+            </div>
+            <a href="{{url('homepage')}}" class="btn btn-warning btn-block mt-3" role="button">ショップへ</a>
+        </div>
+        <div class="col">
             <img src="{{ asset('assets/img/top_ec.jpg') }}" class="card-img-top pt-2">
-            <div classs="card-body">
-                AnimallineECサイト説明本文AnimallineECサイト説明本文AnimallineECサイト説明本文AnimallineECサイト説明本文AnimallineECサイト説明本文
-            </div>
-            <div>
-                <a href="{{url('homepage')}}" class="btn btn-success btn-block" role="button">Animalline ECショップへ</a>
-            </div>
         </div>
-        <div class="card p-3 m-1">
+    </div>
+
+    <div class="row mt-5 d-flex align-items-center">
+        <div class="col">
             <img src="{{ asset('assets/img/top_dctn.jpg') }}" class="card-img-top pt-2">
-            
+        </div>
+        <div class="col">
+            <img src="{{ asset('assets/img/logo_dctn.png') }}" class="w-75 d-block mx-auto">
             <div classs="card-body">
-                Animallineしつけサイト説明本文Animallineしつけサイト説明本文Animallineしつけサイト説明本文Animallineしつけサイト説明本文Animallineしつけサイト説明本文Animallineしつけサイト説明本文Animallineしつけサイト説明本文Animallineしつけサイト説明本文Animallineしつけサイト説明本文Animallineしつけサイト説明本文
+                犬のトイレの失敗や吠え癖、噛み癖などの問題は家の中の環境が原因で起きているケースが多々あります 。 人と同様、犬にも性格・個体差・感情があり、その子の個性、学習スピードに合わせたトレーニングで問題にアプローチすることが大切です。「ペットの家庭教師」では、ご自宅にうかがい、生活環境や個性を確認のうえ、プライベート・しつけトレーニングをご提供します。
             </div>
-            <div>
-                <a href="https://dc-trainers.net/" class="btn btn-warning btn-block mt-3 " role="button" target="blank">ペットの家庭教師</a>
+            <a href="https://dc-trainers.net/" class="btn btn-warning btn-block mt-3" role="button">詳しくはこちら</a>
+        </div>
+    </div>
+
+    <div class="bg-dna mt-5">
+        <div class="p-4"></div>
+        <div class="p-4"><h1>Animallineにて掲載のペットは全頭DNA検査済み<h1></div>
+        <div class="m-4 p-4"><h2>DNA検査のメリット</h2></div>
+        <div class="m-4 p-4">遺伝子検査とは、DNAの変異（突然変異）を検出する検査のことを言います。<br />
+        神経疾患、眼疾患、泌尿器疾患、血液疾患などの遺伝性疾患の検査を行うことが可能です。</div>
+        <div class="row max-w-1200 m-auto">
+            <div class="col-md-6">
+                <h3 class="bg-accent text-white font-weight-300 accent-text-box">発症リスクを知る</h3>
+                <div class="m-2 p-2"></div>
+                <h3 class="font-weight-300 color-gray-500">
+                    遺伝子検査を行うことによって遺伝病の発症リスクを知ることができ、遺伝性疾患に対する備えができることです。事前にその病気のリスクを知ることで、定期検診を行うと共に、早期発見につながり、重症化の予防につながります。​
+                </h3>
             </div>
         </div>
+        <div class="m-4 p-4"></div>
+        <div class="row max-w-1200 m-auto">
+            <div class="col-md-6">
+                <h3 class="bg-accent text-white font-weight-300 accent-text-box">変異遺伝子を次世代に残さない</h3>
+                <div class="m-2 p-2"></div>
+                <h3 class="font-weight-300 color-gray-500">
+                    遺伝情報は両親から半分ずつ子に伝達されるため、次の世代を繁殖する前に両親の遺伝子検査を行うことは、遺伝性疾患を将来の世代に増加させないために重要な意義があります。​
+                </h3>
+            </div>
+        </div>
+        <div class="m-4 p-4"></div>
+        <div class="row max-w-1200 m-auto">
+            <div class="col-md-6">
+                <h3 class="bg-accent text-white font-weight-300 accent-text-box">治療や生活環境の指針を示す​​</h3>
+                <div class="m-2 p-2"></div>
+                <h3 class="font-weight-300 color-gray-500">
+                    イベルメクチンへの感受性や手術時に止血困難となりえるフォンウイルブランド病（vWD）、腎結石、膀胱結石、尿道結石の発症率に関わる高尿酸尿症へのリスクなどを事前に知ることが可能です。
+                </h3>
+            </div>
+        </div>
+        <div class="m-4 p-4"></div>
+        <div class="m-4 p-4"></div>
+        <div class="p-4"></div>
     </div>
 {% endblock %}
 {% block stylesheet %}
