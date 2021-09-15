@@ -868,7 +868,9 @@ class BreederMemberController extends AbstractController
     public
     function breeder_pets_edit(Request $request, BreederPets $breederPet): Response
     {
-        $form = $this->createForm(BreederPetsType::class, $breederPet);
+        $form = $this->createForm(BreederPetsType::class, $breederPet,[
+            'customer' => $this->getUser(),
+        ]);
         $breederPetImages = $this->breederPetImageRepository->findBy(
             ['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
             ['sort_order' => 'ASC']
@@ -904,6 +906,8 @@ class BreederMemberController extends AbstractController
                 'sort_order' => $image->getSortOrder()
             ];
         }
+
+        $customer = $this->getUser();
 
         return $this->render('animalline/breeder/member/pets/edit.twig', [
             'breeder_pet' => $breederPet,
