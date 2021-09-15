@@ -1134,6 +1134,8 @@ class ProductController extends BaseProductController
     }
 
     /**
+     * 廃棄管理画面
+     * 
      * @Route("/%eccube_admin_route%/product/waste", name="admin_product_waste")
      * @Template("@admin/Product/waste.twig")
      */
@@ -1144,10 +1146,23 @@ class ProductController extends BaseProductController
 
 
     /**
+     * 廃棄情報登録画面
+     * 
      * @Route("/%eccube_admin_route%/product/waste/{id}", requirements={"id" = "\d+"}, name="admin_product_waste_regist")
      * @Template("@admin/Product/waste_regist.twig")
      */
     public function waste_regist(Request $request)
+    {
+        return[];
+    }
+
+    /**
+     * 入荷情報登録画面
+     * 
+     * @Route("/%eccube_admin_route%/product/instock", name="admin_product_instock")
+     * @Template("@admin/Product/instock.twig")
+     */
+    public function instock(Request $request)
     {
         return[];
     }
