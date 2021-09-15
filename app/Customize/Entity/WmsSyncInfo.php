@@ -37,7 +37,7 @@ class WmsSyncInfo
     private $sync_result;
 
     /**
-     * @ORM\Column(name="sync_log", type="datetime", nullable=true)
+     * @ORM\Column(name="sync_log", type="text", nullable=true)
      */
     private $sync_log;
 
@@ -96,12 +96,12 @@ class WmsSyncInfo
         return $this;
     }
 
-    public function getSyncLog(): ?\DateTimeInterface
+    public function getSyncLog(): ?string
     {
         return $this->sync_log;
     }
 
-    public function setSyncLog(?\DateTimeInterface $sync_log): self
+    public function setSyncLog(string $sync_log): self
     {
         $this->sync_log = $sync_log;
 
