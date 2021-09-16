@@ -25,23 +25,23 @@ class ShippingSchedule
 
     /**
      * @ORM\ManyToOne(targetEntity=ShippingScheduleHeader::class, inversedBy="ShippingSchedule")
-     * @ORM\JoinColumn(name="header_id", nullable=false)
+     * @ORM\JoinColumn(name="header_id", nullable=true)
      */
     private $ShippingScheduleHeader;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductClass::class, inversedBy="ShippingSchedules")
-     * @ORM\JoinColumn(name="product_class_id", nullable=false)
+     * @ORM\JoinColumn(name="product_class_id", nullable=true)
      */
     private $ProductClass;
 
     /**
-     * @ORM\Column(name="warehouse_code", type="string", length=5)
+     * @ORM\Column(name="warehouse_code", type="string", length=5, nullable=true)
      */
     private $warehouse_code;
 
     /**
-     * @ORM\Column(name="item_code_01", type="string", length=20)
+     * @ORM\Column(name="item_code_01", type="string", length=20, nullable=true)
      */
     private $item_code_01;
 

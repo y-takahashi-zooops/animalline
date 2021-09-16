@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Repository\ProductRepository;
 use Exception;
 use Eccube\Repository\ProductClassRepository;
+use Eccube\Repository\ShippingRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -51,11 +52,17 @@ class ExportRelease extends Command
      */
     protected $wmsSyncInfoRepository;
 
+    /**
+     * @var ShippingRepository
+     */
+    protected $shippingRepository;
+
     public function __construct(
         EntityManagerInterface           $entityManager,
         WmsSyncInfoRepository            $wmsSyncInfoRepository,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
-        ShippingScheduleRepository       $shippingScheduleRepository
+        ShippingScheduleRepository       $shippingScheduleRepository,
+        ShippingRepository               $shippingRepository
     )
     {
         parent::__construct();
@@ -63,6 +70,7 @@ class ExportRelease extends Command
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
         $this->shippingScheduleHeaderRepository = $shippingScheduleHeaderRepository;
         $this->shippingScheduleRepository = $shippingScheduleRepository;
+        $this->shippingRepository = $shippingRepository;
     }
 
     protected function configure()
@@ -126,16 +134,16 @@ class ExportRelease extends Command
             'ss.item_code_01',
             'IDENTITY(ssh.Shipping)'
         )
-            ->innerJoin('ss.ShippingScheduleHeader', 'ssh')
-            ->leftJoin('ssh.Shipping', 's')
-            ->where('s.update_date <= :to')
-            ->setParameters(['to' => Carbon::now()]);
-        if ($syncInfo) $qb = $qb->andWhere('s.update_date >= :from')
-            ->setParameter('from', $syncInfo->getSyncDate());
-        $qb = $qb->orderBy('s.update_date', 'DESC');
+            ->innerJoin('ss.ShippingScheduleHeader', 'ssh');
+        //     ->leftJoin('ssh.Shipping', 's')
+        //     ->where('s.update_date <= :to')
+        //     ->setParameters(['to' => Carbon::now()]);
+        // if ($syncInfo) $qb = $qb->andWhere('s.update_date >= :from')
+        //     ->setParameter('from', $syncInfo->getSyncDate());
+        // $qb = $qb->orderBy('s.update_date', 'DESC');
 
         $records = $qb->getQuery()->getArrayResult();
-        dump($records);die();
+        // dump($records);die();
         $filename = 'SHUSJI' . Carbon::now()->format('Ymd_His') . '.csv';
         if ($records) {
             $wms = new WmsSyncInfo();
@@ -201,17 +209,48 @@ class ExportRelease extends Command
                     }
                     array_push($result, $sorted);
                 }
-                foreach ($result as $item) {
-                    fputcsv($csvh, $item, $d, $e);
+                foreach ($records as $record) {
+                    $shippingScheduleHeader = new ShippingScheduleHeader();
+                    $shippingScheduleHeader->setShippingDateSchedule(Carbon::now())
+                                        ->setShipping(
+                                            $this->shippingRepository->find($id=$record[1])
+                                        )
+                                        ->setArrivalDateSchedule($record['arrival_date_schedule'])
+                                        ->setArrivalTimeCodeSchedule($record['arrival_time_code_schedule'])
+                                        ->setCustomerName($record['customer_name'])
+                                        ->setCustomerZip($record['customer_zip'])
+                                        ->setCustomerAddress($record['customer_address'])
+                                        ->setCustomerTel($record['customer_tel'])
+                                        ->setTotalPrice($record['total_price'])
+                                        ->setDiscountedPrice($record['discounted_price'])
+                                        ->setTaxPrice($record['tax_price'])
+                                        ->setPostagePrice($record['postage_price'])
+                                        ->setTotalWeight($record['total_weight'])
+                                        ->setShippingUnits($record['shipping_units'])
+                                        ->setIsCancel(0)
+                                        ->setShipping(
+                                            $this->shippingRepository->find($id=$record[1])
+                                        );
+
+                    $shippingSchedule = new ShippingSchedule();
+                    $shippingSchedule->setWarehouseCode($record['warehouse_code'])
+                                        ->setItemCode01($record['item_code_01'])
+                                        ->setItemCode02($record['item_code_02'])
+                                        ->setJanCode($record['jan_code'])
+                                        ->setQuantity($record['quantity'])
+                                        ->setStanderdPrice($record['standerd_price'])
+                                        ->setSellingPrice($record['selling_price']);
+                    fputcsv($csvh, $result, $d, $e);
                 }
                 fclose($csvh);
 
                 $wms->setSyncResult(1);
             } catch (Exception $e) {
-                $wms->setSyncResult(3)
-                    ->setSyncLog($e->getMessage());
+                $wms->setSyncResult(3);
             }
             $em->persist($wms);
+            $em->persist($shippingScheduleHeader);
+            $em->persist($shippingSchedule);
             $em->flush();
         }
     }
