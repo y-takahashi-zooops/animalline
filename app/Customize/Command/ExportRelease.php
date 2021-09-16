@@ -101,7 +101,7 @@ class ExportRelease extends Command
 
         $qb = $this->shippingScheduleRepository->createQueryBuilder('ss');
         $qb->select(
-            'ssh.Shipping',
+            'IDENTITY(ssh.Shipping)',
             'ssh.shipping_date_schedule',
             'ssh.arrival_date_schedule',
             'ssh.arrival_time_code_schedule',
@@ -118,13 +118,13 @@ class ExportRelease extends Command
             'ssh.customer_address',
             'ssh.customer_tel',
             'ssh.total_price',
-            'ssh.discounted price',
+            'ssh.discounted_price',
             'ssh.tax_price',
             'ssh.postage_price',
             'ssh.total_weight',
             'ssh.shipping_units',
             'ss.item_code_01',
-            'ssh.Shipping'
+            'IDENTITY(ssh.Shipping)'
         )
             ->innerJoin('ss.ShippingScheduleHeader', 'ssh')
             ->leftJoin('ssh.Shipping', 's')
