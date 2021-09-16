@@ -272,7 +272,9 @@ class ExportRelease extends Command
                                      ->setShippingScheduleHeader($shippingScheduleHeader)
                                      ->setOrderDetail($orderItem)
                                      ->setProductClass($orderItem->getProductClass());
-                    fputcsv($csvh, $result, $d, $e);
+                }
+                foreach ($result as $item) {
+                    fputcsv($csvh, $item, $d, $e);
                 }
                 fclose($csvh);
                 $wms->setSyncResult($isShipping ? 2 : 1);
