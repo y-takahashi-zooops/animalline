@@ -12,6 +12,7 @@ use Customize\Repository\ShippingScheduleRepository;
 use Customize\Repository\WmsSyncInfoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Repository\ProductRepository;
+use Eccube\Repository\ShippingRepository;
 use Exception;
 use Eccube\Repository\ProductClassRepository;
 use Symfony\Component\Console\Command\Command;
@@ -47,6 +48,11 @@ class ExportRelease extends Command
     protected $shippingScheduleRepository;
 
     /**
+     * @var ShippingRepository
+     */
+    protected $shippingRepository;
+
+    /**
      * @var WmsSyncInfoRepository
      */
     protected $wmsSyncInfoRepository;
@@ -55,7 +61,8 @@ class ExportRelease extends Command
         EntityManagerInterface           $entityManager,
         WmsSyncInfoRepository            $wmsSyncInfoRepository,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
-        ShippingScheduleRepository       $shippingScheduleRepository
+        ShippingScheduleRepository       $shippingScheduleRepository,
+        ShippingRepository               $shippingRepository
     )
     {
         parent::__construct();
@@ -63,6 +70,7 @@ class ExportRelease extends Command
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
         $this->shippingScheduleHeaderRepository = $shippingScheduleHeaderRepository;
         $this->shippingScheduleRepository = $shippingScheduleRepository;
+        $this->shippingRepository = $shippingRepository;
     }
 
     protected function configure()
@@ -94,14 +102,14 @@ class ExportRelease extends Command
 
         $dir = 'var/tmp/wms/shipping_schedule';
         if (!file_exists($dir)) {
-            if (!mkdir($dir, 0777)) throw new Exception('Can not create folder.');
+            mkdir($dir, 0777, 'R');
         }
 
         $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 4], ['sync_date' => 'DESC']);
 
         $qb = $this->shippingScheduleRepository->createQueryBuilder('ss');
         $qb->select(
-            'IDENTITY(ssh.Shipping)',
+            'IDENTITY(ssh.Shipping) as shippingInstructionNo',
             'ssh.shipping_date_schedule',
             'ssh.arrival_date_schedule',
             'ssh.arrival_time_code_schedule',
@@ -124,7 +132,7 @@ class ExportRelease extends Command
             'ssh.total_weight',
             'ssh.shipping_units',
             'ss.item_code_01',
-            'IDENTITY(ssh.Shipping)'
+            'IDENTITY(ssh.Shipping) as slipOutputOrder'
         )
             ->innerJoin('ss.ShippingScheduleHeader', 'ssh')
             ->leftJoin('ssh.Shipping', 's')
@@ -133,11 +141,19 @@ class ExportRelease extends Command
         if ($syncInfo) $qb = $qb->andWhere('s.update_date >= :from')
             ->setParameter('from', $syncInfo->getSyncDate());
         $qb = $qb->orderBy('s.update_date', 'DESC');
-
         $records = $qb->getQuery()->getArrayResult();
-        dump($records);die();
+
+        $query = $this->shippingRepository->createQueryBuilder('s');
+        $query->where('s.update_date <= :to')
+            ->setParameters(['to' => Carbon::now()])
+            ->andWhere('s.update_date >= :from')
+            ->setParameter('from', $syncInfo->getSyncDate());
+        $query = $query->getQuery()->getArrayResult();
+        $arr = array_column($query, 'id');
+
         $filename = 'SHUSJI' . Carbon::now()->format('Ymd_His') . '.csv';
         if ($records) {
+            $isShipping = false;
             $wms = new WmsSyncInfo();
             $wms->setSyncAction(4)
                 ->setSyncDate(Carbon::now());
@@ -148,7 +164,13 @@ class ExportRelease extends Command
                 $e = '"'; // this is the default but i like to be explicit
 
                 $result = [];
+
                 foreach ($records as $record) {
+                    if (in_array($record['shippingInstructionNo'], $arr)) {
+                        $isShipping = true;
+                        $wms->setSyncLog("alert");
+                        continue;
+                    }
                     $record['shippingInstructionNo'] = null;
                     $record['expectedShippingDate'] = null;
                     $record['expectedArrivalDate'] = null;
@@ -205,8 +227,7 @@ class ExportRelease extends Command
                     fputcsv($csvh, $item, $d, $e);
                 }
                 fclose($csvh);
-
-                $wms->setSyncResult(1);
+                $wms->setSyncResult($isShipping ? 2 : 1);
             } catch (Exception $e) {
                 $wms->setSyncResult(3)
                     ->setSyncLog($e->getMessage());
