@@ -171,12 +171,12 @@ class ShippingScheduleHeader
         return $this;
     }
 
-    public function getArrivalDateSchedule(): ?\DateTimeInterface
+    public function getArrivalDateSchedule(): ?\DateTime
     {
         return $this->arrival_date_schedule;
     }
 
-    public function setArrivalDateSchedule(\DateTimeInterface $arrival_date_schedule): self
+    public function setArrivalDateSchedule(\DateTime $arrival_date_schedule): self
     {
         $this->arrival_date_schedule = $arrival_date_schedule;
 

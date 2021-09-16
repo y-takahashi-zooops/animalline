@@ -15,6 +15,7 @@ use Eccube\Repository\ProductRepository;
 use Exception;
 use Eccube\Repository\ProductClassRepository;
 use Eccube\Repository\ShippingRepository;
+use Eccube\Repository\OrderItemRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -57,12 +58,18 @@ class ExportRelease extends Command
      */
     protected $shippingRepository;
 
+    /**
+     * @var OrderItemRepository
+     */
+    protected $orderItemRepository;
+
     public function __construct(
         EntityManagerInterface           $entityManager,
         WmsSyncInfoRepository            $wmsSyncInfoRepository,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
         ShippingScheduleRepository       $shippingScheduleRepository,
-        ShippingRepository               $shippingRepository
+        ShippingRepository               $shippingRepository,
+        OrderItemRepository              $orderItemRepository
     )
     {
         parent::__construct();
@@ -71,6 +78,7 @@ class ExportRelease extends Command
         $this->shippingScheduleHeaderRepository = $shippingScheduleHeaderRepository;
         $this->shippingScheduleRepository = $shippingScheduleRepository;
         $this->shippingRepository = $shippingRepository;
+        $this->orderItemRepository = $orderItemRepository;
     }
 
     protected function configure()
@@ -230,7 +238,7 @@ class ExportRelease extends Command
                     $shippingScheduleHeader = new ShippingScheduleHeader();
                     $shippingScheduleHeader->setShippingDateSchedule($now)
                                         ->setShipping(
-                                            $this->shippingRepository->find($id=$record[1])
+                                            $this->shippingRepository->find($id=$record['shippingInstructionNo'])
                                         )
                                         ->setArrivalDateSchedule($record['arrival_date_schedule'])
                                         ->setArrivalTimeCodeSchedule($record['arrival_time_code_schedule'])
@@ -244,13 +252,11 @@ class ExportRelease extends Command
                                         ->setPostagePrice($record['postage_price'])
                                         ->setTotalWeight($record['total_weight'])
                                         ->setShippingUnits($record['shipping_units'])
-                                        ->setIsCancel(0)
-                                        ->setShipping(
-                                            $this->shippingRepository->find($id=$record[1])
-                                        );
+                                        ->setIsCancel(0);
 
                     $shippingSchedule = new ShippingSchedule();
-                    dump($qb->select('s.Order'));die();
+
+                    $orderItem = $this->orderItemRepository->find($record['shippingInstructionNo']);
                     $shippingSchedule->setWarehouseCode($record['warehouse_code'])
                                         ->setItemCode01($record['item_code_01'])
                                         ->setItemCode02($record['item_code_02'])
@@ -258,7 +264,9 @@ class ExportRelease extends Command
                                         ->setQuantity($record['quantity'])
                                         ->setStanderdPrice($record['standerd_price'])
                                         ->setSellingPrice($record['selling_price'])
-                                        ->setOrderDetail($qb->select('s.Order'));
+                                        ->setShippingScheduleHeader($shippingScheduleHeader)
+                                        ->setOrderDetail($orderItem)
+                                        ->setProductClass($orderItem->getProductClass());
                     fputcsv($csvh, $result, $d, $e);
                 }
                 fclose($csvh);
@@ -267,11 +275,11 @@ class ExportRelease extends Command
             } catch (Exception $e) {
                 $wms->setSyncResult(3)
                 ->setSyncLog($e->getMessage());
-                echo 'Export failed.';
+                echo $e->getMessage();
             }
             $em->persist($wms);
-            $em->persist($shippingScheduleHeader);
             $em->persist($shippingSchedule);
+            $em->persist($shippingScheduleHeader);
             $em->flush();
         }
     }
