@@ -10431,120 +10431,164 @@ Styleguide 22.1
 
 /*# sourceMappingURL=style.css.map */
 
-/* 商品一覧画面 */
-.ec-shelfGrid__item .form-group {
-  display: none;
+/* 取引メッセージ画面 */
+/* 吹き出し */
+.balloon-left {
+  position: relative;
+  display: inline-block;
+  margin: 0.5em 0 1.5em;
+  padding: 7px 10px;
+  min-width: 120px;
+  max-width: 100%;
+  font-size: 16px;
+  background: #FFF;
+  box-sizing: border-box;
 }
 
-.ec-flexInput {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0px;
+.balloon-left:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -24px;
+  margin-top: -12px;
+  border: 12px solid transparent;
+  border-right: 12px solid #FFF;
+  z-index: 2;
 }
 
-/* 商品詳細画面デザイン修正用 */
-.ec-productRole__order ul {
-  margin-bottom: 0;
+.balloon-left:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -30px;
+  margin-top: -14px;
+  border: 14px solid transparent;
+  z-index: 1;
+}
+
+.balloon-left p {
+  margin: 0;
   padding: 0;
 }
-.ec-productRole__order li {
-  list-style: none;
-}
 
-/* 購入種別ラジオボタン */
-#order_type_0,
-#order_type_1 {
-  position:relative;	
-  top :30px;
-  right: 35px;
-  transform: scale(3.0);
-}
-
-label[for="order_type_0"],
-label[for="order_type_1"] {
-  position :relative;
-  right: 17px;
-}
-
-/* お届けサイクルラジオボタン */
-#cycle_type_0,
-#cycle_type_1 {
-  transform: scale(1.5);
-}
-
-label[for="cycle_type_0"],
-label[for="cycle_type_1"] {
-  font-weight: normal;
-}
-
-/* 間隔のラベルを消去 */
-label[for="month"],
-label[for="day"]{
-  display: none;
-}
-label[for="change_subscription_month"],
-label[for="change_subscription_day"]{
-  display: none;
-}
-
-.order_label {
-  margin-left: 50px;
-}
-
-.order_list_block {
-  padding: 10px 10px 0px;
-  border-radius: 10px 4px 2px;
-  list-style: none;
-}
-
-.subscription_cycle_block,
-.next_delivery_date_block {
-  padding: 10px 20px 0px;
-  list-style: none;
-  margin-bottom: 0;
-}
-
-.subscription_cycle,
-.next_delivery_date {
-  border-top: 1px dashed #d2d2d2;
-  padding: 5px 0;
-}
-
-.subscription_block {
- border-top: 1px solid #d2d2d2;
- border-radius: 0px 0px 7px 7px;
-}
-
-.glay{
-  background-color: #f0f0f0;
-}
-
-/* 関連商品ヘッダー */
-.relation_product_header {
-  background-color: #004186;
-  padding: 10px;
-  color: white;
-  margin-bottom: 20px;
-}
-
-.subscription_mark {
-  color: #004186;
-  font-weight: bold;
-  padding: 5px;
-  border: black 1px solid;
-  border-radius: 5%;
-  margin-bottom: 10px;
-}
-
-/* 定期購入履歴画面 */
-label[for="change_subscription_change_element_0"],
-label[for="change_subscription_change_element_1"] {
-  font-size: 18px;
-}
-
-#ec-modal-contents__change li,
-#ec-modal-contents__cancel p {
+.balloon-right {
+  position: relative;
+  display: inline-block;
+  margin: 0.5em 0 1.5em;
+  padding: 7px 10px;
+  min-width: 120px;
+  max-width: 100%;
   font-size: 16px;
+  background: #FFF;
+  box-sizing: border-box;
+}
+
+.balloon-right:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -24px;
+  margin-top: -12px;
+  border: 12px solid transparent;
+  border-left: 12px solid #FFF;
+  z-index: 2;
+}
+
+.balloon-right:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -30px;
+  margin-top: -14px;
+  border: 14px solid transparent;
+  z-index: 1;
+}
+
+.balloon-right p {
+  margin: 0;
+  padding: 0;
+}
+
+/* ユーザーイメージ */
+.user-img {
+  display: flex; 
+  justify-content: flex-end; 
+  align-items: center; 
+  padding-right: 0;
+}
+
+/* 保護団体イメージ */
+.adoption-img,
+.breeder-img {
+  display: flex;
+  align-items: center;
+  padding-left: 0;
+
+}
+
+/* 文章 */
+.breeder-info h3{
+  font-weight: 500;
+}
+
+/* ペットリスト */
+.petList {
+  width:100%;
+  margin:0;
+  padding:0;
+  display:-webkit-box;
+  display:-moz-box;
+  display:-ms-box;
+  display:-webkit-flexbox;
+  display:-moz-flexbox;
+  display:-ms-flexbox;
+  display:-webkit-flex;
+  display:-moz-flex;
+  display:-ms-flex;
+  display:flex;
+  -webkit-box-lines:multiple;
+  -moz-box-lines:multiple;
+  -webkit-flex-wrap:wrap;
+  -moz-flex-wrap:wrap;
+  -ms-flex-wrap:wrap;
+  flex-wrap:wrap;
+}
+.petList li {
+  padding-bottom: 35px;
+  position: relative;
+}
+.petList li p {
+  font-size:90%;
+  margin-bottom: 0.25rem
+}
+.petList .price {
+  padding: 0;
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+
+.side-contents {
+  border-radius:5px;
+  padding: 0.4rem;
+  font-size: 0.8rem;
+}
+.side-contents a {
+  color: #fff; 
+}
+
+.img-container{
+  display:flex;/* flexbox */
+  justify-content:flex-start; 
+  align-items: center;
+}
+
+.img-container img {
+  height: 53.27px;
+  width: 53.27px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
 /* TOPページメニュー */
@@ -10564,66 +10608,8 @@ label[for="change_subscription_change_element_1"] {
   text-decoration: none;
 }
 
-.ec-menuRole .ec-itemNav__nav li {
-  border-right: #CCCCCC	solid 1px;
-  width: 33%;
-  }
-
-.ec-menuRole .ec-itemNav__nav li:last-child {
-border-right: none;
-}
-
-.ec-topMainRole .ec-grid5__cell h4 {
-  text-align: center;
-}
-
-.ec-topMainRole .side_contents {
-  border-top: 4px solid #20B2AA;
-}
-
-
-/* =====================================
-	 accordion
-===================================== */
-.category__item {
-  color: #000;
-  cursor: pointer;
-  display: block;
-  margin-bottom: 1px;
-  position: relative;
-}
-.category__item__link {
-  color: #000;
-  display: block;
-  padding: 1rem;
-}
-
-.ec-topMainRole .category {
-  padding: 0;
-}
-
-.ec-topMainRole .subcategory {
-  display: none;
-  list-style: none;
-  padding: 0;
-}
-.ec-topMainRole .subcategory__item {
-  color: #222;
-  padding: 1rem;
-}
-
-/* TOPページバナー */
-.bunner {
-  text-align:center;
-  margin-bottom: 20px;
-}
-
-.bunner img {
-  max-width: 430px;
-  width: 100%;
-}
-
-/*search_result*/
-.navigation .pagination{
-  float: right;
+.header-button {
+  background: #F08300;
+  border-radius:  5px;
+  color: #fff;
 }

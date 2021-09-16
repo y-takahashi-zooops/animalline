@@ -33,6 +33,16 @@ class CustomizeNav implements EccubeNav
 					],
 				],
 			],
+			'dna' => [
+				'name' => 'DNA検査',
+				'icon' => 'fa-vial',
+				'children' => [
+					'dna_examination_status' => [
+						'name' => '検査状況確認',
+						'url' => 'admin_dna_examination_status',
+					],
+				],
+			],
 			'product' => [
 				'children' => [
 					'supplier' => [

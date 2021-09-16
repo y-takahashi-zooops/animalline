@@ -852,7 +852,7 @@ class BreederMemberController extends AbstractController
             $entityManager->persist($breederPet);
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_pet_list');
+            return $this->render('animalline/breeder/member/pets/notification.twig');
         }
 
         return $this->render('animalline/breeder/member/pets/new.twig', [
