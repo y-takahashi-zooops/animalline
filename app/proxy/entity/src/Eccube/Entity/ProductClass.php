@@ -13,6 +13,9 @@
 
 namespace Eccube\Entity;
 
+use Customize\Entity\ShippingSchedule;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -334,6 +337,16 @@ use Doctrine\ORM\Mapping as ORM;
          * })
          */
         private $Creator;
+
+        /**
+         * @ORM\OneToMany(targetEntity=ShippingSchedule::class, mappedBy="ProductClass")
+         */
+        private $ShippingSchedule;
+
+        public function __construct()
+        {
+            $this->ShippingSchedule = new ArrayCollection();
+        }
 
         public function __clone()
         {
@@ -824,5 +837,13 @@ use Doctrine\ORM\Mapping as ORM;
         public function getPointRate()
         {
             return $this->point_rate;
+        }
+
+        /**
+         * @return Collection|ShippingSchedule[]
+         */
+        public function getShippingSchedule(): Collection
+        {
+            return $this->ShippingSchedule;
         }
     }
