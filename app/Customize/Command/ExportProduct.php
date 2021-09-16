@@ -14,7 +14,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  */
@@ -71,9 +70,6 @@ class ExportProduct extends Command
         $this->io = new SymfonyStyle($input, $output);
     }
 
-    /**
-     * @throws Exception
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->entityManager;
@@ -83,12 +79,12 @@ class ExportProduct extends Command
             'colorCode', 'sizeCode', 'jan_code', 'quantity_box'
         ];
 
-        $dir = 'var/tmp/wms/items';
+        $dir = 'var/tmp/wms/items/';
         if (!file_exists($dir)) {
-            if (!mkdir($dir, 0777)) throw new Exception('Can not create folder.');
+            mkdir($dir, 0777, 'R');
         }
 
-        $syncDate = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 1], ['sync_date' => 'ASC'])->getSyncDate();
+        $syncDate = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 1], ['sync_date' => 'DESC'])->getSyncDate();
 
         $qb = $this->productClassRepository->createQueryBuilder('pc');
         $qb->select('COALESCE(pc.code, pc.id) as productCode', 'p.name', 'pc.price02', 'pc.price02 as price02Tax',
@@ -106,13 +102,13 @@ class ExportProduct extends Command
         $filename = 'SHNMST_' . Carbon::now()->format('Ymd_His') . '.csv';
         if ($records) {
             $wms = new WmsSyncInfo();
-            $wms->setSyncAction(1)
+            $wms->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_PRODUCT)
                 ->setSyncDate(Carbon::now());
             try {
-                $csvPath = $dir . '/' . $filename;
+                $csvPath = $dir . $filename;
                 $csvh = fopen($csvPath, 'w+') or die("Can't open file");
-                $d = ','; // this is the default but i like to be explicit
-                $e = '"'; // this is the default but i like to be explicit
+                $d = ',';
+                $e = '"';
 
                 $result = [];
                 foreach ($records as $record) {
@@ -140,9 +136,9 @@ class ExportProduct extends Command
                 }
                 fclose($csvh);
 
-                $wms->setSyncResult(1);
+                $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
             } catch (Exception $e) {
-                $wms->setSyncResult(3)
+                $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_ERROR)
                     ->setSyncLog($e->getMessage());
             }
             $em->persist($wms);
