@@ -83,7 +83,7 @@ class ExportProduct extends Command
             mkdir($dir, 0777, 'R');
         }
 
-        $syncDate = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_PRODUCT], ['sync_date' => 'DESC']);
+        $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_PRODUCT], ['sync_date' => 'DESC']);
 
         $qb = $this->productClassRepository->createQueryBuilder('pc');
         $qb->select(
@@ -99,8 +99,8 @@ class ExportProduct extends Command
             ->leftJoin('pc.Product', 'p')
             ->where('p.update_date <= :to')
             ->setParameters(['with_tax' => AnilineConf::ANILINE_WMS_WITH_TAX, 'to' => Carbon::now()]);
-        if ($syncDate) $qb = $qb->andWhere('p.update_date >= :from')
-            ->setParameter('from', $syncDate->getSyncDate());
+        if ($syncInfo) $qb = $qb->andWhere('p.update_date >= :from')
+            ->setParameter('from', $syncInfo->getSyncDate());
         $qb = $qb->orderBy('p.update_date', 'DESC');
 
         $records = $qb->getQuery()->getArrayResult();
@@ -142,12 +142,11 @@ class ExportProduct extends Command
                 fclose($csvh);
 
                 $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
-
-                echo 'Import succeeded.';
+                echo 'Export succeeded.';
             } catch (Exception $e) {
                 $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_ERROR)
                     ->setSyncLog($e->getMessage());
-                echo 'Import failed.';
+                echo 'Export failed.';
             }
             $em->persist($wms);
             $em->flush();
