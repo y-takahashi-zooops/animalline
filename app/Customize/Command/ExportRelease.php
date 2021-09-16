@@ -253,8 +253,11 @@ class ExportRelease extends Command
                                            ->setDiscountedPrice($order->getDiscount())
                                            ->setTaxPrice($order->getTax())
                                            ->setPostagePrice($order->getDeliveryFeeTotal())
-                                           ->setTotalWeight($orderItem->getProductClass()->getProduct()->getItemWeight())
-                                           ->setShippingUnits(round((float)$orderItem->getProductClass()->getProduct()->getItemWeight() / 20))
+                                           ->setTotalWeight($orderItem->getProductClass()
+                                                                      ->getProduct()->getItemWeight()
+                                                           )
+                                           ->setShippingUnits(round(
+                                               (float)$orderItem->getProductClass()->getProduct()->getItemWeight() / 20))
                                            ->setWmsSendDate($now)
                                            ->setIsCancel(0);
 
