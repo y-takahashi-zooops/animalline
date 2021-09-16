@@ -4,6 +4,7 @@ namespace Customize\Command;
 
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
+use Customize\Entity\WmsSyncInfo;
 use Customize\Repository\WmsSyncInfoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Repository\ProductRepository;
@@ -75,44 +76,77 @@ class ExportProduct extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dir = 'var/tmp/wms/items';
+        $em = $this->entityManager;
+        $fieldSorted = [
+            'year', 'seasonCode', 'subSeasonCode', 'brandCode', 'subBrandCode', 'itemCode', 'subItemCode', 'productCode',
+            'name', 'price02', 'price02Tax', 'item_cost', 'gender', 'taxCode', 'remarks', 'supplier_code', 'productNum',
+            'colorCode', 'sizeCode', 'jan_code', 'quantity_box'
+        ];
 
+        $dir = 'var/tmp/wms/items';
         if (!file_exists($dir)) {
             if (!mkdir($dir, 0777)) throw new Exception('Can not create folder.');
         }
 
         $syncDate = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 1], ['sync_date' => 'ASC'])->getSyncDate();
-        $newDate = Carbon::now();
 
         $qb = $this->productClassRepository->createQueryBuilder('pc');
-        $qb
-            ->select('productCode')
+        $qb->select('COALESCE(pc.code, pc.id) as productCode', 'p.name', 'pc.price02', 'pc.price02 as price02Tax',
+            'pc.item_cost', 'pc.supplier_code', 'pc.code as jan_code', 'p.quantity_box')
             ->leftJoin('pc.Product', 'p')
             ->add('where', $qb->expr()->between(
                 'p.update_date',
                 ':from',
                 ':to')
             )
-            ->setParameters(array('from' => $syncDate, 'to' => $newDate))
+            ->setParameters(array('from' => $syncDate, 'to' => Carbon::now()))
             ->orderBy('p.update_date', 'DESC');
 
         $records = $qb->getQuery()->getArrayResult();
-//        echo (getcwd());
         $filename = 'SHNMST_' . Carbon::now()->format('Ymd_His') . '.csv';
         if ($records) {
-            $csvPath = 'var/tmp/wms/items/' . $filename;
+            $wms = new WmsSyncInfo();
+            $wms->setSyncAction(1)
+                ->setSyncDate(Carbon::now());
+            try {
+                $csvPath = $dir . '/' . $filename;
+                $csvh = fopen($csvPath, 'w+') or die("Can't open file");
+                $d = ','; // this is the default but i like to be explicit
+                $e = '"'; // this is the default but i like to be explicit
 
-            $csvh = fopen($csvPath, 'w+') or die("Can't open file");
-            $d = ','; // this is the default but i like to be explicit
-            $e = '"'; // this is the default but i like to be explicit
+                $result = [];
+                foreach ($records as $record) {
+                    $record['year'] = '99';
+                    $record['seasonCode'] = '01';
+                    $record['subSeasonCode'] = null;
+                    $record['brandCode'] = '0001';
+                    $record['subBrandCode'] = null;
+                    $record['itemCode'] = '0001';
+                    $record['subItemCode'] = null;
+                    $record['gender'] = '2';
+                    $record['taxCode'] = '01';
+                    $record['remarks'] = null;
+                    $record['productNum'] = null;
+                    $record['colorCode'] = '9999';
+                    $record['sizeCode'] = '1';
+                    $sorted = [];
+                    foreach ($fieldSorted as $value) {
+                        array_push($sorted, $record[$value]);
+                    }
+                    array_push($result, $sorted);
+                }
+                foreach ($result as $item) {
+                    fputcsv($csvh, $item, $d, $e);
+                }
+                fclose($csvh);
 
-            foreach ($records as $record) {
-                fputcsv($csvh, $record, $d, $e);
+                $wms->setSyncResult(1);
+            } catch (Exception $e) {
+                $wms->setSyncResult(3)
+                    ->setSyncLog($e->getMessage());
             }
-
-            fclose($csvh);
-
-            // do something with the file
+            $em->persist($wms);
+            $em->flush();
         }
     }
 }
