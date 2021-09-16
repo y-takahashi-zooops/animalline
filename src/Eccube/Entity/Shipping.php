@@ -16,7 +16,6 @@ namespace Eccube\Entity;
 use Customize\Entity\ShippingScheduleHeader;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Eccube\Service\Calculator\OrderItemCollection;
 use Eccube\Service\PurchaseFlow\ItemCollection;
 use Customize\Entity\ReturnScheduleHeader;
