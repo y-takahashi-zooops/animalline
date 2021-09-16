@@ -87,7 +87,7 @@ class ExportProduct extends Command
         $syncDate = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 1], ['sync_date' => 'DESC'])->getSyncDate();
 
         $qb = $this->productClassRepository->createQueryBuilder('pc');
-        $qb->select('COALESCE(pc.code, pc.id) as productCode', 'p.name', 'pc.price02', 'pc.price02 as price02Tax',
+        $qb->select('COALESCE(pc.code, pc.id) as productCode', 'p.name', 'pc.price02', '(pc.price02 * :with_tax) as price02Tax',
             'pc.item_cost', 'pc.supplier_code', 'pc.code as jan_code', 'p.quantity_box')
             ->leftJoin('pc.Product', 'p')
             ->add('where', $qb->expr()->between(
@@ -95,7 +95,7 @@ class ExportProduct extends Command
                 ':from',
                 ':to')
             )
-            ->setParameters(array('from' => $syncDate, 'to' => Carbon::now()))
+            ->setParameters(['with_tax' => AnilineConf::ANILINE_WMS_WITH_TAX, 'from' => $syncDate, 'to' => Carbon::now()])
             ->orderBy('p.update_date', 'DESC');
 
         $records = $qb->getQuery()->getArrayResult();

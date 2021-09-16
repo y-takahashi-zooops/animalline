@@ -143,4 +143,6 @@ final class AnilineConf
     const ANILINE_WMS_RESULT_SUCCESS = 1;
     const ANILINE_WMS_RESULT_ANNOTATED = 2;
     const ANILINE_WMS_RESULT_ERROR = 3;
+
+    const ANILINE_WMS_WITH_TAX = 1.1;
 }
