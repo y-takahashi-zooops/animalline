@@ -51,8 +51,7 @@ class ExportProduct extends Command
         WmsSyncInfoRepository  $wmsSyncInfoRepository,
         ProductClassRepository $productClassRepository,
         ProductRepository      $productRepository
-    )
-    {
+    ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
@@ -84,19 +83,25 @@ class ExportProduct extends Command
             mkdir($dir, 0777, 'R');
         }
 
-        $syncDate = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 1], ['sync_date' => 'DESC'])->getSyncDate();
+        $syncDate = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_PRODUCT], ['sync_date' => 'DESC']);
 
         $qb = $this->productClassRepository->createQueryBuilder('pc');
-        $qb->select('COALESCE(pc.code, pc.id) as productCode', 'p.name', 'pc.price02', '(pc.price02 * :with_tax) as price02Tax',
-            'pc.item_cost', 'pc.supplier_code', 'pc.code as jan_code', 'p.quantity_box')
+        $qb->select(
+            'COALESCE(pc.code, pc.id) as productCode',
+            'p.name',
+            'pc.price02',
+            '(pc.price02 * :with_tax) as price02Tax',
+            'pc.item_cost',
+            'pc.supplier_code',
+            'pc.code as jan_code',
+            'p.quantity_box'
+        )
             ->leftJoin('pc.Product', 'p')
-            ->add('where', $qb->expr()->between(
-                'p.update_date',
-                ':from',
-                ':to')
-            )
-            ->setParameters(['with_tax' => AnilineConf::ANILINE_WMS_WITH_TAX, 'from' => $syncDate, 'to' => Carbon::now()])
-            ->orderBy('p.update_date', 'DESC');
+            ->where('p.update_date <= :to')
+            ->setParameters(['with_tax' => AnilineConf::ANILINE_WMS_WITH_TAX, 'to' => Carbon::now()]);
+        if ($syncDate) $qb = $qb->andWhere('p.update_date >= :from')
+            ->setParameter('from', $syncDate->getSyncDate());
+        $qb = $qb->orderBy('p.update_date', 'DESC');
 
         $records = $qb->getQuery()->getArrayResult();
         $filename = 'SHNMST_' . Carbon::now()->format('Ymd_His') . '.csv';
@@ -137,9 +142,12 @@ class ExportProduct extends Command
                 fclose($csvh);
 
                 $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
+
+                echo 'Import succeeded.';
             } catch (Exception $e) {
                 $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_ERROR)
                     ->setSyncLog($e->getMessage());
+                echo 'Import failed.';
             }
             $em->persist($wms);
             $em->flush();
