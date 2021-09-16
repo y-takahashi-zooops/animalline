@@ -241,33 +241,34 @@ class ExportRelease extends Command
 
                     $shippingScheduleHeader = new ShippingScheduleHeader();
                     $shippingScheduleHeader->setShippingDateSchedule($now)
-                                        ->setShipping($shipping)
-                                        ->setShippingDateSchedule($shipping->getShippingDate())
-                                        ->setArrivalDateSchedule($shipping->getShippingDeliveryDate())
-                                        ->setArrivalTimeCodeSchedule($shipping->getShippingDeliveryTime())
-                                        ->setCustomerName($shipping->getName01() . $shipping->getName02())
-                                        ->setCustomerZip($shipping->getPostalCode())
-                                        ->setCustomerAddress($shipping->getAddr01() . $shipping->getAddr02())
-                                        ->setCustomerTel($shipping->getPhoneNumber())
-                                        ->setTotalPrice($order->getSubTotal())
-                                        ->setDiscountedPrice($order->getDiscount())
-                                        ->setTaxPrice($order->getTax())
-                                        ->setPostagePrice($order->getDeliveryFeeTotal())
-                                        ->setTotalWeight($orderItem->getProductClass()->getProduct()->getItemWeight())
-                                        ->setShippingUnits($orderItem->getProductClass()->getProduct()->getItemWeight() / 20)
-                                        ->setWmsSendDate($now)
-                                        ->setIsCancel(0);
+                                           ->setShipping($shipping)
+                                           ->setShippingDateSchedule($shipping->getShippingDate())
+                                           ->setArrivalDateSchedule($shipping->getShippingDeliveryDate())
+                                           ->setArrivalTimeCodeSchedule($shipping->getShippingDeliveryTime())
+                                           ->setCustomerName($shipping->getName01() . $shipping->getName02())
+                                           ->setCustomerZip($shipping->getPostalCode())
+                                           ->setCustomerAddress($shipping->getAddr01() . $shipping->getAddr02())
+                                           ->setCustomerTel($shipping->getPhoneNumber())
+                                           ->setTotalPrice($order->getSubTotal())
+                                           ->setDiscountedPrice($order->getDiscount())
+                                           ->setTaxPrice($order->getTax())
+                                           ->setPostagePrice($order->getDeliveryFeeTotal())
+                                           ->setTotalWeight($orderItem->getProductClass()->getProduct()->getItemWeight())
+                                           ->setShippingUnits(round((float)$orderItem->getProductClass()->getProduct()->getItemWeight() / 20))
+                                           ->setWmsSendDate($now)
+                                           ->setIsCancel(0);
 
                     $shippingSchedule = new ShippingSchedule();
 
-                    $shippingSchedule->setItemCode01($orderItem->getProductClass()->getCode())
-                                        ->setJanCode($orderItem->getProductClass()->getCode())
-                                        ->setQuantity($orderItem->getQuantity())
-                                        ->setStanderdPrice($orderItem->getPrice())
-                                        ->setSellingPrice($orderItem->getPrice())
-                                        ->setShippingScheduleHeader($shippingScheduleHeader)
-                                        ->setOrderDetail($orderItem)
-                                        ->setProductClass($orderItem->getProductClass());
+                    $shippingSchedule->setWarehouseCode($record['warehouse_code'])
+                                     ->setItemCode01($orderItem->getProductClass()->getCode())
+                                     ->setJanCode($orderItem->getProductClass()->getCode())
+                                     ->setQuantity($orderItem->getQuantity())
+                                     ->setStanderdPrice($orderItem->getPrice())
+                                     ->setSellingPrice($orderItem->getPrice())
+                                     ->setShippingScheduleHeader($shippingScheduleHeader)
+                                     ->setOrderDetail($orderItem)
+                                     ->setProductClass($orderItem->getProductClass());
                     fputcsv($csvh, $result, $d, $e);
                 }
                 fclose($csvh);
