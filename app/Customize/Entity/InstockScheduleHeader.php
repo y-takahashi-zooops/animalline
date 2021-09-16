@@ -44,12 +44,12 @@ class InstockScheduleHeader
     private $arrival_date;
 
     /**
-     * @ORM\Column(name="remark_text", type="string", length=18, nullable=true)
+     * @ORM\Column(name="remark_text", type="string", length=128, nullable=true)
      */
     private $remark_text;
 
     /**
-     * @ORM\Column(name="is_cancel", type="smallint", nullable=false)
+     * @ORM\Column(name="is_cancel", type="smallint", nullable=false, options={"default" = 0})
      */
     private $is_cancel;
 
