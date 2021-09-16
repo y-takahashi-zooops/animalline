@@ -102,14 +102,16 @@ class ExportRelease extends Command
 
         $dir = 'var/tmp/wms/shipping_schedule';
         if (!file_exists($dir)) {
-            if (!mkdir($dir, 0777)) throw new Exception('Can not create folder.');
+            mkdir($dir, 0777, 'R');
         }
+
+        $now = Carbon::now();
 
         $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 4], ['sync_date' => 'DESC']);
 
         $qb = $this->shippingScheduleRepository->createQueryBuilder('ss');
         $qb->select(
-            'IDENTITY(ssh.Shipping)',
+            'IDENTITY(ssh.Shipping) as shippingInstructionNo',
             'ssh.shipping_date_schedule',
             'ssh.arrival_date_schedule',
             'ssh.arrival_time_code_schedule',
@@ -132,23 +134,32 @@ class ExportRelease extends Command
             'ssh.total_weight',
             'ssh.shipping_units',
             'ss.item_code_01',
-            'IDENTITY(ssh.Shipping)'
+            'IDENTITY(ssh.Shipping) as slipOutputOrder'
         )
-            ->innerJoin('ss.ShippingScheduleHeader', 'ssh');
-        //     ->leftJoin('ssh.Shipping', 's')
-        //     ->where('s.update_date <= :to')
-        //     ->setParameters(['to' => Carbon::now()]);
-        // if ($syncInfo) $qb = $qb->andWhere('s.update_date >= :from')
-        //     ->setParameter('from', $syncInfo->getSyncDate());
-        // $qb = $qb->orderBy('s.update_date', 'DESC');
-
+            ->innerJoin('ss.ShippingScheduleHeader', 'ssh')
+            ->leftJoin('ssh.Shipping', 's')
+            ->where('s.update_date <= :to')
+            ->setParameters(['to' => $now]);
+        if ($syncInfo) $qb = $qb->andWhere('s.update_date >= :from')
+            ->setParameter('from', $syncInfo->getSyncDate());
+        $qb = $qb->orderBy('s.update_date', 'DESC');
         $records = $qb->getQuery()->getArrayResult();
-        // dump($records);die();
-        $filename = 'SHUSJI' . Carbon::now()->format('Ymd_His') . '.csv';
+
+        $query = $this->shippingRepository->createQueryBuilder('s');
+        $query->where('s.update_date <= :to')
+            ->setParameters(['to' => $now])
+            ->andWhere('s.update_date >= :from')
+            ->setParameter('from', $syncInfo->getSyncDate());
+        $query = $query->getQuery()->getArrayResult();
+        $arr = array_column($query, 'id');
+
+        $filename = 'SHUSJI' . $now->format('Ymd_His') . '.csv';
+
         if ($records) {
+            $isShipping = false;
             $wms = new WmsSyncInfo();
             $wms->setSyncAction(4)
-                ->setSyncDate(Carbon::now());
+                ->setSyncDate($now);
             try {
                 $csvPath = $dir . '/' . $filename;
                 $csvh = fopen($csvPath, 'w+') or die("Can't open file");
@@ -156,7 +167,13 @@ class ExportRelease extends Command
                 $e = '"'; // this is the default but i like to be explicit
 
                 $result = [];
+
                 foreach ($records as $record) {
+                    if (in_array($record['shippingInstructionNo'], $arr)) {
+                        $isShipping = true;
+                        $wms->setSyncLog("alert");
+                        continue;
+                    }
                     $record['shippingInstructionNo'] = null;
                     $record['expectedShippingDate'] = null;
                     $record['expectedArrivalDate'] = null;
@@ -211,7 +228,7 @@ class ExportRelease extends Command
                 }
                 foreach ($records as $record) {
                     $shippingScheduleHeader = new ShippingScheduleHeader();
-                    $shippingScheduleHeader->setShippingDateSchedule(Carbon::now())
+                    $shippingScheduleHeader->setShippingDateSchedule($now)
                                         ->setShipping(
                                             $this->shippingRepository->find($id=$record[1])
                                         )
@@ -233,20 +250,24 @@ class ExportRelease extends Command
                                         );
 
                     $shippingSchedule = new ShippingSchedule();
+                    dump($qb->select('s.Order'));die();
                     $shippingSchedule->setWarehouseCode($record['warehouse_code'])
                                         ->setItemCode01($record['item_code_01'])
                                         ->setItemCode02($record['item_code_02'])
                                         ->setJanCode($record['jan_code'])
                                         ->setQuantity($record['quantity'])
                                         ->setStanderdPrice($record['standerd_price'])
-                                        ->setSellingPrice($record['selling_price']);
+                                        ->setSellingPrice($record['selling_price'])
+                                        ->setOrderDetail($qb->select('s.Order'));
                     fputcsv($csvh, $result, $d, $e);
                 }
                 fclose($csvh);
-
-                $wms->setSyncResult(1);
+                $wms->setSyncResult($isShipping ? 2 : 1);
+                echo 'Export succeeded.';
             } catch (Exception $e) {
-                $wms->setSyncResult(3);
+                $wms->setSyncResult(3)
+                ->setSyncLog($e->getMessage());
+                echo 'Export failed.';
             }
             $em->persist($wms);
             $em->persist($shippingScheduleHeader);
