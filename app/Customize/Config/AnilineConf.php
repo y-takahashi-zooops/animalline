@@ -137,4 +137,12 @@ final class AnilineConf
     const ANILINE_DOG_SIZE_SMALL = 2;
     const ANILINE_DOG_SIZE_MEDIUM = 3;
     const ANILINE_DOG_SIZE_BIG = 4;
+
+    const ANILINE_WMS_SYNC_ACTION_PRODUCT = 1;
+
+    const ANILINE_WMS_RESULT_SUCCESS = 1;
+    const ANILINE_WMS_RESULT_ANNOTATED = 2;
+    const ANILINE_WMS_RESULT_ERROR = 3;
+
+    const ANILINE_WMS_WITH_TAX = 1.1;
 }

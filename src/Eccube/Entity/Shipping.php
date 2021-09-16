@@ -14,8 +14,10 @@
 namespace Eccube\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use Eccube\Service\Calculator\OrderItemCollection;
 use Eccube\Service\PurchaseFlow\ItemCollection;
+use Customize\Entity\ReturnScheduleHeader;
 
 if (!class_exists('\Eccube\Entity\Shipping')) {
     /**
@@ -261,11 +263,17 @@ if (!class_exists('\Eccube\Entity\Shipping')) {
         private $Creator;
 
         /**
+         * @ORM\OneToMany(targetEntity=ReturnScheduleHeader::class, mappedBy="Shipping")
+         */
+        private $ReturnScheduleHeader;
+
+        /**
          * Constructor
          */
         public function __construct()
         {
             $this->OrderItems = new \Doctrine\Common\Collections\ArrayCollection();
+            $this->ReturnScheduleHeader = new \Doctrine\Common\Collections\ArrayCollection();
         }
 
         /**
@@ -1004,6 +1012,14 @@ if (!class_exists('\Eccube\Entity\Shipping')) {
         public function getCreator()
         {
             return $this->Creator;
+        }
+
+        /**
+         * @return Collection|ReturnScheduleHeader[]
+         */
+        public function getReturnScheduleHeader(): Collection
+        {
+            return $this->ReturnScheduleHeader;
         }
     }
 }
