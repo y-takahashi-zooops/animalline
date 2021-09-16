@@ -1,0 +1,159 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['dna', 'dna_examination_status'] %}
+
+{% block title %}{{ '検査状況確認'|trans }}{% endblock %}
+{% block sub_title %}{{ 'DNA検査'|trans }}{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+{% endblock stylesheet %}
+
+{% block main %}
+<div class="c-outsideBlock">
+    <form id='search_form' method="post" action="#">
+        <div class="c-outsideBlock__contents">
+            <div class="row justify-content-start">
+               <div class="col-6">
+                    <div class="mb-2">
+                        <label class="col-form-label" data-tooltip="true" data-placement="top" title="情報を入力して一覧の絞り込み検索ができます。">顧客名<i class="fa fa-question-circle fa-lg ml-1"></i></label>
+                        <input type="text" class="form-control" />                    
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <label class="col-form-label">種別</label>
+                            <select id="pet_kind" name="pet_kind" class="form-control">
+                                <option value="0" >全て</option>
+                                <option value="1" >犬</option>
+                                <option value="2" >猫</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="col-form-label">検査状況</label>
+                        <select class="ec-select form-control">
+                            <option value="">選択してください</option>
+                            <option value="1">未検査</option>
+                            <option value="2">検査中</option>
+                            <option value="3">検査済み</option>
+                            <option value="4">検査異常</option>
+                            <option value="5">検査不可</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="c-outsideBlock__contents mb-5">
+            <button class="btn btn-ec-conversion px-5" type="submit">検索</button>
+            <span class="font-weight-bold ml-2">検索結果：1件が該当しました</span>
+        </div>
+            <div class="c-outsideBlock__contents mb-5">
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <span class="font-weight-bold">検査状況:&nbsp;</span>検査不可
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <form id="form_bulk" method="POST" action="">
+                    <div class="row justify-content-between mb-2">
+                        <div class="col-6">
+                            <div id="btn_bulk" class="d-none">
+                                <label class="mr-2">一括操作</label>
+                                    <button class="btn btn-ec-regular mr-2 action-submit">検査キット再請求</button>
+                            </div>
+                        </div>
+                        <div class="col-5 text-right">
+                            <div class="d-inline-block mr-2">
+                                <div>
+                                    <select class="custom-select">
+                                        <option  value="10">10件</option>
+                                        <option  value="20">20件</option>
+                                        <option  value="30">30件</option>
+                                        <option  value="40">40件</option>
+                                        <option  value="50" selected>50件</option>
+                                        <option  value="60">60件</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card rounded border-0 mb-4 d-block">
+                        <div class="card-body p-0">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0 pl-3 pt-2 pb-2">
+                                            <input type="checkbox">
+                                        </th>
+                                        <th class="border-top-0 pt-2 pb-2">ID</th>
+                                        <th class="border-top-0 pt-2 pb-2">画像</th>
+                                        <th class="border-top-0 pt-2 pb-2">種別</th>
+                                        <th class="border-top-0 pt-2 pb-2">犬種/猫種</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-nowrap">検査ステータス</th>
+                                        <th class="border-top-0 pt-2 pb-2">登録日</th>
+                                        <th class="border-top-0 pt-2 pb-2">更新日</th>
+                                        <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="align-middle pl-3">
+                                            <input type="checkbox">
+                                        </td>
+                                        <td class="align-middle">1</td>
+                                            <td class="align-middle">
+                                            <a href="#">
+                                                <img src="/html/upload/save_image/no_image_product.png" style="max-width: 50px">
+                                            </a>
+                                        </td>
+                                        <td class="align-middle">犬</td>
+                                        <td class="align-middle">トイ・プードル</td>
+                                        <td class="align-middle">未検査</td>
+                                        <td class="align-middle">2021/09/15 17:54</td>
+                                        <td class="align-middle">2021/09/15 17:55</td>
+                                        <td class="align-middle pr-3" colspan="3">
+                                            <div class="text-right">
+                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査キット再送付">
+                                                    <a class="btn btn-ec-actionIcon" href="#">
+                                                        <i class="fa fa-vial fa-lg text-secondary"aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="審査結果表示">
+                                                    <a href="#" class="btn btn-ec-actionIcon">
+                                                        <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row justify-content-md-center mb-4 pb-4"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+{% endblock %}
+
+

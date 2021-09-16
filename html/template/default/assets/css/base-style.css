@@ -531,7 +531,7 @@ th, td {
 }
 
 .breed-card img {
-    border-radius: 7px;
+    border-radius: 50px;
 }
 
 .size-card {
@@ -570,8 +570,6 @@ th, td {
     width: 20rem;
 }
 
-
-
 /*LP*/
 
 .absolute-container {
@@ -603,107 +601,6 @@ th, td {
     width: fit-content;
     padding: 12px 24px;
     background-repeat: unset;
-}
-
-/* 取引メッセージ画面 */
-
-/* 吹き出し */
-.balloon-left {
-    position: relative;
-    display: inline-block;
-    margin: 0.5em 0 1.5em;
-    padding: 7px 10px;
-    min-width: 120px;
-    max-width: 100%;
-    font-size: 16px;
-    background: #FFF;
-    box-sizing: border-box;
-  }
-  
-  .balloon-left:before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: -24px;
-    margin-top: -12px;
-    border: 12px solid transparent;
-    border-right: 12px solid #FFF;
-    z-index: 2;
-  }
-  
-  .balloon-left:after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: -30px;
-    margin-top: -14px;
-    border: 14px solid transparent;
-    z-index: 1;
-  }
-  
-  .balloon-left p {
-    margin: 0;
-    padding: 0;
-  }
-
-  .balloon-right {
-    position: relative;
-    display: inline-block;
-    margin: 0.5em 0 1.5em;
-    padding: 7px 10px;
-    min-width: 120px;
-    max-width: 100%;
-    font-size: 16px;
-    background: #FFF;
-    box-sizing: border-box;
-  }
-  
-  .balloon-right:before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -24px;
-    margin-top: -12px;
-    border: 12px solid transparent;
-    border-left: 12px solid #FFF;
-    z-index: 2;
-  }
-  
-  .balloon-right:after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -30px;
-    margin-top: -14px;
-    border: 14px solid transparent;
-    z-index: 1;
-  }
-  
-  .balloon-right p {
-    margin: 0;
-    padding: 0;
-  }
-
-/* ユーザーイメージ */
-.user-img {
-    display: flex; 
-    justify-content: flex-end; 
-    align-items: center; 
-    padding-right: 0;
-}
-
-/* 保護団体イメージ */
-.adoption-img,
-.breeder-img {
-    display: flex;
-    align-items: center;
-    padding-left: 0;
-
-}
-
-/* 文章 */
-.breeder-info  h3{
-    font-weight: 500;
 }
 
 /* 基本ドロップダウン */
@@ -761,7 +658,7 @@ th, td {
 	content: '\f002';
 	margin-right: 5px;
 }
-#review_recommend_level {
+/* #review_recommend_level {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -772,42 +669,4 @@ th, td {
     bottom: 18px;
     left: 20px;
     line-height: 0;
-}
-
-.petList {
-    width:100%;
-    margin:0;
-    padding:0;
-    display:-webkit-box;
-    display:-moz-box;
-    display:-ms-box;
-    display:-webkit-flexbox;
-    display:-moz-flexbox;
-    display:-ms-flexbox;
-    display:-webkit-flex;
-    display:-moz-flex;
-    display:-ms-flex;
-    display:flex;
-    -webkit-box-lines:multiple;
-    -moz-box-lines:multiple;
-    -webkit-flex-wrap:wrap;
-    -moz-flex-wrap:wrap;
-    -ms-flex-wrap:wrap;
-    flex-wrap:wrap;
-}
-.petList li {
-    padding-bottom: 35px;
-    position: relative;
-}
-.petList li p {
-    font-size:90%;
-    margin-bottom: 0.25rem
-}
-.petList .price {
-    /* text-align: center; */
-    padding: 0;
-    display: block;
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-}
+} */
