@@ -235,35 +235,36 @@ class ExportRelease extends Command
                     array_push($result, $sorted);
                 }
                 foreach ($records as $record) {
+                    $shipping = $this->shippingRepository->find($id=$record['shippingInstructionNo']);
+                    $order = $shipping->getOrder();
+                    $orderItem = $this->orderItemRepository->find($record['shippingInstructionNo']);
+
                     $shippingScheduleHeader = new ShippingScheduleHeader();
                     $shippingScheduleHeader->setShippingDateSchedule($now)
-                                        ->setShipping(
-                                            $this->shippingRepository->find($id=$record['shippingInstructionNo'])
-                                        )
-                                        ->setArrivalDateSchedule($record['arrival_date_schedule'])
-                                        ->setArrivalTimeCodeSchedule($record['arrival_time_code_schedule'])
-                                        ->setCustomerName($record['customer_name'])
-                                        ->setCustomerZip($record['customer_zip'])
-                                        ->setCustomerAddress($record['customer_address'])
-                                        ->setCustomerTel($record['customer_tel'])
-                                        ->setTotalPrice($record['total_price'])
-                                        ->setDiscountedPrice($record['discounted_price'])
-                                        ->setTaxPrice($record['tax_price'])
-                                        ->setPostagePrice($record['postage_price'])
-                                        ->setTotalWeight($record['total_weight'])
-                                        ->setShippingUnits($record['shipping_units'])
+                                        ->setShipping($shipping)
+                                        ->setShippingDateSchedule($shipping->getShippingDate())
+                                        ->setArrivalDateSchedule($shipping->getShippingDeliveryDate())
+                                        ->setArrivalTimeCodeSchedule($shipping->getShippingDeliveryTime())
+                                        ->setCustomerName($shipping->getName01() . $shipping->getName02())
+                                        ->setCustomerZip($shipping->getPostalCode())
+                                        ->setCustomerAddress($shipping->getAddr01() . $shipping->getAddr02())
+                                        ->setCustomerTel($shipping->getPhoneNumber())
+                                        ->setTotalPrice($order->getSubTotal())
+                                        ->setDiscountedPrice($order->getDiscount())
+                                        ->setTaxPrice($order->getTax())
+                                        ->setPostagePrice($order->getDeliveryFeeTotal())
+                                        ->setTotalWeight($orderItem->getProductClass()->getProduct()->getItemWeight())
+                                        ->setShippingUnits($orderItem->getProductClass()->getProduct()->getItemWeight() / 20)
+                                        ->setWmsSendDate($now)
                                         ->setIsCancel(0);
 
                     $shippingSchedule = new ShippingSchedule();
 
-                    $orderItem = $this->orderItemRepository->find($record['shippingInstructionNo']);
-                    $shippingSchedule->setWarehouseCode($record['warehouse_code'])
-                                        ->setItemCode01($record['item_code_01'])
-                                        ->setItemCode02($record['item_code_02'])
-                                        ->setJanCode($record['jan_code'])
-                                        ->setQuantity($record['quantity'])
-                                        ->setStanderdPrice($record['standerd_price'])
-                                        ->setSellingPrice($record['selling_price'])
+                    $shippingSchedule->setItemCode01($orderItem->getProductClass()->getCode())
+                                        ->setJanCode($orderItem->getProductClass()->getCode())
+                                        ->setQuantity($orderItem->getQuantity())
+                                        ->setStanderdPrice($orderItem->getPrice())
+                                        ->setSellingPrice($orderItem->getPrice())
                                         ->setShippingScheduleHeader($shippingScheduleHeader)
                                         ->setOrderDetail($orderItem)
                                         ->setProductClass($orderItem->getProductClass());
@@ -275,7 +276,7 @@ class ExportRelease extends Command
             } catch (Exception $e) {
                 $wms->setSyncResult(3)
                 ->setSyncLog($e->getMessage());
-                echo $e->getMessage();
+                echo 'Export failed.';
             }
             $em->persist($wms);
             $em->persist($shippingSchedule);
