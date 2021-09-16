@@ -52,10 +52,10 @@ class ExportRelease extends Command
     protected $wmsSyncInfoRepository;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
-        WmsSyncInfoRepository  $wmsSyncInfoRepository,
+        EntityManagerInterface           $entityManager,
+        WmsSyncInfoRepository            $wmsSyncInfoRepository,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
-        ShippingScheduleRepository     $shippingScheduleRepository
+        ShippingScheduleRepository       $shippingScheduleRepository
     )
     {
         parent::__construct();
@@ -97,65 +97,122 @@ class ExportRelease extends Command
             if (!mkdir($dir, 0777)) throw new Exception('Can not create folder.');
         }
 
-        $syncDate = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 1], ['sync_date' => 'ASC'])->getSyncDate();
+        $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 4], ['sync_date' => 'DESC']);
 
-//        $qb = $this->productClassRepository->createQueryBuilder('pc');
-//        $qb->select('COALESCE(pc.code, pc.id) as productCode', 'p.name', 'pc.price02', 'pc.price02 as price02Tax',
-//            'pc.item_cost', 'pc.supplier_code', 'pc.code as jan_code', 'p.quantity_box')
-//            ->leftJoin('pc.Product', 'p')
-//            ->add('where', $qb->expr()->between(
-//                'p.update_date',
-//                ':from',
-//                ':to')
-//            )
-//            ->setParameters(array('from' => $syncDate, 'to' => Carbon::now()))
-//            ->orderBy('p.update_date', 'DESC');
+        $qb = $this->shippingScheduleRepository->createQueryBuilder('ss');
+        $qb->select(
+            'ssh.Shipping',
+            'ssh.shipping_date_schedule',
+            'ssh.arrival_date_schedule',
+            'ssh.arrival_time_code_schedule',
+            'ssh.arrival_time_code_schedule',
+            'ss.warehouse_code',
+            'ss.item_code_01',
+            'ss.item_code_02',
+            'ss.jan_code',
+            'ss.quantity',
+            'ss.standerd_price',
+            'ss.selling_price',
+            'ssh.customer_name',
+            'ssh.customer_zip',
+            'ssh.customer_address',
+            'ssh.customer_tel',
+            'ssh.total_price',
+            'ssh.discounted price',
+            'ssh.tax_price',
+            'ssh.postage_price',
+            'ssh.total_weight',
+            'ssh.shipping_units',
+            'ss.item_code_01',
+            'ssh.Shipping'
+        )
+            ->innerJoin('ss.ShippingScheduleHeader', 'ssh')
+            ->leftJoin('ssh.Shipping', 's')
+            ->where('s.update_date <= :to')
+            ->setParameters(['to' => Carbon::now()]);
+        if ($syncInfo) $qb = $qb->andWhere('s.update_date >= :from')
+            ->setParameter('from', $syncInfo->getSyncDate());
+        $qb = $qb->orderBy('s.update_date', 'DESC');
 
-//        $records = $qb->getQuery()->getArrayResult();
-        $filename = 'SHNMST_' . Carbon::now()->format('Ymd_His') . '.csv';
-//        if ($records) {
-//            $wms = new WmsSyncInfo();
-//            $wms->setSyncAction(1)
-//                ->setSyncDate(Carbon::now());
-//            try {
-//                $csvPath = $dir . '/' . $filename;
-//                $csvh = fopen($csvPath, 'w+') or die("Can't open file");
-//                $d = ','; // this is the default but i like to be explicit
-//                $e = '"'; // this is the default but i like to be explicit
-//
-//                $result = [];
-////                foreach ($records as $record) {
-////                    $record['year'] = '99';
-////                    $record['seasonCode'] = '01';
-////                    $record['subSeasonCode'] = null;
-////                    $record['brandCode'] = '0001';
-////                    $record['subBrandCode'] = null;
-////                    $record['itemCode'] = '0001';
-////                    $record['subItemCode'] = null;
-////                    $record['gender'] = '2';
-////                    $record['taxCode'] = '01';
-////                    $record['remarks'] = null;
-////                    $record['productNum'] = null;
-////                    $record['colorCode'] = '9999';
-////                    $record['sizeCode'] = '1';
-////                    $sorted = [];
-////                    foreach ($fieldSorted as $value) {
-////                        array_push($sorted, $record[$value]);
-////                    }
-//                    array_push($result, $sorted);
-//                }
-//                foreach ($result as $item) {
-//                    fputcsv($csvh, $item, $d, $e);
-//                }
-//                fclose($csvh);
-//
-//                $wms->setSyncResult(1);
-//            } catch (Exception $e) {
-//                $wms->setSyncResult(3)
-//                    ->setSyncLog($e->getMessage());
-//            }
-//            $em->persist($wms);
-//            $em->flush();
-//        }
+        $records = $qb->getQuery()->getArrayResult();
+        dump($records);die();
+        $filename = 'SHUSJI' . Carbon::now()->format('Ymd_His') . '.csv';
+        if ($records) {
+            $wms = new WmsSyncInfo();
+            $wms->setSyncAction(4)
+                ->setSyncDate(Carbon::now());
+            try {
+                $csvPath = $dir . '/' . $filename;
+                $csvh = fopen($csvPath, 'w+') or die("Can't open file");
+                $d = ','; // this is the default but i like to be explicit
+                $e = '"'; // this is the default but i like to be explicit
+
+                $result = [];
+                foreach ($records as $record) {
+                    $record['shippingInstructionNo'] = null;
+                    $record['expectedShippingDate'] = null;
+                    $record['expectedArrivalDate'] = null;
+                    $record['arrivalTime'] = null;
+                    $record['storeCode'] = null;
+                    $record['warehouseCode'] = null;
+                    $record['saleCategory'] = '0';
+                    $record['multiplicationRate'] = null;
+                    $record['slipType'] = '0';
+                    $record['productNumberCode'] = null;
+                    $record['colorCode'] = null;
+                    $record['sizeCode'] = '1';
+                    $record['JAN_code'] = null;
+                    $record['numberOfShippingInstructions'] = null;
+                    $record['retailPrice'] = null;
+                    $record['deliveryUnitPrice'] = null;
+                    $record['shippingCompanyCode'] = '000002';
+                    $record['remarks'] = null;
+                    $record['deliveryName'] = null;
+                    $record['deliveryPostalCode'] = null;
+                    $record['deliveryAddress'] = null;
+                    $record['deliveryPhoneNumber'] = null;
+                    $record['detailsRemarks'] = null;
+                    $record['businessUnitName'] = null;
+                    $record['areaName'] = null;
+                    $record['destinationCode'] = null;
+                    $record['destinationCode'] = null;
+                    $record['areaCode'] = null;
+                    $record['BBDATE'] = null;
+                    $record['deliveryDestinationClassification'] = '1';
+                    $record['totalProductPrice'] = null;
+                    $record['discountAmount'] = null;
+                    $record['consumptionTax'] = null;
+                    $record['postage'] = null;
+                    $record['coupon'] = null;
+                    $record['grossWeight'] = null;
+                    $record['numberOfUnits'] = null;
+                    $record['paymentMethodClassification'] = '0';
+                    $record['remark_2'] = null;
+                    $record['remark_3'] = null;
+                    $record['salesDestinationClassification'] = '01';
+                    $record['partNumberCode_2'] = null;
+                    $record['commission'] = null;
+                    $record['handlingFlightTypes'] = '000';
+                    $record['destinationClassification'] = '1';
+                    $record['slipOutputOrder'] = null;
+                    $sorted = [];
+                    foreach ($fieldSorted as $value) {
+                        array_push($sorted, $record[$value]);
+                    }
+                    array_push($result, $sorted);
+                }
+                foreach ($result as $item) {
+                    fputcsv($csvh, $item, $d, $e);
+                }
+                fclose($csvh);
+
+                $wms->setSyncResult(1);
+            } catch (Exception $e) {
+                $wms->setSyncResult(3)
+                    ->setSyncLog($e->getMessage());
+            }
+            $em->persist($wms);
+            $em->flush();
+        }
     }
 }
