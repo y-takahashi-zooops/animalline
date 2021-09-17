@@ -286,13 +286,10 @@ class AdoptionConfigrationController extends AbstractController
             $conservationPet->addConservationPetImage($petImage4);
             $conservationPet->setThumbnailPath($img0);
 
-            // TODO: update by requires
             $dnaCheckStatus = (new DnaCheckStatus)
-                ->setCustomer($this->getUser())
+                ->setRegisterId($conservation->getId())
                 ->setPetId($conservationPet->getId())
-                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
-                ->setCheckStatus(0)
-                ->setCheckReturnDate(new DateTime('now +7 days'));
+                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
 
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);

@@ -855,13 +855,10 @@ class BreederMemberController extends AbstractController
                 ->addBreederPetImage($petImage4)
                 ->setThumbnailPath($img0);
 
-            // TODO: update by requires
             $dnaCheckStatus = (new DnaCheckStatus)
-                ->setCustomer($this->getUser())
+                ->setRegisterId($breeder->getId())
                 ->setPetId($breederPet->getId())
-                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
-                ->setCheckStatus(0)
-                ->setCheckReturnDate(new DateTime('now +7 days'));
+                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
 
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
