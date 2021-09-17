@@ -18,6 +18,7 @@ use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Entity\BreederHouse;
 use Customize\Entity\Breeders;
+use Customize\Entity\DnaCheckStatus;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreederPetImageRepository;
@@ -89,8 +90,7 @@ class BreederConfigrationController extends AbstractController
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         BreederHouseRepository           $breederHouseRepository,
         SendoffReasonRepository          $sendoffReasonRepository
-    )
-    {
+    ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -303,12 +303,21 @@ class BreederConfigrationController extends AbstractController
                 ->addBreederPetImage($petImage4)
                 ->setThumbnailPath($img0);
 
+            // TODO: update by requires
+            $dnaCheckStatus = (new DnaCheckStatus)
+                ->setCustomer($this->getUser())
+                ->setPetId($breederPet->getId())
+                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
+                ->setCheckStatus(0)
+                ->setCheckReturnDate(new DateTime('now +7 days'));
+
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($breederPet);
+            $entityManager->persist($dnaCheckStatus);
             $entityManager->flush();
 
             return $this->redirectToRoute('breeder_pet_list');
@@ -506,8 +515,10 @@ class BreederConfigrationController extends AbstractController
         $isEdit = false;
         if ($breederExaminationInfo) {
             $isEdit = true;
-            if (in_array($breederExaminationInfo->getPedigreeOrganization(),
-                [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC])) {
+            if (in_array(
+                $breederExaminationInfo->getPedigreeOrganization(),
+                [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC]
+            )) {
                 $breederExaminationInfo->setGroupOrganization($breederExaminationInfo->getPedigreeOrganization());
                 $breederExaminationInfo->setPedigreeOrganization(AnilineConf::PEDIGREE_ORGANIZATION_JKC);
             }

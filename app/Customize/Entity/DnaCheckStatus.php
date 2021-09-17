@@ -24,7 +24,7 @@ class DnaCheckStatus
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class)
-     * @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=false)
      */
     private $Customer;
 
