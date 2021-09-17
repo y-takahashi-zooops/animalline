@@ -658,15 +658,9 @@ th, td {
 	content: '\f002';
 	margin-right: 5px;
 }
-/* #review_recommend_level {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-}
 
-#review_recommend_level label {
-    position: relative;
-    bottom: 18px;
-    left: 20px;
-    line-height: 0;
-} */
+/* DNA検査結果表示 */
+.dna-table td, 
+.dna-table th {
+  width: initial;
+}
