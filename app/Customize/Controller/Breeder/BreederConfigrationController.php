@@ -89,8 +89,7 @@ class BreederConfigrationController extends AbstractController
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         BreederHouseRepository           $breederHouseRepository,
         SendoffReasonRepository          $sendoffReasonRepository
-    )
-    {
+    ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -506,8 +505,10 @@ class BreederConfigrationController extends AbstractController
         $isEdit = false;
         if ($breederExaminationInfo) {
             $isEdit = true;
-            if (in_array($breederExaminationInfo->getPedigreeOrganization(),
-                [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC])) {
+            if (in_array(
+                $breederExaminationInfo->getPedigreeOrganization(),
+                [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC]
+            )) {
                 $breederExaminationInfo->setGroupOrganization($breederExaminationInfo->getPedigreeOrganization());
                 $breederExaminationInfo->setPedigreeOrganization(AnilineConf::PEDIGREE_ORGANIZATION_JKC);
             }

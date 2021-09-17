@@ -32,23 +32,8 @@
             アニマルラインはペットの遺伝病ゼロを目指して<br />全頭DNA検査を実施しています。
         </div>
     </div>
-    <div class="row mt-5 d-flex align-items-center">
-        <div class="col">
-            <img src="{{ asset('assets/img/logo_breeder.png') }}" class="w-75 d-block mx-auto">
-            <div classs="card-body">
-                AnimallineBreeder は自慢の子犬・子猫をお譲りしたいブリーダーと、ブリーダーから直接子犬・子猫をご購入したい 方を つなぐマッチングサイトです。
-            </div>
-            <a href="{{url('breeder_top')}}" class="btn btn-success btn-block mt-3" role="button">検索する</a>
-        </div>
-        <div class="col">
-            <img src="{{ asset('assets/img/top_breeder.jpg') }}" class="card-img-top pt-2">
-        </div>
-    </div>
 
     <div class="row mt-5 d-flex align-items-center">
-        <div class="col">
-            <img src="{{ asset('assets/img/top_adoption.jpg') }}" class="card-img-top pt-2">
-        </div>
         <div class="col">
             <img src="{{ asset('assets/img/logo_adoption.png') }}" class="w-75 d-block mx-auto">
             <div classs="card-body">
@@ -56,25 +41,25 @@
             </div>
             <a href="{{url('adoption_top')}}" class="btn btn-warning btn-block mt-3" role="button">検索する</a>
         </div>
+        <div class="col">
+            <img src="{{ asset('assets/img/top_adoption.jpg') }}" class="card-img-top pt-2">
+        </div>
     </div>
 
     <div class="row mt-5 d-flex align-items-center">
         <div class="col">
-            <img src="{{ asset('assets/img/common/logo.png') }}" class="w-75 d-block mx-auto">
+            <img src="{{ asset('assets/img/top_breeder.jpg') }}" class="card-img-top pt-2">
+        </div>
+        <div class="col">
+            <img src="{{ asset('assets/img/logo_breeder.png') }}" class="w-75 d-block mx-auto">
             <div classs="card-body">
-                しつけから消耗品まで、ペットに関わる様々な商品・サービスを提供しています。
+                AnimallineBreeder は自慢の子犬・子猫をお譲りしたいブリーダーと、ブリーダーから直接子犬・子猫をご購入したい 方を つなぐマッチングサイトです。
             </div>
-            <a href="{{url('homepage')}}" class="btn btn-warning btn-block mt-3" role="button">ショップへ</a>
-        </div>
-        <div class="col">
-            <img src="{{ asset('assets/img/top_ec.jpg') }}" class="card-img-top pt-2">
+            <a href="{{url('breeder_top')}}" class="btn btn-success btn-block mt-3" role="button">検索する</a>
         </div>
     </div>
 
     <div class="row mt-5 d-flex align-items-center">
-        <div class="col">
-            <img src="{{ asset('assets/img/top_dctn.jpg') }}" class="card-img-top pt-2">
-        </div>
         <div class="col">
             <img src="{{ asset('assets/img/logo_dctn.png') }}" class="w-75 d-block mx-auto">
             <div classs="card-body">
@@ -82,8 +67,26 @@
             </div>
             <a href="https://dc-trainers.net/" class="btn btn-warning btn-block mt-3" role="button">詳しくはこちら</a>
         </div>
+        <div class="col">
+            <img src="{{ asset('assets/img/top_dctn.jpg') }}" class="card-img-top pt-2">
+        </div>
     </div>
-
+    
+    {% if is_granted('ROLE_USER') %}
+    <div class="row mt-5 d-flex align-items-center">
+        <div class="col">
+            <img src="{{ asset('assets/img/top_ec.jpg') }}" class="card-img-top pt-2">
+        </div>
+        <div class="col">
+            <img src="{{ asset('assets/img/common/logo.png') }}" class="w-75 d-block mx-auto">
+            <div classs="card-body">
+                しつけから消耗品まで、ペットに関わる様々な商品・サービスを提供しています。
+            </div>
+            <a href="{{url('homepage')}}" class="btn btn-warning btn-block mt-3" role="button">ショップへ</a>
+        </div>
+    </div>
+    {% endif %}
+    
     <div class="bg-dna mt-5">
         <div class="p-4"></div>
         <div class="p-4"><h1>Animallineにて掲載のペットは全頭DNA検査済み<h1></div>

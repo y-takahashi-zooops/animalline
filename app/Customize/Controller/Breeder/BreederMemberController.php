@@ -21,6 +21,7 @@ use Customize\Entity\BreederContacts;
 use Customize\Entity\BreederContactHeader;
 use Customize\Entity\BreederHouse;
 use Customize\Entity\BreederExaminationInfo;
+use Customize\Entity\DnaCheckStatus;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Repository\Master\PrefRepository;
@@ -40,6 +41,7 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\Breeder\BreederContactType;
+use DateTime;
 
 class BreederMemberController extends AbstractController
 {
@@ -138,8 +140,7 @@ class BreederMemberController extends AbstractController
         BreederContactHeaderRepository   $breederContactHeaderRepository,
         BreederEvaluationsRepository     $breederEvaluationsRepository,
         BreederPetImageRepository     $breederPetImageRepository
-    )
-    {
+    ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
@@ -452,10 +453,10 @@ class BreederMemberController extends AbstractController
     {
         //リダイレクト先設定
         $return_path = $request->get('return_path');
-        if($return_path == ""){
+        if ($return_path == "") {
             $return_path = "breeder_examination";
         }
-        
+
         $user = $this->getUser();
 
         $breederData = $breedersRepository->find($user);
@@ -509,7 +510,7 @@ class BreederMemberController extends AbstractController
     {
         //リダイレクト先設定
         $return_path = $request->get('return_path');
-        if($return_path == ""){
+        if ($return_path == "") {
             $return_path = "breeder_examination";
         }
 
@@ -769,7 +770,7 @@ class BreederMemberController extends AbstractController
      * @Template("animalline/breeder/member/pet_list.twig")
      */
     public function breeder_pet_list(Request $request)
-     {
+    {
         $pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
 
         return $this->render(
@@ -782,26 +783,35 @@ class BreederMemberController extends AbstractController
     }
 
     /**
+     * 検査状況確認
+     *
+     * @Route("/breeder/member/examination_status", name="breeder_examination_status")
+     * @Template("animalline/breeder/member/examination_status.twig")
+     */
+    public function examination_status(Request $request)
+    {
+    }
+
+    /**
      * 
      * 新規ペット追加
      * 
      * @Route("/breeder/member/pets/new/{breeder_id}", name="breeder_mypage_pets_new", methods={"GET","POST"})
      */
-    public
-    function breeder_pets_new(Request $request, BreedersRepository $breedersRepository): Response
+    public function breeder_pets_new(Request $request, BreedersRepository $breedersRepository): Response
     {
         $user = $this->getUser();
         $is_breeder = $user->getIsBreeder();
-        if( $is_breeder == 0 ){
+        if ($is_breeder == 0) {
             $breeder = $breedersRepository->find($request->get('breeder_id'));
 
             return $this->render('animalline/breeder/member/examination_guidance.twig', [
                 'breeder' => $breeder
             ]);
         }
-       
+
         $breederPet = new BreederPets();
-        $form = $this->createForm(BreederPetsType::class, $breederPet,[
+        $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
         ]);
         $form->handleRequest($request);
@@ -844,12 +854,18 @@ class BreederMemberController extends AbstractController
                 ->addBreederPetImage($petImage4)
                 ->setThumbnailPath($img0);
 
+            $dnaCheckStatus = (new DnaCheckStatus)
+                ->setRegisterId($breeder->getId())
+                ->setPetId($breederPet->getId())
+                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER);
+
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($breederPet);
+            $entityManager->persist($dnaCheckStatus);
             $entityManager->flush();
 
             return $this->render('animalline/breeder/member/pets/notification.twig');
@@ -859,16 +875,15 @@ class BreederMemberController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-    
+
     /**
      * ペット情報編集
      * 
      * @Route("/breeder/member/pets/edit/{id}", name="breeder_mypage_pets_edit", methods={"GET","POST"})
      */
-    public
-    function breeder_pets_edit(Request $request, BreederPets $breederPet): Response
+    public function breeder_pets_edit(Request $request, BreederPets $breederPet): Response
     {
-        $form = $this->createForm(BreederPetsType::class, $breederPet,[
+        $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
         ]);
         $breederPetImages = $this->breederPetImageRepository->findBy(
@@ -916,7 +931,7 @@ class BreederMemberController extends AbstractController
         ]);
     }
 
-    
+
     /**
      * Copy image and retrieve new url of the copy
      *
@@ -955,5 +970,4 @@ class BreederMemberController extends AbstractController
         copy($imageUrl, $subUrl . $imageName);
         return '/breeder/' . $petId . '/' . $imageName;
     }
-
 }

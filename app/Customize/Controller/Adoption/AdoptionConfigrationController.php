@@ -9,6 +9,7 @@ use Customize\Entity\ConservationContacts;
 use Customize\Entity\ConservationPets;
 use Customize\Entity\ConservationPetImage;
 use Customize\Entity\ConservationsHouse;
+use Customize\Entity\DnaCheckStatus;
 use Customize\Form\Type\ConservationHouseType;
 use Customize\Form\Type\ConservationPetsType;
 use Customize\Form\Type\ConservationsType;
@@ -180,7 +181,7 @@ class AdoptionConfigrationController extends AbstractController
                 ->setSendDate(new DateTime());
             $entityManager = $this->getDoctrine()->getManager();
             $rootMessage->setCustomerNewMsg(1)
-                        ->setLastMessageDate(Carbon::now());
+                ->setLastMessageDate(Carbon::now());
             $entityManager->persist($conservationContact);
             $entityManager->persist($rootMessage);
             $entityManager->flush();
@@ -190,12 +191,12 @@ class AdoptionConfigrationController extends AbstractController
         if ($isAcceptContract) {
             switch ($rootMessage->getContractStatus()) {
                 case AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION:
-                    $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT )
-                    ->setConservationCheck(1);
+                    $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
+                        ->setConservationCheck(1);
                     break;
                 case AnilineConf::CONTRACT_STATUS_WAITCONTRACT:
-                    $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT )
-                    ->setConservationCheck(1);
+                    $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
+                        ->setConservationCheck(1);
                     break;
             }
             $entityManager = $this->getDoctrine()->getManager();
@@ -285,12 +286,18 @@ class AdoptionConfigrationController extends AbstractController
             $conservationPet->addConservationPetImage($petImage4);
             $conservationPet->setThumbnailPath($img0);
 
+            $dnaCheckStatus = (new DnaCheckStatus)
+                ->setRegisterId($conservation->getId())
+                ->setPetId($conservationPet->getId())
+                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
+
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($conservationPet);
+            $entityManager->persist($dnaCheckStatus);
             $entityManager->flush();
 
             return $this->redirectToRoute('adoption_pet_list');
