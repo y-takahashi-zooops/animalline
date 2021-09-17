@@ -96,7 +96,6 @@ class ExportRelease extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $isShipping = false;
         $em = $this->entityManager;
         $fieldSorted = [
             'shippingInstructionNo', 'expectedShippingDate', 'expectedArrivalDate', 'arrivalTime', 'storeCode', 'warehouseCode',
@@ -130,8 +129,8 @@ class ExportRelease extends Command
 
         $query = $this->shippingRepository->createQueryBuilder('s');
         $query->where('s.update_date <= :to')
-            ->setParameters(['to' => $now])
-            ->andWhere('s.update_date >= :from')
+            ->setParameters(['to' => $now]);
+        if ($syncInfo) $qb = $qb->andWhere('s.update_date >= :from')
             ->setParameter('from', $syncInfo->getSyncDate());
         $query = $query->getQuery()->getArrayResult();
         $arr = array_column($query, 'id');
@@ -142,16 +141,15 @@ class ExportRelease extends Command
             ->select('s.id')
             ->where('s.update_date <= :to')
             ->setParameters(['to' => $now]);
-        if ($syncInfo) $qb = $qb->andWhere('s.update_date >= :from')
+        if ($syncInfo) $queryShipping = $queryShipping->andWhere('s.update_date >= :from')
             ->setParameter('from', $syncInfo->getSyncDate());
         $arrId = array_column($queryShipping->getQuery()->getArrayResult(), 'id');
         $arrDiff = array_diff($arr, $arrId);
         $wms = new WmsSyncInfo();
-
+        $isShipping = false;
         if ($records) {
             $wms->setSyncAction(4)
                 ->setSyncDate($now);
-            $wms->setSyncLog("alert");
             $isShipping = true;
         }
 
@@ -215,28 +213,27 @@ class ExportRelease extends Command
                         $queryCsv = $this->shippingScheduleRepository->createQueryBuilder('ss');
                         $queryCsv->select(
                             'IDENTITY(ssh.Shipping) as shippingInstructionNo',
-                            'ssh.shipping_date_schedule',
-                            'ssh.arrival_date_schedule',
-                            'ssh.arrival_time_code_schedule',
-                            'ssh.arrival_time_code_schedule',
-                            'ss.warehouse_code',
-                            'ss.item_code_01',
-                            'ss.item_code_02',
-                            'ss.jan_code',
-                            'ss.quantity',
-                            'ss.standerd_price',
-                            'ss.selling_price',
-                            'ssh.customer_name',
-                            'ssh.customer_zip',
-                            'ssh.customer_address',
-                            'ssh.customer_tel',
-                            'ssh.total_price',
-                            'ssh.discounted_price',
-                            'ssh.tax_price',
-                            'ssh.postage_price',
-                            'ssh.total_weight',
-                            'ssh.shipping_units',
-                            'ss.item_code_01',
+                            'ssh.shipping_date_schedule as expectedShippingDate',
+                            'ssh.arrival_date_schedule as expectedArrivalDate',
+                            'ssh.arrival_time_code_schedule as arrivalTime',
+                            'ss.warehouse_code as warehouseCode',
+                            'ss.item_code_01 as productNumberCode',
+                            'ss.item_code_02 as colorCode',
+                            'ss.jan_code as JAN_code',
+                            'ss.quantity as numberOfShippingInstructions',
+                            'ss.standerd_price as retailPrice',
+                            'ss.selling_price as deliveryUnitPrice',
+                            'ssh.customer_name as deliveryName',
+                            'ssh.customer_zip as deliveryPostalCode',
+                            'ssh.customer_address as deliveryAddress',
+                            'ssh.customer_tel as deliveryPhoneNumber',
+                            'ssh.total_price as totalProductPrice',
+                            'ssh.discounted_price as discountAmount',
+                            'ssh.tax_price as consumptionTax',
+                            'ssh.postage_price as postage',
+                            'ssh.total_weight as grossWeight',
+                            'ssh.shipping_units as numberOfUnits',
+                            'ss.item_code_01 as partNumberCode_2',
                             'IDENTITY(ssh.Shipping) as slipOutputOrder'
                         )
                             ->innerJoin('ss.ShippingScheduleHeader', 'ssh')
@@ -260,7 +257,6 @@ class ExportRelease extends Command
                             $recordCsv['businessUnitName'] = null;
                             $recordCsv['areaName'] = null;
                             $recordCsv['destinationCode'] = null;
-                            $recordCsv['destinationCode'] = null;
                             $recordCsv['areaCode'] = null;
                             $recordCsv['BBDATE'] = null;
                             $recordCsv['deliveryDestinationClassification'] = '1';
@@ -276,6 +272,8 @@ class ExportRelease extends Command
                             foreach ($fieldSorted as $value) {
                                 array_push($sorted, $recordCsv[$value]);
                             }
+                            $sorted[1] = $sorted[1]->format('Y-m-d H:i:s');
+                            $sorted[2] = $sorted[2]->format('Y-m-d H:i:s');
                             array_push($result, $sorted);
                         }
                         foreach ($result as $item) {
@@ -287,7 +285,6 @@ class ExportRelease extends Command
                 }
                 $wms->setSyncAction(4)
                     ->setSyncDate($now);
-                $wms->setSyncLog("alert");
             } catch (Exception $e) {
                 $wms = new WmsSyncInfo();
                 $wms->setSyncAction(4)
@@ -297,7 +294,8 @@ class ExportRelease extends Command
                 echo $e->getMessage();
             }
         }
-        $wms->setSyncResult($isShipping ? 2 : 1);
+        $wms->setSyncResult($isShipping ? 2 : 1)
+            ->setSyncLog($isShipping ? "alert" : null);
         $em->persist($wms);
         $em->flush();
     }
