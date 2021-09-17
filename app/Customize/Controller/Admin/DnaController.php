@@ -41,7 +41,7 @@ class DnaController extends AbstractController
      */
     public function examination_status(PaginatorInterface $paginator, Request $request)
     {
-        if ($request->get('dna-id')) {
+        if ($request->get('dna-id') && $request->isMethod('POST')) {
             $dna = $this->dnaCheckStatusRepository->find((int)$request->get('dna-id'));
             $dna->setCheckStatus(10);
             $newDna = clone $dna;
@@ -49,7 +49,6 @@ class DnaController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newDna);
             $em->flush();
-            return $this->redirectToRoute('admin_dna_examination_status');
         }
 
         $criteria = [];

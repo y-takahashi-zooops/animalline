@@ -78,7 +78,8 @@ file that was distributed with this source code.
     <div class="c-contentsArea__cols">
         <div class="c-contentsArea__primaryCol">
             <div class="c-primaryCol">
-                <form id="form_bulk" method="get" action="">
+                <form id="form_bulk" method="post" action="">
+                    <input type="hidden" name="dna-id" value="">
                     <div class="row justify-content-between mb-2">
                         <div class="col-6">
                             <div id="btn_bulk" class="d-none">
@@ -89,11 +90,11 @@ file that was distributed with this source code.
                         <div class="col-5 text-right">
                             <div class="d-inline-block mr-2">
                                 <div>
-                                    <select class="custom-select" name="item"
-                                            onChange="refresh(this.options[this.selectedIndex].value)">
+                                    <select class="custom-select" onchange="location = this.value;">
                                         {% for i in range(10, 60, 10) %}
-                                            <option value="{{ i }}" {{ params.item is defined ? (params.item == i ? 'selected') : (i == 50 ? 'selected') }}>{{ i }}
-                                                件
+                                            <option value="{{ url('admin_dna_examination_status',
+                                                params|merge({'item': i})) }}" {{ params.item is defined ?
+                                            (params.item == i ? 'selected') : (i == 50 ? 'selected') }}>{{ i }}件
                                             </option>
                                         {% endfor %}
                                     </select>
@@ -177,9 +178,9 @@ file that was distributed with this source code.
                                         <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
                                             {{ 'admin.common.cancel'|trans }}
                                         </button>
-                                            <button class="btn btn-ec-conversion" type="submit">
-                                                はい
-                                            </button>
+                                        <button class="btn btn-ec-conversion" type="submit">
+                                            はい
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -197,11 +198,8 @@ file that was distributed with this source code.
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 <script>
     function change(id) {
-    $("#form_bulk").append('<input type="hidden" name="dna-id" value="'+id+'">');
+    $('input[name=dna-id]').val(id);
     $('#confirm-modal').modal('show');
-};
-    function refresh(num) {
-    $("#form_bulk").submit();
 };
     $(".btn-ec-conversion").on('click', function() {
     setTimeout(function () {
