@@ -1,0 +1,127 @@
+{% set site_type = 'adoption' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <form id="form_bulk" method="POST" action="">
+                <div class="row justify-content-between mb-2">
+                        <div class="col-6"></div>
+                        <div class="col-2 text-right">
+                            <button class="btn btn-warning btn-block mt-3">全件表示</button>
+                        </div>
+                    </div>
+                    <div class="card rounded border-0 mb-4 d-block">
+                        <div class="card-body p-0">
+                            <table class="table table-sm dna-table">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0 pt-2 pb-2">ID</th>
+                                        <th class="border-top-0 pt-2 pb-2">画像</th>
+                                        <th class="border-top-0 pt-2 pb-2">種別</th>
+                                        <th class="border-top-0 pt-2 pb-2">犬種/猫種</th>
+                                        <th class="border-top-0 pt-2 pb-2">検査ステータス</th>
+                                        <th class="border-top-0 pt-2 pb-2">キット出荷</th>
+                                        <th class="border-top-0 pt-2 pb-2">キット返送</th>
+                                        <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="align-middle">1</td>
+                                            <td class="align-middle">
+                                            <a href="#">
+                                                <img src="/html/upload/save_image/no_image_product.png" style="max-width: 50px">
+                                            </a>
+                                        </td>
+                                        <td class="align-middle">犬</td>
+                                        <td class="align-middle">トイ・プードル</td>
+                                        <td class="align-middle">受付</td>
+                                        <td class="align-middle">－</td>
+                                        <td class="align-middle">－</td>
+                                        <td class="align-middle pr-3" colspan="3">
+                                            <div class="text-right">
+                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査キット再送付">
+                                                    <a class="btn btn-ec-actionIcon" href="#">
+                                                        <i class="fa fa-vial fa-lg text-secondary"aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="審査結果表示">
+                                                    <a href="#" class="btn btn-ec-actionIcon">
+                                                        <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="align-middle">2</td>
+                                            <td class="align-middle">
+                                            <a href="#">
+                                                <img src="/html/upload/save_image/no_image_product.png" style="max-width: 50px">
+                                            </a>
+                                        </td>
+                                        <td class="align-middle">犬</td>
+                                        <td class="align-middle">トイ・プードル</td>
+                                        <td class="align-middle">出荷指示中</td>
+                                        <td class="align-middle">－</td>
+                                        <td class="align-middle">－</td>
+                                        <td class="align-middle pr-3" colspan="3">
+                                            <div class="text-right">
+                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査キット再請求">
+                                                    <a class="btn btn-ec-actionIcon" href="#">
+                                                        <i class="fa fa-vial fa-lg text-secondary"aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="審査結果表示">
+                                                    <a href="#" class="btn btn-ec-actionIcon">
+                                                        <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="align-middle">2</td>
+                                            <td class="align-middle">
+                                            <a href="#">
+                                                <img src="/html/upload/save_image/no_image_product.png" style="max-width: 50px">
+                                            </a>
+                                        </td>
+                                        <td class="align-middle">犬</td>
+                                        <td class="align-middle">ラブラドール</td>
+                                        <td class="align-middle">出荷済み</td>
+                                        <td class="align-middle">2021/09/17</td>
+                                        <td class="align-middle">－</td>
+                                        <td class="align-middle pr-3" colspan="3">
+                                            <div class="text-right">
+                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査キット再請求">
+                                                    <a class="btn btn-ec-actionIcon" href="#">
+                                                        <i class="fa fa-vial fa-lg text-secondary"aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="審査結果表示">
+                                                    <a href="#" class="btn btn-ec-actionIcon">
+                                                        <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row justify-content-md-center mb-4 pb-4"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+{% endblock %}
+
+
