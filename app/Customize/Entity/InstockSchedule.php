@@ -23,7 +23,7 @@ class InstockSchedule
 
     /**
      * @ORM\ManyToOne(targetEntity=InstockScheduleHeader::class, inversedBy="InstockSchedule")
-     * @ORM\JoinColumn(name="header_id", nullable=false)
+     * @ORM\JoinColumn(name="header_id", nullable=true)
      */
     private $InstockHeader;
 
