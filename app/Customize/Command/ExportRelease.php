@@ -108,7 +108,7 @@ class ExportRelease extends Command
             'slipOutputOrder'
         ];
 
-        $dir = 'var/tmp/wms/shipping_schedule';
+        $dir = 'var/tmp/wms/shipping_schedule/';
         if (!file_exists($dir)) {
             mkdir($dir, 0777, 'R');
         }
@@ -125,7 +125,7 @@ class ExportRelease extends Command
         $query = $query->getQuery()->getArrayResult();
         $arr = array_column($query, 'id');
 
-        $filename = 'SHUSJI' . $now->format('Ymd_His') . '.csv';
+        $filename = 'SHUSJI_' . $now->format('Ymd_His') . '.csv';
         $queryShipping = $this->shippingScheduleHeaderRepository->createQueryBuilder('ssh')
             ->innerJoin('ssh.Shipping', 's')
             ->where('s.update_date <= :to')
@@ -146,7 +146,7 @@ class ExportRelease extends Command
                 ->setParameter('arr', $arrDiff);
             $queryNotInHeaders = $queryNotInHeaders->getQuery()->getArrayResult();
             try {
-                $csvPath = $dir . '/' . $filename;
+                $csvPath = $dir . $filename;
                 $csvh = fopen($csvPath, 'w+') or die("Can't open file");
                 $d = ','; // this is the default but i like to be explicit
                 $e = '"'; // this is the default but i like to be explicit
@@ -267,11 +267,9 @@ class ExportRelease extends Command
                             fputcsv($csvh, $item, $d, $e);
                         }
                         fclose($csvh);
-                        echo 'Export succeeded.';
+                        echo 'Export succeeded.' . "\n";
                     }
                 }
-                $wms->setSyncAction(4)
-                    ->setSyncDate($now);
             } catch (Exception $e) {
                 $wms = new WmsSyncInfo();
                 $wms->setSyncResult(3)
