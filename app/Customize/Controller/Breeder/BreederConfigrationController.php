@@ -18,7 +18,6 @@ use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Entity\BreederHouse;
 use Customize\Entity\Breeders;
-use Customize\Entity\DnaCheckStatus;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreederPetImageRepository;
@@ -303,18 +302,12 @@ class BreederConfigrationController extends AbstractController
                 ->addBreederPetImage($petImage4)
                 ->setThumbnailPath($img0);
 
-            $dnaCheckStatus = (new DnaCheckStatus)
-                ->setRegisterId($breeder->getId())
-                ->setPetId($breederPet->getId())
-                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
-
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($breederPet);
-            $entityManager->persist($dnaCheckStatus);
             $entityManager->flush();
 
             return $this->redirectToRoute('breeder_pet_list');
