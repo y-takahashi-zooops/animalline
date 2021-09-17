@@ -117,20 +117,10 @@ class ExportRelease extends Command
 
         $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 4], ['sync_date' => 'DESC']);
 
-        $qb = $this->shippingScheduleRepository->createQueryBuilder('ss');
-        $qb->innerJoin('ss.ShippingScheduleHeader', 'ssh')
-            ->leftJoin('ssh.Shipping', 's')
-            ->where('s.update_date <= :to')
-            ->setParameters(['to' => $now]);
-        if ($syncInfo) $qb = $qb->andWhere('s.update_date >= :from')
-            ->setParameter('from', $syncInfo->getSyncDate());
-        $qb = $qb->orderBy('s.update_date', 'DESC');
-        $records = $qb->getQuery()->getArrayResult();
-
         $query = $this->shippingRepository->createQueryBuilder('s');
         $query->where('s.update_date <= :to')
             ->setParameters(['to' => $now]);
-        if ($syncInfo) $qb = $qb->andWhere('s.update_date >= :from')
+        if ($syncInfo) $query = $query->andWhere('s.update_date >= :from')
             ->setParameter('from', $syncInfo->getSyncDate());
         $query = $query->getQuery()->getArrayResult();
         $arr = array_column($query, 'id');
@@ -138,21 +128,18 @@ class ExportRelease extends Command
         $filename = 'SHUSJI' . $now->format('Ymd_His') . '.csv';
         $queryShipping = $this->shippingScheduleHeaderRepository->createQueryBuilder('ssh')
             ->innerJoin('ssh.Shipping', 's')
-            ->select('s.id')
             ->where('s.update_date <= :to')
             ->setParameters(['to' => $now]);
         if ($syncInfo) $queryShipping = $queryShipping->andWhere('s.update_date >= :from')
             ->setParameter('from', $syncInfo->getSyncDate());
-        $arrId = array_column($queryShipping->getQuery()->getArrayResult(), 'id');
+        $records = $queryShipping->getQuery()->getArrayResult();
+        $arrId = array_column($queryShipping->select('s.id')->getQuery()->getArrayResult(), 'id');
         $arrDiff = array_diff($arr, $arrId);
         $wms = new WmsSyncInfo();
         $isShipping = false;
         if ($records) {
-            $wms->setSyncAction(4)
-                ->setSyncDate($now);
             $isShipping = true;
         }
-
         if ($arrDiff) {
             $queryNotInHeaders = $this->shippingRepository->createQueryBuilder('s');
             $queryNotInHeaders->andWhere('s.id in (:arr)')
@@ -287,15 +274,18 @@ class ExportRelease extends Command
                     ->setSyncDate($now);
             } catch (Exception $e) {
                 $wms = new WmsSyncInfo();
-                $wms->setSyncAction(4)
-                    ->setSyncResult(3)
+                $wms->setSyncResult(3)
                     ->setSyncDate($now)
                     ->setSyncLog($e->getMessage());
                 echo $e->getMessage();
             }
+        } else {
+            $isShipping = true;
         }
         $wms->setSyncResult($isShipping ? 2 : 1)
-            ->setSyncLog($isShipping ? "alert" : null);
+            ->setSyncLog($isShipping ? "alert" : null)
+            ->setSyncAction(4)
+            ->setSyncDate($now);
         $em->persist($wms);
         $em->flush();
     }
