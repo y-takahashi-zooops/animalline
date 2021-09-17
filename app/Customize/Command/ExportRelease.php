@@ -147,12 +147,14 @@ class ExportRelease extends Command
         $arrId = array_column($queryShipping->getQuery()->getArrayResult(), 'id');
         $arrDiff = array_diff($arr, $arrId);
         $wms = new WmsSyncInfo();
+
         if ($records) {
             $wms->setSyncAction(4)
                 ->setSyncDate($now);
-            $wms->setSyncResult(1);
             $wms->setSyncLog("alert");
+            $isShipping = true;
         }
+
         if ($arrDiff) {
             $queryNotInHeaders = $this->shippingRepository->createQueryBuilder('s');
             $queryNotInHeaders->andWhere('s.id in (:arr)')
@@ -282,19 +284,20 @@ class ExportRelease extends Command
                         fclose($csvh);
                         echo 'Export succeeded.';
                     }
-                    echo 'Export succeeded.';
                 }
                 $wms->setSyncAction(4)
                     ->setSyncDate($now);
-                $wms->setSyncResult(1);
                 $wms->setSyncLog("alert");
             } catch (Exception $e) {
                 $wms = new WmsSyncInfo();
-                $wms->setSyncResult(3)
+                $wms->setSyncAction(4)
+                    ->setSyncResult(3)
+                    ->setSyncDate($now)
                     ->setSyncLog($e->getMessage());
                 echo $e->getMessage();
             }
         }
+        $wms->setSyncResult($isShipping ? 2 : 1);
         $em->persist($wms);
         $em->flush();
     }
