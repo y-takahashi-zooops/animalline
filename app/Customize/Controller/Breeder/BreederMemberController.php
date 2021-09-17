@@ -858,7 +858,7 @@ class BreederMemberController extends AbstractController
             $dnaCheckStatus = (new DnaCheckStatus)
                 ->setRegisterId($breeder->getId())
                 ->setPetId($breederPet->getId())
-                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
+                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER);
 
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
