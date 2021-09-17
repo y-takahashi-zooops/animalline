@@ -783,6 +783,16 @@ class BreederMemberController extends AbstractController
     }
 
     /**
+     * 検査状況確認
+     *
+     * @Route("/breeder/member/examination_status", name="breeder_examination_status")
+     * @Template("animalline/breeder/member/examination_status.twig")
+     */
+    public function examination_status(Request $request)
+    {
+    }
+
+    /**
      * 
      * 新規ペット追加
      * 
