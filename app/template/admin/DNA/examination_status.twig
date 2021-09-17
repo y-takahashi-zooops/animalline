@@ -48,8 +48,8 @@ file that was distributed with this source code.
                             <label class="col-form-label">検査状況</label>
                             <select class="ec-select form-control" name="check_status">
                                 <option value="">選択してください</option>
-                                {% set checkStatus = {1:'受付', 2:'出荷指示中', 3:'出荷済', 4:'DNAチェック中', 6:'検体異常', 7:'DNA検査中', 8:'検査通過', 9:'検査NG', 10:'検体再送付手続済'} %}
-                                {% for key, value in checkStatus %}
+                                {% set check_status = {1:'受付', 2:'出荷指示中', 3:'出荷済', 4:'DNAチェック中', 6:'検体異常', 7:'DNA検査中', 8:'検査通過', 9:'検査NG', 10:'検体再送付手続済'} %}
+                                {% for key, value in check_status %}
                                     <option value="{{ key }}" {{ params.check_status is defined and params.check_status == key ? 'selected' }}>{{ value }}</option>
                                 {% endfor %}
                             </select>
@@ -68,7 +68,7 @@ file that was distributed with this source code.
                 <div class="c-outsideBlock__contents mb-5">
                     <ul class="list-inline">
                         <li class="list-inline-item">
-                            <span class="font-weight-bold">検査状況:&nbsp;</span>{{ checkStatus[params.check_status] }}
+                            <span class="font-weight-bold">検査状況:&nbsp;</span>{{ check_status[params.check_status] }}
                         </li>
                     </ul>
                 </div>
@@ -123,24 +123,24 @@ file that was distributed with this source code.
                                 {% for dna in dnas %}
                                     <tr>
                                         <td></td>
-                                        <td class="align-middle">{{ dna.id }}</td>
+                                        <td class="align-middle">{{ dna.dna_id }}</td>
                                         <td class="align-middle">
                                             <a href="#">
-                                                <img src="/html/upload/save_image/no_image_product.png"
+                                                <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}"
                                                      style="max-width: 50px">
                                             </a>
                                         </td>
-                                        <td class="align-middle">犬</td>
-                                        <td class="align-middle">トイ・プードル</td>
-                                        <td class="align-middle">{{ checkStatus[dna.checkStatus] }}</td>
-                                        <td class="align-middle">{{ dna.kitShippingDate is empty ? '' : dna.kitShippingDate | date('Y/m/d H:i') }}</td>
-                                        <td class="align-middle">{{ dna.kitReturnDate is empty ? '' : dna.kitReturnDate | date('Y/m/d H:i') }}</td>
-                                        <td class="align-middle">{{ dna.checkReturnDate is empty ? '' : dna.checkReturnDate | date('Y/m/d H:i') }}</td>
+                                        <td class="align-middle">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
+                                        <td class="align-middle">{{ dna.breeds_name }}</td>
+                                        <td class="align-middle">{{ check_status[dna.check_status] }}</td>
+                                        <td class="align-middle">{{ dna.kit_shipping_date is empty ? '' : dna.kit_shipping_date | date('Y/m/d H:i') }}</td>
+                                        <td class="align-middle">{{ dna.kit_return_date is empty ? '' : dna.kit_return_date | date('Y/m/d H:i') }}</td>
+                                        <td class="align-middle">{{ dna.check_return_date is empty ? '' : dna.check_return_date | date('Y/m/d H:i') }}</td>
                                         <td class="align-middle pr-3" colspan="3">
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="検査キット再送付">
-                                                    <a class="btn btn-ec-actionIcon" {{ dna.checkStatus == 6 ? 'onclick=change('~dna.id~')' : 'disabled' }}>
+                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == 6 ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
                                                         <i class="fa fa-vial fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>
@@ -154,6 +154,10 @@ file that was distributed with this source code.
                                                 </div>
                                             </div>
                                         </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="10">結果が０件です。</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

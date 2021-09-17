@@ -22,12 +22,13 @@ class DnaController extends AbstractController
      * @var DnaCheckStatusRepository;
      */
     protected $dnaCheckStatusRepository;
+
     /**
      * DnaController constructor
      *
      */
     public function __construct(
-        DnaQueryService $dnaQueryService,
+        DnaQueryService          $dnaQueryService,
         DnaCheckStatusRepository $dnaCheckStatusRepository
     )
     {
@@ -71,8 +72,6 @@ class DnaController extends AbstractController
         if ($request->get('check_status')) {
             $criteria['check_status'] = $request->get('check_status');
         }
-
-        $all = $this->dnaCheckStatusRepository->findAll();
 
         $results = $this->dnaQueryService->filterDnaAdmin($criteria);
         $dnas = $paginator->paginate(

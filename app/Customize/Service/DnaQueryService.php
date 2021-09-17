@@ -39,11 +39,12 @@ class DnaQueryService
      * @param BreedersRepository $breedersRepository
      */
     public function __construct(
-        BreederPetsRepository  $breederPetsRepository,
-        BreedsRepository $breedsRepository,
+        BreederPetsRepository    $breederPetsRepository,
+        BreedsRepository         $breedsRepository,
         DnaCheckStatusRepository $dnaCheckStatusRepository,
-        BreedersRepository     $breedersRepository
-    ) {
+        BreedersRepository       $breedersRepository
+    )
+    {
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
@@ -76,7 +77,8 @@ class DnaQueryService
         if (!empty($checkStatus))
             $queryConservation->andWhere('dna.check_status = :check_status')
                 ->setParameter(':check_status', $checkStatus);
-        $resultConservation = $queryConservation->getQuery()->getArrayResult();
+        $resultConservation = $queryConservation->orderBy('dna.update_date', 'DESC')
+            ->addOrderBy('dna.id', 'DESC')->getQuery()->getArrayResult();
 
         $queryBreeder = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->join('Customize\Entity\BreederPets', 'bp', 'WITH', 'dna.pet_id = bp.id')
@@ -92,7 +94,8 @@ class DnaQueryService
         if (!empty($checkStatus))
             $queryBreeder->andWhere('dna.check_status = :check_status')
                 ->setParameter(':check_status', $checkStatus);
-        $resultBreeder = $queryBreeder->getQuery()->getArrayResult();
+        $resultBreeder = $queryBreeder->orderBy('dna.update_date', 'DESC')
+            ->addOrderBy('dna.id', 'DESC')->getQuery()->getArrayResult();
 
         return array_merge($resultBreeder, $resultConservation);
     }

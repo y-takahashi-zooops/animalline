@@ -798,8 +798,7 @@ class BreederMemberController extends AbstractController
      * 
      * @Route("/breeder/member/pets/new/{breeder_id}", name="breeder_mypage_pets_new", methods={"GET","POST"})
      */
-    public
-    function breeder_pets_new(Request $request, BreedersRepository $breedersRepository): Response
+    public function breeder_pets_new(Request $request, BreedersRepository $breedersRepository): Response
     {
         $user = $this->getUser();
         $is_breeder = $user->getIsBreeder();
@@ -882,8 +881,7 @@ class BreederMemberController extends AbstractController
      * 
      * @Route("/breeder/member/pets/edit/{id}", name="breeder_mypage_pets_edit", methods={"GET","POST"})
      */
-    public
-    function breeder_pets_edit(Request $request, BreederPets $breederPet): Response
+    public function breeder_pets_edit(Request $request, BreederPets $breederPet): Response
     {
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
