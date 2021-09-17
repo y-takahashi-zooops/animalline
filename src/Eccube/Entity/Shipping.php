@@ -13,8 +13,9 @@
 
 namespace Eccube\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Customize\Entity\ShippingScheduleHeader;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Eccube\Service\Calculator\OrderItemCollection;
 use Eccube\Service\PurchaseFlow\ItemCollection;
 use Customize\Entity\ReturnScheduleHeader;
@@ -263,7 +264,11 @@ if (!class_exists('\Eccube\Entity\Shipping')) {
         private $Creator;
 
         /**
-         * @ORM\OneToMany(targetEntity=ReturnScheduleHeader::class, mappedBy="Shipping")
+         * @ORM\OneToMany(targetEntity=ShippingScheduleHeader::class, mappedBy="Shipping")
+         */
+        private $ShippingScheduleHeader;
+
+        /* @ORM\OneToMany(targetEntity=ReturnScheduleHeader::class, mappedBy="Shipping")
          */
         private $ReturnScheduleHeader;
 
@@ -273,6 +278,7 @@ if (!class_exists('\Eccube\Entity\Shipping')) {
         public function __construct()
         {
             $this->OrderItems = new \Doctrine\Common\Collections\ArrayCollection();
+            $this->ShippingScheduleHeader = new \Doctrine\Common\Collections\ArrayCollection();
             $this->ReturnScheduleHeader = new \Doctrine\Common\Collections\ArrayCollection();
         }
 
@@ -775,6 +781,14 @@ if (!class_exists('\Eccube\Entity\Shipping')) {
         {
             return (new ItemCollection($this->OrderItems))->sort();
         }
+
+        /**
+         * @return Collection|ShippingScheduleHeader[]
+         */
+        public function getShippingScheduleHeader(): Collection
+        {
+            return $this->ShippingScheduleHeader;
+    }
 
         /**
          * 商品の受注明細を取得

@@ -101,7 +101,7 @@ class WmsSyncInfo
         return $this->sync_log;
     }
 
-    public function setSyncLog(string $sync_log): self
+    public function setSyncLog(?string $sync_log): self
     {
         $this->sync_log = $sync_log;
 

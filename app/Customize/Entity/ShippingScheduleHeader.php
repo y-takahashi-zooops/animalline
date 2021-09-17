@@ -3,8 +3,10 @@
 namespace Customize\Entity;
 
 use Customize\Repository\ShippingScheduleHeaderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Eccube\Entity\Order;
+use Eccube\Entity\Shipping;
 
 /**
  * @ORM\Table(name="ald_shipping_schedule_header")
@@ -123,12 +125,6 @@ class ShippingScheduleHeader
     private $cancel_reason;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="ShippingScheduleHeaders")
-     * @ORM\JoinColumn(name="order_id", nullable=false)
-     */
-    private $Order;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
@@ -141,6 +137,22 @@ class ShippingScheduleHeader
      * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
     private $update_date;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ShippingSchedule::class, mappedBy="ShippingScheduleHeader")
+     */
+    private $ShippingSchedule;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Shipping::class, inversedBy="ShippingScheduleHeader")
+     * @ORM\JoinColumn(name="shipping_id", nullable=false)
+     */
+    private $Shipping;
+
+    public function __construct()
+    {
+        $this->ShippingSchedule = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -159,12 +171,12 @@ class ShippingScheduleHeader
         return $this;
     }
 
-    public function getArrivalDateSchedule(): ?\DateTimeInterface
+    public function getArrivalDateSchedule(): ?\DateTime
     {
         return $this->arrival_date_schedule;
     }
 
-    public function setArrivalDateSchedule(\DateTimeInterface $arrival_date_schedule): self
+    public function setArrivalDateSchedule(\DateTime $arrival_date_schedule): self
     {
         $this->arrival_date_schedule = $arrival_date_schedule;
 
@@ -387,14 +399,22 @@ class ShippingScheduleHeader
         return $this;
     }
 
-    public function getOrder(): ?Order
+    /**
+     * @return Collection|ShippingSchedule[]
+     */
+    public function getShippingSchedule(): Collection
     {
-        return $this->Order;
+        return $this->ShippingSchedule;
     }
 
-    public function setOrder(?Order $order_id): self
+    public function getShipping(): ?Shipping
     {
-        $this->Order = $order_id;
+        return $this->Shipping;
+    }
+
+    public function setShipping(?Shipping $Shipping): self
+    {
+        $this->Shipping = $Shipping;
 
         return $this;
     }
