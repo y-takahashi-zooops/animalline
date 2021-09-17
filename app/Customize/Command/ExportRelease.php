@@ -151,8 +151,6 @@ class ExportRelease extends Command
                 $d = ','; // this is the default but i like to be explicit
                 $e = '"'; // this is the default but i like to be explicit
 
-                $result = [];
-
                 foreach ($queryNotInHeaders as $queryNotInHeader) {
                     $shipping = $this->shippingRepository->find($queryNotInHeader['id']);
                     $order = $shipping->getOrder();
@@ -232,6 +230,7 @@ class ExportRelease extends Command
                             ->setParameter('from', $syncInfo->getSyncDate());
                         $queryCsv = $queryCsv->orderBy('s.update_date', 'DESC');
                         $recordCsvs = $queryCsv->getQuery()->getArrayResult();
+                        $result = [];
                         foreach ($recordCsvs as $recordCsv) {
                             $recordCsv['storeCode'] = null;
                             $recordCsv['saleCategory'] = '0';
@@ -266,10 +265,10 @@ class ExportRelease extends Command
                         foreach ($result as $item) {
                             fputcsv($csvh, $item, $d, $e);
                         }
-                        fclose($csvh);
-                        echo 'Export succeeded.' . "\n";
                     }
                 }
+                fclose($csvh);
+                echo 'Export succeeded.' . "\n";
             } catch (Exception $e) {
                 $wms = new WmsSyncInfo();
                 $wms->setSyncResult(3)
