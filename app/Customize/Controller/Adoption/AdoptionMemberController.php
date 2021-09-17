@@ -612,4 +612,16 @@ class AdoptionMemberController extends AbstractController
             ]
         );
     }
+
+    /**
+     * 検査状況確認
+     *
+     * @Route("/adoption/member/examination_status", name="adoption_examination_status")
+     * @Template("animalline/adoption/member/examination_status.twig")
+     */
+    public function examination_status(Request $request)
+    {
+    }
+
+
 }
