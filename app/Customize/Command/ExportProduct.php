@@ -130,6 +130,7 @@ class ExportProduct extends Command
                     $record['productNum'] = null;
                     $record['colorCode'] = '9999';
                     $record['sizeCode'] = '1';
+                    $record['price02Tax'] = round($record['price02Tax'], 2);
                     $sorted = [];
                     foreach ($fieldSorted as $value) {
                         array_push($sorted, $record[$value]);
@@ -142,11 +143,11 @@ class ExportProduct extends Command
                 fclose($csvh);
 
                 $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
-                echo 'Export succeeded.';
+                echo 'Export succeeded.' . "\n";
             } catch (Exception $e) {
                 $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_ERROR)
                     ->setSyncLog($e->getMessage());
-                echo 'Export failed.';
+                echo 'Export failed' . "\n";
             }
             $em->persist($wms);
             $em->flush();
