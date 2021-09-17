@@ -23,10 +23,9 @@ class DnaCheckStatus
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Customer::class)
-     * @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(name="register_id", type="integer")
      */
-    private $Customer;
+    private $register_id;
 
     /**
      * @ORM\Column(name="pet_id", type="integer")
@@ -39,9 +38,9 @@ class DnaCheckStatus
     private $site_type;
 
     /**
-     * @ORM\Column(name="check_status", type="smallint")
+     * @ORM\Column(name="check_status", type="smallint", options={"default" = 1})
      */
-    private $check_status;
+    private $check_status = 1;
 
     /**
      * @ORM\Column(name="status_comment", type="string", length=255, nullable=true)
@@ -64,7 +63,7 @@ class DnaCheckStatus
     private $kit_return_date;
 
     /**
-     * @ORM\Column(name="check_return_date", type="datetime")
+     * @ORM\Column(name="check_return_date", type="datetime", nullable=true)
      */
     private $check_return_date;
 
@@ -83,14 +82,14 @@ class DnaCheckStatus
         return $this->id;
     }
 
-    public function getCustomer(): Customer
+    public function getRegisterId(): int
     {
-        return $this->Customer;
+        return $this->register_id;
     }
 
-    public function setCustomer(Customer $Customer): self
+    public function setRegisterId(int $register_id): self
     {
-        $this->Customer = $Customer;
+        $this->register_id = $register_id;
 
         return $this;
     }
