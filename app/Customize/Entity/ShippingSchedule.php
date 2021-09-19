@@ -5,6 +5,7 @@ namespace Customize\Entity;
 use Customize\Repository\ShippingScheduleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\OrderItem;
+use Eccube\Entity\ProductClass;
 
 /**
  * @ORM\Table(name="ald_shipping_schedule")
@@ -23,17 +24,24 @@ class ShippingSchedule
     private $id;
 
     /**
-     * @ORM\Column(name="header_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity=ShippingScheduleHeader::class, inversedBy="ShippingSchedule")
+     * @ORM\JoinColumn(name="header_id", nullable=true)
      */
-    private $header_id;
+    private $ShippingScheduleHeader;
 
     /**
-     * @ORM\Column(name="warehouse_code", type="string", length=5)
+     * @ORM\ManyToOne(targetEntity=ProductClass::class, inversedBy="ShippingSchedules")
+     * @ORM\JoinColumn(name="product_class_id", nullable=true)
+     */
+    private $ProductClass;
+
+    /**
+     * @ORM\Column(name="warehouse_code", type="string", length=5, nullable=true)
      */
     private $warehouse_code;
 
     /**
-     * @ORM\Column(name="item_code_01", type="string", length=20)
+     * @ORM\Column(name="item_code_01", type="string", length=20, nullable=true)
      */
     private $item_code_01;
 
@@ -87,14 +95,14 @@ class ShippingSchedule
         return $this->id;
     }
 
-    public function getHeaderId(): ?int
+    public function getShippingScheduleHeader(): ?ShippingScheduleHeader
     {
-        return $this->header_id;
+        return $this->ShippingScheduleHeader;
     }
 
-    public function setHeaderId(?int $header_id): self
+    public function setShippingScheduleHeader(?ShippingScheduleHeader $ShippingScheduleHeader): self
     {
-        $this->header_id = $header_id;
+        $this->ShippingScheduleHeader = $ShippingScheduleHeader;
 
         return $this;
     }
@@ -191,6 +199,18 @@ class ShippingSchedule
     public function setOrderDetail(?OrderItem $order_detail_id): self
     {
         $this->OrderDetail = $order_detail_id;
+
+        return $this;
+    }
+
+    public function getProductClass(): ?ProductClass
+    {
+        return $this->ProductClass;
+    }
+
+    public function setProductClass(?ProductClass $product_class_id): self
+    {
+        $this->ProductClass = $product_class_id;
 
         return $this;
     }
