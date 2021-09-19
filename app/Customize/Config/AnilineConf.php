@@ -145,4 +145,7 @@ final class AnilineConf
     const ANILINE_WMS_RESULT_ERROR = 3;
 
     const ANILINE_WMS_WITH_TAX = 1.1;
+
+    const ANILINE_SITE_TYPE_BREEDER = 1; // ブリーダー
+    const ANILINE_SITE_TYPE_ADOPTION = 2; // 保護団体
 }
