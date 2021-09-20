@@ -107,6 +107,7 @@ class AdoptionController extends AbstractController
      *
      * @Route("/adoption/pet/search", name="adoption_pet_search")
      * @Template("animalline/adoption/pet/search.twig")
+     * @param Request $request
      */
     public function petSearch(Request $request)
     {
@@ -118,6 +119,9 @@ class AdoptionController extends AbstractController
      *
      * @Route("/adoption/pet/search/result", name="adoption_pet_search_result")
      * @Template("animalline/adoption/pet/search_result.twig")
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
      */
     public function petSearchResult(PaginatorInterface $paginator, Request $request): Response
     {
@@ -144,6 +148,8 @@ class AdoptionController extends AbstractController
      *
      * @Route("/adoption/member/", name="adoption_mypage")
      * @Template("animalline/adoption/member/index.twig")
+     * @param Request $request
+     * @return Response|null
      */
     public function adoption_mypage(Request $request)
     {
@@ -175,6 +181,8 @@ class AdoptionController extends AbstractController
      *
      * @Route("/adoption/pet/detail/{id}", name="adoption_pet_detail", requirements={"id" = "\d+"})
      * @Template("animalline/adoption/pet/detail.twig")
+     * @param Request $request
+     * @return Response|null
      */
     public function petDetail(Request $request)
     {
@@ -216,6 +224,8 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * favorite pet
+     *
      * @Route("/adoption/pet/detail/favorite_pet", name="favorite_pet")
      * @param Request $request
      * @return JsonResponse
@@ -276,6 +286,7 @@ class AdoptionController extends AbstractController
      *
      * @Route("/adoption/viewhist", name="adoption_viewhist")
      * @Template("animalline/adoption/viewhist.twig")
+     * @param Request $request
      */
     public function viewhist(Request $request)
     {
@@ -283,10 +294,13 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * 保護団体検索 
-     * 
+     * 保護団体検索
+     *
      * @Route("/adoption/adoption_search", name="adoption_search")
      * @Template("/animalline/adoption/adoption_search.twig")
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
      */
     public function breeder_search(PaginatorInterface $paginator, Request $request): Response
     {
@@ -313,6 +327,9 @@ class AdoptionController extends AbstractController
      *
      * @Route("/adoption/member/favorite", name="adoption_favorite")
      * @Template("animalline/adoption/favorite.twig")
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response|null
      */
     public function favorite(PaginatorInterface $paginator, Request $request): ?Response
     {
@@ -331,6 +348,7 @@ class AdoptionController extends AbstractController
      *
      * @Route("/adoption/list", name="adoption_list")
      * @Template("animalline/adoption/list.twig")
+     * @param Request $request
      */
     public function list(Request $request)
     {
@@ -426,6 +444,8 @@ class AdoptionController extends AbstractController
      *
      * @Route("/adoption/member/contact/{pet_id}", name="adpotion_contact", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/adoption/contact.twig")
+     * @param Request $request
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse|Response|null
      */
     public function contact(Request $request)
     {
@@ -485,6 +505,8 @@ class AdoptionController extends AbstractController
      *
      * @Route("/adoption/member/contact/{pet_id}/complete", name="adoption_contact_complete", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/adoption/contact_complete.twig")
+     * @param Request $request
+     * @return Response|null
      */
     public function complete(Request $request)
     {
