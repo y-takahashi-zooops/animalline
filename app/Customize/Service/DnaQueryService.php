@@ -102,21 +102,22 @@ class DnaQueryService
     /**
      * Breeder member DNA filter.
      *
+     * @param int $registerId
      * @param bool $isAll
      * @return array
      */
-    public function filterDnaBreederMember(bool $isAll): array
+    public function filterDnaBreederMember(int $registerId, bool $isAll): array
     {
         // Not show all dna check statuses by default.
         $notStatuses = [AnilineConf::ANILINE_CHECK_STATUS_TEST_PASS, AnilineConf::ANILINE_CHECK_STATUS_TEST_NG, AnilineConf::ANILINE_CHECK_STATUS_RESENT];
 
         $queryBreeder = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->join('Customize\Entity\BreederPets', 'bp', 'WITH', 'dna.pet_id = bp.id')
-            ->join('Eccube\Entity\Customer', 'c', 'WITH', 'dna.register_id = c.id and dna.register_id = bp.Breeder')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
-            ->where('dna.site_type = :site_type')
-            ->setParameter(':site_type', AnilineConf::ANILINE_SITE_TYPE_BREEDER)
-            ->select('dna.id as dna_id, bp.id as pet_id, c.id as customer_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dna.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
+            ->where('dna.register_id = :register_id')
+            ->andWhere('dna.site_type = :site_type')
+            ->setParameters([':register_id' => $registerId, ':site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
+            ->select('dna.id as dna_id, bp.id as pet_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dna.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
         if (!$isAll) $queryBreeder->andWhere($queryBreeder->expr()->notIn('dna.check_status', $notStatuses));
         $resultBreeder = $queryBreeder->orderBy('dna.update_date', 'DESC')
             ->addOrderBy('dna.id', 'DESC')
