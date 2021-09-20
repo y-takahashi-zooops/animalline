@@ -101,8 +101,13 @@ class BreederController extends AbstractController
     }
 
     /**
+     * Page pet search result
+     * 
      * @Route("/breeder/pet/search/result", name="breeder_pet_search_result")
      * @Template("animalline/breeder/pet/search_result.twig")
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @return RedirectResponse
      */
     public function petSearchResult(PaginatorInterface $paginator, Request $request): Response
     {
@@ -129,6 +134,8 @@ class BreederController extends AbstractController
      *
      * @Route("/breeder/member/", name="breeder_mypage")
      * @Template("animalline/breeder/member/index.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function breeder_mypage(Request $request)
     {
@@ -163,6 +170,8 @@ class BreederController extends AbstractController
      *
      * @Route("/breeder/pet/detail/{id}", name="breeder_pet_detail", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/pet/detail.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function petDetail(Request $request)
     {
@@ -204,6 +213,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * Page favorite pet
+     * 
      * @Route("/breeder/pet/detail/favorite_pet", name="breeder_favorite_pet")
      * @param Request $request
      * @return JsonResponse
@@ -238,8 +249,12 @@ class BreederController extends AbstractController
     }
 
     /**
+     * Page complete
+     * 
      * @Route("/breeder/member/contact/{pet_id}/complete", name="breeder_contact_complete", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/breeder/contact_complete.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function complete(Request $request)
     {
@@ -253,6 +268,9 @@ class BreederController extends AbstractController
      * 
      * @Route("/breeder/breeder_search", name="breeder_search")
      * @Template("/animalline/breeder/breeder_search.twig")
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @return RedirectResponse
      */
     public function breeder_search(PaginatorInterface $paginator, Request $request): Response
     {
@@ -277,6 +295,10 @@ class BreederController extends AbstractController
     /**
      * @Route("/breeder/breeder_search/{breeder_id}", name="breeder_detail", requirements={"breeder_id" = "\d+"})
      * @Template("/animalline/breeder/breeder_detail.twig")
+     * @param Request $request
+     * @param int $breeder_id
+     * @param PaginatorInterface $paginator
+     * @return RedirectResponse
      */
     public function breeder_detail(Request $request, $breeder_id, PaginatorInterface $paginator)
     {

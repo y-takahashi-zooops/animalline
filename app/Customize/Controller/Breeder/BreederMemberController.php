@@ -180,6 +180,8 @@ class BreederMemberController extends AbstractController
      *
      * @Route("/breeder/member/", name="breeder_mypage")
      * @Template("animalline/breeder/member/index.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function breeder_mypage(Request $request)
     {
@@ -218,6 +220,8 @@ class BreederMemberController extends AbstractController
      *
      * @Route("/breeder/member/all_message", name="breeder_all_message")
      * @Template("animalline/breeder/member/breeder_message.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function all_message(Request $request)
     {
@@ -233,6 +237,9 @@ class BreederMemberController extends AbstractController
      *
      * @Route("/breeder/member/message/{id}", name="breeder_message")
      * @Template("animalline/breeder/member/message.twig")
+     * @param Request $request
+     * @param BreederContactHeader $msgHeader
+     * @return RedirectResponse
      */
     public function message(Request $request, BreederContactHeader $msgHeader)
     {
@@ -301,6 +308,8 @@ class BreederMemberController extends AbstractController
      *
      * @Route("/breeder/member/contract/{pet_id}", name="breeder_contract", requirements={"pet_id" = "\d+"})
      * @Template("animalline/breeder/member/contract.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function contract(Request $request)
     {
@@ -365,6 +374,8 @@ class BreederMemberController extends AbstractController
      *
      * @Route("/breeder/member/contract/complete/{pet_id}", name="breeder_contract_complete", requirements={"pet_id" = "\d+"})
      * @Template("animalline/breeder/member/contract_complete.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function contract_complete(Request $request)
     {
@@ -406,6 +417,8 @@ class BreederMemberController extends AbstractController
      *
      * @Route("/breeder/member/examination", name="breeder_examination")
      * @Template("animalline/breeder/member/examination.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function examination(Request $request)
     {
@@ -466,6 +479,9 @@ class BreederMemberController extends AbstractController
      *
      * @Route("/breeder/member/baseinfo", name="breeder_baseinfo")
      * @Template("/animalline/breeder/member/base_info.twig")
+     * @param Request $request
+     * @param BreedersRepository $breedersRepository
+     * @return RedirectResponse
      */
     public function base_info(Request $request, BreedersRepository $breedersRepository)
     {
@@ -523,6 +539,8 @@ class BreederMemberController extends AbstractController
      *
      * @Route("/breeder/member/house_info/{pet_type}", name="breeder_house_info")
      * @Template("/animalline/breeder/member/house_info.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function house_info(Request $request)
     {
@@ -568,6 +586,8 @@ class BreederMemberController extends AbstractController
      *
      * @Route("/breeder/member/examination_info/{pet_type}", name="breeder_examination_info", methods={"GET","POST"})
      * @Template("/animalline/breeder/member/examination_info.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function examination_info(Request $request)
     {
@@ -628,6 +648,8 @@ class BreederMemberController extends AbstractController
      * 審査結果提出
      *
      * @Route("/breeder/member/examination/submit", name="breeder_examination_submit")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function examination_submit(Request $request)
     {
@@ -660,6 +682,9 @@ class BreederMemberController extends AbstractController
      * 
      * @Route("/breeder/member/favorite", name="breeder_favorite")
      * @Template("animalline/breeder/favorite.twig")
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @return RedirectResponse
      */
     public function favorite(PaginatorInterface $paginator, Request $request): ?Response
     {
@@ -676,6 +701,8 @@ class BreederMemberController extends AbstractController
     /**
      * @Route("/breeder/member/message/{contact_id}", name="breeder_mypage_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/breeder/member/message.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function breeder_message(Request $request)
     {
@@ -724,8 +751,12 @@ class BreederMemberController extends AbstractController
     }
 
     /**
+     * Page contact
+     * 
      * @Route("/breeder/member/contact/{pet_id}", name="breeder_contact", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/breeder/contact.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function contact(Request $request)
     {
@@ -786,6 +817,8 @@ class BreederMemberController extends AbstractController
      *
      * @Route("/breeder/member/pet_list", name="breeder_pet_list")
      * @Template("animalline/breeder/member/pet_list.twig")
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function breeder_pet_list(Request $request)
     {
@@ -840,6 +873,9 @@ class BreederMemberController extends AbstractController
      * 新規ペット追加
      * 
      * @Route("/breeder/member/pets/new/{breeder_id}", name="breeder_mypage_pets_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param BreedersRepository $breedersRepository
+     * @return RedirectResponse
      */
     public function breeder_pets_new(Request $request, BreedersRepository $breedersRepository): Response
     {
@@ -923,6 +959,9 @@ class BreederMemberController extends AbstractController
      * ペット情報編集
      * 
      * @Route("/breeder/member/pets/edit/{id}", name="breeder_mypage_pets_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param BreederPets $breederPet
+     * @return RedirectResponse
      */
     public function breeder_pets_edit(Request $request, BreederPets $breederPet): Response
     {

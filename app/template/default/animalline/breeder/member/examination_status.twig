@@ -12,7 +12,7 @@
                     <input type="hidden" name="dna_id" value="">
                     <div class="row justify-content-between mb-2">
                         <div class="col-6"></div>
-                        <div class="col-2 text-right">
+                        <div class="col-2 text-right" {% if params.is_all is defined and params.is_all == 1 %} hidden {% endif %}>
                             <a class="btn btn-warning btn-block mt-3"
                                href="{{ url('breeder_examination_status', {'is_all': 1}) }}">全件表示</a>
                         </div>
@@ -33,7 +33,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for  dna in dnas %}
+                                {% for dna in dnas %}
                                     <tr>
                                         <td class="align-middle">{{ dna.dna_id }}</td>
                                         <td class="align-middle">
