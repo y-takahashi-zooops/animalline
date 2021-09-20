@@ -30,7 +30,7 @@ class DnaQueryService
      */
     protected $dnaCheckStatusRepository;
 
-    private $excludes = [
+    const EXCLUDES = [
         AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED,
         AnilineConf::ANILINE_DNA_CHECK_STATUS_NG,
         AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT
@@ -49,8 +49,7 @@ class DnaQueryService
         BreedsRepository         $breedsRepository,
         DnaCheckStatusRepository $dnaCheckStatusRepository,
         BreedersRepository       $breedersRepository
-    )
-    {
+    ) {
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
@@ -122,7 +121,7 @@ class DnaQueryService
             ->andWhere('dna.site_type = :site_type')
             ->setParameters([':register_id' => $registerId, ':site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
             ->select('dna.id as dna_id, bp.id as pet_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dna.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
-        if (!$isAll) $queryBreeder->andWhere($queryBreeder->expr()->notIn('dna.check_status', $this->excludes));
+        if (!$isAll) $queryBreeder->andWhere($queryBreeder->expr()->notIn('dna.check_status', self::EXCLUDES));
         return $queryBreeder->orderBy('dna.update_date', 'DESC')
             ->addOrderBy('dna.id', 'DESC')
             ->getQuery()
@@ -147,7 +146,7 @@ class DnaQueryService
             ->andWhere('dna.site_type =:site_type')
             ->setParameter(':site_type', AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
         if (!$criteria['is_all']) {
-            $queryConservation->andWhere('dna.check_status NOT IN (:excludes)')->setParameter(':excludes', $this->excludes);
+            $queryConservation->andWhere('dna.check_status NOT IN (:excludes)')->setParameter(':excludes', self::EXCLUDES);
         }
 
         return $queryConservation->orderBy('dna.update_date', 'DESC')
