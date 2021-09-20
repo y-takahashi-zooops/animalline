@@ -148,4 +148,9 @@ final class AnilineConf
 
     const ANILINE_SITE_TYPE_BREEDER = 1; // ブリーダー
     const ANILINE_SITE_TYPE_ADOPTION = 2; // 保護団体
+
+    const ANILINE_CHECK_STATUS_RECEPTION = 1; // 受付
+    const ANILINE_CHECK_STATUS_TEST_PASS = 8; // 検査通過
+    const ANILINE_CHECK_STATUS_TEST_NG = 9; // 検査NG
+    const ANILINE_CHECK_STATUS_RESENT = 10; // 検体再送付手続済
 }
