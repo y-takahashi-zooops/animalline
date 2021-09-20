@@ -854,6 +854,8 @@ class BreederMemberController extends AbstractController
             $em->persist($dna);
             $em->persist($newDna);
             $em->flush();
+
+            return $this->redirectToRoute('breeder_examination_status');
         }
 
         $userId = $this->getUser()->getId();
