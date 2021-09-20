@@ -665,27 +665,7 @@ th, td {
   width: initial;
 }
 
-.modal-message {
-    font-size: 18px;
-}
-
-.modal-title {
-    font-size: 22px;
-}
-
-.btn-ec-sub {
-    font-size: 14px;
-}
-
-.btn-ec-conversion {
-    font-size: 14px;
-}
-
-.close {
-    font-size: 18px;
-}
-
-a[disabled] {
+a[disabled], button[disabled] {
     cursor: not-allowed;
     opacity: .5;
 }
