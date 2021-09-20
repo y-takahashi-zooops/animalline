@@ -44,9 +44,9 @@ class DnaController extends AbstractController
     {
         if ($request->get('dna-id') && $request->isMethod('POST')) {
             $dna = $this->dnaCheckStatusRepository->find((int)$request->get('dna-id'));
-            $dna->setCheckStatus(10);
+            $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
             $newDna = clone $dna;
-            $newDna->setCheckStatus(1);
+            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_DEFAULT);
             $em = $this->getDoctrine()->getManager();
             $em->persist($newDna);
             $em->flush();
