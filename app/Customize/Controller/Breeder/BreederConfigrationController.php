@@ -104,8 +104,6 @@ class BreederConfigrationController extends AbstractController
      * 
      * @Route("/breeder/configration/all_message", name="get_message_breeder_configration")
      * @Template("animalline/breeder/configration/get_message.twig")
-     * @param Request $request
-     * @return RedirectResponse
      */
     public function get_message_breeder_configration(Request $request)
     {
@@ -140,8 +138,6 @@ class BreederConfigrationController extends AbstractController
      *
      * @Route("/breeder/configration/", name="breeder_configration")
      * @Template("animalline/breeder/configration/index.twig")
-     * @param Request $request
-     * @return RedirectResponse
      */
     public function breeder_configration(Request $request)
     {
@@ -181,9 +177,6 @@ class BreederConfigrationController extends AbstractController
      * 
      * @Route("/breeder/configration/message/{contact_id}", name="breeder_configration_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/breeder/configration/message.twig")
-     * @param Request $request
-     * @param int $contact_id
-     * @return RedirectResponse
      */
     public function breeder_configration_message(Request $request, $contact_id)
     {
@@ -270,9 +263,6 @@ class BreederConfigrationController extends AbstractController
      * Page pet new's Breeder
      * 
      * @Route("/breeder/configration/pets/new/{breeder_id}", name="breeder_configuration_pets_new", methods={"GET","POST"})
-     * @param Request $request
-     * @param BreedersRepository $breedersRepository
-     * @return RedirectResponse
      */
     public function breeder_configuration_pets_new(Request $request, BreedersRepository $breedersRepository): Response
     {
@@ -338,9 +328,6 @@ class BreederConfigrationController extends AbstractController
      * Breeder edit pets
      * 
      * @Route("/breeder/configration/pets/edit/{id}", name="breeder_configuration_pets_edit", methods={"GET","POST"})
-     * @param Request $request
-     * @param BreederPets $breederPet
-     * @return RedirectResponse
      */
     public function breeder_configuration_pets_edit(Request $request, BreederPets $breederPet): Response
     {
@@ -429,10 +416,6 @@ class BreederConfigrationController extends AbstractController
      * Get pet data by pet kind
      * 
      * @Route("/breeder_pet_data_by_pet_kind", name="breeder_pet_data_by_pet_kind", methods={"GET"})
-     * @param Request $request
-     * @param BreedsRepository $breedsRepository
-     * @param CoatColorsRepository $coatColorsRepository
-     * @return JsonResponse
      */
     public function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
     {
@@ -465,8 +448,6 @@ class BreederConfigrationController extends AbstractController
      * Upload image
      * 
      * @Route("/breeder/configration/pets/upload", name="breeder_pets_upload_crop_image", methods={"POST"}, options={"expose"=true})
-     * @param Request $request
-     * @return JsonResponse
      */
     public function upload(Request $request)
     {
@@ -488,9 +469,6 @@ class BreederConfigrationController extends AbstractController
      * 
      * @Route("/breeder/configration/baseinfo", name="breeder_baseinfo")
      * @Template("/animalline/breeder/configration/baseinfo.twig")
-     * @param Request $request
-     * @param BreedersRepository $breedersRepository
-     * @return RedirectResponse
      */
     public function baseinfo(Request $request, BreedersRepository $breedersRepository)
     {
@@ -529,8 +507,6 @@ class BreederConfigrationController extends AbstractController
      * 
      * @Route("/breeder/configration/examinationinfo/{pet_type}", name="breeder_examinationinfo", methods={"GET","POST"})
      * @Template("/animalline/breeder/configration/examinationinfo.twig")
-     * @param Request $request
-     * @return RedirectResponse
      */
     public function examinationinfo(Request $request)
     {
