@@ -18,8 +18,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- */
 class MovieConvert extends Command
 {
     protected static $defaultName = 'eccube:customize:movie-convert';
@@ -29,14 +27,29 @@ class MovieConvert extends Command
      */
     protected $entityManager;
 
+    /**
+     * @var MovieConvertRepository
+     */
     protected $movieConvertRepository;
 
+    /**
+     * @var ConservationPetsRepository
+     */
     protected $conservationPetsRepository;
 
+    /**
+     * @var BreederPetsRepository
+     */
     protected $breederPetsRepository;
 
+    /**
+     * @var BreederPetImageRepository
+     */
     protected $breederPetImageRepository;
 
+    /**
+     * @var ConservationPetImageRepository
+     */
     protected $conservationPetImageRepository;
 
     /**
@@ -44,6 +57,16 @@ class MovieConvert extends Command
      */
     protected $io;
 
+    /**
+     * MovieConvert constructor.
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param MovieConvertRepository $movieConvertRepository
+     * @param ConservationPetsRepository $conservationPetsRepository
+     * @param BreederPetsRepository $breederPetsRepository
+     * @param BreederPetImageRepository $breederPetImageRepository
+     * @param ConservationPetImageRepository $conservationPetImageRepository
+     */
     public function __construct(
         EntityManagerInterface         $entityManager,
         MovieConvertRepository         $movieConvertRepository,
@@ -64,7 +87,7 @@ class MovieConvert extends Command
 
     protected function configure()
     {
-        $this->setDescription('');
+        $this->setDescription('Convert movie format');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -72,7 +95,7 @@ class MovieConvert extends Command
         $this->io = new SymfonyStyle($input, $output);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $em = $this->entityManager;
         $movies = $this->movieConvertRepository->findBy(['convert_status' => AnilineConf::MOVIE_IN_QUEUE]);

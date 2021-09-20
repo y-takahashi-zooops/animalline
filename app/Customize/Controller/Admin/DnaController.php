@@ -25,7 +25,8 @@ class DnaController extends AbstractController
 
     /**
      * DnaController constructor
-     *
+     * @param DnaQueryService $dnaQueryService
+     * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      */
     public function __construct(
         DnaQueryService          $dnaQueryService,
@@ -37,6 +38,8 @@ class DnaController extends AbstractController
     }
 
     /**
+     * 検査状況確認DNA検査
+     *
      * @Route("/%eccube_admin_route%/dna/examination_status", name="admin_dna_examination_status")
      * @Template("@admin/DNA/examination_status.twig")
      */
@@ -44,12 +47,14 @@ class DnaController extends AbstractController
     {
         if ($request->get('dna-id') && $request->isMethod('POST')) {
             $dna = $this->dnaCheckStatusRepository->find((int)$request->get('dna-id'));
-            $dna->setCheckStatus(10);
+            $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
             $newDna = clone $dna;
-            $newDna->setCheckStatus(1);
+            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_DEFAULT);
             $em = $this->getDoctrine()->getManager();
             $em->persist($newDna);
             $em->flush();
+
+            return $this->redirectToRoute('admin_dna_examination_status');
         }
 
         $criteria = [];

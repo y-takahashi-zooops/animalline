@@ -125,7 +125,7 @@ file that was distributed with this source code.
                                         <td></td>
                                         <td class="align-middle">{{ dna.dna_id }}</td>
                                         <td class="align-middle">
-                                            <a href="#">
+                                            <a target="_blank" href="{{ url(dna.site_type == constant('Customize\\Config\\AnilineConf::ANILINE_SITE_TYPE_BREEDER') ? 'breeder_pet_detail' : 'adoption_pet_detail', {'id':dna.pet_id}) }}">
                                                 <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}"
                                                      style="max-width: 50px">
                                             </a>
@@ -133,14 +133,14 @@ file that was distributed with this source code.
                                         <td class="align-middle">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
                                         <td class="align-middle">{{ dna.breeds_name }}</td>
                                         <td class="align-middle">{{ check_status[dna.check_status] }}</td>
-                                        <td class="align-middle">{{ dna.kit_shipping_date is empty ? '' : dna.kit_shipping_date | date('Y/m/d H:i') }}</td>
-                                        <td class="align-middle">{{ dna.kit_return_date is empty ? '' : dna.kit_return_date | date('Y/m/d H:i') }}</td>
-                                        <td class="align-middle">{{ dna.check_return_date is empty ? '' : dna.check_return_date | date('Y/m/d H:i') }}</td>
+                                        <td class="align-middle">{{ dna.kit_shipping_date is empty ? '_' : dna.kit_shipping_date | date('Y/m/d H:i') }}</td>
+                                        <td class="align-middle">{{ dna.kit_return_date is empty ? '_' : dna.kit_return_date | date('Y/m/d H:i') }}</td>
+                                        <td class="align-middle">{{ dna.check_return_date is empty ? '_' : dna.check_return_date | date('Y/m/d H:i') }}</td>
                                         <td class="align-middle pr-3" colspan="3">
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="検査キット再送付">
-                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == 6 ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
+                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL') ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
                                                         <i class="fa fa-vial fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>

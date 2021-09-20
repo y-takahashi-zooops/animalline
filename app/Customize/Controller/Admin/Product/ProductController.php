@@ -1069,6 +1069,8 @@ class ProductController extends BaseProductController
     }
 
     /**
+     * 仕入先管理
+     *
      * @Route("/%eccube_admin_route%/product/supplier", name="admin_product_supplier")
      * @Template("@admin/Product/supplier.twig")
      */

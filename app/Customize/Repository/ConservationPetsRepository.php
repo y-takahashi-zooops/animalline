@@ -19,6 +19,27 @@ class ConservationPetsRepository extends ServiceEntityRepository
         parent::__construct($registry, ConservationPets::class);
     }
 
+    /**
+     * Get list favorite pet decrement
+     *
+     * @return array
+     */
+
+    public function findByFavoriteCount(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.favorite_count > 0')
+            ->orderBy('a.favorite_count', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Increment favorite count of pet
+     *
+     * @param ConservationPets $entity
+     * @return int|mixed|string
+     */
     public function incrementCount(ConservationPets $entity)
     {
         return $this
@@ -31,6 +52,12 @@ class ConservationPetsRepository extends ServiceEntityRepository
             ->execute();
     }
 
+    /**
+     * Decrement favorite count of pet
+     *
+     * @param ConservationPets $entity
+     * @return int|mixed|string
+     */
     public function decrementCount(ConservationPets $entity)
     {
         return $this
@@ -42,29 +69,4 @@ class ConservationPetsRepository extends ServiceEntityRepository
             ->getQuery()
             ->execute();
     }
-
-    /**
-     * @return ConservationPets[] Returns an array of ConservationPets objects
-     */
-
-    public function findByFavoriteCount()
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.favorite_count > 0')
-            ->orderBy('a.favorite_count', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /*
-    public function findOneBySomeField($value): ?ConservationPets
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
