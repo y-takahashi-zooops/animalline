@@ -559,8 +559,8 @@ class BreederMemberController extends AbstractController
 
             // Customer情報から初期情報をセット
             $Customer = $this->customerRepository->find($user);
-            $form->get('breeder_name')->setData($Customer->getname01() . $Customer->getname02());
-            $form->get('breeder_kana')->setData($Customer->getkana01() . $Customer->getkana02());
+            $form->get('breeder_name')->setData($Customer->getname01().'　'.$Customer->getname02());
+            $form->get('breeder_kana')->setData($Customer->getkana01().'　'.$Customer->getkana02());
             $form->get('breeder_zip')->setData($Customer->getPostalCode());
             $form->get('addr')->get('PrefBreeder')->setData($Customer->getPref());
             $form->get('addr')->get('breeder_city')->setData($Customer->getAddr01());
