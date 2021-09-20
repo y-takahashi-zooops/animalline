@@ -96,8 +96,6 @@ class AdoptionConfigrationController extends AbstractController
      *
      * @Route("/adoption/configration/all_message", name="get_message_adoption_configration")
      * @Template("animalline/adoption/configration/get_message.twig")
-     * @param Request $request
-     * @return Response|null
      */
     public function get_message_adoption_configration(Request $request)
     {
@@ -131,8 +129,6 @@ class AdoptionConfigrationController extends AbstractController
      *
      * @Route("/adoption/configration/", name="adoption_configration")
      * @Template("animalline/adoption/configration/index.twig")
-     * @param Request $request
-     * @return Response|null
      */
     public function adoption_configration(Request $request)
     {
@@ -161,8 +157,6 @@ class AdoptionConfigrationController extends AbstractController
      *
      * @Route("/adoption/configration/message/{contact_id}", name="adoption_configration_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/adoption/configration/message.twig")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response|null
      */
     public function adoption_configration_message(Request $request, $contact_id)
     {
@@ -475,10 +469,6 @@ class AdoptionConfigrationController extends AbstractController
      *
      * @Route("/adoption/configration/baseinfo", name="adoption_baseinfo")
      * @Template("/animalline/adoption/configration/baseinfo.twig")
-     * @param Request $request
-     * @param ConservationsRepository $conservationsRepository
-     * @param PrefRepository $prefRepository
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function baseinfo(Request $request, ConservationsRepository $conservationsRepository, PrefRepository $prefRepository)
     {
@@ -517,8 +507,6 @@ class AdoptionConfigrationController extends AbstractController
      *
      * @Route("/adoption/configration/houseinfo/{pet_type}", name="adoption_houseinfo")
      * @Template("/animalline/adoption/configration/houseinfo.twig")
-     * @param Request $request
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function houseinfo(Request $request)
     {
