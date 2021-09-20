@@ -6,13 +6,10 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\Conservations;
 use Customize\Form\Type\Adoption\ConservationAddressType;
 use Eccube\Common\EccubeConfig;
-use Eccube\Form\Validator\Email;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -168,8 +165,7 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                ]
-                ]);
+                ]]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

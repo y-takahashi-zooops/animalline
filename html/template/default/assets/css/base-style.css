@@ -664,3 +664,8 @@ th, td {
 .dna-table th {
   width: initial;
 }
+
+a[disabled], button[disabled] {
+    cursor: not-allowed;
+    opacity: .5;
+}

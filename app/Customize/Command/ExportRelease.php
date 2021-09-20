@@ -3,7 +3,6 @@
 namespace Customize\Command;
 
 use Carbon\Carbon;
-use Customize\Config\AnilineConf;
 use Customize\Entity\ShippingSchedule;
 use Customize\Entity\ShippingScheduleHeader;
 use Customize\Entity\WmsSyncInfo;
@@ -11,19 +10,14 @@ use Customize\Repository\ShippingScheduleHeaderRepository;
 use Customize\Repository\ShippingScheduleRepository;
 use Customize\Repository\WmsSyncInfoRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Eccube\Repository\ProductRepository;
 use Exception;
-use Eccube\Repository\ProductClassRepository;
 use Eccube\Repository\ShippingRepository;
 use Eccube\Repository\OrderItemRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- */
 class ExportRelease extends Command
 {
     protected static $defaultName = 'eccube:customize:wms-shipping-schedule';
@@ -63,6 +57,16 @@ class ExportRelease extends Command
      */
     protected $orderItemRepository;
 
+    /**
+     * ExportRelease constructor.
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param WmsSyncInfoRepository $wmsSyncInfoRepository
+     * @param ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository
+     * @param ShippingScheduleRepository $shippingScheduleRepository
+     * @param ShippingRepository $shippingRepository
+     * @param OrderItemRepository $orderItemRepository
+     */
     public function __construct(
         EntityManagerInterface           $entityManager,
         WmsSyncInfoRepository            $wmsSyncInfoRepository,

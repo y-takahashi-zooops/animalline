@@ -20,9 +20,10 @@ class BreederPetsRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return BreederPets[] Returns an array of BreederPets objects
+     * Get list favorite pet decrement
+     *
+     * @return array
      */
-
     public function findByFavoriteCount(): array
     {
         return $this->createQueryBuilder('a')
@@ -32,6 +33,12 @@ class BreederPetsRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Increment favorite count of pet
+     *
+     * @param BreederPets $entity
+     * @return int|mixed|string
+     */
     public function incrementCount(BreederPets $entity)
     {
         return $this
@@ -44,6 +51,12 @@ class BreederPetsRepository extends ServiceEntityRepository
             ->execute();
     }
 
+    /**
+     * Decrement favorite count of pet
+     *
+     * @param BreederPets $entity
+     * @return int|mixed|string
+     */
     public function decrementCount(BreederPets $entity)
     {
         return $this

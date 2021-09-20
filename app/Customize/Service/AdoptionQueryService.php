@@ -59,6 +59,12 @@ class AdoptionQueryService
         $this->conservationsRepository = $conservationsRepository;
     }
 
+    /**
+     * get breeds have pet
+     *
+     * @param $petKind
+     * @return array
+     */
     public function getBreedsHavePet($petKind): array
     {
         $result = $this->breedsRepository->createQueryBuilder('b')
@@ -132,6 +138,13 @@ class AdoptionQueryService
             ->getResult();
     }
 
+    /**
+     * search adoptions result
+     *
+     * @param $request
+     * @param $petKind
+     * @return array
+     */
     public function searchAdoptionsResult($request, $petKind): array
     {
         $query = $this->conservationsRepository->createQueryBuilder('c')
@@ -175,6 +188,12 @@ class AdoptionQueryService
             ->getResult();
     }
 
+    /**
+     * find adoption favorite pets
+     *
+     * @param $customerId
+     * @return int|mixed|string
+     */
     public function findAdoptionFavoritePets($customerId)
     {
         $query = $this->petsFavoriteRepository->createQueryBuilder('pf')

@@ -251,6 +251,8 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * favorite pet
+     *
      * @Route("/adoption/pet/detail/favorite_pet", name="favorite_pet")
      * @param Request $request
      * @return JsonResponse
@@ -318,8 +320,8 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * 保護団体検索 
-     * 
+     * 保護団体検索
+     *
      * @Route("/adoption/adoption_search", name="adoption_search")
      * @Template("/animalline/adoption/adoption_search.twig")
      */

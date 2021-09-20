@@ -239,9 +239,9 @@ class BreederController extends AbstractController
     }
 
     /**
+     * Page favorite pet
+     * 
      * @Route("/breeder/pet/detail/favorite_pet", name="breeder_favorite_pet")
-     * @param Request $request
-     * @return JsonResponse
      */
     public function favoritePet(Request $request)
     {
@@ -273,6 +273,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * Page complete
+     * 
      * @Route("/breeder/member/contact/{pet_id}/complete", name="breeder_contact_complete", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/breeder/contact_complete.twig")
      */
