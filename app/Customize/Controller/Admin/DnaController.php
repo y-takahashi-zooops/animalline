@@ -25,7 +25,8 @@ class DnaController extends AbstractController
 
     /**
      * DnaController constructor
-     *
+     * @param DnaQueryService $dnaQueryService
+     * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      */
     public function __construct(
         DnaQueryService          $dnaQueryService,
@@ -37,6 +38,8 @@ class DnaController extends AbstractController
     }
 
     /**
+     * 検査状況確認DNA検査
+     *
      * @Route("/%eccube_admin_route%/dna/examination_status", name="admin_dna_examination_status")
      * @Template("@admin/DNA/examination_status.twig")
      */

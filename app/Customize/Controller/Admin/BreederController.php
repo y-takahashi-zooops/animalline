@@ -114,7 +114,8 @@ class BreederController extends AbstractController
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         CustomerRepository               $customerRepository,
         MailService                      $mailService
-    ) {
+    )
+    {
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
@@ -128,6 +129,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * ブリーダー一覧
+     *
      * @Route("/%eccube_admin_route%/breeder/breeder_list", name="admin_breeder_list")
      * @Template("@admin/Breeder/index.twig")
      */
@@ -175,6 +178,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * 登録内容編集ブリーダー管理
+     *
      * @Route("/%eccube_admin_route%/breeder/edit/{id}", name="admin_breeder_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/edit.twig")
      */
@@ -207,6 +212,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * 犬舎・猫舎情報編集ブリーダー管理
+     *
      * @Route("/%eccube_admin_route%/breeder/house/{id}", name="admin_breeder_house", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/house.twig")
      */
@@ -244,6 +251,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * 審査情報表示ブリーダー管理
+     *
      * @Route("/%eccube_admin_route%/breeder/examination/{id}", name="admin_breeder_examination", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/examination.twig")
      */
@@ -270,6 +279,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * 審査結果登録ブリーダー管理
+     *
      * @Route("/%eccube_admin_route%/breeder/examination/regist/{id}", name="admin_breeder_examination_regist", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/examination_regist.twig")
      */
@@ -293,14 +304,14 @@ class BreederController extends AbstractController
                 ->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_COMPLETE);
 
             $breeder = $this->breedersRepository->find($breederId);
-            
+
             // breederの審査ステータスを変更
-            if( $result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK ){
+            if ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
                 $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK);
-            } elseif( $result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_NG ) {
+            } elseif ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_NG) {
                 $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG);
             }
-        
+
             $data['examination_comment'] = $comment;
             if ($result === AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
                 $this->mailService->sendBreederExaminationMailAccept($Customer, $data);
@@ -325,6 +336,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * ペット一覧ブリーダー管理
+     *
      * @Route("/%eccube_admin_route%/breeder/pet/list/{id}", name="admin_breeder_pet_list", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/pet/index.twig")
      */
@@ -376,6 +389,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * ペット情報編集ブリーダー管理
+     *
      * @Route("/%eccube_admin_route%/breeder/pet/edit/{id}", name="admin_breeder_pet_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/pet/edit.twig")
      */
