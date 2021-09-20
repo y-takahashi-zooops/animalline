@@ -823,8 +823,9 @@ class BreederMemberController extends AbstractController
             $em->flush();
         }
 
+        $userId = $this->getUser()->getId();
         $isAll = $request->get('is_all') ?? false;
-        $results = $this->dnaQueryService->filterDnaBreederMember($isAll);
+        $results = $this->dnaQueryService->filterDnaBreederMember($userId, $isAll);
         $dnas = $paginator->paginate(
             $results,
             $request->query->getInt('page', 1),
