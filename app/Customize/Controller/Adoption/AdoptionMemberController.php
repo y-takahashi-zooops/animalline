@@ -642,9 +642,7 @@ class AdoptionMemberController extends AbstractController
     {
         $criteria = [];
         $criteria['conservation_id'] = $this->getUser()->getId();
-        if ($request->get('is_all') == 1 && $request->isMethod('GET')) {
-            $criteria['is_all'] = true;
-        }
+        $criteria['is_all'] = $request->get('is_all') ?: false;
 
         if ($request->get('dna-id') && $request->isMethod('POST')) {
             $dna = $this->dnaCheckStatusRepository->find((int)$request->get('dna-id'));
@@ -654,6 +652,8 @@ class AdoptionMemberController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newDna);
             $em->flush();
+
+            return $this->redirectToRoute('adoption_examination_status');
         }
 
         $results = $this->dnaQueryService->filterDnaAdoption($criteria);

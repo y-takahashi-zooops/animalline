@@ -125,7 +125,7 @@ file that was distributed with this source code.
                                         <td></td>
                                         <td class="align-middle">{{ dna.dna_id }}</td>
                                         <td class="align-middle">
-                                            <a href="#">
+                                            <a href="{{ url(dna.site_type == constant('Customize\\Config\\AnilineConf::ANILINE_SITE_TYPE_BREEDER') ? 'adoption_pet_detail' : 'breeder_pet_detail', {'id':dna.pet_id}) }}">
                                                 <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}"
                                                      style="max-width: 50px">
                                             </a>

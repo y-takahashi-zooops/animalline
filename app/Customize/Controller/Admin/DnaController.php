@@ -50,6 +50,8 @@ class DnaController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newDna);
             $em->flush();
+
+            return $this->redirectToRoute('admin_dna_examination_status');
         }
 
         $criteria = [];

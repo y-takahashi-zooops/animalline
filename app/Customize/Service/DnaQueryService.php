@@ -73,7 +73,7 @@ class DnaQueryService
             ->join('Customize\Entity\ConservationPets', 'cp', 'WITH', 'dna.pet_id = cp.id')
             ->join('Eccube\Entity\Customer', 'c', 'WITH', 'dna.register_id = c.id and dna.register_id = cp.Conservation')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
-            ->select('dna.id as dna_id, cp.id as pet_id, c.id as customer_id, cp.thumbnail_path, cp.pet_kind, b.breeds_name, dna.check_status, dna.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
+            ->select('dna.id as dna_id, dna.site_type, cp.id as pet_id, c.id as customer_id, cp.thumbnail_path, cp.pet_kind, b.breeds_name, dna.check_status, dna.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
         if (!empty($customerName))
             $queryConservation->andWhere('c.name01 like :customer_name or c.name02 like :customer_name')
                 ->setParameter(':customer_name', '%' . $criteria['customer_name'] . '%');
@@ -90,7 +90,7 @@ class DnaQueryService
             ->join('Customize\Entity\BreederPets', 'bp', 'WITH', 'dna.pet_id = bp.id')
             ->join('Eccube\Entity\Customer', 'c', 'WITH', 'dna.register_id = c.id and dna.register_id = bp.Breeder')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
-            ->select('dna.id as dna_id, bp.id as pet_id, c.id as customer_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dna.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
+            ->select('dna.id as dna_id, dna.site_type, bp.id as pet_id, c.id as customer_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dna.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
         if (!empty($customerName))
             $queryBreeder->andWhere('c.name01 like :customer_name or c.name02 like :customer_name')
                 ->setParameter(':customer_name', '%' . $criteria['customer_name'] . '%');
@@ -123,7 +123,7 @@ class DnaQueryService
             ->setParameter(':adoption_id', $criteria['conservation_id'])
             ->andWhere('dna.site_type =:site_type')
             ->setParameter(':site_type', AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
-        if (!array_key_exists('is_all', $criteria)) {
+        if (!$criteria['is_all']) {
             $queryConservation->andWhere('dna.check_status NOT IN (:excludes)')->setParameter(':excludes', $this->excludes);
         }
 
