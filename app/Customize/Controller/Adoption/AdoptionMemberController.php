@@ -3,8 +3,10 @@
 namespace Customize\Controller\Adoption;
 
 use Customize\Config\AnilineConf;
+use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\AdoptionQueryService;
 use Carbon\Carbon;
+use Customize\Service\DnaQueryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Form\Type\ConservationsType;
 use Customize\Form\Type\ConservationHouseType;
@@ -34,6 +36,16 @@ use DateTime;
 
 class AdoptionMemberController extends AbstractController
 {
+    /**
+     * @var DnaQueryService
+     */
+    protected $dnaQueryService;
+
+    /**
+     * @var DnaCheckStatusRepository
+     */
+    protected $dnaCheckStatusRepository;
+
     /**
      * @var ConservationContactHeaderRepository
      */
@@ -65,7 +77,7 @@ class AdoptionMemberController extends AbstractController
     protected $conservationsRepository;
 
     /**
-     * @var ConservationsHouseRepository
+     * @var ConservationsHousesRepository
      */
     protected $conservationsHouseRepository;
 
@@ -90,14 +102,16 @@ class AdoptionMemberController extends AbstractController
      *
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      * @param ConservationContactsRepository $conservationContactsRepository
-     * @param ConservationPetImageRepository $conservationPetImageRepository
      * @param AdoptionQueryService $adoptionQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
      * @param ConservationsRepository $conservationsRepository
+     * @param PrefRepository $prefRepository
      * @param ConservationsHousesRepository $conservationsHouseRepository
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param CustomerRepository $customerRepository
+     * @param DnaCheckStatusRepository $dnaCheckStatusRepository
+     * @param DnaQueryService $dnaQueryService
      */
     public function __construct(
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
@@ -109,8 +123,11 @@ class AdoptionMemberController extends AbstractController
         PrefRepository                      $prefRepository,
         ConservationsHousesRepository       $conservationsHouseRepository,
         ConservationPetsRepository          $conservationPetsRepository,
-        CustomerRepository                  $customerRepository
-    ) {
+        CustomerRepository                  $customerRepository,
+        DnaCheckStatusRepository            $dnaCheckStatusRepository,
+        DnaQueryService                     $dnaQueryService
+    )
+    {
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
@@ -121,14 +138,18 @@ class AdoptionMemberController extends AbstractController
         $this->conservationsHouseRepository = $conservationsHouseRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->customerRepository = $customerRepository;
+        $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
+        $this->dnaQueryService = $dnaQueryService;
     }
 
     /**
-     * 
+     *
      * マイページ
-     * 
+     *
      * @Route("/adoption/member/", name="adoption_mypage")
      * @Template("animalline/adoption/member/index.twig")
+     * @param Request $request
+     * @return Response|null
      */
     public function adoption_mypage(Request $request)
     {
@@ -164,6 +185,8 @@ class AdoptionMemberController extends AbstractController
     }
 
     /**
+     * get message mypage
+     *
      * @Route("/adoption/member/all_message", name="adoption_get_message_mypage")
      * @Template("animalline/adoption/member/adoption_message.twig")
      */
@@ -178,9 +201,11 @@ class AdoptionMemberController extends AbstractController
 
     /**
      * ブリーダー登録申請画面
-     * 
+     *
      * @Route("/adoption/member/examination", name="adoption_examination")
      * @Template("animalline/adoption/member/examination.twig")
+     * @param Request $request
+     * @return Response|null
      */
     public function examination(Request $request)
     {
@@ -238,9 +263,13 @@ class AdoptionMemberController extends AbstractController
 
     /**
      * 基本情報編集画面
-     * 
+     *
      * @Route("/adoption/member/baseinfo", name="adoption_baseinfo")
      * @Template("/animalline/adoption/member/base_info.twig")
+     * @param Request $request
+     * @param ConservationsRepository $conservationsRepository
+     * @param PrefRepository $prefRepository
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function base_info(Request $request, ConservationsRepository $conservationsRepository, PrefRepository $prefRepository)
     {
@@ -293,9 +322,11 @@ class AdoptionMemberController extends AbstractController
 
     /**
      * 犬舎・猫舎情報編集画面
-     * 
+     *
      * @Route("/adoption/member/house_info/{pet_type}", name="adoption_house_info")
      * @Template("/animalline/adoption/member/house_info.twig")
+     * @param Request $request
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function house_info(Request $request)
     {
@@ -332,9 +363,10 @@ class AdoptionMemberController extends AbstractController
 
     /**
      * 審査情報編集画面
-     * 
+     *
      * @Route("/adoption/member/examination_info/{pet_type}", name="adoption_examination_info", methods={"GET","POST"})
      * @Template("/animalline/adoption/member/examination_info.twig")
+     * @param Request $request
      */
     public function examination_info(Request $request)
     {
@@ -394,8 +426,10 @@ class AdoptionMemberController extends AbstractController
 
     /**
      * 審査結果提出
-     * 
+     *
      * @Route("/adoption/member/examination/submit", name="adoption_examination_submit")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function examination_submit(Request $request)
     {
@@ -425,9 +459,12 @@ class AdoptionMemberController extends AbstractController
 
     /**
      * お気に入り一覧画面
-     * 
+     *
      * @Route("/adoption/member/favorite", name="adoption_favorite")
      * @Template("animalline/adoption/favorite.twig")
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response|null
      */
     public function favorite(PaginatorInterface $paginator, Request $request): ?Response
     {
@@ -446,6 +483,9 @@ class AdoptionMemberController extends AbstractController
      *
      * @Route("/adoption/member/message/{id}", name="adoption_mypage_messages", requirements={"id" = "\d+"})
      * @Template("animalline/adoption/member/message.twig")
+     * @param Request $request
+     * @param ConservationContactHeader $rootMessage
+     * @return array
      */
     public function adoption_message(Request $request, ConservationContactHeader $rootMessage)
     {
@@ -496,6 +536,8 @@ class AdoptionMemberController extends AbstractController
      *
      * @Route("/adoption/member/message/{id}/contract", name="adoption_message_contract", requirements={"id" = "\d+"})
      * @Template("animalline/adoption/member/message.twig")
+     * @param ConservationContactHeader $rootMessage
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function adoption_message_contract(ConservationContactHeader $rootMessage)
     {
@@ -516,6 +558,9 @@ class AdoptionMemberController extends AbstractController
      *
      * @Route("/adoption/member/message/{id}/cancel", name="adoption_message_cancel", requirements={"id" = "\d+"})
      * @Template("animalline/adoption/member/message.twig")
+     * @param Request $request
+     * @param ConservationContactHeader $rootMessage
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function adoption_message_cancel(Request $request, ConservationContactHeader $rootMessage)
     {
@@ -537,8 +582,12 @@ class AdoptionMemberController extends AbstractController
     }
 
     /**
+     * adoption contact
+     *
      * @Route("/adoption/member/contact/{pet_id}", name="adoption_contact", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/adoption/contact.twig")
+     * @param Request $request
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse|Response|null
      */
     public function contact(Request $request)
     {
@@ -599,9 +648,11 @@ class AdoptionMemberController extends AbstractController
      *
      * @Route("/adoption/member/pet_list", name="adoption_pet_list")
      * @Template("animalline/adoption/member/pet_list.twig")
+     * @param Request $request
+     * @return Response|null
      */
     public function adoption_configration(Request $request)
-     {
+    {
         $pets = $this->conservationPetsRepository->findBy(['Conservation' => $this->getUser()], ['update_date' => 'DESC']);
 
         return $this->render(
@@ -618,10 +669,37 @@ class AdoptionMemberController extends AbstractController
      *
      * @Route("/adoption/member/examination_status", name="adoption_examination_status")
      * @Template("animalline/adoption/member/examination_status.twig")
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function examination_status(Request $request)
+    public function examination_status(PaginatorInterface $paginator, Request $request)
     {
+        $criteria = [];
+        $criteria['conservation_id'] = $this->getUser()->getId();
+        $criteria['is_all'] = $request->get('is_all') ?: false;
+
+        if ($request->get('dna-id') && $request->isMethod('POST')) {
+            $dna = $this->dnaCheckStatusRepository->find((int)$request->get('dna-id'));
+            $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
+            $newDna = clone $dna;
+            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_DEFAULT);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($newDna);
+            $em->flush();
+
+            return $this->redirectToRoute('adoption_examination_status');
+        }
+
+        $results = $this->dnaQueryService->filterDnaAdoption($criteria);
+        $dnas = $paginator->paginate(
+            $results,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return [
+            'dnas' => $dnas
+        ];
     }
-
-
 }

@@ -31,6 +31,8 @@ use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreederPetImageRepository;
+use Customize\Repository\DnaCheckStatusRepository;
+use Customize\Service\DnaQueryService;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
@@ -42,6 +44,7 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\Breeder\BreederContactType;
 use DateTime;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederMemberController extends AbstractController
 {
@@ -110,6 +113,15 @@ class BreederMemberController extends AbstractController
      */
     protected $breederPetImageRepository;
 
+    /**
+     * @var DnaQueryService;
+     */
+    protected $dnaQueryService;
+
+    /**
+     * @var DnaCheckStatusRepository;
+     */
+    protected $dnaCheckStatusRepository;
 
     /**
      * BreederController constructor.
@@ -125,6 +137,8 @@ class BreederMemberController extends AbstractController
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      * @param CustomerRepository $customerRepository
      * @param BreederPetImageRepository $breederPetImageRepository
+     * @param DnaQueryService $dnaQueryService
+     * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      */
     public function __construct(
         BreederContactsRepository        $breederContactsRepository,
@@ -139,7 +153,9 @@ class BreederMemberController extends AbstractController
         CustomerRepository               $customerRepository,
         BreederContactHeaderRepository   $breederContactHeaderRepository,
         BreederEvaluationsRepository     $breederEvaluationsRepository,
-        BreederPetImageRepository     $breederPetImageRepository
+        BreederPetImageRepository        $breederPetImageRepository,
+        DnaQueryService                  $dnaQueryService,
+        DnaCheckStatusRepository         $dnaCheckStatusRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
@@ -154,6 +170,8 @@ class BreederMemberController extends AbstractController
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederEvaluationsRepository = $breederEvaluationsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
+        $this->dnaQueryService = $dnaQueryService;
+        $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
     }
 
     /**
@@ -821,8 +839,33 @@ class BreederMemberController extends AbstractController
      * @Route("/breeder/member/examination_status", name="breeder_examination_status")
      * @Template("animalline/breeder/member/examination_status.twig")
      */
-    public function examination_status(Request $request)
+    public function examination_status(Request $request, PaginatorInterface $paginator)
     {
+        $dnaId = (int)$request->get('dna_id');
+        if ($request->isMethod('POST') && $dnaId) {
+            $dna = $this->dnaCheckStatusRepository->find($dnaId);
+            if (!$dna) throw new NotFoundHttpException();
+
+            $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
+            $newDna = clone $dna;
+            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_DEFAULT);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($dna);
+            $em->persist($newDna);
+            $em->flush();
+        }
+
+        $userId = $this->getUser()->getId();
+        $isAll = $request->get('is_all') ?? false;
+        $results = $this->dnaQueryService->filterDnaBreederMember($userId, $isAll);
+        $dnas = $paginator->paginate(
+            $results,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE)
+        );
+
+        return compact('dnas');
     }
 
     /**
