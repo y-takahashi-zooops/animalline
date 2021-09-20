@@ -55,6 +55,16 @@ if ($trustedHosts) {
 
 $request = Request::createFromGlobals();
 
+//ロードバランサによるHTTPS通信への対応
+Request::setTrustedProxies(
+    // trust *all* requests
+    ['127.0.0.1', $request->server->get('REMOTE_ADDR')],
+
+    // if you're using ELB, otherwise use a constant from above
+    Request::HEADER_X_FORWARDED_AWS_ELB
+);
+//ロードバランサによるHTTPS通信への対応
+
 $maintenanceFile = env('ECCUBE_MAINTENANCE_FILE_PATH', __DIR__.'/.maintenance');
 
 if (file_exists($maintenanceFile)) {
