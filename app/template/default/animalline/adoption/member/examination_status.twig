@@ -1,6 +1,7 @@
 {% set site_type = 'adoption' %}
 {% extends 'ani_frame.twig' %}
 {% set check_status = {1:'受付', 2:'出荷指示中', 3:'出荷済', 4:'DNAチェック中', 6:'検体異常', 7:'DNA検査中', 8:'検査通過', 9:'検査NG', 10:'検体再送付手続済'} %}
+{% set params = app.request.query.all %}
 
 {% block main %}
     <div class="c-contentsArea__cols">
@@ -10,7 +11,7 @@
                     <input type="hidden" name="dna-id" value="">
                     <div class="row justify-content-between mb-2">
                         <div class="col-6"></div>
-                        <div class="col-2 text-right">
+                        <div class="col-2 text-right" {% if params.is_all is defined and params.is_all == 1 %} hidden {% endif %}>
                             <a href="{{ path('adoption_examination_status', {'is_all': 1}) }}"
                                class="btn btn-warning btn-block mt-3">全件表示</a>
                         </div>
@@ -85,7 +86,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body text-left">
-                                        <span class="text-left modal-message">検体を再送付しますか？</span>
+                                        <span class="text-left modal-message">検査キットの再請求をしますか？</span>
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn btn-secondary" type="button" data-dismiss="modal">
