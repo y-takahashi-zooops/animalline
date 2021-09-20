@@ -123,8 +123,3 @@ video {
 .balloon-right:after {
     border-left: 14px solid #FFAC69;
 }
-
-a[disabled], button[disabled] {
-    cursor: not-allowed;
-    opacity: .5;
-}
