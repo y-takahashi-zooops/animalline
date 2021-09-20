@@ -132,6 +132,13 @@ class BreederQueryService
             ->getResult();
     }
 
+    /**
+     * Retrieve breeder pets
+     *
+     * @param Object $request
+     * @param int $petKind
+     * @return array
+     */
     public function searchBreedersResult($request, $petKind): array
     {
         $query = $this->breedersRepository->createQueryBuilder('b')
@@ -174,6 +181,12 @@ class BreederQueryService
             ->getResult();
     }
 
+    /**
+     * Retrive breeder pets
+     *
+     * @param int $customerId
+     * @return array
+     */
     public function findBreederFavoritePets($customerId)
     {
         $query = $this->petsFavoriteRepository->createQueryBuilder('pf')
@@ -187,6 +200,12 @@ class BreederQueryService
         return $query;
     }
 
+    /**
+     * Retrive breeder pets
+     *
+     * @param Object $breederId
+     * @return array
+     */
     public function calculateBreederRank($breederId): float
     {
         $result = $this->breedersRepository->createQueryBuilder('b')
