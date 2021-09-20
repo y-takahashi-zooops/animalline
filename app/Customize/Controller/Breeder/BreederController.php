@@ -101,6 +101,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * Breeder pet search result.
+     * 
      * @Route("/breeder/pet/search/result", name="breeder_pet_search_result")
      * @Template("animalline/breeder/pet/search_result.twig")
      */
@@ -204,6 +206,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * Breeder love pet.
+     * 
      * @Route("/breeder/pet/detail/favorite_pet", name="breeder_favorite_pet")
      * @param Request $request
      * @return JsonResponse
@@ -238,6 +242,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * Breeder contact complete.
+     * 
      * @Route("/breeder/member/contact/{pet_id}/complete", name="breeder_contact_complete", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/breeder/contact_complete.twig")
      */
@@ -275,6 +281,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * Breeder search detail.
+     * 
      * @Route("/breeder/breeder_search/{breeder_id}", name="breeder_detail", requirements={"breeder_id" = "\d+"})
      * @Template("/animalline/breeder/breeder_detail.twig")
      */

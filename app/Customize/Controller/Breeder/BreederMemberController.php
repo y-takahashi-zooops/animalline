@@ -674,6 +674,8 @@ class BreederMemberController extends AbstractController
     }
 
     /**
+     * Breeder member send message.
+     * 
      * @Route("/breeder/member/message/{contact_id}", name="breeder_mypage_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/breeder/member/message.twig")
      */
@@ -724,6 +726,8 @@ class BreederMemberController extends AbstractController
     }
 
     /**
+     * Breeder member send contact.
+     * 
      * @Route("/breeder/member/contact/{pet_id}", name="breeder_contact", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/breeder/contact.twig")
      */
@@ -821,6 +825,8 @@ class BreederMemberController extends AbstractController
             $em->persist($dna);
             $em->persist($newDna);
             $em->flush();
+
+            return $this->redirectToRoute('breeder_examination_status');
         }
 
         $userId = $this->getUser()->getId();

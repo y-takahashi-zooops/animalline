@@ -100,6 +100,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Breeder configuration messsage list.
+     * 
      * @Route("/breeder/configration/all_message", name="get_message_breeder_configration")
      * @Template("animalline/breeder/configration/get_message.twig")
      */
@@ -171,6 +173,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Breeder configuration message detail.
+     * 
      * @Route("/breeder/configration/message/{contact_id}", name="breeder_configration_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/breeder/configration/message.twig")
      */
@@ -256,6 +260,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Breeder configuration add pet.
+     * 
      * @Route("/breeder/configration/pets/new/{breeder_id}", name="breeder_configuration_pets_new", methods={"GET","POST"})
      */
     public function breeder_configuration_pets_new(Request $request, BreedersRepository $breedersRepository): Response
@@ -319,6 +325,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Breeder configuration edit pet.
+     * 
      * @Route("/breeder/configration/pets/edit/{id}", name="breeder_configuration_pets_edit", methods={"GET","POST"})
      */
     public function breeder_configuration_pets_edit(Request $request, BreederPets $breederPet): Response
@@ -405,6 +413,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Breeder get data by pet kind.
+     * 
      * @Route("/breeder_pet_data_by_pet_kind", name="breeder_pet_data_by_pet_kind", methods={"GET"})
      */
     public function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
@@ -435,6 +445,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Breeder configuration upload pet image.
+     * 
      * @Route("/breeder/configration/pets/upload", name="breeder_pets_upload_crop_image", methods={"POST"}, options={"expose"=true})
      * @param Request $request
      * @return JsonResponse
@@ -455,6 +467,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Breeder configuration baseinfo.
+     * 
      * @Route("/breeder/configration/baseinfo", name="breeder_baseinfo")
      * @Template("/animalline/breeder/configration/baseinfo.twig")
      */
@@ -491,6 +505,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Breeder configuration examination info.
+     * 
      * @Route("/breeder/configration/examinationinfo/{pet_type}", name="breeder_examinationinfo", methods={"GET","POST"})
      * @Template("/animalline/breeder/configration/examinationinfo.twig")
      */
