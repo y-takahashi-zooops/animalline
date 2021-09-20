@@ -29,6 +29,8 @@ class CustomTopController extends AbstractController
      */
     public function index()
     {
+        //先行公開用
+        return $this->redirectToRoute('breeder_top');
         return [];
     }
 
@@ -38,6 +40,8 @@ class CustomTopController extends AbstractController
      */
     public function animalline_index()
     {
+        //先行公開用
+        return $this->redirectToRoute('breeder_top');
         return [];
     }
 

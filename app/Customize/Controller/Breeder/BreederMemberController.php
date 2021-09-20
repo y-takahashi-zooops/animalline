@@ -42,6 +42,8 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\Breeder\BreederContactType;
 use DateTime;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Eccube\Form\Type\Front\CustomerLoginType;
 
 class BreederMemberController extends AbstractController
 {
@@ -154,6 +156,62 @@ class BreederMemberController extends AbstractController
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederEvaluationsRepository = $breederEvaluationsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
+    }
+
+    /**
+     * ログイン画面.
+     *
+     * @Route("/breeder/login", name="breeder_login")
+     * @Template("animalline/breeder/login.twig")
+     */
+    public function breeder_login(Request $request, AuthenticationUtils $utils)
+    {
+        //ログイン完了後に元のページに戻るためのセッション変数を設定
+        $referer = $request->headers->get('referer');
+        /*
+        if($referer){
+            $referers = parse_url($referer);
+            if($referers['host'] == $request->getHost()) {
+                $this->setLoginTargetPath($referer);
+            }
+        }
+        */
+        //ログイン完了後に元のページに戻るためのセッション変数を設定
+
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            log_info('認証済のためログイン処理をスキップ');
+
+            return $this->redirectToRoute('breeder_mypage');
+        }
+
+        /* @var $form \Symfony\Component\Form\FormInterface */
+        $builder = $this->formFactory
+            ->createNamedBuilder('', CustomerLoginType::class);
+
+        $builder->get('login_memory')->setData((bool) $request->getSession()->get('_security.login_memory'));
+
+        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $Customer = $this->getUser();
+            if ($Customer instanceof Customer) {
+                $builder->get('login_email')
+                    ->setData($Customer->getEmail());
+            }
+        }
+
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_MYPAGE_LOGIN_INITIALIZE, $event);
+
+        $form = $builder->getForm();
+
+        return [
+            'error' => $utils->getLastAuthenticationError(),
+            'form' => $form->createView(),
+        ];
     }
 
     /**
@@ -468,7 +526,6 @@ class BreederMemberController extends AbstractController
 
         $form = $builder->getForm();
         $form->handleRequest($request);
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             $thumbnail_path = $request->get('thumbnail_path') ? $request->get('thumbnail_path') : $breederData->getThumbnailPath();
@@ -821,7 +878,7 @@ class BreederMemberController extends AbstractController
             $breeder = $breedersRepository->find($request->get('breeder_id'));
             $breederPet->setBreeder($breeder);
             $breederPet->setDnaCheckResult(0);
-            $breederPet->setReleaseStatus(1);
+            $breederPet->setReleaseStatus(0);
             $entityManager->persist($breederPet);
             $entityManager->flush();
             $petId = $breederPet->getId();
@@ -868,12 +925,25 @@ class BreederMemberController extends AbstractController
             $entityManager->persist($dnaCheckStatus);
             $entityManager->flush();
 
-            return $this->render('animalline/breeder/member/pets/notification.twig');
+            return $this->redirectToRoute('breeder_newpet_complete');
+            //return $this->render('animalline/breeder/member/pets/notification.twig');
         }
 
         return $this->render('animalline/breeder/member/pets/new.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * 
+     * 新規ペット追加
+     * 
+     * @Route("/breeder/member/pets/new_complete", name="breeder_newpet_complete", methods={"GET","POST"})
+     * @Template("animalline/breeder/member/pets/notification.twig")
+     */
+    public function breeder_pets_new_complete()
+    {
+        return[];
     }
 
     /**

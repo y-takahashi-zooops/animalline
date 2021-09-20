@@ -5,6 +5,7 @@
 <div class="main">
     <div class="row">
         <div class="main-container col-12">
+            {#
             <h1>マイページ</h1>
 
             <div class="row">
@@ -18,13 +19,16 @@
                 </div>
             </div>
             <div class="m-2 p-2"></div>
-            <h3>保護団体登録申請</h3>
-            <div class="row">
-                <div class="col-lg-4 col-md-12">
-                    <a href="{{url('adoption_examination')}}" class="btn btn-warning btn-block mt-3"
-                        role="button">保護団体申請を行う</a>
+            #}
+            {% if user.isConservation == 0 %}
+                <h3>保護団体登録申請</h3>
+                <div class="row">
+                    <div class="col-lg-4 col-md-12">
+                        <a href="{{url('adoption_examination')}}" class="btn btn-warning btn-block mt-3"
+                            role="button">保護団体申請を行う</a>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
             {% if user.isConservation == 1 %}
             <div class="m-2 p-2"></div>
             <h1>保護団体様管理メニュー</h1>
@@ -46,16 +50,20 @@
                     {% endif %}
                 </div>
             <div class="row">
+                {#
                 <div class="col-lg-4 col-md-12">
                     <a href="{{url('get_message_adoption_configration')}}" class="btn btn-warning btn-block mt-3"
                         role="button">問い合わせ対応</a>
                 </div>
+                #}
                 <div class="col-lg-4 col-md-12">
                     <a href="{{url('adoption_pet_list')}}" class="btn btn-warning btn-block mt-3" role="button">ペット管理</a>
                 </div>
+                {#
                 <div class="col-lg-4 col-md-12">
                     <a href="{{url('adoption_examination_status')}}" class="btn btn-warning btn-block mt-3" role="button">検査状況確認</a>
                 </div>
+                #}
             </div>
             {% endif %}
     </div>

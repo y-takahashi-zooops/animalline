@@ -169,16 +169,7 @@ class ConservationsType extends AbstractType
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                 ]
-            ])
-            ->add('email', EmailType::class, [
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
-                ],
-            ]);
+                ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

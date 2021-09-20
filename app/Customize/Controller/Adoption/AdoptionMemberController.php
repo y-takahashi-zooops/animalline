@@ -31,6 +31,8 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\ConservationContactType;
 use DateTime;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Eccube\Form\Type\Front\CustomerLoginType;
 
 class AdoptionMemberController extends AbstractController
 {
@@ -121,6 +123,62 @@ class AdoptionMemberController extends AbstractController
         $this->conservationsHouseRepository = $conservationsHouseRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->customerRepository = $customerRepository;
+    }
+
+    /**
+     * ログイン画面.
+     *
+     * @Route("/adoption/login", name="adoption_login")
+     * @Template("animalline/adoption/login.twig")
+     */
+    public function adoption_login(Request $request, AuthenticationUtils $utils)
+    {
+        //ログイン完了後に元のページに戻るためのセッション変数を設定
+        $referer = $request->headers->get('referer');
+        /*
+        if($referer){
+            $referers = parse_url($referer);
+            if($referers['host'] == $request->getHost()) {
+                $this->setLoginTargetPath($referer);
+            }
+        }
+        */
+        //ログイン完了後に元のページに戻るためのセッション変数を設定
+
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            log_info('認証済のためログイン処理をスキップ');
+
+            return $this->redirectToRoute('adoption_mypage');
+        }
+
+        /* @var $form \Symfony\Component\Form\FormInterface */
+        $builder = $this->formFactory
+            ->createNamedBuilder('', CustomerLoginType::class);
+
+        $builder->get('login_memory')->setData((bool) $request->getSession()->get('_security.login_memory'));
+
+        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $Customer = $this->getUser();
+            if ($Customer instanceof Customer) {
+                $builder->get('login_email')
+                    ->setData($Customer->getEmail());
+            }
+        }
+
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_MYPAGE_LOGIN_INITIALIZE, $event);
+
+        $form = $builder->getForm();
+
+        return [
+            'error' => $utils->getLastAuthenticationError(),
+            'form' => $form->createView(),
+        ];
     }
 
     /**
@@ -276,8 +334,8 @@ class AdoptionMemberController extends AbstractController
 
             // Customer情報から初期情報をセット
             $Customer = $this->customerRepository->find($user);
-            $form->get('owner_name')->setData($Customer->getname01() . $Customer->getname02());
-            $form->get('owner_kana')->setData($Customer->getkana01() . $Customer->getkana02());
+            $form->get('owner_name')->setData($Customer->getname01() ."　". $Customer->getname02());
+            $form->get('owner_kana')->setData($Customer->getkana01() ."　". $Customer->getkana02());
             $form->get('zip')->setData($Customer->getPostalCode());
             $form->get('addr')->get('PrefId')->setData($Customer->getPref());
             $form->get('addr')->get('city')->setData($Customer->getAddr01());

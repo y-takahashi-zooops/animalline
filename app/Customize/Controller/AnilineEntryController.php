@@ -18,7 +18,7 @@ use Eccube\Entity\BaseInfo;
 use Eccube\Entity\Master\CustomerStatus;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
-use Eccube\Form\Type\Front\EntryType;
+use Customize\Form\Type\Front\EntryType;
 use Eccube\Repository\BaseInfoRepository;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Repository\Master\CustomerStatusRepository;
@@ -110,6 +110,29 @@ class AnilineEntryController extends AbstractController
     }
 
     /**
+     * 利用規約.
+     *
+     * @Route("/help/agreement", name="help_agreement")
+     * @Template("Help/agreement.twig")
+     */
+    public function agreement(Request $request)
+    {
+        $referer = $request->headers->get('referer');
+
+        if(preg_match("/adoption/",$referer)){
+            $prefix = "adoption";
+        }
+        else if(preg_match("/breeder/",$referer)){
+            $prefix = "breeder";
+        }
+        else{
+            $prefix = "default";
+        }
+
+        return ['prefix' => $prefix,];
+    }
+
+    /**
      * 会員登録画面.
      *
      * @Route("/entry", name="entry")
@@ -117,10 +140,22 @@ class AnilineEntryController extends AbstractController
      */
     public function index(Request $request)
     {
+        $return_path = $request->get("ReturnPath");
+
+        if(preg_match("/^adoption/",$return_path)){
+            $prefix = "adoption";
+        }
+        else if(preg_match("/^breeder/",$return_path)){
+            $prefix = "breeder";
+        }
+        else{
+            $prefix = "default";
+        }
+
         if ($this->isGranted('ROLE_USER')) {
             log_info('認証済のためログイン処理をスキップ');
 
-            return $this->redirectToRoute('mypage');
+            return $this->redirectToRoute($return_path);
         }
 
         /** @var $Customer \Eccube\Entity\Customer */
@@ -154,6 +189,7 @@ class AnilineEntryController extends AbstractController
                         [
                             'form' => $form->createView(),
                             'request' => $request,
+                            'prefix' => $prefix,
                         ]
                     );
 
@@ -203,7 +239,7 @@ class AnilineEntryController extends AbstractController
 
                         log_info('仮会員登録完了画面へリダイレクト');
 
-                        return $this->redirectToRoute('entry_complete');
+                        return $this->redirectToRoute('entry_complete',['ReturnPath' => $return_path,]);
 
                     } else {
                         // 仮会員設定が無効な場合は、会員登録を完了させる.
@@ -214,6 +250,7 @@ class AnilineEntryController extends AbstractController
                             'secret_key' => $Customer->getSecretKey(),
                             'qtyInCart' => $qtyInCart,
                             'returnPath' => $request->get("ReturnPath"),
+                            'prefix' => $prefix,
                         ]);
 
                     }
@@ -223,6 +260,7 @@ class AnilineEntryController extends AbstractController
         return [
             'form' => $form->createView(),
             'request' => $request,
+            'prefix' => $prefix,
         ];
     }
 
@@ -232,9 +270,21 @@ class AnilineEntryController extends AbstractController
      * @Route("/entry/complete", name="entry_complete")
      * @Template("Entry/complete.twig")
      */
-    public function complete()
+    public function complete(Request $request)
     {
-        return [];
+        $return_path = $request->get("ReturnPath");
+
+        if(preg_match("/adoption/",$return_path)){
+            $prefix = "adoption";
+        }
+        else if(preg_match("/breeder/",$return_path)){
+            $prefix = "breeder";
+        }
+        else{
+            $prefix = "default";
+        }
+
+        return ['prefix' => $prefix,];
     }
 
     /**
@@ -245,6 +295,16 @@ class AnilineEntryController extends AbstractController
      */
     public function activate(Request $request, $secret_key, $returnPath, $qtyInCart = null)
     {
+        if(preg_match("/^adoption/",$returnPath)){
+            $prefix = "adoption";
+        }
+        else if(preg_match("/^breeder/",$returnPath)){
+            $prefix = "breeder";
+        }
+        else{
+            $prefix = "default";
+        }
+
         $errors = $this->recursiveValidator->validate(
             $secret_key,
             [
@@ -262,6 +322,7 @@ class AnilineEntryController extends AbstractController
             return [
                 'qtyInCart' => $qtyInCart,
                 'returnPath' => $returnPath,
+                'prefix' => $prefix,
             ];
         } elseif ($request->getMethod() === 'GET' && count($errors) === 0) {
 
@@ -271,6 +332,7 @@ class AnilineEntryController extends AbstractController
             return [
                 'qtyInCart' => $qtyInCart,
                 'returnPath' => $returnPath,
+                'prefix' => $prefix,
             ];
         }
 

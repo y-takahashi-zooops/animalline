@@ -218,6 +218,7 @@ file that was distributed with this source code.
                                         {{ form_errors(form.homepage_url) }}
                                     </div>
                                 </div>
+                                <!--
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
@@ -246,6 +247,7 @@ file that was distributed with this source code.
                                         {{ form_errors(form.examination_status) }}     
                                     </div>
                                 </div>
+                                -->
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
@@ -257,20 +259,6 @@ file that was distributed with this source code.
                                         {{ form_errors(form.pr_text) }}
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>メールアドレス</span>
-                                            <span class="badge badge-primary ml-1">
-                                                {{ 'admin.common.required'|trans }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        {{ form_widget(form.email) }}
-                                        {{ form_errors(form.email) }}
-                                    </div>
-                                </div>  
                             </div>
                         </div>
                     </div>                    

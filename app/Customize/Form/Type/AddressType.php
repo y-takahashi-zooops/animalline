@@ -1,5 +1,16 @@
 <?php
 
+/*
+ * This file is part of EC-CUBE
+ *
+ * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ *
+ * http://www.ec-cube.co.jp/
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Customize\Form\Type;
 
 use Eccube\Common\EccubeConfig;
@@ -62,7 +73,8 @@ class AddressType extends AbstractType
         $builder
             ->add($options['pref_name'], PrefType::class, array_merge_recursive($options['options'], $options['pref_options']))
             ->add($options['addr01_name'], TextType::class, array_merge_recursive($options['options'], $options['addr01_options']))
-            ->add($options['addr02_name'], TextType::class, array_merge_recursive($options['options'], $options['addr02_options']));
+            ->add($options['addr02_name'], TextType::class, array_merge_recursive($options['options'], $options['addr02_options']))
+        ;
 
         $builder->setAttribute('pref_name', $options['pref_name']);
         $builder->setAttribute('addr01_name', $options['addr01_name']);
@@ -93,7 +105,7 @@ class AddressType extends AbstractType
                     new Assert\Length(['max' => $this->config['eccube_address1_len']]),
                 ],
                 'attr' => [
-                    'class' => 'p-locality p-street-address',
+                    'class' => 'p-locality',
                     'placeholder' => 'common.address_sample_01',
                 ],
             ],
@@ -102,13 +114,13 @@ class AddressType extends AbstractType
                     new Assert\Length(['max' => $this->config['eccube_address2_len']]),
                 ],
                 'attr' => [
-                    'class' => 'p-extended-address',
+                    'class' => 'p-street-address p-extended-address',
                     'placeholder' => 'common.address_sample_02',
                 ],
             ],
-            'pref_name' => 'PrefBreeder',
-            'addr01_name' => 'breeder_city',
-            'addr02_name' => 'breeder_address',
+            'pref_name' => 'pref',
+            'addr01_name' => 'addr01',
+            'addr02_name' => 'addr02',
             'error_bubbling' => false,
             'inherit_data' => true,
             'trim' => true,
@@ -117,6 +129,6 @@ class AddressType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'addr';
+        return 'address';
     }
 }

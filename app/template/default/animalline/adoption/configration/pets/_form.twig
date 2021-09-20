@@ -3,7 +3,7 @@
         <div class="col-md-3">
             {{ form_label(form.pet_kind, 'ペット種別', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 ec-select">
            {{ form_widget(form.pet_kind) }}
            {{ form_errors(form.pet_kind) }}
         </div>
@@ -12,7 +12,7 @@
         <div class="col-md-3">
             {{ form_label(form.BreedsType, '犬種(猫種)', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 ec-select">
             {{ form_widget(form.BreedsType) }}
             {{ form_errors(form.BreedsType) }}
         </div>
@@ -84,7 +84,7 @@
         <div class="col-md-3">
             {{ form_label(form.pet_sex, '性別', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 ec-select">
             {{ form_widget(form.pet_sex) }}
             {{ form_errors(form.pet_sex) }}
         </div>
@@ -102,7 +102,7 @@
         <div class="col-md-3">
             {{ form_label(form.CoatColor, '毛色', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 ec-select">
             {{ form_widget(form.CoatColor) }}
             {{ form_errors(form.CoatColor) }}
         </div>

@@ -40,10 +40,10 @@ class ConservationsType extends AbstractType
                     '個人' => AnilineConf::ANILINE_ORGANIZATION_PERSONAL,
                     '団体' => AnilineConf::ANILINE_ORGANIZATION_GROUP
                 ],
-                'required' => false,
+                'required' => true,
             ])
             ->add('organization_name', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -60,7 +60,7 @@ class ConservationsType extends AbstractType
                         '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
                         '猫' => AnilineConf::ANILINE_PET_KIND_CAT
                     ],
-                'required' => false,
+                'required' => true,
                 'placeholder' => 'common.select'
             ])
             ->add('owner_name', TextType::class, [
@@ -70,10 +70,6 @@ class ConservationsType extends AbstractType
                 'constraints' => [
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
                     ]),
                     new Assert\NotBlank()
                 ]
@@ -87,7 +83,7 @@ class ConservationsType extends AbstractType
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                     new Assert\Regex([
-                        'pattern' => '/^[ァ-ヶｦ-ﾟー]+$/u',
+                        'pattern' => '/^[ァ-ヶｦ-ﾟー 　]+$/u',
                         'message' => 'form_error.kana_only',
                     ]),
                     new Assert\NotBlank()
@@ -187,6 +183,10 @@ class ConservationsType extends AbstractType
                 'constraints' => [
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/^http/',
+                        'message' => 'http://もしくはhttps://から入力してください。',
                     ]),
                 ]
             ])

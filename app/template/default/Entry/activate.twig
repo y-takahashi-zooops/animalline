@@ -8,7 +8,18 @@ http://www.ec-cube.co.jp/
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
-{% extends 'default_frame.twig' %}
+{# ヘッダーの切り替え #}
+{% if prefix == "adoption" %}
+    {% set base_template = 'adoption_frame.twig' %}
+{% endif %}
+{% if prefix == "breeder" %}
+    {% set base_template = 'breeder_frame.twig' %}
+{% endif %}
+{% if prefix == "default" %}
+    {% set base_template = 'default_frame.twig' %}
+{% endif %}
+{% extends base_template %}
+{# ヘッダーの切り替え #}
 
 {% set body_class = 'registration_page' %}
 
@@ -25,14 +36,14 @@ file that was distributed with this source code.
                     <h2>{{ '会員登録ありがとうございます'|trans }}</h2>
                 </div>
                 <p class="ec-reportDescription">{{ '会員登録が完了しました。
-それでは、ショッピングをお楽しみください。
+引き続き必要情報の登録をお願いします。
 '|trans|nl2br }}</p>
                 <div class="ec-off4Grid">
                     <div class="ec-off4Grid__cell">
                         {% if qtyInCart %}
                             <a class="ec-blockBtn--action" style="margin-bottom: 3px" href="{{ url('cart') }}">{{ 'カートへ進む'|trans }}</a>
                         {% endif %}
-                        <a class="ec-blockBtn--cancel" href="{{ url(returnPath) }}">{{ 'トップページへ'|trans }}</a>
+                        <a class="ec-blockBtn--cancel" href="{{ url(returnPath) }}">{{ '審査情報入力ページへ'|trans }}</a>
                     </div>
                 </div>
             </div>

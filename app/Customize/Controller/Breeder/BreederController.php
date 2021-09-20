@@ -101,6 +101,41 @@ class BreederController extends AbstractController
     }
 
     /**
+     * @Route("/breeder/", name="breeder_top")
+     * @Template("animalline/breeder/reg_index.twig")
+     */
+    public function adoption_index(Request $request)
+    {
+        return;
+    }
+    /* 本番用。仮受付バージョンでコメントアウト
+    public function breeder_index(Request $request)
+    {
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
+        $regions = $this->prefRepository->findAll();
+        $newPets = $this->breederPetsRepository->findBy(
+            ['pet_kind' => $petKind],
+            ['release_date' => 'DESC'],
+            AnilineConf::NUMBER_ITEM_TOP
+        );
+        $favoritePets = $this->breederPetsRepository->findBy(
+            ['pet_kind' => $petKind],
+            ['favorite_count' => 'DESC'],
+            AnilineConf::NUMBER_ITEM_TOP
+        );
+
+        return $this->render('animalline/breeder/index.twig', [
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions,
+            'newPets' => $newPets,
+            'favoritePets' => $favoritePets,
+        ]);
+    }
+    */
+
+    /**
      * @Route("/breeder/pet/search/result", name="breeder_pet_search_result")
      * @Template("animalline/breeder/pet/search_result.twig")
      */

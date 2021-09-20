@@ -37,6 +37,52 @@ security:
             logout:
                 path: admin_logout
                 target: admin_login
+        adoption:
+            pattern: '^/adoption/'
+            anonymous: true
+            provider: customer_provider
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 3600
+                name: eccube_remember_me
+                remember_me_parameter: 'login_memory'
+            form_login:
+                check_path: adoption_login
+                login_path: adoption_login
+                csrf_token_generator: security.csrf.token_manager
+                default_target_path: adoption_mypage
+                username_parameter: 'login_email'
+                password_parameter: 'login_pass'
+                use_forward: false
+                success_handler: eccube.security.success_handler
+                failure_handler: eccube.security.failure_handler
+            logout:
+                path: logout
+                target: adoption_top
+                success_handler: eccube.security.logout_success_handler
+        breeder:
+            pattern: '^/breeder/'
+            anonymous: true
+            provider: customer_provider
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 3600
+                name: eccube_remember_me
+                remember_me_parameter: 'login_memory'
+            form_login:
+                check_path: breeder_login
+                login_path: breeder_login
+                csrf_token_generator: security.csrf.token_manager
+                default_target_path: breeder_mypage
+                username_parameter: 'login_email'
+                password_parameter: 'login_pass'
+                use_forward: false
+                success_handler: eccube.security.success_handler
+                failure_handler: eccube.security.failure_handler
+            logout:
+                path: logout
+                target: breeder_top
+                success_handler: eccube.security.logout_success_handler
         customer:
             pattern: '^/'
             anonymous: true

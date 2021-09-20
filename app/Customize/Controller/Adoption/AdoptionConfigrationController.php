@@ -253,7 +253,7 @@ class AdoptionConfigrationController extends AbstractController
             $conservation = $conservationsRepository->find($request->get('conservation_id'));
             $conservationPet->setConservation($conservation);
             $conservationPet->setDnaCheckResult(0);
-            $conservationPet->setReleaseStatus(1);
+            $conservationPet->setReleaseStatus(0);
             $conservationPet->setPrice(0);
             $entityManager->persist($conservationPet);
             $entityManager->flush();

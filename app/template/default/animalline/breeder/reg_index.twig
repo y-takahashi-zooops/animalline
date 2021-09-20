@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="安心・安全のペットライフをご提供します">
+<meta name="viewport" content="width=device-width">
+<title>アニマルライン | 保護団体様新規登録</title>
+<link rel="stylesheet" media="all" href="{{ asset('assets/css/reg/style.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script src="{{ asset('assets/js/reg/script.js') }}"></script>
+</head>
+
+<body id="top">
+<div id="mainImg">
+	<img src="{{ asset('assets/img/reg/breeder_top.png') }}" alt="">
+</div>
+
+<!-- MESSAGE -->
+<section id="sec01">
+	<header>
+		<h2>安心・安全への取り組み</h2>
+	</header>
+	<div class="innerS">
+		大事に育てたワンちゃん、猫ちゃんを直接新しいご家族に託したい。そう考えるブリーダー様は多くいらっしゃると思います。Animalline Breederはそんな皆様のお手伝いをしたいという想いから生まれました。当サイトに掲載されるワンちゃん、猫ちゃんは全頭ＤＮＡ検査を行いますので、安心して新しいご家族に引き渡すことができ、ブリーダー様のブランド価値を守ります。
+	</div>
+
+	<div class="buttonS">
+		<a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn btn--orange">新規登録してペットを掲載する</a>
+	</div>
+</section>
+<!-- // MESSAGE -->
+
+<!-- GALLERY -->
+<section id="sec02">
+	<header>
+		<h2><span>Gallery</span></h2>
+	</header>
+	<ul id="gallery">
+		<li><img src="{{ asset('assets/img/reg/img_cat.jpg') }}" width="426" height="418" alt=""></li>
+        <li><img src="{{ asset('assets/img/reg/img_dog2.jpg') }}" width="426" height="418" alt=""></li>
+		<li><img src="{{ asset('assets/img/reg/img_dog.jpg') }}" width="426" height="418" alt=""></li>
+	</ul>
+</section>
+<!-- // GALLERY -->
+
+<!-- BRAND --> 
+<section id="sec02">
+    <div class="titleS">
+	    <img src="{{ asset('assets/img/reg/title_merit.png') }}" alt="">
+    </div>
+
+	<ul id="gallery">
+		<li><img src="{{ asset('assets/img/reg/merit01.png') }}" width="426" height="426" alt=""></li>
+        <li><img src="{{ asset('assets/img/reg/merit02.png') }}" width="426" height="426" alt=""></li>
+		<li><img src="{{ asset('assets/img/reg/merit03.png') }}" width="426" height="426" alt=""></li>
+	</ul>
+</section>
+<!-- // STORY -->
+
+<!-- PROJECT -->
+<section id="sec03">
+	<header>
+		<h2><span>様々な提供サービス</span></h2>
+	</header>
+	<div class="innerS">
+		<img src="{{ asset('assets/img/reg/img_02.jpg') }}" width="726" height="333" alt="">
+		<p>アニマルラインは消耗品の販売から保険、しつけサービスまでワンちゃん、猫ちゃんに関する幅広いサービスを提供していきます。ブリーダー様の顧客による様々なサービスの利用からインセンティブをお支払いすることで、飼養施設の安定した運営の手助けをいたします。</p>
+	</div>
+</section>
+<!-- // PROJECT -->
+<div class="buttonS">
+	<a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn btn--orange">新規登録してペットを掲載する</a>
+</div>
+<div class="buttonS">
+	<a href="{{url('breeder_login')}}?ReturnPath=adoption_mypage" class="btn btn--green">既に登録している方(ログイン)</a>
+</div>
+<!-- COMPANY -->
+<section id="sec05">
+	<header>
+		<h2><span>Company</span></h2>
+	</header>
+	<div class="companyS">
+		<ul class="col2">
+			<li>
+				<p>株式会社 企画/海</p>
+				<p>〒168-0074<br>東京都杉並区上高井戸1-22-12</p>
+				<p>TEL 03-3290-1211</p>
+				<p>営業時間 : 9：30～18：30<br>日曜・祝日を除く</p>
+			</li>
+			<li>
+				<div id="map">
+					<!-- GOOGLE MAP -->
+					<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7708.664646729858!2d139.60464713721387!3d35.674681607410406!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f22768a585b3%3A0x68a9ba6feff0558e!2z44CSMTY4LTAwNzQg5p2x5Lqs6YO95p2J5Lim5Yy65LiK6auY5LqV5oi477yR5LiB55uu77yS77yS4oiS77yR77yS!5e0!3m2!1sja!2sjp!4v1632141728567!5m2!1sja!2sjp" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+					<!-- // GOOGLE MAP -->
+				</div>
+			</li>
+		</ul>
+	</div>
+</section>
+<!-- // COMPANY -->
+
+
+<footer id="footer">
+	Copyright(c) 2021 アニマルライン All Rights Reserved.
+</footer>
+
+</body>
+</html>

@@ -17,7 +17,7 @@
                     <div class="mb-5">
                         <dl>
                             <dt>
-                                {{ form_label(form.conservation_house_name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                {{ form_label(form.conservation_house_name, '運営者氏名', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
                                 <div class="ec-halfInput{{ has_errors(form.conservation_house_name) ? ' error' }}">
@@ -28,7 +28,7 @@
                         </dl>
                         <dl>
                             <dt>
-                                {{ form_label(form.conservation_house_kana, 'お名前(カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                {{ form_label(form.conservation_house_kana, '運営者氏名(カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
                                 <div class="ec-halfInput{{ has_errors(form.conservation_house_kana) ? ' error' }}">
@@ -86,6 +86,7 @@
                                 <div class="ec-halfInput{{ has_errors(form.conservation_house_house_tel) ? ' error' }}">
                                     {{ form_widget(form.conservation_house_house_tel) }}
                                     {{ form_errors(form.conservation_house_house_tel) }}
+                                    <input type="hidden" id="Tel" value={{conservation.tel}}>
                                 </div>
                             </dd>
                         </dl>
@@ -97,6 +98,7 @@
                                 <div class="ec-halfInput{{ has_errors(form.conservation_house_house_fax) ? ' error' }}">
                                     {{ form_widget(form.conservation_house_house_fax) }}
                                     {{ form_errors(form.conservation_house_house_fax) }}
+                                    <input type="hidden" id="Fax" value={{conservation.fax}}>
                                 </div>
                             </dd>
                         </dl>
@@ -153,7 +155,9 @@
         document.getElementById("conservation_house_conservation_house_house_zip").value = document.getElementById("Zip").value 
         document.getElementById("conservation_house_address_pref").value = document.getElementById("Pref").value 
         document.getElementById("conservation_house_address_conservation_house_city").value = document.getElementById("City").value 
-        document.getElementById("conservation_house_address_conservation_house_address").value = document.getElementById("Address").value 
+        document.getElementById("conservation_house_address_conservation_house_address").value = document.getElementById("Address").value
+        document.getElementById("conservation_house_conservation_house_house_tel").value = document.getElementById("Tel").value 
+        document.getElementById("conservation_house_conservation_house_house_fax").value = document.getElementById("Fax").value 
     };
 </script>
 {% endblock %}

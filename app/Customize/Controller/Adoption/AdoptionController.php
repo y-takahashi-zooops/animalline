@@ -103,6 +103,41 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * @Route("/adoption/", name="adoption_top")
+     * @Template("animalline/adoption/reg_index.twig")
+     */
+    public function adoption_index(Request $request)
+    {
+        return;
+    }
+    /* 本場用。仮受付バージョンでコメントアウト
+    public function adoption_index(Request $request)
+    {
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
+        $regions = $this->prefRepository->findAll();
+        $newPets = $this->conservationPetsRepository->findBy(
+            ['pet_kind' => $petKind],
+            ['release_date' => 'DESC'],
+            AnilineConf::NUMBER_ITEM_TOP
+        );
+        $favoritePets = $this->conservationPetsRepository->findBy(
+            ['pet_kind' => $petKind],
+            ['favorite_count' => 'DESC'],
+            AnilineConf::NUMBER_ITEM_TOP
+        );
+
+        return $this->render('animalline/adoption/index.twig', [
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions,
+            'newPets' => $newPets,
+            'favoritePets' => $favoritePets,
+        ]);
+    }
+    */
+    
+    /**
      * ペット検索画面.
      *
      * @Route("/adoption/pet/search", name="adoption_pet_search")
