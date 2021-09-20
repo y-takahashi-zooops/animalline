@@ -2,6 +2,7 @@
 {% extends 'ani_frame.twig' %}
 
 {% set params = app.request.query.all %}
+{% set check_status = {1:'受付', 2:'出荷指示中', 3:'出荷済', 4:'DNAチェック中', 6:'検体異常', 7:'DNA検査中', 8:'検査通過', 9:'検査NG', 10:'検体再送付手続済'} %}
 
 {% block main %}
     <div class="c-contentsArea__cols">
@@ -43,29 +44,7 @@
                                             {{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}
                                         </td>
                                         <td class="align-middle">{{ dna.breeds_name }}</td>
-                                        <td class="align-middle">
-                                            {% if dna.check_status == 1 %}
-                                                受付
-                                            {% elseif dna.check_status == 2 %}
-                                                出荷指示中
-                                            {% elseif dna.check_status == 3 %}
-                                                出荷指示中
-                                            {% elseif dna.check_status == 4 %}
-                                                出荷済
-                                            {% elseif dna.check_status == 5 %}
-                                                DNAチェック中
-                                            {% elseif dna.check_status == 6 %}
-                                                検体異常
-                                            {% elseif dna.check_status == 7 %}
-                                                DNA検査中
-                                            {% elseif dna.check_status == 8 %}
-                                                検査通過
-                                            {% elseif dna.check_status == 9 %}
-                                                検査NG
-                                            {% elseif dna.check_status == 10 %}
-                                                検体再送付手続済
-                                            {% endif %}
-                                        </td>
+                                        <td class="align-middle">{{ check_status[dna.check_status] }}</td>
                                         <td class="align-middle">
                                             {{ dna.kit_shipping_date is empty ? '_' : dna.kit_shipping_date | date('Y/m/d H:i') }}
                                         </td>
