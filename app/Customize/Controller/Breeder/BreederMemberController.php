@@ -813,9 +813,9 @@ class BreederMemberController extends AbstractController
             $dna = $this->dnaCheckStatusRepository->find($dnaId);
             if (!$dna) throw new NotFoundHttpException();
 
-            $dna->setCheckStatus(AnilineConf::ANILINE_CHECK_STATUS_RESENT);
+            $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
             $newDna = clone $dna;
-            $newDna->setCheckStatus(AnilineConf::ANILINE_CHECK_STATUS_RECEPTION);
+            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_DEFAULT);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($dna);

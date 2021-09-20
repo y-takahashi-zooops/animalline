@@ -125,7 +125,7 @@ file that was distributed with this source code.
                                         <td></td>
                                         <td class="align-middle">{{ dna.dna_id }}</td>
                                         <td class="align-middle">
-                                            <a href="#">
+                                            <a href="{{ url(dna.site_type == constant('Customize\\Config\\AnilineConf::ANILINE_SITE_TYPE_BREEDER') ? 'adoption_pet_detail' : 'breeder_pet_detail', {'id':dna.pet_id}) }}">
                                                 <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}"
                                                      style="max-width: 50px">
                                             </a>
@@ -140,7 +140,7 @@ file that was distributed with this source code.
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="検査キット再送付">
-                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == 6 ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
+                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL') ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
                                                         <i class="fa fa-vial fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>
