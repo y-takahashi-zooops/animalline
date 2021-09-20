@@ -37,7 +37,7 @@
                                     <tr>
                                         <td class="align-middle">{{ dna.dna_id }}</td>
                                         <td class="align-middle">
-                                            <a href="{{ url('breeder_pet_detail', {'id': dna.pet_id}) }}">
+                                            <a target="_blank" href="{{ url('breeder_pet_detail', {'id': dna.pet_id}) }}">
                                                 <img style="max-width: 50px"
                                                      src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}">
                                             </a>

@@ -35,7 +35,7 @@
                                     <tr>
                                         <td class="align-middle">{{ dna.dna_id }}</td>
                                         <td class="align-middle">
-                                            <a href="{{ path('adoption_pet_detail', {'id': dna.pet_id}) }}">
+                                            <a target="_blank" href="{{ path('adoption_pet_detail', {'id': dna.pet_id}) }}">
                                                 <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}"
                                                      style="max-width: 50px">
                                             </a>
@@ -43,8 +43,8 @@
                                         <td class="align-middle">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
                                         <td class="align-middle">{{ dna.breeds_name }}</td>
                                         <td class="align-middle">{{ check_status[dna.check_status] }}</td>
-                                        <td class="align-middle">{{ dna.kit_shipping_date is empty ? '' : dna.kit_shipping_date | date('Y/m/d H:i') }}</td>
-                                        <td class="align-middle">{{ dna.kit_return_date is empty ? '' : dna.kit_return_date | date('Y/m/d H:i') }}</td>
+                                        <td class="align-middle">{{ dna.kit_shipping_date is empty ? '_' : dna.kit_shipping_date | date('Y/m/d H:i') }}</td>
+                                        <td class="align-middle">{{ dna.kit_return_date is empty ? '_' : dna.kit_return_date | date('Y/m/d H:i') }}</td>
                                         <td class="align-middle pr-3" colspan="3">
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
