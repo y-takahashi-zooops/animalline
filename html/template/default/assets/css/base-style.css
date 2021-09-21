@@ -17,7 +17,7 @@
 /*DOM*/
 html {
     max-width:1170px;
-    min-width:600px;
+    min-width:320px;
     margin: auto;
     font-size: min(2.25vw,18px);
 }

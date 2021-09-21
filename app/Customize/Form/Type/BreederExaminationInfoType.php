@@ -61,49 +61,49 @@ class BreederExaminationInfoType extends AbstractType
                 'required' => true,
             ])
             ->add('parent_pet_count_1', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('parent_pet_count_2', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('parent_pet_count_3', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('parent_pet_buy_place_1', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('parent_pet_buy_place_2', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('parent_pet_buy_place_3', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('owner_worktime_ave', IntegerType::class, [
                 'required' => true,
             ])
             ->add('family_staff_count', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('family_staff_worktime_ave', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('fulltime_staff_count', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('fulltime_staff_worktime_ave', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('parttime_staff_count', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('parttime_staff_worktime_ave', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('other_staff_count', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('other_staff_worktime_ave', IntegerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('breeding_exp_year', IntegerType::class, [
                 'required' => true,
@@ -186,7 +186,7 @@ class BreederExaminationInfoType extends AbstractType
                     '50回以上' => AnilineConf::EXPERIENCE_GREATER_FIFTY,
                 ],
                 'attr' => [
-                    'class' => 'form-check-inline ec-radio'
+                    'class' => 'ec-radio'
                 ],
                 'expanded' => true,
                 'required' => true,
@@ -201,7 +201,7 @@ class BreederExaminationInfoType extends AbstractType
                     '50回以上' => AnilineConf::EXPERIENCE_GREATER_FIFTY,
                 ],
                 'attr' => [
-                    'class' => 'form-check-inline ec-radio'
+                    'class' => 'ec-radio'
                 ],
                 'expanded' => true,
                 'required' => true,

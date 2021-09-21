@@ -93,7 +93,7 @@ class ConservationAddressHouseType extends AbstractType
                     new Assert\Length(['max' => $this->config['eccube_address1_len']]),
                 ],
                 'attr' => [
-                    'class' => 'p-locality p-street-address',
+                    'class' => 'p-locality',
                     'placeholder' => 'common.address_sample_01',
                 ],
             ],
@@ -102,7 +102,7 @@ class ConservationAddressHouseType extends AbstractType
                     new Assert\Length(['max' => $this->config['eccube_address2_len']]),
                 ],
                 'attr' => [
-                    'class' => 'p-extended-address',
+                    'class' => 'p-street-address p-extended-address',
                     'placeholder' => 'common.address_sample_02',
                 ],
             ],

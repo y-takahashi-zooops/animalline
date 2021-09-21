@@ -5,7 +5,7 @@ namespace Customize\Form\Type;
 use Customize\Config\AnilineConf;
 use Customize\Entity\Breeders;
 use Eccube\Common\EccubeConfig;
-use Customize\Form\Type\AddressType;
+use Customize\Form\Type\BreederAddressType;
 use Customize\Form\Type\LicenseAddressType;
 use Eccube\Form\Type\RepeatedEmailType;
 use Eccube\Form\Validator\Email;
@@ -86,7 +86,7 @@ class AdminBreederType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('addr', AddressType::class)
+            ->add('addr', BreederAddressType::class)
             ->add('breeder_tel', TextType::class, [
                 'required' => true,
                 'constraints' => [

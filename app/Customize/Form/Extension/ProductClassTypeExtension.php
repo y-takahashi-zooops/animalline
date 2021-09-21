@@ -43,6 +43,7 @@ class ProductClassTypeExtension extends AbstractTypeExtension
    public function buildForm(FormBuilderInterface $builder, array $options)
    {
         // 仕入先ドロップダウン
+        $choices = [];
         $suppliers = $this->supplierRepository->findAll();
         foreach ($suppliers as $supplier) {
             $choices[$supplier->getSupplierName()] = $supplier->getId();

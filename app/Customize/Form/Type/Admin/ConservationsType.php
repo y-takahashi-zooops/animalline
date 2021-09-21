@@ -165,8 +165,7 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                ]
-            ]);
+                ]]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

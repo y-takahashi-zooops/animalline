@@ -91,6 +91,7 @@
                                 <div class="ec-telInput{{ has_errors(form.breeder_house_house_tel) ? ' error' }}">
                                     {{ form_widget(form.breeder_house_house_tel) }}
                                     {{ form_errors(form.breeder_house_house_tel) }}
+                                    <input type="hidden" id="licenceTel" value={{breeder.breederTel}}>
                                 </div>
                             </dd>
                         </dl>
@@ -102,6 +103,7 @@
                                 <div class="ec-telInput{{ has_errors(form.breeder_house_house_fax) ? ' error' }}">
                                     {{ form_widget(form.breeder_house_house_fax) }}
                                     {{ form_errors(form.breeder_house_house_fax) }}
+                                    <input type="hidden" id="licenceFax" value={{breeder.breederFax}}>
                                 </div>
                             </dd>
                         </dl>
@@ -159,7 +161,9 @@
         document.getElementById("breeder_house_breeder_house_house_zip").value = document.getElementById("licenceZip").value 
         document.getElementById("breeder_house_address_BreederHousePrefId").value = document.getElementById("licencePref").value 
         document.getElementById("breeder_house_address_breeder_house_city").value = document.getElementById("licenceCity").value 
-        document.getElementById("breeder_house_address_breeder_house_address").value = document.getElementById("licenceAddress").value 
+        document.getElementById("breeder_house_address_breeder_house_address").value = document.getElementById("licenceAddress").value
+        document.getElementById("breeder_house_breeder_house_house_tel").value = document.getElementById("licenceTel").value 
+        document.getElementById("breeder_house_breeder_house_house_fax").value = document.getElementById("licenceFax").value 
     };
 </script>
 {% endblock %}

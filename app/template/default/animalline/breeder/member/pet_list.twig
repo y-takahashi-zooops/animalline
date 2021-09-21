@@ -19,24 +19,14 @@
                         <div class="m-4"></div>
                         <div class="d-flex">
                             <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
-                            {% if(pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE')) %}
-                                <h4 class="pet-set-male">男の子</h4>
-                            {% else %}
-                                <h4 class="pet-set-female">女の子</h4>
-                            {% endif %}
                         </div>
                         <div class="mb-2"></div>
                         <div class="d-flex">
                             {% set breederHouse = pet.Breeder.getBreederHouseByPetType(pet.petKind) %}
-                            <h4 class="mr-3">{{ breederHouse.breederHousePref ~ ' ' ~ breederHouse.breederHouseCity ?? '' }}</h4>
-                            <h4>{{ pet.coatColor.coatColorName ?? '' }}</h4>
                         </div>
                         <div class="m-2"></div>
-                        <h4>{{ pet.prComment }}</h4>
                         <div class="m-2"></div>
-                        {# <h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4> #}
-                        <div class="m-4"></div>
-                        <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円（税込）</span></h3>
+                        <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円</span></h3>
                         <a href={{ path('breeder_mypage_pets_edit', {'id': pet.id}) }} class="btn basic-btn btn-primary text-align-center my-2">編集</a>
                     </div>
                 </div>

@@ -1,10 +1,13 @@
 <footer class="footer">
+    {#
     <div class="row m-2 p-2">
         <div class="col" align="center"><a href="{{url('ani_company')}}">会社概要</a></div>
         <div class="col" align="center"><a href="{{url('help_tradelaw')}}">特定商取引法に基づく表記</a></div>
         <div class="col" align="center"><a href="{{url('help_privacy')}}">プライバシーポリシー</a></div>
     </div>
+    #}
     <div class="container">
+        {#
         {% if site_type == 'adoption' %}
             <img src="{{ asset('assets/img/adoption/logo.svg') }}">
         {% elseif site_type == 'breeder' %}
@@ -12,10 +15,11 @@
         {% elseif site_type == 'common' %}
             <img src="{{ asset('assets/img/common/logo.svg') }}">
         {% endif %}
+        #}
         <div class="m-1 p-1"></div>
             <p>
                 <small>
-                    Copyright ●● 2021 All right reserved
+                    Copyright アニマルライン 2021 All right reserved
                 </small>
             </p>
         </div>

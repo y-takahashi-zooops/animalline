@@ -5,7 +5,7 @@ namespace Customize\Form\Type;
 use Customize\Config\AnilineConf;
 use Customize\Entity\Breeders;
 use Eccube\Common\EccubeConfig;
-use Customize\Form\Type\AddressType;
+use Customize\Form\Type\BreederAddressType;
 use Customize\Form\Type\LicenseAddressType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -41,10 +41,6 @@ class BreedersType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
-                    ]),
                     new Assert\NotBlank()
                 ]
             ])
@@ -58,7 +54,7 @@ class BreedersType extends AbstractType
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                     new Assert\Regex([
-                        'pattern' => '/^[ァ-ヶｦ-ﾟー]+$/u',
+                        'pattern' => '/^[ァ-ヶｦ-ﾟー 　]+$/u',
                         'message' => 'form_error.kana_only',
                     ]),
                     new Assert\NotBlank()
@@ -71,7 +67,7 @@ class BreedersType extends AbstractType
                         '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
                         '猫' => AnilineConf::ANILINE_PET_KIND_CAT
                     ],
-                'required' => false,
+                'required' => true,
                 'placeholder' => 'common.select'
             ])
             ->add('breeder_zip', TextType::class, [
@@ -92,7 +88,7 @@ class BreedersType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('addr', AddressType::class)
+            ->add('addr', BreederAddressType::class)
             ->add('breeder_tel', TextType::class, [
                 'required' => true,
                 'constraints' => [
@@ -143,10 +139,6 @@ class BreedersType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
-                    ]),
                     new Assert\NotBlank()
                 ]
             ])
@@ -190,10 +182,6 @@ class BreedersType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
-                    ]),
                     new Assert\NotBlank()
                 ]
             ])
@@ -206,15 +194,11 @@ class BreedersType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
-                    ]),
                     new Assert\NotBlank()
                 ]
             ])
             ->add('license_regist_date', DateType::class, [
-                'required' => false,
+                'required' => true,
                 'input' => 'datetime',
                 'years' => range(date('Y'), 1990),
                 'widget' => 'choice',
@@ -222,7 +206,7 @@ class BreedersType extends AbstractType
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
             ])
             ->add('license_expire_date', DateType::class, [
-                'required' => false,
+                'required' => true,
                 'input' => 'datetime',
                 'years' => range(2050, date('Y')),
                 'widget' => 'choice',
@@ -231,11 +215,11 @@ class BreedersType extends AbstractType
                 'constraints' => [
                     new Assert\GreaterThan([
                         'propertyPath' => 'parent.all[license_regist_date].data',
-                        'message' => '有効期限の末日は登録年月日より大きくなければなりません。'
+                        'message' => '有効期限の末日は登録年月日より先の日付を入力してください。'
                     ]),
                     new Assert\GreaterThan([
                         'value' => date('Y-m-d'),
-                        'message' => '有効期限の末日は未来日となければなりません。'
+                        'message' => '有効期限の末日は未来の日付を入力してください。'
                     ])
                 ],
             ])

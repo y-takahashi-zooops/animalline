@@ -8,7 +8,18 @@ http://www.ec-cube.co.jp/
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
-{% extends 'default_frame.twig' %}
+{# ヘッダーの切り替え #}
+{% if prefix == "adoption" %}
+    {% set base_template = 'adoption_frame.twig' %}
+{% endif %}
+{% if prefix == "breeder" %}
+    {% set base_template = 'breeder_frame.twig' %}
+{% endif %}
+{% if prefix == "default" %}
+    {% set base_template = 'default_frame.twig' %}
+{% endif %}
+{% extends base_template %}
+{# ヘッダーの切り替え #}
 
 {% set body_class = 'registration_page' %}
 
@@ -157,7 +168,6 @@ file that was distributed with this source code.
                             <div class="ec-off4Grid__cell">
                                 <input type="hidden" name="ReturnPath" value="{{request.get('ReturnPath')}}" />
                                 <button class="ec-blockBtn--action" type="submit" name="mode" value="complete">{{ '会員登録をする'|trans }}</button>
-                                <button>{{ '戻る'|trans }}</button>
                             </div>
                         </div>
                     </div>

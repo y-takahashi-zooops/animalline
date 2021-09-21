@@ -16,12 +16,14 @@
                 </div>
             </div>
             <div class="m-2 p-2"></div>
+            {% if user.is_breeder == 0 %}
             <h3>ブリーダー登録申請</h3>
             <div class="row">
                 <div class="col-lg-4 col-md-12">
                     <a href="{{url('breeder_examination')}}" class="btn btn-warning btn-block mt-3" role="button">ブリーダー申請を行う</a>
                 </div>
             </div>
+            {% endif %}
 
             {% if user.is_breeder == 1 %}
                 <div class="m-2 p-2"></div>

@@ -43,10 +43,6 @@ class BreederHouseType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
-                    ]),
                     new Assert\NotBlank()
                 ]
             ])
@@ -60,7 +56,7 @@ class BreederHouseType extends AbstractType
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                     new Assert\Regex([
-                        'pattern' => '/^[ァ-ヶｦ-ﾟー]+$/u',
+                        'pattern' => '/^[ァ-ヶｦ-ﾟー 　]+$/u',
                         'message' => 'form_error.kana_only',
                     ]),
                     new Assert\NotBlank()
@@ -104,7 +100,7 @@ class BreederHouseType extends AbstractType
                 'trim' => true,
             ])
             ->add('breeder_house_house_fax', TextType::class, [
-                'required' => true,
+                'required' => false,
                 'constraints' => [
                     new Assert\Length([
                         'max' => 11,
@@ -113,7 +109,6 @@ class BreederHouseType extends AbstractType
                         'type' => 'numeric',
                         'message' => 'form_error.numeric_only',
                     ]),
-                    new Assert\NotBlank(),
                 ],
                 'attr' => [
                     'placeholder' => 'common.phone_number_sample',

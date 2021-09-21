@@ -18,13 +18,15 @@
                 </div>
             </div>
             <div class="m-2 p-2"></div>
-            <h3>保護団体登録申請</h3>
-            <div class="row">
-                <div class="col-lg-4 col-md-12">
-                    <a href="{{url('adoption_examination')}}" class="btn btn-warning btn-block mt-3"
-                        role="button">保護団体申請を行う</a>
+            {% if user.isConservation == 0 %}
+                <h3>保護団体登録申請</h3>
+                <div class="row">
+                    <div class="col-lg-4 col-md-12">
+                        <a href="{{url('adoption_examination')}}" class="btn btn-warning btn-block mt-3"
+                            role="button">保護団体申請を行う</a>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
             {% if user.isConservation == 1 %}
             <div class="m-2 p-2"></div>
             <h1>保護団体様管理メニュー</h1>

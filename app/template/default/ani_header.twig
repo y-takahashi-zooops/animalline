@@ -15,6 +15,7 @@
                         <img src="{{ asset('assets/img/common/logo.svg') }}">
                     </a>
                 {% endif %}
+                {#
                 <div class="d-flex align-items-center pl-2 pr-2" style="border: 1px solid red; border-radius:50px;">
                     <div class="mr-2 d-flex">
                         <i class="fa fa-dog fa-fw mr-1" style="color: red;"></i>
@@ -33,6 +34,7 @@
                         </h5>
                     </div>
                 </div>
+                #}
                 {# <ul class="d-flex align-items-center">
                     {% if site_type == 'adoption' %}
                         {% if is_granted('ROLE_USER') %}
@@ -40,12 +42,6 @@
                                 <a class="nav-link d-flex align-items-center" href={{url('adoption_mypage')}}>
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
                                     <h5 class="color-gray-500 font-weight-normal">マイページ</h5>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{ url('adoption_favorite') }}>
-                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -62,13 +58,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{ url('adoption_favorite') }}>
-                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{url('mypage_login')}}>
+                                <a class="nav-link d-flex align-items-center" href={{url('adoption_login')}}>
                                     <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
                                     <h5 class="color-gray-500 font-weight-normal">ログイン</h5>
                                 </a>
@@ -80,12 +70,6 @@
                                 <a class="nav-link d-flex align-items-center" href={{url('breeder_mypage')}}>
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
                                     <h5 class="color-gray-500 font-weight-normal">マイページ</h5>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{ url('breeder_favorite') }}>
-                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -102,13 +86,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{ url('breeder_favorite') }}>
-                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{url('mypage_login')}}>
+                                <a class="nav-link d-flex align-items-center" href={{url('breeder_login')}}>
                                     <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
                                     <h5 class="color-gray-500 font-weight-normal">ログイン</h5>
                                 </a>
@@ -123,12 +101,6 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href="{{url('mypage_favorite')}}">
-                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center" href={{ url('logout') }}>
                                     <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
                                     <h5 class="color-gray-500 font-weight-normal">ログアウト</h5>
@@ -139,12 +111,6 @@
                                 <a class="nav-link d-flex align-items-center " href={{url('entry')}}>
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
                                     <h5 class="color-gray-500 font-weight-normal">会員登録</h5>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href="{{url('mypage_favorite')}}">
-                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -162,12 +128,6 @@
                     {% if site_type == 'adoption' %}
                         {% if is_granted('ROLE_USER') %}
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{ url('adoption_favorite') }}>
-                                    <i class="far fa-heart fa-fw mr-1" style="color: red;"></i>
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center" href={{url('adoption_mypage')}}>
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
                                     <h5 class="font-weight-normal">マイページ</h5>
@@ -181,19 +141,13 @@
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{ url('adoption_favorite') }}>
-                                    <i class="far fa-heart fa-fw mr-1" style="color: red;"></i>
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center" href="{{url('entry')}}?ReturnPath=adoption_top">
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
                                     <h5 class="color-gray-500 font-weight-normal">会員登録</h5>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{url('mypage_login')}}>
+                                <a class="nav-link d-flex align-items-center" href={{url('adoption_login')}}>
                                     <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
                                     <h5 class="color-gray-500 font-weight-normal">ログイン</h5>
                                 </a>
@@ -201,12 +155,6 @@
                         {% endif %}
                     {% elseif site_type == 'breeder' %}
                         {% if is_granted('ROLE_USER') %}
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{ url('breeder_favorite') }}>
-                                    <i class="far fa-heart fa-fw mr-1" style="color: red;"></i>
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
-                                </a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center" href={{url('breeder_mypage')}}>
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
@@ -221,19 +169,13 @@
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{ url('breeder_favorite') }}>
-                                    <i class="far fa-heart fa-fw mr-1" style="color: red;"></i>
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center" href="{{url('entry')}}?ReturnPath=breeder_top">
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
                                     <h5 class="color-gray-500 font-weight-normal">会員登録</h5>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href={{url('mypage_login')}}>
+                                <a class="nav-link d-flex align-items-center" href={{url('breeder_login')}}>
                                     <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
                                     <h5 class="color-gray-500 font-weight-normal">ログイン</h5>
                                 </a>
@@ -241,12 +183,6 @@
                         {% endif %}
                     {% elseif site_type == 'common' %}
                         {% if is_granted('ROLE_USER') %}
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href="{{url('mypage_favorite')}}">
-                                    <i class="far fa-heart fa-fw mr-1" style="color: red;"></i>
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
-                                </a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center" href="{{url('mypage')}}">
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
@@ -260,12 +196,6 @@
                                 </a>
                             </li>
                         {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center" href="{{url('mypage_favorite')}}">
-                                    <i class="far fa-heart fa-fw mr-1" style="color: red;"></i>
-                                    <h5 class="color-gray-500 font-weight-normal">お気に入り</h5>
-                                </a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center " href={{url('entry')}}>
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
@@ -317,12 +247,6 @@
                                 </a>
                             </div>
                             <div class="text-align-center">
-                                <a class="nav-link active hamburger_menu_btn bg-section" href=""{{url('adoption_favorite')}}"">
-                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
-                                    <span>お気に入り</span>
-                                </a>
-                            </div>
-                            <div class="text-align-center">
                                 <a class="nav-link active hamburger_menu_btn bg-section" href={{url('adoption_mypage')}}>
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
                                     <span>マイページ</span>
@@ -335,12 +259,6 @@
                                 <a class="nav-link active hamburger_menu_btn bg-section" href={{url('mypage_login')}}>
                                     <img src="{{ asset('assets/img/icon_lock-solid.svg') }}" class="mr-2">
                                     <span>ログイン</span>
-                                </a>
-                            </div>
-                            <div class="text-align-center">
-                                <a class="nav-link active hamburger_menu_btn bg-section" href={{url('adoption_favorite')}}>
-                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
-                                    <span>お気に入り</span>
                                 </a>
                             </div>
                             <div class="text-align-center">
@@ -361,12 +279,6 @@
                                 </a>
                             </div>
                             <div class="text-align-center">
-                                <a class="nav-link active hamburger_menu_btn bg-section" href=""{{url('breeder_favorite')}}"">
-                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
-                                    <span>お気に入り</span>
-                                </a>
-                            </div>
-                            <div class="text-align-center">
                                 <a class="nav-link active hamburger_menu_btn bg-section" href={{url('breeder_mypage')}}>
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
                                     <span>マイページ</span>
@@ -382,12 +294,6 @@
                                 </a>
                             </div>
                             <div class="text-align-center">
-                                <a class="nav-link active hamburger_menu_btn bg-section" href={{url('breeder_favorite')}}>
-                                    <img src="{{ asset('assets/img/icon_heart-solid.svg') }}" class="mr-2">
-                                    <span>お気に入り</span>
-                                </a>
-                            </div>
-                            <div class="text-align-center">
                                 <a class="nav-link active hamburger_menu_btn bg-section" href={{url('entry')}}>
                                     <img src="{{ asset('assets/img/icon_user-solid.svg') }}" class="mr-2">
                                     <span>会員登録</span>
@@ -396,6 +302,7 @@
                         </div>
                     {% endif %}
                 {% endif %}
+                {#
                 <ul class="navList m-0 p-2">
                     <li class="nav-item side-nav-item">
                         <a class="nav-link active rounded-0" href={{url('adoption_top')}}>保護団体TOP</a>
@@ -437,6 +344,7 @@
                         </a>
                     </li>
                 </ul>
+                #}
             </nav>
             <div class="hamburger_btn position-absolute" id="js-hamburger">
                 <span class="hamburger_line hamburger_line_1 position-absolute"></span>

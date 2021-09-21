@@ -90,14 +90,17 @@ class AnilineMypageController extends AbstractController
     {
         //ログイン完了後に元のページに戻るためのセッション変数を設定
         $referer = $request->headers->get('referer');
+        /*
         if($referer){
             $referers = parse_url($referer);
             if($referers['host'] == $request->getHost()) {
                 $this->setLoginTargetPath($referer);
             }
         }
+        */
         //ログイン完了後に元のページに戻るためのセッション変数を設定
-
+        $prefix = $request->get('type');
+        
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             log_info('認証済のためログイン処理をスキップ');
 
@@ -131,6 +134,7 @@ class AnilineMypageController extends AbstractController
         return [
             'error' => $utils->getLastAuthenticationError(),
             'form' => $form->createView(),
+            'prefix' => $prefix,
         ];
     }
 }
