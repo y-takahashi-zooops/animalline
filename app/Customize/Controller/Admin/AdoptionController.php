@@ -99,8 +99,7 @@ class AdoptionController extends AbstractController
         AdoptionQueryService           $adoptionQueryService,
         CustomerRepository             $customerRepository,
         MailService                    $mailService
-    )
-    {
+    ) {
         $this->conservationsRepository = $conservationsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->coatColorsRepository = $coatColorsRepository;
@@ -211,6 +210,8 @@ class AdoptionController extends AbstractController
     public function Examination_regist(Request $request)
     {
         $conservationId = $request->get("id");
+        $conservation = $this->conservationsRepository->find($conservationId);
+        if (!$conservation) throw new NotFoundHttpException();
         /** @var $Customer \Eccube\Entity\Customer */
         $Customer = $this->customerRepository->find($conservationId);
         if (!$Customer) throw new NotFoundHttpException();
@@ -223,20 +224,13 @@ class AdoptionController extends AbstractController
 
         if ($request->isMethod('POST')) {
             $result = (int)$request->get('examination_result');
-
-            $conservation = $this->conservationRepository->find($conservationId);
-
-            if ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
-                $conservation->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK);
-            } elseif ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_NG) {
-                $conservation->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG);
-            }
+            $conservation->setExaminationStatus($result);
 
             $data['examination_comment'] = $comment;
-            if ($result === AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
+            if ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK) {
                 $this->mailService->sendBreederExaminationMailAccept($Customer, $data);
                 $Customer->setIsConservation(1);
-            } else {
+            } else if ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG) {
                 $this->mailService->sendBreederExaminationMailReject($Customer, $data);
             }
 
@@ -249,7 +243,8 @@ class AdoptionController extends AbstractController
         }
 
         return compact(
-            'data'
+            'data',
+            'conservation'
         );
     }
 
