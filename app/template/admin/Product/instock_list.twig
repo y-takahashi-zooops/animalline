@@ -1,0 +1,180 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['product', 'instock_list'] %}
+
+{% block title %}入荷情報一覧{% endblock %}
+{% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
+
+{% block javascript %}
+<script>
+    $("#search").on('click', function() {
+        $('#searchProductModalList').show();
+    });
+</script>
+{% endblock %}
+
+{% block stylesheet %}{% endblock %}
+
+{% block main %}
+<div class="c-outsideBlock">
+    <form id='search_form' method="post">
+        <div class="c-outsideBlock__contents">
+            <div class="row justify-content-start">
+                <div class="col-6">
+                    <div class="mb-2">
+                        <label class="col-form-label" data-tooltip="true" data-placement="top" title="情報を入力して一覧の絞り込み検索ができます。">日付<i class="fa fa-question-circle fa-lg ml-1"></i></label>
+                        <input type="text" id="admin_search_product_id" name="admin_search_product[id]" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="c-outsideBlock__contents mb-5">
+            <button class="btn btn-ec-conversion px-5" type="submit">検索</button>
+            <span class="font-weight-bold ml-2">検索結果：240件が該当しました</span>
+        </div>
+        <div class="c-outsideBlock__contents mb-5">
+            <ul class="list-inline">
+                <li class="list-inline-item"><span class="font-weight-bold">公開ステータス:&nbsp;</span>公開,&nbsp;非公開</li>
+            </ul>
+        </div>
+    </form>
+</div>
+<div class="c-contentsArea__cols">
+    <div class="c-contentsArea__primaryCol">
+        <div class="c-primaryCol">
+            <form id="form_bulk" method="POST" action="">
+                <div class="row justify-content-between mb-2">
+                    <div class="col-6"></div>
+                    <div class="col-5 text-right">
+                        <div class="d-inline-block mr-2">
+                            <div>
+                                <select class="custom-select" onchange="location = this.value;">
+                                    <option selected="" value="/aniconfig/product/page/1?page_count=10">10件</option>
+                                    <option  value="/aniconfig/product/page/1?page_count=20">20件</option>
+                                    <option  value="/aniconfig/product/page/1?page_count=30">30件</option>
+                                    <option  value="/aniconfig/product/page/1?page_count=40">40件</option>
+                                    <option  value="/aniconfig/product/page/1?page_count=50">50件</option>
+                                    <option  value="/aniconfig/product/page/1?page_count=60">60件</option>
+                                    <option  value="/aniconfig/product/page/1?page_count=70">70件</option>
+                                    <option  value="/aniconfig/product/page/1?page_count=80">80件</option>
+                                    <option  value="/aniconfig/product/page/1?page_count=90">90件</option>
+                                    <option  value="/aniconfig/product/page/1?page_count=100">100件</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded border-0 mb-4 d-block">
+                    <div class="card-body p-0">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th class="border-top-0 pt-2 pb-2">ID</th>
+                                    <th class="border-top-0 pt-2 pb-2">画像</th>
+                                    <th class="border-top-0 pt-2 pb-2">商品名</th>
+                                    <th class="border-top-0 pt-2 pb-2">コード</th>
+                                    <th class="border-top-0 pt-2 pb-2">価格</th>
+                                    <th class="border-top-0 pt-2 pb-2">在庫数</th>
+                                    <th class="border-top-0 pt-2 pb-2 text-nowrap">公開状態</th>
+                                    <th class="border-top-0 pt-2 pb-2">登録日</th>
+                                    <th class="border-top-0 pt-2 pb-2">更新日</th>
+                                    <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="align-middle">204</td>
+                                        <td class="align-middle">
+                                            <a href="http://animalline.local/aniconfig/product/product/204/edit">
+                                                <img src="/html/upload/save_image/no_image_product.png" style="max-width: 50px">
+                                            </a>
+                                        </td>
+                                        <td class="align-middle">
+                                            <a href="http://animalline.local/aniconfig/product/product/204/edit">シュプレモ　小型犬用　成犬用　６ｋｇ　　　　　</a>
+                                        </td>
+                                        <td class="align-middle">1100173</td>
+                                        <td class="align-middle">￥8,267</td>
+                                        <td class="align-middle"></td>
+                                        <td class="align-middle">公開</td>
+                                        <td class="align-middle">2021/09/21 14:09</td>
+                                        <td class="align-middle">2021/09/21 14:09</td>
+                                        <td class="align-middle pr-3" colspan="3">
+                                        <div class="text-right">
+                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="表示">
+                                                <a class="btn btn-ec-actionIcon" href="#" target="_blank">
+                                                    <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="複製">
+                                                <a href="#" class="btn btn-ec-actionIcon" data-toggle="modal" data-target="#confirmModal-204">
+                                                    <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                            <div class="modal fade" id="confirmModal-204" tabindex="-1" role="dialog" aria-labelledby="confirmModal-204" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title font-weight-bold">商品を複製します</h5>
+                                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">×</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body text-left">
+                                                            <p class="text-left">商品を複製してよろしいですか？</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-ec-sub" type="button"data-dismiss="modal">キャンセル</button>
+                                                            <a href="#" class="btn btn-ec-conversion"
+                                                            data-confirm="false" data-method="post">複製</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+            <!-- 完全に削除の確認モーダル-->
+            <div class="modal fade" id="bulkDeleteModal" tabindex="-1" role="dialog" aria-labelledby="discontinuance" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title font-weight-bold">商品を削除します</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body text-left">
+                            <p class="text-left">商品を削除してよろしいですか？</p>
+                            <ul id="bulkErrors"></ul>
+                            <div class="progress" style="display: none">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-ec-sub" type="button" data-dismiss="modal">キャンセル</button>
+                            <button class="btn btn-ec-delete" type="button" id="bulkDelete">削除</button>
+                            <button class="btn btn-ec-regular" id="bulkDeleteDone" style="display: none" type="button" data-dismiss="modal">完了</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+

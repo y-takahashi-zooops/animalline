@@ -161,11 +161,26 @@ class ExportRelease extends Command
                     $orderItem = $this->orderItemRepository->findOneBy(['Shipping' => $shipping]);
                     if ($orderItem) {
                         $shippingScheduleHeader = new ShippingScheduleHeader();
+
+                        // 着荷時刻を佐川用コードに変換
+                        $shippingDeliveryTime = $shipping->getShippingDeliveryTime();
+                        if( $shippingDeliveryTime == "午前" ){
+                            $shippingDeliveryTimeCode = "01";
+                        } elseif( $shippingDeliveryTime == "12:00～14:00" ){
+                            $shippingDeliveryTimeCode = "12";
+                        } elseif( $shippingDeliveryTime == "14:00～16:00" ){
+                            $shippingDeliveryTimeCode = "14";
+                        } elseif( $shippingDeliveryTime == "16:00～18:00" ){
+                            $shippingDeliveryTimeCode = "16";
+                        } elseif( $shippingDeliveryTime == "18:00～21:00" ){
+                            $shippingDeliveryTimeCode = "04";
+                        }
+
                         $shippingScheduleHeader
                             ->setShipping($shipping)
                             ->setShippingDateSchedule($shipping->getShippingDate())
                             ->setArrivalDateSchedule($shipping->getShippingDeliveryDate())
-                            ->setArrivalTimeCodeSchedule($shipping->getShippingDeliveryTime())
+                            ->setArrivalTimeCodeSchedule($shippingDeliveryTimeCode)
                             ->setCustomerName($shipping->getName01() . $shipping->getName02())
                             ->setCustomerZip($shipping->getPostalCode())
                             ->setCustomerAddress($shipping->getAddr01() . $shipping->getAddr02())

@@ -1161,10 +1161,22 @@ class ProductController extends BaseProductController
     /**
      * 入荷情報登録画面
      * 
-     * @Route("/%eccube_admin_route%/product/instock", name="admin_product_instock")
-     * @Template("@admin/Product/instock.twig")
+     * @Route("/%eccube_admin_route%/product/instock", name="admin_product_instock_list")
+     * @Template("@admin/Product/instock_list.twig")
      */
-    public function instock(Request $request)
+    public function instock_list(Request $request)
+    {
+        return[];
+    }
+
+    /**
+     * 入荷情報登録画面
+     * 
+     * @Route("/%eccube_admin_route%/product/instock/new", name="admin_product_instock_registration_new")
+     * @Route("/%eccube_admin_route%/product/instock/edit/{id}", name="admin_product_instock_registration_edit")
+     * @Template("@admin/Product/instock_edit.twig")
+     */
+    public function instock_registration(Request $request)
     {
         return[];
     }

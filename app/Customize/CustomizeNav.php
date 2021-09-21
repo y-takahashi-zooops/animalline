@@ -53,9 +53,13 @@ class CustomizeNav implements EccubeNav
 						'name' => '廃棄管理',
 						'url' => 'admin_product_waste',
 					],
-					'instock' => [
+					'instock_master' => [
+						'name' => '入荷情報一覧',
+						'url' => 'admin_product_instock_list',
+					],
+					'instock_edit' => [
 						'name' => '入荷情報登録',
-						'url' => 'admin_product_instock',
+						'url' => 'admin_product_instock_registration_new',
 					],
 				],
 			],
