@@ -6,7 +6,6 @@ use Customize\Entity\Breeders;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Eccube\Util\StringUtil;
-use Customize\Config\AnilineConf;
 
 /**
  * @method Breeders|null find($id, $lockMode = null, $lockVersion = null)
@@ -28,7 +27,7 @@ class BreedersRepository extends ServiceEntityRepository
      * @param array $order
      * @return array
      */
-    public function filterBreederAdmin(array $criteria, array $order)
+    public function filterBreederAdmin(array $criteria, array $order): array
     {
         $qb = $this->createQueryBuilder('b');
         if (isset($criteria['breeder_name']) && StringUtil::isNotBlank($criteria['breeder_name'])) {

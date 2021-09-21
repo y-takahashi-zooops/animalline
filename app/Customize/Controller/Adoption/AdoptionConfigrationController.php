@@ -9,6 +9,7 @@ use Customize\Entity\ConservationContacts;
 use Customize\Entity\ConservationPets;
 use Customize\Entity\ConservationPetImage;
 use Customize\Entity\ConservationsHouse;
+use Customize\Entity\DnaCheckStatus;
 use Customize\Form\Type\ConservationHouseType;
 use Customize\Form\Type\ConservationPetsType;
 use Customize\Form\Type\ConservationsType;
@@ -91,6 +92,8 @@ class AdoptionConfigrationController extends AbstractController
     }
 
     /**
+     * get message adoption configuration
+     *
      * @Route("/adoption/configration/all_message", name="get_message_adoption_configration")
      * @Template("animalline/adoption/configration/get_message.twig")
      */
@@ -180,7 +183,7 @@ class AdoptionConfigrationController extends AbstractController
                 ->setSendDate(new DateTime());
             $entityManager = $this->getDoctrine()->getManager();
             $rootMessage->setCustomerNewMsg(1)
-                        ->setLastMessageDate(Carbon::now());
+                ->setLastMessageDate(Carbon::now());
             $entityManager->persist($conservationContact);
             $entityManager->persist($rootMessage);
             $entityManager->flush();
@@ -190,12 +193,12 @@ class AdoptionConfigrationController extends AbstractController
         if ($isAcceptContract) {
             switch ($rootMessage->getContractStatus()) {
                 case AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION:
-                    $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT )
-                    ->setConservationCheck(1);
+                    $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
+                        ->setConservationCheck(1);
                     break;
                 case AnilineConf::CONTRACT_STATUS_WAITCONTRACT:
-                    $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT )
-                    ->setConservationCheck(1);
+                    $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
+                        ->setConservationCheck(1);
                     break;
             }
             $entityManager = $this->getDoctrine()->getManager();
@@ -239,7 +242,12 @@ class AdoptionConfigrationController extends AbstractController
     }
 
     /**
+     * adoption configuration pets new
+     *
      * @Route("/adoption/configuration/pets/new/{conservation_id}", name="adoption_configuration_pets_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param ConservationsRepository $conservationsRepository
+     * @return Response
      */
     public function adoption_configuration_pets_new(Request $request, ConservationsRepository $conservationsRepository): Response
     {
@@ -285,12 +293,18 @@ class AdoptionConfigrationController extends AbstractController
             $conservationPet->addConservationPetImage($petImage4);
             $conservationPet->setThumbnailPath($img0);
 
+            $dnaCheckStatus = (new DnaCheckStatus)
+                ->setRegisterId($conservation->getId())
+                ->setPetId($conservationPet->getId())
+                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
+
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($conservationPet);
+            $entityManager->persist($dnaCheckStatus);
             $entityManager->flush();
 
             return $this->redirectToRoute('adoption_pet_list');
@@ -303,7 +317,12 @@ class AdoptionConfigrationController extends AbstractController
     }
 
     /**
+     * adoption configuration pets edit
+     *
      * @Route("/adoption/configuration/pets/edit/{id}", name="adoption_configuration_pets_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param ConservationPets $conservationPet
+     * @return Response
      */
     public function adoption_configuration_pets_edit(Request $request, ConservationPets $conservationPet): Response
     {
@@ -388,7 +407,13 @@ class AdoptionConfigrationController extends AbstractController
     }
 
     /**
+     * pet data by pet kind
+     *
      * @Route("/pet_data_by_pet_kind", name="pet_data_by_pet_kind", methods={"GET"})
+     * @param Request $request
+     * @param BreedsRepository $breedsRepository
+     * @param CoatColorsRepository $coatColorsRepository
+     * @return JsonResponse
      */
     public function petDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
     {
@@ -418,6 +443,8 @@ class AdoptionConfigrationController extends AbstractController
     }
 
     /**
+     * adoption pets upload crop image
+     *
      * @Route("/adoption/configration/pets/upload", name="adoption_pets_upload_crop_image", methods={"POST"}, options={"expose"=true})
      * @param Request $request
      * @return JsonResponse
@@ -438,6 +465,8 @@ class AdoptionConfigrationController extends AbstractController
     }
 
     /**
+     * adoption base information
+     *
      * @Route("/adoption/configration/baseinfo", name="adoption_baseinfo")
      * @Template("/animalline/adoption/configration/baseinfo.twig")
      */
@@ -474,6 +503,8 @@ class AdoptionConfigrationController extends AbstractController
     }
 
     /**
+     * house information
+     *
      * @Route("/adoption/configration/houseinfo/{pet_type}", name="adoption_houseinfo")
      * @Template("/animalline/adoption/configration/houseinfo.twig")
      */

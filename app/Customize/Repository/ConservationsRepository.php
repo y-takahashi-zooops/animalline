@@ -5,7 +5,6 @@ namespace Customize\Repository;
 use Customize\Entity\Conservations;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Eccube\Util\StringUtil;
 use Customize\Config\AnilineConf;
 
 /**
@@ -24,10 +23,10 @@ class ConservationsRepository extends ServiceEntityRepository
     /**
      * Search conservation with examination_status and organization_name
      *
-     * @param  array $request
+     * @param array $request
      * @return array
      */
-    public function searchConservations($request)
+    public function searchConservations(array $request): array
     {
         $qb = $this->createQueryBuilder('c');
         if (isset($request['organization_name']) && !empty($request['organization_name'])) {
@@ -53,8 +52,8 @@ class ConservationsRepository extends ServiceEntityRepository
             }
         }
 
-        $orderField = isset($request['field']) ? $request['field'] : 'create_date';
-        $direction = isset($request['direction']) ? $request['direction'] : 'DESC';
+        $orderField = $request['field'] ?? 'create_date';
+        $direction = $request['direction'] ?? 'DESC';
         return $qb->orderBy('c.' . $orderField, $direction)
             ->getQuery()
             ->getResult();

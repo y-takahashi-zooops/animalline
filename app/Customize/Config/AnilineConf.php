@@ -145,4 +145,14 @@ final class AnilineConf
     const ANILINE_WMS_RESULT_ERROR = 3;
 
     const ANILINE_WMS_WITH_TAX = 1.1;
+
+    const ANILINE_SITE_TYPE_BREEDER = 1; // ブリーダー
+    const ANILINE_SITE_TYPE_ADOPTION = 2; // 保護団体
+
+    // ステータス確認
+    const ANILINE_DNA_CHECK_STATUS_DEFAULT = 1; // 受付
+    const ANILINE_DNA_CHECK_STATUS_NOT_NORMAL = 6; // 検体異
+    const ANILINE_DNA_CHECK_STATUS_PASSED = 8; // 検査通過
+    const ANILINE_DNA_CHECK_STATUS_NG = 9; // 検査NG
+    const ANILINE_DNA_CHECK_STATUS_RESENT = 10; // 検体再送付手続済
 }

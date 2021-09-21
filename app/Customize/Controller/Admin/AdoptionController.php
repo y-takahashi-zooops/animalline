@@ -13,7 +13,6 @@
 
 namespace Customize\Controller\Admin;
 
-
 use Customize\Config\AnilineConf;
 use Customize\Form\Type\Admin\ConservationHouseType;
 use Customize\Repository\BreedsRepository;
@@ -94,6 +93,8 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * 保護団体一覧
+     *
      * @Route("/%eccube_admin_route%/adoption/adoption_list", name="admin_adoption_list")
      * @Template("@admin/Adoption/index.twig")
      */
@@ -114,6 +115,8 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * 登録内容編集保護団体管理
+     *
      * @Route("/%eccube_admin_route%/adoption/edit/{id}", name="admin_adoption_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/edit.twig")
      */
@@ -134,6 +137,8 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * 犬舎・猫舎情報編集保護団体管理
+     *
      * @Route("/%eccube_admin_route%/adoption/house/{id}", name="admin_adoption_house", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/house.twig")
      */
@@ -168,6 +173,8 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * 審査情報表示保護団体管理
+     *
      * @Route("/%eccube_admin_route%/adoption/examination/{id}", name="admin_adoption_examination", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/examination.twig")
      */
@@ -177,6 +184,8 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * ペット一覧保護団体管理
+     *
      * @Route("/%eccube_admin_route%/adoption/pet/list/{id}", name="admin_adoption_pet_list", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/pet/index.twig")
      */
@@ -223,6 +232,8 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * ペット情報編集保護団体管理
+     *
      * @Route("/%eccube_admin_route%/adoption/pet/edit/{id}", name="admin_adoption_pet_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/pet/edit.twig")
      */
@@ -234,7 +245,7 @@ class AdoptionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $conservationPet->setBreedsType($this->breedsRepository->find($request->get('breeds_type')));
             $conservationPet->setCoatColor($this->coatColorsRepository->find($request->get('coat_color')));
-            
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationPet);
             $entityManager->flush();
@@ -245,7 +256,7 @@ class AdoptionController extends AbstractController
         $breeds = $this->breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()]);
         $colors = $this->coatColorsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()]);
         $images = $this->conservationPetImageRepository->findBy(['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
-        
+
         return $this->render('@admin/Adoption/pet/edit.twig', [
             'form' => $form->createView(),
             'conservationPet' => $conservationPet,

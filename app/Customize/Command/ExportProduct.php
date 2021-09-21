@@ -15,8 +15,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- */
 class ExportProduct extends Command
 {
     protected static $defaultName = 'eccube:customize:wms-item';
@@ -46,12 +44,21 @@ class ExportProduct extends Command
      */
     protected $wmsSyncInfoRepository;
 
+    /**
+     * ExportProduct constructor.
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param WmsSyncInfoRepository $wmsSyncInfoRepository
+     * @param ProductClassRepository $productClassRepository
+     * @param ProductRepository $productRepository
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         WmsSyncInfoRepository  $wmsSyncInfoRepository,
         ProductClassRepository $productClassRepository,
         ProductRepository      $productRepository
-    ) {
+    )
+    {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;

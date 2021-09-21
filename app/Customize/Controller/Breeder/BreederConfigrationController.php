@@ -89,8 +89,7 @@ class BreederConfigrationController extends AbstractController
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         BreederHouseRepository           $breederHouseRepository,
         SendoffReasonRepository          $sendoffReasonRepository
-    )
-    {
+    ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -101,6 +100,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Page All message's breeder
+     * 
      * @Route("/breeder/configration/all_message", name="get_message_breeder_configration")
      * @Template("animalline/breeder/configration/get_message.twig")
      */
@@ -172,6 +173,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Page breeder's message
+     * 
      * @Route("/breeder/configration/message/{contact_id}", name="breeder_configration_messages", requirements={"contact_id" = "\d+"})
      * @Template("animalline/breeder/configration/message.twig")
      */
@@ -257,6 +260,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Page pet new's Breeder
+     * 
      * @Route("/breeder/configration/pets/new/{breeder_id}", name="breeder_configuration_pets_new", methods={"GET","POST"})
      */
     public function breeder_configuration_pets_new(Request $request, BreedersRepository $breedersRepository): Response
@@ -320,6 +325,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Breeder edit pets
+     * 
      * @Route("/breeder/configration/pets/edit/{id}", name="breeder_configuration_pets_edit", methods={"GET","POST"})
      */
     public function breeder_configuration_pets_edit(Request $request, BreederPets $breederPet): Response
@@ -406,6 +413,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Get pet data by pet kind
+     * 
      * @Route("/breeder_pet_data_by_pet_kind", name="breeder_pet_data_by_pet_kind", methods={"GET"})
      */
     public function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
@@ -436,9 +445,9 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Upload image
+     * 
      * @Route("/breeder/configration/pets/upload", name="breeder_pets_upload_crop_image", methods={"POST"}, options={"expose"=true})
-     * @param Request $request
-     * @return JsonResponse
      */
     public function upload(Request $request)
     {
@@ -456,6 +465,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Breeder base information
+     * 
      * @Route("/breeder/configration/baseinfo", name="breeder_baseinfo")
      * @Template("/animalline/breeder/configration/baseinfo.twig")
      */
@@ -492,6 +503,8 @@ class BreederConfigrationController extends AbstractController
     }
 
     /**
+     * Page examination infomation's breeder
+     * 
      * @Route("/breeder/configration/examinationinfo/{pet_type}", name="breeder_examinationinfo", methods={"GET","POST"})
      * @Template("/animalline/breeder/configration/examinationinfo.twig")
      */
@@ -506,8 +519,10 @@ class BreederConfigrationController extends AbstractController
         $isEdit = false;
         if ($breederExaminationInfo) {
             $isEdit = true;
-            if (in_array($breederExaminationInfo->getPedigreeOrganization(),
-                [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC])) {
+            if (in_array(
+                $breederExaminationInfo->getPedigreeOrganization(),
+                [AnilineConf::PEDIGREE_ORGANIZATION_JKC, AnilineConf::PEDIGREE_ORGANIZATION_KC]
+            )) {
                 $breederExaminationInfo->setGroupOrganization($breederExaminationInfo->getPedigreeOrganization());
                 $breederExaminationInfo->setPedigreeOrganization(AnilineConf::PEDIGREE_ORGANIZATION_JKC);
             }
