@@ -25,12 +25,15 @@ use Customize\Repository\CoatColorsRepository;
 use Customize\Repository\ConservationPetImageRepository;
 use Customize\Form\Type\Admin\ConservationsType;
 use Customize\Service\AdoptionQueryService;
+use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;
+use Eccube\Repository\CustomerRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AdoptionController extends AbstractController
 {
@@ -65,6 +68,16 @@ class AdoptionController extends AbstractController
     protected $conservationPetImageRepository;
 
     /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
+     * @var MailService
+     */
+    protected $mailService;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationsRepository $conservationsRepository
@@ -73,6 +86,8 @@ class AdoptionController extends AbstractController
      * @param ConservationPetImageRepository $conservationPetImageRepository
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param AdoptionQueryService $adoptionQueryService
+     * @param CustomerRepository $customerRepository
+     * @param MailService $mailService
      */
 
     public function __construct(
@@ -81,7 +96,9 @@ class AdoptionController extends AbstractController
         CoatColorsRepository           $coatColorsRepository,
         ConservationPetImageRepository $conservationPetImageRepository,
         ConservationPetsRepository     $conservationPetsRepository,
-        AdoptionQueryService           $adoptionQueryService
+        AdoptionQueryService           $adoptionQueryService,
+        CustomerRepository             $customerRepository,
+        MailService                    $mailService
     )
     {
         $this->conservationsRepository = $conservationsRepository;
@@ -90,6 +107,8 @@ class AdoptionController extends AbstractController
         $this->conservationPetImageRepository = $conservationPetImageRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
+        $this->customerRepository = $customerRepository;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -181,6 +200,57 @@ class AdoptionController extends AbstractController
     public function Examination(Request $request)
     {
         return;
+    }
+
+    /**
+     * 審査結果登録ブリーダー管理
+     *
+     * @Route("/%eccube_admin_route%/adoption/examination/regist/{id}", name="admin_adoption_examination_regist", requirements={"id" = "\d+"})
+     * @Template("@admin/Adoption/examination_regist.twig")
+     */
+    public function Examination_regist(Request $request)
+    {
+        $conservationId = $request->get("id");
+        /** @var $Customer \Eccube\Entity\Customer */
+        $Customer = $this->customerRepository->find($conservationId);
+        if (!$Customer) throw new NotFoundHttpException();
+
+        $comment = $request->get('examination_result_comment');
+        $data = [
+            'name' => "{$Customer->getName01()} {$Customer->getName02()}",
+            'examination_comment' => "<span id='ex-comment'>{$comment}</span>"
+        ];
+
+        if ($request->isMethod('POST')) {
+            $result = (int)$request->get('examination_result');
+
+            $conservation = $this->conservationRepository->find($conservationId);
+
+            if ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
+                $conservation->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK);
+            } elseif ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_NG) {
+                $conservation->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG);
+            }
+
+            $data['examination_comment'] = $comment;
+            if ($result === AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
+                $this->mailService->sendBreederExaminationMailAccept($Customer, $data);
+                $Customer->setIsConservation(1);
+            } else {
+                $this->mailService->sendBreederExaminationMailReject($Customer, $data);
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($Customer);
+            $entityManager->flush();
+
+            $this->addSuccess('審査結果を登録しました。', 'admin');
+            return $this->redirectToRoute('admin_adoption_list');
+        }
+
+        return compact(
+            'data'
+        );
     }
 
     /**
