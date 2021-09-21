@@ -10,10 +10,10 @@ file that was distributed with this source code.
 #}
 {% extends '@admin/default_frame.twig' %}
 
-{% set menus = ['breeders', 'breeders_breeder_list'] %}
+{% set menus = ['adoptions', 'adoptions_adoption_list'] %}
 
 {% block title %}{{ '審査結果登録'|trans }}{% endblock %}
-{% block sub_title %}{{ 'ブリーダー管理'|trans }}{% endblock %}
+{% block sub_title %}{{ '保護団体管理'|trans }}{% endblock %}
 
 {% block stylesheet %}
 <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
@@ -67,7 +67,7 @@ file that was distributed with this source code.
         <div class="c-contentsArea__primaryCol">
             <div class="c-primaryCol">
                 <div class="card rounded border-0 mb-4">
-                    <div class="card-header"><span class="card-title">審査結果編集</span></div>
+                    <div class="card-header"><span class="card-title">審査結果登録</span></div>
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-2">

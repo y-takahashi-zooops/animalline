@@ -228,10 +228,10 @@ class AdoptionController extends AbstractController
 
             $data['examination_comment'] = $comment;
             if ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK) {
-                $this->mailService->sendBreederExaminationMailAccept($Customer, $data);
+                $this->mailService->sendAdoptionExaminationMailAccept($Customer, $data);
                 $Customer->setIsConservation(1);
             } else if ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG) {
-                $this->mailService->sendBreederExaminationMailReject($Customer, $data);
+                $this->mailService->sendAdoptionExaminationMailReject($Customer, $data);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
