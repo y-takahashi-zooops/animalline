@@ -203,7 +203,7 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * 審査結果登録ブリーダー管理
+     * 審査結果登録保護団体管理
      *
      * @Route("/%eccube_admin_route%/adoption/examination/regist/{id}", name="admin_adoption_examination_regist", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/examination_regist.twig")
