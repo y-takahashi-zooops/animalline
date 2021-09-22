@@ -137,7 +137,8 @@ class ExportProduct extends Command
                     $record['productNum'] = null;
                     $record['colorCode'] = '9999';
                     $record['sizeCode'] = '1';
-                    $record['price02Tax'] = round($record['price02Tax'], 2);
+                    $record['price02Tax'] = round($record['price02Tax'], 0);
+                    $record['price02'] = round($record['price02'], 0);
                     $sorted = [];
                     foreach ($fieldSorted as $value) {
                         array_push($sorted, $record[$value]);
