@@ -13,9 +13,10 @@
 
 namespace Customize\Controller\Admin\Product;
 
+use Customize\Entity\InstockScheduleHeader;
+use Doctrine\Common\Collections\ArrayCollection;
 use Customize\Config\AnilineConf;
 use Customize\Form\Type\Admin\InstockScheduleHeaderType;
-use Customize\Form\Type\Admin\RegisterProductsType;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
 use Eccube\Controller\AbstractController;
@@ -1168,14 +1169,23 @@ class ProductController extends BaseProductController
      */
     public function instock(Request $request)
     {
-        $builder = $this->formFactory->createBuilder(InstockScheduleHeaderType::class);
+        $TargetInstock = new InstockScheduleHeader();
+        $OriginItems = new ArrayCollection();
+        $entityManager = $this->getDoctrine()->getManager();
 
+        // 商品検索フォーム
+
+        $builder = $this->formFactory->createBuilder(InstockScheduleHeaderType::class, $TargetInstock);
         $form = $builder->getForm();
         $form->handleRequest($request);
-        $entityManager = $this->getDoctrine()->getManager();
+
+        $builder = $this->formFactory
+            ->createBuilder(SearchProductType::class);
+        $searchProductModalForm = $builder->getForm();
 
         return[
             'form' => $form->createView(),
+            'searchProductModalForm' => $searchProductModalForm->createView(),
         ];
     }
 }

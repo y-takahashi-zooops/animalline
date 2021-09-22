@@ -61,13 +61,13 @@ class InstockScheduleHeaderType extends AbstractType
             ])
             ->add('remark_text', TextareaType::class, [
                 'required' => false,
-            ])
-            ->add('instockSchedules', CollectionType::class, [
-                'entry_type' => InstockScheduleType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype' => true,
             ]);
+//            ->add('instockSchedules', CollectionType::class, [
+//                'entry_type' => InstockScheduleType::class,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'prototype' => true,
+//            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
