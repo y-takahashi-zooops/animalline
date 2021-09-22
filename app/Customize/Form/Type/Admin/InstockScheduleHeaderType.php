@@ -62,7 +62,7 @@ class InstockScheduleHeaderType extends AbstractType
             ->add('remark_text', TextareaType::class, [
                 'required' => false,
             ])
-           ->add('InstockSchedule', CollectionType::class, [
+            ->add('InstockSchedule', CollectionType::class, [
                'entry_type' => InstockScheduleType::class,
                'allow_add' => true,
                'allow_delete' => true,
