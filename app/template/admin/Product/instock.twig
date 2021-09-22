@@ -120,14 +120,16 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                 </div>
-                                {{ form_errors(form.InstockItemsErrors) }}
+                                {# {{ form_errors(form.InstockItemsErrors) }} #}
                             </div>
-                            <div class="col-5 text-right">
+                            {# <div class="col-5 text-right">
                                 <button type="submit" class="btn btn-ec-regular mr-2" name="mode" value="calc" data-link="order-product" id="calculate"{{ action_disabled ? ' disabled="disabled"' }}>{{ 'admin.order.update_calculation_results'|trans }}</button>
-                            </div>
+                            </div> #}
                         </div>
+
                         <table id="table-form-field" class="table table-striped table-sm mb-0"
-                               data-prototype="{% filter escape %}{{ include('@admin/Product/instock_item_prototype.twig', {'instockItemForm': form.InstockItems.vars.prototype}) }}{% endfilter %}">
+                               {# data-prototype="{% filter escape %}{{ include('@admin/Product/instock_item_prototype.twig', {'instockScheduleForm': form.InstockSchedule.vars.prototype}) }}{% endfilter %}" #}
+                               >
                                 <thead class="table-active">
                                     <tr class="text-nowrap">
                                         <th class="pt-2 pb-2 pl-3">商品名・商品コード</th>
@@ -147,93 +149,93 @@ file that was distributed with this source code.
                                     </tr>
                             </thead>
                             <tbody>
-                                {% for instockItemForm in form.InstockItems %}
-                                    {% set InstockItem = instockItemForm.vars.data %}
+                                {% for instockScheduleForm in form.InstockSchedule %}
+                                    {% set instockSchedule = instockScheduleForm.vars.data %}
                                 <tr>
                                     {# hidden values #}
-                                    {{ form_widget(instockItemForm.ProductClass) }}
-                                    {{ form_widget(instockItemForm.order_item_type) }}
-                                    {{ form_widget(instockItemForm.tax_type) }}
+                                    {{ form_widget(instockScheduleForm.ProductClass) }}
+                                    {{ form_widget(instockScheduleForm.order_item_type) }}
+                                    {{ form_widget(instockScheduleForm.tax_type) }}
                                     <!-- 商品名 -->
                                     <td class="align-middle w-25 pl-3">
                                         <p class="mb-0 font-weight-bold">
                                             {# 商品とポイント値引きは名前変更できない #}
-                                            {% if InstockItem.isProduct or InstockItem.isPoint %}
-                                                {% if InstockItem.isProduct %}
-                                                    <a href="{{ url('admin_product_product_edit', {id: InstockItem.ProductClass.Product.id}) }}" target="_blank">
-                                                        {{ InstockItem.product_name }}
+                                            {% if instockSchedule.isProduct or instockSchedule.isPoint %}
+                                                {% if instockSchedule.isProduct %}
+                                                    <a href="{{ url('admin_product_product_edit', {id: instockSchedule.ProductClass.Product.id}) }}" target="_blank">
+                                                        {{ instockSchedule.product_name }}
                                                     </a>
                                                 {% else %}
-                                                    {{ InstockItem.product_name }}
+                                                    {{ instockSchedule.product_name }}
                                                 {% endif %}
-                                                {{ form_widget(instockItemForm.product_name, { 'type': 'hidden' }) }}
+                                                {{ form_widget(instockScheduleForm.product_name, { 'type': 'hidden' }) }}
                                             {% else %}
-                                                {{ form_widget(instockItemForm.product_name) }}
+                                                {{ form_widget(instockScheduleForm.product_name) }}
                                             {% endif %}
                                         </p>
                                         <span>
-                                            {{ InstockItem.product_code }}
-                                            {% if InstockItem.class_category_name1 is not empty %}
+                                            {{ instockSchedule.product_code }}
+                                            {% if instockSchedule.class_category_name1 is not empty %}
                                                 / (
-                                                {{ InstockItem.class_name1 }}：
-                                                {{ InstockItem.class_category_name1 }}
-                                                {% if InstockItem.class_category_name2 is not empty %}
+                                                {{ instockSchedule.class_name1 }}：
+                                                {{ instockSchedule.class_category_name1 }}
+                                                {% if instockSchedule.class_category_name2 is not empty %}
                                                     /
-                                                    {{ InstockItem.class_name2 }}：
-                                                    {{ InstockItem.class_category_name2 }}
+                                                    {{ instockSchedule.class_name2 }}：
+                                                    {{ instockSchedule.class_category_name2 }}
                                                 {% endif %}
                                                 )
                                             {% endif %}
                                         </span>
-                                        {{ form_errors(instockItemForm.product_name) }}
+                                        {{ form_errors(instockScheduleForm.product_name) }}
                                     </td>
                                     <!-- 金額 -->
                                     <td class="align-middle">
                                         <div class="col mt-3">
                                         {# ポイント値引きは価格変更できない #}
-                                            {% if InstockItem.isPoint %}
-                                                {{ form_widget(instockItemForm.price, {'attr': { 'readonly': 'readonly', 'class': 'pointPrice' } }) }}
+                                            {% if instockSchedule.isPoint %}
+                                                {{ form_widget(instockScheduleForm.price, {'attr': { 'readonly': 'readonly', 'class': 'pointPrice' } }) }}
                                             {% else %}
-                                                {{ form_widget(instockItemForm.price) }}
+                                                {{ form_widget(instockScheduleForm.price) }}
                                             {% endif %}
                                             <div class="text-right small">((税抜))</div>
-                                            {{ form_errors(instockItemForm.price) }}
+                                            {{ form_errors(instockScheduleForm.price) }}
                                         </div>
                                     </td>
                                     <!-- 数量 -->
                                     <td class="align-middle">
                                         <div class="col-12 col-xl-8">
                                             {# 複数配送の場合は商品の個数を変更できない、ポイントの場合も個数を変更できない #}
-                                            {% if (Instock.isMultiple and InstockItem.isProduct) or InstockItem.isPoint %}
-                                                {{ form_widget(instockItemForm.quantity, { 'attr': { 'readonly': 'readonly' } }) }}
+                                            {% if (Instock.isMultiple and instockSchedule.isProduct) or instockSchedule.isPoint %}
+                                                {{ form_widget(instockScheduleForm.quantity, { 'attr': { 'readonly': 'readonly' } }) }}
                                             {% else %}
-                                                {{ form_widget(instockItemForm.quantity) }}
+                                                {{ form_widget(instockScheduleForm.quantity) }}
                                             {% endif %}
-                                            {{ form_errors(instockItemForm.quantity) }}
+                                            {{ form_errors(instockScheduleForm.quantity) }}
                                         </div>
                                     </td>
                                     <!-- ダース数量 -->
                                     <td class="align-middle">
                                         <div class="col-12 col-xl-8">
                                             {# 複数配送の場合は商品の個数を変更できない、ポイントの場合も個数を変更できない #}
-                                            {% if (Instock.isMultiple and InstockItem.isProduct) or InstockItem.isPoint %}
-                                                {{ form_widget(instockItemForm.quantity_box, { 'attr': { 'readonly': 'readonly' } }) }}
+                                            {% if (Instock.isMultiple and instockSchedule.isProduct) or instockSchedule.isPoint %}
+                                                {{ form_widget(instockScheduleForm.quantity_box, { 'attr': { 'readonly': 'readonly' } }) }}
                                             {% else %}
-                                                {{ form_widget(instockItemForm.quantity_box) }}
+                                                {{ form_widget(instockScheduleForm.quantity_box) }}
                                             {% endif %}
-                                            {{ form_errors(instockItemForm.quantity_box) }}
+                                            {{ form_errors(instockScheduleForm.quantity_box) }}
                                         </div>
                                     </td>
                                     <!-- 小計 -->
                                     <td class="align-middle">
                                         <div class="col">
-                                            <span>{{ InstockItem.purchase_price|price }}</span>
+                                            <span>{{ instockSchedule.purchase_price|price }}</span>
                                         </div>
                                     </td>
                                     <td class="align-middle text-right pr-3">
                                         <div class="row justify-content-end">
                                         {# 複数配送の場合は商品を削除できない #}
-                                        {% if (Instock.isMultiple and InstockItem.isProduct) or InstockItem.isPoint %}
+                                        {% if (Instock.isMultiple and instockSchedule.isProduct) or instockSchedule.isPoint %}
                                             <div class="col-auto text-center">
                                                 <div class="d-inline-block mr-3" data-tooltip="true"
                                                         data-placement="top" title="{{ 'admin.common.delete'|trans }}">
@@ -246,12 +248,12 @@ file that was distributed with this source code.
                                             <div class="col-auto text-center">
                                                 <div class="d-inline-block mr-3" data-tooltip="true"
                                                 data-placement="top" title="{{ 'admin.common.delete'|trans }}">
-                                                    <a class="btn btn-ec-actionIcon" data-toggle="modal" data-target="#delete_{{ instockItemForm.vars.id }}">
+                                                    <a class="btn btn-ec-actionIcon" data-toggle="modal" data-target="#delete_{{ instockScheduleForm.vars.id }}">
                                                         <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
                                                     </a>
                                                 </div>
                                                 <!-- 明細の削除確認モーダル -->
-                                                <div class="modal fade" id="delete_{{ instockItemForm.vars.id }}" tabindex="-1" role="dialog" aria-labelledby="delete_{{ instockItemForm.vars.id }}" aria-hidden="true">
+                                                <div class="modal fade" id="delete_{{ instockScheduleForm.vars.id }}" tabindex="-1" role="dialog" aria-labelledby="delete_{{ instockScheduleForm.vars.id }}" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -261,7 +263,7 @@ file that was distributed with this source code.
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body text-left">
-                                                                <p class="text-left">明細は注文から削除されます。「{{ ({ '%name%' : InstockItem.product_name }) }}」を削除してよろしいですか？</p>
+                                                                <p class="text-left">明細は注文から削除されます。「{{ ({ '%name%' : instockSchedule.product_name }) }}」を削除してよろしいですか？</p>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button class="btn btn-ec-sub" type="button" data-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
@@ -304,7 +306,7 @@ file that was distributed with this source code.
                         <!-- お支払い合計 -->
                         <div class="row justify-content-end mb-3">
                             <div class="col-auto"><span class="align-middle">お支払い合計</span></div>
-                            <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">{{ Instock.payment_total|price }}</span></div>
+                            {# <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">{{ Instock.payment_total|price }}</span></div> #}
                         </div>
                         <hr>
                     </div>
