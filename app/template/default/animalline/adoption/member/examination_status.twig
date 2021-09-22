@@ -11,14 +11,19 @@
                     <input type="hidden" name="dna-id" value="">
                     <div class="row justify-content-between mb-2">
                         <div class="col-6"></div>
-                        <div class="col-2 text-right" {% if params.is_all is defined and params.is_all == 1 %} hidden {% endif %}>
-                            <a href="{{ path('adoption_examination_status', {'is_all': 1}) }}"
-                               class="btn btn-warning btn-block mt-3">全件表示</a>
+                        <div class="col-2 text-right">
+                            {% if params.is_all is defined and params.is_all == 1 %}
+                                <a href="{{ path('adoption_examination_status') }}"
+                                   class="btn btn-warning btn-block mt-3">未完了のみ表示</a>
+                            {% else %}
+                                <a href="{{ path('adoption_examination_status', {'is_all': 1}) }}"
+                                   class="btn btn-warning btn-block mt-3">全件表示</a>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="card rounded border-0 mb-4 d-block">
                         <div class="card-body p-0">
-                            <table class="table table-sm dna-table">
+                            <table class="table table-sm dna-table text-center">
                                 <thead>
                                 <tr>
                                     <th class="border-top-0 pt-2 pb-2">ID</th>
@@ -44,8 +49,8 @@
                                         <td class="align-middle">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
                                         <td class="align-middle">{{ dna.breeds_name }}</td>
                                         <td class="align-middle">{{ check_status[dna.check_status] }}</td>
-                                        <td class="align-middle">{{ dna.kit_shipping_date is empty ? '_' : dna.kit_shipping_date | date('Y/m/d H:i') }}</td>
-                                        <td class="align-middle">{{ dna.kit_return_date is empty ? '_' : dna.kit_return_date | date('Y/m/d H:i') }}</td>
+                                        <td class="align-middle">{{ dna.kit_shipping_date is empty ? '_' : dna.kit_shipping_date | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ dna.kit_return_date is empty ? '_' : dna.kit_return_date | date('Y/m/d') }}</td>
                                         <td class="align-middle pr-3" colspan="3">
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
