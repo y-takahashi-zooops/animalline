@@ -14,6 +14,7 @@
 namespace Customize\Controller\Admin\Product;
 
 use Customize\Config\AnilineConf;
+use Customize\Form\Type\Admin\InstockScheduleHeaderType;
 use Customize\Form\Type\Admin\RegisterProductsType;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
@@ -1167,7 +1168,7 @@ class ProductController extends BaseProductController
      */
     public function instock(Request $request)
     {
-        $builder = $this->formFactory->createBuilder(RegisterProductsType::class);
+        $builder = $this->formFactory->createBuilder(InstockScheduleHeaderType::class);
 
         $form = $builder->getForm();
         $form->handleRequest($request);

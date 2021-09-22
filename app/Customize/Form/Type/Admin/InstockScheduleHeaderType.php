@@ -2,15 +2,13 @@
 
 namespace Customize\Form\Type\Admin;
 
-use Customize\Entity\InstockSchedule;
 use Customize\Entity\InstockScheduleHeader;
-use Customize\Entity\Supplier;
-use Doctrine\DBAL\Types\DateType;
+use Customize\Repository\SupplierRepository;
 use Eccube\Common\EccubeConfig;
-use Eccube\Form\Type\Admin\InstockScheduleType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,29 +21,38 @@ class InstockScheduleHeaderType extends AbstractType
      */
     protected $eccubeConfig;
 
-    public function __construct(EccubeConfig $eccubeConfig)
+    /**
+     * @var SupplierRepository
+     */
+    protected $supplierRepository;
+
+    public function __construct(
+        EccubeConfig       $eccubeConfig,
+        SupplierRepository $supplierRepository
+    )
     {
         $this->eccubeConfig = $eccubeConfig;
+        $this->supplierRepository = $supplierRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // 仕入先ドロップダウン
+        $choices = [];
+        $suppliers = $this->supplierRepository->findAll();
+        foreach ($suppliers as $supplier) {
+            $choices[$supplier->getSupplierName()] = $supplier->getSupplierCode();
+        }
+
         $builder
             ->add('order_date', DateType::class, [
                 'placeholder' => '',
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
             ])
-            ->add('supplier_code', EntityType::class, [
-                'class' => Supplier::class,
-//                'choice' => ,
-                'choice_label' => function (Supplier $supplier) {
-                    return $supplier->getSupplierName();
-                },
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
+            ->add('supplier_code', ChoiceType::class, [
+                'choices' => $choices,
+                'placeholder' => 'common.select'
             ])
             ->add('arrival_date_schedule', DateType::class, [
                 'placeholder' => '',
