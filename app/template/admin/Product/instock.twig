@@ -113,9 +113,8 @@ file that was distributed with this source code.
                                             <div class="modal-body">
                                                 {{ form_widget(searchProductModalForm.id, { attr : {'class': 'mb-3', 'placeholder': 'admin.product.multi_search_label' }}) }}
                                                 {{ form_widget(searchProductModalForm.category_id) }}
-                                                <button type="button" id="search" class="btn btn-ec-conversion px-5 mb-4 mt-2">検索</button>
-                                                {# <div id="searchProductModalList" hidden> #}
-                                                <div id="searchProductModalList" style="display: none;"></div>
+                                                <button type="button" id="searchProductModalButton" class="btn btn-ec-conversion px-5 mb-4 mt-2">検索</button>
+                                                <div id="searchProductModalList"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -126,9 +125,8 @@ file that was distributed with this source code.
                                 <button type="submit" class="btn btn-ec-regular mr-2" name="mode" value="calc" data-link="order-product" id="calculate"{{ action_disabled ? ' disabled="disabled"' }}>{{ 'admin.order.update_calculation_results'|trans }}</button>
                             </div> #}
                         </div>
-
                         <table id="table-form-field" class="table table-striped table-sm mb-0"
-                               {# data-prototype="{% filter escape %}{{ include('@admin/Product/instock_item_prototype.twig', {'instockScheduleForm': form.InstockSchedule.vars.prototype}) }}{% endfilter %}" #}
+                               data-prototype="{% filter escape %}{{ include('@admin/Product/instock_item_prototype.twig', {'instockScheduleForm': form.InstockSchedule.vars.prototype}) }}{% endfilter %}"
                                >
                                 <thead class="table-active">
                                     <tr class="text-nowrap">
