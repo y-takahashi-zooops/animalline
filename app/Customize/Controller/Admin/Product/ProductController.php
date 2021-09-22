@@ -14,6 +14,7 @@
 namespace Customize\Controller\Admin\Product;
 
 use Customize\Config\AnilineConf;
+use Customize\Form\Type\Admin\RegisterProductsType;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
 use Eccube\Controller\AbstractController;
@@ -1166,6 +1167,14 @@ class ProductController extends BaseProductController
      */
     public function instock(Request $request)
     {
-        return[];
+        $builder = $this->formFactory->createBuilder(RegisterProductsType::class);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+        $entityManager = $this->getDoctrine()->getManager();
+
+        return[
+            'form' => $form->createView(),
+        ];
     }
 }

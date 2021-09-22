@@ -3,8 +3,8 @@
 namespace Customize\Form\Type\Admin;
 
 use Customize\Entity\BreederHouse;
-use Doctrine\DBAL\Types\DateType;
-use Doctrine\DBAL\Types\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Eccube\Common\EccubeConfig;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -28,7 +28,11 @@ class RegisterProductsType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('order_date', DateType::class)
+        $builder->add('order_date', DateType::class, [
+                'placeholder' => '',
+                'format' => 'yyyy-MM-dd',
+                'required' => false,
+            ])
             ->add('supplier_code', EntityType::class, [
                 'class' => 'Customize\Entity\Supplier',
                 'choice_label' => function (\Customize\Entity\Supplier $supplier) {
@@ -39,7 +43,11 @@ class RegisterProductsType extends AbstractType
                     new Assert\NotBlank(),
                 ],
             ])
-            ->add('arrival_date_schedule', DateType::class)
+            ->add('arrival_date_schedule', DateType::class, [
+                'placeholder' => '',
+                'format' => 'yyyy-MM-dd',
+                'required' => false,
+            ])
             ->add('remark_text', TextareaType::class)
             ->add('purchase_price', IntegerType::class)
             ->add('arrival_quantity', IntegerType::class)

@@ -53,84 +53,24 @@ file that was distributed with this source code.
                                         <label class="col-3 col-form-label">発注日</label>
                                         <div class="col">
                                             <div class="form-inline">
-                                                <select class="form-control mr-2">
-                                                    <option value="2016">2016</option>
-                                                    <option value="2017">2017</option>
-                                                    <option value="2018">2018</option>
-                                                    <option value="2019">2019</option>
-                                                    <option value="2020">2020</option>
-                                                    <option value="2021" selected>2021</option>
-                                                </select>
-                                                /
-                                                <select class="form-control mr-2 ml-2">
-                                                    <option value="1">01</option>
-                                                    <option value="2">02</option>
-                                                    <option value="3">03</option>
-                                                    <option value="4">04</option>
-                                                    <option value="5">05</option>
-                                                    <option value="6">06</option>
-                                                    <option value="7">07</option>
-                                                    <option value="8">08</option>
-                                                    <option value="9" selected>09</option>
-                                                    <option value="10">10</option>
-                                                    <option value="11">11</option>
-                                                    <option value="12">12</option>
-                                                </select>
-                                                /
-                                                <select class="form-control ml-2">
-                                                    <option value=""></option>
-                                                    <option value="1">01</option>
-                                                    <option value="2">02</option>
-                                                    <option value="15" selected>15</option>
-                                                    <option value="30">30</option>
-                                                    <option value="31">31</option>
-                                                </select>
+                                                {{ form_widget(form.order_date) }}
+                                                {{ form_errors(form.order_date) }}
                                             </div>  
                                         </div>
                                     </div>
                                     <div class="row mb-3 form-group">
                                         <label class="col-3 col-form-label">仕入先</label>
                                         <div class="col">
-                                            <select class="form-control">
-                                                <option value="1">仕入先1</option>
-                                                <option value="2">仕入先2</option>
-                                            </select>
+                                            {{ form_widget(form.supplier_code) }}
+                                            {{ form_errors(form.supplier_code) }}
                                         </div>
                                     </div>
                                     <div class="row mb-3 form-group">
                                         <label class="col-3 col-form-label" >入荷予定日</label>
                                         <div class="col">
                                             <div class="form-inline">
-                                                <select class="form-control mr-2">
-                                                    <option value=""></option>
-                                                    <option value="2021">2021</option>
-                                                    <option value="2022">2022</option>
-                                                    <option value="2023">2023</option>
-                                                </select>
-                                                /
-                                                <select class="form-control mr-2 ml-2">
-                                                    <option value=""></option>
-                                                    <option value="1">01</option>
-                                                    <option value="2">02</option>
-                                                    <option value="3">03</option>
-                                                    <option value="4">04</option>
-                                                    <option value="5">05</option>
-                                                    <option value="6">06</option>
-                                                    <option value="7">07</option>
-                                                    <option value="8">08</option>
-                                                    <option value="9">09</option>
-                                                    <option value="10">10</option>
-                                                    <option value="11">11</option>
-                                                    <option value="12">12</option>
-                                                </select>
-                                                /
-                                                <select class="form-control ml-2">
-                                                    <option value=""></option>
-                                                    <option value="1">01</option>
-                                                    <option value="2">02</option>
-                                                    <option value="30">30</option>
-                                                    <option value="31">31</option>
-                                                </select>
+                                                {{ form_widget(form.arrival_date_schedule) }}
+                                                {{ form_errors(form.arrival_date_schedule) }}
                                             </div>
                                         </div>
                                     </div>
@@ -139,7 +79,8 @@ file that was distributed with this source code.
                                     <div class="row mb-3 form-group">
                                         <label class="col-3 col-form-label">備考</label>
                                         <div class="col">
-                                            <textarea class="form-control" rows="6"></textarea>
+                                            {{ form_widget(form.remark_text, { attr : {'rows': '6'}}) }}
+                                            {{ form_errors(form.remark_text) }}
                                         </div>
                                     </div>
                                 </div>
