@@ -17,8 +17,64 @@ file that was distributed with this source code.
 
 {% block javascript %}
 <script>
-    $("#search").on('click', function() {
-        $('#searchProductModalList').show();
+    $(function(){
+        // 商品検索
+        $('#search').on('click', function () {
+            var list = $('#searchProductModalList');
+            list.children().remove();
+
+            $.ajax({
+                url: "{{ url('admin_order_search_product') }}",
+                type: 'POST',
+                dataType: 'html',
+                data: {
+                    'id': $('#admin_search_product_id').val(),
+                    'category_id': $('#admin_search_product_category_id').val()
+                }
+            }).done(function (data) {
+                $('#searchProductModalList').html(data);
+            }).fail(function (data) {
+                alert('search product failed.');
+            });
+        });
+
+        // ページング処理
+        $(document).on('click', '#searchProductModalList ul.pagination li.page-item a.page-link', function (e) {
+            e.preventDefault();
+            var list = $('#searchProductModalList');
+            list.children().remove();
+            var url = $(this).attr('href');
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'html'
+            }).done(function (data) {
+                $('#searchProductModalList').html(data);
+            }).fail(function (data) {
+                alert('search product failed.');
+            });
+        });
+
+        // 商品追加
+        $collectionHolder = $('#table-form-field');
+        index = $collectionHolder.find('tbody > tr').length;
+        formIdPrefix = '#order_OrderItems_';
+
+        $(document).on('click', '.delete', function (e) {
+            // 商品削除
+            $(this).parents('tr').remove();
+            index--;
+            $("#calculate").trigger('click');
+        });
+
+        // 計算結果の更新が押されたらページ内リンクさせる
+        $('.btn').click(function () {
+            var data = $(this).data();
+            if (data.link) {
+                $('#form1').attr('action', '#' + data.link).submit();
+                return false;
+            }
+        });
     });
 </script>
 {% endblock %}
@@ -114,8 +170,7 @@ file that was distributed with this source code.
                                                 {{ form_widget(searchProductModalForm.id, { attr : {'class': 'mb-3', 'placeholder': 'admin.product.multi_search_label' }}) }}
                                                 {{ form_widget(searchProductModalForm.category_id) }}
                                                 <button type="button" id="search" class="btn btn-ec-conversion px-5 mb-4 mt-2">検索</button>
-                                                {# <div id="searchProductModalList" hidden> #}
-                                                <div id="searchProductModalList" style="display: none;"></div>
+                                                <div id="searchProductModalList"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -128,8 +183,8 @@ file that was distributed with this source code.
                         </div>
 
                         <table id="table-form-field" class="table table-striped table-sm mb-0"
-                               {# data-prototype="{% filter escape %}{{ include('@admin/Product/instock_item_prototype.twig', {'instockScheduleForm': form.InstockSchedule.vars.prototype}) }}{% endfilter %}" #}
-                               >
+                            data-prototype="{% filter escape %}{{ include('@admin/Product/instock_item_prototype.twig', {'instockScheduleForm': form.InstockSchedule.vars.prototype}) }}{% endfilter %}"
+                            >
                                 <thead class="table-active">
                                     <tr class="text-nowrap">
                                         <th class="pt-2 pb-2 pl-3">商品名・商品コード</th>
