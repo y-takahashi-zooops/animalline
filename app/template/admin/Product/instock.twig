@@ -95,10 +95,10 @@ file that was distributed with this source code.
                             {# <div class="d-inline-block" data-tooltip="true" data-placement="top" title="購入された商品情報、及び、送料、手数料を含めた計算結果が表示されます。商品の追加や金額変更を行った場合は、計算結果の更新を行ってください。"><span class="card-title">商品情報<i class="fa fa-question-circle fa-lg ml-1"></i></span></div> #}
                             <div class="d-inline-block"><span class="card-title">商品情報</span></div>
                         </div>
-                        <div class="col-4 text-right"><a data-toggle="collapse" href="#orderItem" aria-expanded="false" aria-controls="orderItem"><i class="fa fa-angle-up fa-lg"></i></a></div>
+                        <div class="col-4 text-right"><a data-toggle="collapse" href="#instockItem" aria-expanded="false" aria-controls="instockItem"><i class="fa fa-angle-up fa-lg"></i></a></div>
                     </div>
                 </div>
-                <div class="collapse show ec-cardCollapse" id="orderItem">
+                <div class="collapse show ec-cardCollapse" id="instockItem">
                     <div class="card-body">
                         <div class="row justify-content-between mb-2">
                             <div class="col-6">
@@ -111,147 +111,171 @@ file that was distributed with this source code.
                                                 <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                             </div>
                                             <div class="modal-body">
-                                                <input type="text" id="admin_search_product_id" name="admin_search_product[id]" class="mb-3 form-control" placeholder="商品名・商品ID・商品コード" />
-                                                    <select class="form-control">
-                                                        <option value="">全ての商品</option>
-                                                        <option value="2">新入荷</option>
-                                                        <option value="1">ジェラート</option>
-                                                        <option value="3">　彩のデザート</option>
-                                                        <option value="4">　　CUBE</option>
-                                                        <option value="5">アイスサンド</option>
-                                                        <option value="6">　フルーツ</option>
-                                                    </select>
+                                                {{ form_widget(searchProductModalForm.id, { attr : {'class': 'mb-3', 'placeholder': 'admin.product.multi_search_label' }}) }}
+                                                {{ form_widget(searchProductModalForm.category_id) }}
                                                 <button type="button" id="search" class="btn btn-ec-conversion px-5 mb-4 mt-2">検索</button>
                                                 {# <div id="searchProductModalList" hidden> #}
-                                                <div id="searchProductModalList" style="display: none;">
-                                                    <table class="table table-striped table-sm mb-3">
-                                                        <thead class="table-active">
-                                                            <tr>
-                                                                <th class="pt-2 pb-2 pl-3">商品ID</th>
-                                                                <th class="pt-2 pb-2 pl-3">商品名・商品コード</th>
-                                                                <th class="pt-2 pb-2 pr-3"></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td class="align-middle pl-3">
-                                                                    2
-                                                                </td>
-                                                                <td class="align-middle pl-3">
-                                                                    <p class="m-0"> チェリーアイスサンド</p>
-                                                                    <span>sand-01</span>
-                                                                </td>
-                                                                <td class="align-middle pr-3 text-right">
-                                                                    <button type="button" class="btn btn-ec-actionIcon" onclick="location.href='{{path('admin_product_instock')}}'">
-                                                                        <i class="fa fa-plus fa-lg font-weight-bold text-secondary"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                <div id="searchProductModalList" style="display: none;"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                             </div>
-                         </div>
-                         <table id="table-form-field" class="table table-striped table-sm mb-0">
-                             <thead class="table-active">
-                             <tr class="text-nowrap">
-                                 <th class="pt-2 pb-2 pl-3">商品名・商品コード</th>
-                                 <th class="pt-2 pb-2">
-                                     <div class="col-8">金額</div>
-                                 </th>
-                                 <th class="pt-2 pb-2">
-                                     <div class="col-8">数量</div>
-                                 </th>
-                                 <th class="pt-2 pb-2">
-                                     <div class="col-8">ダース数量</div>
-                                 </th>
-                                 <th class="pt-2 pb-2">
-                                     <div class="col-8">小計</div>
-                                 </th>
-                                 <th class="pt-2 pb-2 pr-3"></th>
-                             </tr>
-                             </thead>
-                             <tbody>
-                                <input type="hidden" id="order_OrderItems_1_ProductClass" name="order[OrderItems][1][ProductClass]" value="11" />
-                                <input type="hidden" id="order_OrderItems_1_order_item_type" name="order[OrderItems][1][order_item_type]" value="1" />
-                                <input type="hidden" id="order_OrderItems_1_tax_type" name="order[OrderItems][1][tax_type]" value="1" />
-                                <!-- 商品名 -->
-                                <td class="align-middle w-25 pl-3">
-                                    <p class="mb-0 font-weight-bold">
-                                        <a href="http://animalline.local/aniconfig/product/product/2/edit" target="_blank">
-                                            チェリーアイスサンド
-                                        </a>
-                                    </p>
-                                    <span>sand-01</span>
-                                </td>
-                                <!-- 金額 -->
-                                <td class="align-middle">
-                                    <div class="col mt-3">
-                                    {# <div class="col"> #}
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">￥ </span>
-                                            </div>
-                                            <input type="text" required="required" class="form-control" value="2,800" />
+                                {{ form_errors(form.InstockItemsErrors) }}
+                            </div>
+                            <div class="col-5 text-right">
+                                <button type="submit" class="btn btn-ec-regular mr-2" name="mode" value="calc" data-link="order-product" id="calculate"{{ action_disabled ? ' disabled="disabled"' }}>{{ 'admin.order.update_calculation_results'|trans }}</button>
+                            </div>
+                        </div>
+                        <table id="table-form-field" class="table table-striped table-sm mb-0"
+                               data-prototype="{% filter escape %}{{ include('@admin/Product/instock_item_prototype.twig', {'instockItemForm': form.InstockItems.vars.prototype}) }}{% endfilter %}">
+                                <thead class="table-active">
+                                    <tr class="text-nowrap">
+                                        <th class="pt-2 pb-2 pl-3">商品名・商品コード</th>
+                                        <th class="pt-2 pb-2">
+                                            <div class="col-8">金額</div>
+                                        </th>
+                                        <th class="pt-2 pb-2">
+                                            <div class="col-8">数量</div>
+                                        </th>
+                                        <th class="pt-2 pb-2">
+                                            <div class="col-8">ダース数量</div>
+                                        </th>
+                                        <th class="pt-2 pb-2">
+                                            <div class="col-8">小計</div>
+                                        </th>
+                                        <th class="pt-2 pb-2 pr-3"></th>
+                                    </tr>
+                            </thead>
+                            <tbody>
+                                {% for instockItemForm in form.InstockItems %}
+                                    {% set InstockItem = instockItemForm.vars.data %}
+                                <tr>
+                                    {# hidden values #}
+                                    {{ form_widget(instockItemForm.ProductClass) }}
+                                    {{ form_widget(instockItemForm.order_item_type) }}
+                                    {{ form_widget(instockItemForm.tax_type) }}
+                                    <!-- 商品名 -->
+                                    <td class="align-middle w-25 pl-3">
+                                        <p class="mb-0 font-weight-bold">
+                                            {# 商品とポイント値引きは名前変更できない #}
+                                            {% if InstockItem.isProduct or InstockItem.isPoint %}
+                                                {% if InstockItem.isProduct %}
+                                                    <a href="{{ url('admin_product_product_edit', {id: InstockItem.ProductClass.Product.id}) }}" target="_blank">
+                                                        {{ InstockItem.product_name }}
+                                                    </a>
+                                                {% else %}
+                                                    {{ InstockItem.product_name }}
+                                                {% endif %}
+                                                {{ form_widget(instockItemForm.product_name, { 'type': 'hidden' }) }}
+                                            {% else %}
+                                                {{ form_widget(instockItemForm.product_name) }}
+                                            {% endif %}
+                                        </p>
+                                        <span>
+                                            {{ InstockItem.product_code }}
+                                            {% if InstockItem.class_category_name1 is not empty %}
+                                                / (
+                                                {{ InstockItem.class_name1 }}：
+                                                {{ InstockItem.class_category_name1 }}
+                                                {% if InstockItem.class_category_name2 is not empty %}
+                                                    /
+                                                    {{ InstockItem.class_name2 }}：
+                                                    {{ InstockItem.class_category_name2 }}
+                                                {% endif %}
+                                                )
+                                            {% endif %}
+                                        </span>
+                                        {{ form_errors(instockItemForm.product_name) }}
+                                    </td>
+                                    <!-- 金額 -->
+                                    <td class="align-middle">
+                                        <div class="col mt-3">
+                                        {# ポイント値引きは価格変更できない #}
+                                            {% if InstockItem.isPoint %}
+                                                {{ form_widget(instockItemForm.price, {'attr': { 'readonly': 'readonly', 'class': 'pointPrice' } }) }}
+                                            {% else %}
+                                                {{ form_widget(instockItemForm.price) }}
+                                            {% endif %}
+                                            <div class="text-right small">((税抜))</div>
+                                            {{ form_errors(instockItemForm.price) }}
                                         </div>
-                                        <div class="text-right small">(税抜)</div>
-                                    </div>
-                                </td>
-                                <!-- 数量 -->
-                                <td class="align-middle">
-                                    <div class="col-12 col-xl-8">
-                                        <input type="number" required="required" class="form-control" value="1" />                     
-                                    </div>
-                                </td>
-                                <!-- ダース数量 -->
-                                <td class="align-middle">
-                                    <div class="col-12 col-xl-8">
-                                        <input type="number" required="required" class="form-control" value="1" />                     
-                                    </div>
-                                </td>
-                                <!-- 小計 -->
-                                <td class="align-middle">
-                                    <div class="col">
-                                        <span>￥3,080</span>
-                                    </div>
-                                </td>
-                                <td class="align-middle text-right pr-3">
-                                    <div class="row justify-content-end">
-                                        <div class="col-auto text-center">
-                                            <div class="d-inline-block mr-3" data-tooltip="true"
-                                            data-placement="top" title="削除">
-                                                <a class="btn btn-ec-actionIcon" data-toggle="modal" data-target="#delete_order_OrderItems_1">
-                                                    <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
-                                                </a>
+                                    </td>
+                                    <!-- 数量 -->
+                                    <td class="align-middle">
+                                        <div class="col-12 col-xl-8">
+                                            {# 複数配送の場合は商品の個数を変更できない、ポイントの場合も個数を変更できない #}
+                                            {% if (Instock.isMultiple and InstockItem.isProduct) or InstockItem.isPoint %}
+                                                {{ form_widget(instockItemForm.quantity, { 'attr': { 'readonly': 'readonly' } }) }}
+                                            {% else %}
+                                                {{ form_widget(instockItemForm.quantity) }}
+                                            {% endif %}
+                                            {{ form_errors(instockItemForm.quantity) }}
+                                        </div>
+                                    </td>
+                                    <!-- ダース数量 -->
+                                    <td class="align-middle">
+                                        <div class="col-12 col-xl-8">
+                                            {# 複数配送の場合は商品の個数を変更できない、ポイントの場合も個数を変更できない #}
+                                            {% if (Instock.isMultiple and InstockItem.isProduct) or InstockItem.isPoint %}
+                                                {{ form_widget(instockItemForm.quantity_box, { 'attr': { 'readonly': 'readonly' } }) }}
+                                            {% else %}
+                                                {{ form_widget(instockItemForm.quantity_box) }}
+                                            {% endif %}
+                                            {{ form_errors(instockItemForm.quantity_box) }}
+                                        </div>
+                                    </td>
+                                    <!-- 小計 -->
+                                    <td class="align-middle">
+                                        <div class="col">
+                                            <span>{{ InstockItem.purchase_price|price }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-right pr-3">
+                                        <div class="row justify-content-end">
+                                        {# 複数配送の場合は商品を削除できない #}
+                                        {% if (Instock.isMultiple and InstockItem.isProduct) or InstockItem.isPoint %}
+                                            <div class="col-auto text-center">
+                                                <div class="d-inline-block mr-3" data-tooltip="true"
+                                                        data-placement="top" title="{{ 'admin.common.delete'|trans }}">
+                                                    <a class="btn btn-ec-actionIcon disabled">
+                                                        <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <!-- 明細の削除確認モーダル -->
-                                            <div class="modal fade" id="delete_order_OrderItems_1" tabindex="-1" role="dialog" aria-labelledby="delete_order_OrderItems_1" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title font-weight-bold">削除します</h5>
-                                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">×</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body text-left">
-                                                            <p class="text-left">明細は注文から削除されます。「チェリーアイスサンド」を削除してよろしいですか？</p>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button class="btn btn-ec-sub" type="button" data-dismiss="modal">キャンセル</button>
-                                                            <a href="#order-product" class="btn delete btn-ec-delete">削除</a>
+                                        {% else %}
+                                            <div class="col-auto text-center">
+                                                <div class="d-inline-block mr-3" data-tooltip="true"
+                                                data-placement="top" title="{{ 'admin.common.delete'|trans }}">
+                                                    <a class="btn btn-ec-actionIcon" data-toggle="modal" data-target="#delete_{{ instockItemForm.vars.id }}">
+                                                        <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                                <!-- 明細の削除確認モーダル -->
+                                                <div class="modal fade" id="delete_{{ instockItemForm.vars.id }}" tabindex="-1" role="dialog" aria-labelledby="delete_{{ instockItemForm.vars.id }}" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title font-weight-bold">{{ 'admin.common.delete_modal__title'|trans }}</h5>
+                                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body text-left">
+                                                                <p class="text-left">明細は注文から削除されます。「{{ ({ '%name%' : InstockItem.product_name }) }}」を削除してよろしいですか？</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-ec-sub" type="button" data-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
+                                                                <a href="#order-product" class="btn delete btn-ec-delete">{{ 'admin.common.delete'|trans }}</a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        {% endif %}
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                         <hr class="mt-0">
@@ -280,7 +304,7 @@ file that was distributed with this source code.
                         <!-- お支払い合計 -->
                         <div class="row justify-content-end mb-3">
                             <div class="col-auto"><span class="align-middle">お支払い合計</span></div>
-                            <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">￥3080</span></div>
+                            <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">{{ Instock.payment_total|price }}</span></div>
                         </div>
                         <hr>
                     </div>
