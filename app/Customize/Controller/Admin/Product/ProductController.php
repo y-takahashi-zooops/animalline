@@ -19,6 +19,7 @@ use Customize\Form\Type\Admin\InstockListType;
 use Customize\Form\Type\Admin\InstockScheduleHeaderType;
 use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\InstockScheduleRepository;
+use Customize\Service\ListInstockQueryService;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
 use Eccube\Controller\AbstractController;
@@ -136,6 +137,11 @@ class ProductController extends BaseProductController
     protected $instockScheduleRepository;
 
     /**
+     * @var ListInstockQueryService
+     */
+    protected $listInstockQueryService;
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -151,6 +157,7 @@ class ProductController extends BaseProductController
      * @param SupplierRepository $supplierRepository
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      * @param InstockScheduleRepository $instockScheduleRepository
+     * @param ListInstockQueryService $listInstockQueryService
      */
     public function __construct(
         CsvExportService                $csvExportService,
@@ -165,7 +172,8 @@ class ProductController extends BaseProductController
         TagRepository                   $tagRepository,
         SupplierRepository              $supplierRepository,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
-        InstockScheduleRepository       $instockScheduleRepository
+        InstockScheduleRepository       $instockScheduleRepository,
+        ListInstockQueryService         $listInstockQueryService
     )
     {
         $this->csvExportService = $csvExportService;
@@ -181,6 +189,7 @@ class ProductController extends BaseProductController
         $this->supplierRepository = $supplierRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
         $this->instockScheduleRepository = $instockScheduleRepository;
+        $this->listInstockQueryService = $listInstockQueryService;
     }
 
     /**
@@ -1197,6 +1206,7 @@ class ProductController extends BaseProductController
             $dates = $request->get('instock_list');
             $orderDate = $dates['order_date'];
             $scheduleDate = $dates['arrival_date_schedule'];
+//            $result = $this->listInstockQueryService->search($dates);
 
             if ($orderDate['year'] && $orderDate['month'] && $orderDate['day']) {
                 $orderDate = $orderDate['year'] . '-' . $orderDate['month'] . '-' . $orderDate['day'];
@@ -1225,7 +1235,7 @@ class ProductController extends BaseProductController
             $request->query->getInt('page', 1),
             $request->query->getInt('item', 50)
         );
-
+dump($result);die();
         return [
             'form' => $form->createView(),
             'instocks' => $instocks,
