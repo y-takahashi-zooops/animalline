@@ -65,6 +65,7 @@ class InstockScheduleHeaderType extends AbstractType
                'allow_add' => true,
                'allow_delete' => true,
                'prototype' => true,
+               'mapped' => false
            ]);
     }
 

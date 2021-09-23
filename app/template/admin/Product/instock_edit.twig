@@ -92,6 +92,7 @@ file that was distributed with this source code.
 
 {% block main %}
     <form name="form1" id="form1" method="post" action="?">
+        {{ form_widget(form._token) }}
         <div class="c-contentsArea__cols">
             <div class="c-contentsArea__primaryCol">
                 <div class="c-primaryCol">

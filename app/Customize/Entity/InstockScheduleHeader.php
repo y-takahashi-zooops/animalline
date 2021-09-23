@@ -51,7 +51,7 @@ class InstockScheduleHeader
     /**
      * @ORM\Column(name="is_cancel", type="smallint", nullable=false, options={"default" = 0})
      */
-    private $is_cancel;
+    private $is_cancel = 0;
 
     /**
      * @ORM\Column(name="cancel_reason", type="smallint", nullable=true)
