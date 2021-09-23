@@ -51,7 +51,12 @@ class InstockScheduleHeaderType extends AbstractType
                 'required' => true,
             ])
             ->add('supplier_code', ChoiceType::class, [
+                'placeholder' => 'common.select',
                 'choices' => $choices,
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
             ])
             ->add('arrival_date_schedule', DateType::class, [
                 'format' => 'yyyy-MM-dd',
@@ -61,12 +66,12 @@ class InstockScheduleHeaderType extends AbstractType
                 'required' => false,
             ])
             ->add('InstockSchedule', CollectionType::class, [
-               'entry_type' => OrderItemType::class,
-               'allow_add' => true,
-               'allow_delete' => true,
-               'prototype' => true,
-               'mapped' => false
-           ]);
+                'entry_type' => OrderItemType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'mapped' => false
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

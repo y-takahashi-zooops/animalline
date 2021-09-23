@@ -78,8 +78,6 @@ file that was distributed with this source code.
             }
         });
 
-        $('input[id$=_tax_rate]').val(0);
-
         $('input[id$=_tax_rate]').on('blur', function(){
             if ($(this).val() > 0) {
                 $(this).parent().parent().parent().find('input[id$=_quantity]').val(0);
@@ -304,7 +302,7 @@ file that was distributed with this source code.
                                             <!-- 小計 -->
                                             <td class="align-middle">
                                                 <div class="col">
-                                                    <span>{{ subtotalPrices[loop.index - 1] ?? 0 }}</span>
+                                                    <span>{{ (subtotalPrices[loop.index - 1] ?? 0) | price}}</span>
                                                 </div>
                                             </td>
                                             <td class="align-middle text-right pr-3">
