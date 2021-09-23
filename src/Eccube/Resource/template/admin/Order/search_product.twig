@@ -98,6 +98,8 @@ file that was distributed with this source code.
         $($lastRow).find(formIdPrefix + index + '_quantity').val(quantity);
         $($lastRow).find(formIdPrefix + index + '_order_item_type').val(type);
         $($lastRow).find(formIdPrefix + index + '_product_name').val(product_name);
+        $($lastRow).find(formIdPrefix + index + '_arrival_quantity_schedule').val(1);
+        $($lastRow).find(formIdPrefix + index + '_arrival_box_schedule').val(0);
 
         if ($('#class_category_name1').length) $('#class_category_name1').val($row.find('select[name=classcategory_id1] option:selected').text());
         if ($('#class_category_name2').length) $('#class_category_name2').val($row.find('select[name=classcategory_id2] option:selected').text());
