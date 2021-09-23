@@ -16,6 +16,7 @@ namespace Customize\Controller\Admin\Product;
 use Customize\Entity\InstockScheduleHeader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Customize\Config\AnilineConf;
+use Customize\Entity\InstockSchedule;
 use Customize\Form\Type\Admin\InstockScheduleHeaderType;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
@@ -1233,16 +1234,23 @@ class ProductController extends BaseProductController
                         $this->entityManager->persist($TargetInstock);
                         $this->entityManager->flush();
 
-                        foreach ($OriginItems as $Item) {
-                            if ($TargetInstock->getInstockSchedule()->contains($Item) === false) {
-                                $this->entityManager->remove($Item);
-                            }
-                        }
-                        $this->entityManager->flush();
+                        $items = $form['InstockSchedule']->getData();
+                        foreach ($items as $item) {
+                            // todo: update from form fields
+                            $InstockSchedule = (new InstockSchedule())
+                                ->setInstockHeader($TargetInstock)
+                                ->setWarehouseCode('00001')
+                                ->setItemCode01('')
+                                ->setItemCode02('')
+                                ->setPurchasePrice(2)
+                                ->setArrivalQuantitySchedule(3)
+                                ->setArrivalBoxSchedule(4);
 
+                            $this->entityManager->persist($InstockSchedule);
+                            $this->entityManager->flush();
+                        }
 
                         $this->addSuccess('admin.common.save_complete', 'admin');
-
                         log_info('受注登録完了', [$TargetInstock->getId()]);
 
                         return $this->redirectToRoute('admin_product_instock_list');
