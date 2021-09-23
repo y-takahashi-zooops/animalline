@@ -82,6 +82,7 @@ file that was distributed with this source code.
             if ($(this).val() > 0) {
                 $(this).parent().parent().parent().find('input[id$=_quantity]').val(0);
             } else {
+                $(this).val(0);
                 $(this).parent().parent().parent().find('input[id$=_quantity]').val(1);
             }
             $('#form1').submit();
@@ -91,6 +92,7 @@ file that was distributed with this source code.
             if ($(this).val() > 0) {
                 $(this).parent().parent().parent().find('input[id$=_tax_rate]').val(0);
             } else {
+                $(this).val(0);
                 $(this).parent().parent().parent().find('input[id$=_tax_rate]').val(1);
             }
             $('#form1').submit();
