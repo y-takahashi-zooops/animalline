@@ -1184,30 +1184,6 @@ class ProductController extends BaseProductController
      */
     public function instock_registration(Request $request, $id = null)
     {
-        //         $TargetInstock = new InstockScheduleHeader();
-        //         $OriginItems = new ArrayCollection();
-        //         $entityManager = $this->getDoctrine()->getManager();
-
-        //         // 商品検索フォーム
-
-        //         $builder = $this->formFactory->createBuilder(InstockScheduleHeaderType::class, $TargetInstock);
-        //         $form = $builder->getForm();
-
-        //         $form->handleRequest($request);
-        // //        $instockSchedule = $request->request->get('instock_schedule_header') ?
-        // //            $request->request->get('instock_schedule_header')['InstockSchedule'] : null;
-
-        //         $builder = $this->formFactory
-        //             ->createBuilder(SearchProductType::class);
-        //         $searchProductModalForm = $builder->getForm();
-        // //dump($instockSchedule);die;
-        //         return[
-        //             'form' => $form->createView(),
-        //             'searchProductModalForm' => $searchProductModalForm->createView(),
-        // //            'schedules' => $instockSchedule
-        //         ];
-
-
         $TargetInstock = null;
 
         // 空のエンティティを作成.
@@ -1233,13 +1209,14 @@ class ProductController extends BaseProductController
                 $price = $item->getPrice();
                 $quantity1 = $item->getQuantity();
                 $quantity2 = $item->getTaxRate();
+                $quantityBox = $item->getProduct()->getQuantityBox();
                 $subTotalPrice = 0;
                 if ($quantity1 == 0) {
-                    $subTotalPrice = $price * $quantity2;
+                    $subTotalPrice = $price * $quantity2 * $quantityBox;
                 } elseif ($quantity2 == 0) {
                     $subTotalPrice = $price * $quantity1;
                 } else {
-                    $subTotalPrice = $price * $quantity1 + $price * $quantity2;
+                    $subTotalPrice = $price * $quantity1 + $price * $quantity2 * $quantityBox;
                 }
 
                 $subTotalPrices[] = $subTotalPrice;
@@ -1254,27 +1231,15 @@ class ProductController extends BaseProductController
                         $this->entityManager->persist($TargetInstock);
                         $this->entityManager->flush();
 
-                        foreach ($items as $item) {
-                            $price = $item->getPrice();
-                            $quantity1 = $item->getQuantity();
-                            $quantity2 = $item->getTaxRate();
-                            $subTotalPrice = 0;
-                            if ($quantity1 == 0) {
-                                $subTotalPrice = $price * $quantity2;
-                            } elseif ($quantity2 == 0) {
-                                $subTotalPrice = $price * $quantity1;
-                            } else {
-                                $subTotalPrice = $price * $quantity1 + $price * $quantity2;
-                            }
-
+                        foreach ($items as $key => $item) {
                             $InstockSchedule = (new InstockSchedule())
                                 ->setInstockHeader($TargetInstock)
                                 ->setWarehouseCode('00001')
                                 ->setItemCode01('')
                                 ->setItemCode02('')
-                                ->setPurchasePrice($subTotalPrice)
-                                ->setArrivalQuantitySchedule($quantity1)
-                                ->setArrivalBoxSchedule($quantity2);
+                                ->setPurchasePrice($subTotalPrices[$key - 1])
+                                ->setArrivalQuantitySchedule($item->getQuantity())
+                                ->setArrivalBoxSchedule($item->getTaxRate());
 
                             $this->entityManager->persist($InstockSchedule);
                             $this->entityManager->flush();
@@ -1283,7 +1248,7 @@ class ProductController extends BaseProductController
                         $this->addSuccess('admin.common.save_complete', 'admin');
                         log_info('受注登録完了', [$TargetInstock->getId()]);
 
-                        return $this->redirectToRoute('admin_product_instock_list');
+                        return $this->redirectToRoute('admin_product_instock_registration_new');
                     }
                     break;
                 default:
