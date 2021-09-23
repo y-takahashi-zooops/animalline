@@ -21,6 +21,24 @@ file that was distributed with this source code.
 <script>
     $(".delete").on('click', function() {
     $('#DeleteModal').modal('show');
+    $('#bulkDelete').val($(this).data('id'));
+});
+    $("#bulkDelete").on('click', function() {
+    $.ajax({
+        url: '/aniconfig/product/instock/delete',
+        type: 'post',
+        dataType: 'json',
+        data: {
+            'id': $('#bulkDelete').val()
+        }
+    })
+        .done(function (data) {
+            $('#DeleteModal').modal('hide');
+            $('form').submit();
+        })
+        .fail(function (err) {
+            console.error(err);
+        });
 });
 </script>
 {% endblock %}
@@ -100,8 +118,8 @@ file that was distributed with this source code.
                                         <td class="pt-2 pb-2"></td>
                                         <td class="align-middle">{{ instock.id }}</td>
                                         <td class="align-middle">{{ supplier[instock.supplierCode] }}</td>
-                                        <td class="align-middle">{{ instock.orderDate | date('Y/m/d')}}</td>
-                                        <td class="align-middle">{{ instock.arrivalDateSchedule | date('Y/m/d')}}</td>
+                                        <td class="align-middle">{{ instock.orderDate | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.arrivalDateSchedule | date('Y/m/d') }}</td>
                                         <td class="align-middle">{{ instock. arrivalDate is empty ? '_' : instock. arrivalDate | date('Y/m/d') }}</td>
                                         <td class="align-middle pr-3" colspan="3">
                                             <div class="text-right">
@@ -115,7 +133,8 @@ file that was distributed with this source code.
                                                 </div>
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="削除">
-                                                    <a class="btn btn-ec-actionIcon delete">
+                                                    <a class="btn btn-ec-actionIcon delete"
+                                                       data-id="{{ instock.id }}">
                                                         <i class="fa fa-close fa-lg text-secondary"></i>
                                                     </a>
                                                 </div>
@@ -156,7 +175,7 @@ file that was distributed with this source code.
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-ec-sub" type="button" data-dismiss="modal">キャンセル</button>
-                            <button class="btn btn-ec-delete" type="button" id="bulkDelete">削除</button>
+                            <button class="btn btn-ec-delete" type="button" id="bulkDelete"">削除</button>
                             <button class="btn btn-ec-regular" id="bulkDeleteDone" style="display: none" type="button"
                                     data-dismiss="modal">完了
                             </button>

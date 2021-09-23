@@ -18,6 +18,7 @@ use Customize\Entity\InstockScheduleHeader;
 use Customize\Form\Type\Admin\InstockListType;
 use Customize\Form\Type\Admin\InstockScheduleHeaderType;
 use Customize\Repository\InstockScheduleHeaderRepository;
+use Customize\Repository\InstockScheduleRepository;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
 use Eccube\Controller\AbstractController;
@@ -56,6 +57,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -129,6 +131,11 @@ class ProductController extends BaseProductController
     protected $instockScheduleHeaderRepository;
 
     /**
+     * @var InstockScheduleRepository
+     */
+    protected $instockScheduleRepository;
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -143,6 +150,7 @@ class ProductController extends BaseProductController
      * @param TagRepository $tagRepository
      * @param SupplierRepository $supplierRepository
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
+     * @param InstockScheduleRepository $instockScheduleRepository
      */
     public function __construct(
         CsvExportService                $csvExportService,
@@ -156,7 +164,8 @@ class ProductController extends BaseProductController
         ProductStatusRepository         $productStatusRepository,
         TagRepository                   $tagRepository,
         SupplierRepository              $supplierRepository,
-        InstockScheduleHeaderRepository $instockScheduleHeaderRepository
+        InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
+        InstockScheduleRepository       $instockScheduleRepository
     )
     {
         $this->csvExportService = $csvExportService;
@@ -171,6 +180,7 @@ class ProductController extends BaseProductController
         $this->tagRepository = $tagRepository;
         $this->supplierRepository = $supplierRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
+        $this->instockScheduleRepository = $instockScheduleRepository;
     }
 
     /**
@@ -1179,31 +1189,31 @@ class ProductController extends BaseProductController
      */
     public function instock_list(PaginatorInterface $paginator, Request $request)
     {
-        $instockDate= new InstockScheduleHeader();
-        $instocks=[];
-        $supplier=[];
-        $count=0;
-        if($request->get('instock_list')) {
+        $instockDate = new InstockScheduleHeader();
+        $instocks = [];
+        $supplier = [];
+        $count = 0;
+        if ($request->get('instock_list')) {
             $dates = $request->get('instock_list');
             $orderDate = $dates['order_date'];
             $scheduleDate = $dates['arrival_date_schedule'];
 
-            if ($orderDate['year'] || $orderDate['month'] || $orderDate['day']) {
+            if ($orderDate['year'] && $orderDate['month'] && $orderDate['day']) {
                 $orderDate = $orderDate['year'] . '-' . $orderDate['month'] . '-' . $orderDate['day'];
                 $orderDate = new \DateTime($orderDate);
                 $instockDate->setOrderDate($orderDate);
                 $instocks = $this->instockScheduleHeaderRepository->findBy(['order_date' => $orderDate]);
             }
-            if ($scheduleDate['year'] || $scheduleDate['month'] || $scheduleDate['day']) {
+            if ($scheduleDate['year'] && $scheduleDate['month'] && $scheduleDate['day']) {
                 $scheduleDate = $scheduleDate['year'] . '-' . $scheduleDate['month'] . '-' . $scheduleDate['day'];
                 $scheduleDate = new \DateTime($scheduleDate);
                 $instockDate->setArrivalDateSchedule($scheduleDate);
                 $instocks = $this->instockScheduleHeaderRepository->findBy(['arrival_date_schedule' => $scheduleDate]);
             }
-            if($instocks){
-                foreach ($instocks as $instock){
-                    $suppliers = $this->supplierRepository->findOneBy(['supplier_code'=>$instock->getSupplierCode()]);
-                    $supplier[$instock->getSupplierCode()]=$suppliers->getSupplierName();
+            if ($instocks) {
+                foreach ($instocks as $instock) {
+                    $suppliers = $this->supplierRepository->findOneBy(['supplier_code' => $instock->getSupplierCode()]);
+                    $supplier[$instock->getSupplierCode()] = $suppliers->getSupplierName();
                 }
             }
         }
@@ -1222,6 +1232,25 @@ class ProductController extends BaseProductController
             'supplier' => $supplier,
             'count' => $count,
         ];
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/product/instock/delete", name="admin_product_instock_delete")
+     */
+    public function deleteInstock(Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $instockHeader = $this->instockScheduleHeaderRepository->find($request->get('id'));
+        $instocks = $this->instockScheduleRepository->findBy(['InstockHeader' => $request->get('id')]);
+        if ($instocks) {
+            foreach ($instocks as $instock) {
+                $entityManager->remove($instock);
+            }
+            $entityManager->flush();
+        }
+        $entityManager->remove($instockHeader);
+        $entityManager->flush();
+        return new JsonResponse('success');
     }
 
     /**
