@@ -826,4 +826,86 @@ class MailService
 
         return $this->mailer->send($message, $failures);
     }
+
+    /**
+     * Send adoption examination accept mail.
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @param $data
+     * @return int
+     */
+    public function sendAdoptionExaminationMailAccept(\Eccube\Entity\Customer $Customer, $data)
+    {
+        $body = $this->twig->render('Mail/conservation_examination_ok.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'data' => $data
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('['.$this->BaseInfo->getShopName().'] 審査結果通知')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        // HTMLテンプレートが存在する場合
+        $htmlFileName = $this->getHtmlTemplate('Mail/conservation_examination_ok.twig');
+        if (!is_null($htmlFileName)) {
+            $htmlBody = $this->twig->render($htmlFileName, [
+                'BaseInfo' => $this->BaseInfo,
+                'data' => $data
+            ]);
+
+            $message
+                ->setContentType('text/plain; charset=UTF-8')
+                ->setBody($body, 'text/plain')
+                ->addPart($htmlBody, 'text/html');
+        } else {
+            $message->setBody($body);
+        }
+
+        return $this->mailer->send($message, $failures);
+    }
+
+    /**
+     * Send adoption examination reject mail.
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @param $data
+     * @return int
+     */
+    public function sendAdoptionExaminationMailReject(\Eccube\Entity\Customer $Customer, $data)
+    {
+        $body = $this->twig->render('Mail/conservation_examination_ng.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'data' => $data
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('['.$this->BaseInfo->getShopName().'] 審査結果通知')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        // HTMLテンプレートが存在する場合
+        $htmlFileName = $this->getHtmlTemplate('Mail/conservation_examination_ng.twig');
+        if (!is_null($htmlFileName)) {
+            $htmlBody = $this->twig->render($htmlFileName, [
+                'BaseInfo' => $this->BaseInfo,
+                'data' => $data
+            ]);
+
+            $message
+                ->setContentType('text/plain; charset=UTF-8')
+                ->setBody($body, 'text/plain')
+                ->addPart($htmlBody, 'text/html');
+        } else {
+            $message->setBody($body);
+        }
+
+        return $this->mailer->send($message, $failures);
+    }
 }
