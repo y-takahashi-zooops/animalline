@@ -75,6 +75,14 @@ file that was distributed with this source code.
                 return false;
             }
         });
+
+        $('#price').on('blur', function(){
+            $('#form1').submit();
+        });
+
+        $('#delete-product').on('click', function(){
+            $('#form1').submit();
+        });
     });
 </script>
 {% endblock %}
@@ -332,6 +340,38 @@ file that was distributed with this source code.
                                     </td>
                                 </tr>
                                 {% endfor %}
+
+                                <!-- TODO: use form -->
+                                <tr>
+                                    <td>
+                                        <input type="text" name="price" id="price">
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-ec-actionIcon" data-toggle="modal" data-target="#delete_instock_schedule_header_InstockSchedule_1">
+                                            <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <div class="modal fade" id="delete_instock_schedule_header_InstockSchedule_1" tabindex="-1" role="dialog"
+                                    aria-labelledby="delete_order_OrderItems_2" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title font-weight-bold">削除します</h5>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body text-left">
+                                                <p class="text-left">明細は注文から削除されます。「彩のジェラートCUBE」を削除してよろしいですか？</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-ec-sub" type="button" data-dismiss="modal">キャンセル</button>
+                                                <a href="#order-product" class="btn delete btn-ec-delete" id="delete-product">削除</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </tbody>
                         </table>
                         <hr class="mt-0">
