@@ -14,6 +14,10 @@
 namespace Customize\Controller\Admin\Product;
 
 use Customize\Config\AnilineConf;
+use Customize\Entity\InstockScheduleHeader;
+use Customize\Form\Type\Admin\InstockListType;
+use Customize\Form\Type\Admin\InstockScheduleHeaderType;
+use Customize\Repository\InstockScheduleHeaderRepository;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
 use Eccube\Controller\AbstractController;
@@ -120,6 +124,11 @@ class ProductController extends BaseProductController
     protected $tagRepository;
 
     /**
+     * @var InstockScheduleHeaderRepository
+     */
+    protected $instockScheduleHeaderRepository;
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -133,20 +142,23 @@ class ProductController extends BaseProductController
      * @param ProductStatusRepository $productStatusRepository
      * @param TagRepository $tagRepository
      * @param SupplierRepository $supplierRepository
+     * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      */
     public function __construct(
-        CsvExportService $csvExportService,
-        ProductClassRepository $productClassRepository,
-        ProductImageRepository $productImageRepository,
-        TaxRuleRepository $taxRuleRepository,
-        CategoryRepository $categoryRepository,
-        ProductRepository $productRepository,
-        BaseInfoRepository $baseInfoRepository,
-        PageMaxRepository $pageMaxRepository,
-        ProductStatusRepository $productStatusRepository,
-        TagRepository $tagRepository,
-        SupplierRepository $supplierRepository
-    ) {
+        CsvExportService                $csvExportService,
+        ProductClassRepository          $productClassRepository,
+        ProductImageRepository          $productImageRepository,
+        TaxRuleRepository               $taxRuleRepository,
+        CategoryRepository              $categoryRepository,
+        ProductRepository               $productRepository,
+        BaseInfoRepository              $baseInfoRepository,
+        PageMaxRepository               $pageMaxRepository,
+        ProductStatusRepository         $productStatusRepository,
+        TagRepository                   $tagRepository,
+        SupplierRepository              $supplierRepository,
+        InstockScheduleHeaderRepository $instockScheduleHeaderRepository
+    )
+    {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
         $this->productImageRepository = $productImageRepository;
@@ -158,6 +170,7 @@ class ProductController extends BaseProductController
         $this->productStatusRepository = $productStatusRepository;
         $this->tagRepository = $tagRepository;
         $this->supplierRepository = $supplierRepository;
+        $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
     }
 
     /**
@@ -190,7 +203,7 @@ class ProductController extends BaseProductController
         $page_count = $this->session->get('eccube.admin.product.search.page_count',
             $this->eccubeConfig->get('eccube_default_page_count'));
 
-        $page_count_param = (int) $request->get('page_count');
+        $page_count_param = (int)$request->get('page_count');
         $pageMaxis = $this->pageMaxRepository->findAll();
 
         if ($page_count_param) {
@@ -235,7 +248,7 @@ class ProductController extends BaseProductController
                  */
                 if ($page_no) {
                     // ページ送りで遷移した場合.
-                    $this->session->set('eccube.admin.product.search.page_no', (int) $page_no);
+                    $this->session->set('eccube.admin.product.search.page_no', (int)$page_no);
                 } else {
                     // 他画面から遷移した場合.
                     $page_no = $this->session->get('eccube.admin.product.search.page_no', 1);
@@ -344,7 +357,7 @@ class ProductController extends BaseProductController
                         throw new UnsupportedMediaTypeHttpException();
                     }
 
-                    $filename = date('mdHis').uniqid('_').'.'.$extension;
+                    $filename = date('mdHis') . uniqid('_') . '.' . $extension;
                     $image->move($this->eccubeConfig['eccube_temp_image_dir'], $filename);
                     $files[] = $filename;
                 }
@@ -543,7 +556,7 @@ class ProductController extends BaseProductController
                     $this->entityManager->persist($ProductImage);
 
                     // 移動
-                    $file = new File($this->eccubeConfig['eccube_temp_image_dir'].'/'.$add_image);
+                    $file = new File($this->eccubeConfig['eccube_temp_image_dir'] . '/' . $add_image);
                     $file->move($this->eccubeConfig['eccube_save_image_dir']);
                 }
 
@@ -562,7 +575,7 @@ class ProductController extends BaseProductController
 
                     // 削除
                     $fs = new Filesystem();
-                    $fs->remove($this->eccubeConfig['eccube_save_image_dir'].'/'.$delete_image);
+                    $fs->remove($this->eccubeConfig['eccube_save_image_dir'] . '/' . $delete_image);
                 }
                 $this->entityManager->persist($Product);
                 $this->entityManager->flush();
@@ -620,7 +633,7 @@ class ProductController extends BaseProductController
                 if ($returnLink = $form->get('return_link')->getData()) {
                     try {
                         // $returnLinkはpathの形式で渡される. pathが存在するかをルータでチェックする.
-                        $pattern = '/^'.preg_quote($request->getBasePath(), '/').'/';
+                        $pattern = '/^' . preg_quote($request->getBasePath(), '/') . '/';
                         $returnLink = preg_replace($pattern, '', $returnLink);
                         $result = $router->match($returnLink);
                         // パラメータのみ抽出
@@ -705,7 +718,7 @@ class ProductController extends BaseProductController
                     return $this->json(['success' => $success, 'message' => $message]);
                 } else {
                     $this->deleteMessage();
-                    $rUrl = $this->generateUrl('admin_product_page', ['page_no' => $page_no]).'?resume='.Constant::ENABLED;
+                    $rUrl = $this->generateUrl('admin_product_page', ['page_no' => $page_no]) . '?resume=' . Constant::ENABLED;
 
                     return $this->redirect($rUrl);
                 }
@@ -736,7 +749,7 @@ class ProductController extends BaseProductController
                     foreach ($deleteImages as $deleteImage) {
                         try {
                             $fs = new Filesystem();
-                            $fs->remove($this->eccubeConfig['eccube_save_image_dir'].'/'.$deleteImage);
+                            $fs->remove($this->eccubeConfig['eccube_save_image_dir'] . '/' . $deleteImage);
                         } catch (\Exception $e) {
                             // エラーが発生しても無視する
                         }
@@ -770,7 +783,7 @@ class ProductController extends BaseProductController
                 $this->addError($message, 'admin');
             }
 
-            $rUrl = $this->generateUrl('admin_product_page', ['page_no' => $page_no]).'?resume='.Constant::ENABLED;
+            $rUrl = $this->generateUrl('admin_product_page', ['page_no' => $page_no]) . '?resume=' . Constant::ENABLED;
 
             return $this->redirect($rUrl);
         }
@@ -829,10 +842,10 @@ class ProductController extends BaseProductController
                 foreach ($Images as $Image) {
                     // 画像ファイルを新規作成
                     $extension = pathinfo($Image->getFileName(), PATHINFO_EXTENSION);
-                    $filename = date('mdHis').uniqid('_').'.'.$extension;
+                    $filename = date('mdHis') . uniqid('_') . '.' . $extension;
                     try {
                         $fs = new Filesystem();
-                        $fs->copy($this->eccubeConfig['eccube_save_image_dir'].'/'.$Image->getFileName(), $this->eccubeConfig['eccube_save_image_dir'].'/'.$filename);
+                        $fs->copy($this->eccubeConfig['eccube_save_image_dir'] . '/' . $Image->getFileName(), $this->eccubeConfig['eccube_save_image_dir'] . '/' . $filename);
                     } catch (\Exception $e) {
                         // エラーが発生しても無視する
                     }
@@ -995,9 +1008,9 @@ class ProductController extends BaseProductController
         });
 
         $now = new \DateTime();
-        $filename = 'product_'.$now->format('YmdHis').'.csv';
+        $filename = 'product_' . $now->format('YmdHis') . '.csv';
         $response->headers->set('Content-Type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
         $response->send();
 
         log_info('商品CSV出力ファイル名', [$filename]);
@@ -1137,7 +1150,7 @@ class ProductController extends BaseProductController
 
     /**
      * 廃棄管理画面
-     * 
+     *
      * @Route("/%eccube_admin_route%/product/waste", name="admin_product_waste")
      * @Template("@admin/Product/waste.twig")
      */
@@ -1149,35 +1162,77 @@ class ProductController extends BaseProductController
 
     /**
      * 廃棄情報登録画面
-     * 
+     *
      * @Route("/%eccube_admin_route%/product/waste/{id}", requirements={"id" = "\d+"}, name="admin_product_waste_regist")
      * @Template("@admin/Product/waste_regist.twig")
      */
     public function waste_regist(Request $request)
     {
-        return[];
+        return [];
     }
 
     /**
      * 入荷情報登録画面
-     * 
+     *
      * @Route("/%eccube_admin_route%/product/instock", name="admin_product_instock_list")
      * @Template("@admin/Product/instock_list.twig")
      */
-    public function instock_list(Request $request)
+    public function instock_list(PaginatorInterface $paginator, Request $request)
     {
-        return[];
+        $instockDate= new InstockScheduleHeader();
+        $instocks=[];
+        $supplier=[];
+        $count=0;
+        if($request->get('instock_list')) {
+            $dates = $request->get('instock_list');
+            $orderDate = $dates['order_date'];
+            $scheduleDate = $dates['arrival_date_schedule'];
+
+            if ($orderDate['year'] || $orderDate['month'] || $orderDate['day']) {
+                $orderDate = $orderDate['year'] . '-' . $orderDate['month'] . '-' . $orderDate['day'];
+                $orderDate = new \DateTime($orderDate);
+                $instockDate->setOrderDate($orderDate);
+                $instocks = $this->instockScheduleHeaderRepository->findBy(['order_date' => $orderDate]);
+            }
+            if ($scheduleDate['year'] || $scheduleDate['month'] || $scheduleDate['day']) {
+                $scheduleDate = $scheduleDate['year'] . '-' . $scheduleDate['month'] . '-' . $scheduleDate['day'];
+                $scheduleDate = new \DateTime($scheduleDate);
+                $instockDate->setArrivalDateSchedule($scheduleDate);
+                $instocks = $this->instockScheduleHeaderRepository->findBy(['arrival_date_schedule' => $scheduleDate]);
+            }
+            if($instocks){
+                foreach ($instocks as $instock){
+                    $suppliers = $this->supplierRepository->findOneBy(['supplier_code'=>$instock->getSupplierCode()]);
+                    $supplier[$instock->getSupplierCode()]=$suppliers->getSupplierName();
+                }
+            }
+        }
+        $count = count($instocks);
+        $builder = $this->formFactory->createBuilder(InstockListType::class, $instockDate);
+        $form = $builder->getForm();
+        $instocks = $paginator->paginate(
+            $instocks,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', 50)
+        );
+
+        return [
+            'form' => $form->createView(),
+            'instocks' => $instocks,
+            'supplier' => $supplier,
+            'count' => $count,
+        ];
     }
 
     /**
      * 入荷情報登録画面
-     * 
+     *
      * @Route("/%eccube_admin_route%/product/instock/new", name="admin_product_instock_registration_new")
      * @Route("/%eccube_admin_route%/product/instock/edit/{id}", name="admin_product_instock_registration_edit")
      * @Template("@admin/Product/instock_edit.twig")
      */
     public function instock_registration(Request $request)
     {
-        return[];
+        return [];
     }
 }
