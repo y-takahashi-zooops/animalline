@@ -153,22 +153,6 @@ class OrderItemType extends AbstractType
                         'message' => 'form_error.float_only',
                     ]),
                 ],
-            ])
-            ->add('arrival_quantity_schedule', IntegerType::class, [
-                'mapped' => false,
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Range(['min' => 0]),
-                ],
-            ])
-            ->add('arrival_box_schedule', IntegerType::class, [
-                'mapped' => false,
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Range(['min' => 0]),
-                ],
             ]);
 
         $builder

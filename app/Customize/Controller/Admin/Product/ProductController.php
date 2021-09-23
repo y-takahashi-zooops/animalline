@@ -1225,7 +1225,27 @@ class ProductController extends BaseProductController
 
         $form->handleRequest($request);
 
+        $totalPrice = 0;
+        $subTotalPrices = [];
         if ($form->isSubmitted() && $form['InstockSchedule']->isValid()) {
+            $items = $form['InstockSchedule']->getData();
+            foreach ($items as $item) {
+                $price = $item->getPrice();
+                $quantity1 = $item->getQuantity();
+                $quantity2 = $item->getTaxRate();
+                $subTotalPrice = 0;
+                if ($quantity1 == 0) {
+                    $subTotalPrice = $price * $quantity2;
+                } elseif ($quantity2 == 0) {
+                    $subTotalPrice = $price * $quantity1;
+                } else {
+                    $subTotalPrice = $price * $quantity1 + $price * $quantity2;
+                }
+
+                $subTotalPrices[] = $subTotalPrice;
+            }
+            $totalPrice = array_sum($subTotalPrices);
+
             switch ($request->get('mode')) {
                 case 'register':
                     log_info('受注登録開始', [$TargetInstock->getId()]);
@@ -1234,17 +1254,27 @@ class ProductController extends BaseProductController
                         $this->entityManager->persist($TargetInstock);
                         $this->entityManager->flush();
 
-                        $items = $form['InstockSchedule']->getData();
                         foreach ($items as $item) {
-                            // todo: update from form fields
+                            $price = $item->getPrice();
+                            $quantity1 = $item->getQuantity();
+                            $quantity2 = $item->getTaxRate();
+                            $subTotalPrice = 0;
+                            if ($quantity1 == 0) {
+                                $subTotalPrice = $price * $quantity2;
+                            } elseif ($quantity2 == 0) {
+                                $subTotalPrice = $price * $quantity1;
+                            } else {
+                                $subTotalPrice = $price * $quantity1 + $price * $quantity2;
+                            }
+
                             $InstockSchedule = (new InstockSchedule())
                                 ->setInstockHeader($TargetInstock)
                                 ->setWarehouseCode('00001')
                                 ->setItemCode01('')
                                 ->setItemCode02('')
-                                ->setPurchasePrice(2)
-                                ->setArrivalQuantitySchedule(3)
-                                ->setArrivalBoxSchedule(4);
+                                ->setPurchasePrice($subTotalPrice)
+                                ->setArrivalQuantitySchedule($quantity1)
+                                ->setArrivalBoxSchedule($quantity2);
 
                             $this->entityManager->persist($InstockSchedule);
                             $this->entityManager->flush();
@@ -1255,7 +1285,6 @@ class ProductController extends BaseProductController
 
                         return $this->redirectToRoute('admin_product_instock_list');
                     }
-
                     break;
                 default:
                     break;
@@ -1272,7 +1301,9 @@ class ProductController extends BaseProductController
             'form' => $form->createView(),
             'searchProductModalForm' => $searchProductModalForm->createView(),
             'Order' => $TargetInstock,
-            'id' => $id
+            'id' => $id,
+            'totalPrice' => $totalPrice,
+            'subtotalPrices' => $subTotalPrices
         ];
     }
 }
