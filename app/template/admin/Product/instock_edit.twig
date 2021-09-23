@@ -65,7 +65,8 @@ file that was distributed with this source code.
             // 商品削除
             $(this).parents('tr').remove();
             index--;
-            $("#calculate").trigger('click');
+            // $("#calculate").trigger('click');
+            $('#form1').submit();
         });
 
         // 計算結果の更新が押されたらページ内リンクさせる
@@ -77,11 +78,23 @@ file that was distributed with this source code.
             }
         });
 
-        $('#price').on('blur', function(){
+        $('input[id$=_tax_rate]').val(0);
+
+        $('input[id$=_tax_rate]').on('blur', function(){
+            if ($(this).val() > 0) {
+                $(this).parent().parent().parent().find('input[id$=_quantity]').val(0);
+            } else {
+                $(this).parent().parent().parent().find('input[id$=_quantity]').val(1);
+            }
             $('#form1').submit();
         });
 
-        $('#delete-product').on('click', function(){
+        $('input[id$=_quantity]').on('blur', function(){
+            if ($(this).val() > 0) {
+                $(this).parent().parent().parent().find('input[id$=_tax_rate]').val(0);
+            } else {
+                $(this).parent().parent().parent().find('input[id$=_tax_rate]').val(1);
+            }
             $('#form1').submit();
         });
     });
@@ -233,7 +246,7 @@ file that was distributed with this source code.
                                             <td class="align-middle w-25 pl-3">
                                                 <p class="mb-0 font-weight-bold">
                                                     {# 商品とポイント値引きは名前変更できない #}
-                                                    {% if instockSchedule.isProduct or instockSchedule.isPoint %}
+                                                    {% if (instockSchedule.isProduct or instockSchedule.isPoint) %}
                                                         {% if instockSchedule.isProduct %}
                                                             <a href="{{ url('admin_product_product_edit', {id: instockSchedule.ProductClass.Product.id}) }}"
                                                                target="_blank">
@@ -276,16 +289,16 @@ file that was distributed with this source code.
                                             <td class="align-middle">
                                                 <div class="col-12 col-xl-8">
                                                     {# 複数配送の場合は商品の個数を変更できない、ポイントの場合も個数を変更できない #}
-                                                    {{ form_widget(instockScheduleForm.arrival_quantity_schedule) }}
-                                                    {{ form_errors(instockScheduleForm.arrival_quantity_schedule) }}
+                                                    {{ form_widget(instockScheduleForm.quantity) }}
+                                                    {{ form_errors(instockScheduleForm.quantity) }}
                                                 </div>
                                             </td>
                                             <!-- ダース数量 -->
                                             <td class="align-middle">
                                                 <div class="col-12 col-xl-8">
                                                     {# 複数配送の場合は商品の個数を変更できない、ポイントの場合も個数を変更できない #}
-                                                    {{ form_widget(instockScheduleForm.arrival_box_schedule) }}
-                                                    {{ form_errors(instockScheduleForm.arrival_box_schedule) }}
+                                                    {{ form_widget(instockScheduleForm.tax_rate) }}
+                                                    {{ form_errors(instockScheduleForm.tax_rate) }}
                                                 </div>
                                             </td>
                                             <!-- 小計 -->
@@ -297,7 +310,7 @@ file that was distributed with this source code.
                                             <td class="align-middle text-right pr-3">
                                                 <div class="row justify-content-end">
                                                     {# 複数配送の場合は商品を削除できない #}
-                                                    {% if (instockSchedule.isProduct or instockSchedule.isPoint) %}
+                                                    {% if (not instockSchedule.isProduct) %}
                                                         <div class="col-auto text-center">
                                                             <div class="d-inline-block mr-3" data-tooltip="true"
                                                                  data-placement="top"
@@ -336,14 +349,12 @@ file that was distributed with this source code.
                                                                             </button>
                                                                         </div>
                                                                         <div class="modal-body text-left">
-                                                                            <p class="text-left">
-                                                                                明細は注文から削除されます。「{{ ({ '%name%' : instockSchedule.product_name }) }}
-                                                                                」を削除してよろしいですか？</p>
+                                                                            <p class="text-left">{{ 'admin.order.delete_item__confirm_message'|trans({ '%name%' : instockSchedule.product_name }) }}</p>
                                                                         </div>
                                                                         <div class="modal-footer">
                                                                             <button class="btn btn-ec-sub" type="button"
                                                                                     data-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
-                                                                            <a href="#order-product"
+                                                                            <a href="#"
                                                                                class="btn delete btn-ec-delete">{{ 'admin.common.delete'|trans }}</a>
                                                                         </div>
                                                                     </div>
@@ -355,76 +366,16 @@ file that was distributed with this source code.
                                             </td>
                                         </tr>
                                     {% endfor %}
-
-                                    <!-- TODO: use form -->
-                                    {#<tr>
-                                        <td>
-                                            <input type="text" name="price" id="price">
-                                            <input type="text" name="class_category_name1" id="class_category_name1">
-                                            <input type="text" name="class_category_name2" id="class_category_name2">
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-ec-actionIcon" data-toggle="modal"
-                                               data-target="#delete_instock_schedule_header_InstockSchedule_1">
-                                                <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
-                                            </a>
-                                        </td>
-                                    </tr>#}
-
-                                    <div class="modal fade" id="delete_instock_schedule_header_InstockSchedule_1"
-                                         tabindex="-1" role="dialog"
-                                         aria-labelledby="delete_order_OrderItems_2" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title font-weight-bold">削除します</h5>
-                                                    <button class="close" type="button" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body text-left">
-                                                    <p class="text-left">明細は注文から削除されます。「彩のジェラートCUBE」を削除してよろしいですか？</p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
-                                                        キャンセル
-                                                    </button>
-                                                    <a href="#order-product" class="btn delete btn-ec-delete"
-                                                       id="delete-product">削除</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     </tbody>
                                 </table>
                                 <hr class="mt-0">
-                                {# <div class="row justify-content-end mb-3">
-                             <div class="col-auto"><span class="align-middle">小計</span></div>
-                             <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">￥0</span></div>
-                        </div>
-                        <div class="row justify-content-end mb-3">
-                            <div class="col-auto"><span class="align-middle">送料</span></div>
-                            <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">￥0</span></div>
-                        </div>
-                        <div class="row justify-content-end mb-3">
-                            <div class="col-auto"><span class="align-middle">手数料</span></div>
-                            <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">￥0</span></div>
-                        </div>
-                        <div class="row justify-content-end mb-3">
-                            <div class="col-auto"><span class="align-middle">値引き</span></div>
-                            <div class="col-2 text-right"><span class="h4 align-middle text-danger font-weight-normal">￥0</span></div>
-                        </div>
-                        <hr>
-                        <div class="row justify-content-end mb-3">
-                            <div class="col-auto"><span class="align-middle">合計</span></div>
-                            <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">￥0</span></div>
-                        </div>
-                        <hr> #}
+
                                 <!-- お支払い合計 -->
                                 <div class="row justify-content-end mb-3">
                                     <div class="col-auto"><span class="align-middle">お支払い合計</span></div>
-                                    {# <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">{{ Instock.payment_total|price }}</span></div> #}
+                                    <div class="col-2 text-right"><span
+                                                class="h4 align-middle font-weight-normal">{{ total|price }}</span>
+                                    </div>
                                 </div>
                                 <hr>
                             </div>
