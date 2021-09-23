@@ -1,0 +1,472 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['product', 'instock_edit'] %}
+
+{% block title %}入荷情報登録{% endblock %}
+{% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
+
+{% block javascript %}
+<script>
+    $(function(){
+    // 商品検索
+    $('#search').on('click', function () {
+        var list = $('#searchProductModalList');
+        list.children().remove();
+
+        $.ajax({
+            url: "{{ url('admin_order_search_product') }}",
+                type: 'POST',
+                dataType: 'html',
+                data: {
+                    'id': $('#admin_search_product_id').val(),
+                    'category_id': $('#admin_search_product_category_id').val(),
+                    'is_instock': true
+                }
+            }).done(function (data) {
+                $('#searchProductModalList').html(data);
+            }).fail(function (data) {
+                alert('search product failed.');
+            });
+        });
+
+        // ページング処理
+        $(document).on('click', '#searchProductModalList ul.pagination li.page-item a.page-link', function (e) {
+            e.preventDefault();
+            var list = $('#searchProductModalList');
+            list.children().remove();
+            var url = $(this).attr('href');
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'html'
+            }).done(function (data) {
+                $('#searchProductModalList').html(data);
+            }).fail(function (data) {
+                alert('search product failed.');
+            });
+        });
+
+        // 商品追加
+        $collectionHolder = $('#table-form-field');
+        index = $collectionHolder.find('tbody > tr').length;
+        formIdPrefix = '#instock_schedule_header_InstockSchedule_';
+
+        $(document).on('click', '.delete', function (e) {
+            // 商品削除
+            $(this).parents('tr').remove();
+            index--;
+            $("#calculate").trigger('click');
+        });
+
+        // 計算結果の更新が押されたらページ内リンクさせる
+        $('.btn').click(function () {
+            var data = $(this).data();
+            if (data.link) {
+                $('#form1').attr('action', '#' + data.link).submit();
+                return false;
+            }
+        });
+
+        $('#price').on('blur', function(){
+            $('#form1').submit();
+        });
+
+        $('#delete-product').on('click', function(){
+            $('#form1').submit();
+        });
+    });
+</script>
+{% endblock %}
+
+{% block stylesheet %}{% endblock %}
+
+{% block main %}
+    <form name="form1" id="form1" method="post" action="?">
+        <div class="c-contentsArea__cols">
+            <div class="c-contentsArea__primaryCol">
+                <div class="c-primaryCol">
+                    <div class="card rounded border-0 mb-4">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="d-inline-block">
+                                        <span class="card-title">入荷情報</span>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <a data-toggle="collapse" href="#instockInfo" aria-expanded="false"
+                                       aria-controls="instockInfo">
+                                        <i class="fa fa-angle-up fa-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse show ec-cardCollapse" id="instockInfo">
+                            <div class="card-body">
+                                <div class="row h-adr">
+                                    <div class="col-6">
+                                        <div class="row mb-3 form-group">
+                                            <label class="col-3 col-form-label">発注日</label>
+                                            <div class="col">
+                                                <div class="form-inline">
+                                                    {{ form_widget(form.order_date) }}
+                                                    {{ form_errors(form.order_date) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 form-group">
+                                            <label class="col-3 col-form-label">仕入先</label>
+                                            <div class="col">
+                                                {{ form_widget(form.supplier_code) }}
+                                                {{ form_errors(form.supplier_code) }}
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 form-group">
+                                            <label class="col-3 col-form-label">入荷予定日</label>
+                                            <div class="col">
+                                                <div class="form-inline">
+                                                    {{ form_widget(form.arrival_date_schedule) }}
+                                                    {{ form_errors(form.arrival_date_schedule) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row mb-3 form-group">
+                                            <label class="col-3 col-form-label">備考</label>
+                                            <div class="col">
+                                                {{ form_widget(form.remark_text, { attr : {'rows': '6'}}) }}
+                                                {{ form_errors(form.remark_text) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- .card.rounded -->
+                    <div id="order-product" class="card rounded border-0 mb-4">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-8">
+                                    {# <div class="d-inline-block" data-tooltip="true" data-placement="top" title="購入された商品情報、及び、送料、手数料を含めた計算結果が表示されます。商品の追加や金額変更を行った場合は、計算結果の更新を行ってください。"><span class="card-title">商品情報<i class="fa fa-question-circle fa-lg ml-1"></i></span></div> #}
+                                    <div class="d-inline-block"><span class="card-title">商品情報</span></div>
+                                </div>
+                                <div class="col-4 text-right"><a data-toggle="collapse" href="#instockItem"
+                                                                 aria-expanded="false" aria-controls="instockItem"><i
+                                                class="fa fa-angle-up fa-lg"></i></a></div>
+                            </div>
+                        </div>
+                        <div class="collapse show ec-cardCollapse" id="instockItem">
+                            <div class="card-body">
+                                <div class="row justify-content-between mb-2">
+                                    <div class="col-6">
+                                        <a class="btn btn-ec-regular mr-2 add" data-toggle="modal"
+                                           data-target="#addProduct">商品を追加</a>
+                                        <div class="modal fade" id="addProduct" tabindex="-1" role="dialog"
+                                             aria-labelledby="addProduct" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">商品を追加</h5>
+                                                        <button class="close" type="button" data-dismiss="modal"
+                                                                aria-label="Close"><span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        {{ form_widget(searchProductModalForm.id, { attr : {'class': 'mb-3', 'placeholder': 'admin.product.multi_search_label' }}) }}
+                                                        {{ form_widget(searchProductModalForm.category_id) }}
+                                                        <button type="button" id="search"
+                                                                class="btn btn-ec-conversion px-5 mb-4 mt-2">検索
+                                                        </button>
+                                                        <div id="searchProductModalList"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {# {{ form_errors(form.InstockItemsErrors) }} #}
+                                    </div>
+                                    {# <div class="col-5 text-right">
+                                <button type="submit" class="btn btn-ec-regular mr-2" name="mode" value="calc" data-link="order-product" id="calculate"{{ action_disabled ? ' disabled="disabled"' }}>{{ 'admin.order.update_calculation_results'|trans }}</button>
+                            </div> #}
+                                </div>
+                                <table id="table-form-field" class="table table-striped table-sm mb-0"
+                                       data-prototype="{% filter escape %}{{ include('@admin/Product/instock_item_prototype.twig', {'instockScheduleForm': form.InstockSchedule.vars.prototype}) }}{% endfilter %}"
+                                >
+                                    <thead class="table-active">
+                                    <tr class="text-nowrap">
+                                        <th class="pt-2 pb-2 pl-3">商品名・商品コード</th>
+                                        <th class="pt-2 pb-2">
+                                            <div class="col-8">金額</div>
+                                        </th>
+                                        <th class="pt-2 pb-2">
+                                            <div class="col-8">数量</div>
+                                        </th>
+                                        <th class="pt-2 pb-2">
+                                            <div class="col-8">ダース数量</div>
+                                        </th>
+                                        <th class="pt-2 pb-2">
+                                            <div class="col-8">小計</div>
+                                        </th>
+                                        <th class="pt-2 pb-2 pr-3"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for instockScheduleForm in form.InstockSchedule %}
+                                        {% set instockSchedule = instockScheduleForm.vars.data %}
+                                        <tr>
+                                            {# hidden values #}
+                                            {{ form_widget(instockScheduleForm.ProductClass) }}
+                                            {{ form_widget(instockScheduleForm.order_item_type) }}
+                                            {{ form_widget(instockScheduleForm.tax_type) }}
+                                            <!-- 商品名 -->
+                                            <td class="align-middle w-25 pl-3">
+                                                <p class="mb-0 font-weight-bold">
+                                                    {# 商品とポイント値引きは名前変更できない #}
+                                                    {% if instockSchedule.isProduct or instockSchedule.isPoint %}
+                                                        {% if instockSchedule.isProduct %}
+                                                            <a href="{{ url('admin_product_product_edit', {id: instockSchedule.ProductClass.Product.id}) }}"
+                                                               target="_blank">
+                                                                {{ instockSchedule.product_name }}
+                                                            </a>
+                                                        {% else %}
+                                                            {{ instockSchedule.product_name }}
+                                                        {% endif %}
+                                                        {{ form_widget(instockScheduleForm.product_name, { 'type': 'hidden' }) }}
+                                                    {% else %}
+                                                        {{ form_widget(instockScheduleForm.product_name) }}
+                                                    {% endif %}
+                                                </p>
+                                                <span>
+                                            {{ instockSchedule.product_code }}
+                                                    {% if instockSchedule.class_category_name1 is not empty %}
+                                                        / (
+                                                        {{ instockSchedule.class_name1 }}：
+                                                        {{ instockSchedule.class_category_name1 }}
+                                                        {% if instockSchedule.class_category_name2 is not empty %}
+                                                            /
+                                                            {{ instockSchedule.class_name2 }}：
+                                                            {{ instockSchedule.class_category_name2 }}
+                                                        {% endif %}
+                                                        )
+                                                    {% endif %}
+                                        </span>
+                                                {{ form_errors(instockScheduleForm.product_name) }}
+                                            </td>
+                                            <!-- 金額 -->
+                                            <td class="align-middle">
+                                                <div class="col mt-3">
+                                                    {# ポイント値引きは価格変更できない #}
+                                                    {% if instockSchedule.isPoint %}
+                                                        {{ form_widget(instockScheduleForm.price, {'attr': { 'readonly': 'readonly', 'class': 'pointPrice' } }) }}
+                                                    {% else %}
+                                                        {{ form_widget(instockScheduleForm.price) }}
+                                                    {% endif %}
+                                                    <div class="text-right small">(税抜)</div>
+                                                    {{ form_errors(instockScheduleForm.price) }}
+                                                </div>
+                                            </td>
+                                            <!-- 数量 -->
+                                            <td class="align-middle">
+                                                <div class="col-12 col-xl-8">
+                                                    {# 複数配送の場合は商品の個数を変更できない、ポイントの場合も個数を変更できない #}
+                                                    {% if (instockSchedule.isProduct) or instockSchedule.isPoint %}
+                                                        {{ form_widget(instockScheduleForm.quantity, { 'attr': { 'readonly': 'readonly' } }) }}
+                                                    {% else %}
+                                                        {{ form_widget(instockScheduleForm.quantity) }}
+                                                    {% endif %}
+                                                    {{ form_errors(instockScheduleForm.quantity) }}
+                                                </div>
+                                            </td>
+                                            <!-- ダース数量 -->
+                                            <td class="align-middle">
+                                                <div class="col-12 col-xl-8">
+                                                    {# 複数配送の場合は商品の個数を変更できない、ポイントの場合も個数を変更できない #}
+                                                    {% if (instockSchedule.isProduct or instockSchedule.isPoint) %}
+                                                        {{ form_widget(instockScheduleForm.tax_type, { 'attr': { 'readonly': 'readonly' } }) }}
+                                                    {% else %}
+                                                        {{ form_widget(instockScheduleForm.tax_type) }}
+                                                    {% endif %}
+                                                    {{ form_errors(instockScheduleForm.tax_type) }}
+                                                </div>
+                                            </td>
+                                            <!-- 小計 -->
+                                            <td class="align-middle">
+                                                <div class="col">
+                                                    <span>{{ instockSchedule.price|price }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-right pr-3">
+                                                <div class="row justify-content-end">
+                                                    {# 複数配送の場合は商品を削除できない #}
+                                                    {% if (instockSchedule.isProduct or instockSchedule.isPoint) %}
+                                                        <div class="col-auto text-center">
+                                                            <div class="d-inline-block mr-3" data-tooltip="true"
+                                                                 data-placement="top"
+                                                                 title="{{ 'admin.common.delete'|trans }}">
+                                                                <a class="btn btn-ec-actionIcon disabled">
+                                                                    <i class="fa fa-close fa-lg text-secondary"
+                                                                       aria-hidden="true"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="col-auto text-center">
+                                                            <div class="d-inline-block mr-3" data-tooltip="true"
+                                                                 data-placement="top"
+                                                                 title="{{ 'admin.common.delete'|trans }}">
+                                                                <a class="btn btn-ec-actionIcon" data-toggle="modal"
+                                                                   data-target="#delete_{{ instockScheduleForm.vars.id }}">
+                                                                    <i class="fa fa-close fa-lg text-secondary"
+                                                                       aria-hidden="true"></i>
+                                                                </a>
+                                                            </div>
+                                                            <!-- 明細の削除確認モーダル -->
+                                                            <div class="modal fade"
+                                                                 id="delete_{{ instockScheduleForm.vars.id }}"
+                                                                 tabindex="-1" role="dialog"
+                                                                 aria-labelledby="delete_{{ instockScheduleForm.vars.id }}"
+                                                                 aria-hidden="true">
+                                                                <div class="modal-dialog" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title font-weight-bold">{{ 'admin.common.delete_modal__title'|trans }}</h5>
+                                                                            <button class="close" type="button"
+                                                                                    data-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                <span aria-hidden="true">×</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body text-left">
+                                                                            <p class="text-left">
+                                                                                明細は注文から削除されます。「{{ ({ '%name%' : instockSchedule.product_name }) }}
+                                                                                」を削除してよろしいですか？</p>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button class="btn btn-ec-sub" type="button"
+                                                                                    data-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
+                                                                            <a href="#order-product"
+                                                                               class="btn delete btn-ec-delete">{{ 'admin.common.delete'|trans }}</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    <!-- TODO: use form -->
+                                    {#<tr>
+                                        <td>
+                                            <input type="text" name="price" id="price">
+                                            <input type="text" name="class_category_name1" id="class_category_name1">
+                                            <input type="text" name="class_category_name2" id="class_category_name2">
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-ec-actionIcon" data-toggle="modal"
+                                               data-target="#delete_instock_schedule_header_InstockSchedule_1">
+                                                <i class="fa fa-close fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                    </tr>#}
+
+                                    <div class="modal fade" id="delete_instock_schedule_header_InstockSchedule_1"
+                                         tabindex="-1" role="dialog"
+                                         aria-labelledby="delete_order_OrderItems_2" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title font-weight-bold">削除します</h5>
+                                                    <button class="close" type="button" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body text-left">
+                                                    <p class="text-left">明細は注文から削除されます。「彩のジェラートCUBE」を削除してよろしいですか？</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+                                                        キャンセル
+                                                    </button>
+                                                    <a href="#order-product" class="btn delete btn-ec-delete"
+                                                       id="delete-product">削除</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </tbody>
+                                </table>
+                                <hr class="mt-0">
+                                {# <div class="row justify-content-end mb-3">
+                             <div class="col-auto"><span class="align-middle">小計</span></div>
+                             <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">￥0</span></div>
+                        </div>
+                        <div class="row justify-content-end mb-3">
+                            <div class="col-auto"><span class="align-middle">送料</span></div>
+                            <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">￥0</span></div>
+                        </div>
+                        <div class="row justify-content-end mb-3">
+                            <div class="col-auto"><span class="align-middle">手数料</span></div>
+                            <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">￥0</span></div>
+                        </div>
+                        <div class="row justify-content-end mb-3">
+                            <div class="col-auto"><span class="align-middle">値引き</span></div>
+                            <div class="col-2 text-right"><span class="h4 align-middle text-danger font-weight-normal">￥0</span></div>
+                        </div>
+                        <hr>
+                        <div class="row justify-content-end mb-3">
+                            <div class="col-auto"><span class="align-middle">合計</span></div>
+                            <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">￥0</span></div>
+                        </div>
+                        <hr> #}
+                                <!-- お支払い合計 -->
+                                <div class="row justify-content-end mb-3">
+                                    <div class="col-auto"><span class="align-middle">お支払い合計</span></div>
+                                    {# <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">{{ Instock.payment_total|price }}</span></div> #}
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div><!-- .card.rounded -->
+                </div>
+            </div>
+            <!-- コンバージョンエリア -->
+            <div class="c-conversionArea">
+                <div class="c-conversionArea__container">
+                    <div class="row justify-content-between align-items-center">
+                        <div class="col-6">
+                            <div class="c-conversionArea__leftBlockItem">
+                                {# <a class="c-baseLink" href="http://animalline.local/aniconfig/order?resume=1"><i class="fa fa-backward" aria-hidden="true"></i><span>受注一覧</span></a> #}
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="row align-items-center justify-content-end">
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-ec-conversion px-5" name="mode"
+                                            value="register">登録
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+
+

@@ -47,16 +47,13 @@ class InstockScheduleHeaderType extends AbstractType
 
         $builder
             ->add('order_date', DateType::class, [
-                'placeholder' => '',
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
             ])
             ->add('supplier_code', ChoiceType::class, [
                 'choices' => $choices,
-                'placeholder' => 'common.select'
             ])
             ->add('arrival_date_schedule', DateType::class, [
-                'placeholder' => '',
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
             ])
