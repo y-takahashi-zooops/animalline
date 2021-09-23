@@ -649,6 +649,7 @@ class EditController extends AbstractController
                 'forms' => $forms,
                 'Products' => $Products,
                 'pagination' => $pagination,
+                'is_instock' => $request->get('is_instock')
             ];
         }
     }

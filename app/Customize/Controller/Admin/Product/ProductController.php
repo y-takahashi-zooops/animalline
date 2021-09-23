@@ -1169,6 +1169,7 @@ class ProductController extends BaseProductController
      */
     public function instock(Request $request)
     {
+
         $TargetInstock = new InstockScheduleHeader();
         $OriginItems = new ArrayCollection();
         $entityManager = $this->getDoctrine()->getManager();
@@ -1177,15 +1178,19 @@ class ProductController extends BaseProductController
 
         $builder = $this->formFactory->createBuilder(InstockScheduleHeaderType::class, $TargetInstock);
         $form = $builder->getForm();
+
         $form->handleRequest($request);
+//        $instockSchedule = $request->request->get('instock_schedule_header') ?
+//            $request->request->get('instock_schedule_header')['InstockSchedule'] : null;
 
         $builder = $this->formFactory
             ->createBuilder(SearchProductType::class);
         $searchProductModalForm = $builder->getForm();
-
+//dump($instockSchedule);die;
         return[
             'form' => $form->createView(),
             'searchProductModalForm' => $searchProductModalForm->createView(),
+//            'schedules' => $instockSchedule
         ];
     }
 }

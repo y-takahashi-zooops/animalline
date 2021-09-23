@@ -45,7 +45,7 @@ file that was distributed with this source code.
     }
 
     // 受注明細行を追加する.
-    function fnAddOrderItem($row, product_id, type, product_name) {
+    function fnAddOrderItem($row, product_id, type, product_name, is_instock=null) {
         // 規格1の要素を取得
         var $sele1 = $row.find('select[name=classcategory_id1]');
         // 規格2の要素を取得
@@ -59,7 +59,7 @@ file that was distributed with this source code.
         if (!$sele1.length && !$sele2.length) {
             var product = productsClassCategories[product_id]['__unselected2']['#'];
             product_class_id = product['product_class_id'];
-            price = product['price02'];
+            price = is_instock ? product['item_cost'] : product['price02'];
             // 規格が登録されている商品の場合
         } else if ($sele1.length) {
             if ($sele2.length) {
@@ -72,7 +72,8 @@ file that was distributed with this source code.
                 var product = productsClassCategories[product_id][class_category_id1]['#' + class_cateogry_id2];
 
                 product_class_id = product['product_class_id'];
-                price = product['price02'];
+
+                price = is_instock ? product['item_cost'] : product['price02'];
             } else {
                 var class_category_id1 = $sele1.val();
                 if (class_category_id1 == '__unselected') {
@@ -82,7 +83,7 @@ file that was distributed with this source code.
                 var product = productsClassCategories[product_id][class_category_id1]['#'];
 
                 product_class_id = product['product_class_id'];
-                price = product['price02'];
+                price = is_instock ? product['item_cost'] : product['price02'];
             }
         }
 
@@ -178,7 +179,7 @@ file that was distributed with this source code.
                     {% endif %}
                 </td>
                 <td class="align-middle pr-3 text-right">
-                    <button type="button" class="btn btn-ec-actionIcon" onclick="fnAddOrderItem($(this).parent().parent(), {{ Product.id }}, {{ constant('Eccube\\Entity\\Master\\OrderItemType::PRODUCT') }}, '{{ Product.name|escape('js') }}')" name="mode" value="modal">
+                    <button type="button" class="btn btn-ec-actionIcon" onclick="fnAddOrderItem($(this).parent().parent(), {{ Product.id }}, {{ constant('Eccube\\Entity\\Master\\OrderItemType::PRODUCT') }}, '{{ Product.name|escape('js') }}', {{ is_instock }})" name="mode" value="modal">
                         <i class="fa fa-plus fa-lg font-weight-bold text-secondary"></i>
                     </button>
                 </td>

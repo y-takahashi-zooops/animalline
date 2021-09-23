@@ -5,6 +5,7 @@ namespace Customize\Form\Type\Admin;
 use Customize\Entity\InstockScheduleHeader;
 use Customize\Repository\SupplierRepository;
 use Eccube\Common\EccubeConfig;
+use Eccube\Form\Type\Admin\OrderItemType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -63,7 +64,7 @@ class InstockScheduleHeaderType extends AbstractType
                 'required' => false,
             ])
             ->add('InstockSchedule', CollectionType::class, [
-               'entry_type' => InstockScheduleType::class,
+               'entry_type' => OrderItemType::class,
                'allow_add' => true,
                'allow_delete' => true,
                'prototype' => true,

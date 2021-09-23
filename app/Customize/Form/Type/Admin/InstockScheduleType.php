@@ -94,15 +94,11 @@ class InstockScheduleType extends AbstractType
     {
         $builder
             ->add('product_name', TextType::class, [
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_mtext_len'],
-                    ]),
-                ],
+                'mapped' => false
             ])
             ->add('price', PriceType::class, [
                 'accept_minus' => true,
+                'mapped' => false
             ])
             ->add('arrival_quantity_schedule', IntegerType::class, [
                 'constraints' => [
@@ -123,7 +119,9 @@ class InstockScheduleType extends AbstractType
             ]);
 
         $builder
-            ->add($builder->create('ProductClass', HiddenType::class)
+            ->add($builder->create('ProductClass', HiddenType::class, [
+                'mapped' => false
+            ])
                 ->addModelTransformer(new DataTransformer\EntityToIdTransformer(
                     $this->entityManager,
                     ProductClass::class

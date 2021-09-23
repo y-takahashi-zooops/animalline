@@ -29,7 +29,8 @@ file that was distributed with this source code.
                 dataType: 'html',
                 data: {
                     'id': $('#admin_search_product_id').val(),
-                    'category_id': $('#admin_search_product_category_id').val()
+                    'category_id': $('#admin_search_product_category_id').val(),
+                    'is_instock': true
                 }
             }).done(function (data) {
                 $('#searchProductModalList').html(data);
@@ -268,7 +269,7 @@ file that was distributed with this source code.
                                     <td class="align-middle">
                                         <div class="col-12 col-xl-8">
                                             {# 複数配送の場合は商品の個数を変更できない、ポイントの場合も個数を変更できない #}
-                                            {% if (Instock.isMultiple and instockSchedule.isProduct) or instockSchedule.isPoint %}
+                                            {% if (instockSchedule.isProduct) or instockSchedule.isPoint %}
                                                 {{ form_widget(instockScheduleForm.quantity, { 'attr': { 'readonly': 'readonly' } }) }}
                                             {% else %}
                                                 {{ form_widget(instockScheduleForm.quantity) }}
@@ -280,7 +281,7 @@ file that was distributed with this source code.
                                     <td class="align-middle">
                                         <div class="col-12 col-xl-8">
                                             {# 複数配送の場合は商品の個数を変更できない、ポイントの場合も個数を変更できない #}
-                                            {% if (Instock.isMultiple and instockSchedule.isProduct) or instockSchedule.isPoint %}
+                                            {% if (instockSchedule.isProduct or instockSchedule.isPoint) %}
                                                 {{ form_widget(instockScheduleForm.quantity_box, { 'attr': { 'readonly': 'readonly' } }) }}
                                             {% else %}
                                                 {{ form_widget(instockScheduleForm.quantity_box) }}
@@ -297,7 +298,7 @@ file that was distributed with this source code.
                                     <td class="align-middle text-right pr-3">
                                         <div class="row justify-content-end">
                                         {# 複数配送の場合は商品を削除できない #}
-                                        {% if (Instock.isMultiple and instockSchedule.isProduct) or instockSchedule.isPoint %}
+                                        {% if (instockSchedule.isProduct) or instockSchedule.isPoint %}
                                             <div class="col-auto text-center">
                                                 <div class="d-inline-block mr-3" data-tooltip="true"
                                                         data-placement="top" title="{{ 'admin.common.delete'|trans }}">
