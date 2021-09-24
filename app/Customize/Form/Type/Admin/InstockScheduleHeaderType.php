@@ -30,8 +30,7 @@ class InstockScheduleHeaderType extends AbstractType
     public function __construct(
         EccubeConfig       $eccubeConfig,
         SupplierRepository $supplierRepository
-    )
-    {
+    ) {
         $this->eccubeConfig = $eccubeConfig;
         $this->supplierRepository = $supplierRepository;
     }
@@ -70,7 +69,7 @@ class InstockScheduleHeaderType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
-                'mapped' => false
+                'mapped' => $options['isEdit'] // only map when edit
             ]);
     }
 
@@ -78,6 +77,10 @@ class InstockScheduleHeaderType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => InstockScheduleHeader::class,
+            'currentOrg' => false
         ]);
+
+        $resolver->setRequired('isEdit');
+        $resolver->setAllowedTypes('isEdit', 'bool');
     }
 }

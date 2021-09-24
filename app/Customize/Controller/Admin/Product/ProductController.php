@@ -70,6 +70,8 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Eccube\Controller\Admin\Product\ProductController as BaseProductController;
+use Eccube\Entity\OrderItem;
+use Eccube\Repository\Master\OrderItemTypeRepository;
 
 class ProductController extends BaseProductController
 {
@@ -144,6 +146,11 @@ class ProductController extends BaseProductController
     protected $listInstockQueryService;
 
     /**
+     * @var OrderItemTypeRepository
+     */
+    protected $orderItemTypeRepository;
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -160,6 +167,7 @@ class ProductController extends BaseProductController
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      * @param InstockScheduleRepository $instockScheduleRepository
      * @param ListInstockQueryService $listInstockQueryService
+     * @param OrderItemTypeRepository $orderItemTypeRepository
      */
     public function __construct(
         CsvExportService                $csvExportService,
@@ -175,7 +183,8 @@ class ProductController extends BaseProductController
         SupplierRepository              $supplierRepository,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
-        ListInstockQueryService         $listInstockQueryService
+        ListInstockQueryService         $listInstockQueryService,
+        OrderItemTypeRepository         $orderItemTypeRepository
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -191,6 +200,7 @@ class ProductController extends BaseProductController
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
         $this->instockScheduleRepository = $instockScheduleRepository;
         $this->listInstockQueryService = $listInstockQueryService;
+        $this->orderItemTypeRepository = $orderItemTypeRepository;
     }
 
     /**
@@ -1276,30 +1286,65 @@ class ProductController extends BaseProductController
     public function instock_registration(Request $request, $id = null)
     {
         $TargetInstock = null;
+        $totalPrice = 0;
+        $subTotalPrices = [];
+
         if ($id) {
             $TargetInstock = $this->instockScheduleHeaderRepository->find($id);
             if (!$TargetInstock) {
                 throw new NotFoundHttpException();
             }
+
+            // 編集前の受注情報を保持
+            $OriginItems = new ArrayCollection();
+            foreach ($TargetInstock->getInstockSchedule() as $schedule) {
+                $item = new OrderItem;
+                $item->setOrderItemType($this->orderItemTypeRepository->find(1));
+                $item->setPrice($schedule->getPurchasePrice());
+                $item->setQuantity($schedule->getArrivalQuantitySchedule());
+                $item->setTaxRate($schedule->getArrivalBoxSchedule());
+                $productClass = $this->productClassRepository->findOneBy(['code' => $schedule->getJanCode()]);
+                $item->setProduct($productClass->getProduct());
+                $item->setProductClass($productClass);
+                $item->setProductName($productClass->formattedProductName());
+                $OriginItems->add($item);
+            }
+            $TargetInstock->setInstockSchedule();
+            foreach ($OriginItems as $item) {
+                $TargetInstock->addInstockSchedule($item);
+
+                $price = $item->getPrice();
+                $quantity1 = $item->getQuantity();
+                $quantity2 = $item->getTaxRate();
+                $quantityBox = $item->getProduct()->getQuantityBox();
+                $subTotalPrice = 0;
+                if ($quantity1 == 0) {
+                    $subTotalPrice = $price * $quantity2 * $quantityBox;
+                } elseif ($quantity2 == 0) {
+                    $subTotalPrice = $price * $quantity1;
+                } else {
+                    $subTotalPrice = $price * $quantity1 + $price * $quantity2 * $quantityBox;
+                }
+                $subTotalPrices[] = $subTotalPrice;
+            }
+            $totalPrice = array_sum($subTotalPrices);
         } else {
             // 空のエンティティを作成.
             $TargetInstock = new InstockScheduleHeader();
         }
 
-        // 編集前の受注情報を保持
-        $OriginItems = new ArrayCollection();
-        foreach ($TargetInstock->getInstockSchedule() as $Item) {
-            $OriginItems->add($Item);
-        }
-
-        $builder = $this->formFactory->createBuilder(InstockScheduleHeaderType::class, $TargetInstock);
+        $builder = $this->formFactory->createBuilder(
+            InstockScheduleHeaderType::class,
+            $TargetInstock,
+            [
+                'isEdit' => !!$id
+            ]
+        );
 
         $form = $builder->getForm();
 
         $form->handleRequest($request);
 
-        $totalPrice = 0;
-        $subTotalPrices = [];
         if ($form->isSubmitted() && $form['InstockSchedule']->isValid()) {
             $items = $form['InstockSchedule']->getData();
             foreach ($items as $item) {
