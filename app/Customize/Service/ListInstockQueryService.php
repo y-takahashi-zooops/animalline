@@ -32,13 +32,13 @@ class ListInstockQueryService
     {
         $result = $this->instockScheduleHeaderRepository->createQueryBuilder('i');
 
-        if ($orderDate['orderDateYear'] and $orderDate['orderDateMonth'] and $orderDate['orderDateDate']) {
-            $orderDateInput = new \DateTime($orderDate['orderDateYear'] . '-' . $orderDate['orderDateMonth'] . '-' . $orderDate['orderDateDate']);
+        if ($orderDate['orderDateYear'] and $orderDate['orderDateMonth'] and $orderDate['orderDateDay']) {
+            $orderDateInput = new \DateTime($orderDate['orderDateYear'] . '-' . $orderDate['orderDateMonth'] . '-' . $orderDate['orderDateDay']);
             $result = $result->where('i.order_date = :orderDateInput')
                 ->setParameter('orderDateInput', $orderDateInput);
         }
-        if ($scheduleDate['scheduleDateYear'] and $scheduleDate['scheduleDateMonth'] and $scheduleDate['scheduleDateDate']) {
-            $scheduleDateInput = new \DateTime($scheduleDate['scheduleDateYear'] . '-' . $scheduleDate['scheduleDateMonth'] . '-' . $scheduleDate['scheduleDateDate']);
+        if ($scheduleDate['scheduleDateYear'] and $scheduleDate['scheduleDateMonth'] and $scheduleDate['scheduleDateDay']) {
+            $scheduleDateInput = new \DateTime($scheduleDate['scheduleDateYear'] . '-' . $scheduleDate['scheduleDateMonth'] . '-' . $scheduleDate['scheduleDateDay']);
             $orderDate ? $result = $result->andWhere('i.arrival_date_schedule = :scheduleDateInput')
                          ->setParameter('scheduleDateInput', $scheduleDateInput)
                         : $result = $result->where('i.arrival_date_schedule = :scheduleDateInput')
@@ -46,7 +46,7 @@ class ListInstockQueryService
         }
 
 
-        if ($orderDate['orderDateYear'] and $orderDate['orderDateMonth'] and !$orderDate['orderDateDate']) {
+        if ($orderDate['orderDateYear'] and $orderDate['orderDateMonth'] and !$orderDate['orderDateDay']) {
             $fromTime = new \DateTime($orderDate['orderDateYear'] . '-' . $orderDate['orderDateMonth'] . '-01');
             $toTime = new \DateTime($fromTime->format('Y-m-d') . ' first day of next month');
             $result = $result->where('i.order_date >= :fromTime')
@@ -54,7 +54,7 @@ class ListInstockQueryService
                 ->setParameter('fromTime', $fromTime)
                 ->setParameter('toTime', $toTime);
         }
-        if ($scheduleDate['scheduleDateYear'] and $scheduleDate['scheduleDateMonth'] and !$scheduleDate['scheduleDateDate']) {
+        if ($scheduleDate['scheduleDateYear'] and $scheduleDate['scheduleDateMonth'] and !$scheduleDate['scheduleDateDay']) {
             $fromTime = new \DateTime($scheduleDate['scheduleDateYear'] . '-' . $scheduleDate['scheduleDateMonth'] . '-01');
             $toTime = new \DateTime($fromTime->format('Y-m-d') . ' first day of next month');
             $orderDate ? $result->andWhere('i.arrival_date_schedule >= :fromTime')

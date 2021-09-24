@@ -96,7 +96,7 @@ file that was distributed with this source code.
                                 <select class="form-control" id="instock_list_arrival_date_schedule_day" name="arrival_date_schedule_day">
                                     <option value="">--</option>
                                     {% for i in 1..31 %}
-                                        <option value={{ i }} {% if params.instock_list_arrival_date_schedule_day is defined and params.instock_list_arrival_date_schedule_day == i %} selected{% endif %}>{{ i }}</option>
+                                        <option value={{ i }} {% if params.arrival_date_schedule_day is defined and params.arrival_date_schedule_day == i %} selected{% endif %}>{{ i }}</option>
                                     {% endfor %}
                                 </select>
                             </div>

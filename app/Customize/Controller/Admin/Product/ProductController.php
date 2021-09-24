@@ -1218,13 +1218,13 @@ class ProductController extends BaseProductController
             $orderDate = [
                 'orderDateYear' => $request->get('order_date_year'),
                 'orderDateMonth' => $request->get('order_date_month'),
-                'orderDateDate' => $request->get('order_date_Date')
+                'orderDateDay' => $request->get('order_date_day')
             ];
 
             $scheduleDate = [
                 'scheduleDateYear' => $request->get('arrival_date_schedule_year'),
                 'scheduleDateMonth' => $request->get('arrival_date_schedule_month'),
-                'scheduleDateDate' => $request->get('arrival_date_schedule_date')
+                'scheduleDateDay' => $request->get('arrival_date_schedule_day')
             ];
             $instocks = $this->listInstockQueryService->search($orderDate,  $scheduleDate);
         }
