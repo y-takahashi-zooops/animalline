@@ -49,9 +49,6 @@ class InstockScheduleHeaderType extends AbstractType
             ->add('order_date', DateType::class, [
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
             ])
             ->add('supplier_code', ChoiceType::class, [
                 'placeholder' => 'common.select',
@@ -64,9 +61,6 @@ class InstockScheduleHeaderType extends AbstractType
             ->add('arrival_date_schedule', DateType::class, [
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
             ])
             ->add('remark_text', TextareaType::class, [
                 'required' => false,
