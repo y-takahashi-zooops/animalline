@@ -184,8 +184,7 @@ class ProductController extends BaseProductController
         InstockScheduleRepository       $instockScheduleRepository,
         ListInstockQueryService         $listInstockQueryService,
         OrderItemTypeRepository         $orderItemTypeRepository
-    )
-    {
+    ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
         $this->productImageRepository = $productImageRepository;
@@ -1341,6 +1340,7 @@ class ProductController extends BaseProductController
                 case 'register':
                     log_info('受注登録開始', [$TargetInstock->getId()]);
                     if ($form->isValid()) {
+                        $TargetInstock->setInstockSchedule(); // clear temp orderitem data
                         $this->entityManager->persist($TargetInstock);
                         $this->entityManager->flush();
                         foreach ($items as $key => $item) {
@@ -1350,7 +1350,7 @@ class ProductController extends BaseProductController
                                 ->setItemCode01('')
                                 ->setItemCode02('')
                                 ->setJanCode($item->getProductCode())
-                                ->setPurchasePrice($subTotalPrices[$key - 1])
+                                ->setPurchasePrice($subTotalPrices[$id ? $key : $key - 1])
                                 ->setArrivalQuantitySchedule($item->getQuantity())
                                 ->setArrivalBoxSchedule($item->getTaxRate());
                             $this->entityManager->persist($InstockSchedule);
