@@ -13,7 +13,11 @@
 
 namespace Customize\Controller\Admin\Product;
 
+use Customize\Entity\InstockScheduleHeader;
+use Doctrine\Common\Collections\ArrayCollection;
 use Customize\Config\AnilineConf;
+use Customize\Entity\InstockSchedule;
+use Customize\Form\Type\Admin\InstockScheduleHeaderType;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
 use Eccube\Controller\AbstractController;
@@ -187,8 +191,10 @@ class ProductController extends BaseProductController
          * - デフォルト値
          * また, セッションに保存する際は mtb_page_maxと照合し, 一致した場合のみ保存する.
          **/
-        $page_count = $this->session->get('eccube.admin.product.search.page_count',
-            $this->eccubeConfig->get('eccube_default_page_count'));
+        $page_count = $this->session->get(
+            'eccube.admin.product.search.page_count',
+            $this->eccubeConfig->get('eccube_default_page_count')
+        );
 
         $page_count_param = (int) $request->get('page_count');
         $pageMaxis = $this->pageMaxRepository->findAll();
@@ -344,7 +350,7 @@ class ProductController extends BaseProductController
                         throw new UnsupportedMediaTypeHttpException();
                     }
 
-                    $filename = date('mdHis').uniqid('_').'.'.$extension;
+                    $filename = date('mdHis') . uniqid('_') . '.' . $extension;
                     $image->move($this->eccubeConfig['eccube_temp_image_dir'], $filename);
                     $files[] = $filename;
                 }
@@ -543,7 +549,7 @@ class ProductController extends BaseProductController
                     $this->entityManager->persist($ProductImage);
 
                     // 移動
-                    $file = new File($this->eccubeConfig['eccube_temp_image_dir'].'/'.$add_image);
+                    $file = new File($this->eccubeConfig['eccube_temp_image_dir'] . '/' . $add_image);
                     $file->move($this->eccubeConfig['eccube_save_image_dir']);
                 }
 
@@ -562,7 +568,7 @@ class ProductController extends BaseProductController
 
                     // 削除
                     $fs = new Filesystem();
-                    $fs->remove($this->eccubeConfig['eccube_save_image_dir'].'/'.$delete_image);
+                    $fs->remove($this->eccubeConfig['eccube_save_image_dir'] . '/' . $delete_image);
                 }
                 $this->entityManager->persist($Product);
                 $this->entityManager->flush();
@@ -620,7 +626,7 @@ class ProductController extends BaseProductController
                 if ($returnLink = $form->get('return_link')->getData()) {
                     try {
                         // $returnLinkはpathの形式で渡される. pathが存在するかをルータでチェックする.
-                        $pattern = '/^'.preg_quote($request->getBasePath(), '/').'/';
+                        $pattern = '/^' . preg_quote($request->getBasePath(), '/') . '/';
                         $returnLink = preg_replace($pattern, '', $returnLink);
                         $result = $router->match($returnLink);
                         // パラメータのみ抽出
@@ -705,7 +711,7 @@ class ProductController extends BaseProductController
                     return $this->json(['success' => $success, 'message' => $message]);
                 } else {
                     $this->deleteMessage();
-                    $rUrl = $this->generateUrl('admin_product_page', ['page_no' => $page_no]).'?resume='.Constant::ENABLED;
+                    $rUrl = $this->generateUrl('admin_product_page', ['page_no' => $page_no]) . '?resume=' . Constant::ENABLED;
 
                     return $this->redirect($rUrl);
                 }
@@ -736,7 +742,7 @@ class ProductController extends BaseProductController
                     foreach ($deleteImages as $deleteImage) {
                         try {
                             $fs = new Filesystem();
-                            $fs->remove($this->eccubeConfig['eccube_save_image_dir'].'/'.$deleteImage);
+                            $fs->remove($this->eccubeConfig['eccube_save_image_dir'] . '/' . $deleteImage);
                         } catch (\Exception $e) {
                             // エラーが発生しても無視する
                         }
@@ -770,7 +776,7 @@ class ProductController extends BaseProductController
                 $this->addError($message, 'admin');
             }
 
-            $rUrl = $this->generateUrl('admin_product_page', ['page_no' => $page_no]).'?resume='.Constant::ENABLED;
+            $rUrl = $this->generateUrl('admin_product_page', ['page_no' => $page_no]) . '?resume=' . Constant::ENABLED;
 
             return $this->redirect($rUrl);
         }
@@ -829,10 +835,10 @@ class ProductController extends BaseProductController
                 foreach ($Images as $Image) {
                     // 画像ファイルを新規作成
                     $extension = pathinfo($Image->getFileName(), PATHINFO_EXTENSION);
-                    $filename = date('mdHis').uniqid('_').'.'.$extension;
+                    $filename = date('mdHis') . uniqid('_') . '.' . $extension;
                     try {
                         $fs = new Filesystem();
-                        $fs->copy($this->eccubeConfig['eccube_save_image_dir'].'/'.$Image->getFileName(), $this->eccubeConfig['eccube_save_image_dir'].'/'.$filename);
+                        $fs->copy($this->eccubeConfig['eccube_save_image_dir'] . '/' . $Image->getFileName(), $this->eccubeConfig['eccube_save_image_dir'] . '/' . $filename);
                     } catch (\Exception $e) {
                         // エラーが発生しても無視する
                     }
@@ -995,9 +1001,9 @@ class ProductController extends BaseProductController
         });
 
         $now = new \DateTime();
-        $filename = 'product_'.$now->format('YmdHis').'.csv';
+        $filename = 'product_' . $now->format('YmdHis') . '.csv';
         $response->headers->set('Content-Type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
         $response->send();
 
         log_info('商品CSV出力ファイル名', [$filename]);
@@ -1155,7 +1161,7 @@ class ProductController extends BaseProductController
      */
     public function waste_regist(Request $request)
     {
-        return[];
+        return [];
     }
 
     /**
@@ -1166,7 +1172,7 @@ class ProductController extends BaseProductController
      */
     public function instock_list(Request $request)
     {
-        return[];
+        return [];
     }
 
     /**
@@ -1176,8 +1182,93 @@ class ProductController extends BaseProductController
      * @Route("/%eccube_admin_route%/product/instock/edit/{id}", name="admin_product_instock_registration_edit")
      * @Template("@admin/Product/instock_edit.twig")
      */
-    public function instock_registration(Request $request)
+    public function instock_registration(Request $request, $id = null)
     {
-        return[];
+        $TargetInstock = null;
+
+        // 空のエンティティを作成.
+        $TargetInstock = new InstockScheduleHeader();
+
+        // 編集前の受注情報を保持
+        $OriginItems = new ArrayCollection();
+        foreach ($TargetInstock->getInstockSchedule() as $Item) {
+            $OriginItems->add($Item);
+        }
+
+        $builder = $this->formFactory->createBuilder(InstockScheduleHeaderType::class, $TargetInstock);
+
+        $form = $builder->getForm();
+
+        $form->handleRequest($request);
+
+        $totalPrice = 0;
+        $subTotalPrices = [];
+        if ($form->isSubmitted() && $form['InstockSchedule']->isValid()) {
+            $items = $form['InstockSchedule']->getData();
+            foreach ($items as $item) {
+                $price = $item->getPrice();
+                $quantity1 = $item->getQuantity();
+                $quantity2 = $item->getTaxRate();
+                $quantityBox = $item->getProduct()->getQuantityBox();
+                $subTotalPrice = 0;
+                if ($quantity1 == 0) {
+                    $subTotalPrice = $price * $quantity2 * $quantityBox;
+                } elseif ($quantity2 == 0) {
+                    $subTotalPrice = $price * $quantity1;
+                } else {
+                    $subTotalPrice = $price * $quantity1 + $price * $quantity2 * $quantityBox;
+                }
+
+                $subTotalPrices[] = $subTotalPrice;
+            }
+            $totalPrice = array_sum($subTotalPrices);
+
+            switch ($request->get('mode')) {
+                case 'register':
+                    log_info('受注登録開始', [$TargetInstock->getId()]);
+
+                    if ($form->isValid()) {
+                        $this->entityManager->persist($TargetInstock);
+                        $this->entityManager->flush();
+
+                        foreach ($items as $key => $item) {
+                            $InstockSchedule = (new InstockSchedule())
+                                ->setInstockHeader($TargetInstock)
+                                ->setWarehouseCode('00001')
+                                ->setItemCode01('')
+                                ->setItemCode02('')
+                                ->setPurchasePrice($subTotalPrices[$key - 1])
+                                ->setArrivalQuantitySchedule($item->getQuantity())
+                                ->setArrivalBoxSchedule($item->getTaxRate());
+
+                            $this->entityManager->persist($InstockSchedule);
+                            $this->entityManager->flush();
+                        }
+
+                        $this->addSuccess('admin.common.save_complete', 'admin');
+                        log_info('受注登録完了', [$TargetInstock->getId()]);
+
+                        return $this->redirectToRoute('admin_product_instock_registration_new');
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // 商品検索フォーム
+        $builder = $this->formFactory
+            ->createBuilder(SearchProductType::class);
+
+        $searchProductModalForm = $builder->getForm();
+
+        return [
+            'form' => $form->createView(),
+            'searchProductModalForm' => $searchProductModalForm->createView(),
+            'Order' => $TargetInstock,
+            'id' => $id,
+            'totalPrice' => $totalPrice,
+            'subtotalPrices' => $subTotalPrices
+        ];
     }
 }
