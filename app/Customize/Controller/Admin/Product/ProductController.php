@@ -1313,9 +1313,9 @@ class ProductController extends BaseProductController
                 $OriginItems->add($item);
             }
             $TargetInstock->setInstockSchedule();
-            foreach ($OriginItems as $item) {
+            foreach ($OriginItems as $key => $item) {
                 $TargetInstock->addInstockSchedule($item);
-                $subTotalPrices[] = $this->calcPrice($item);
+                $subTotalPrices[$key] = $this->calcPrice($item);
             }
             $totalPrice = array_sum($subTotalPrices);
         } else {
@@ -1334,14 +1334,17 @@ class ProductController extends BaseProductController
         if ($form->isSubmitted() && $form['InstockSchedule']->isValid()) {
             $subTotalPrices = [];
             $items = $form['InstockSchedule']->getData();
-            foreach ($items as $item) {
-                $subTotalPrices[] = $this->calcPrice($item);
+            foreach ($items as $key => $item) {
+                $subTotalPrices[$key] = $this->calcPrice($item);
             }
             $totalPrice = array_sum($subTotalPrices);
             switch ($request->get('mode')) {
                 case 'register':
                     log_info('受注登録開始', [$TargetInstock->getId()]);
                     if ($form->isValid()) {
+                        foreach ($this->instockScheduleRepository->findBy(['InstockHeader'=>$TargetInstock->getId()]) as $schedule) {
+                            $this->entityManager->remove($schedule);
+                        }
                         $TargetInstock->setInstockSchedule(); // clear temp orderitem data
                         $this->entityManager->persist($TargetInstock);
                         $this->entityManager->flush();
@@ -1352,7 +1355,7 @@ class ProductController extends BaseProductController
                                 ->setItemCode01('')
                                 ->setItemCode02('')
                                 ->setJanCode($item->getProductCode())
-                                ->setPurchasePrice($subTotalPrices[$id ? $key : $key - 1])
+                                ->setPurchasePrice($subTotalPrices[$key])
                                 ->setArrivalQuantitySchedule($item->getQuantity())
                                 ->setArrivalBoxSchedule($item->getTaxRate());
                             $this->entityManager->persist($InstockSchedule);
@@ -1360,7 +1363,7 @@ class ProductController extends BaseProductController
                         }
                         $this->addSuccess('admin.common.save_complete', 'admin');
                         log_info('受注登録完了', [$TargetInstock->getId()]);
-                        return $this->redirectToRoute('admin_product_instock_registration_new');
+                        return $this->redirectToRoute($id ? 'admin_product_instock_list' : 'admin_product_instock_registration_new');
                     }
                     break;
                 default:
