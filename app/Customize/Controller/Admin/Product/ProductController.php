@@ -1212,7 +1212,7 @@ class ProductController extends BaseProductController
     {
         $instockDate = new InstockScheduleHeader();
         $supplier = [];
-        $instocks = $this->instockScheduleHeaderRepository->findAll();
+        $instocks = null;
         if ($request->getMethod('get')) {
             $orderDate = [
                 'orderDateYear' => $request->get('order_date_year'),
