@@ -176,8 +176,7 @@ class ProductController extends BaseProductController
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
         ListInstockQueryService         $listInstockQueryService
-    )
-    {
+    ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
         $this->productImageRepository = $productImageRepository;
@@ -1203,9 +1202,8 @@ class ProductController extends BaseProductController
     public function instock_list(PaginatorInterface $paginator, Request $request)
     {
         $instockDate = new InstockScheduleHeader();
-        $instocks = [];
         $supplier = [];
-        $count = 0;
+        $instocks = $this->instockScheduleHeaderRepository->findAll();
         if ($request->get('instock_list')) {
             $dates = $request->get('instock_list');
             $orderDate = $dates['order_date'];
@@ -1234,6 +1232,7 @@ class ProductController extends BaseProductController
         $count = count($instocks);
         $builder = $this->formFactory->createBuilder(InstockListType::class, $instockDate);
         $form = $builder->getForm();
+
         $instocks = $paginator->paginate(
             $instocks,
             $request->query->getInt('page', 1),
@@ -1249,6 +1248,8 @@ class ProductController extends BaseProductController
     }
 
     /**
+     * Delete instock header and schedule by id
+     *
      * @Route("/%eccube_admin_route%/product/instock/delete", name="admin_product_instock_delete")
      */
     public function deleteInstock(Request $request)
@@ -1277,9 +1278,15 @@ class ProductController extends BaseProductController
     public function instock_registration(Request $request, $id = null)
     {
         $TargetInstock = null;
-
-        // 空のエンティティを作成.
-        $TargetInstock = new InstockScheduleHeader();
+        if ($id) {
+            $TargetInstock = $this->instockScheduleHeaderRepository->find($id);
+            if (!$TargetInstock) {
+                throw new NotFoundHttpException();
+            }
+        } else {
+            // 空のエンティティを作成.
+            $TargetInstock = new InstockScheduleHeader();
+        }
 
         // 編集前の受注情報を保持
         $OriginItems = new ArrayCollection();
