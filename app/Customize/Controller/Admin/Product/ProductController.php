@@ -1222,11 +1222,11 @@ class ProductController extends BaseProductController
             //     $instockDate->setArrivalDateSchedule($scheduleDate);
             //     $instocks = $this->instockScheduleHeaderRepository->findBy(['arrival_date_schedule' => $scheduleDate]);
             // }
-            if ($instocks) {
-                foreach ($instocks as $instock) {
-                    $suppliers = $this->supplierRepository->findOneBy(['supplier_code' => $instock->getSupplierCode()]);
-                    $supplier[$instock->getSupplierCode()] = $suppliers->getSupplierName();
-                }
+        }
+        if ($instocks) {
+            foreach ($instocks as $instock) {
+                $suppliers = $this->supplierRepository->findOneBy(['supplier_code' => $instock->getSupplierCode()]);
+                $supplier[$instock->getSupplierCode()] = $suppliers->getSupplierName();
             }
         }
         $count = count($instocks);
