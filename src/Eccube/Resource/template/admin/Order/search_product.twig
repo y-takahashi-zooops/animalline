@@ -45,7 +45,7 @@ file that was distributed with this source code.
     }
 
     // 受注明細行を追加する.
-    function fnAddOrderItem($row, product_id, type, product_name, is_instock=null) {
+    function fnAddOrderItem($row, product_id, type, product_name, is_instock = null) {
         // 規格1の要素を取得
         var $sele1 = $row.find('select[name=classcategory_id1]');
         // 規格2の要素を取得

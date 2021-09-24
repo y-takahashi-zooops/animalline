@@ -68,9 +68,9 @@ class InstockSchedule
     private $arrival_box_schedule;
 
     /**
-     * @ORM\Column(name="arrival_box_", type="smallint", nullable=true)
+     * @ORM\Column(name="arrival_box", type="smallint", nullable=true)
      */
-    private $arrival_box_;
+    private $arrival_box;
 
     /**
      * @var \DateTime
@@ -201,12 +201,12 @@ class InstockSchedule
 
     public function getArrivalBox(): ?int
     {
-        return $this->arrival_box_;
+        return $this->arrival_box;
     }
 
-    public function setArrivalBox(?int $arrival_box_): self
+    public function setArrivalBox(?int $arrival_box): self
     {
-        $this->arrival_box_ = $arrival_box_;
+        $this->arrival_box = $arrival_box;
 
         return $this;
     }
