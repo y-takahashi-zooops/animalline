@@ -5,6 +5,7 @@ namespace Customize\Form\Type\Admin;
 use Customize\Entity\InstockScheduleHeader;
 use Customize\Repository\SupplierRepository;
 use Eccube\Common\EccubeConfig;
+use Eccube\Form\Type\Admin\OrderItemType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -46,28 +47,37 @@ class InstockScheduleHeaderType extends AbstractType
 
         $builder
             ->add('order_date', DateType::class, [
-                'placeholder' => '',
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
             ])
             ->add('supplier_code', ChoiceType::class, [
+                'placeholder' => 'common.select',
                 'choices' => $choices,
-                'placeholder' => 'common.select'
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
             ])
             ->add('arrival_date_schedule', DateType::class, [
-                'placeholder' => '',
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
             ])
             ->add('remark_text', TextareaType::class, [
                 'required' => false,
             ])
             ->add('InstockSchedule', CollectionType::class, [
-               'entry_type' => InstockScheduleType::class,
-               'allow_add' => true,
-               'allow_delete' => true,
-               'prototype' => true,
-           ]);
+                'entry_type' => OrderItemType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'mapped' => false
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

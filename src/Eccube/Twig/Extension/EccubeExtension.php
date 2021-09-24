@@ -283,6 +283,7 @@ class EccubeExtension extends AbstractExtension
                 'product_class_id' => (string) $ProductClass->getId(),
                 'product_code' => $ProductClass->getCode() === null ? '' : $ProductClass->getCode(),
                 'sale_type' => (string) $ProductClass->getSaleType()->getId(),
+                'item_cost' => (float) $ProductClass->getItemCost()
             ];
         }
 

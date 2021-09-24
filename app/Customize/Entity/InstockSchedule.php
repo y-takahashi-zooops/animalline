@@ -91,7 +91,7 @@ class InstockSchedule
         return $this->id;
     }
 
-    public function getBInstockHeader(): ?InstockScheduleHeader
+    public function getInstockHeader(): ?InstockScheduleHeader
     {
         return $this->InstockHeader;
     }
