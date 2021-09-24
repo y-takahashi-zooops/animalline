@@ -162,6 +162,8 @@ class ImportProduct extends Command
                     // product_stockテーブルに新規レコード追加
                     $ProductStock = new ProductStock();
 
+                    $ProductImage = new ProductImage();
+
                     $ProductStatus = $this->productStatusRepository->find(ProductStatus::DISPLAY_SHOW);
                     $SaleType = $this->saleTypeRepository->find(SaleType::SALE_TYPE_NORMAL);
                     $user = $this->memberRepository->find(1);
@@ -183,6 +185,7 @@ class ImportProduct extends Command
                     $Product
                         ->setCreator($user)                                // 作成者ID
                         ->setStatus($ProductStatus)                        // 商品ステータスID：1(公開)
+                        ->setFreeArea($data[0])                             // free_areaに一旦商品コードを格納
                         ->setName($data[1])                                // 商品名
                         ->setDescriptionDetail($data[2])                   // 商品説明
                         ->setSearchWord($data[3])                          // 検索ワード
@@ -193,7 +196,7 @@ class ImportProduct extends Command
                     $ProductClass
                         ->setSaleType($SaleType)                            // 販売種別ID：1
                         ->setCreator($user)                                 // 作成者ID
-                        ->setCode($data[0])                                 // 商品コード
+                        ->setCode($data[5])                                 // 商品コード
                         // ->setStock($data[6])                                // 在庫数
                         ->setStockUnlimited(1)                              // 在庫制限
                         ->setPrice01($price01)                              // 価格1 
@@ -206,6 +209,13 @@ class ImportProduct extends Command
                     // product_stockテーブルにデータセット
                     $ProductStock->setProductClass($ProductClass)           // 商品クラスID
                         ->setCreator($user);                                // 作成者ID
+                    
+                    $filePath = $data[0].".jpg";
+                    $ProductImage
+                        ->setProduct($Product)
+                        ->setCreator($user)
+                        ->setFileName($filePath)
+                        ->setSortNo(1);
 
                     // 画像をダウンロードして所定のパスに配置
                     // if (!empty($data[26])) {
@@ -234,6 +244,7 @@ class ImportProduct extends Command
                     $em->persist($Product);
                     $em->persist($ProductClass);
                     $em->persist($ProductStock);
+                    $em->persist($ProductImage);
                 }
                 // 2行目以降を読み込む
                 $headerflag = true;
