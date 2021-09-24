@@ -52,6 +52,10 @@ class ListInstockQueryService
                                      ->setParameter('orderDateInput', $orderDateInput);
                 }
             }
+        } else {
+            if ($orderDate['orderDateMonth'] or $orderDate['orderDateDay']) {
+                return $result = [];
+            }
         }
 
         if ($scheduleDate['scheduleDateYear']) {
@@ -79,7 +83,12 @@ class ListInstockQueryService
                                      ->setParameter('scheduleDateInput', $scheduleDateInput);
                 }
             }
+        } else {
+            if ($scheduleDate['scheduleDateMonth'] or $scheduleDate['scheduleDateDay']) {
+                return $result = [];
+            }
         }
+
         return $result->addOrderBy('i.update_date', 'DESC')->getQuery()->getResult();
     }
 }
