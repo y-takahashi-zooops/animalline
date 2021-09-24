@@ -6,6 +6,7 @@ use Customize\Repository\InstockScheduleHeaderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Eccube\Entity\OrderItem;
 
 /**
  * @ORM\Table(name="ald_instock_schedule_header")
@@ -88,6 +89,22 @@ class InstockScheduleHeader
     public function getInstockSchedule(): Collection
     {
         return $this->InstockSchedule;
+    }
+
+    public function setInstockSchedule(): self
+    {
+        $this->InstockSchedule = new ArrayCollection();
+
+        return $this;
+    }
+
+    public function addInstockSchedule(OrderItem $InstockSchedule): self
+    {
+        if (!$this->InstockSchedule->contains($InstockSchedule)) {
+            $this->InstockSchedule[] = $InstockSchedule;
+        }
+
+        return $this;
     }
 
     public function getId(): ?int
