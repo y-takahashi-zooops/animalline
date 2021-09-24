@@ -388,6 +388,8 @@ class ShippingController extends BaseShippingController
     }
 
     /**
+     * Get shipping schedule by header
+     *
      * @Route("/%eccube_admin_route%/shipping_schedules_by_header", name="get_shipping_schedules_by_header", methods={"GET"})
      */
     public function getShippingSchedulesByHeader(Request $request)
@@ -410,6 +412,8 @@ class ShippingController extends BaseShippingController
     }
 
     /**
+     * Get shipping schedule
+     *
      * @Route("/%eccube_admin_route%/shipping_schedule", name="get_shipping_schedule", methods={"GET"})
      */
     public function getShippingSchedule(Request $request)

@@ -11,7 +11,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -30,8 +34,7 @@ class InstockScheduleHeaderType extends AbstractType
     public function __construct(
         EccubeConfig       $eccubeConfig,
         SupplierRepository $supplierRepository
-    )
-    {
+    ) {
         $this->eccubeConfig = $eccubeConfig;
         $this->supplierRepository = $supplierRepository;
     }
@@ -70,14 +73,37 @@ class InstockScheduleHeaderType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
-                'mapped' => false
+                'mapped' => $options['isEdit'] // only map when edit
+            ])
+            ->add('InstockScheduleErrors', TextType::class, [
+                'mapped' => false,
             ]);
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateInstockSchedule']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => InstockScheduleHeader::class,
+            'isEdit' => false
         ]);
+
+        $resolver->setRequired('isEdit');
+        $resolver->setAllowedTypes('isEdit', 'bool');
+    }
+
+    /**
+     * 受注明細のバリデーションを行う.
+     * 商品明細が1件も登録されていない場合はエラーとする.
+     *
+     * @param FormEvent $event
+     */
+    public function validateInstockSchedule(FormEvent $event)
+    {
+        $form = $event->getForm();
+        if (count($form['InstockSchedule']) < 1) {
+            $form['InstockScheduleErrors']->addError(new FormError(trans('admin.order.product_item_not_found')));
+        }
+
     }
 }

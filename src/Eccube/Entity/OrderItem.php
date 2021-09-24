@@ -874,6 +874,8 @@ if (!class_exists('\Eccube\Entity\OrderItem')) {
         }
 
         /**
+         * Get ShippingSchedules
+         *
          * @return Collection|ShippingSchedule[]
          */
         public function getShippingSchedules(): Collection
@@ -881,6 +883,12 @@ if (!class_exists('\Eccube\Entity\OrderItem')) {
             return $this->ShippingSchedules;
         }
 
+        /**
+         * Add shipping schedule
+         *
+         * @param ShippingSchedule $shippingSchedule
+         * @return OrderItem
+         */
         public function addShippingSchedule(ShippingSchedule $shippingSchedule): self
         {
             if (!$this->ShippingSchedules->contains($shippingSchedule)) {
@@ -891,6 +899,12 @@ if (!class_exists('\Eccube\Entity\OrderItem')) {
             return $this;
         }
 
+        /**
+         * Remove shipping schedule
+         *
+         * @param ShippingSchedule $shippingSchedule
+         * @return OrderItem
+         */
         public function removeShippingSchedule(ShippingSchedule $shippingSchedule): self
         {
             if ($this->ShippingSchedules->removeElement($shippingSchedule)) {
@@ -904,13 +918,21 @@ if (!class_exists('\Eccube\Entity\OrderItem')) {
         }
 
         /**
-         * @return Collection|ReturnSchedule[]
+         * Get return schedule
+         *
+         * @return Collection
          */
         public function getReturnSchedule(): Collection
         {
             return $this->ReturnSchedule;
         }
 
+        /**
+         * Add return schedule
+         *
+         * @param ReturnSchedule $returnSchedule
+         * @return OrderItem
+         */
         public function addReturnSchedule(ReturnSchedule $returnSchedule): self
         {
             if (!$this->ReturnSchedule->contains($returnSchedule)) {
@@ -921,6 +943,12 @@ if (!class_exists('\Eccube\Entity\OrderItem')) {
             return $this;
         }
 
+        /**
+         * Remove return schedule
+         *
+         * @param ReturnSchedule $returnSchedule
+         * @return OrderItem
+         */
         public function removeReturnSchedule(ReturnSchedule $returnSchedule): self
         {
             if ($this->ReturnSchedule->removeElement($returnSchedule)) {

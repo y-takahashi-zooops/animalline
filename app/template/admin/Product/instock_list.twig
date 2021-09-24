@@ -10,86 +10,136 @@ file that was distributed with this source code.
 #}
 {% extends '@admin/default_frame.twig' %}
 
-{% set menus = ['product', 'instock_list'] %}
+{% set menus = ['product', 'instock_master'] %}
+{% set params = app.request.query.all %}
 
 {% block title %}入荷情報一覧{% endblock %}
 {% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
 
 {% block javascript %}
+<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 <script>
     $(".delete").on('click', function() {
-        $('#DeleteModal').modal('show');
-    });
+    $('#DeleteModal').modal('show');
+    $('#bulkDelete').val($(this).data('id'));
+});
+    $("#bulkDelete").on('click', function() {
+    $.ajax({
+        url: '{{ url('admin_product_instock_delete') }}',
+        type: 'post',
+        dataType: 'json',
+        data: {
+            'id': $('#bulkDelete').val()
+        }
+    })
+        .done(function (data) {
+            $('#DeleteModal').modal('hide');
+            location.reload();
+        })
+        .fail(function (err) {
+            console.error(err);
+        });
+});
 </script>
 {% endblock %}
 
 {% block stylesheet %}{% endblock %}
 
 {% block main %}
-<div class="c-outsideBlock">
-    <form id='search_form' method="post">
-        <div class="c-outsideBlock__contents">
-            <div class="row justify-content-start mb-3">
-                <div class="col-6">
-                    <label class="col-form-label">発注日</label>
-                    <div class="date">
-                        <select class="form-control"><option value="" selected>----</option><option value="2021">2021</option><option value="2020">2020</option><option value="2019">2019</option><option value="2018">2018</option><option value="2017">2017</option><option value="2016">2016</option><option value="2015">2015</option><option value="2014">2014</option><option value="2013">2013</option><option value="2012">2012</option><option value="2011">2011</option><option value="2010">2010</option><option value="2009">2009</option><option value="2008">2008</option><option value="2007">2007</option><option value="2006">2006</option><option value="2005">2005</option><option value="2004">2004</option><option value="2003">2003</option><option value="2002">2002</option><option value="2001">2001</option><option value="2000">2000</option><option value="1999">1999</option><option value="1998">1998</option><option value="1997">1997</option><option value="1996">1996</option><option value="1995">1995</option><option value="1994">1994</option><option value="1993">1993</option><option value="1992">1992</option><option value="1991">1991</option><option value="1990">1990</option></select>
-                        <select class="form-control"><option value="" selected>--</option><option value="1">01</option><option value="2" >02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select>
-                        <select class="form-control"><option value="" selected>--</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-start mb-3">
-                <div class="col-6">
-                    <label class="col-form-label">入荷予定日</label>
-                    <div class="date">
-                        <select class="form-control"><option value="" selected>----</option><option value="2021">2021</option><option value="2020">2020</option><option value="2019">2019</option><option value="2018">2018</option><option value="2017">2017</option><option value="2016">2016</option><option value="2015">2015</option><option value="2014">2014</option><option value="2013">2013</option><option value="2012">2012</option><option value="2011">2011</option><option value="2010">2010</option><option value="2009">2009</option><option value="2008">2008</option><option value="2007">2007</option><option value="2006">2006</option><option value="2005">2005</option><option value="2004">2004</option><option value="2003">2003</option><option value="2002">2002</option><option value="2001">2001</option><option value="2000">2000</option><option value="1999">1999</option><option value="1998">1998</option><option value="1997">1997</option><option value="1996">1996</option><option value="1995">1995</option><option value="1994">1994</option><option value="1993">1993</option><option value="1992">1992</option><option value="1991">1991</option><option value="1990">1990</option></select>
-                        <select class="form-control"><option value="" selected>--</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select>
-                        <select class="form-control"><option value="" selected>--</option><option value="1">01</option><option value="2">02</option><option value="3">03</option><option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option><option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="c-outsideBlock__contents mb-5">
-            <button class="btn btn-ec-conversion px-5" type="submit">検索</button>
-            <span class="font-weight-bold ml-2">検索結果：2件が該当しました</span>
-        </div>
-        {# <div class="c-outsideBlock__contents mb-5">
-            <ul class="list-inline">
-                <li class="list-inline-item"><span class="font-weight-bold">公開ステータス:&nbsp;</span>公開,&nbsp;非公開</li>
-            </ul>
-        </div> #}
-    </form>
-</div>
-<div class="c-contentsArea__cols">
-    <div class="c-contentsArea__primaryCol">
-        <div class="c-primaryCol">
-            <form id="form_bulk" method="POST" action="">
-                <div class="row justify-content-between mb-2">
-                    <div class="col-6"></div>
-                    <div class="col-5 text-right">
-                        <div class="d-inline-block mr-2">
-                            <div>
-                                <select class="custom-select">
-                                    <option selected="" value="10">10件</option>
-                                    <option  value="20">20件</option>
-                                    <option  value="30">30件</option>
-                                    <option  value="40">40件</option>
-                                    <option  value="50">50件</option>
-                                    <option  value="60">60件</option>
-                                    <option  value="70">70件</option>
-                                    <option  value="80">80件</option>
-                                    <option  value="90">90件</option>
-                                    <option  value="100">100件</option>
+    <div class="c-outsideBlock">
+        <form id='search_form' method="get" action="">
+            <div class="c-outsideBlock__contents">
+                <div class="row justify-content-start mb-3">
+                    <div class="col-6">
+                        <label class="col-form-label">発注日</label>
+                        <div class="date">
+                            <div id="instock_list_order_date" class="form-inline">
+                                <select class="form-control" id="instock_list_order_date_year" name="order_date_year">
+                                    <option value="">----</option>
+                                    {% for i in 2016..2036 %}
+                                        <option value={{ i }} {% if params.order_date_year is defined and params.order_date_year == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-control" id="instock_list_order_date_month" name="order_date_month">
+                                    <option value="">--</option>
+                                    {% for i in 1..12 %}
+                                        <option value={{ i }} {% if params.order_date_month is defined and params.order_date_month == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-control" id="instock_list_order_date_day" name="order_date_day">
+                                    <option value="">--</option>
+                                    {% for i in 1..31 %}
+                                        <option value={{ i }}  {% if params.order_date_day is defined and params.order_date_day == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card rounded border-0 mb-4 d-block">
-                    <div class="card-body p-0">
-                        <table class="table table-sm">
-                            <thead>
+                <div class="row justify-content-start mb-3">
+                    <div class="col-6">
+                        <label class="col-form-label">入荷予定日</label>
+                        <div class="date">
+                            <div id="instock_list_arrival_date_schedule" class="form-inline">
+                                <select class="form-control" id="instock_list_arrival_date_schedule_year" name="arrival_date_schedule_year">
+                                    <option value="">----</option>
+                                    {% for i in 2016..2036 %}
+                                        <option value={{ i }}  {% if params.arrival_date_schedule_year is defined and params.arrival_date_schedule_year == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-control" id="instock_list_arrival_date_schedule_month" name="arrival_date_schedule_month">
+                                    <option value="">--</option>
+                                    {% for i in 1..12 %}
+                                        <option value={{ i }} {% if params.arrival_date_schedule_month is defined and params.arrival_date_schedule_month == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-control" id="instock_list_arrival_date_schedule_day" name="arrival_date_schedule_day">
+                                    <option value="">--</option>
+                                    {% for i in 1..31 %}
+                                        <option value={{ i }} {% if params.arrival_date_schedule_day is defined and params.arrival_date_schedule_day == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="c-outsideBlock__contents mb-5">
+                <button class="btn btn-ec-conversion px-5" type="submit">検索</button>
+                <span class="font-weight-bold ml-2">検索結果：{{ count }} 件が該当しました</span>
+            </div>
+            {# <div class="c-outsideBlock__contents mb-5">
+            <ul class="list-inline">
+                <li class="list-inline-item"><span class="font-weight-bold">公開ステータス:&nbsp;</span>公開,&nbsp;非公開</li>
+            </ul>
+        </div> #}
+        </form>
+    </div>
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <form id="form_bulk" method="get" action="">
+                    <div class="row justify-content-between mb-2">
+                        <div class="col-6"></div>
+                        <div class="col-5 text-right">
+                            <div class="d-inline-block mr-2">
+                                <div>
+                                    <select class="custom-select" onchange="location = this.value;">
+                                        {% for i in range(10, 60, 10) %}
+                                            <option value="{{ url('admin_product_instock_list',
+                                                params|merge({'item': i})) }}" {{ params.item is defined ?
+                                            (params.item == i ? 'selected') : (i == 50 ? 'selected') }}>{{ i }}件
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card rounded border-0 mb-4 d-block">
+                        <div class="card-body p-0">
+                            <table class="table table-sm">
+                                <thead>
                                 <tr>
                                     <th class="border-top-0 pt-2 pb-2"></th>
                                     <th class="border-top-0 pt-2 pb-2">ID</th>
@@ -101,76 +151,68 @@ file that was distributed with this source code.
                                 </tr>
                                 </thead>
                                 <tbody>
+                                {% for instock in instocks %}
                                     <tr>
                                         <td class="pt-2 pb-2"></td>
-                                        <td class="align-middle">1</td>
-                                        <td class="align-middle">仕入先１</td>
-                                        <td class="align-middle">2021/09/18</td>
-                                        <td class="align-middle">2021/09/21</td>
-                                        <td class="align-middle">2021/09/21</td>
+                                        <td class="align-middle">{{ instock.id }}</td>
+                                        <td class="align-middle">{{ supplier[instock.supplierCode] }}</td>
+                                        <td class="align-middle">{{ instock.orderDate | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.arrivalDateSchedule | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
                                         <td class="align-middle pr-3" colspan="3">
                                             <div class="text-right">
-                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="編集">
-                                                    <a class="btn btn-ec-actionIcon" href="{{url('admin_product_instock_registration_edit', {'id': 1}) }}">
-                                                        <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
+                                                <div class="px-1 d-inline-block text-center" data-tooltip="true"
+                                                     data-placement="top" title="編集">
+                                                    <a class="btn btn-ec-actionIcon"
+                                                       href="{{ url('admin_product_instock_registration_edit', {'id': instock.id}) }}">
+                                                        <i class="fa fa-edit fa-lg text-secondary"
+                                                           aria-hidden="true"></i>
                                                     </a>
                                                 </div>
-                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="削除">
-                                                    <a class="btn btn-ec-actionIcon delete">
+                                                <div class="px-1 d-inline-block text-center" data-tooltip="true"
+                                                     data-placement="top" title="削除">
+                                                    <a class="btn btn-ec-actionIcon delete"
+                                                       data-id="{{ instock.id }}">
                                                         <i class="fa fa-close fa-lg text-secondary"></i>
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td class="pt-2 pb-2"></td>
-                                        <td class="align-middle">2</td>
-                                        <td class="align-middle">仕入先２</td>
-                                        <td class="align-middle">2021/09/21</td>
-                                        <td class="align-middle">2021/09/23</td>
-                                        <td class="align-middle">－</td>
-                                        <td class="align-middle pr-3" colspan="3">
-                                            <div class="text-right">
-                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="編集">
-                                                    <a class="btn btn-ec-actionIcon" href="{{url('admin_product_instock_registration_edit', {'id': 2}) }}">
-                                                        <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
-                                                    </a>
-                                                </div>
-                                                <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="削除">
-                                                    <a class="btn btn-ec-actionIcon delete">
-                                                        <i class="fa fa-close fa-lg text-secondary"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </form>
             </div>
-
+            <div class="navigation float-right">
+                {{ knp_pagination_render(instocks) }}
+            </div>
             <!-- 完全に削除の確認モーダル-->
-            <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="discontinuance" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+            <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="discontinuance"
+                 aria-hidden="true" data-keyboard="false" data-backdrop="static">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title font-weight-bold">入荷情報を削除します</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">×</span></button>
                         </div>
                         <div class="modal-body text-left">
                             <p class="text-left">入荷情報を削除してよろしいですか？</p>
                             <ul id="bulkErrors"></ul>
                             <div class="progress" style="display: none">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                     style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-ec-sub" type="button" data-dismiss="modal">キャンセル</button>
                             <button class="btn btn-ec-delete" type="button" id="bulkDelete">削除</button>
-                            <button class="btn btn-ec-regular" id="bulkDeleteDone" style="display: none" type="button" data-dismiss="modal">完了</button>
+                            <button class="btn btn-ec-regular" id="bulkDeleteDone" style="display: none" type="button"
+                                    data-dismiss="modal">完了
+                            </button>
                         </div>
                     </div>
                 </div>
