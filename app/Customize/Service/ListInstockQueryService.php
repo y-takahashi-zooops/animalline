@@ -28,67 +28,58 @@ class ListInstockQueryService
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
     }
 
-    public function search($dates)
+    public function search($orderDate = null,  $scheduleDate = null)
     {
         $result = $this->instockScheduleHeaderRepository->createQueryBuilder('i');
-        $orderDate = $dates['order_date'];
-        $scheduleDate = $dates['arrival_date_schedule'];
-        if ($orderDate) {
-            if ($orderDate['year'] and $orderDate['month'] and $orderDate['day']) {
-                $orderDateInput = new \DateTime($orderDate['year'] . '-' . $orderDate['month'] . '-' . $orderDate['day']);
-                $result = $result->where('i.order_date = :orderDateInput')
-                    ->setParameter('orderDateInput', $orderDateInput);
-            }
-            if ($orderDate['year'] and $orderDate['month'] and !$orderDate['day']) {
-                $fromTime = new \DateTime($orderDate['year'] . '-' . $orderDate['month'] . '-01');
-                $toTime = new \DateTime($fromTime->format('Y-m-d') . ' first day of next month');
-                $result = $result->where('i.order_date >= :fromTime')
-                    ->andWhere('i.order_date < :toTime')
-                    ->setParameter('fromTime', $fromTime)
-                    ->setParameter('toTime', $toTime);
-            }
-            if ($orderDate['year'] and !$orderDate['month']) {
-                $fromTime = new \DateTime($orderDate['year'] . '-01' . '-01');
-                $toTime = new \DateTime($fromTime->format('Y-m-d') . ' first day of next year');
-                $result = $result->where('i.order_date >= :fromTime')
-                    ->andWhere('i.order_date < :toTime')
-                    ->setParameter('fromTime', $fromTime)
-                    ->setParameter('toTime', $toTime);
+
+        if ($orderDate['orderDateYear']) {
+            $fromTimeYearOrderDate = new \DateTime($orderDate['orderDateYear'] . '-01' . '-01');
+            $toTimeYearOrderDate = new \DateTime($fromTimeYearOrderDate->format('Y-m-d') . ' first day of next year');
+            $result = $result->where('i.order_date >= :fromTimeYearOrderDate')
+                ->andWhere('i.order_date < :toTimeYearOrderDate')
+                ->setParameter('fromTimeYearOrderDate', $fromTimeYearOrderDate)
+                ->setParameter('toTimeYearOrderDate', $toTimeYearOrderDate);
+            if ($orderDate['orderDateMonth']) {
+                $fromTimeMonthOrderDate = new \DateTime($orderDate['orderDateYear'] . '-' . $orderDate['orderDateMonth'] . '-01');
+                $toTimeMonthOrderDate = new \DateTime($fromTimeMonthOrderDate->format('Y-m-d') . ' first day of next month');
+                $result = $result->andWhere('i.order_date >= :fromTimeMonthOrderDate')
+                    ->andWhere('i.order_date < :toTimeMonthOrderDate')
+                    ->setParameter('fromTimeMonthOrderDate', $fromTimeMonthOrderDate)
+                    ->setParameter('toTimeMonthOrderDate', $toTimeMonthOrderDate);
+                if ($orderDate['orderDateDay']) {
+                    $orderDateInput = new \DateTime($orderDate['orderDateYear'] . '-' . $orderDate['orderDateMonth'] . '-' . $orderDate['orderDateDay']);
+                    $result = $result->andWhere('i.order_date = :orderDateInput')
+                        ->setParameter('orderDateInput', $orderDateInput);
+                }
             }
         }
-        if ($scheduleDate) {
-            if ($scheduleDate['year'] and $scheduleDate['month'] and $scheduleDate['day']) {
-                $scheduleDateInput = new \DateTime($scheduleDate['year'] . '-' . $scheduleDate['month'] . '-' . $scheduleDate['day']);
-                $orderDate ? $result = $result->andWhere('i.order_date = :scheduleDateInput')
-                             ->setParameter('scheduleDateInput', $scheduleDateInput)
-                            : $result = $result->where('i.order_date = :scheduleDateInput')
-                            ->setParameter('scheduleDateInput', $scheduleDateInput);
-            }
-            if ($scheduleDate['year'] and $scheduleDate['month'] and !$scheduleDate['day']) {
-                $fromTime = new \DateTime($scheduleDate['year'] . '-' . $scheduleDate['month'] . '-01');
-                $toTime = new \DateTime($fromTime->format('Y-m-d') . ' first day of next month');
-                $orderDate ? $result->andWhere('i.order_date >= :fromTime')
-                             ->andWhere('i.order_date < :toTime')
-                             ->setParameter('fromTime', $fromTime)
-                             ->setParameter('toTime', $toTime)
-                           : $result->where('i.order_date >= :fromTime')
-                             ->andWhere('i.order_date < :toTime')
-                             ->setParameter('fromTime', $fromTime)
-                             ->setParameter('toTime', $toTime);
-            }
-            if ($scheduleDate['year'] and !$scheduleDate['month']) {
-                $fromTime = new \DateTime($scheduleDate['year'] . '-01' . '-01');
-                $toTime = new \DateTime($fromTime->format('Y-m-d') . ' first day of next year');
-                $orderDate ? $result->andWhere('i.order_date >= :fromTime')
-                             ->andWhere('i.order_date < :toTime')
-                             ->setParameter('fromTime', $fromTime)
-                             ->setParameter('toTime', $toTime)
-                           : $result->where('i.order_date >= :fromTime')
-                             ->andWhere('i.order_date < :toTime')
-                             ->setParameter('fromTime', $fromTime)
-                             ->setParameter('toTime', $toTime);
+
+        if ($scheduleDate['scheduleDateYear']) {
+            $fromTimeYearScheduleDate = new \DateTime($scheduleDate['scheduleDateYear'] . '-01' . '-01');
+            $toTimeYearScheduleDate = new \DateTime($fromTimeYearScheduleDate->format('Y-m-d') . ' first day of next year');
+            $result = $orderDate ? $result->andWhere('i.arrival_date_schedule >= :fromTimeYearScheduleDate')
+                         ->andWhere('i.arrival_date_schedule < :toTimeYearScheduleDate')
+                         ->setParameter('fromTimeYearScheduleDate', $fromTimeYearScheduleDate)
+                         ->setParameter('toTimeYearScheduleDate', $toTimeYearScheduleDate)
+                       : $result->where('i.arrival_date_schedule >= :fromTimeYearScheduleDate')
+                         ->andWhere('i.arrival_date_schedule < :toTimeYearScheduleDate')
+                         ->setParameter('fromTimeYearScheduleDate', $fromTimeYearScheduleDate)
+                         ->setParameter('toTimeYearScheduleDate', $toTimeYearScheduleDate);
+            
+            if ($scheduleDate['scheduleDateMonth']) {
+                $fromTimeMonthScheduleDate = new \DateTime($scheduleDate['scheduleDateYear'] . '-' . $scheduleDate['scheduleDateMonth'] . '-01');
+                $toTimeMonthScheduleDate = new \DateTime($fromTimeMonthScheduleDate->format('Y-m-d') . ' first day of next month');
+                $result = $result->andWhere('i.arrival_date_schedule >= :fromTimeMonthScheduleDate')
+                       ->andWhere('i.arrival_date_schedule < :toTimeMonthScheduleDate')
+                       ->setParameter('fromTimeMonthScheduleDate', $fromTimeMonthScheduleDate)
+                       ->setParameter('toTimeMonthScheduleDate', $toTimeMonthScheduleDate);
+                if ($scheduleDate['scheduleDateDay']) {
+                    $scheduleDateInput = new \DateTime($scheduleDate['scheduleDateYear'] . '-' . $scheduleDate['scheduleDateMonth'] . '-' . $scheduleDate['scheduleDateDay']);
+                    $result = $result->andWhere('i.arrival_date_schedule = :scheduleDateInput')
+                                    ->setParameter('scheduleDateInput', $scheduleDateInput);
+                }
             }
         }
-        return $result->getQuery()->getResult();
+        return $result->addOrderBy('i.update_date', 'DESC')->getQuery()->getResult();
     }
 }
