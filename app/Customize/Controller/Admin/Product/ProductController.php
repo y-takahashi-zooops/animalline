@@ -1248,6 +1248,8 @@ class ProductController extends BaseProductController
     }
 
     /**
+     * Delete instock header and schedule by id
+     *
      * @Route("/%eccube_admin_route%/product/instock/delete", name="admin_product_instock_delete")
      */
     public function deleteInstock(Request $request)
