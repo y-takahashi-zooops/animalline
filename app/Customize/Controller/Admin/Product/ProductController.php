@@ -1255,12 +1255,6 @@ class ProductController extends BaseProductController
     public function deleteInstock(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        if ($request->get('idProduct')) {
-            $product = $request->get('idProduct');
-            $instock = $this->instockScheduleRepository->find($product);
-
-            $entityManager->remove($instock);
-        }
         if ($request->get('id')) {
             $instockHeader = $this->instockScheduleHeaderRepository->find($request->get('id'));
             $instocks = $this->instockScheduleRepository->findBy(['InstockHeader' => $request->get('id')]);
