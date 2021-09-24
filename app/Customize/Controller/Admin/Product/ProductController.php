@@ -1202,9 +1202,8 @@ class ProductController extends BaseProductController
     public function instock_list(PaginatorInterface $paginator, Request $request)
     {
         $instockDate = new InstockScheduleHeader();
-        $instocks = [];
         $supplier = [];
-        $count = 0;
+        $instocks = $this->instockScheduleHeaderRepository->findAll();
         if ($request->get('instock_list')) {
             $dates = $request->get('instock_list');
             $orderDate = $dates['order_date'];
@@ -1223,16 +1222,17 @@ class ProductController extends BaseProductController
                 $instockDate->setArrivalDateSchedule($scheduleDate);
                 $instocks = $this->instockScheduleHeaderRepository->findBy(['arrival_date_schedule' => $scheduleDate]);
             }
-            if ($instocks) {
-                foreach ($instocks as $instock) {
-                    $suppliers = $this->supplierRepository->findOneBy(['supplier_code' => $instock->getSupplierCode()]);
-                    $supplier[$instock->getSupplierCode()] = $suppliers->getSupplierName();
-                }
+        }
+        if ($instocks) {
+            foreach ($instocks as $instock) {
+                $suppliers = $this->supplierRepository->findOneBy(['supplier_code' => $instock->getSupplierCode()]);
+                $supplier[$instock->getSupplierCode()] = $suppliers->getSupplierName();
             }
         }
         $count = count($instocks);
         $builder = $this->formFactory->createBuilder(InstockListType::class, $instockDate);
         $form = $builder->getForm();
+
         $instocks = $paginator->paginate(
             $instocks,
             $request->query->getInt('page', 1),
