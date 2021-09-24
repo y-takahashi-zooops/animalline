@@ -20,7 +20,7 @@
         <header>
             <div class="wrap">
             <div class="header-left">
-                <div class="header-logo"><h1><a href="{{url('breeder_top')}}"><img src="{{ asset('assets/img/logo_common.png') }}" alt="Animalline"/></a></h1></div>
+                <div class="header-logo"><h1><a href="{{url('breeder_top')}}"><img src="{{ asset('assets/img/logo_breeder.png') }}" width="610" height="80" alt="Animalline"/></a></h1></div>
                 {#
                 <div class="header-count">
                 <div class="header-count__dogs"><span>子犬掲載数</span><strong><i>2,652</i>頭</strong></div>
@@ -44,12 +44,14 @@
                     <span>ブリーダー登録</span>
                     </a>
                 </li>
+                {#
                 <li class="adoption">
-                    <a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn">
+                    <a href="" class="btn">
                     <i><img src="{{ asset('assets/img/guide/icon-care.png') }}" width="12" height="12" alt="保護団体登録"/></i>
                     <span>保護団体登録</span>
                     </a>
                 </li>
+                #}
                 {% if is_granted('ROLE_USER') %}
                     <li class="login">
                         <a href="{{url('breeder_mypage')}}" class="btn">

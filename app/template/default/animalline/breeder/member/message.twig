@@ -1,11 +1,11 @@
 {% set site_type = 'breeder' %}
-{% extends 'ani_frame.twig' %}
+{% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
     <div class="main">
         <div class="row">
             <div class="main-container col-12">
-                <h1>取引メッセージ</h1>
+                <div class="breeder_section_header">取引メッセージ</div>
                 <div class="m-2 p-2"></div>
 
                 {# ペット情報 #}
@@ -14,7 +14,7 @@
                     <div class="col-12 col-sm-10">
                         <h2>ペット情報</h2>
                         <div class="m-1 p-1"></div>
-                        <div class="col-12 py-3 breeder-border bg-white">
+                        <div class="col-12 py-3 bg-white">
                             <div class="row">
                                 <div class="breeder-img col-sm-4">
                                     <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}" class="w-100">
@@ -135,6 +135,7 @@
                                 </div>
                             </div>
                         {% else %}
+                            {#
                             <h2>ユーザー情報</h2>
                             <div class="m-1 p-1"></div>
                             <div class="col-12 py-3 breeder-border bg-white">
@@ -144,6 +145,7 @@
                                     </div>
                                 </div>
                             </div>
+                            #}
                         {% endif %}
                     </div>
                 </div>
@@ -199,7 +201,7 @@
                         </div>
                     {% endif %}
                 {% else %}
-                    <p class="text-center">結果が０件です。</p>
+                    <!-- <p class="text-center">結果が０件です。</p> -->
                 {% endfor %}
 
                 {# 返信欄・ボタン #}
@@ -212,20 +214,21 @@
                                       name="breeder-msg-form">
                                 <textarea {{ isScroll ? 'autofocus' }} aria-label="dialog-chat" class="col-12" rows="5" name="reply_message"
                                           placeholder="返信メッセージ"></textarea>
-                                    <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">送信</button>
+                                    <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">返信メッセージ送信</button>
 
+                                    ここに取引が完了した際の報告で特典が受けられることの説明を表記する
                                     <div class="d-flex">
                                         {% if Customer.isbreeder == 0 %}
                                             <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--action mt-2 mr-2"
                                                     onclick="location.href='{{ url('breeder_contract', {'pet_id': message.pet.id}) }}'">
-                                                成約
+                                                取引成約を報告する
                                             </button>
                                         {% else %}
-                                            <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">成約
+                                            <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">取引成約を報告して特典を受け取る
                                             </button>
                                         {% endif %}
                                         <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">
-                                            取引をキャンセルする
+                                            取引は成約しませんでした
                                         </button>
                                     </div>
                                 </form>

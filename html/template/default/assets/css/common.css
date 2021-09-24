@@ -57,7 +57,7 @@ HEADER
 ------------------*/
 header{
   width:100%;
-  min-width:1360px;
+  min-width:640px;
   position:fixed;
   top:0;
   left:0;
@@ -1561,6 +1561,64 @@ margin:0 0 20px;
 }
 
 /*------------------
+CONTENTS佐藤追加分
+------------------*/
+.breeder_section_header {
+  background-color: #388e3c;
+  color: #fff;
+  width:100%;
+  font-weight: 900;
+  font-size: 1.0rem;
+  padding: 5px 5px;
+}
+
+.breeder_section_header_orange {
+  background-color: #ffc67c;
+  color: #fff;
+  width:100%;
+  font-weight: 900;
+  font-size: 1.0rem;
+  padding: 5px 5px;
+}
+
+.breeder_section_detail {
+  border-bottom: 1px dotted #ddd;
+}
+
+.contents_col_bold {
+  width:100%;
+  font-weight: 900;
+  font-size: 0.9rem;
+  padding: 5px 5px;
+}
+.contents_col_normal {
+  width:300%;
+  font-weight: 300;
+  font-size: 0.9rem;
+  padding: 5px 5px;
+}
+.contents_col_price {
+  color: rgb(145, 30, 53);
+  width:100%;
+  font-weight: 900;
+  font-size: 1.0rem;
+  padding: 5px 5px;
+}
+.btn_center {
+  text-align: center;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+.center_section{
+  margin: 100px auto;
+  width: 640px;
+  padding: 10px;
+}
+/*------------------
+CONTENTS佐藤追加分
+------------------*/
+
+/*------------------
 Width <= 980px
 ------------------*/
 @media screen and (max-width: 1200px) {
@@ -1578,7 +1636,7 @@ header {
   min-width: 100%;
 }
 header .header-logo img{
-  height:20px;
+  height:80px;
 }
 header .header-count{
   padding:0;
@@ -1613,18 +1671,21 @@ Width <= 768px
 Width <= 640px
 ------------------*/
 @media screen and (max-width: 640px) {
-header .header-count{
-  display:none;
-}
-#side-menu .side-menu__count{
-  display:block;
-}
+  header .header-count{
+    display:none;
+  }
+  #side-menu .side-menu__count{
+    display:block;
+  }
 }
 
 /*------------------
 Width <= 480px
 ------------------*/
 @media screen and (max-width: 480px) {
+  header .header-logo img{
+    height:60px;
+  }
 }
 
 /*------------------
@@ -1632,3 +1693,5 @@ Width <= 375px
 ------------------*/
 @media screen and (max-width: 375px) {
 }
+
+

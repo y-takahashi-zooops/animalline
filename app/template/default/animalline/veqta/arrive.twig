@@ -1,0 +1,35 @@
+{% extends 'animalline/veqta/frame.twig' %}
+
+{% block main %}
+<div class="center_section">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-6">
+                    検体バーコード読み込み
+                </div>
+                <div class="col-6">
+                    <input type="text" class="w-100" value="123456789">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    検体送付者名
+                </div>
+                <div class="col-6">
+                    鈴木　太郎様
+                </div>
+            </div>
+
+            <div class="col-12">
+                <a href="{{url('veqta_arrive')}}" class="btn btn-warning w-100 m-1">検査結果登録</a>
+            </div>
+            <div class="col-12">
+                <a href="{{url('veqta_index')}}" class="btn btn-warning w-100 m-1">戻る</a>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

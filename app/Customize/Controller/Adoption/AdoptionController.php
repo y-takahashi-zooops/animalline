@@ -104,13 +104,8 @@ class AdoptionController extends AbstractController
 
     /**
      * @Route("/adoption/", name="adoption_top")
-     * @Template("animalline/adoption/reg_index.twig")
+     * @Template("animalline/adoption/index.twig")
      */
-    public function adoption_index(Request $request)
-    {
-        return;
-    }
-    /* 本場用。仮受付バージョンでコメントアウト
     public function adoption_index(Request $request)
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
@@ -135,7 +130,6 @@ class AdoptionController extends AbstractController
             'favoritePets' => $favoritePets,
         ]);
     }
-    */
     
     /**
      * ペット検索画面.

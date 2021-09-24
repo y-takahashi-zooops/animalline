@@ -589,7 +589,7 @@ th, td {
 }
 
 .bg-dna {
-    width: 100vw;
+    width: 100%;
     background-image: url("../img/bg-dna-img.png");
     background-position-x: right;
 }
