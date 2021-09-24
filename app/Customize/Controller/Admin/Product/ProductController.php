@@ -1381,6 +1381,7 @@ class ProductController extends BaseProductController
                                 ->setWarehouseCode('00001')
                                 ->setItemCode01('')
                                 ->setItemCode02('')
+                                ->setJanCode($item->getProductCode())
                                 ->setPurchasePrice($subTotalPrices[$key - 1])
                                 ->setArrivalQuantitySchedule($item->getQuantity())
                                 ->setArrivalBoxSchedule($item->getTaxRate());
