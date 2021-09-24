@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class InstockListType extends AbstractType
 {
@@ -33,14 +34,22 @@ class InstockListType extends AbstractType
     {
         $builder
             ->add('order_date', DateType::class, [
-                'placeholder' => '',
-                'format' => 'yyyy-MM-dd',
+                'input' => 'datetime',
                 'required' => false,
+                'format' => 'yyyyMMdd',
+                'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
+                'constraints' => [
+                    new Assert\DateTime(),
+                ],
             ])
             ->add('arrival_date_schedule', DateType::class, [
-                'placeholder' => '',
-                'format' => 'yyyy-MM-dd',
+                'input' => 'datetime',
                 'required' => false,
+                'format' => 'yyyyMMdd',
+                'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
+                'constraints' => [
+                    new Assert\DateTime(),
+                ],
             ]);
     }
 

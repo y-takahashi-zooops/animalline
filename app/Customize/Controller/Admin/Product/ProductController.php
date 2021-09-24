@@ -1218,20 +1218,20 @@ class ProductController extends BaseProductController
             $dates = $request->get('instock_list');
             $orderDate = $dates['order_date'];
             $scheduleDate = $dates['arrival_date_schedule'];
-            //            $result = $this->listInstockQueryService->search($dates);
+            $instocks = $this->listInstockQueryService->search($dates);
 
-            if ($orderDate['year'] && $orderDate['month'] && $orderDate['day']) {
-                $orderDate = $orderDate['year'] . '-' . $orderDate['month'] . '-' . $orderDate['day'];
-                $orderDate = new \DateTime($orderDate);
-                $instockDate->setOrderDate($orderDate);
-                $instocks = $this->instockScheduleHeaderRepository->findBy(['order_date' => $orderDate]);
-            }
-            if ($scheduleDate['year'] && $scheduleDate['month'] && $scheduleDate['day']) {
-                $scheduleDate = $scheduleDate['year'] . '-' . $scheduleDate['month'] . '-' . $scheduleDate['day'];
-                $scheduleDate = new \DateTime($scheduleDate);
-                $instockDate->setArrivalDateSchedule($scheduleDate);
-                $instocks = $this->instockScheduleHeaderRepository->findBy(['arrival_date_schedule' => $scheduleDate]);
-            }
+            // if ($orderDate['year'] && $orderDate['month'] && $orderDate['day']) {
+            //     $orderDate = $orderDate['year'] . '-' . $orderDate['month'] . '-' . $orderDate['day'];
+            //     $orderDate = new \DateTime($orderDate);
+            //     $instockDate->setOrderDate($orderDate);
+            //     $instocks = $this->instockScheduleHeaderRepository->findBy(['order_date' => $orderDate]);
+            // }
+            // if ($scheduleDate['year'] && $scheduleDate['month'] && $scheduleDate['day']) {
+            //     $scheduleDate = $scheduleDate['year'] . '-' . $scheduleDate['month'] . '-' . $scheduleDate['day'];
+            //     $scheduleDate = new \DateTime($scheduleDate);
+            //     $instockDate->setArrivalDateSchedule($scheduleDate);
+            //     $instocks = $this->instockScheduleHeaderRepository->findBy(['arrival_date_schedule' => $scheduleDate]);
+            // }
         }
         if ($instocks) {
             foreach ($instocks as $instock) {
@@ -1258,6 +1258,8 @@ class ProductController extends BaseProductController
     }
 
     /**
+     * Delete instock header and schedule by id
+     *
      * @Route("/%eccube_admin_route%/product/instock/delete", name="admin_product_instock_delete")
      */
     public function deleteInstock(Request $request)

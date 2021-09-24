@@ -10,7 +10,7 @@ file that was distributed with this source code.
 #}
 {% extends '@admin/default_frame.twig' %}
 
-{% set menus = ['product', 'instock_list'] %}
+{% set menus = ['product', 'instock_master'] %}
 {% set params = app.request.query.all %}
 
 {% block title %}入荷情報一覧{% endblock %}
@@ -25,7 +25,7 @@ file that was distributed with this source code.
 });
     $("#bulkDelete").on('click', function() {
     $.ajax({
-        url: '/aniconfig/product/instock/delete',
+        url: '{{ url('admin_product_instock_delete') }}',
         type: 'post',
         dataType: 'json',
         data: {
@@ -34,7 +34,7 @@ file that was distributed with this source code.
     })
         .done(function (data) {
             $('#DeleteModal').modal('hide');
-            $('form').submit();
+            location.reload();
         })
         .fail(function (err) {
             console.error(err);
@@ -47,7 +47,7 @@ file that was distributed with this source code.
 
 {% block main %}
     <div class="c-outsideBlock">
-        <form id='search_form' method="get">
+        <form id='search_form' method="get" action="">
             <div class="c-outsideBlock__contents">
                 <div class="row justify-content-start mb-3">
                     <div class="col-6">
@@ -80,7 +80,7 @@ file that was distributed with this source code.
     <div class="c-contentsArea__cols">
         <div class="c-contentsArea__primaryCol">
             <div class="c-primaryCol">
-                <form id="form_bulk" method="POST" action="">
+                <form id="form_bulk" method="get" action="">
                     <div class="row justify-content-between mb-2">
                         <div class="col-6"></div>
                         <div class="col-5 text-right">
@@ -120,7 +120,7 @@ file that was distributed with this source code.
                                         <td class="align-middle">{{ supplier[instock.supplierCode] }}</td>
                                         <td class="align-middle">{{ instock.orderDate | date('Y/m/d') }}</td>
                                         <td class="align-middle">{{ instock.arrivalDateSchedule | date('Y/m/d') }}</td>
-                                        <td class="align-middle">{{ instock. arrivalDate is empty ? '_' : instock. arrivalDate | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
                                         <td class="align-middle pr-3" colspan="3">
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
@@ -175,7 +175,7 @@ file that was distributed with this source code.
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-ec-sub" type="button" data-dismiss="modal">キャンセル</button>
-                            <button class="btn btn-ec-delete" type="button" id="bulkDelete"">削除</button>
+                            <button class="btn btn-ec-delete" type="button" id="bulkDelete">削除</button>
                             <button class="btn btn-ec-regular" id="bulkDeleteDone" style="display: none" type="button"
                                     data-dismiss="modal">完了
                             </button>
