@@ -59,6 +59,7 @@ class CustomTopController extends AbstractController
         return [];
     }
 
+
     /**
      * @Route("/contact", name="ani_contact")
      * @Template("ani_contact.twig")

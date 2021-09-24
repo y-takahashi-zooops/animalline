@@ -16,13 +16,10 @@
 
 /*DOM*/
 html {
-    max-width:1170px;
     min-width:320px;
-    margin: auto;
     font-size: min(2.25vw,18px);
 }
 body {
-    margin: 0;
     font-family: "Hiragino Sans", "ヒラギノ角ゴ Pro W3", "ヒラギノ角ゴ Pro W6", "ヒラギノ角ゴ Pro W7", "Hiragino Kaku Gothic Pro", "Noto Sans JP", "游ゴシック", helvetica, arial, sans-serif!important;
 }
 
@@ -284,7 +281,7 @@ th, td {
 }
 
 .main {
-    max-width: 1600px;
+    max-width:1170px;
     margin: auto;
     /* padding: 2em 4em; */
     padding: 2em 2em;

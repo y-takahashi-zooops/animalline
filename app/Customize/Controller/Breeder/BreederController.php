@@ -102,13 +102,8 @@ class BreederController extends AbstractController
 
     /**
      * @Route("/breeder/", name="breeder_top")
-     * @Template("animalline/breeder/reg_index.twig")
+     * @Template("animalline/breeder/index.twig")
      */
-    public function adoption_index(Request $request)
-    {
-        return;
-    }
-    /* 本番用。仮受付バージョンでコメントアウト
     public function breeder_index(Request $request)
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
@@ -133,7 +128,15 @@ class BreederController extends AbstractController
             'favoritePets' => $favoritePets,
         ]);
     }
-    */
+
+    /**
+     * @Route("/breeder/guide/dog", name="breedr_guide_dog")
+     * @Template("animalline/breeder/guide/dog.twig")
+     */
+    public function breedr_guide_dog()
+    {
+        return [];
+    }
 
     /**
      * @Route("/breeder/pet/search/result", name="breeder_pet_search_result")
