@@ -68,24 +68,7 @@ file that was distributed with this source code.
 
         $(document).on('click', '#bulkDelete', function (e) {
             // 商品削除
-            console.log($('#bulkDelete').val())
-
             // $("#calculate").trigger('click');
-             $.ajax({
-                url: '{{ url('admin_product_instock_delete') }}',
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    'idProduct': $('#bulkDelete').val()
-                     }
-                })
-                   .done(function (data) {
-                       $('#DeleteModal').modal('hide');
-                        location.reload();
-                       })
-                    .fail(function (err) {
-                         console.error(err);
-                      });
              $(this).parents('tr').remove();
             index--;
             $('#form1').submit();
