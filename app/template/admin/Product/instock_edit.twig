@@ -61,11 +61,33 @@ file that was distributed with this source code.
         index = $collectionHolder.find('tbody > tr').length;
         formIdPrefix = '#instock_schedule_header_InstockSchedule_';
 
-        $(document).on('click', '.delete', function (e) {
+         $("#delete").on('click', function() {
+            console.log($(this).data('id'));
+            $('#bulkDelete').val($(this).data('id'));
+        });
+
+        $(document).on('click', '#bulkDelete', function (e) {
             // 商品削除
-            $(this).parents('tr').remove();
-            index--;
+            console.log($('#bulkDelete').val())
+
             // $("#calculate").trigger('click');
+             $.ajax({
+                url: '{{ url('admin_product_instock_delete') }}',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    'idProduct': $('#bulkDelete').val()
+                     }
+                })
+                   .done(function (data) {
+                       $('#DeleteModal').modal('hide');
+                        location.reload();
+                       })
+                    .fail(function (err) {
+                         console.error(err);
+                      });
+             $(this).parents('tr').remove();
+            index--;
             $('#form1').submit();
         });
 
@@ -326,7 +348,7 @@ file that was distributed with this source code.
                                                             <div class="d-inline-block mr-3" data-tooltip="true"
                                                                  data-placement="top"
                                                                  title="{{ 'admin.common.delete'|trans }}">
-                                                                <a class="btn btn-ec-actionIcon" data-toggle="modal"
+                                                                <a id="delete" class="btn btn-ec-actionIcon" data-toggle="modal" data-id="{{ instockSchedule.id}}"
                                                                    data-target="#delete_{{ instockScheduleForm.vars.id }}">
                                                                     <i class="fa fa-close fa-lg text-secondary"
                                                                        aria-hidden="true"></i>
@@ -354,8 +376,9 @@ file that was distributed with this source code.
                                                                         <div class="modal-footer">
                                                                             <button class="btn btn-ec-sub" type="button"
                                                                                     data-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
-                                                                            <a href="#"
-                                                                               class="btn delete btn-ec-delete">{{ 'admin.common.delete'|trans }}</a>
+{#                                                                            <a href="#" id="bulkDelete"#}
+{#                                                                               class="btn delete btn-ec-delete">{{ 'admin.common.delete'|trans }}</a>#}
+                                                                            <button class="btn btn-ec-delete" type="button" id="bulkDelete">{{ 'admin.common.delete'|trans }}</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
