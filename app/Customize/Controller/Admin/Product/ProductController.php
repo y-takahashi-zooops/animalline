@@ -1301,10 +1301,14 @@ class ProductController extends BaseProductController
                 $item->setProductClass($productClass);
                 $item->setProductName($productClass->getProduct()->getName());
                 $item->setProductCode($schedule->getJanCode());
-                $item->setClassName1('フレーバー');
-                $item->setClassCategoryName1($productClass->getClassCategory1()->getName());
-                $item->setClassName2('サイズ');
-                $item->setClassCategoryName2($productClass->getClassCategory2()->getName());
+                if ($productClass->getClassCategory1()) {
+                    $item->setClassName1('フレーバー');
+                    $item->setClassCategoryName1($productClass->getClassCategory1()->getName());
+                }
+                if ($productClass->getClassCategory2()) {
+                    $item->setClassName2('サイズ');
+                    $item->setClassCategoryName2($productClass->getClassCategory2()->getName());
+                }
                 $OriginItems->add($item);
             }
             $TargetInstock->setInstockSchedule();
