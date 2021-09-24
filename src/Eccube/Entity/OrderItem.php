@@ -345,18 +345,6 @@ if (!class_exists('\Eccube\Entity\OrderItem')) {
         }
 
         /**
-         * Set id.
-         *
-         * @return OrderItem
-         */
-        public function setId($id)
-        {
-            $this->id = $id;
-
-            return $this;
-        }
-
-        /**
          * Set productName.
          *
          * @param string $productName

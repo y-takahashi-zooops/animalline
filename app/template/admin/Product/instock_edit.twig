@@ -61,16 +61,10 @@ file that was distributed with this source code.
         index = $collectionHolder.find('tbody > tr').length;
         formIdPrefix = '#instock_schedule_header_InstockSchedule_';
 
-         $("#delete").on('click', function() {
-            console.log($(this).data('id'));
-            $('#bulkDelete').val($(this).data('id'));
-        });
-
-        $(document).on('click', '#bulkDelete', function (e) {
-            // 商品削除
-            // $("#calculate").trigger('click');
-             $(this).parents('tr').remove();
+        $(document).on('click', '.delete', function (e) {
+            $(this).parents('tr').remove();
             index--;
+            // $("#calculate").trigger('click');
             $('#form1').submit();
         });
 
@@ -212,7 +206,7 @@ file that was distributed with this source code.
                                                 </div>
                                             </div>
                                         </div>
-                                         {{ form_errors(form.InstockScheduleErrors) }}
+                                        {{ form_errors(form.InstockScheduleErrors) }}
                                     </div>
                                     {# <div class="col-5 text-right">
                                 <button type="submit" class="btn btn-ec-regular mr-2" name="mode" value="calc" data-link="order-product" id="calculate"{{ action_disabled ? ' disabled="disabled"' }}>{{ 'admin.order.update_calculation_results'|trans }}</button>
@@ -240,7 +234,7 @@ file that was distributed with this source code.
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for instockScheduleForm in form.InstockSchedule %}
+                                    {% for key , instockScheduleForm in form.InstockSchedule %}
                                         {% set instockSchedule = instockScheduleForm.vars.data %}
                                         <tr>
                                             {# hidden values #}
@@ -309,7 +303,7 @@ file that was distributed with this source code.
                                             <!-- 小計 -->
                                             <td class="align-middle">
                                                 <div class="col">
-                                                    <span>{{ (subtotalPrices[loop.index - 1] ?? 0) | price}}</span>
+                                                    <span>{{ (subtotalPrices[key] ?? 0) | price }}</span>
                                                 </div>
                                             </td>
                                             <td class="align-middle text-right pr-3">
@@ -331,7 +325,7 @@ file that was distributed with this source code.
                                                             <div class="d-inline-block mr-3" data-tooltip="true"
                                                                  data-placement="top"
                                                                  title="{{ 'admin.common.delete'|trans }}">
-                                                                <a id="delete" class="btn btn-ec-actionIcon" data-toggle="modal" data-id="{{ instockSchedule.id}}"
+                                                                <a class="btn btn-ec-actionIcon" data-toggle="modal"
                                                                    data-target="#delete_{{ instockScheduleForm.vars.id }}">
                                                                     <i class="fa fa-close fa-lg text-secondary"
                                                                        aria-hidden="true"></i>
@@ -359,9 +353,8 @@ file that was distributed with this source code.
                                                                         <div class="modal-footer">
                                                                             <button class="btn btn-ec-sub" type="button"
                                                                                     data-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
-{#                                                                            <a href="#" id="bulkDelete"#}
-{#                                                                               class="btn delete btn-ec-delete">{{ 'admin.common.delete'|trans }}</a>#}
-                                                                            <button class="btn btn-ec-delete" type="button" id="bulkDelete">{{ 'admin.common.delete'|trans }}</button>
+                                                                            <a href="#"
+                                                                               class="btn delete btn-ec-delete">{{ 'admin.common.delete'|trans }}</a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -379,7 +372,9 @@ file that was distributed with this source code.
                                 <!-- お支払い合計 -->
                                 <div class="row justify-content-end mb-3">
                                     <div class="col-auto"><span class="align-middle">お支払い合計</span></div>
-                                    <div class="col-2 text-right"><span class="h4 align-middle font-weight-normal">{{ totalPrice | price }}</span></div>
+                                    <div class="col-2 text-right"><span
+                                                class="h4 align-middle font-weight-normal">{{ totalPrice | price }}</span>
+                                    </div>
                                 </div>
                                 <hr>
                             </div>

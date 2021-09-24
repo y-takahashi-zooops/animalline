@@ -1292,7 +1292,6 @@ class ProductController extends BaseProductController
             $OriginItems = new ArrayCollection();
             foreach ($TargetInstock->getInstockSchedule() as $schedule) {
                 $item = new OrderItem;
-                $item->setId($schedule->getId());
                 $item->setOrderItemType($this->orderItemTypeRepository->find(1));
                 $item->setQuantity($schedule->getArrivalQuantitySchedule());
                 $item->setTaxRate($schedule->getArrivalBoxSchedule());
