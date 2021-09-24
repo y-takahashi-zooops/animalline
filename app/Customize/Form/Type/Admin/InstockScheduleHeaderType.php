@@ -77,7 +77,7 @@ class InstockScheduleHeaderType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => InstockScheduleHeader::class,
-            'currentOrg' => false
+            'isEdit' => false
         ]);
 
         $resolver->setRequired('isEdit');
