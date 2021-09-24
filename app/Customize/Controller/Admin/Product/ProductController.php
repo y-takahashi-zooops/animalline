@@ -1204,24 +1204,19 @@ class ProductController extends BaseProductController
         $instockDate = new InstockScheduleHeader();
         $supplier = [];
         $instocks = $this->instockScheduleHeaderRepository->findAll();
-        if ($request->get('instock_list')) {
-            $dates = $request->get('instock_list');
-            $orderDate = $dates['order_date'];
-            $scheduleDate = $dates['arrival_date_schedule'];
-            $instocks = $this->listInstockQueryService->search($dates);
+        if ($request->getMethod('get')) {
+            $orderDate = [
+                'orderDateYear' => $request->get('order_date_year'),
+                'orderDateMonth' => $request->get('order_date_month'),
+                'orderDateDate' => $request->get('order_date_Date')
+            ];
 
-            // if ($orderDate['year'] && $orderDate['month'] && $orderDate['day']) {
-            //     $orderDate = $orderDate['year'] . '-' . $orderDate['month'] . '-' . $orderDate['day'];
-            //     $orderDate = new \DateTime($orderDate);
-            //     $instockDate->setOrderDate($orderDate);
-            //     $instocks = $this->instockScheduleHeaderRepository->findBy(['order_date' => $orderDate]);
-            // }
-            // if ($scheduleDate['year'] && $scheduleDate['month'] && $scheduleDate['day']) {
-            //     $scheduleDate = $scheduleDate['year'] . '-' . $scheduleDate['month'] . '-' . $scheduleDate['day'];
-            //     $scheduleDate = new \DateTime($scheduleDate);
-            //     $instockDate->setArrivalDateSchedule($scheduleDate);
-            //     $instocks = $this->instockScheduleHeaderRepository->findBy(['arrival_date_schedule' => $scheduleDate]);
-            // }
+            $scheduleDate = [
+                'scheduleDateYear' => $request->get('arrival_date_schedule_year'),
+                'scheduleDateMonth' => $request->get('arrival_date_schedule_month'),
+                'scheduleDateDate' => $request->get('arrival_date_schedule_date')
+            ];
+            $instocks = $this->listInstockQueryService->search($orderDate,  $scheduleDate);
         }
         if ($instocks) {
             foreach ($instocks as $instock) {
@@ -1230,9 +1225,6 @@ class ProductController extends BaseProductController
             }
         }
         $count = count($instocks);
-        $builder = $this->formFactory->createBuilder(InstockListType::class, $instockDate);
-        $form = $builder->getForm();
-
         $instocks = $paginator->paginate(
             $instocks,
             $request->query->getInt('page', 1),
@@ -1240,7 +1232,6 @@ class ProductController extends BaseProductController
         );
 
         return [
-            'form' => $form->createView(),
             'instocks' => $instocks,
             'supplier' => $supplier,
             'count' => $count,

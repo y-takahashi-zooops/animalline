@@ -53,7 +53,26 @@ file that was distributed with this source code.
                     <div class="col-6">
                         <label class="col-form-label">発注日</label>
                         <div class="date">
-                            {{ form_widget(form.order_date) }}
+                            <div id="instock_list_order_date" class="form-inline">
+                                <select class="form-control" id="instock_list_order_date_year" name="order_date_year">
+                                    <option value="">----</option>
+                                    {% for i in 2016..2036 %}
+                                        <option value={{ i }} {% if params.order_date_year is defined and params.order_date_year == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-control" id="instock_list_order_date_month" name="order_date_month">
+                                    <option value="">--</option>
+                                    {% for i in 1..12 %}
+                                        <option value={{ i }} {% if params.order_date_month is defined and params.order_date_month == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-control" id="instock_list_order_date_day" name="order_date_day">
+                                    <option value="">--</option>
+                                    {% for i in 1..31 %}
+                                        <option value={{ i }}  {% if params.order_date_day is defined and params.order_date_day == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -61,7 +80,26 @@ file that was distributed with this source code.
                     <div class="col-6">
                         <label class="col-form-label">入荷予定日</label>
                         <div class="date">
-                            {{ form_widget(form.arrival_date_schedule) }}
+                            <div id="instock_list_arrival_date_schedule" class="form-inline">
+                                <select class="form-control" id="instock_list_arrival_date_schedule_year" name="arrival_date_schedule_year">
+                                    <option value="">----</option>
+                                    {% for i in 2016..2036 %}
+                                        <option value={{ i }}  {% if params.arrival_date_schedule_year is defined and params.arrival_date_schedule_year == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-control" id="instock_list_arrival_date_schedule_month" name="arrival_date_schedule_month">
+                                    <option value="">--</option>
+                                    {% for i in 1..12 %}
+                                        <option value={{ i }} {% if params.arrival_date_schedule_month is defined and params.arrival_date_schedule_month == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="form-control" id="instock_list_arrival_date_schedule_day" name="arrival_date_schedule_day">
+                                    <option value="">--</option>
+                                    {% for i in 1..31 %}
+                                        <option value={{ i }} {% if params.instock_list_arrival_date_schedule_day is defined and params.instock_list_arrival_date_schedule_day == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
