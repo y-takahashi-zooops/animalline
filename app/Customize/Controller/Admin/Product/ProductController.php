@@ -176,8 +176,7 @@ class ProductController extends BaseProductController
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
         ListInstockQueryService         $listInstockQueryService
-    )
-    {
+    ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
         $this->productImageRepository = $productImageRepository;
@@ -1203,14 +1202,13 @@ class ProductController extends BaseProductController
     public function instock_list(PaginatorInterface $paginator, Request $request)
     {
         $instockDate = new InstockScheduleHeader();
-        $instocks = [];
         $supplier = [];
-        $count = 0;
+        $instocks = $this->instockScheduleHeaderRepository->findAll();
         if ($request->get('instock_list')) {
             $dates = $request->get('instock_list');
             $orderDate = $dates['order_date'];
             $scheduleDate = $dates['arrival_date_schedule'];
-//            $result = $this->listInstockQueryService->search($dates);
+            //            $result = $this->listInstockQueryService->search($dates);
 
             if ($orderDate['year'] && $orderDate['month'] && $orderDate['day']) {
                 $orderDate = $orderDate['year'] . '-' . $orderDate['month'] . '-' . $orderDate['day'];
@@ -1224,16 +1222,17 @@ class ProductController extends BaseProductController
                 $instockDate->setArrivalDateSchedule($scheduleDate);
                 $instocks = $this->instockScheduleHeaderRepository->findBy(['arrival_date_schedule' => $scheduleDate]);
             }
-            if ($instocks) {
-                foreach ($instocks as $instock) {
-                    $suppliers = $this->supplierRepository->findOneBy(['supplier_code' => $instock->getSupplierCode()]);
-                    $supplier[$instock->getSupplierCode()] = $suppliers->getSupplierName();
-                }
+        }
+        if ($instocks) {
+            foreach ($instocks as $instock) {
+                $suppliers = $this->supplierRepository->findOneBy(['supplier_code' => $instock->getSupplierCode()]);
+                $supplier[$instock->getSupplierCode()] = $suppliers->getSupplierName();
             }
         }
         $count = count($instocks);
         $builder = $this->formFactory->createBuilder(InstockListType::class, $instockDate);
         $form = $builder->getForm();
+
         $instocks = $paginator->paginate(
             $instocks,
             $request->query->getInt('page', 1),
@@ -1277,9 +1276,15 @@ class ProductController extends BaseProductController
     public function instock_registration(Request $request, $id = null)
     {
         $TargetInstock = null;
-
-        // 空のエンティティを作成.
-        $TargetInstock = new InstockScheduleHeader();
+        if ($id) {
+            $TargetInstock = $this->instockScheduleHeaderRepository->find($id);
+            if (!$TargetInstock) {
+                throw new NotFoundHttpException();
+            }
+        } else {
+            // 空のエンティティを作成.
+            $TargetInstock = new InstockScheduleHeader();
+        }
 
         // 編集前の受注情報を保持
         $OriginItems = new ArrayCollection();
