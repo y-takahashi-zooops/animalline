@@ -13,13 +13,15 @@
 
 namespace Customize\Controller\Admin\Product;
 
-use Customize\Config\AnilineConf;
 use Customize\Entity\InstockScheduleHeader;
+use Doctrine\Common\Collections\ArrayCollection;
+use Customize\Config\AnilineConf;
 use Customize\Form\Type\Admin\InstockListType;
 use Customize\Form\Type\Admin\InstockScheduleHeaderType;
 use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\InstockScheduleRepository;
 use Customize\Service\ListInstockQueryService;
+use Customize\Entity\InstockSchedule;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
 use Eccube\Controller\AbstractController;
@@ -219,8 +221,10 @@ class ProductController extends BaseProductController
          * - デフォルト値
          * また, セッションに保存する際は mtb_page_maxと照合し, 一致した場合のみ保存する.
          **/
-        $page_count = $this->session->get('eccube.admin.product.search.page_count',
-            $this->eccubeConfig->get('eccube_default_page_count'));
+        $page_count = $this->session->get(
+            'eccube.admin.product.search.page_count',
+            $this->eccubeConfig->get('eccube_default_page_count')
+        );
 
         $page_count_param = (int)$request->get('page_count');
         $pageMaxis = $this->pageMaxRepository->findAll();
@@ -1235,7 +1239,7 @@ class ProductController extends BaseProductController
             $request->query->getInt('page', 1),
             $request->query->getInt('item', 50)
         );
-dump($result);die();
+
         return [
             'form' => $form->createView(),
             'instocks' => $instocks,
@@ -1270,8 +1274,93 @@ dump($result);die();
      * @Route("/%eccube_admin_route%/product/instock/edit/{id}", name="admin_product_instock_registration_edit")
      * @Template("@admin/Product/instock_edit.twig")
      */
-    public function instock_registration(Request $request)
+    public function instock_registration(Request $request, $id = null)
     {
-        return [];
+        $TargetInstock = null;
+
+        // 空のエンティティを作成.
+        $TargetInstock = new InstockScheduleHeader();
+
+        // 編集前の受注情報を保持
+        $OriginItems = new ArrayCollection();
+        foreach ($TargetInstock->getInstockSchedule() as $Item) {
+            $OriginItems->add($Item);
+        }
+
+        $builder = $this->formFactory->createBuilder(InstockScheduleHeaderType::class, $TargetInstock);
+
+        $form = $builder->getForm();
+
+        $form->handleRequest($request);
+
+        $totalPrice = 0;
+        $subTotalPrices = [];
+        if ($form->isSubmitted() && $form['InstockSchedule']->isValid()) {
+            $items = $form['InstockSchedule']->getData();
+            foreach ($items as $item) {
+                $price = $item->getPrice();
+                $quantity1 = $item->getQuantity();
+                $quantity2 = $item->getTaxRate();
+                $quantityBox = $item->getProduct()->getQuantityBox();
+                $subTotalPrice = 0;
+                if ($quantity1 == 0) {
+                    $subTotalPrice = $price * $quantity2 * $quantityBox;
+                } elseif ($quantity2 == 0) {
+                    $subTotalPrice = $price * $quantity1;
+                } else {
+                    $subTotalPrice = $price * $quantity1 + $price * $quantity2 * $quantityBox;
+                }
+
+                $subTotalPrices[] = $subTotalPrice;
+            }
+            $totalPrice = array_sum($subTotalPrices);
+
+            switch ($request->get('mode')) {
+                case 'register':
+                    log_info('受注登録開始', [$TargetInstock->getId()]);
+
+                    if ($form->isValid()) {
+                        $this->entityManager->persist($TargetInstock);
+                        $this->entityManager->flush();
+
+                        foreach ($items as $key => $item) {
+                            $InstockSchedule = (new InstockSchedule())
+                                ->setInstockHeader($TargetInstock)
+                                ->setWarehouseCode('00001')
+                                ->setItemCode01('')
+                                ->setItemCode02('')
+                                ->setPurchasePrice($subTotalPrices[$key - 1])
+                                ->setArrivalQuantitySchedule($item->getQuantity())
+                                ->setArrivalBoxSchedule($item->getTaxRate());
+
+                            $this->entityManager->persist($InstockSchedule);
+                            $this->entityManager->flush();
+                        }
+
+                        $this->addSuccess('admin.common.save_complete', 'admin');
+                        log_info('受注登録完了', [$TargetInstock->getId()]);
+
+                        return $this->redirectToRoute('admin_product_instock_registration_new');
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // 商品検索フォーム
+        $builder = $this->formFactory
+            ->createBuilder(SearchProductType::class);
+
+        $searchProductModalForm = $builder->getForm();
+
+        return [
+            'form' => $form->createView(),
+            'searchProductModalForm' => $searchProductModalForm->createView(),
+            'Order' => $TargetInstock,
+            'id' => $id,
+            'totalPrice' => $totalPrice,
+            'subtotalPrices' => $subTotalPrices
+        ];
     }
 }
