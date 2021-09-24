@@ -185,7 +185,8 @@ class ProductController extends BaseProductController
         InstockScheduleRepository       $instockScheduleRepository,
         ListInstockQueryService         $listInstockQueryService,
         OrderItemTypeRepository         $orderItemTypeRepository
-    ) {
+    )
+    {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
         $this->productImageRepository = $productImageRepository;
@@ -1305,20 +1306,7 @@ class ProductController extends BaseProductController
             $TargetInstock->setInstockSchedule();
             foreach ($OriginItems as $item) {
                 $TargetInstock->addInstockSchedule($item);
-
-                $price = $item->getPrice();
-                $quantity1 = $item->getQuantity();
-                $quantity2 = $item->getTaxRate();
-                $quantityBox = $item->getProduct()->getQuantityBox();
-                $subTotalPrice = 0;
-                if ($quantity1 == 0) {
-                    $subTotalPrice = $price * $quantity2 * $quantityBox;
-                } elseif ($quantity2 == 0) {
-                    $subTotalPrice = $price * $quantity1;
-                } else {
-                    $subTotalPrice = $price * $quantity1 + $price * $quantity2 * $quantityBox;
-                }
-                $subTotalPrices[] = $subTotalPrice;
+                $subTotalPrices[] = $this->price($item);
             }
             $totalPrice = array_sum($subTotalPrices);
         } else {
@@ -1339,22 +1327,10 @@ class ProductController extends BaseProductController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form['InstockSchedule']->isValid()) {
+            $subTotalPrices = [];
             $items = $form['InstockSchedule']->getData();
             foreach ($items as $item) {
-                $price = $item->getPrice();
-                $quantity1 = $item->getQuantity();
-                $quantity2 = $item->getTaxRate();
-                $quantityBox = $item->getProduct()->getQuantityBox();
-                $subTotalPrice = 0;
-                if ($quantity1 == 0) {
-                    $subTotalPrice = $price * $quantity2 * $quantityBox;
-                } elseif ($quantity2 == 0) {
-                    $subTotalPrice = $price * $quantity1;
-                } else {
-                    $subTotalPrice = $price * $quantity1 + $price * $quantity2 * $quantityBox;
-                }
-
-                $subTotalPrices[] = $subTotalPrice;
+                $subTotalPrices[] = $this->price($item);
             }
             $totalPrice = array_sum($subTotalPrices);
 
@@ -1406,5 +1382,27 @@ class ProductController extends BaseProductController
             'totalPrice' => $totalPrice,
             'subtotalPrices' => $subTotalPrices
         ];
+    }
+
+    /**
+     * price
+     *
+     * @return array
+     */
+    public function price($item)
+    {
+        $price = $item->getPrice();
+        $quantity1 = $item->getQuantity();
+        $quantity2 = $item->getTaxRate();
+        $quantityBox = $item->getProduct()->getQuantityBox();
+        $subTotalPrice = 0;
+        if ($quantity1 == 0) {
+            $subTotalPrice = $price * $quantity2 * $quantityBox;
+        } elseif ($quantity2 == 0) {
+            $subTotalPrice = $price * $quantity1;
+        } else {
+            $subTotalPrice = $price * $quantity1 + $price * $quantity2 * $quantityBox;
+        }
+        return $subTotalPrice;
     }
 }
