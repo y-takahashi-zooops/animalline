@@ -3,70 +3,76 @@
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
-    <div class="section-search">
-        <div class="main">
-            {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-                <nav class="nav nav-pills search-nav m-2 d-none d-flex">
-                    <a class="nav-item nav-link active bg-breeder col-md-3"
-                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
-                        <h4 class="text-white text-align-center">犬を探す</h4>
-                    </a>
-                    <a class="nav-item nav-link border bg-white col-md-3"
-                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
-                        <h4 class="color-gray-300 text-align-center">猫を探す</h4>
-                    </a>
-                </nav>
-            {% else %}
-                <nav class="nav nav-pills search-nav m-2 d-none d-flex">
-                    <a class="nav-item nav-link border bg-white col-md-3"
-                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
-                        <h4 class="color-gray-300 text-align-center">犬を探す</h4>
-                    </a>
-                    <a class="nav-item nav-link active bg-breeder col-md-3"
-                    href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
-                        <h4 class="text-white text-align-center">猫を探す</h4>
-                    </a>
-                </nav>
-            {% endif %}
-            <div class="m-2 p-2"></div>
-            <form action="{{ url('breeder_pet_search_result') }}" method="get">
-                <input type="hidden" name="pet_kind" value="{{ petKind }}">
-                <div class="row">
-                    <div class="col-md-5 select-container mb-2 mb-sm-none">
-                        <select class="form_dropdown w-100" id="formControlSelect1" name="breed_type">
-                            <option value="">種類</option>
-                            {% for breed in breeds %}
-                                <option value="{{ breed.id }}">{{ breed.breedsName }}</option>
+    <section id="breeder-mv">
+      <div class="inner">
+        <div class="breeder-mv__container">
+          <div class="breeder-mv__text">
+            <h2>テキストが入りますテキストが入りますテキストが入ります</h2>
+            <div class="breeder-mv__text_logo"><img src="{{ asset('assets/img/breeder-mv-logo.png') }}" alt="Animalline Breeder"/></div>
+            <p>キャッチコピーが入ります。</p>
+            <div class="breeder-mv__text_btn">
+              <ul>
+                {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+                    <li class="breeder-mv__text_btn_dog"><span><i>犬を探す</i></a></li>
+                    <li class="breeder-mv__text_btn_cat"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>猫を探す</i></a></li>
+                {% else %}
+                    <li class="breeder-mv__text_btn_dog"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>犬を探す</i></a></li>
+                    <li class="breeder-mv__text_btn_cat"><span><i>猫を探す</i></a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+          <div class="breeder-mv__search">
+            <div class="breeder-mv__search_wrap breeder-mv__search_dog">
+              <div class="breeder-mv__search_title">
+                <h2>犬を探す</h2>
+              </div>
+              <div class="breeder-mv__search_body">
+                <form action="{{ url('breeder_pet_search_result') }}" method="get">
+                  <input type="hidden" name="pet_kind" value="{{ petKind }}">
+                  <div class="breeder-mv__search_top">
+                    <div class="select-container">
+                      <select class="form_dropdown w-100" id="formControlSelect1" name="breed_type">
+                        <option value="">種類</option>
+                        {% for breed in breeds %}
+                            <option value="{{ breed.id }}">{{ breed.breedsName }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="breeder-mv__search_bottom">
+                    <div class="breeder-mv__search_bottom_w50">
+                      <div class="select-container">
+                        <select class="form_dropdown w-100" id="formControlSelect2" name="gender">
+                          <option value="">性別</option>
+                          <option value="1">男の子</option>
+                          <option value="2">女の子</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="breeder-mv__search_bottom_w50">
+                      <div class="select-container">
+                        <select class="form_dropdown w-100" id="formControlSelect3" name="region">
+                            <option value="">都道府県</option>
+                            {% for region in regions %}
+                                <option value="{{ region.id }}">{{ region.name }}</option>
                             {% endfor %}
                         </select>
+                      </div>
+                      <label><input type="checkbox" name="adjacent" value="1" class="mr-1">隣の都道府県も検索</label>
                     </div>
-                    <div class="col-md-3 select-container mb-2 mb-sm-none">
-                        <select class="form_dropdown w-100" id="formControlSelect2" name="gender">
-                            <option value="">性別</option>
-                            <option value="1">男の子</option>
-                            <option value="2">女の子</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 select-container">
-                        <select class="form_dropdown w-100" id="formControlSelect3" name="region">
-                                <option value="">都道府県</option>
-                                {% for region in regions %}
-                                    <option value="{{ region.id }}">{{ region.name }}</option>
-                                {% endfor %}
-                        </select>
-                        <input type="checkbox" name="adjacent" value="1" class="mr-1">隣の都道府県も検索
-                    </div>
-                </div>
-                <div class="row">
-                    <div style="margin: 0 auto;">
-                        <a href="#">
-                            <button class="search_button bg-accent mt-3">検索する</button>
-                        </a>
-                    </div>
-                </div>
-            </form>
+                  </div>
+                  <div class="breeder-mv__search_btn">
+                    <button><i class="bi bi-check2-square"></i>この条件で検索する</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
+    </section>
+
     <div class="bg-primary">
         <div class="m-2 p-2"></div>
         <div class="row">
@@ -186,38 +192,6 @@
                     </div>
                 </div>
                 {# 注目のペット END #}
-                <div class="m-2 p-2"></div>
-                {# 特集 #}
-                <div class="card-deck">
-                    <div class="card">
-                        <div class="row no-gutters">
-                            <a href="{{url('homepage')}}"><img class="card-img-top" src="{{ asset('assets/img/top_ec.jpg') }}" alt="Card image"></a>
-                            <div class="card-body">
-                                <a href="{{url('homepage')}}"><h4 class="card-title">Animalline EC</h4></a>
-                                <p class="card-text">しつけから消耗品まで、ペットに関わる様々な商品・サービスを提供しています。</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="row no-gutters">
-                            <img class="card-img-top" src="{{ asset('assets/img/guide.jpg') }}" alt="Card image">
-                            <div class="card-body">
-                                <h4 class="card-title">お迎えガイド</h4>
-                                <p class="card-text">新たな家族を迎えるためのお迎えガイド</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="row no-gutters">
-                            <img class="card-img-top" src="{{ asset('assets/img/top_dctn.jpg') }}" alt="Card image">
-                            <div class="card-body">
-                                <h4 class="card-title">ペットの家庭教師</h4>
-                                <p class="card-text">パピーのしつけははじめが大切！</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {# 特集 END #}
                 <div class="m-2 p-2"></div>
                 {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
                     <div class="d-flex justify-content-between align-items-end">
@@ -454,6 +428,38 @@
             </div>
         </div>
     </div>
+    <section id="breeder-footer">
+      <div class="inner">
+        <div class="breeder-footer__bnr">
+          <ul>
+            <li>
+              <a href="">
+                <figure>
+                  <img src="{{ asset('assets/img/breeder-bnr01.png') }}" alt="Animalline EC"/>
+                  <figcaption>（※リンク差し替え予定）しつけから消耗品まで、ペットに関わる様々な商品・サービスを提供しています。</figcaption>
+                </figure>
+              </a>
+            </li>
+            <li>
+              <a href="{{url('breedr_guide_dog')}}">
+                <figure>
+                  <img src="{{ asset('assets/img/breeder-bnr02.png') }}" alt="お迎えガイド"/>
+                  <figcaption>新たな家族を迎えるためのお迎えガイド</figcaption>
+                </figure>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <figure>
+                  <img src="{{ asset('assets/img/breeder-bnr03.png') }}" alt="ペットの家庭教師"/>
+                  <figcaption>パピーのしつけははじめが大切！</figcaption>
+                </figure>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
 {% endblock %}
 
 {% block stylesheet %}
