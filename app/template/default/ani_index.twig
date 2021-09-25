@@ -2,132 +2,192 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-    {#
-    <div id="carouselExampleFade" class="carousel slide carousel-fade mb-4" data-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="{{ asset('assets/img/top_image01.jpg') }}" class="d-block w-100" alt="First slide">
+<main role="main">
+    <section id="main-visual">
+        <ul class="main-visual_slider">
+            <li class="main-visual_slider_1">
+            <div class="main-visual__content">
+                <div class="main-visual__content_text">
+                <p><img src="{{ asset('assets/img/top-mv01-copy.png') }}" alt="ブリーダーと飼い主をつなぐ。アニマルラインブリーダー"/></p>
+                <div class="main-visual__content_text_btn"><a href="{{url('breeder_top')}}"><i class="bi bi-arrow-right-circle-fill"></i>詳しくはこちら</a></div>
+                </div>
             </div>
-            <div class="carousel-item">
-                <img src="{{ asset('assets/img/top_image02.jpg') }}" class="d-block w-100" alt="Second slide">
+            </li>
+            <li class="main-visual_slider_2">
+            <div class="main-visual__content">
+                <div class="main-visual__content_text">
+                <p><img src="{{ asset('assets/img/top-mv02-copy.png') }}" alt="里親を探している・なりたい方。アニマルラインアドプション"/></p>
+                <div class="main-visual__content_text_btn"><a href="{{url('adoption_top')}}"><i class="bi bi-arrow-right-circle-fill"></i>詳しくはこちら</a></div>
+                </div>
             </div>
-            <div class="carousel-item">
-                <img src="{{ asset('assets/img/top_image03.jpg') }}" class="d-block w-100" alt="Third slide">
+            </li>
+            <li class="main-visual_slider_3">
+            <div class="main-visual__content">
+                <div class="main-visual__content_text">
+                <p><img src="{{ asset('assets/img/top-mv03-copy.png') }}" alt="自宅でしつけトレーニング。ペットの家庭教師"/></p>
+                <div class="main-visual__content_text_btn"><a href="https://dc-trainers.net/" target="_blank"><i class="bi bi-arrow-right-circle-fill"></i>詳しくはこちら</a></div>
+                </div>
             </div>
-        </div>
-        <a class="carousel-control-prev" href="#carouselExampleFade" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carouselExampleFade" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
-    #}
-    <div class="w-100 position-relative">
-        <img src="{{ asset('assets/img/lp-breeder-main-image.png') }}" class="w-100 position-relative">
-        <div class="main-image-view position-absolute text-white">
-            <h1 class="text-white">遺伝病ゼロの世界を目指して</h1>
-            アニマルラインはペットの遺伝病ゼロを目指して<br />全頭DNA検査を実施しています。
-        </div>
-    </div>
+            </li>
+        </ul>
+    </section>
 
-    <div class="row mt-5 d-flex align-items-center">
-        <div class="col">
-            <img src="{{ asset('assets/img/logo_adoption.png') }}" class="w-75 d-block mx-auto">
-            <div classs="card-body">
-                Animalline Adoption は飼い主のいない保護犬猫の里親を探している方と、保護犬猫の里親になりたい 方を つなぐマッチングサイトです。
+    <section id="top-content">
+      <article class="top-content_01">
+        <div class="top-content__icon"><img src="{{ asset('assets/img/top-icon01.png') }}" alt="Animalline Breeder"/></div>
+        <div class="top-content__container">
+          <figure class="top-content__container_image"><img src="{{ asset('assets/img/top-bg01.jpg') }}" alt="Animalline Breeder"/></figure>
+          <div class="top-content__container_text">
+            <h2>ブリーダーと飼い主のためのマッチングサイト</h2>
+            <div class="top-content__container_text_wrap">
+              <div class="top-content__container_text_logo"><a href="{{url('breeder_top')}}"><img src="{{ asset('assets/img/top-logo01.png') }}" alt="Animalline Breeder"/></a></div>
+              <p>Animalline Breederは自慢の子犬・子猫をお譲りしたいブリーダーと、ブリーダーから直接子犬・子猫をご購入したい方をつなぐマッチングサイトです。</p>
+              <div class="top-content__container_text_btn"><a href="{{url('breeder_top')}}"><i class="bi bi-search"></i>検索する</a></div>
             </div>
-            <a href="{{url('adoption_top')}}" class="btn btn-warning btn-block mt-3" role="button">検索する</a>
+          </div>
         </div>
-        <div class="col">
-            <img src="{{ asset('assets/img/top_adoption.jpg') }}" class="card-img-top pt-2">
-        </div>
-    </div>
-
-    <div class="row mt-5 d-flex align-items-center">
-        <div class="col">
-            <img src="{{ asset('assets/img/top_breeder.jpg') }}" class="card-img-top pt-2">
-        </div>
-        <div class="col">
-            <img src="{{ asset('assets/img/logo_breeder.png') }}" class="w-75 d-block mx-auto">
-            <div classs="card-body">
-                AnimallineBreeder は自慢の子犬・子猫をお譲りしたいブリーダーと、ブリーダーから直接子犬・子猫をご購入したい 方を つなぐマッチングサイトです。
+      </article>
+      <article class="top-content_02">
+        <div class="top-content__icon"><img src="{{ asset('assets/img/top-icon02.png') }}" alt="Animalline Adoption"/></div>
+        <div class="top-content__container">
+          <figure class="top-content__container_image"><img src="{{ asset('assets/img/top-bg02.jpg') }}" alt="Animalline Adoption"/></figure>
+          <div class="top-content__container_text">
+            <h2>保護犬・猫と里親になりたい方のマッチングサイト</h2>
+            <div class="top-content__container_text_wrap">
+              <div class="top-content__container_text_logo"><a href="{{url('adoption_top')}}"><img src="{{ asset('assets/img/top-logo02.png') }}" alt="Animalline Adoption"/></a></div>
+              <p>Animalline Adoptionは飼い主のいない保護犬猫の里親を探している方と、保護犬猫の里親になりたい方をつなぐマッチングサイトです。</p>
+              <div class="top-content__container_text_btn"><a href="{{url('adoption_top')}}"><i class="bi bi-search"></i>検索する</a></div>
             </div>
-            <a href="{{url('breeder_top')}}" class="btn btn-success btn-block mt-3" role="button">検索する</a>
+          </div>
         </div>
-    </div>
-
-    <div class="row mt-5 d-flex align-items-center">
-        <div class="col">
-            <img src="{{ asset('assets/img/logo_dctn.png') }}" class="w-75 d-block mx-auto">
-            <div classs="card-body">
-                犬のトイレの失敗や吠え癖、噛み癖などの問題は家の中の環境が原因で起きているケースが多々あります 。 人と同様、犬にも性格・個体差・感情があり、その子の個性、学習スピードに合わせたトレーニングで問題にアプローチすることが大切です。「ペットの家庭教師」では、ご自宅にうかがい、生活環境や個性を確認のうえ、プライベート・しつけトレーニングをご提供します。
+      </article>
+      <article class="top-content_03">
+        <div class="top-content__icon"><img src="{{ asset('assets/img/top-icon03.png') }}" alt="ペットの家庭教師"/></div>
+        <div class="top-content__container">
+          <figure class="top-content__container_image"><img src="{{ asset('assets/img/top-bg03.jpg') }}" alt="ペットの家庭教師"/></figure>
+          <div class="top-content__container_text">
+            <div class="top-content__container_text_wrap">
+              <div class="top-content__container_text_logo"><a href="https://dc-trainers.net/" target="_blank"><img src="{{ asset('assets/img/top-logo03.png') }}" alt="ペットの家庭教師"/></a></div>
+              <p>「ペットの家庭教師」では、ご自宅にうかがい、生活環境や個性を確認のうえ、プライベート・しつけトレーニングをご提供します。</p>
+              <div class="top-content__container_text_btn"><a href="https://dc-trainers.net/"  target="_blank"><i class="bi bi-arrow-right-circle-fill"></i>詳しくはこちら</a></div>
             </div>
-            <a href="https://dc-trainers.net/" class="btn btn-warning btn-block mt-3" role="button">詳しくはこちら</a>
+          </div>
         </div>
-        <div class="col">
-            <img src="{{ asset('assets/img/top_dctn.jpg') }}" class="card-img-top pt-2">
-        </div>
-    </div>
-    
-    {% if is_granted('ROLE_USER') %}
-    <div class="row mt-5 d-flex align-items-center">
-        <div class="col">
-            <img src="{{ asset('assets/img/top_ec.jpg') }}" class="card-img-top pt-2">
-        </div>
-        <div class="col">
-            <img src="{{ asset('assets/img/common/logo.png') }}" class="w-75 d-block mx-auto">
-            <div classs="card-body">
-                しつけから消耗品まで、ペットに関わる様々な商品・サービスを提供しています。
+      </article>
+      {% if is_granted('ROLE_USER') %}
+        <article class="top-content_04">
+            <div class="top-content__icon"><img src="{{ asset('assets/img/top-icon04.png') }}" alt="Animalline EC SHOP"/></div>
+            <div class="top-content__container">
+            <figure class="top-content__container_image"><img src="{{ asset('assets/img/top-bg04.jpg') }}" alt="Animalline EC SHOP"/></figure>
+            <div class="top-content__container_text">
+                <div class="top-content__container_text_wrap">
+                <div class="top-content__container_text_logo"><a href="{{url('homepage')}}"><img src="{{ asset('assets/img/top-logo04.png') }}" alt="Animalline EC SHOP"/></a></div>
+                <p>しつけから消耗品まで、ペットに関わる様々な商品・サービスを提供しています。</p>
+                <div class="top-content__container_text_btn"><a href="{{url('homepage')}}"><i class="bi bi-cart3"></i>ショップへ</a></div>
+                </div>
             </div>
-            <a href="{{url('homepage')}}" class="btn btn-warning btn-block mt-3" role="button">ショップへ</a>
-        </div>
-    </div>
+            </div>
+        </article>
     {% endif %}
+    </section>
     
-    <div class="bg-dna mt-5">
-        <div class="p-4"></div>
-        <div class="p-4"><h1>Animallineにて掲載のペットは全頭DNA検査済み<h1></div>
-        <div class="m-4 p-4"><h2>DNA検査のメリット</h2></div>
-        <div class="m-4 p-4">遺伝子検査とは、DNAの変異（突然変異）を検出する検査のことを言います。<br />
-        神経疾患、眼疾患、泌尿器疾患、血液疾患などの遺伝性疾患の検査を行うことが可能です。</div>
-        <div class="row max-w-1200 m-auto">
-            <div class="col-md-6">
-                <h3 class="bg-accent text-white font-weight-300 accent-text-box">発症リスクを知る</h3>
-                <div class="m-2 p-2"></div>
-                <h3 class="font-weight-300 color-gray-500">
-                    遺伝子検査を行うことによって遺伝病の発症リスクを知ることができ、遺伝性疾患に対する備えができることです。事前にその病気のリスクを知ることで、定期検診を行うと共に、早期発見につながり、重症化の予防につながります。​
-                </h3>
-            </div>
-        </div>
-        <div class="m-4 p-4"></div>
-        <div class="row max-w-1200 m-auto">
-            <div class="col-md-6">
-                <h3 class="bg-accent text-white font-weight-300 accent-text-box">変異遺伝子を次世代に残さない</h3>
-                <div class="m-2 p-2"></div>
-                <h3 class="font-weight-300 color-gray-500">
-                    遺伝情報は両親から半分ずつ子に伝達されるため、次の世代を繁殖する前に両親の遺伝子検査を行うことは、遺伝性疾患を将来の世代に増加させないために重要な意義があります。​
-                </h3>
-            </div>
-        </div>
-        <div class="m-4 p-4"></div>
-        <div class="row max-w-1200 m-auto">
-            <div class="col-md-6">
-                <h3 class="bg-accent text-white font-weight-300 accent-text-box">治療や生活環境の指針を示す​​</h3>
-                <div class="m-2 p-2"></div>
-                <h3 class="font-weight-300 color-gray-500">
-                    イベルメクチンへの感受性や手術時に止血困難となりえるフォンウイルブランド病（vWD）、腎結石、膀胱結石、尿道結石の発症率に関わる高尿酸尿症へのリスクなどを事前に知ることが可能です。
-                </h3>
-            </div>
-        </div>
-        <div class="m-4 p-4"></div>
-        <div class="m-4 p-4"></div>
-        <div class="p-4"></div>
-    </div>
+    <section id="top-topics">
+      <div class="top-topics__title">
+        <h2>TOPICS<small>新着情報</small></h2>
+      </div>
+      <div class="top-topics__slide">
+        <ul>
+          <li>
+            <figure><img src="{{ asset('assets/img/top-topics-img01.jpg') }}" alt=""/></figure>
+            <div class="date">2021.00.00</div>
+            <p>タイトルが入りますタイトルが入りますタイトルが入ります</p>
+          </li>
+          <li>
+            <figure><img src="{{ asset('assets/img/top-topics-img02.jpg') }}" alt=""/></figure>
+            <div class="date">2021.00.00</div>
+            <p>タイトルが入りますタイトルが入りますタイトルが入ります</p>
+          </li>
+          <li>
+            <figure><img src="{{ asset('assets/img/top-topics-img03.jpg') }}" alt=""/></figure>
+            <div class="date">2021.00.00</div>
+            <p>タイトルが入りますタイトルが入りますタイトルが入ります</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="top-dna">
+      <div class="inner">
+        <div class="top-dna-icon"><img src="{{ asset('assets/img/top-icon05.png') }}" alt="Animallineにて掲載のペットは全頭DNA検査済み"/></div>
+        <h2>Animallineにて掲載のペットは<br>
+          全頭DNA検査済み</h2>
+        <h3>DNA検査のメリット</h3>
+        <p>遺伝子検査とは、DNAの変異（突然変異）を検出する検査のことを言います。<br>
+          神経疾患、眼疾患、泌尿器疾患、血液疾患などの遺伝性疾患の検査を行うことが可能です。</p>
+        <ul>
+          <li>
+            <h4>発症リスクを知る</h4>
+            <figure><img src="{{ asset('assets/img/top-dna-img01.png') }}" alt="発症リスクを知る"/></figure>
+            <p>遺伝子検査を行うことによって遺伝病の発症リスクを知ることができ、遺伝性疾患に対する備えができることです。事前にその病気のリスクを知ることで、定期検診を行うと共に、早期発見につながり、重症化の予防につながります。</p>
+          </li>
+          <li>
+            <h4>変異遺伝子を次世代に残さない</h4>
+            <figure><img src="{{ asset('assets/img/top-dna-img02.png') }}" alt="変異遺伝子を次世代に残さない"/></figure>
+            <p>遺伝情報は両親から半分ずつ子に伝達されるため、次の世代を繁殖する前に両親の遺伝子検査を行うことは、遺伝性疾患を将来の世代に増加させないために重要な意義があります。</p>
+          </li>
+          <li>
+            <h4>治療や生活環境の指針を示す</h4>
+            <figure><img src="{{ asset('assets/img/top-dna-img03.png') }}" alt="治療や生活環境の指針を示す"/></figure>
+            <p>イベルメクチンへの感受性や手術時に止血困難となりえるフォンウイルブランド病（vWD）、腎結石、膀胱結石、尿道結石の発症率に関わる高尿酸尿症へのリスクなどを事前に知ることが可能です。</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+    
+</main>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/common-style.css') }}">
 {% endblock %}
-{% block javascript %}{% endblock %}
+{% block javascript %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+$(function(){
+  $('.main-visual_slider').slick({
+    fade:true,
+    arrows: false,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 6000,
+    speed:1000,
+    dots:true
+    /*responsive: [
+    {
+    breakpoint: 980,
+    settings: {
+    }
+    }
+    ]*/
+    });
+  $('.top-topics__slide ul').slick({
+    centerMode: true,
+    centerPadding: '25%',
+    arrows: false,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 6000,
+    speed:1000,
+    dots:true
+    /*responsive: [
+    {
+    breakpoint: 980,
+    settings: {
+    }
+    }
+    ]*/
+    });
+});
+</script>
+{% endblock %}
