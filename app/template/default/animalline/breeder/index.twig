@@ -276,47 +276,68 @@
           </div>
           
           <div class="breeder-column__side">
-            <div class="breeder-column__side_bnr">
-              <ul>
-                <li class="breeder-column__side_bnr_breeder"><a href=""><i class="bi bi-search"></i>ブリーダー検索はこちら</a></li>
-                <li class="breeder-column__side_bnr_ec"><a href=""><i class="bi bi-cart3"></i>ECショップはこちら</a></li>
-                <li class="breeder-column__side_bnr_guide"><a href="">お迎えガイド</a></li>
-                <li class="breeder-column__side_bnr_learning"><a href="">ペットの家庭教師</a></li>
-              </ul>
+            {#
+        <li class="nav-item side-nav-item">
+            <div class="side-contents mb-3" style="background: #337ab7;">
+                {% if site_type == 'breeder' %}
+                    <a class="nav-link active" href={{url('breeder_search')}}><i class="fas fa-search fa-fw mr-2" aria-hidden="true"></i>ブリーダー検索はこちら</a>
+                {% elseif site_type == 'adoption' %}
+                    <a class="nav-link active" href={{url('adoption_search')}}><i class="fas fa-search fa-fw mr-2" aria-hidden="true"></i>保護団体検索はこちら</a>
+                {% endif %}
             </div>
-            <div class="breeder-column__side_links">
-              <div class="breeder-column__side_links_title"><h3>カテゴリーから探す</h3></div>
-              <ul>
-                <li><a href=""><i class="bi bi-caret-right-fill"></i>新着のペット</a></li>
-                <li><a href=""><i class="bi bi-caret-right-fill"></i>注目のペット</a></li>
-                <li class="parent"><i class="bi bi-caret-right-fill"></i>人気の犬種
-                  <ul>
-                    <li><a href=""><i class="bi bi-chevron-right"></i>トイプードル</a></li>
-                    <li><a href=""><i class="bi bi-chevron-right"></i>チワワ</a></li>
-                    <li><a href=""><i class="bi bi-chevron-right"></i>ミニチュアダックス</a></li>
-                    <li><a href=""><i class="bi bi-chevron-right"></i>ポメラニアン</a></li>
-                    <li><a href=""><i class="bi bi-chevron-right"></i>フレンチブルドッグ</a></li>
-                    <li><a href=""><i class="bi bi-chevron-right"></i>柴</a></li>
-                  </ul>
-                </li>
-                <li class="parent"><i class="bi bi-caret-right-fill"></i>サイズ
-                  <ul>
-                    <li><a href=""><i class="bi bi-chevron-right"></i>超小型犬</a></li>
-                    <li><a href=""><i class="bi bi-chevron-right"></i>小型犬</a></li>
-                    <li><a href=""><i class="bi bi-chevron-right"></i>中型犬</a></li>
-                    <li><a href=""><i class="bi bi-chevron-right"></i>大型犬</a></li>
-                  </ul>
-                </li>
-              </ul>
+        </li>
+        #}
+
+        {% if is_granted('ROLE_USER') %}
+        <li class="nav-item side-nav-item">
+            <div class="side-contents mb-3" style="background: #F08300">
+                <a class="nav-link" href="{{url('homepage')}}"><i class="fa fa-shopping-basket fa-fw mr-2" aria-hidden="true"></i>ECショップはこちら</a>
             </div>
-            <div class="breeder-column__side_info">
-              <ul>
-                <li><a href=""><i class="bi bi-envelope"></i>お問い合わせ</a></li>
-                <li><a href=""><i class="bi bi-building"></i>会社概要</a></li>
-                <li><a href=""><i class="bi bi-file-text"></i>利用規約</a></li>
-                <li><a href=""><i class="bi bi-shield-check"></i>プライバシーポリシー</a></li>
-              </ul>
+        </li>
+        {% endif %}
+        <li class="nav-item side-nav-item">
+            <div class="side-contents mb-3 bg-accent p-0">
+                <a href="{{url('breedr_guide_dog')}}">
+                    <div class="img-container">
+                        <img src="{{ asset('assets/img/guide.jpg') }}" style="height:53.27px; width:53.27px;">
+                        <span class="ml-3">お迎えガイド</span>
+                    </div>
+                </a>
             </div>
+        </li>
+        <li class="nav-item side-nav-item">
+            <div class="side-contents mb-3" style="border: 1px solid skyblue;">
+                <a href="#">
+                    <div class="img-container">
+                        <img src="{{ asset('assets/img/logo_dctn.png') }}" style="height:40.5px; width:51.75px;">
+                        <span class="ml-3" style="color: skyblue;">ペットの家庭教師</span>
+                    </div>
+                </a>
+            </div>
+        </li>
+        <li class="nav-item side-nav-item">
+            <div class="side-contents mb-3 bg-breeder" style="color: #fff;">
+                <div style="padding: 10px; border-bottom: 1px solid #fff;">
+                    <span style="color: white;"><i class="fas fa-dog fa-fw mr-2"></i>カテゴリーから探す</span>
+                </div>
+                <div style="padding: 15px;">
+                    <div>人気の犬種</div>
+                    <div>サイズ</div>
+                </div>
+            </div>
+        </li>
+        <li class="nav-item side-nav-item" style="border-bottom: solid 1px #DDDDDD">
+            <a class="nav-item nav-link" href={{url('ani_contact')}}><i class="fas fa-fw fa-envelope mr-2" aria-hidden="true"></i>お問い合わせ</a>
+        </li>
+        <li class="nav-item side-nav-item" style="border-bottom: solid 1px #DDDDDD">
+            <a class="nav-item nav-link" href={{url('ani_company')}}><i class="fa fa-building fa-fw mr-2" aria-hidden="true"></i>会社概要</a>
+        </li>
+        <li class="nav-item side-nav-item" style="border-bottom: solid 1px #DDDDDD">
+           <a class="nav-item nav-link" href={{url('ani_terms')}}><i class="fa fa-file-alt fa-fw mr-2" aria-hidden="true"></i>利用規約</a>
+        </li>
+        <li class="nav-item side-nav-item">
+            <a class="nav-item nav-link" href={{url('help_privacy')}}><i class="fa fa-shield-alt fa-fw mr-2" aria-hidden="true"></i>プライバシーポリシー</a>
+        </li>
           </div>
         </div>
       </div>
