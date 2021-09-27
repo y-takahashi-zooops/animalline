@@ -138,7 +138,9 @@ final class AnilineConf
     const ANILINE_DOG_SIZE_MEDIUM = 3;
     const ANILINE_DOG_SIZE_BIG = 4;
 
-    const ANILINE_WMS_SYNC_ACTION_PRODUCT = 1;
+    // 同期アクション
+    const ANILINE_WMS_SYNC_ACTION_PRODUCT = 1; // 商品
+    const ANILINE_WMS_SYNC_ACTION_INSTOCK_SCHEDULE = 2; // 入荷予定
 
     const ANILINE_WMS_RESULT_SUCCESS = 1;
     const ANILINE_WMS_RESULT_ANNOTATED = 2;
@@ -155,4 +157,8 @@ final class AnilineConf
     const ANILINE_DNA_CHECK_STATUS_PASSED = 8; // 検査通過
     const ANILINE_DNA_CHECK_STATUS_NG = 9; // 検査NG
     const ANILINE_DNA_CHECK_STATUS_RESENT = 10; // 検体再送付手続済
+
+    const ANILINE_SHIPPING_STATUS_ACCEPT = 1;
+    const ANILINE_SHIPPING_STATUS_INSTRUCTING = 2;
+    const ANILINE_SHIPPING_STATUS_SHIPPED = 3;
 }
