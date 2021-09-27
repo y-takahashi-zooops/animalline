@@ -1,0 +1,59 @@
+{% set site_type = 'breeder' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <form id="form_bulk" method="POST" action="">
+                    <input type="hidden" name="dna_id" value="">
+                    <div class="row justify-content-between mb-2">
+                        <div class="col-6"></div>
+                        <div class="col-2 text-right">
+                            <a class="btn btn-warning btn-block mt-3"
+                                   href="{{ url('breeder_examination_kit_new') }}">検査キット請求</a>
+                            <a class="btn btn-warning btn-block mt-3"
+                                   href="{{ url('breeder_examination_kit') }}">全件表示</a>
+                        </div>
+                    </div>
+                    <div class="card rounded border-0 mb-4 d-block">
+                        <div class="card-body p-0">
+                            <table class="table table-sm dna-table text-center">
+                                <thead>
+                                <tr>
+                                    <th class="border-top-0 pt-2 pb-2">ID</th>
+                                    <th class="border-top-0 pt-2 pb-2">出荷数量</th>
+                                    <th class="border-top-0 pt-2 pb-2">出荷ステータス</th>
+                                    <th class="border-top-0 pt-2 pb-2">キット出荷日</th>
+                                    <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="row justify-content-md-center mb-4 pb-4"></div>
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}
+<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+<script>
+    function change(id) {
+    $('input[name=dna_id]').val(id);
+    $('#confirm-modal').modal('show');
+};
+    $(".btn-ec-conversion").on('click', function() {
+    setTimeout(function () {
+        $('#confirm-modal').modal('hide');
+    }, 2000);
+});
+</script>
+{% endblock %}
+
+
