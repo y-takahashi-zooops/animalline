@@ -160,8 +160,7 @@ class BreederMemberController extends AbstractController
         BreederPetImageRepository        $breederPetImageRepository,
         DnaQueryService                  $dnaQueryService,
         DnaCheckStatusRepository         $dnaCheckStatusRepository
-    )
-    {
+    ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
@@ -961,18 +960,12 @@ class BreederMemberController extends AbstractController
                 ->addBreederPetImage($petImage4)
                 ->setThumbnailPath($img0);
 
-            $dnaCheckStatus = (new DnaCheckStatus)
-                ->setRegisterId($breeder->getId())
-                ->setPetId($breederPet->getId())
-                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER);
-
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($breederPet);
-            $entityManager->persist($dnaCheckStatus);
             $entityManager->flush();
 
             return $this->redirectToRoute('breeder_newpet_complete');
@@ -1118,6 +1111,7 @@ class BreederMemberController extends AbstractController
         $breederHouseDog = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $form = $builder->getForm();
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $dnaCheckSatusHeader->setRegisterId($this->getUser()->getId())
                 ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
@@ -1127,7 +1121,19 @@ class BreederMemberController extends AbstractController
             $entityManager->flush();
 
             return  $this->redirect($this->generateUrl('breeder_examination_kit'));
+
+            $kitUnit = $dnaCheckSatusHeader->getKitUnit();
+            for ($i = 0; $i < $kitUnit; $i++) {
+                $Dna = (new DnaCheckStatus)
+                    ->setDnaHeader($dnaCheckSatusHeader)
+                    ->setPetId($dnaCheckSatusHeader->getPetId())
+                    ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
+                    ->setKitPetRegisterDate(new DateTime);
+                $entityManager->persist($Dna);
+            }
+            $entityManager->flush();
         }
+
         return [
             'form' => $form->createView(),
             'breeder' => $breeder,
