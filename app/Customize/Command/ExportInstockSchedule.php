@@ -55,11 +55,12 @@ class ExportInstockSchedule extends Command
      * @param InstockScheduleRepository $instockScheduleRepository
      */
     public function __construct(
-        EntityManagerInterface           $entityManager,
-        WmsSyncInfoRepository            $wmsSyncInfoRepository,
-        InstockScheduleHeaderRepository  $instockScheduleHeaderRepository,
-        InstockScheduleRepository        $instockScheduleRepository
-    ) {
+        EntityManagerInterface          $entityManager,
+        WmsSyncInfoRepository           $wmsSyncInfoRepository,
+        InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
+        InstockScheduleRepository       $instockScheduleRepository
+    )
+    {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
@@ -113,46 +114,49 @@ class ExportInstockSchedule extends Command
         }
         $records = $qb->getQuery()->getArrayResult();
 
-        if ($records) {
-            $result = [];
-            foreach ($records as $record) {
-                $record['invoiceDate'] = null;
-                $record['boxNumber'] = null;
-                $record['lineNumber'] = null;
-                $record['colorCode'] = 9999;
-                $record['sizeCode'] = 1;
-                $record['FOB'] = null;
-                $record['BBDATE'] = null;
-                $record['remarks'] = null;
-                $record['stockDate'] = $record['stockDate']->format('Y-m-d');
-
-                $sorted = [];
-                foreach ($fields as $value) {
-                    $sorted[] = $record[$value];
-                }
-                $result[] = $sorted;
-            }
-
-            $dir = 'var/tmp/wms/instock_schedule/';
-            if (!file_exists($dir) && !mkdir($dir, 0777, true)) throw new Exception("Can't create directory.");
-            $filename = "NYUKAYOTEI_{$now->format('Ymd_His')}.csv";
-            $csvPath = $dir . $filename;
-            if (!$csvh = fopen($csvPath, 'w+')) throw new Exception("Can't create file.");
-
-            foreach ($result as $item) {
-                fputcsv($csvh, $item);
-            }
-            fclose($csvh);
-
-            $wms = (new WmsSyncInfo)
-                ->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_INSTOCK_SCHEDULE)
-                ->setSyncDate($now)
-                ->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
-            $em = $this->entityManager;
-            $em->persist($wms);
-            $em->flush();
-
-            echo "Export succeeded.\n";
+        if (!$records) {
+            echo "No record instock export csv.\n";
+            return;
         }
+        $result = [];
+        foreach ($records as $record) {
+            $record['invoiceDate'] = null;
+            $record['boxNumber'] = null;
+            $record['lineNumber'] = null;
+            $record['colorCode'] = 9999;
+            $record['sizeCode'] = 1;
+            $record['FOB'] = null;
+            $record['BBDATE'] = null;
+            $record['remarks'] = null;
+            $record['stockDate'] = $record['stockDate']->format('Y-m-d');
+
+            $sorted = [];
+            foreach ($fields as $value) {
+                $sorted[] = $record[$value];
+            }
+            $result[] = $sorted;
+        }
+
+        $dir = 'var/tmp/wms/instock_schedule/';
+        if (!file_exists($dir) && !mkdir($dir, 0777, true)) throw new Exception("Can't create directory.");
+        $filename = "NYUKAYOTEI_{$now->format('Ymd_His')}.csv";
+        $csvPath = $dir . $filename;
+        if (!$csvh = fopen($csvPath, 'w+')) throw new Exception("Can't create file.");
+
+        foreach ($result as $item) {
+            fputcsv($csvh, $item);
+        }
+        fclose($csvh);
+
+        $wms = (new WmsSyncInfo)
+            ->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_INSTOCK_SCHEDULE)
+            ->setSyncDate($now)
+            ->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
+        $em = $this->entityManager;
+        $em->persist($wms);
+        $em->flush();
+
+        echo "Export succeeded.\n";
+
     }
 }
