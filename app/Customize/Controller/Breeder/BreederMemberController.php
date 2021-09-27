@@ -24,7 +24,6 @@ use Customize\Entity\BreederContactHeader;
 use Customize\Entity\BreederHouse;
 use Customize\Entity\BreederExaminationInfo;
 use Customize\Entity\DnaCheckStatus;
-use Customize\Entity\DnaCheckStatusHeader;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Repository\Master\PrefRepository;
