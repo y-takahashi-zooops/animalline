@@ -1,0 +1,109 @@
+<?php
+
+/*
+ * This file is part of EC-CUBE
+ *
+ * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ *
+ * http://www.ec-cube.co.jp/
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Customize\Form\Type\Breeder;
+
+use Customize\Config\AnilineConf;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Eccube\Common\EccubeConfig;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Customize\Form\Type\AddressHouseType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
+class BreederKitDnaType extends AbstractType
+{
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
+
+    /**
+     * ContactType constructor.
+     *
+     * @param EccubeConfig $eccubeConfig
+     */
+    public function __construct(EccubeConfig $eccubeConfig)
+    {
+        $this->eccubeConfig = $eccubeConfig;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('choice_address', ChoiceType::class, [
+                'require' => true,
+                'mapped' => false,
+            ])
+            ->add('name', TextType::class, [
+                'require' => false,
+                'mapped' => false,
+            ])
+            ->add('shipping_zip', TextType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ]),
+                    new Assert\Length([
+                        'max' => 7,
+                    ]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'class' => 'p-postal-code',
+                    'placeholder' => 'common.postal_code_sample',
+                ],
+                'trim' => true,
+            ])
+            ->add('address', AddressHouseType::class)
+            ->add('shipping_tel', TextType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 11,
+                    ]),
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ]),
+                    new Assert\NotBlank(),
+                ],
+                'attr' => [
+                    'placeholder' => 'common.phone_number_sample',
+                    'maxlength' => 11,
+                ],
+                'trim' => true,
+            ])
+            ->add('kit_unit', IntegerType::class, [
+                'required' => false,
+            ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'breeder_kit_dna';
+    }
+}

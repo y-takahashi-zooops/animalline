@@ -6,6 +6,7 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\BreederPetImage;
 use Customize\Entity\BreederPets;
 use Customize\Entity\BreederEvaluations;
+use Customize\Form\Type\Breeder\BreederKitDnaType;
 use Customize\Form\Type\BreederEvaluationsType;
 use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederEvaluationsRepository;
@@ -1107,8 +1108,17 @@ class BreederMemberController extends AbstractController
      * @Route("/breeder/member/dna_kit/new", name="breeder_examination_kit_new", methods={"GET","POST"})
      * @Template("animalline/breeder/member/examination_kit_form.twig")
      */
-    public function breeder_examination_kit_new()
+    public function breeder_examination_kit_new(Request $request)
     {
-        return[];
+
+        $builder = $this->formFactory->createBuilder(BreederKitDnaType::class);
+        $breeder = $this->breedersRepository->find($this->getUser()->getId());
+
+        dump($breeder->getBreederHouses());die();
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+        return[
+            'form' => $form->createView()
+        ];
     }
 }
