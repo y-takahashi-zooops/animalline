@@ -1108,12 +1108,14 @@ class BreederMemberController extends AbstractController
     {
         $isAll = $request->get('is_all') ?? false;
         $registerId = $this->getUser();
+
         $dnas = $this->dnaCheckStatusHeaderRepository->createQueryBuilder('dna')
-        ->where('dna.register_id = :register_id')
-        ->andWhere('dna.site_type = :site_type')
-        ->setParameters([':register_id' => $registerId, ':site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
-        ->select('dna.id as id, dna.kit_unit, dna.shipping_status, dna.kit_shipping_date');
+                     ->where('dna.register_id = :register_id')
+                     ->andWhere('dna.site_type = :site_type')
+                     ->setParameters([':register_id' => $registerId, ':site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
+                     ->select('dna.id as id, dna.kit_unit, dna.shipping_status, dna.kit_shipping_date');
         if (!$isAll) $dnas->andWhere($dnas->expr()->notIn('dna.shipping_status', AnilineConf::ANILINE_SHIPPING_STATUS_SHIPPED));
+
         $dnas->orderBy('dna.create_date', 'DESC')
             ->getQuery()
             ->getResult();
