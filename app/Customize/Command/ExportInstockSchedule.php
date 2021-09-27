@@ -85,7 +85,7 @@ class ExportInstockSchedule extends Command
         $em = $this->entityManager;
         $fields = [
             'invoiceNumber', 'invoiceDate', 'supplierCode', 'supplierName', 'boxNumber',
-            'lineNumber', 'warehouseCode', 'stockDate', 'productNumber', // 'code', TODO: remove
+            'lineNumber', 'warehouseCode', 'stockDate', 'productNumberCode',
             'colorCode', 'sizeCode', 'jANCode', 'FOB', 'quantity', 'caseQuantity',
             'BBDATE', 'remarks'
         ];
@@ -104,7 +104,7 @@ class ExportInstockSchedule extends Command
             's.supplier_name as supplierName',
             'isd.warehouse_code as warehouseCode',
             'ihd.arrival_date_schedule as stockDate',
-            'isd.jan_code as productNumber',
+            'isd.jan_code as productNumberCode',
             'isd.jan_code as jANCode',
             'isd.arrival_quantity_schedule as quantity',
             'isd.arrival_box_schedule as caseQuantity'
