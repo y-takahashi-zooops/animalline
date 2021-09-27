@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\WmsSyncInfo;
 use Customize\Repository\WmsSyncInfoRepository;
+use Customize\Repository\SupplierRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Repository\ProductRepository;
 use Exception;
@@ -45,18 +46,26 @@ class ExportProduct extends Command
     protected $wmsSyncInfoRepository;
 
     /**
+     * @var SupplierRepository
+     */
+    protected $supplierRepository;
+    
+
+    /**
      * ExportProduct constructor.
      *
      * @param EntityManagerInterface $entityManager
      * @param WmsSyncInfoRepository $wmsSyncInfoRepository
      * @param ProductClassRepository $productClassRepository
      * @param ProductRepository $productRepository
+     * @param SupplierRepository $supplierRepository
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         WmsSyncInfoRepository  $wmsSyncInfoRepository,
         ProductClassRepository $productClassRepository,
-        ProductRepository      $productRepository
+        ProductRepository      $productRepository,
+        SupplierRepository     $supplierRepository
     )
     {
         parent::__construct();
@@ -64,6 +73,7 @@ class ExportProduct extends Command
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
         $this->productClassRepository = $productClassRepository;
         $this->productRepository = $productRepository;
+        $this->supplierRepository = $supplierRepository;
     }
 
     protected function configure()
@@ -94,7 +104,8 @@ class ExportProduct extends Command
 
         $qb = $this->productClassRepository->createQueryBuilder('pc');
         $qb->select(
-            'COALESCE(pc.code, pc.id) as productCode',
+            'p.id',
+            'pc.code as productCode',
             'p.name',
             'pc.price02',
             '(pc.price02 * :with_tax) as price02Tax',
@@ -116,7 +127,7 @@ class ExportProduct extends Command
             $wms = new WmsSyncInfo();
             $wms->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_PRODUCT)
                 ->setSyncDate(Carbon::now());
-            try {
+            //try {
                 $csvPath = $dir . $filename;
                 $csvh = fopen($csvPath, 'w+') or die("Can't open file");
                 $d = ',';
@@ -124,6 +135,17 @@ class ExportProduct extends Command
 
                 $result = [];
                 foreach ($records as $record) {
+                    
+                    $supplier = $this->supplierRepository->find($record['supplier_code']);
+                    $product = $this->productRepository->find($record['id']);
+
+                    $record['supplier_code'] = $supplier->getSupplierCode();
+                    if(is_null($record['productCode']) || strlen($record['productCode']) < 13){
+                        $record['itemCode'] = $product->getFreeArea();
+                        $record['jan_code'] = "";
+                    }
+                    $record['quantity_box'] = 1;
+
                     $record['year'] = '99';
                     $record['seasonCode'] = '01';
                     $record['subSeasonCode'] = null;
@@ -152,11 +174,13 @@ class ExportProduct extends Command
 
                 $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
                 echo 'Export succeeded.' . "\n";
+            /*
             } catch (Exception $e) {
                 $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_ERROR)
                     ->setSyncLog($e->getMessage());
                 echo 'Export failed' . "\n";
             }
+            */
             $em->persist($wms);
             $em->flush();
         }
