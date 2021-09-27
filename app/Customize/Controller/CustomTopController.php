@@ -42,6 +42,8 @@ class CustomTopController extends AbstractController
     }
 
     /**
+     * 利用規約
+     * 
      * @Route("/terms", name="ani_terms")
      * @Template("ani_terms.twig")
      */
@@ -51,6 +53,8 @@ class CustomTopController extends AbstractController
     }
 
     /**
+     * 会社概要
+     * 
      * @Route("/company", name="ani_company")
      * @Template("ani_company.twig")
      */

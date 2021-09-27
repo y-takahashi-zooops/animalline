@@ -1,8 +1,8 @@
-{% set site_type = 'common' %}
-{% extends 'ani_frame.twig' %}
+{% set site_type = 'adoption' %}
+{% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
-   {{include('company.twig')}}
+   {{ include('company.twig') }}
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">

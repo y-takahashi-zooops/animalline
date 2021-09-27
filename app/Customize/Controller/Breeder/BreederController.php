@@ -130,10 +130,10 @@ class BreederController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/guide/dog", name="breedr_guide_dog")
+     * @Route("/breeder/guide/dog", name="breeder_guide_dog")
      * @Template("animalline/breeder/guide/dog.twig")
      */
-    public function breedr_guide_dog()
+    public function breeder_guide_dog()
     {
         return [];
     }
@@ -337,5 +337,38 @@ class BreederController extends AbstractController
             'breeder',
             'pets'
         );
+    }
+    
+    /**
+     * 会社概要.
+     *
+     * @Route("/breeder/company", name="breeder_company")
+     * @Template("animalline/breeder/company.twig")
+     */
+    public function company(Request $request)
+    {
+        return;
+    }
+    
+    /**
+     * 特定商取引法に基づく表記.
+     *
+     * @Route("/breeder/tradelaw", name="breeder_tradelaw")
+     * @Template("animalline/breeder/tradelaw.twig")
+     */
+    public function tradelaw(Request $request)
+    {
+        return;
+    }
+    
+    /**
+     * プライバシーポリシー.
+     *
+     * @Route("/breeder/policy", name="breeder_policy")
+     * @Template("animalline/breeder/policy.twig")
+     */
+    public function policy(Request $request)
+    {
+        return;
     }
 }

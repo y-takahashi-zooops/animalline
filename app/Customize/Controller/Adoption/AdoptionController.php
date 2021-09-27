@@ -319,7 +319,7 @@ class AdoptionController extends AbstractController
      * @Route("/adoption/adoption_search", name="adoption_search")
      * @Template("/animalline/adoption/adoption_search.twig")
      */
-    public function breeder_search(PaginatorInterface $paginator, Request $request): Response
+    public function adoption_search(PaginatorInterface $paginator, Request $request): Response
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
         $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
@@ -522,5 +522,39 @@ class AdoptionController extends AbstractController
         return $this->render('animalline/adoption/contact_complete.twig', [
             'id' => $request->get('pet_id')
         ]);
+    }
+
+      
+    /**
+     * 会社概要.
+     *
+     * @Route("/adoption/company", name="adoption_company")
+     * @Template("animalline/adoption/company.twig")
+     */
+    public function company(Request $request)
+    {
+        return;
+    }
+    
+    /**
+     * 特定商取引法に基づく表記.
+     *
+     * @Route("/adoption/tradelaw", name="adoption_tradelaw")
+     * @Template("animalline/adoption/tradelaw.twig")
+     */
+    public function tradelaw(Request $request)
+    {
+        return;
+    }
+    
+    /**
+     * プライバシーポリシー.
+     *
+     * @Route("/adoption/policy", name="adoption_policy")
+     * @Template("animalline/adoption/policy.twig")
+     */
+    public function policy(Request $request)
+    {
+        return;
     }
 }

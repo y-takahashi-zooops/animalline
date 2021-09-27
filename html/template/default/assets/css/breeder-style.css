@@ -55,10 +55,12 @@
 
 .breeder-btn {
     background-color: var(--breeder-main-color);
+    color: #fff;
 }
 
 .breeder-btn:hover {
     background-color: #49bb6b;
+    color: #fff;
 }
 
 .pagination .page-item.active .page-link {
