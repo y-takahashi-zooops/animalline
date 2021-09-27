@@ -85,7 +85,7 @@ class ExportInstockSchedule extends Command
         $em = $this->entityManager;
         $fields = [
             'invoiceNumber', 'invoiceDate', 'supplierCode', 'supplierName', 'boxNumber',
-            'lineNumber', 'warehouseCode', 'stockDate', 'productNumber', 'code',
+            'lineNumber', 'warehouseCode', 'stockDate', 'productNumber', // 'code', TODO: remove
             'colorCode', 'sizeCode', 'jANCode', 'FOB', 'quantity', 'caseQuantity',
             'BBDATE', 'remarks'
         ];
@@ -99,15 +99,15 @@ class ExportInstockSchedule extends Command
 
         $qb = $this->instockScheduleRepository->createQueryBuilder('isd');
         $qb->select(
-            'ihd.id as invoice_number',
-            's.supplier_code',
-            's.supplier_name',
-            'isd.warehouse_code',
-            'ihd.arrival_date_schedule',
-            'isd.jan_code as product_number_code',
-            'isd.jan_code as jan_code',
-            'isd.arrival_quantity_schedule',
-            'isd.arrival_box_schedule'
+            'ihd.id as invoiceNumber',
+            's.supplier_code as supplierCode',
+            's.supplier_name as supplierName',
+            'isd.warehouse_code as warehouseCode',
+            'ihd.arrival_date_schedule as stockDate',
+            'isd.jan_code as productNumber',
+            'isd.jan_code as jANCode',
+            'isd.arrival_quantity_schedule as quantity',
+            'isd.arrival_box_schedule as caseQuantity'
         )
             ->innerJoin('isd.InstockHeader', 'ihd')
             ->leftJoin('Customize\Entity\Supplier', 's', 'WITH', 'ihd.supplier_code = s.supplier_code')
@@ -142,6 +142,7 @@ class ExportInstockSchedule extends Command
                 $record['FOB'] = null;
                 $record['BBDATE'] = null;
                 $record['remarks'] = null;
+                $record['stockDate'] = $record['stockDate']->format('Y-m-d H:i:s');
                 $sorted = [];
                 foreach ($fields as $value) {
                     array_push($sorted, $record[$value]);
