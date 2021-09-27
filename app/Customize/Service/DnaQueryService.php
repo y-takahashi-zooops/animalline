@@ -52,12 +52,13 @@ class DnaQueryService
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      */
     public function __construct(
-        BreederPetsRepository    $breederPetsRepository,
-        BreedsRepository         $breedsRepository,
-        DnaCheckStatusRepository $dnaCheckStatusRepository,
-        BreedersRepository       $breedersRepository,
+        BreederPetsRepository          $breederPetsRepository,
+        BreedsRepository               $breedsRepository,
+        DnaCheckStatusRepository       $dnaCheckStatusRepository,
+        BreedersRepository             $breedersRepository,
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
-    ) {
+    )
+    {
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
@@ -83,15 +84,18 @@ class DnaQueryService
             ->join('Eccube\Entity\Customer', 'c', 'WITH', 'dnah.register_id = c.id and dnah.register_id = cp.Conservation')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
             ->select('dna.id as dna_id, dna.site_type, cp.id as pet_id, c.id as customer_id, cp.thumbnail_path, cp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
-        if (!empty($customerName))
+        if (!empty($customerName)) {
             $queryConservation->andWhere('c.name01 like :customer_name or c.name02 like :customer_name')
                 ->setParameter(':customer_name', '%' . $criteria['customer_name'] . '%');
-        if (!empty($petKind))
+        }
+        if (!empty($petKind)) {
             $queryConservation->andWhere('cp.pet_kind = :pet_kind')
                 ->setParameter(':pet_kind', $petKind);
-        if (!empty($checkStatus))
+        }
+        if (!empty($checkStatus)) {
             $queryConservation->andWhere('dna.check_status = :check_status')
                 ->setParameter(':check_status', $checkStatus);
+        }
         $resultConservation = $queryConservation->orderBy('dna.update_date', 'DESC')
             ->addOrderBy('dna.id', 'DESC')->getQuery()->getArrayResult();
 
@@ -101,15 +105,18 @@ class DnaQueryService
             ->join('Eccube\Entity\Customer', 'c', 'WITH', 'dnah.register_id = c.id and dnah.register_id = bp.Breeder')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
             ->select('dna.id as dna_id, dna.site_type, bp.id as pet_id, c.id as customer_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
-        if (!empty($customerName))
+        if (!empty($customerName)) {
             $queryBreeder->andWhere('c.name01 like :customer_name or c.name02 like :customer_name')
                 ->setParameter(':customer_name', '%' . $criteria['customer_name'] . '%');
-        if (!empty($petKind))
+        }
+        if (!empty($petKind)) {
             $queryBreeder->andWhere('bp.pet_kind = :pet_kind')
                 ->setParameter(':pet_kind', $petKind);
-        if (!empty($checkStatus))
+        }
+        if (!empty($checkStatus)) {
             $queryBreeder->andWhere('dna.check_status = :check_status')
                 ->setParameter(':check_status', $checkStatus);
+        }
         $resultBreeder = $queryBreeder->orderBy('dna.update_date', 'DESC')
             ->addOrderBy('dna.id', 'DESC')->getQuery()->getArrayResult();
 
@@ -132,30 +139,13 @@ class DnaQueryService
             ->andWhere('dna.site_type = :site_type')
             ->setParameters([':register_id' => $registerId, ':site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
             ->select('dna.id as dna_id, bp.id as pet_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dna.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
-        if (!$isAll) $queryBreeder->andWhere($queryBreeder->expr()->notIn('dna.check_status', self::EXCLUDES));
+        if (!$isAll) {
+            $queryBreeder->andWhere($queryBreeder->expr()->notIn('dna.check_status', self::EXCLUDES));
+        }
         return $queryBreeder->orderBy('dna.update_date', 'DESC')
             ->addOrderBy('dna.id', 'DESC')
             ->getQuery()
             ->getArrayResult();
-    }
-
-    /**
-     * Breeder member DNA Kit filter.
-     *
-     * @param int $registerId
-     * @param bool $isAll
-     * @return array
-     */
-    public function filterDnaKitBreederMember(int $registerId, bool $isAll): array
-    {
-        $queryBreeder = $this->dnaCheckStatusHeaderRepository->createQueryBuilder('dna')
-            ->where('dna.site_type = :site_type')
-            ->setParameters([':register_id' => $registerId, ':site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
-            ->select('dna.id as id, dna.kit_unit, dna.shipping_status, dna.kit_shipping_date');
-        if (!$isAll) $queryBreeder->andWhere($queryBreeder->expr()->notIn('dna.shipping_status', 3));
-        $queryBreeder->orderBy('dna.create_date', 'DESC')
-            ->getQuery()
-            ->getResult();
     }
 
     /**

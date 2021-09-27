@@ -116,6 +116,11 @@ class BreederKitDnaType extends AbstractType
             ])
             ->add('kit_unit', IntegerType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Assert\GreaterThanOrEqual([
+                        'value' => 0,
+                    ]),
+                ]
             ]);
     }
 
