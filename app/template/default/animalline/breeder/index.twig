@@ -25,7 +25,11 @@
           <div class="breeder-mv__search">
             <div class="breeder-mv__search_wrap breeder-mv__search_dog">
               <div class="breeder-mv__search_title">
-                <h2>犬を探す</h2>
+                {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+                  <h2>犬を探す</h2>
+                {% else %}
+                  <h2>猫を探す<h2>
+                {% endif %}
               </div>
               <div class="breeder-mv__search_body">
                 <form action="{{ url('breeder_pet_search_result') }}" method="get">
@@ -297,7 +301,7 @@
         {% endif %}
         <li class="nav-item side-nav-item">
             <div class="side-contents mb-3 bg-accent p-0">
-                <a href="{{url('breedr_guide_dog')}}">
+                <a href="{{url('breeder_guide_dog')}}">
                     <div class="img-container">
                         <img src="{{ asset('assets/img/guide.jpg') }}" style="height:53.27px; width:53.27px;">
                         <span class="ml-3">お迎えガイド</span>
@@ -356,7 +360,7 @@
               </a>
             </li>
             <li>
-              <a href="{{url('breedr_guide_dog')}}">
+              <a href="{{url('breeder_guide_dog')}}">
                 <figure>
                   <img src="{{ asset('assets/img/breeder-bnr02.png') }}" alt="お迎えガイド"/>
                   <figcaption>新たな家族を迎えるためのお迎えガイド</figcaption>

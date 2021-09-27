@@ -106,7 +106,6 @@
                     </div>
                     <div class="col-12 breeder_section_detail">
                         <div class="row">
-
                             <div class="col-12 col-md-4 contents_col_bold">繁殖の可否</div>
                             <div class="col-12 col-md-8 contents_col_normal">{{ breederPet.getIsBreeding() == 0 ? '否' : '可' }}</div>
                         </div>
@@ -128,7 +127,7 @@
                     </div>
                     <div class="col-12 breeder_section_detail">
                         <div class="row">
-                            <div class="col-12 contents_col_normal">{{ breederPet.prComment }}</div>
+                            <div class="col-12 contents_col_normal">{{ breederPet.prComment | nl2br }}</div>
                         </div>
                     </div>
                     <div class="breeder_section_header">
@@ -153,16 +152,15 @@
                     </div>
                     <div class="col-12 breeder_section_detail">
                         <div class="row">
-                            <div class="col-12 contents_col_normal">{{ breederPet.description }}</div>
+                            <div class="col-12 contents_col_normal">{{ breederPet.description | nl2br }}</div>
                         </div>
                     </div>
-
                     <div class="breeder_section_header_orange">
                         <i class="fas fa-paw"></i>　生体保障内容
                     </div>
                     <div class="col-12 breeder_section_detail">
                         <div class="row">
-                            <div class="col-12 contents_col_normal">{{ breederPet.getGuarantee() }}</div>
+                            <div class="col-12 contents_col_normal">{{ breederPet.getGuarantee() | nl2br }}</div>
                         </div>
                     </div>
                     <div class="breeder_section_header_orange">
@@ -170,7 +168,15 @@
                     </div>
                     <div class="col-12 breeder_section_detail">
                         <div class="row">
-                            <div class="col-12 contents_col_normal">{{ breederPet.getDeliveryTime() }}</div>
+                            <div class="col-12 contents_col_normal">{{ breederPet.getDeliveryTime() | nl2br }}</div>
+                        </div>
+                    </div>
+                    <div class="breeder_section_header_orange">
+                        <i class="fas fa-paw"></i>　引き渡し方法
+                    </div>
+                    <div class="col-12 breeder_section_detail">
+                        <div class="row">
+                            <div class="col-12 contents_col_normal">{{ breederPet.getDeliveryWay() | nl2br }}</div>
                         </div>
                     </div>
                     <div class="breeder_section_header_orange">
@@ -178,7 +184,7 @@
                     </div>
                     <div class="col-12 breeder_section_detail">
                         <div class="row">
-                            <div class="col-12 contents_col_normal">{{ breederPet.getPaymentMethod() }}</div>
+                            <div class="col-12 contents_col_normal">{{ breederPet.getPaymentMethod() | nl2br }}</div>
                         </div>
                     </div>
                     <div class="m-2 p-2"></div>
@@ -254,7 +260,7 @@
                     </div>
                     <div class="col-12 breeder_section_detail">
                         <div class="row">
-                            <div class="col-12 contents_col_normal">{{ breederPet.Breeder.getPrText() }}</div>
+                            <div class="col-12 contents_col_normal">{{ breederPet.Breeder.getPrText()| nl2br }}</div>
                         </div>
                     </div>
                 
@@ -263,7 +269,7 @@
                     </div>
                     <div class="col-12 breeder_section_detail">
                         <div class="row">
-                            <div class="col-12 contents_col_normal">{{ breederPet.Breeder.getRegalEffort() }}</div>
+                            <div class="col-12 contents_col_normal">{{ breederPet.Breeder.getRegalEffort()| nl2br }}</div>
                         </div>
                     </div>
                 </div>

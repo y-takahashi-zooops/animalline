@@ -1,5 +1,5 @@
 {% set site_type = 'adoption' %}
-{% extends 'ani_frame.twig' %}
+{% extends 'animalline/adoption/frame.twig' %}
 {% set params = app.request.query.all %}
 {% block main %}
     <div class="section-search">
@@ -72,7 +72,8 @@
         </div>
     </div>
     
-    <div class="bg-primary">
+    {# <div class="bg-primary"> #}
+    <div>
         <div class="m-2 p-2"></div>
         <div class="row">
             {% include 'side.twig' %}

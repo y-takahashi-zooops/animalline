@@ -55,10 +55,12 @@
 
 .adoption-btn {
     background-color: var(--adoption-main-color);
+    color: #fff;
 }
 
 .adoption-btn:hover {
     background-color: #FFAC69;
+    color: #fff;
 }
 
 .pagination .page-item.active .page-link {

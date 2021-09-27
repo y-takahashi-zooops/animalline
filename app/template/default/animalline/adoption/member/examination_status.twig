@@ -1,5 +1,5 @@
 {% set site_type = 'adoption' %}
-{% extends 'ani_frame.twig' %}
+{% extends 'animalline/adoption/frame.twig' %}
 {% set check_status = {1:'受付', 2:'出荷指示中', 3:'出荷済', 4:'DNAチェック中', 6:'検体異常', 7:'DNA検査中', 8:'検査通過', 9:'検査NG', 10:'検体再送付手続済'} %}
 {% set params = app.request.query.all %}
 

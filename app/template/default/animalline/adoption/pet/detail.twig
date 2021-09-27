@@ -1,5 +1,5 @@
 {% set site_type = 'adoption' %}
-{% extends 'ani_frame.twig' %}
+{% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
     <div class="main">
@@ -9,7 +9,7 @@
                 <div class="sub-title">
                     <h2 class="float-left">{{ conservationPet.BreedsType.breedsName ?? '' }}</h2>
                     <div class="col-sm-3 float-right btn-like {{ isFavorite ? "red-heart" : "" }}"
-                         data-id="{{ conservationPet.getId() }}" data-login="{{ isLoggedIn }}">
+                         data-id="{{ conservationPet.id }}" data-login="{{ isLoggedIn }}">
                         <a>
                             <svg width="24" height="20" class="heart-icon">
                                 <path d="M19.469 1.262c-5.284-1.53-7.47 4.142-7.47 4.142S9.815-.269 4.532 1.262C-1.937 3.138.44 13.832 12 19.333c11.559-5.501 13.938-16.195 7.469-18.07z"
@@ -26,63 +26,23 @@
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[0].imageUri | default('/noimage_plugin_list.png')) }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[0].imageUri | default | length > 0 ? images[0].imageUri : '/noimage_plugin_list.png') }}"
                              class="card-img-top" alt="...">
                         <div class="d-block d-sm-none m-2 p-2"></div>
                     </div>
                     <div class="col-6 col-sm-3">
-                        <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[1].imageUri |default('/noimage_plugin_list.png')) }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[1].imageUri | default | length > 0 ? images[1].imageUri : '/noimage_plugin_list.png') }}"
                              class="card-img-top w-100" alt="...">
                         <div class="m-2 p-2"></div>
-                        <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[2].imageUri |default('/noimage_plugin_list.png')) }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[2].imageUri | default | length > 0 ? images[2].imageUri : '/noimage_plugin_list.png') }}"
                              class="card-img-top w-100" alt="...">
                     </div>
                     <div class="col-6 col-sm-3">
-                        <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[3].imageUri |default('/noimage_plugin_list.png')) }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[3].imageUri | default | length > 0 ? images[3].imageUri : '/noimage_plugin_list.png') }}"
                              class="card-img-top w-100" alt="...">
                         <div class="m-2 p-2"></div>
-                        <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[4].imageUri |default('/noimage_plugin_list.png')) }}"
+                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (images[4].imageUri | default | length > 0 ? images[4].imageUri : '/noimage_plugin_list.png') }}"
                              class="card-img-top w-100" alt="...">
-                    </div>
-                </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="col-12">
-                        <table class="table table-borderless">
-                            <tbody>
-                            <tr>
-                                <th scope="row" class="text-align-center">種類</th>
-                                <td class="color-gray-500">{{ conservationPet.BreedsType.breedsName ?? '' }}</td>
-                                <th scope="row" class="text-align-center">性別</th>
-                                <td class="color-gray-500">{{ conservationPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="text-align-center">見学地域</th>
-                                {% set conservationHouse = conservationPet.Conservation.getConservationHouseByPetType(conservationPet.petKind) %}
-                                <td class="color-gray-500">{{ conservationHouse.conservationHouseCity ~ ' ' ~ conservationHouse.conservationHousePref ?? '' }}</td>
-                                <th scope="row" class="text-align-center">誕生日</th>
-                                <td class="color-gray-500">{{ conservationPet.petBirthday.format('Y年m月d日') ?? '' }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="text-align-center">色</th>
-                                <td class="color-gray-500">{{ conservationPet.CoatColor.coatColorName ?? '' }}</td>
-                                {% if (conservationPet.petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
-                                    <th scope="row" class="text-align-center">成犬時予想</th>
-                                    <td class="color-gray-500">{{ conservationPet.futureWait }}kg</td>
-                                {% endif %}
-                            </tr>
-                            <tr>
-                                <th scope="row" class="text-align-center" style="vertical-align: middle;">PR</th>
-                                <td colspan="3" class="color-gray-500">{{ conservationPet.prComment }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="price-container col-12">
-                        <h2>{{ conservationPet.price|number_format(0) }}<span>円（税込）</span></h2>
                     </div>
                 </div>
                 <div class="m-2 p-2"></div>
@@ -98,53 +58,159 @@
                     <div class="m-2 p-2"></div>
                 {% endif %}
                 <div class="row">
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-4">
-                        <a href="{{ url('adpotion_contact', {'pet_id': conservationPet.getId()}) }}">
-                            <button class="btn basic-btn adoption-btn">お問い合わせ</button>
-                        </a>
+                    <div class="adoption_section_header">
+                        <i class="fas fa-paw"></i>　基本情報
                     </div>
-                    <div class="col-sm-4"></div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 col-md-4 contents_col_bold">種類</div>
+                            <div class="col-12 col-md-8 contents_col_normal">{{ conservationPet.breedsType.breedsName ?? '' }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 col-md-4 contents_col_bold">性別</div>
+                            <div class="col-12 col-md-8 contents_col_normal">{{ conservationPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            {% set conservationHouse = conservationPet.Conservation.getConservationHouseByPetType(conservationPet.petKind) %}
+                            <div class="col-12 col-md-4 contents_col_bold">見学地域</div>
+                            <div class="col-12 col-md-8 contents_col_normal">{{ conservationHouse.conservationHouseCity ~ ' ' ~ conservationHouse.conservationHousePref ?? '' }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 col-md-4 contents_col_bold">誕生日</div>
+                            <div class="col-12 col-md-8 contents_col_normal">{{ conservationPet.petBirthday.format('Y年m月d日') ?? '' }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 col-md-4 contents_col_bold">毛色</div>
+                            <div class="col-12 col-md-8 contents_col_normal">{{ conservationPet.coatColor.coatColorName ?? '' }}</div>
+                        </div>
+                    </div>
+                    {# <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 col-md-4 contents_col_bold">血統書の有無</div>
+                            <div class="col-12 col-md-8 contents_col_normal">{{ conservationPet.getIsPedigree() == 0 ? '無' : '有' }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 col-md-4 contents_col_bold">ワクチン代負担</div>
+                            <div class="col-12 col-md-8 contents_col_normal">{{ conservationPet.getIsPedigree() == 0 ? '代金に含まない' : '代金に含む' }}</div>
+                        </div>
+                    </div> #}
+                    {# <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 col-md-4 contents_col_bold">繁殖の可否</div>
+                            <div class="col-12 col-md-8 contents_col_normal">{{ breederPet.getIsBreeding() == 0 ? '否' : '可' }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12 breeder_section_detail">
+                        <div class="row">
+                            <div class="col-12 col-md-4 contents_col_bold">ブリーダーへの販売可否</div>
+                            <div class="col-12 col-md-8 contents_col_normal">{{ breederPet.getIsBreeding() == 0 ? '否' : '可' }}</div>
+                        </div>
+                    </div> #}
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 col-md-4 contents_col_bold">成犬時予想体重</div>
+                            <div class="col-12 col-md-8 contents_col_normal">{{ conservationPet.futureWait }}kg</div>
+                        </div>
+                    </div>
+                    <div class="adoption_section_header">
+                        <i class="fas fa-paw"></i>　PRコメント
+                    </div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 contents_col_normal">{{ conservationPet.prComment | nl2br }}</div>
+                        </div>
+                    </div>
+                    <div class="adoption_section_header">
+                        <i class="fas fa-paw"></i>　金額
+                    </div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 contents_col_price">{{ conservationPet.price|number_format(0) }}円（税込）</div>
+                        </div>
+                    </div>
+                    <div class="col-12 btn_center">
+                        <div class="row">
+                            <div class="col-12">
+                                <a href="{{ url('adoption_contact', {'pet_id': conservationPet.id}) }}">
+                                    <button class="btn basic-btn adoption-btn">お問い合わせ</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="adoption_section_header_orange">
+                        <i class="fas fa-paw"></i>　紹介文
+                    </div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 contents_col_normal">{{ conservationPet.description | nl2br }}</div>
+                        </div>
+                    </div>
+                    {# <div class="breeder_section_header_orange">
+                        <i class="fas fa-paw"></i>　生体保障内容
+                    </div>
+                    <div class="col-12 breeder_section_detail">
+                        <div class="row">
+                            <div class="col-12 contents_col_normal">{{ breederPet.getGuarantee() }}</div>
+                        </div>
+                    </div> #}
+                    <div class="adoption_section_header_orange">
+                        <i class="fas fa-paw"></i>　引き渡し時期
+                    </div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 contents_col_normal">{{ conservationPet.getDeliveryTime() | nl2br }}</div>
+                        </div>
+                    </div>
+                    <div class="adoption_section_header_orange">
+                        <i class="fas fa-paw"></i>　引き渡し方法
+                    </div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 contents_col_normal">{{ conservationPet.getDeliveryWay() | nl2br }}</div>
+                        </div>
+                    </div>
+                    {# <div class="breeder_section_header_orange">
+                        <i class="fas fa-paw"></i>　支払方法
+                    </div>
+                    <div class="col-12 breeder_section_detail">
+                        <div class="row">
+                            <div class="col-12 contents_col_normal">{{ breederPet.getPaymentMethod() }}</div>
+                        </div>
+                    </div> #}
+                    <div class="m-2 p-2"></div>
+                    <div class="adoption_section_header">
+                        <i class="fas fa-paw"></i>　保護団体紹介
+                    </div>
                 </div>
+
                 <div class="m-2 p-2"></div>
                 <div class="row">
-                    <div class="col-12">
-                        <h2 class="font-weight-500">紹介文</h2>
-                    </div>
-                </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="col-12">
-                        <p>{{ conservationPet.description }}</p>
-                    </div>
-                </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="col-12">
-                        <h2 class="font-weight-500">引き渡し時期</h2>
-                    </div>
-                </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="col-12">
-                        <p>{{ conservationPet.deliveryTime }}</p>
-                    </div>
-                </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="col-12">
-                        <h2 class="font-weight-500">保護団体紹介</h2>
-                    </div>
-                </div>
-                <div class="m-2 p-2"></div>
-                <div class="row">
-                    <div class="breeder-img col-sm-4">
+                    <div class="adoption-img col-sm-4">
                         <img alt="..."
-                             src="{{ (conservationPet.Conservation.thumbnailPath | default(constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png')) }}"
+                             src="{{ conservationPet.Conservation.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                              class="w-100 mb-4 mb-sm-0">
                     </div>
-                    <div class="breeder-info col-sm-8">
+                    <div class="adoption-info col-sm-8">
                         <h3 class="font-weight-500 color-gray-500">{{ conservationPet.Conservation.organizationName }}</h3>
+                        <div class="d-flex">
+                            <h6>運営者指名：</h6>
+                            <h6>{{ conservationPet.Conservation.ownerName }}</h6>
+                        </div>
+                        <div class="m-1 p-1"></div>
+                        <div class="d-flex">
+                            <h6>ホームページの URL 任意：</h6>
+                            <h6>{{ conservationPet.Conservation.homepageUrl }}</h6>
+                        </div>
                         <div class="m-1 p-1"></div>
                         <div class="d-flex">
                             <h6>犬舎所在地：</h6>
@@ -159,49 +225,34 @@
                             {% endif %}
                         </div>
                         <div class="m-1 p-1"></div>
-                        <div class="d-flex">
-                            <h6>運営者指名：</h6>
-                            <h6>{{ conservationPet.Conservation.ownerName }}</h6>
-                        </div>
-                        <div class="m-1 p-1"></div>
-                        <div class="d-flex">
-                            <h6>ホームページの URL 任意：</h6>
-                            <h6>{{ conservationPet.Conservation.homepageUrl }}</h6>
-                        </div>
                         <div class="m-2 p-2"></div>
-                        <a href="conservationpage.html">
+                        {# <a href="{{ url('breeder_detail', {'breeder_id':breederPet.Breeder.id}) }}"> #}
+                        <a href="#">
                             <h4 class="color-adoption">保護団体詳細ページへ</h4>
                         </a>
                     </div>
                 </div>
                 <div class="m-2 p-2"></div>
                 <div class="row">
-                    <div class="col-12">
-                        <p>
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。
-                            テキストが入ります。テキストが入ります。
-                        </p>
+                    <div class="adoption_section_header_orange">
+                        <i class="fas fa-paw"></i>　PRコメント
+                    </div>
+                    <div class="col-12 adoption_section_detail">
+                        <div class="row">
+                            <div class="col-12 contents_col_normal">{{ conservationPet.Conservation.getPrText() | nl2br }}</div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="m-2 p-2"></div>
                 <div class="row">
                     <div class="col-12 bg-primary">
-                        <div class="col-12">
-                            <h2 class="font-weight-500">自己PR</h2>
-                            <div class="m-2 p-2"></div>
-                            <p>
-                                {{ conservationPet.Conservation.prText }}
-                            </p>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </body>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
