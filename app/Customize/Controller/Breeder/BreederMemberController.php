@@ -1087,4 +1087,28 @@ class BreederMemberController extends AbstractController
         copy($imageUrl, $subUrl . $imageName);
         return '/breeder/' . $petId . '/' . $imageName;
     }
+
+    /**
+     * 
+     * 検査キット請求
+     * 
+     * @Route("/breeder/member/dna_kit/", name="breeder_examination_kit", methods={"GET","POST"})
+     * @Template("animalline/breeder/member/examination_kit_list.twig")
+     */
+    public function breeder_examination_kit()
+    {
+        return[];
+    }
+
+      /**
+     * 
+     * 検査キット請求
+     * 
+     * @Route("/breeder/member/dna_kit/new", name="breeder_examination_kit_new", methods={"GET","POST"})
+     * @Template("animalline/breeder/member/examination_kit_form.twig")
+     */
+    public function breeder_examination_kit_new()
+    {
+        return[];
+    }
 }
