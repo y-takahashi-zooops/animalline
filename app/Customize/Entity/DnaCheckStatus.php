@@ -4,7 +4,6 @@ namespace Customize\Entity;
 
 use Customize\Repository\DnaCheckStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Eccube\Entity\Customer;
 
 /**
  * @ORM\Table(name="ald_dna_check_status")
@@ -23,12 +22,13 @@ class DnaCheckStatus
     private $id;
 
     /**
-     * @ORM\Column(name="register_id", type="integer")
+     * @ORM\ManyToOne(targetEntity=DnaCheckStatusHeader::class, inversedBy="DnaCheckStatus")
+     * @ORM\JoinColumn(name="header_id", nullable=false)
      */
-    private $register_id;
+    private $DnaHeader;
 
     /**
-     * @ORM\Column(name="pet_id", type="integer")
+     * @ORM\Column(name="pet_id", type="integer", nullable=true)
      */
     private $pet_id;
 
@@ -53,9 +53,9 @@ class DnaCheckStatus
     private $file_path;
 
     /**
-     * @ORM\Column(name="kit_shipping_date", type="datetime", nullable=true)
+     * @ORM\Column(name="kit_pet_register_date", type="datetime", nullable=true)
      */
-    private $kit_shipping_date;
+    private $kit_pet_register_date;
 
     /**
      * @ORM\Column(name="kit_return_date", type="datetime", nullable=true)
@@ -82,14 +82,14 @@ class DnaCheckStatus
         return $this->id;
     }
 
-    public function getRegisterId(): int
+    public function getDnaHeader(): ?DnaCheckStatusHeader
     {
-        return $this->register_id;
+        return $this->DnaHeader;
     }
 
-    public function setRegisterId(int $register_id): self
+    public function setDnaHeader(?DnaCheckStatusHeader $dnaCheckStatusHeader): self
     {
-        $this->register_id = $register_id;
+        $this->DnaHeader = $dnaCheckStatusHeader;
 
         return $this;
     }
@@ -154,14 +154,14 @@ class DnaCheckStatus
         return $this;
     }
 
-    public function getKitShippingDate(): ?\DateTime
+    public function getKitPetRegisterDate(): ?\DateTime
     {
-        return $this->kit_shipping_date;
+        return $this->kit_pet_register_date;
     }
 
-    public function setKitShippingDate(?\DateTime $kit_shipping_date): self
+    public function setKitPetRegisterDate(?\DateTime $kit_pet_register_date): self
     {
-        $this->kit_shipping_date = $kit_shipping_date;
+        $this->kit_pet_register_date = $kit_pet_register_date;
 
         return $this;
     }
