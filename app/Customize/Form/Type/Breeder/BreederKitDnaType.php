@@ -62,7 +62,10 @@ class BreederKitDnaType extends AbstractType
                         '犬舎住所' => 2,
                         '猫舎住所' => 3,
                     ],
-                'placeholder' => 'common.select'
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank()
+                ],
             ])
             ->add('name', TextType::class, [
                 'required' => false,
