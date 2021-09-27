@@ -1107,20 +1107,20 @@ class BreederMemberController extends AbstractController
         $dnaCheckSatusHeader = new DnaCheckStatusHeader();
         $builder = $this->formFactory->createBuilder(BreederKitDnaType::class, $dnaCheckSatusHeader);
         $breeder = $this->breedersRepository->find($this->getUser()->getId());
-        $breederHouseCat = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
-        $breederHouseDog = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
+        $breederHouseCat = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
+        $breederHouseDog = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
         $form = $builder->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $pref = $this->prefRepository->find($request->get('breeder_kit_dna')['address']['PrefShipping']);
             $dnaCheckSatusHeader->setRegisterId($this->getUser()->getId())
                 ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
-                ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPTING);
+                ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPTING)
+                ->setShippingPref($pref->getName());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($dnaCheckSatusHeader);
             $entityManager->flush();
-
-            return  $this->redirect($this->generateUrl('breeder_examination_kit'));
 
             $kitUnit = $dnaCheckSatusHeader->getKitUnit();
             for ($i = 0; $i < $kitUnit; $i++) {
@@ -1132,6 +1132,7 @@ class BreederMemberController extends AbstractController
                 $entityManager->persist($Dna);
             }
             $entityManager->flush();
+            return  $this->redirect($this->generateUrl('breeder_examination_kit'));
         }
 
         return [
