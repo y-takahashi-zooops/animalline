@@ -82,20 +82,12 @@ class ExportInstockSchedule extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->entityManager;
+        $now = Carbon::now();
         $fields = [
             'invoiceNumber', 'invoiceDate', 'supplierCode', 'supplierName', 'boxNumber',
-            'lineNumber', 'warehouseCode', 'stockDate', 'productNumber', // 'code', TODO: remove
-            'colorCode', 'sizeCode', 'jANCode', 'FOB', 'quantity', 'caseQuantity',
-            'BBDATE', 'remarks'
+            'lineNumber', 'warehouseCode', 'stockDate', 'productNumberCode', 'colorCode',
+            'sizeCode', 'jANCode', 'FOB', 'quantity', 'caseQuantity', 'BBDATE', 'remarks'
         ];
-
-        $dir = 'var/tmp/wms/instock_schedule/';
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, 'R');
-        }
-
-        $now = Carbon::now();
 
         $qb = $this->instockScheduleRepository->createQueryBuilder('isd');
         $qb->select(
@@ -104,7 +96,7 @@ class ExportInstockSchedule extends Command
             's.supplier_name as supplierName',
             'isd.warehouse_code as warehouseCode',
             'ihd.arrival_date_schedule as stockDate',
-            'isd.jan_code as productNumber',
+            'isd.jan_code as productNumberCode',
             'isd.jan_code as jANCode',
             'isd.arrival_quantity_schedule as quantity',
             'isd.arrival_box_schedule as caseQuantity'
@@ -121,17 +113,7 @@ class ExportInstockSchedule extends Command
         }
         $records = $qb->getQuery()->getArrayResult();
 
-        $filename = 'NYUKAYOTEI_' . Carbon::now()->format('Ymd_His') . '.csv';
         if ($records) {
-            $wms = new WmsSyncInfo();
-            $wms->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_INSTOCK_SCHEDULE)
-                ->setSyncDate(Carbon::now());
-            //try {
-            $csvPath = $dir . $filename;
-            $csvh = fopen($csvPath, 'w+') or die("Can't open file");
-            $d = ',';
-            $e = '"';
-
             $result = [];
             foreach ($records as $record) {
                 $record['invoiceDate'] = null;
@@ -142,23 +124,35 @@ class ExportInstockSchedule extends Command
                 $record['FOB'] = null;
                 $record['BBDATE'] = null;
                 $record['remarks'] = null;
-                $record['stockDate'] = $record['stockDate']->format('Y-m-d H:i:s');
+                $record['stockDate'] = $record['stockDate']->format('Y-m-d');
+
                 $sorted = [];
                 foreach ($fields as $value) {
-                    array_push($sorted, $record[$value]);
+                    $sorted[] = $record[$value];
                 }
-                array_push($result, $sorted);
+                $result[] = $sorted;
             }
+
+            $dir = 'var/tmp/wms/instock_schedule/';
+            if (!file_exists($dir) && !mkdir($dir, 0777, true)) throw new Exception("Can't create directory.");
+            $filename = "NYUKAYOTEI_{$now->format('Ymd_His')}.csv";
+            $csvPath = $dir . $filename;
+            if (!$csvh = fopen($csvPath, 'w+')) throw new Exception("Can't create file.");
+
             foreach ($result as $item) {
-                fputcsv($csvh, $item, $d, $e);
+                fputcsv($csvh, $item);
             }
             fclose($csvh);
 
-            $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
-            echo 'Export succeeded.' . "\n";
-
+            $wms = (new WmsSyncInfo)
+                ->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_INSTOCK_SCHEDULE)
+                ->setSyncDate($now)
+                ->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
+            $em = $this->entityManager;
             $em->persist($wms);
             $em->flush();
+
+            echo "Export succeeded.\n";
         }
     }
 }
