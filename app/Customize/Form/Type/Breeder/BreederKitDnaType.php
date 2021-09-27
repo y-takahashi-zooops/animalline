@@ -50,11 +50,11 @@ class BreederKitDnaType extends AbstractType
     {
         $builder
             ->add('choice_address', ChoiceType::class, [
-                'require' => true,
+                'required' => true,
                 'mapped' => false,
             ])
             ->add('name', TextType::class, [
-                'require' => false,
+                'required' => false,
                 'mapped' => false,
             ])
             ->add('shipping_zip', TextType::class, [

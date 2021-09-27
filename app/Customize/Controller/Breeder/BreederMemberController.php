@@ -23,6 +23,7 @@ use Customize\Entity\BreederContactHeader;
 use Customize\Entity\BreederHouse;
 use Customize\Entity\BreederExaminationInfo;
 use Customize\Entity\DnaCheckStatus;
+use Customize\Entity\DnaCheckStatusHeader;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Repository\Master\PrefRepository;
@@ -959,18 +960,12 @@ class BreederMemberController extends AbstractController
                 ->addBreederPetImage($petImage4)
                 ->setThumbnailPath($img0);
 
-            $dnaCheckStatus = (new DnaCheckStatus)
-                ->setRegisterId($breeder->getId())
-                ->setPetId($breederPet->getId())
-                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER);
-
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($breederPet);
-            $entityManager->persist($dnaCheckStatus);
             $entityManager->flush();
 
             return $this->redirectToRoute('breeder_newpet_complete');
@@ -1114,9 +1109,26 @@ class BreederMemberController extends AbstractController
         $builder = $this->formFactory->createBuilder(BreederKitDnaType::class);
         $breeder = $this->breedersRepository->find($this->getUser()->getId());
 
-        dump($breeder->getBreederHouses());die();
         $form = $builder->getForm();
         $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            // todo: update from form
+            $DnaHeader = new DnaCheckStatusHeader;
+            $kitUnit = 2;
+
+            for($i = 0; $i < $kitUnit; $i++) {
+                $Dna = (new DnaCheckStatus)
+                ->setDnaHeader($DnaHeader)
+                ->setPetId($DnaHeader->getPetId())
+                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
+                ->setKitPetRegisterDate(new DateTime);
+                $em->persist($Dna);
+            }
+            $em->flush();
+        }
+
         return[
             'form' => $form->createView()
         ];
