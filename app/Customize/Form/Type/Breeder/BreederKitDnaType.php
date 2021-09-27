@@ -14,6 +14,8 @@
 namespace Customize\Form\Type\Breeder;
 
 use Customize\Config\AnilineConf;
+use Customize\Entity\ConservationsHouse;
+use Customize\Form\Type\AddressHouseKitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Eccube\Common\EccubeConfig;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -24,6 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Customize\Form\Type\AddressHouseType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class BreederKitDnaType extends AbstractType
@@ -50,11 +53,11 @@ class BreederKitDnaType extends AbstractType
     {
         $builder
             ->add('choice_address', ChoiceType::class, [
-                'require' => true,
+                'required' => true,
                 'mapped' => false,
             ])
             ->add('name', TextType::class, [
-                'require' => false,
+                'required' => false,
                 'mapped' => false,
             ])
             ->add('shipping_zip', TextType::class, [
@@ -75,7 +78,7 @@ class BreederKitDnaType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('address', AddressHouseType::class)
+            ->add('address', AddressHouseKitType::class)
             ->add('shipping_tel', TextType::class, [
                 'required' => false,
                 'constraints' => [
@@ -99,11 +102,10 @@ class BreederKitDnaType extends AbstractType
             ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return 'breeder_kit_dna';
+        $resolver->setDefaults([
+            'data_class' => AddressHouseKitType::class,
+        ]);
     }
 }

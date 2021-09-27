@@ -7,45 +7,45 @@
     </div>
     <div class="ec-off1Grid">
         <div class="ec-off1Grid__cell">
-            <form method="post" action="#" novalidate name="update-baseinfo-form">
+            <form method="post" action="" novalidate name="dna-kit-form">
+                {{ form_widget(form._token) }}
                 <h2>送付先情報</h2>
-                
                 <div class="ec-borderedDefs">
                     <div class="mb-5">
                         <dl>
                             <dt>
-                                送付先住所
+                                {{ form_label(form.kit_unit, '送付先住所', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <select>
-                                    <option>選択してください</option>
-                                    <option>基本情報</option>
-                                    <option>犬舎住所</option>
-                                    <option>猫舎住所</option>
-                                </select>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                お名前
-                            </dt>
-                            <dd>
-                                <div class="ec-input">
-                                    <input type="text" value="">
+                                <div class="ec-select{{ has_errors(form.choice_address) ? ' error' }}">
+                                    {{ form_widget(form.choice_address) }}
+                                    {{ form_errors(form.choice_address) }}
                                 </div>
                             </dd>
+                        </dl>
+                        <dl>
+                            <dt>
+                                {{ form_label(form.kit_unit, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.name) ? ' error' }}">
+                                    {{ form_widget(form.name) }}
+                                    {{ form_errors(form.name) }}
+                                    {# <input type="hidden" id="licenceTel" value={{breeder.breederTel}}> #}
+                                </div>
                             </dd>
                         </dl>
                         <dl>
                             <dt>
-                                住所
+                                <div>
+                                    {{ form_label(form.address, '住所', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                </div>
                             </dt>
-                            <dd class="h-adr">
-                                <span class="p-country-name" style="display:none;">Japan</span>
-                                <div class="ec-zipInput">
-                                    <div class="ec-input">
-                                        <input type="text" value="〒">
-                                    </div>
+                            <dd>
+                                <div class="ec-zipInput{{ has_errors(form.shipping_zip) ? ' error' }}">
+                                    <span>{{ '〒'|trans }}</span>
+                                    {{ form_widget(form.shipping_zip) }}
+                                    {# <input type="hidden" id="licenceZip" value={{breeder.licenseZip}}> #}
                                     <div class="ec-zipInputHelp">
                                         <div class="ec-zipInputHelp__icon">
                                             <div class="ec-icon"><img
@@ -56,41 +56,49 @@
                                         <a href="https://www.post.japanpost.jp/zipcode/"
                                            target="_blank"><span>郵便番号検索</span></a>
                                     </div>
+                                    {{ form_errors(form.shipping_zip) }}
                                 </div>
-                                <div class="ec-select">
-                                    <select>
-                                        <option>都道府県</option>
-                                    </select>
+                                <div class="ec-select{{ has_errors(form.address.PrefShipping) ? ' error' }}">
+                                    {{ form_widget(form.address.PrefShipping) }}
+                                    {{ form_errors(form.address.PrefShipping) }}
+                                    {# <input type="hidden" id="licencePref" value={{breeder.PrefLicense.Id}}> #}
                                 </div>
-                                <div class="ec-input">
-                                    <input type="text" value="市区町村名">
+                                <div class="ec-input{{ has_errors(form.address.shipping_city) ? ' error' }}">
+                                    {{ form_widget(form.address.shipping_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                    {{ form_errors(form.address.shipping_city) }}
+                                    {# <input type="hidden" id="licenceCity" value={{breeder.licenseCity}}> #}
                                 </div>
-                                <div class="ec-input">
-                                   <input type="text" value="番地・ビル名">
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                電話番号
-                            </dt>
-                            <dd>
-                                <div class="ec-input">
-                                    <input type="text" value="">
+                                <div class="ec-input{{ has_errors(form.address.shipping_address) ? ' error' }}">
+                                    {{ form_widget(form.address.shipping_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                    {{ form_errors(form.address.shipping_address) }}
+                                    {# <input type="hidden" id="licenceAddress" value={{breeder.licenseAddress}}> #}
                                 </div>
                             </dd>
                         </dl>
                         <dl>
                             <dt>
-                                キット数量
+                                {{ form_label(form.shipping_tel, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-input">
-                                    <input type="text" value="">
+                                <div class="ec-input{{ has_errors(form.shipping_tel) ? ' error' }}">
+                                    {{ form_widget(form.shipping_tel) }}
+                                    {{ form_errors(form.shipping_tel) }}
+                                    {# <input type="hidden" id="licenceTel" value={{breeder.breederTel}}> #}
                                 </div>
                             </dd>
                         </dl>
-                        
+                        <dl>
+                            <dt>
+                                {{ form_label(form.kit_unit, 'キット数量', { 'label_attr': { 'class': 'ec-label' }}) }}
+                            </dt>
+                            <dd>
+                                <div class="ec-input{{ has_errors(form.kit_unit) ? ' error' }}">
+                                    {{ form_widget(form.kit_unit) }}
+                                    {{ form_errors(form.kit_unit) }}
+                                    {# <input type="hidden" id="licenceTel" value={{breeder.breederTel}}> #}
+                                </div>
+                            </dd>
+                        </dl>
                     </div>
                 </div>
                 <div class="ec-registerRole__actions">
@@ -103,17 +111,17 @@
             </form>
         </div>
     </div>
+    {{ include('animalline/components/_modal_confirm.twig') }}
 {% endblock %}
 {% block stylesheet %}
-    
+
 {% endblock %}
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
-
 <script>
+
 </script>
 {% endblock %}
         
