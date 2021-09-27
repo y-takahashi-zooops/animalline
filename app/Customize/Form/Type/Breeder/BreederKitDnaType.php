@@ -56,10 +56,20 @@ class BreederKitDnaType extends AbstractType
             ->add('choice_address', ChoiceType::class, [
                 'required' => true,
                 'mapped' => false,
+                'choices' =>
+                    [
+                        '基本情報' => 1,
+                        '犬舎住所' => 2,
+                        '猫舎住所' => 3,
+                    ],
+                'placeholder' => 'common.select'
             ])
             ->add('name', TextType::class, [
                 'required' => false,
                 'mapped' => false,
+                'attr' => [
+                    'readonly' => true,
+                ]
             ])
             ->add('shipping_zip', TextType::class, [
                 'required' => false,
@@ -74,12 +84,16 @@ class BreederKitDnaType extends AbstractType
                     new Assert\NotBlank()
                 ],
                 'attr' => [
+                    'readonly' => true,
                     'class' => 'p-postal-code',
                     'placeholder' => 'common.postal_code_sample',
                 ],
                 'trim' => true,
             ])
-            ->add('address', AddressHouseKitType::class)
+            ->add('address', AddressHouseKitType::class, [
+                'attr' => [
+                    'readonly' => true,
+                ]])
             ->add('shipping_tel', TextType::class, [
                 'required' => false,
                 'constraints' => [
@@ -90,7 +104,6 @@ class BreederKitDnaType extends AbstractType
                         'type' => 'numeric',
                         'message' => 'form_error.numeric_only',
                     ]),
-                    new Assert\NotBlank(),
                 ],
                 'attr' => [
                     'placeholder' => 'common.phone_number_sample',

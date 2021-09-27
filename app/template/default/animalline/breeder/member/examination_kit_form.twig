@@ -14,7 +14,7 @@
                     <div class="mb-5">
                         <dl>
                             <dt>
-                                {{ form_label(form.kit_unit, '送付先住所', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                {{ form_label(form.choice_address, '送付先住所', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
                                 <div class="ec-select{{ has_errors(form.choice_address) ? ' error' }}">
@@ -58,7 +58,8 @@
                                     </div>
                                     {{ form_errors(form.shipping_zip) }}
                                 </div>
-                                <div class="ec-select{{ has_errors(form.address.PrefShipping) ? ' error' }}">
+                                <div class="ec-select{{ has_errors(form.address.PrefShipping) ? ' error' }}"
+                                     onmousedown="(function(e){ e.preventDefault(); })(event, this)">
                                     {{ form_widget(form.address.PrefShipping) }}
                                     {{ form_errors(form.address.PrefShipping) }}
                                     {# <input type="hidden" id="licencePref" value={{breeder.PrefLicense.Id}}> #}
@@ -112,6 +113,9 @@
         </div>
     </div>
     {{ include('animalline/components/_modal_confirm.twig') }}
+    <input type="hidden" id="issetHouseDog" value="{{ breederHouseDog ? 'true' : 'false' }}">
+    <input type="hidden" id="issetHouseCat" value="{{ breederHouseCat ? 'true' : 'false' }}">
+
 {% endblock %}
 {% block stylesheet %}
 
@@ -122,6 +126,25 @@
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 <script>
 
+    if ($("#issetHouseDog").val() == 'false') {
+    $("#breeder_kit_dna_choice_address option[value='2']").remove();
+}
+    if ($("#issetHouseCat").val() == 'false') {
+    $("#breeder_kit_dna_choice_address option[value='3']").remove();
+}
+    $(document).on('change', '#breeder_kit_dna_choice_address', function(){
+    var name = $(this).val() == 1 ? '{{breeder.breederName}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.breederHouseName}}' : '{{breederHouseCat ? breederHouseCat.breederHouseName}}';
+    var zip = $(this).val() == 1 ? '{{breeder.breederZip}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.breederHouseHouseZip}}' : '{{breederHouseCat ? breederHouseCat.breederHouseHouseZip}}';
+    var pref_id = $(this).val() == 1 ? '{{breeder.PrefBreeder.Id}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.BreederHousePrefId.Id}}' : '{{breederHouseCat ? breederHouseCat.BreederHousePrefId.Id}}';
+    var city = $(this).val() == 1 ? '{{breeder.breederCity}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.breederHouseCity}}' : '{{breederHouseCat ? breederHouseCat.breederHouseCity}}';
+    var addr = $(this).val() == 1 ? '{{breeder.breederAddress}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.breederHouseAddress}}' : '{{breederHouseCat ? breederHouseCat.breederHouseAddress}}';
+
+    $("#breeder_kit_dna_name").val(name)
+    $("#breeder_kit_dna_shipping_zip").val(zip)
+    $("#breeder_kit_dna_address_PrefShipping").val(pref_id)
+    $("#breeder_kit_dna_address_shipping_city").val(city)
+    $("#breeder_kit_dna_address_shipping_address").val(addr)
+});
 </script>
 {% endblock %}
         

@@ -1137,8 +1137,8 @@ class BreederMemberController extends AbstractController
         return [
             'form' => $form->createView(),
             'breeder' => $breeder,
-            '$breederHouseCat' => $breederHouseCat,
-            '$breederHouseDog' => $breederHouseDog
+            'breederHouseCat' => $breederHouseCat,
+            'breederHouseDog' => $breederHouseDog
         ];
     }
 }
