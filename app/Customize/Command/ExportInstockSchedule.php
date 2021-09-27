@@ -3,9 +3,12 @@
 namespace Customize\Command;
 
 use Carbon\Carbon;
+use Customize\Config\AnilineConf;
 use Customize\Entity\InstockSchedule;
 use Customize\Entity\InstockScheduleHeader;
 use Customize\Entity\WmsSyncInfo;
+use Customize\Repository\InstockScheduleHeaderRepository;
+use Customize\Repository\InstockScheduleRepository;
 use Customize\Repository\WmsSyncInfoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -34,34 +37,34 @@ class ExportInstockSchedule extends Command
     protected $wmsSyncInfoRepository;
 
     /**
-     * @var InstockScheduleHeader
+     * @var InstockScheduleHeaderRepository
      */
-    protected $instockScheduleHeader;
+    protected $instockScheduleHeaderRepository;
 
     /**
-     * @var InstockSchedule
+     * @var instockScheduleRepository
      */
-    protected $instockSchedule;
+    protected $instockScheduleRepository;
 
     /**
      * ExportRelease constructor.
      *
      * @param EntityManagerInterface $entityManager
      * @param WmsSyncInfoRepository $wmsSyncInfoRepository
-     * @param InstockScheduleHeader $instockScheduleHeader
-     * @param InstockSchedule $instockSchedule
+     * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
+     * @param InstockScheduleRepository $instockScheduleRepository
      */
     public function __construct(
         EntityManagerInterface           $entityManager,
         WmsSyncInfoRepository            $wmsSyncInfoRepository,
-        InstockScheduleHeader            $instockScheduleHeader,
-        InstockSchedule                  $instockSchedule
+        InstockScheduleHeaderRepository  $instockScheduleHeaderRepository,
+        InstockScheduleRepository        $instockScheduleRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
-        $this->instockScheduleHeader = $instockScheduleHeader;
-        $this->instockSchedule = $instockSchedule;
+        $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
+        $this->instockScheduleRepository = $instockScheduleRepository;
     }
 
     protected function configure()
@@ -89,6 +92,30 @@ class ExportInstockSchedule extends Command
 
         $now = Carbon::now();
 
-        $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 4], ['sync_date' => 'DESC']);
+        $qb = $this->instockScheduleRepository->createQueryBuilder('isd');
+        $qb->select(
+            'ihd.id as invoice_number',
+            's.supplier_code',
+            's.supplier_name',
+            'isd.warehouse_code',
+            'ihd.arrival_date_schedule',
+            'isd.jan_code as product_number_code',
+            'isd.jan_code as jan_code',
+            'isd.arrival_quantity_schedule',
+            'isd.arrival_box_schedule'
+        )
+            ->innerJoin('isd.InstockHeader', 'ihd')
+            ->leftJoin('Customize\Entity\Supplier', 's', 'WITH', 'ihd.supplier_code = s.supplier_code')
+            ->where('isd.update_date <= :to')
+            ->setParameters(['to' => $now])
+            ->orderBy('isd.update_date', 'DESC');
+
+        $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_INSTOCK_SCHEDULE], ['sync_date' => 'DESC']);
+        if ($syncInfo) {
+            $qb = $qb->andWhere('isd.update_date >= :from')
+                ->setParameter('from', $syncInfo->getSyncDate());
+        }
+
+        $result = $qb->getQuery()->getArrayResult();
     }
 }
