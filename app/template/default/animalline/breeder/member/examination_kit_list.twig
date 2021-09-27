@@ -37,7 +37,7 @@
                                     {% for dna in dnas %}
                                         <tr>
                                             <td>{{ dna.id }}</td>
-                                            <td>{{ dna.kit_unit }}</td>
+                                            <td>{{ dna.kit_unit ? dna.kit_unit : '_' }}</td>
                                             <td>{{ dna.shipping_status == 1 ? '受付' : dna.shipping_status == 2 ? '出荷指示中' : '出荷済' }}</td>
                                             <td>{{ dna.kit_shipping_date | date('Y/m/d') }}</td>
                                         </tr>
