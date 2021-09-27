@@ -6,6 +6,8 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\BreederPetImage;
 use Customize\Entity\BreederPets;
 use Customize\Entity\BreederEvaluations;
+use Customize\Entity\DnaCheckStatusHeader;
+use Customize\Form\Type\Breeder\BreederKitDnaType;
 use Customize\Form\Type\BreederEvaluationsType;
 use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederEvaluationsRepository;
@@ -126,7 +128,7 @@ class BreederMemberController extends AbstractController
      */
     protected $dnaCheckStatusRepository;
 
-        /**
+    /**
      * @var DnaCheckStatusHeaderRepository;
      */
     protected $dnaCheckStatusHeaderRepository;
@@ -166,7 +168,8 @@ class BreederMemberController extends AbstractController
         DnaQueryService                  $dnaQueryService,
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
         DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository
-    ) {
+    )
+    {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
@@ -215,7 +218,7 @@ class BreederMemberController extends AbstractController
         $builder = $this->formFactory
             ->createNamedBuilder('', CustomerLoginType::class);
 
-        $builder->get('login_memory')->setData((bool) $request->getSession()->get('_security.login_memory'));
+        $builder->get('login_memory')->setData((bool)$request->getSession()->get('_security.login_memory'));
 
         if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $Customer = $this->getUser();
@@ -568,8 +571,8 @@ class BreederMemberController extends AbstractController
 
             // Customer情報から初期情報をセット
             $Customer = $this->customerRepository->find($user);
-            $form->get('breeder_name')->setData($Customer->getname01().'　'.$Customer->getname02());
-            $form->get('breeder_kana')->setData($Customer->getkana01().'　'.$Customer->getkana02());
+            $form->get('breeder_name')->setData($Customer->getname01() . '　' . $Customer->getname02());
+            $form->get('breeder_kana')->setData($Customer->getkana01() . '　' . $Customer->getkana02());
             $form->get('breeder_zip')->setData($Customer->getPostalCode());
             $form->get('addr')->get('PrefBreeder')->setData($Customer->getPref());
             $form->get('addr')->get('breeder_city')->setData($Customer->getAddr01());
@@ -723,7 +726,7 @@ class BreederMemberController extends AbstractController
 
     /**
      * お気に入り
-     * 
+     *
      * @Route("/breeder/member/favorite", name="breeder_favorite")
      * @Template("animalline/breeder/favorite.twig")
      */
@@ -769,7 +772,9 @@ class BreederMemberController extends AbstractController
                 ->setReason($isEnd ? $this->sendoffReasonRepository->find($request->get('reason')) : null);
 
             $rootMessage->setIsResponse(AnilineConf::RESPONSE_UNREPLIED);
-            if ($isEnd) $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
+            if ($isEnd) {
+                $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederContact);
@@ -791,7 +796,7 @@ class BreederMemberController extends AbstractController
 
     /**
      * Page contact
-     * 
+     *
      * @Route("/breeder/member/contact/{pet_id}", name="breeder_contact", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/breeder/contact.twig")
      */
@@ -879,7 +884,9 @@ class BreederMemberController extends AbstractController
         $dnaId = (int)$request->get('dna_id');
         if ($request->isMethod('POST') && $dnaId) {
             $dna = $this->dnaCheckStatusRepository->find($dnaId);
-            if (!$dna) throw new NotFoundHttpException();
+            if (!$dna) {
+                throw new NotFoundHttpException();
+            }
 
             $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
             $newDna = clone $dna;
@@ -906,9 +913,9 @@ class BreederMemberController extends AbstractController
     }
 
     /**
-     * 
+     *
      * 新規ペット追加
-     * 
+     *
      * @Route("/breeder/member/pets/new/{breeder_id}", name="breeder_mypage_pets_new", methods={"GET","POST"})
      */
     public function breeder_pets_new(Request $request, BreedersRepository $breedersRepository): Response
@@ -967,18 +974,12 @@ class BreederMemberController extends AbstractController
                 ->addBreederPetImage($petImage4)
                 ->setThumbnailPath($img0);
 
-            $dnaCheckStatus = (new DnaCheckStatus)
-                ->setRegisterId($breeder->getId())
-                ->setPetId($breederPet->getId())
-                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER);
-
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($breederPet);
-            $entityManager->persist($dnaCheckStatus);
             $entityManager->flush();
 
             return $this->redirectToRoute('breeder_newpet_complete');
@@ -991,20 +992,20 @@ class BreederMemberController extends AbstractController
     }
 
     /**
-     * 
+     *
      * 新規ペット追加
-     * 
+     *
      * @Route("/breeder/member/pets/new_complete", name="breeder_newpet_complete", methods={"GET","POST"})
      * @Template("animalline/breeder/member/pets/notification.twig")
      */
     public function breeder_pets_new_complete()
     {
-        return[];
+        return [];
     }
 
     /**
      * ペット情報編集
-     * 
+     *
      * @Route("/breeder/member/pets/edit/{id}", name="breeder_mypage_pets_edit", methods={"GET","POST"})
      */
     public function breeder_pets_edit(Request $request, BreederPets $breederPet): Response
@@ -1018,7 +1019,6 @@ class BreederMemberController extends AbstractController
         );
         $request->request->set('thumbnail_path', $breederPet->getThumbnailPath());
         $form->handleRequest($request);
-
 
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -1065,8 +1065,7 @@ class BreederMemberController extends AbstractController
      * @param int $petId
      * @return string
      */
-    private
-    function setImageSrc($imageUrl, $petId)
+    private function setImageSrc($imageUrl, $petId)
     {
         if (empty($imageUrl)) {
             return '';
@@ -1098,9 +1097,9 @@ class BreederMemberController extends AbstractController
     }
 
     /**
-     * 
+     *
      * 検査キット請求
-     * 
+     *
      * @Route("/breeder/member/dna_kit/", name="breeder_examination_kit", methods={"GET","POST"})
      * @Template("animalline/breeder/member/examination_kit_list.twig")
      */
@@ -1110,11 +1109,13 @@ class BreederMemberController extends AbstractController
         $registerId = $this->getUser();
 
         $dnas = $this->dnaCheckStatusHeaderRepository->createQueryBuilder('dna')
-                     ->where('dna.register_id = :register_id')
-                     ->andWhere('dna.site_type = :site_type')
-                     ->setParameters([':register_id' => $registerId, ':site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
-                     ->select('dna.id as id, dna.kit_unit, dna.shipping_status, dna.kit_shipping_date');
-        if (!$isAll) $dnas->andWhere($dnas->expr()->notIn('dna.shipping_status', AnilineConf::ANILINE_SHIPPING_STATUS_SHIPPED));
+            ->where('dna.register_id = :register_id')
+            ->andWhere('dna.site_type = :site_type')
+            ->setParameters([':register_id' => $registerId, ':site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
+            ->select('dna.id as id, dna.kit_unit, dna.shipping_status, dna.kit_shipping_date');
+        if (!$isAll) {
+            $dnas->andWhere($dnas->expr()->notIn('dna.shipping_status', AnilineConf::ANILINE_SHIPPING_STATUS_SHIPPED));
+        }
 
         $dnas->orderBy('dna.create_date', 'DESC')
             ->getQuery()
@@ -1129,15 +1130,51 @@ class BreederMemberController extends AbstractController
         return compact('dnas');
     }
 
-      /**
-     * 
+    /**
+     *
      * 検査キット請求
-     * 
+     *
      * @Route("/breeder/member/dna_kit/new", name="breeder_examination_kit_new", methods={"GET","POST"})
      * @Template("animalline/breeder/member/examination_kit_form.twig")
      */
-    public function breeder_examination_kit_new()
+    public function breeder_examination_kit_new(Request $request)
     {
-        return[];
+        $dnaCheckSatusHeader = new DnaCheckStatusHeader();
+        $builder = $this->formFactory->createBuilder(BreederKitDnaType::class, $dnaCheckSatusHeader);
+        $breeder = $this->breedersRepository->find($this->getUser()->getId());
+        $breederHouseCat = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
+        $breederHouseDog = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $pref = $this->prefRepository->find($request->get('breeder_kit_dna')['address']['PrefShipping']);
+            $dnaCheckSatusHeader->setRegisterId($this->getUser()->getId())
+                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
+                ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
+                ->setShippingPref($pref->getName());
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($dnaCheckSatusHeader);
+            $entityManager->flush();
+
+            $kitUnit = $dnaCheckSatusHeader->getKitUnit();
+            for ($i = 0; $i < $kitUnit; $i++) {
+                $Dna = (new DnaCheckStatus)
+                    ->setDnaHeader($dnaCheckSatusHeader)
+                    ->setPetId($dnaCheckSatusHeader->getPetId())
+                    ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
+                    ->setKitPetRegisterDate(new DateTime);
+                $entityManager->persist($Dna);
+            }
+            $entityManager->flush();
+            return $this->redirect($this->generateUrl('breeder_examination_kit'));
+        }
+
+        return [
+            'form' => $form->createView(),
+            'breeder' => $breeder,
+            'breederHouseCat' => $breederHouseCat,
+            'breederHouseDog' => $breederHouseDog
+        ];
     }
 }

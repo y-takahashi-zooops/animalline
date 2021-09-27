@@ -158,7 +158,7 @@ final class AnilineConf
     const ANILINE_DNA_CHECK_STATUS_NG = 9; // 検査NG
     const ANILINE_DNA_CHECK_STATUS_RESENT = 10; // 検体再送付手続済
 
-    const ANILINE_SHIPPING_STATUS_ACCEPT = 1; // 検体再送付手続済
-    const ANILINE_SHIPPING_STATUS_INSTRUCTING = 2; // 検体再送付手続済
-    const ANILINE_SHIPPING_STATUS_SHIPPED = 3; // 検体再送付手続済
+    const ANILINE_SHIPPING_STATUS_ACCEPT = 1;
+    const ANILINE_SHIPPING_STATUS_INSTRUCTING = 2;
+    const ANILINE_SHIPPING_STATUS_SHIPPED = 3;
 }

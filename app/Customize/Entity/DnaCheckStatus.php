@@ -99,7 +99,7 @@ class DnaCheckStatus
         return $this->pet_id;
     }
 
-    public function setPetId(int $pet_id): self
+    public function setPetId(?int $pet_id): self
     {
         $this->pet_id = $pet_id;
 
