@@ -43,6 +43,7 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\Breeder\BreederContactType;
+use Customize\Repository\DnaCheckStatusHeaderRepository;
 use DateTime;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
@@ -125,6 +126,11 @@ class BreederMemberController extends AbstractController
      */
     protected $dnaCheckStatusRepository;
 
+        /**
+     * @var DnaCheckStatusHeaderRepository;
+     */
+    protected $dnaCheckStatusHeaderRepository;
+
     /**
      * BreederController constructor.
      *
@@ -141,6 +147,7 @@ class BreederMemberController extends AbstractController
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
+     * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      */
     public function __construct(
         BreederContactsRepository        $breederContactsRepository,
@@ -157,7 +164,8 @@ class BreederMemberController extends AbstractController
         BreederEvaluationsRepository     $breederEvaluationsRepository,
         BreederPetImageRepository        $breederPetImageRepository,
         DnaQueryService                  $dnaQueryService,
-        DnaCheckStatusRepository         $dnaCheckStatusRepository
+        DnaCheckStatusRepository         $dnaCheckStatusRepository,
+        DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
@@ -174,6 +182,7 @@ class BreederMemberController extends AbstractController
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
+        $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
     }
 
     /**
@@ -1095,9 +1104,27 @@ class BreederMemberController extends AbstractController
      * @Route("/breeder/member/dna_kit/", name="breeder_examination_kit", methods={"GET","POST"})
      * @Template("animalline/breeder/member/examination_kit_list.twig")
      */
-    public function breeder_examination_kit()
+    public function breeder_examination_kit(Request $request, PaginatorInterface $paginator)
     {
-        return[];
+        $isAll = $request->get('is_all') ?? false;
+        $registerId = $this->getUser();
+        $dnas = $this->dnaCheckStatusHeaderRepository->createQueryBuilder('dna')
+        ->where('dna.register_id = :register_id')
+        ->andWhere('dna.site_type = :site_type')
+        ->setParameters([':register_id' => $registerId, ':site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
+        ->select('dna.id as id, dna.kit_unit, dna.shipping_status, dna.kit_shipping_date');
+        if (!$isAll) $dnas->andWhere($dnas->expr()->notIn('dna.shipping_status', 3));
+        $dnas->orderBy('dna.create_date', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        $dnas = $paginator->paginate(
+            $dnas,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE)
+        );
+
+        return compact('dnas');
     }
 
       /**

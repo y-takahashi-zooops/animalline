@@ -6,6 +6,7 @@ use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreedsRepository;
+use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 
 class DnaQueryService
@@ -30,6 +31,11 @@ class DnaQueryService
      */
     protected $dnaCheckStatusRepository;
 
+    /**
+     * @var DnaCheckStatusHeaderRepository
+     */
+    protected $dnaCheckStatusHeaderRepository;
+
     const EXCLUDES = [
         AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED,
         AnilineConf::ANILINE_DNA_CHECK_STATUS_NG,
@@ -43,17 +49,20 @@ class DnaQueryService
      * @param BreedsRepository $breedsRepository
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      * @param BreedersRepository $breedersRepository
+     * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      */
     public function __construct(
         BreederPetsRepository    $breederPetsRepository,
         BreedsRepository         $breedsRepository,
         DnaCheckStatusRepository $dnaCheckStatusRepository,
-        BreedersRepository       $breedersRepository
+        BreedersRepository       $breedersRepository,
+        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
     ) {
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->breedersRepository = $breedersRepository;
+        $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
     }
 
     /**
@@ -126,6 +135,25 @@ class DnaQueryService
             ->addOrderBy('dna.id', 'DESC')
             ->getQuery()
             ->getArrayResult();
+    }
+
+    /**
+     * Breeder member DNA Kit filter.
+     *
+     * @param int $registerId
+     * @param bool $isAll
+     * @return array
+     */
+    public function filterDnaKitBreederMember(int $registerId, bool $isAll): array
+    {
+        $queryBreeder = $this->dnaCheckStatusHeaderRepository->createQueryBuilder('dna')
+            ->where('dna.site_type = :site_type')
+            ->setParameters([':register_id' => $registerId, ':site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
+            ->select('dna.id as id, dna.kit_unit, dna.shipping_status, dna.kit_shipping_date');
+        if (!$isAll) $queryBreeder->andWhere($queryBreeder->expr()->notIn('dna.shipping_status', 3));
+        $queryBreeder->orderBy('dna.create_date', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
