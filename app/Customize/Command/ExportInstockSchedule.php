@@ -3,6 +3,7 @@
 namespace Customize\Command;
 
 use Carbon\Carbon;
+use Customize\Config\AnilineConf;
 use Customize\Entity\InstockSchedule;
 use Customize\Entity\InstockScheduleHeader;
 use Customize\Entity\WmsSyncInfo;
@@ -80,7 +81,12 @@ class ExportInstockSchedule extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->entityManager;
-        $fields = [];
+        $fields = [
+            'invoiceNumber', 'invoiceDate', 'supplierCode', 'supplierName', 'boxNumber',
+            'lineNumber', 'warehouseCode', 'stockDate', 'productNumber', 'code',
+            'colorCode', 'sizeCode', 'jANCode', 'FOB', 'quantity', 'caseQuantity',
+            'BBDATE', 'remarks'
+        ];
 
         $dir = 'var/tmp/wms/instock_schedule/';
         if (!file_exists($dir)) {
@@ -90,5 +96,43 @@ class ExportInstockSchedule extends Command
         $now = Carbon::now();
 
         $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 4], ['sync_date' => 'DESC']);
+        $filename = 'NYUKAYOTEI_' . Carbon::now()->format('Ymd_His') . '.csv';
+        if ($records) {
+            $wms = new WmsSyncInfo();
+            $wms->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_INSTOCK_SCHEDULE)
+                ->setSyncDate(Carbon::now());
+            //try {
+            $csvPath = $dir . $filename;
+            $csvh = fopen($csvPath, 'w+') or die("Can't open file");
+            $d = ',';
+            $e = '"';
+
+            $result = [];
+            foreach ($records as $record) {
+                $record['invoiceDate'] = null;
+                $record['boxNumber'] = null;
+                $record['lineNumber'] = null;
+                $record['colorCode'] = 9999;
+                $record['sizeCode'] = 1;
+                $record['FOB'] = null;
+                $record['BBDATE'] = null;
+                $record['remarks'] = null;
+                $sorted = [];
+                foreach ($fields as $value) {
+                    array_push($sorted, $record[$value]);
+                }
+                array_push($result, $sorted);
+            }
+            foreach ($result as $item) {
+                fputcsv($csvh, $item, $d, $e);
+            }
+            fclose($csvh);
+
+            $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
+            echo 'Export succeeded.' . "\n";
+
+            $em->persist($wms);
+            $em->flush();
+        }
     }
 }
