@@ -31,7 +31,6 @@
                                 <div class="ec-input{{ has_errors(form.name) ? ' error' }}">
                                     {{ form_widget(form.name) }}
                                     {{ form_errors(form.name) }}
-                                    {# <input type="hidden" id="licenceTel" value={{breeder.breederTel}}> #}
                                 </div>
                             </dd>
                         </dl>
@@ -45,7 +44,6 @@
                                 <div class="ec-zipInput{{ has_errors(form.shipping_zip) ? ' error' }}">
                                     <span>{{ '〒'|trans }}</span>
                                     {{ form_widget(form.shipping_zip) }}
-                                    {# <input type="hidden" id="licenceZip" value={{breeder.licenseZip}}> #}
                                     <div class="ec-zipInputHelp">
                                         <div class="ec-zipInputHelp__icon">
                                             <div class="ec-icon"><img
@@ -62,17 +60,14 @@
                                      onmousedown="(function(e){ e.preventDefault(); })(event, this)">
                                     {{ form_widget(form.address.PrefShipping) }}
                                     {{ form_errors(form.address.PrefShipping) }}
-                                    {# <input type="hidden" id="licencePref" value={{breeder.PrefLicense.Id}}> #}
                                 </div>
                                 <div class="ec-input{{ has_errors(form.address.shipping_city) ? ' error' }}">
                                     {{ form_widget(form.address.shipping_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
                                     {{ form_errors(form.address.shipping_city) }}
-                                    {# <input type="hidden" id="licenceCity" value={{breeder.licenseCity}}> #}
                                 </div>
                                 <div class="ec-input{{ has_errors(form.address.shipping_address) ? ' error' }}">
                                     {{ form_widget(form.address.shipping_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
                                     {{ form_errors(form.address.shipping_address) }}
-                                    {# <input type="hidden" id="licenceAddress" value={{breeder.licenseAddress}}> #}
                                 </div>
                             </dd>
                         </dl>
@@ -84,7 +79,6 @@
                                 <div class="ec-input{{ has_errors(form.shipping_tel) ? ' error' }}">
                                     {{ form_widget(form.shipping_tel) }}
                                     {{ form_errors(form.shipping_tel) }}
-                                    {# <input type="hidden" id="licenceTel" value={{breeder.breederTel}}> #}
                                 </div>
                             </dd>
                         </dl>
@@ -96,7 +90,6 @@
                                 <div class="ec-input{{ has_errors(form.kit_unit) ? ' error' }}">
                                     {{ form_widget(form.kit_unit) }}
                                     {{ form_errors(form.kit_unit) }}
-                                    {# <input type="hidden" id="licenceTel" value={{breeder.breederTel}}> #}
                                 </div>
                             </dd>
                         </dl>
@@ -125,7 +118,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 <script>
-
     if ($("#issetHouseDog").val() == 'false') {
     $("#breeder_kit_dna_choice_address option[value='2']").remove();
 }
@@ -144,6 +136,14 @@
     $("#breeder_kit_dna_address_PrefShipping").val(pref_id)
     $("#breeder_kit_dna_address_shipping_city").val(city)
     $("#breeder_kit_dna_address_shipping_address").val(addr)
+});
+    $("form[name=dna-kit-form]").submit(function (e) {
+    e.preventDefault();
+    $('#modal').modal('show');
+});
+
+$("#confirm-yes").click(function (e) {
+    document.getElementsByName('dna-kit-form')[0].submit();
 });
 </script>
 {% endblock %}
