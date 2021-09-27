@@ -1125,6 +1125,8 @@ class BreederMemberController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($dnaCheckSatusHeader);
             $entityManager->flush();
+
+            return  $this->redirect($this->generateUrl('breeder_examination_kit'));
         }
         return [
             'form' => $form->createView(),

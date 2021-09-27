@@ -15,6 +15,7 @@ namespace Customize\Form\Type\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationsHouse;
+use Customize\Entity\DnaCheckStatusHeader;
 use Customize\Form\Type\AddressHouseKitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Eccube\Common\EccubeConfig;
@@ -105,7 +106,7 @@ class BreederKitDnaType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => AddressHouseKitType::class,
+            'data_class' => DnaCheckStatusHeader::class,
         ]);
     }
 }
