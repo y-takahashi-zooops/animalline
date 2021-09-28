@@ -111,14 +111,14 @@ class ImportInstockSchedule extends Command
             if (!$Header) {
                 continue;
             }
-            $Header->setArrivalDate(new DateTime($data[11]));
+            $Header->setArrivalDate($data[11] ? new DateTime($data[11]) : NULL);
             $em->persist($Header);
             $Instock = $this->instockScheduleRepository->findOneBy(['id' => $instockId, 'InstockHeader' => $headerId]);
 
             if ($Instock) {
                 $Instock->setItemCode01($data[8])
-                    ->setArrivalQuantity($data[12])
-                    ->setArrivalBox($data[13]);
+                    ->setArrivalQuantity($data[12] ? $data[12] : NULL)
+                    ->setArrivalBox($data[13] ? $data[13] : NULL);
                 $em->persist($Instock);
             }
 
