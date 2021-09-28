@@ -2,14 +2,31 @@
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
-    <p class="mb-4">
-        お問い合わせの内容を送信しました
-    </p>
-    <div class="col-md-8" style="margin: 0 auto;">
-        <a class="ec-blockBtn--action bg-breeder mb-4"
-           href={{ url('breeder_pet_detail', {id: id}) }}>{{ 'ペット詳細へ戻ります'|trans }}</a>
+    <div class="ec-role">
+        <div class="ec-pageHeader">
+            <h1>お問い合わせ完了</h1>
+        </div>
     </div>
-    </body>
+    <div class="ec-registerCompleteRole">
+        <div class="ec-offGrid ec-text-ac">
+            <div class="ec-offGrid__cell">
+                <div class="ec-reportHeading">
+                    <h2>
+                        お問い合わせの内容を送信しました<br/>
+                        ブリーダーからの返信があるまでお待ちください<br/>
+                    </h2>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="ec-off2Grid">
+                    <div class="ec-off2Grid__cell">
+                        <a class="ec-blockBtn--action bg-breeder mb-4" href={{ url('breeder_pet_detail', {id: id}) }}>
+                            {{ 'ペット詳細へ戻ります'|trans }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">

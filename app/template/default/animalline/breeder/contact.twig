@@ -17,7 +17,7 @@
                                 {{ form_label(form.contact_type, 'コンタクト内容', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                <div class="ec-input{{ has_errors(form.contact_type) ? ' error' }}">
+                                <div class="ec-select{{ has_errors(form.contact_type) ? ' error' }}">
                                     {{ form_widget(form.contact_type) }}
                                     {{ form_errors(form.contact_type) }}
                                 </div>

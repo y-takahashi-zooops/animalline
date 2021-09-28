@@ -23,13 +23,15 @@
             </div>
           </div>
           <div class="adoption-mv__search">
-            <div class="adoption-mv__search_wrap adoption-mv__search_dog">
-              <div class="adoption-mv__search_title">
-                {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+            {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+              <div class="adoption-mv__search_wrap adoption-mv__search_dog">
+                <div class="adoption-mv__search_title">
                   <h2>犬を探す</h2>
-                {% else %}
+            {% else %}
+              <div class="adoption-mv__search_wrap adoption-mv__search_cat">
+                <div class="adoption-mv__search_title">
                   <h2>猫を探す<h2>
-                {% endif %}
+            {% endif %}
           </div>
               <div class="adoption-mv__search_body">
                 <form action="{{ url('adoption_pet_search_result') }}" method="get">

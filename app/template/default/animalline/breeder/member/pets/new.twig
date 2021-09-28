@@ -1,14 +1,29 @@
 {% set site_type = 'breeder' %}
-{% extends 'ani_frame.twig' %}
+{% extends 'animalline/breeder/frame.twig' %}
 {% block main %}
-    <h1>新規ペット追加</h1>
-    <br>
-    <a href="{{ path('breeder_pet_list') }}">
-       <img src="{{ asset('assets/img/arrow-icon.svg') }}" style="transform:rotate(-180deg);">
-        <span>一覧へ戻る</span>
-    </a>
-    <hr>
-    {{ include('animalline/breeder/member/pets/_form.twig') }}
+<section id="breeder-column" class="breeder-column_dog">
+        <div class="inner">
+            {# <a href="{{ path('breeder_pet_list') }}">
+                <img src="{{ asset('assets/img/arrow-icon.svg') }}" style="transform:rotate(-180deg);">
+                <span>一覧へ戻る</span>
+            </a> #}
+            <div class="row mb-2">
+                <div class="col-sm-3">
+                    <a href={{ path('breeder_pet_list') }} class="btn btn-warning w-100 text-align-center my-1">
+                        <i class="fas fa-arrow-left ml-1"></i>
+                        ペット一覧                            
+                    </a>
+                </div>
+            </div>
+            <div class="breeder-column__main_section_title">
+                <h3>ペット情報編集</h3>
+            </div>
+            <div class="breeder-column__main_section_body">
+                {{ include('animalline/breeder/member/pets/_form.twig') }}
+                <input hidden id="form-edit">
+            </div>
+        </div>
+    </section>
 {% endblock %}
 
 {% block javascript %}

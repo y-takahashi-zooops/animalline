@@ -1,20 +1,23 @@
 {{ form_start(form) }}
 
-    
-    <label class="ec-label required">
-        {{ form_label(form.pet_kind, 'ペット種別', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
-    </label>
-    <div class="ec-select">
+    <div class="row mb-3">
+        <div class="col-md-3">
+            {{ form_label(form.pet_kind, 'ペット種別', { 'label_attr': {'class': 'ec-label' }}) }}      
+        </div>
+        <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.pet_kind, { 'attr': { 'onchange': 'petKindChange();' }}) }}
         {{ form_errors(form.pet_kind) }}
+        </div>
     </div>
 
-    <label class="ec-label required">
-        {{ form_label(form.breeds_type, '犬種(猫種)', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-    </label>
-    <div class="ec-select">
+    <div class="row mb-3">
+        <div class="col-md-3">
+        {{ form_label(form.breeds_type, '犬種(猫種)', { 'label_attr': {'class': 'ec-label' }}) }}
+        </div>
+        <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.breeds_type) }}
         {{ form_errors(form.breeds_type) }}
+        </div>
     </div>
 
     <div class="row">
@@ -80,29 +83,44 @@
     <input type="hidden" name="img3" class="breeder_pets_image3">
     <input type="hidden" name="img4" class="breeder_pets_image4">
 
-    {{ form_label(form.pet_sex, '性別', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
-    <div class="ec-select">
+    <div class="row mb-3">
+        <div class="col-md-3">
+        {{ form_label(form.pet_sex, '性別', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.pet_sex) }}
         {{ form_errors(form.pet_sex) }}
+        </div>
     </div>
 
-    {{ form_label(form.pet_birthday, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
-    <div class="ec-select">
+    <div class="row mb-3">
+        <div class="col-md-3">
+        {{ form_label(form.pet_birthday, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.pet_birthday) }}
         {{ form_errors(form.pet_birthday) }}
+        </div>
     </div>
-    
-    {{ form_label(form.coat_color, '毛色', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
-    <div class="ec-select">
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+        {{ form_label(form.coat_color, '毛色', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.coat_color) }}
         {{ form_errors(form.coat_color) }}
+        </div>
     </div>
 
-
-    {{ form_label(form.future_wait, '成犬時予想体重（ｋｇ）', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
-    <div class="col-6 col-md-3 ec-input" style="margin:0">
+    <div class="row mb-3">
+        <div class="col-md-3">
+        {{ form_label(form.future_wait, '成犬時予想体重（ｋｇ）', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+        </div>
+        <div class="col-md-3 ec-input">
         {{ form_widget(form.future_wait) }}
         {{ form_errors(form.future_wait) }}
+        </div>
     </div>
 
     {#
@@ -238,16 +256,22 @@
             </div>
         </div>
     </div>    
-    
-    <div class="col-md-3">
-        {{ form_label(form.price, '価格（税込）', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-    </div>
-    
-    <div class="ec-input">
-        {{ form_widget(form.price) }}
-        {{ form_errors(form.price) }}
-    </div>
 
+    <div class="row mb-3">
+        <div class="col-md-3">
+        {{ form_label(form.price, '価格（税込）', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        </div>
+        <div class="col-md-8 col-lg-4">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">￥ </span>
+                </div>
+                {{ form_widget(form.price) }}
+                {{ form_errors(form.price) }}
+                </div>
+        </div>
+    </div>    
+ 
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4">

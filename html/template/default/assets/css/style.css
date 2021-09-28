@@ -590,7 +590,8 @@ Styleguide 1.1.4
 
 .ec-heading-bold {
   margin: 16px 0;
-  font-size: 16px;
+  /* font-size: 16px; */
+  font-size: 1.6rem;
   font-weight: bold;
 }
 
@@ -633,7 +634,7 @@ Styleguide 1.1.6
 
 .ec-reportHeading {
   width: 100%;
-  border-top: 1px dotted #ccc;
+  /* border-top: 1px dotted #ccc; */
   margin: 20px 0 30px;
   padding: 0;
   text-align: center;
@@ -9554,7 +9555,8 @@ Styleguide 22.1
     font-weight: bold;
   }
   .ec-heading-bold {
-    font-size: 18px;
+    /* font-size: 18px; */
+    font-size: 1.6rem;
   }
   .ec-reportHeading {
     border-top: 0;
@@ -10606,10 +10608,4 @@ Styleguide 22.1
 }
 .ec-menuRole a:hover {
   text-decoration: none;
-}
-
-.header-button {
-  background: #F08300;
-  border-radius:  5px;
-  color: #fff;
 }
