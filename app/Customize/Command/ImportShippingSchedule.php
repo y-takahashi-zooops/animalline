@@ -2,11 +2,11 @@
 
 namespace Customize\Command;
 
-use Customize\Config\AnilineConf;
 use Customize\Repository\ShippingScheduleHeaderRepository;
 use Customize\Repository\ShippingScheduleRepository;
+use DateTime;
+use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\EntityManagerInterface;
-use Eccube\Entity\Shipping;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,9 +53,9 @@ class ImportShippingSchedule extends Command
      *
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
+        EntityManagerInterface           $entityManager,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
-        ShippingScheduleRepository $shippingScheduleRepository
+        ShippingScheduleRepository       $shippingScheduleRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -65,8 +65,8 @@ class ImportShippingSchedule extends Command
 
     protected function configure()
     {
-      $this->addArgument('fileName', InputArgument::REQUIRED, 'The fileName to import.')
-            ->setDescription('Import shipping schedule.');
+        $this->addArgument('fileName', InputArgument::REQUIRED, 'The fileName to import.')
+            ->setDescription('Import csv shipping schedule.');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -74,13 +74,14 @@ class ImportShippingSchedule extends Command
         $this->io = new SymfonyStyle($input, $output);
     }
 
+    /**
+     * @throws ConnectionException
+     * @throws Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // // タイムアウト上限を一時的に開放
         set_time_limit(0);
-
-        $totalCnt = 0;       // トータル行カウント
-        $headerflag = true; // ヘッダースキップフラグ
 
         $em = $this->entityManager;
         // 自動コミットをやめ、トランザクションを開始
@@ -90,40 +91,37 @@ class ImportShippingSchedule extends Command
         $em->getConfiguration()->setSQLLogger(null);
         $em->getConnection()->beginTransaction();
 
-        $csvpath = "var/tmp/receive/". $input->getArgument('fileName');
+        $csvpath = "var/tmp/wms/receive/" . $input->getArgument('fileName');
 
         // ファイルが指定されていれば続行
         if ($csvpath) {
             $fp = fopen($csvpath, 'r');
-            if ($fp === FALSE) {
+            if ($fp === false) {
                 //エラー
-                throw new \Exception('Error: Failed to open file');
+                throw new Exception('Error: Failed to open file');
             }
 
             log_info('商品CSV取込開始');
 
             // CSVファイルの登録処理
-            while (($data = fgetcsv($fp)) !== FALSE) {
+            while (($data = fgetcsv($fp)) !== false) {
                 // ヘッダー行(1行目)はスキップ
-                if ($headerflag) {
-                    $totalCnt++;
-                    $dateShipping = new \DateTime($data[2]);
-                    $shippingHeader = $this->shippingScheduleHeaderRepository->find($data[0]);
-                    $shippingHeader->setShippingDate($dateShipping)
-                        ->setWmsShipNo($data[4]);
-                    $em->persist($shippingHeader);
+                $dateShipping = new DateTime($data[2]);
+                $shippingHeader = $this->shippingScheduleHeaderRepository->find($data[0]);
+                if (!$shippingHeader) {
+                    continue;
                 }
+                $shippingHeader->setShippingDate($dateShipping)
+                    ->setWmsShipNo($data[4]);
+                $em->persist($shippingHeader);
 
-                // 100件ごとに更新
-                if ($totalCnt % 10 == 0 && $totalCnt !== 0) {
-                    try {
-                        $em->flush();
-                        $em->getConnection()->commit();
-                        // $em->clear();
-                    } catch (\Exception $e) {
-                        $em->getConnection()->rollback();
-                        throw $e;
-                    }
+                try {
+                    $em->flush();
+                    $em->getConnection()->commit();
+                    // $em->clear();
+                } catch (Exception $e) {
+                    $em->getConnection()->rollback();
+                    throw $e;
                 }
             }
         }
@@ -132,7 +130,7 @@ class ImportShippingSchedule extends Command
         try {
             $em->flush();
             $em->getConnection()->commit();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $em->getConnection()->rollback();
             throw $e;
         }
