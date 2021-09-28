@@ -12,6 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Eccube\Repository\MemberRepository;
 use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\InstockScheduleRepository;
+use Symfony\Component\Console\Input\InputArgument;
 
 class ImportInstockSchedule extends Command
 {
@@ -63,7 +64,8 @@ class ImportInstockSchedule extends Command
 
     protected function configure()
     {
-        $this->setDescription('Import instock schedule.');
+        $this->addArgument('fileName', InputArgument::REQUIRED, 'The fileName to import.')
+             ->setDescription('Import instock schedule.');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -88,7 +90,7 @@ class ImportInstockSchedule extends Command
         $em->getConnection()->beginTransaction();
 
         // todo: update path
-        $csvpath = "var/tmp/items.csv";
+        $csvpath = "var/tmp/" . $input->getArgument('fileName');
 
         // ファイルが指定されていれば続行
         if ($csvpath) {
