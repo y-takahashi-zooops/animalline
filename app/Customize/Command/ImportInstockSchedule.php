@@ -107,11 +107,14 @@ class ImportInstockSchedule extends Command
             $headerId = $data[0];
             $instockId = $data[5];
             $Header = $this->instockScheduleHeaderRepository->find($headerId);
-            if ($Header) {
-                $Header->setArrivalDate(new DateTime($data[11]));
-                $em->persist($Header);
+
+            if (!$Header) {
+                continue;
             }
+            $Header->setArrivalDate(new DateTime($data[11]));
+            $em->persist($Header);
             $Instock = $this->instockScheduleRepository->findOneBy(['id' => $instockId, 'InstockHeader' => $headerId]);
+
             if ($Instock) {
                 $Instock->setItemCode01($data[8])
                     ->setArrivalQuantity($data[12])
@@ -131,5 +134,6 @@ class ImportInstockSchedule extends Command
 
         log_info('商品CSV取込完了');
         fclose($fp);
+        echo 'Export succeeded.' . "\n";
     }
 }
