@@ -88,7 +88,7 @@ file that was distributed with this source code.
         }
 
         var prototype = $collectionHolder.data('prototype');
-        index++;
+        var index = is_instock ? $collectionHolder.data('next-index') : index + 1;
         var newForm = prototype.replace(/__name__/g, index);
         $collectionHolder.children('tbody').append(newForm);
         var $lastRow = $collectionHolder.children('tbody').children('tr').last();
