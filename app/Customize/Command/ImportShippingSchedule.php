@@ -1,0 +1,142 @@
+<?php
+
+namespace Customize\Command;
+
+use Customize\Config\AnilineConf;
+use Customize\Repository\ShippingScheduleHeaderRepository;
+use Customize\Repository\ShippingScheduleRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Entity\Shipping;
+use Exception;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Eccube\Repository\MemberRepository;
+
+class ImportShippingSchedule extends Command
+{
+    protected static $defaultName = 'eccube:customize:import-shipping-schedule';
+
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var SymfonyStyle
+     */
+    protected $io;
+
+    /**
+     * @var MemberRepository
+     */
+    protected $memberRepository;
+
+    /**
+     * @var ShippingScheduleHeaderRepository
+     */
+    protected $shippingScheduleHeaderRepository;
+
+    /**
+     * @var ShippingScheduleRepository
+     */
+    protected $shippingScheduleRepository;
+
+    /**
+     * Import shipping schedule constructor.
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository
+     * @param ShippingScheduleRepository $shippingScheduleRepository
+     *
+     */
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
+        ShippingScheduleRepository $shippingScheduleRepository
+    ) {
+        parent::__construct();
+        $this->entityManager = $entityManager;
+        $this->shippingScheduleHeaderRepository = $shippingScheduleHeaderRepository;
+        $this->shippingScheduleRepository = $shippingScheduleRepository;
+    }
+
+    protected function configure()
+    {
+        $this->setDescription('Import shipping schedule.');
+    }
+
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->io = new SymfonyStyle($input, $output);
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        // // タイムアウト上限を一時的に開放
+        set_time_limit(0);
+
+        $totalCnt = 0;       // トータル行カウント
+        $headerflag = false; // ヘッダースキップフラグ
+
+        $em = $this->entityManager;
+        // 自動コミットをやめ、トランザクションを開始
+        $em->getConnection()->setAutoCommit(false);
+
+        // sql loggerを無効にする.
+        $em->getConfiguration()->setSQLLogger(null);
+        $em->getConnection()->beginTransaction();
+
+        // todo: update path
+        $csvpath = "var/tmp/recieve";
+
+        // ファイルが指定されていれば続行
+        if ($csvpath) {
+            $fp = fopen($csvpath, 'r');
+            if ($fp === FALSE) {
+                //エラー
+                throw new \Exception('Error: Failed to open file');
+            }
+
+            log_info('商品CSV取込開始');
+
+            // CSVファイルの登録処理
+            while (($data = fgetcsv($fp)) !== FALSE) {
+                // ヘッダー行(1行目)はスキップ
+                if ($headerflag) {
+                    $totalCnt++;
+
+                    // todo: add logic
+                }
+                // 2行目以降を読み込む
+                $headerflag = true;
+
+
+                // 100件ごとに更新
+                if ($totalCnt % 100 == 0 && $totalCnt !== 0) {
+                    try {
+                        $em->flush();
+                        $em->getConnection()->commit();
+                        // $em->clear();
+                    } catch (\Exception $e) {
+                        $em->getConnection()->rollback();
+                        throw $e;
+                    }
+                }
+            }
+        }
+
+        // 端数分を更新
+        try {
+            $em->flush();
+            $em->getConnection()->commit();
+        } catch (\Exception $e) {
+            $em->getConnection()->rollback();
+            throw $e;
+        }
+
+        log_info('商品CSV取込完了');
+        fclose($fp);
+    }
+}
