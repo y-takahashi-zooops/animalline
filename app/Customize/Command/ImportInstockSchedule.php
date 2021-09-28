@@ -134,6 +134,6 @@ class ImportInstockSchedule extends Command
 
         log_info('商品CSV取込完了');
         fclose($fp);
-        echo 'Export succeeded.' . "\n";
+        echo 'Import succeeded.' . "\n";
     }
 }
