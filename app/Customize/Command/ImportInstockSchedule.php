@@ -12,6 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Eccube\Repository\MemberRepository;
 use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\InstockScheduleRepository;
+use DateTime;
 use Symfony\Component\Console\Input\InputArgument;
 
 class ImportInstockSchedule extends Command
@@ -65,7 +66,7 @@ class ImportInstockSchedule extends Command
     protected function configure()
     {
         $this->addArgument('fileName', InputArgument::REQUIRED, 'The fileName to import.')
-             ->setDescription('Import instock schedule.');
+            ->setDescription('Import csv instock schedule.');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -75,11 +76,8 @@ class ImportInstockSchedule extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // // タイムアウト上限を一時的に開放
+        // タイムアウト上限を一時的に開放
         set_time_limit(0);
-
-        $totalCnt = 0;       // トータル行カウント
-        $headerflag = false; // ヘッダースキップフラグ
 
         $em = $this->entityManager;
         // 自動コミットをやめ、トランザクションを開始
@@ -89,52 +87,46 @@ class ImportInstockSchedule extends Command
         $em->getConfiguration()->setSQLLogger(null);
         $em->getConnection()->beginTransaction();
 
-        // todo: update path
-        $csvpath = "var/tmp/" . $input->getArgument('fileName');
+        $csvpath = "var/tmp/wms/receive/" . $input->getArgument('fileName');
 
         // ファイルが指定されていれば続行
-        if ($csvpath) {
-            $fp = fopen($csvpath, 'r');
-            if ($fp === FALSE) {
-                //エラー
-                throw new \Exception('Error: Failed to open file');
-            }
-
-            log_info('商品CSV取込開始');
-
-            // CSVファイルの登録処理
-            while (($data = fgetcsv($fp)) !== FALSE) {
-                // ヘッダー行(1行目)はスキップ
-                if ($headerflag) {
-                    $totalCnt++;
-
-                    // todo: add logic
-                }
-                // 2行目以降を読み込む
-                $headerflag = true;
-
-
-                // 100件ごとに更新
-                if ($totalCnt % 100 == 0 && $totalCnt !== 0) {
-                    try {
-                        $em->flush();
-                        $em->getConnection()->commit();
-                        // $em->clear();
-                    } catch (\Exception $e) {
-                        $em->getConnection()->rollback();
-                        throw $e;
-                    }
-                }
-            }
+        if (!$csvpath) {
+            throw new Exception('Error: File path is required');
         }
 
-        // 端数分を更新
-        try {
-            $em->flush();
-            $em->getConnection()->commit();
-        } catch (\Exception $e) {
-            $em->getConnection()->rollback();
-            throw $e;
+        $fp = fopen($csvpath, 'r');
+        if ($fp === FALSE) {
+            //エラー
+            throw new \Exception('Error: Failed to open file');
+        }
+
+        log_info('商品CSV取込開始');
+
+        // CSVファイルの登録処理
+        while (($data = fgetcsv($fp)) !== FALSE) {
+            $headerId = $data[0];
+            $instockId = $data[5];
+            $Header = $this->instockScheduleHeaderRepository->find($headerId);
+            if ($Header) {
+                $Header->setArrivalDate(new DateTime($data[11]));
+                $em->persist($Header);
+            }
+            $Instock = $this->instockScheduleRepository->findOneBy(['id' => $instockId, 'InstockHeader' => $headerId]);
+            if ($Instock) {
+                $Instock->setItemCode01($data[8])
+                    ->setArrivalQuantity($data[12])
+                    ->setArrivalBox($data[13]);
+                $em->persist($Instock);
+            }
+
+            // 端数分を更新
+            try {
+                $em->flush();
+                $em->getConnection()->commit();
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                throw $e;
+            }
         }
 
         log_info('商品CSV取込完了');
