@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Eccube\Repository\MemberRepository;
+use Symfony\Component\Console\Input\InputArgument;
 
 class ImportShippingSchedule extends Command
 {
@@ -64,7 +65,8 @@ class ImportShippingSchedule extends Command
 
     protected function configure()
     {
-        $this->setDescription('Import shipping schedule.');
+      $this->addArgument('fileName', InputArgument::REQUIRED, 'The fileName to import.')
+            ->setDescription('Import shipping schedule.');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -78,7 +80,7 @@ class ImportShippingSchedule extends Command
         set_time_limit(0);
 
         $totalCnt = 0;       // トータル行カウント
-        $headerflag = false; // ヘッダースキップフラグ
+        $headerflag = true; // ヘッダースキップフラグ
 
         $em = $this->entityManager;
         // 自動コミットをやめ、トランザクションを開始
@@ -88,8 +90,7 @@ class ImportShippingSchedule extends Command
         $em->getConfiguration()->setSQLLogger(null);
         $em->getConnection()->beginTransaction();
 
-        // todo: update path
-        $csvpath = "var/tmp/recieve";
+        $csvpath = "var/tmp/receive/". $input->getArgument('fileName');
 
         // ファイルが指定されていれば続行
         if ($csvpath) {
@@ -106,15 +107,15 @@ class ImportShippingSchedule extends Command
                 // ヘッダー行(1行目)はスキップ
                 if ($headerflag) {
                     $totalCnt++;
-
-                    // todo: add logic
+                    $dateShipping = new \DateTime($data[2]);
+                    $shippingHeader = $this->shippingScheduleHeaderRepository->find($data[0]);
+                    $shippingHeader->setShippingDate($dateShipping)
+                        ->setWmsShipNo($data[4]);
+                    $em->persist($shippingHeader);
                 }
-                // 2行目以降を読み込む
-                $headerflag = true;
-
 
                 // 100件ごとに更新
-                if ($totalCnt % 100 == 0 && $totalCnt !== 0) {
+                if ($totalCnt % 10 == 0 && $totalCnt !== 0) {
                     try {
                         $em->flush();
                         $em->getConnection()->commit();
