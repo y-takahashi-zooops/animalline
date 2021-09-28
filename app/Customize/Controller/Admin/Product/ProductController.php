@@ -1295,19 +1295,18 @@ class ProductController extends BaseProductController
                 $item->setOrderItemType($this->orderItemTypeRepository->find(1));
                 $item->setQuantity($schedule->getArrivalQuantitySchedule());
                 $item->setTaxRate($schedule->getArrivalBoxSchedule());
-                $productClass = $this->productClassRepository->findOneBy(['code' => $schedule->getJanCode()]);
-                $item->setPrice($productClass->getItemCost());
-                $item->setProduct($productClass->getProduct());
-                $item->setProductClass($productClass);
-                $item->setProductName($productClass->getProduct()->getName());
-                $item->setProductCode($schedule->getJanCode());
-                if ($productClass->getClassCategory1()) {
+                $item->setPrice($schedule->getProductClass()->getItemCost());
+                $item->setProduct($schedule->getProductClass()->getProduct());
+                $item->setProductClass($schedule->getProductClass());
+                $item->setProductName($schedule->getProductClass()->getProduct()->getName());
+                $item->setProductCode($schedule->getProductClass()->getCode());
+                if ($schedule->getProductClass()->getClassCategory1()) {
                     $item->setClassName1('フレーバー');
-                    $item->setClassCategoryName1($productClass->getClassCategory1()->getName());
+                    $item->setClassCategoryName1($schedule->getProductClass()->getClassCategory1()->getName());
                 }
-                if ($productClass->getClassCategory2()) {
+                if ($schedule->getProductClass()->getClassCategory2()) {
                     $item->setClassName2('サイズ');
-                    $item->setClassCategoryName2($productClass->getClassCategory2()->getName());
+                    $item->setClassCategoryName2($schedule->getProductClass()->getClassCategory2()->getName());
                 }
                 $OriginItems->add($item);
             }
@@ -1341,7 +1340,7 @@ class ProductController extends BaseProductController
                 case 'register':
                     log_info('受注登録開始', [$TargetInstock->getId()]);
                     if ($form->isValid()) {
-                        foreach ($this->instockScheduleRepository->findBy(['InstockHeader'=>$TargetInstock->getId()]) as $schedule) {
+                        foreach ($this->instockScheduleRepository->findBy(['InstockHeader' => $TargetInstock]) as $schedule) {
                             $this->entityManager->remove($schedule);
                         }
                         $TargetInstock->setInstockSchedule(); // clear temp orderitem data
@@ -1356,7 +1355,8 @@ class ProductController extends BaseProductController
                                 ->setJanCode($item->getProductCode())
                                 ->setPurchasePrice($subTotalPrices[$key])
                                 ->setArrivalQuantitySchedule($item->getQuantity())
-                                ->setArrivalBoxSchedule($item->getTaxRate());
+                                ->setArrivalBoxSchedule($item->getTaxRate())
+                                ->setProductClass($item->getProductClass());
                             $this->entityManager->persist($InstockSchedule);
                             $this->entityManager->flush();
                         }

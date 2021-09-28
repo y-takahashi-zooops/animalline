@@ -75,7 +75,7 @@ class InstockSchedule
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductClass::class)
-     * @ORM\JoinColumn(name="product_class_id", nullable=true)
+     * @ORM\JoinColumn(name="product_class_id", nullable=false)
      */
     private $ProductClass;
 
