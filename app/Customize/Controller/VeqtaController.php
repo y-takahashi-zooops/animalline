@@ -95,14 +95,14 @@ class VeqtaController extends AbstractController
      */
     public function result(Request $request)
     {
-        $barCode = $request->get('barcode');
-        if ($request->isMethod('POST')) {
-            $barcode = $request->get('barcode');
-            $checkStatus = $request->get('check_status');
+        $barcode = $request->get('barcode');
 
+        if ($request->isMethod('POST')) {
+            $checkStatus = $request->get('check_status');
             $siteType = $barcode[0];
             $dnaId = substr($barcode, 1);
             $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
+
             if (!$Dna) {
                 throw new NotFoundHttpException();
             }
@@ -140,19 +140,12 @@ class VeqtaController extends AbstractController
             $entityManager->flush();
         }
 
-        $barCode = $request->get('barCode');
-        $dnaCheckStatusId = (int)substr($barCode, 1);
-        $siteType = (int)substr($barCode, 0,1);
-        $shippingName = null;
-
-        $dnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['id' => $dnaCheckStatusId, 'site_type' => $siteType]);
-
-        if ($dnaCheckStatus) {
-            $dnaCheckStatusHeader = $this->dnaCheckStatusHeaderRepository->find($dnaCheckStatus[0]->getDnaHeader());
-            if ($dnaCheckStatus[0]->getCheckStatus() == 5) {
-                    $shippingName = $dnaCheckStatusHeader->getShippingName();
-                    return new JsonResponse(array(['shippingName' => $shippingName]));
-            }
+        if ($request->isMethod('GET') and $barcode) {
+            $siteType = $barcode[0];
+            $dnaId = substr($barcode, 1);
+            $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
+            $dnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['id' => $dnaId, 'site_type' => $siteType]);
+            $this->readBarCode($dnaCheckStatus);
         }
         return [];
     }
@@ -196,5 +189,22 @@ class VeqtaController extends AbstractController
         }
 
         return new JsonResponse(['file_name' => $file->getClientOriginalName()]);
+    }
+
+    /**
+     * Upload file.
+     * @Route("/upload_file", name="upload_file", methods={"POST"})
+     */
+    public function readBarCode($dnaCheckStatus = null) {
+        $shippingName = null;
+        $isExist = false;
+        if ($dnaCheckStatus) {
+            $dnaCheckStatusHeader = $this->dnaCheckStatusHeaderRepository->findOneBy(['id' => $dnaCheckStatus[0]->getDnaHeader(), ]);
+            if ($dnaCheckStatus[0]->getCheckStatus() == 5) {
+                $isExist = false;
+                $shippingName = $dnaCheckStatusHeader->getShippingName();
+                return new JsonResponse(array(['shippingName' => $shippingName]));
+            }
+        }
     }
 }
