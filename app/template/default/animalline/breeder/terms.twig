@@ -2,8 +2,7 @@
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
-    ペット検索画面
-</body>
+   {{ include('terms.twig') }}
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">

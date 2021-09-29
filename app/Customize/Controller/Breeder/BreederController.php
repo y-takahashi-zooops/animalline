@@ -371,4 +371,15 @@ class BreederController extends AbstractController
     {
         return;
     }
+    
+    /**
+     * 利用規約.
+     *
+     * @Route("/breeder/terms", name="breeder_terms")
+     * @Template("animalline/breeder/terms.twig")
+     */
+    public function terms(Request $request)
+    {
+        return;
+    }
 }

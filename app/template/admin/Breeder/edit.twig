@@ -308,6 +308,18 @@ file that was distributed with this source code.
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
+                                            <span>画像</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <img alt="license_thumbnail_path" src="{{ form.license_thumbnail_path.vars.value }}"
+                                            style="max-width: 200px">
+                                        {{ form_widget(form.license_thumbnail_path) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
                                             {{ form_label(form.license_no, '登録証番号', { 'label_attr': { 'class': 'ec-label' }}) }}
                                             <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}

@@ -3,176 +3,180 @@
 {% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
-	<div class="ec-pageHeader">
-		<h1>{{ '基本情報入力'|trans }}</h1>
-	</div>
-	<div class="ec-off1Grid">
-		<div class="ec-off1Grid__cell">
-			<form method="post" action="{{ url('adoption_baseinfo') }}" novalidate class="h-adr" name="update-baseinfo-form">
-				<span class="p-country-name" style="display:none;">Japan</span>
-				{{ form_widget(form._token) }}
-				<div class="ec-borderedDefs">
-					<div class="mb-5">
-						<dl>
-							<dt>
-								{{ form_label(form.is_organization, '登録者区分', { 'label_attr': { 'class': 'ec-label' }}) }}
-							</dt>
-							<dd>
-								<div class="ec-halfInput{{ has_errors(form.is_organization) ? ' error' }} ec-select">
-									{{ form_widget(form.is_organization) }}
-									{{ form_errors(form.is_organization) }}
-								</div>
-							</dd>
-						</dl>
-						<dl>
-							<dt>
-								{{ form_label(form.organization_name, '	保護団体名（個人の場合は氏名）', { 'label_attr': { 'class': 'ec-label' }}) }}
-							</dt>
-							<dd>
-								<div class="ec-halfInput{{ has_errors(form.organization_name) ? ' error' }}">
-									{{ form_widget(form.organization_name, { 'attr': { 'placeholder': '保護団体名' }}) }}
-									{{ form_errors(form.organization_name) }}
-								</div>
-							</dd>
-						</dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.handling_pet_kind, '取り扱いペット種別', { 'label_attr': { 'class': 'ec-label' }}) }}
-                            </dt>
-                            <dd>
-                                <div class="ec-select{{ has_errors(form.handling_pet_kind) ? ' error' }}">
-                                {{ form_widget(form.handling_pet_kind) }}
-                                {{ form_errors(form.handling_pet_kind) }}      
-                                </div>
-                            </dd>
-                        </dl>
-						<dl>
-							<dt>
-								{{ form_label(form.owner_name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
-							</dt>
-							<dd>
-								<div class="ec-halfInput{{ has_errors(form.owner_name) ? ' error' }}">
-									{{ form_widget(form.owner_name, { 'attr': { 'placeholder': 'お名前' }}) }}
-									{{ form_errors(form.owner_name) }}
-								</div>
-							</dd>
-						</dl>
-						<dl>
-							<dt>
-								{{ form_label(form.owner_kana, 'お名前(カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}
-							</dt>
-							<dd>
-								<div class="ec-halfInput{{ has_errors(form.owner_kana) ? ' error' }}">
-									{{ form_widget(form.owner_kana, { 'attr': { 'placeholder': 'お名前（カナ）' }}) }}
-									{{ form_errors(form.owner_kana) }}
-								</div>
-							</dd>
-						</dl>
-						<dl>
-							<dt>
-								{{ form_label(form.addr, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
-							</dt>
-							<dd>
-								<div class="ec-zipInput{{ has_errors(form.zip) ? ' error' }}">
-									<span>{{ '〒'|trans }}</span>
-									{{ form_widget(form.zip) }}
-									<div class="ec-zipInputHelp">
-										<div class="ec-zipInputHelp__icon">
-											<div class="ec-icon"><img src="/html/template/default/assets/icon/question-white.svg" alt="">
-											</div>
+	<section id="breeder-column" class="breeder-column_dog">
+		<div class="inner">
+			<div class="ec-pageHeader">
+				<h1>{{ '基本情報入力'|trans }}</h1>
+			</div>
+			<div class="ec-off1Grid">
+				<div class="ec-off1Grid__cell">
+					<form method="post" action="{{ url('adoption_baseinfo') }}" novalidate class="h-adr" name="update-baseinfo-form">
+						<span class="p-country-name" style="display:none;">Japan</span>
+						{{ form_widget(form._token) }}
+						<div class="ec-borderedDefs">
+							<div class="mb-5">
+								<dl>
+									<dt>
+										{{ form_label(form.is_organization, '登録者区分', { 'label_attr': { 'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-halfInput{{ has_errors(form.is_organization) ? ' error' }} ec-select">
+											{{ form_widget(form.is_organization) }}
+											{{ form_errors(form.is_organization) }}
 										</div>
-										<a href="https://www.post.japanpost.jp/zipcode/" target="_blank">
-											<span>郵便番号検索</span>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.organization_name, '	保護団体名（個人の場合は氏名）', { 'label_attr': { 'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-halfInput{{ has_errors(form.organization_name) ? ' error' }}">
+											{{ form_widget(form.organization_name, { 'attr': { 'placeholder': '保護団体名' }}) }}
+											{{ form_errors(form.organization_name) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.handling_pet_kind, '取り扱いペット種別', { 'label_attr': { 'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-select{{ has_errors(form.handling_pet_kind) ? ' error' }}">
+										{{ form_widget(form.handling_pet_kind) }}
+										{{ form_errors(form.handling_pet_kind) }}      
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.owner_name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-halfInput{{ has_errors(form.owner_name) ? ' error' }}">
+											{{ form_widget(form.owner_name, { 'attr': { 'placeholder': 'お名前' }}) }}
+											{{ form_errors(form.owner_name) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.owner_kana, 'お名前(カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-halfInput{{ has_errors(form.owner_kana) ? ' error' }}">
+											{{ form_widget(form.owner_kana, { 'attr': { 'placeholder': 'お名前（カナ）' }}) }}
+											{{ form_errors(form.owner_kana) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.addr, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-zipInput{{ has_errors(form.zip) ? ' error' }}">
+											<span>{{ '〒'|trans }}</span>
+											{{ form_widget(form.zip) }}
+											<div class="ec-zipInputHelp">
+												<div class="ec-zipInputHelp__icon">
+													<div class="ec-icon"><img src="/html/template/default/assets/icon/question-white.svg" alt="">
+													</div>
+												</div>
+												<a href="https://www.post.japanpost.jp/zipcode/" target="_blank">
+													<span>郵便番号検索</span>
+												</a>
+											</div>
+											{{ form_errors(form.zip) }}
+										</div>
+										<div class="ec-select{{ has_errors(form.addr.PrefId) ? ' error' }}">
+											{{ form_widget(form.addr.PrefId) }}
+											{{ form_errors(form.addr.PrefId) }}
+										</div>
+										<div class="ec-input{{ has_errors(form.addr.city) ? ' error' }}">
+											{{ form_widget(form.addr.city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+											{{ form_errors(form.addr.city) }}
+										</div>
+										<div class="ec-input{{ has_errors(form.addr.address) ? ' error' }}">
+											{{ form_widget(form.addr.address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+											{{ form_errors(form.addr.address) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.tel, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-telInput{{ has_errors(form.tel) ? ' error' }}">
+											{{ form_widget(form.tel) }}
+											{{ form_errors(form.tel) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.fax, 'FAX番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-telInput{{ has_errors(form.fax) ? ' error' }}">
+											{{ form_widget(form.fax) }}
+											{{ form_errors(form.fax) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.homepage_url, 'ホームページの URL', { 'label_attr': { 'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-input{{ has_errors(form.homepage_url) ? ' error' }}">
+											{{ form_widget(form.homepage_url) }}
+											{{ form_errors(form.homepage_url) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.pr_text, 'メッセージ', { 'label_attr': { 'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-input{{ has_errors(form.pr_text) ? ' error' }}">
+											{{ form_widget(form.pr_text) }}
+											{{ form_errors(form.pr_text) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.thumbnail_path, '紹介ページ用画像', { 'label_attr': {'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="media-body">
+											<img id="img_thumbnail" class="img_preview mb-2 {{ conservation.thumbnailPath ? '' : 'hidden' }}" src="{{ conservation.thumbnailPath }}" alt="..." style="width: 200px; border: 1px solid #ddd;"/>
+											{{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;' } }) }}
+											{{ form_errors(form.thumbnail_path) }}
+											<input type="hidden" name="thumbnail_path" id="adoption_src_path">
+										</div>
+										<a class="btn btn-ec-regular mr-2" onclick="$('#conservations_thumbnail_path').click()" style="background: #f0f0f0; border: 1px solid black;">
+											{{ 'admin.common.file_select'|trans }}
 										</a>
-									</div>
-									{{ form_errors(form.zip) }}
-								</div>
-								<div class="ec-select{{ has_errors(form.addr.PrefId) ? ' error' }}">
-									{{ form_widget(form.addr.PrefId) }}
-									{{ form_errors(form.addr.PrefId) }}
-								</div>
-								<div class="ec-input{{ has_errors(form.addr.city) ? ' error' }}">
-									{{ form_widget(form.addr.city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-									{{ form_errors(form.addr.city) }}
-								</div>
-								<div class="ec-input{{ has_errors(form.addr.address) ? ' error' }}">
-									{{ form_widget(form.addr.address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-									{{ form_errors(form.addr.address) }}
-								</div>
-							</dd>
-						</dl>
-						<dl>
-							<dt>
-								{{ form_label(form.tel, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}
-							</dt>
-							<dd>
-								<div class="ec-telInput{{ has_errors(form.tel) ? ' error' }}">
-									{{ form_widget(form.tel) }}
-									{{ form_errors(form.tel) }}
-								</div>
-							</dd>
-						</dl>
-						<dl>
-							<dt>
-								{{ form_label(form.fax, 'FAX番号', { 'label_attr': { 'class': 'ec-label' }}) }}
-							</dt>
-							<dd>
-								<div class="ec-telInput{{ has_errors(form.fax) ? ' error' }}">
-									{{ form_widget(form.fax) }}
-									{{ form_errors(form.fax) }}
-								</div>
-							</dd>
-						</dl>
-						<dl>
-							<dt>
-								{{ form_label(form.homepage_url, 'ホームページの URL', { 'label_attr': { 'class': 'ec-label' }}) }}
-							</dt>
-							<dd>
-								<div class="ec-input{{ has_errors(form.homepage_url) ? ' error' }}">
-									{{ form_widget(form.homepage_url) }}
-									{{ form_errors(form.homepage_url) }}
-								</div>
-							</dd>
-						</dl>
-						<dl>
-							<dt>
-								{{ form_label(form.pr_text, 'メッセージ', { 'label_attr': { 'class': 'ec-label' }}) }}
-							</dt>
-							<dd>
-								<div class="ec-input{{ has_errors(form.pr_text) ? ' error' }}">
-									{{ form_widget(form.pr_text) }}
-									{{ form_errors(form.pr_text) }}
-								</div>
-							</dd>
-						</dl>
-						<dl>
-							<dt>
-								{{ form_label(form.thumbnail_path, '紹介ページ用画像', { 'label_attr': {'class': 'ec-label' }}) }}
-							</dt>
-							<dd>
-								<div class="media-body">
-									<img id="img_thumbnail" class="img_preview mb-2 {{ conservation.thumbnailPath ? '' : 'hidden' }}" src="{{ conservation.thumbnailPath }}" alt="..." style="width: 200px; border: 1px solid #ddd;"/>
-									{{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;' } }) }}
-									{{ form_errors(form.thumbnail_path) }}
-									<input type="hidden" name="thumbnail_path" id="adoption_src_path">
-								</div>
-								<a class="btn btn-ec-regular mr-2" onclick="$('#conservations_thumbnail_path').click()">
-									{{ 'admin.common.file_select'|trans }}
-								</a>
-							</dd>
-						</dl>
-					</div>
-				</div>
-				<div class="ec-registerRole__actions">
-					<div class="ec-off4Grid">
-						<div class="ec-off4Grid__cell">
-							<button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
+									</dd>
+								</dl>
+							</div>
 						</div>
-					</div>
+						<div class="ec-registerRole__actions">
+							<div class="ec-off4Grid">
+								<div class="ec-off4Grid__cell">
+									<button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
+								</div>
+							</div>
+						</div>
+					</form>
 				</div>
-			</form>
+			</div>
 		</div>
-	</div>
+	</section>
 	<div class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" id="modal-crop" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">

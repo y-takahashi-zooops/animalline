@@ -222,6 +222,7 @@ FOOTER
 footer{
   background-color:#eeeeee;
   padding:60px 0 40px;
+  margin-top: 60px;
 }
 .pagetop{
   position:fixed;
