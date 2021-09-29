@@ -10,11 +10,11 @@
             data: {
                 'id': $('#barcode').val().split("0").pop()
             },
-        }).done(function (data) {console.log(data.isDisable)
+        }).done(function (data) {
             if(data.isDisable){
                 $('#name').text(data.shipping_name ?? '')
                 $('#input-hidden').val(data.dnaId);
-                 $('#submit').removeAttr('disabled');
+                $('#submit').removeAttr('disabled');
             } else {
                 $('#submit').attr('disabled',true);
                  alert('データが存在しません');
