@@ -1,6 +1,14 @@
 {% extends 'animalline/veqta/frame.twig' %}
 
 {% block main %}
+<style type="text/css">
+    label.error {
+        display: inline-block;
+        color: red;
+        width: 200px;
+    }
+</style>
+
 <div class="center_section">
     <div class="row">
         <div class="col-12">
@@ -65,6 +73,26 @@
     $(function () {
         $('#file').on('change', function () {
             uploadFile();
+        });
+
+        $("#form").validate({
+            rules: {
+                barcode: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 6
+                }
+            },
+            messages: {
+                barcode: {
+                    required: "サンプルバーコードを入力してください",
+                    minlength: "サンプルバーコードは6文字である必要があります",
+                    maxlength: "サンプルバーコードは6文字である必要があります"
+                }
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
         });
     });
 
