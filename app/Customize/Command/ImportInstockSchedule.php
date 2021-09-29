@@ -58,14 +58,15 @@ class ImportInstockSchedule extends Command
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      * @param InstockScheduleRepository $instockScheduleRepository
      * @param ProductStockRepository $productStockRepository
-     * 
+     *
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
+        EntityManagerInterface          $entityManager,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
-        ProductStockRepository $productStockRepository
-    ) {
+        ProductStockRepository          $productStockRepository
+    )
+    {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
@@ -128,8 +129,8 @@ class ImportInstockSchedule extends Command
                 $Instock->setItemCode01($data[8])
                     ->setArrivalQuantity($data[12] ? $data[12] : NULL)
                     ->setArrivalBox($data[13] ? $data[13] : NULL);
-                $ProductStock = $this->productStockRepository->findOneBy(['ProductClass' => $Instock]);
-                $ProductStock->setStock($ProductStock->getStock()+$Instock->getArrivalQuantity());
+                $ProductStock = $this->productStockRepository->findOneBy(['ProductClass' => $Instock->getProductClass()]);
+                $ProductStock->setStock($ProductStock->getStock() + $Instock->getArrivalQuantity());
                 $em->persist($Instock);
                 $em->persist($ProductStock);
             }
