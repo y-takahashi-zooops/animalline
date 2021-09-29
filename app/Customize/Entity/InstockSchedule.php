@@ -4,6 +4,7 @@ namespace Customize\Entity;
 
 use Customize\Repository\InstockScheduleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Eccube\Entity\ProductClass;
 
 /**
  * @ORM\Table(name="ald_instock_schedule")
@@ -71,6 +72,12 @@ class InstockSchedule
      * @ORM\Column(name="arrival_box", type="smallint", nullable=true)
      */
     private $arrival_box;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ProductClass::class)
+     * @ORM\JoinColumn(name="product_class_id", nullable=false)
+     */
+    private $ProductClass;
 
     /**
      * @var \DateTime
@@ -207,6 +214,18 @@ class InstockSchedule
     public function setArrivalBox(?int $arrival_box): self
     {
         $this->arrival_box = $arrival_box;
+
+        return $this;
+    }
+
+    public function getProductClass(): ?ProductClass
+    {
+        return $this->ProductClass;
+    }
+
+    public function setProductClass(?ProductClass $product_class_id): self
+    {
+        $this->ProductClass = $product_class_id;
 
         return $this;
     }

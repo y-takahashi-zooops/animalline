@@ -45,6 +45,11 @@ class DnaCheckStatusHeader
     private $shipping_status;
 
     /**
+     * @ORM\Column(name="shipping_name", type="string", length=255, nullable=true)
+     */
+    private $shipping_name;
+
+    /**
      * @ORM\Column(name="kit_unit", type="smallint", nullable=true)
      */
     private $kit_unit;
@@ -164,6 +169,18 @@ class DnaCheckStatusHeader
     public function setShippingStatus(int $shipping_status): self
     {
         $this->shipping_status = $shipping_status;
+
+        return $this;
+    }
+
+    public function getShippingName(): ?string
+    {
+        return $this->shipping_name;
+    }
+
+    public function setShippingName(string $shipping_name): self
+    {
+        $this->shipping_name = $shipping_name;
 
         return $this;
     }

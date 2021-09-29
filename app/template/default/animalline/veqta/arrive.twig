@@ -1,35 +1,66 @@
 {% extends 'animalline/veqta/frame.twig' %}
-
+{% block javascript %}
+<script>
+    $(document).on('keyup', '#barcode', function() {
+    if ($(this).val().length == 6) {
+    $.ajax({
+    url: '{{ url('arrive_get_user') }}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'id': $('#barcode').val().split("0").pop()
+            },
+        }).done(function (data) {
+            if(data.isDisable){
+                $('#name').text(data.shipping_name ?? '')
+                $('#input-hidden').val(data.dnaId);
+                $('#submit').removeAttr('disabled');
+            } else {
+                $('#submit').attr('disabled',true);
+                 alert('データが存在しません');
+            }
+        }).fail(function () {
+            console.log('search DNA failed.');
+        });
+    } else {
+        $('#name').text('')
+    }
+})
+</script>
+{% endblock %}
 {% block main %}
-<div class="center_section">
-    <div class="row">
-        <div class="col-12">
-            <div class="row">
-                <div class="col-6">
-                    検体バーコード読み込み
+    <div class="center_section">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        検体バーコード読み込み
+                    </div>
+                    <div class="col-6">
+                        <input type="text" class="w-100" id="barcode" maxlength="6">
+                    </div>
                 </div>
-                <div class="col-6">
-                    <input type="text" class="w-100" value="123456789">
+
+                <div class="row">
+                    <div class="col-6">
+                        検体送付者名
+                    </div>
+                    <div class="col-6">
+                        <span id="name"></span>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <form name="form-receive-kit" id="form-receive-kit" method="post">
+                        <input type="hidden" name="dna-id" value="" id="input-hidden">
+                        <button type="submit" class="btn btn-warning w-100 m-1" id="submit" disabled>キット受領処理</button>
+                    </form>
+                </div>
+                <div class="col-12">
+                    <a href="{{ url('veqta_index') }}" class="btn btn-warning w-100 m-1">戻る</a>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-6">
-                    検体送付者名
-                </div>
-                <div class="col-6">
-                    鈴木　太郎様
-                </div>
-            </div>
-
-            <div class="col-12">
-                <a href="{{url('veqta_arrive')}}" class="btn btn-warning w-100 m-1">キット受領処理</a>
-            </div>
-            <div class="col-12">
-                <a href="{{url('veqta_index')}}" class="btn btn-warning w-100 m-1">戻る</a>
-            </div>
         </div>
-        
     </div>
-</div>
 {% endblock %}

@@ -184,7 +184,8 @@ class ProductController extends BaseProductController
         InstockScheduleRepository       $instockScheduleRepository,
         ListInstockQueryService         $listInstockQueryService,
         OrderItemTypeRepository         $orderItemTypeRepository
-    ) {
+    )
+    {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
         $this->productImageRepository = $productImageRepository;
@@ -1292,22 +1293,22 @@ class ProductController extends BaseProductController
             $OriginItems = new ArrayCollection();
             foreach ($TargetInstock->getInstockSchedule() as $schedule) {
                 $item = new OrderItem;
+                $item->setId($schedule->getId());
                 $item->setOrderItemType($this->orderItemTypeRepository->find(1));
                 $item->setQuantity($schedule->getArrivalQuantitySchedule());
                 $item->setTaxRate($schedule->getArrivalBoxSchedule());
-                $productClass = $this->productClassRepository->findOneBy(['code' => $schedule->getJanCode()]);
-                $item->setPrice($productClass->getItemCost());
-                $item->setProduct($productClass->getProduct());
-                $item->setProductClass($productClass);
-                $item->setProductName($productClass->getProduct()->getName());
-                $item->setProductCode($schedule->getJanCode());
-                if ($productClass->getClassCategory1()) {
+                $item->setPrice($schedule->getProductClass()->getItemCost());
+                $item->setProduct($schedule->getProductClass()->getProduct());
+                $item->setProductClass($schedule->getProductClass());
+                $item->setProductName($schedule->getProductClass()->getProduct()->getName());
+                $item->setProductCode($schedule->getProductClass()->getCode());
+                if ($schedule->getProductClass()->getClassCategory1()) {
                     $item->setClassName1('フレーバー');
-                    $item->setClassCategoryName1($productClass->getClassCategory1()->getName());
+                    $item->setClassCategoryName1($schedule->getProductClass()->getClassCategory1()->getName());
                 }
-                if ($productClass->getClassCategory2()) {
+                if ($schedule->getProductClass()->getClassCategory2()) {
                     $item->setClassName2('サイズ');
-                    $item->setClassCategoryName2($productClass->getClassCategory2()->getName());
+                    $item->setClassCategoryName2($schedule->getProductClass()->getClassCategory2()->getName());
                 }
                 $OriginItems->add($item);
             }
@@ -1341,25 +1342,46 @@ class ProductController extends BaseProductController
                 case 'register':
                     log_info('受注登録開始', [$TargetInstock->getId()]);
                     if ($form->isValid()) {
-                        foreach ($this->instockScheduleRepository->findBy(['InstockHeader'=>$TargetInstock->getId()]) as $schedule) {
-                            $this->entityManager->remove($schedule);
-                        }
                         $TargetInstock->setInstockSchedule(); // clear temp orderitem data
                         $this->entityManager->persist($TargetInstock);
                         $this->entityManager->flush();
-                        foreach ($items as $key => $item) {
-                            $InstockSchedule = (new InstockSchedule())
-                                ->setInstockHeader($TargetInstock)
-                                ->setWarehouseCode('00001')
-                                ->setItemCode01('')
-                                ->setItemCode02('')
-                                ->setJanCode($item->getProductCode())
-                                ->setPurchasePrice($subTotalPrices[$key])
-                                ->setArrivalQuantitySchedule($item->getQuantity())
-                                ->setArrivalBoxSchedule($item->getTaxRate());
-                            $this->entityManager->persist($InstockSchedule);
-                            $this->entityManager->flush();
+
+                        $idScheduleDb = [];
+                        $idScheduleReq = [];
+                        foreach ($this->instockScheduleRepository->findBy(['InstockHeader' => $TargetInstock]) as $scheduleHeader) {
+                            array_push($idScheduleDb, $scheduleHeader->getId());
                         }
+                        foreach ($items as $key => $item) {
+                            array_push($idScheduleReq, $item['id']);
+                            if ($item['id']) {
+                                $InstockSchedule = $this->instockScheduleRepository->find($item['id']);
+                                $InstockSchedule->setJanCode($item->getProductCode())
+                                    ->setPurchasePrice($subTotalPrices[$key])
+                                    ->setArrivalQuantitySchedule($item->getQuantity())
+                                    ->setArrivalBoxSchedule($item->getTaxRate())
+                                    ->setProductClass($item->getProductClass());
+                            } else {
+                                $InstockSchedule = (new InstockSchedule())
+                                    ->setInstockHeader($TargetInstock)
+                                    ->setWarehouseCode('00001')
+                                    ->setItemCode01('')
+                                    ->setItemCode02('')
+                                    ->setJanCode($item->getProductCode())
+                                    ->setPurchasePrice($subTotalPrices[$key])
+                                    ->setArrivalQuantitySchedule($item->getQuantity())
+                                    ->setArrivalBoxSchedule($item->getTaxRate())
+                                    ->setProductClass($item->getProductClass());
+                            }
+                            $this->entityManager->persist($InstockSchedule);
+                        }
+                        foreach ($idScheduleDb as $item) {
+                            if (!in_array($item, $idScheduleReq)) {
+                                $scheduleDel = $this->instockScheduleRepository->find($item);
+                                $this->entityManager->remove($scheduleDel);
+                            }
+                        }
+                        $this->entityManager->flush();
+
                         $this->addSuccess('admin.common.save_complete', 'admin');
                         log_info('受注登録完了', [$TargetInstock->getId()]);
                         return $this->redirectToRoute($id ? 'admin_product_instock_list' : 'admin_product_instock_registration_new');

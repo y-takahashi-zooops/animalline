@@ -1100,7 +1100,7 @@ class BreederMemberController extends AbstractController
      *
      * 検査キット請求
      *
-     * @Route("/breeder/member/dna_kit/", name="breeder_examination_kit", methods={"GET","POST"})
+     * @Route("/breeder/member/dna_kit", name="breeder_examination_kit", methods={"GET","POST"})
      * @Template("animalline/breeder/member/examination_kit_list.twig")
      */
     public function breeder_examination_kit(Request $request, PaginatorInterface $paginator)

@@ -67,9 +67,8 @@ class BreederKitDnaType extends AbstractType
                     new Assert\NotBlank()
                 ],
             ])
-            ->add('name', TextType::class, [
+            ->add('shipping_name', TextType::class, [
                 'required' => false,
-                'mapped' => false,
                 'attr' => [
                     'readonly' => true,
                 ]
