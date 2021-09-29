@@ -23,11 +23,7 @@ use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Eccube\Event\EccubeEvents;
-use Eccube\Event\EventArgs;
-use Eccube\Form\Type\Front\ContactType;
 use Exception;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -39,15 +35,39 @@ class VeqtaController extends AbstractController
     protected $dnaCheckStatusHeaderRepository;
 
     /**
+     * @var BreederPetsRepository
+     */
+    protected $breederPetsRepository;
+
+    /**
+     * @var ConservationPetsRepository
+     */
+    protected $conservationPetsRepository;
+
+    /**
+     * @var DnaCheckStatusRepository
+     */
+    protected $dnaCheckStatusRepository;
+
+    /**
      * VeqtaController constructor.
      *
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+     * @param BreederPetsRepository $breederPetsRepository
+     * @param ConservationPetsRepository $conservationPetsRepository
+     * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      */
 
     public function __construct(
-        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
+        BreederPetsRepository $breederPetsRepository,
+        ConservationPetsRepository $conservationPetsRepository,
+        DnaCheckStatusRepository $dnaCheckStatusRepository
     ) {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
+        $this->breederPetsRepository = $breederPetsRepository;
+        $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
     }
 
     /**
@@ -73,22 +93,21 @@ class VeqtaController extends AbstractController
      * @Route("/veqta/result", name="veqta_result")
      * @Template("animalline/veqta/result.twig")
      */
-    public function result(Request $request, BreederPetsRepository $breederPetsRepository, ConservationPetsRepository $conservationPetsRepository, DnaCheckStatusRepository $dnaCheckStatusRepository)
+    public function result(Request $request)
     {
         if ($request->isMethod('POST')) {
             $barcode = $request->get('barcode');
             $checkStatus = $request->get('check_status');
 
-
             $siteType = $barcode[0];
             $dnaId = substr($barcode, 1);
-            $Dna = $dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
+            $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
             if (!$Dna) {
                 throw new NotFoundHttpException();
             }
             $Pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
-                $breederPetsRepository->find($Dna->getPetId()) :
-                $conservationPetsRepository->find($Dna->getPetId());
+                $this->breederPetsRepository->find($Dna->getPetId()) :
+                $this->conservationPetsRepository->find($Dna->getPetId());
             if (!$Pet) {
                 throw new NotFoundHttpException();
             }
@@ -105,8 +124,8 @@ class VeqtaController extends AbstractController
                     }
                 default: {
                         $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL);
-                        $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: ???, 62: ????.
-                        $Pet->setReleaseStatus(1);
+                        $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+                        $Pet->setReleaseStatus(AnilineConf::RELEASE_STATUS_PUBLIC);
                         $Pet->setReleaseDate(Carbon::now());
                     }
             }
@@ -120,7 +139,7 @@ class VeqtaController extends AbstractController
             $entityManager->flush();
         }
 
-		$barCode = $request->get('barCode');
+        $barCode = $request->get('barCode');
         $dnaCheckStatusId = (int)substr($barCode, 1);
 
         $dnaCheckStatus = $this->dnaCheckStatusHeaderRepository->find($dnaCheckStatusId);
