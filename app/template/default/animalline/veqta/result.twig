@@ -11,14 +11,14 @@
 
 <div class="center_section">
     <div class="row">
-        <form id="form" name="form" action="{{ url('veqta_result') }}" method="post">
-            <div class="col-12">
+        <div class="col-12">
+            <form method="POST" action="" id="form">
                 <div class="row">
                     <div class="col-6">
                         検体バーコード読み込み
                     </div>
                     <div class="col-6">
-                        <input type="text" class="w-100" id="barCode" name="barCode" required>
+                        <input type="text" class="w-100" placeholder="123456" name="barcode">
                     </div>
                 </div>
 
@@ -27,7 +27,7 @@
                         検体送付者名
                     </div>
                     <div class="col-6">
-                        鈴木　太郎様
+                        <span id="sender_name">鈴木　太郎様</span>
                     </div>
                 </div>
 
@@ -36,12 +36,12 @@
                         検査結果
                     </div>
                     <div class="col-6">
-                        <select>
-                            <option value="A">選択してください</option>
-                            <option value="B">検体異常</option>
-                            <option value="B">クリア</option>
-                            <option value="B">キャリア</option>
-                            <option value="B">アフェクテッド</option>
+                        <select name="check_status" required>
+                            <option value="">選択してください</option>
+                            <option value="4">検体異常</option>
+                            <option value="6_1">クリア</option>
+                            <option value="6_2">キャリア</option>
+                            <option value="7">アフェクテッド</option>
                         </select>
                     </div>
                 </div>
@@ -51,19 +51,18 @@
                         検査結果PDF
                     </div>
                     <div class="col-6">
-                        <input type="file" accept=".pdf">(*.pdf)</input>
+                        <input type="file" accept=".pdf" name="result_pdf">(*.pdf)</input>
                     </div>
                 </div>
 
                 <div class="col-12">
-                    <button class="btn btn-warning w-100 m-1" id="resultRegistration" type="submit">検査結果登録</button>
+                    <button type="submit" class="btn btn-warning w-100 m-1">検査結果登録</button>
                 </div>
                 <div class="col-12">
                     <a href="{{url('veqta_index')}}" class="btn btn-warning w-100 m-1">戻る</a>
                 </div>
-            </div>
-        </form>
-        
+            </form>
+        </div>
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -71,14 +70,14 @@
 $(document).ready(function() {
     $("#form").validate({
         rules: {
-            barCode: {
+            barcode: {
                 required: true,
                 minlength: 6,
                 maxlength: 6
             }
         },
         messages: {
-            barCode: {
+            barcode: {
                 required: "サンプルバーコードを入力してください",
                 minlength: "サンプルバーコードは6文字である必要があります",
                 maxlength: "サンプルバーコードは6文字である必要があります"
