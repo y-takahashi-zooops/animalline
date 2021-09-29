@@ -105,9 +105,11 @@
             }
         }).done(function ({ shippingName, hasRecord }) {
             $('#sender_name').text(shippingName);
+            $('#dnaTestResultRegist').attr('disabled', !hasRecord);
             if (!hasRecord) alert('データが存在しません。');
         }).fail(function (err) {
             $('#sender_name').text('');
+            $('#dnaTestResultRegist').attr('disabled', true);
             console.error(err);
         });
     }
