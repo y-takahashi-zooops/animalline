@@ -4,6 +4,8 @@ namespace Customize\Command;
 
 use Customize\Config\AnilineConf;
 use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Entity\ProductStock;
+use Eccube\Repository\ProductStockRepository;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,9 +42,14 @@ class ImportInstockSchedule extends Command
     protected $instockScheduleHeaderRepository;
 
     /**
-     * @var instockScheduleRepository
+     * @var InstockScheduleRepository
      */
     protected $instockScheduleRepository;
+
+    /**
+     * @var ProductStockRepository
+     */
+    protected $productStockRepository;
 
     /**
      * Import instock schedule constructor.
@@ -50,17 +57,20 @@ class ImportInstockSchedule extends Command
      * @param EntityManagerInterface $entityManager
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      * @param InstockScheduleRepository $instockScheduleRepository
+     * @param ProductStockRepository $productStockRepository
      * 
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
-        InstockScheduleRepository       $instockScheduleRepository
+        InstockScheduleRepository       $instockScheduleRepository,
+        ProductStockRepository $productStockRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
         $this->instockScheduleRepository = $instockScheduleRepository;
+        $this->productStockRepository = $productStockRepository;
     }
 
     protected function configure()
@@ -114,12 +124,14 @@ class ImportInstockSchedule extends Command
             $Header->setArrivalDate($data[11] ? new DateTime($data[11]) : NULL);
             $em->persist($Header);
             $Instock = $this->instockScheduleRepository->findOneBy(['id' => $instockId, 'InstockHeader' => $headerId]);
-
             if ($Instock) {
                 $Instock->setItemCode01($data[8])
                     ->setArrivalQuantity($data[12] ? $data[12] : NULL)
                     ->setArrivalBox($data[13] ? $data[13] : NULL);
+                $ProductStock = $this->productStockRepository->findOneBy(['ProductClass' => $Instock]);
+                $ProductStock->setStock($ProductStock->getStock()+$Instock->getArrivalQuantity());
                 $em->persist($Instock);
+                $em->persist($ProductStock);
             }
 
             // 端数分を更新
