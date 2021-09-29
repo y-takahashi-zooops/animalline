@@ -49,8 +49,7 @@ class VeqtaController extends AbstractController
     public function __construct(
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
         DnaCheckStatusRepository       $dnaCheckStatusRepository
-    )
-    {
+    ) {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
     }
@@ -88,23 +87,27 @@ class VeqtaController extends AbstractController
     /**
      * @Route("/veqta/arrive/get_user", name="arrive_get_user")
      * @param Request $request
+     * @return JsonResponse
      */
-    public function getArriveUser(Request $request)
+    public function getArriveUser(Request $request): JsonResponse
     {
         $shippingName = null;
         $show = false;
         $name = null;
-        $dnaCheckStatuse = $this->dnaCheckStatusRepository->find($request->get('id'));
-        if ($dnaCheckStatuse) {
-            $header = $this->dnaCheckStatusHeaderRepository->find($dnaCheckStatuse->getDnaHeader());
-            if ($dnaCheckStatuse->getCheckStatus() == 3) {
+        $dnaCheckStatus = $this->dnaCheckStatusRepository->find($request->get('id'));
+        if ($dnaCheckStatus) {
+            $header = $this->dnaCheckStatusHeaderRepository->find($dnaCheckStatus->getDnaHeader());
+            if ($dnaCheckStatus->getCheckStatus() == 3) {
                 $show = true;
                 $shippingName = $header->getShippingName();
             }
-            return new JsonResponse(array(['name' => $shippingName, 'show' => $show, 'id' => $request->get('id')]));
         }
-
-        return new JsonResponse(array(['name' => $shippingName, 'show' => $show, 'id' => $request->get('id')]));
+        $data = [
+            'shipping_name' => $shippingName,
+            'isDisable' => $show,
+            'dnaId' => $request->get('id')
+        ];
+        return new JsonResponse($data);
     }
 
     /**

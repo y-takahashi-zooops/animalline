@@ -1,28 +1,30 @@
 {% extends 'animalline/veqta/frame.twig' %}
 {% block javascript %}
 <script>
-    $('#barcode').on('blur', function(){
+    $(document).on('keyup', '#barcode', function() {
+    if ($(this).val().length == 6) {
     $.ajax({
-        url: '{{ url('arrive_get_user') }}',
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            'id': $('#barcode').val().split("0").pop()
-        },
-    }).done(function (data) {
-           console.log(data)
-        var name = data[0].name;
-        if(data[0].show){
-            $('#name').text(name??'')
-            $('#input-hidden').val(data[0].id);
-             $('#submit').removeAttr('disabled');
-        } else {
-            $('#submit').attr('disabled',true);
-             alert('データが存在しません');
-        }
-    }).fail(function (data) {
-        alert('search product failed.');
-    });
+    url: '{{ url('arrive_get_user') }}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'id': $('#barcode').val().split("0").pop()
+            },
+        }).done(function (data) {console.log(data.isDisable)
+            if(data.isDisable){
+                $('#name').text(data.shipping_name ?? '')
+                $('#input-hidden').val(data.dnaId);
+                 $('#submit').removeAttr('disabled');
+            } else {
+                $('#submit').attr('disabled',true);
+                 alert('データが存在しません');
+            }
+        }).fail(function () {
+            console.log('search DNA failed.');
+        });
+    } else {
+        $('#name').text('')
+    }
 })
 </script>
 {% endblock %}
@@ -44,13 +46,13 @@
                         検体送付者名
                     </div>
                     <div class="col-6">
-                        <p id="name"></p>
+                        <span id="name"></span>
                     </div>
                 </div>
 
                 <div class="col-12">
                     <form name="form-receive-kit" id="form-receive-kit" method="post">
-                        <input type="hidden" name="dna-id" value="4" id="input-hidden">
+                        <input type="hidden" name="dna-id" value="" id="input-hidden">
                         <button type="submit" class="btn btn-warning w-100 m-1" id="submit" disabled>キット受領処理</button>
                     </form>
                 </div>
