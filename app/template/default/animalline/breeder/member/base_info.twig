@@ -11,7 +11,7 @@
             <div class="ec-off1Grid">
                 <div class="ec-off1Grid__cell">
                     <form method="post" action="#" novalidate name="update-baseinfo-form">
-                        <h4>ブリーダー情報</h4>
+                        <h2>ブリーダー情報</h2>
                         {{ form_widget(form._token) }}
                         <div class="ec-borderedDefs">
                             <div class="mb-5">
@@ -137,20 +137,20 @@
                                                 class="img_preview mb-2 {{ breederData.thumbnailPath ? '' : 'hidden' }}"
                                                 src="{{ breederData.thumbnailPath }}" alt="..."
                                                 style="width: 200px; border: 1px solid #ddd;"/>
-                                            {{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;' } }) }}
+                                            {{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'thumbnail_path'  } }) }}
                                             {{ form_errors(form.thumbnail_path) }}
                                             <input type="hidden" name="thumbnail_path" id="breeder_src_path">
                                         </div>
-                                        <a class="btn btn-ec-regular mr-2" onclick="$('#breeders_thumbnail_path').click()">
+                                        <a class="btn btn-ec-regular mr-2" onclick="$('#breeders_thumbnail_path').click()" style="background: #f0f0f0; border: 1px solid black;">
                                             {{ 'admin.common.file_select'|trans }}
                                         </a>
                                     </dd>
                                 </dl>
                             </div>
                             <div class="mb-5">
-                                <div class="row" style="border-bottom:1px dotted #ccc">
-                                    <h4 class="mr-4 mt-1">動物取扱業登録証情報</h4>
-                                    <button class="btn btn-ec-regular btn-secondary mb-2" id="copy" type="button">ブリーダー情報コピー</button>
+                                <div class="d-flex" style="border-bottom:1px dotted #ccc">
+                                    <h2 class="mr-4 mt-1">動物取扱業登録証情報</h2>
+                                    <button class="btn btn-ec-regular btn-secondary m-2" id="copy" type="button">ブリーダー情報コピー</button>
                                 </div>
                                 <dl>
                                     <dt>
@@ -161,6 +161,25 @@
                                             {{ form_widget(form.license_name,  { 'attr': { 'placeholder': '運営責任者氏名' }}) }}
                                             {{ form_errors(form.license_name) }}
                                         </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.license_thumbnail_path, '画像', { 'label_attr': {'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="media-body">
+                                            <img id="img_license_thumbnail"
+                                                class="img_preview mb-2 {{ breederData.licenseThumbnailPath ? '' : 'hidden' }}"
+                                                src="{{ breederData.licenseThumbnailPath }}" alt="..."
+                                                style="width: 200px; border: 1px solid #ddd;"/>
+                                                {{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'thumbnail_path'  } }) }}
+                                                {{ form_errors(form.license_thumbnail_path) }}
+                                            <input type="hidden" name="license_thumbnail_path" id="breeder_license_src_path">
+                                        </div>
+                                        <a class="btn btn-ec-regular mr-2" onclick="$('#breeders_license_thumbnail_path').click()" style="background: #f0f0f0; border: 1px solid black;">
+                                            {{ 'admin.common.file_select'|trans }}
+                                        </a>
                                     </dd>
                                 </dl>
                                 <dl>

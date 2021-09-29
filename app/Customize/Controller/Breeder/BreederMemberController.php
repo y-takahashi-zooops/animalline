@@ -559,10 +559,12 @@ class BreederMemberController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $thumbnail_path = $request->get('thumbnail_path') ? $request->get('thumbnail_path') : $breederData->getThumbnailPath();
+            $license_thumbnail_path = $request->get('license_thumbnail_path') ? $request->get('license_thumbnail_path') : $breederData->getLicenseThumbnailPath();
 
             $breederData->setBreederPref($breederData->getPrefBreeder())
                 ->setLicensePref($breederData->getPrefLicense())
-                ->setThumbnailPath($thumbnail_path);
+                ->setThumbnailPath($thumbnail_path)
+                ->setLicenseThumbnailPath($license_thumbnail_path);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederData);
             $entityManager->flush();

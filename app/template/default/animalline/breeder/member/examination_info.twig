@@ -23,10 +23,12 @@
 								<span class="ec-required">必須</span>
 							</dt>
 							<dd>
-								{{ form_widget(form.pedigree_organization[0]) }}
-								<div class="ec-select">  
-									{{ form_widget(form.group_organization) }}
-									{{ form_errors(form.group_organization) }}
+								<div class="input-group-append">
+									{{ form_widget(form.pedigree_organization[0]) }}
+									<div class="ec-select ml-4">  
+										{{ form_widget(form.group_organization) }}
+										{{ form_errors(form.group_organization) }}
+									</div>
 								</div>
 								{{ form_errors(form.pedigree_organization) }}
 								{{ form_widget(form.pedigree_organization[1]) }}
@@ -43,9 +45,12 @@
 								<span class="ec-required">必須</span>
 							</dt>
 							<dd>
-								<div class="ec-input">
-									{{ form_widget(form.breeding_pet_count) }}
-									{{ form_errors(form.breeding_pet_count) }}
+								<div class="input-group-append">
+									<div class="ec-input">
+										{{ form_widget(form.breeding_pet_count) }}
+										{{ form_errors(form.breeding_pet_count) }}
+									</div>
+									<label class="ml-2">頭</label>
 								</div>
 							</dd>
 						</dl>
@@ -55,35 +60,47 @@
 								<span class="ec-required">必須</span>
 							</dt>
 							<dd>
-								
-								<div class="ec-radio">
-									<label>
-										<span>1～3歳</span>
-									</label>
+								<div class="col-12">
+									<div class="row">
+										<div class="col-4">
+											1～3歳                                                          
+										</div>
+										<div class="col-8 input-group-append">
+											<div class="ec-select">
+												{{ form_widget(form.parent_pet_count_1) }}
+												{{ form_errors(form.parent_pet_count_1) }}
+											</div>
+											<label class="ml-2">頭</label>
+										</div>
+									</div>
 								</div>
-								<div class="ec-select">
-									{{ form_widget(form.parent_pet_count_1) }}
-									{{ form_errors(form.parent_pet_count_1) }}
+								<div class="col-12">
+									<div class="row">
+										<div class="col-4">
+											4～6歳                                                          
+										</div>
+										<div class="col-8 input-group-append">
+											<div class="ec-select">
+												{{ form_widget(form.parent_pet_count_2) }}
+												{{ form_errors(form.parent_pet_count_2) }}
+											</div>
+											<label class="ml-2">頭</label>
+										</div>
+									</div>
 								</div>
-
-								<div class="ec-radio">
-									<label>
-										<span>4～6歳</span>
-									</label>
-								</div>
-								<div class="ec-select">
-									{{ form_widget(form.parent_pet_count_2) }}
-									{{ form_errors(form.parent_pet_count_2) }}
-								</div>
-								
-								<div class="ec-radio">
-									<label>
-										<span>7歳以上</span>
-									</label>
-								</div>
-								<div class="ec-select">
-									{{ form_widget(form.parent_pet_count_3) }}
-									{{ form_errors(form.parent_pet_count_3) }}
+								<div class="col-12">
+									<div class="row">
+										<div class="col-4">
+											7歳以上                                                          
+										</div>
+										<div class="col-8 input-group-append">
+											<div class="ec-select">
+												{{ form_widget(form.parent_pet_count_3) }}
+												{{ form_errors(form.parent_pet_count_3) }}
+											</div>
+											<label class="ml-2">頭</label>
+										</div>
+									</div>
 								</div>
 							</dd>
 						</dl>
@@ -93,34 +110,47 @@
 								<span class="ec-required">必須</span>
 							</dt>
 							<dd>
-								<div class="ec-radio">
-									<label for="ParentPetBuyFrom_1">
-										<span>ブリーダー</span>
-									</label>
+								<div class="col-12">
+									<div class="row">
+										<div class="col-4">
+											ブリーダー                                                          
+										</div>
+										<div class="col-8 input-group-append">
+											<div class="ec-select">
+												{{ form_widget(form.parent_pet_buy_place_1) }}
+												{{ form_errors(form.parent_pet_buy_place_1) }}
+											</div>
+											<label class="ml-2">頭</label>
+										</div>
+									</div>
 								</div>
-								<div class="ec-select">
-									{{ form_widget(form.parent_pet_buy_place_1) }}
-									{{ form_errors(form.parent_pet_buy_place_1) }}
+								<div class="col-12">
+									<div class="row">
+										<div class="col-4">
+											ショップ                                                          
+										</div>
+										<div class="col-8 input-group-append">
+											<div class="ec-select">
+												{{ form_widget(form.parent_pet_buy_place_2) }}
+												{{ form_errors(form.parent_pet_buy_place_2) }}
+											</div>
+											<label class="ml-2">頭</label>
+										</div>
+									</div>
 								</div>
-
-								<div class="ec-radio">
-									<label for="ParentPetBuyFrom_2">
-										<span>ショップ</span>
-									</label>
-								</div>
-								<div class="ec-select">
-									{{ form_widget(form.parent_pet_buy_place_2) }}
-									{{ form_errors(form.parent_pet_buy_place_2) }}
-								</div>
-
-								<div class="ec-radio">
-									<label for="ParentPetBuyFrom_3">
-										<span>その他</span>
-									</label>
-								</div>
-								<div class="ec-select">
-									{{ form_widget(form.parent_pet_buy_place_3) }}
-									{{ form_errors(form.parent_pet_buy_place_3) }}
+								<div class="col-12">
+									<div class="row">
+										<div class="col-4">
+											その他                                                          
+										</div>
+										<div class="col-8 input-group-append">
+											<div class="ec-select">
+												{{ form_widget(form.parent_pet_buy_place_3) }}
+												{{ form_errors(form.parent_pet_buy_place_3) }}
+											</div>
+											<label class="ml-2">頭</label>
+										</div>
+									</div>
 								</div>
 							</dd>
 						</dl>
@@ -131,62 +161,86 @@
 							</dt>
 							<dd>
 								<label class="ec-label required mr-2">{{ petType }}舎運営者　1名</label><br />
-									
 								
-								<label class="ec-label required mr-2">平均労働時間（時間/1週間）</label>
-								<div class="ec-select">
-									{{ form_widget(form.owner_worktime_ave) }}
-									{{ form_errors(form.owner_worktime_ave) }}
+								<label class="ec-label required">一人あたり平均労働時間</label>
+								<div class="input-group-append">
+									<div class="ec-input">
+										{{ form_widget(form.owner_worktime_ave) }}
+										{{ form_errors(form.owner_worktime_ave) }}
+									</div>
+									<label class="ml-2">時間/1週間</label>
+								</div>
+													
+								<label class="ec-label required mr-2">家族</label>
+								<div class="input-group-append">
+									<div class="ec-input">
+										{{ form_widget(form.family_staff_count) }}
+										{{ form_errors(form.family_staff_count) }}
+									</div>
+									<label class="ml-2">名</label>
+								</div>
+
+								<label class="ec-label required">一人あたり平均労働時間</label>
+								<div class="input-group-append">
+									<div class="ec-input">
+										{{ form_widget(form.family_staff_worktime_ave) }}
+										{{ form_errors(form.family_staff_worktime_ave) }}
+									</div>
+									<label class="ml-2">時間/1週間</label>
 								</div>
 								
-								<label class="ec-label required mr-2">家族（人数）</label>
-								<div class="ec-select">
-									{{ form_widget(form.family_staff_count) }}
-									{{ form_errors(form.family_staff_count) }}
+								<label class="ec-label required mr-2">社員</label>
+								<div class="input-group-append">
+									<div class="ec-input">
+										{{ form_widget(form.fulltime_staff_count) }}
+										{{ form_errors(form.fulltime_staff_count) }}
+									</div>
+									<label class="ml-2">名</label>
 								</div>
 
-								<label class="ec-label required mr-2">一人あたり平均労働時間（時間/1週間）</label>
-								<div class="ec-select">
-									{{ form_widget(form.family_staff_worktime_ave) }}
-									{{ form_errors(form.family_staff_worktime_ave) }}
-								</div>
-								<span class="ml-1">時間/1週間あたり</span>
-
-								<label class="ec-label required mr-2">社員（人数）</label>
-								<div class="ec-select">
-									{{ form_widget(form.fulltime_staff_count) }}
-									{{ form_errors(form.fulltime_staff_count) }}
-								</div>
-									
-								<label class="required">一人あたり平均労働時間（時間/1週間）</label>
-								<div class="ec-select">
-									{{ form_widget(form.fulltime_staff_worktime_ave) }}
-									{{ form_errors(form.fulltime_staff_worktime_ave) }}
+								<label class="ec-label required">一人あたり平均労働時間</label>
+								<div class="input-group-append">
+									<div class="ec-input">
+										{{ form_widget(form.fulltime_staff_worktime_ave) }}
+										{{ form_errors(form.fulltime_staff_worktime_ave) }}
+									</div>
+									<label class="ml-2">時間/1週間</label>
 								</div>
 
-								<label class="ec-label required mr-2">パート・アルバイト（人数）</label>
-								<div class="ec-select">
-									{{ form_widget(form.parttime_staff_count) }}
-									{{ form_errors(form.parttime_staff_count) }}
+								<label class="ec-label required mr-2">パート・アルバイト</label>
+								<div class="input-group-append">
+									<div class="ec-input">
+										{{ form_widget(form.parttime_staff_count) }}
+										{{ form_errors(form.parttime_staff_count) }}
+									</div>
+									<label class="ec-label required ml-2">名</label>
 								</div>
 
-								<label class="ec-label required mr-2">一人あたり平均労働時間（時間/1週間）</label>
-								<div class="ec-select">
-									{{ form_widget(form.parttime_staff_worktime_ave) }}
-									{{ form_errors(form.parttime_staff_worktime_ave) }}
-								</div>
-								<span class="ml-1">時間/1週間あたり</span>
-
-								<label class="ec-label required mr-2">その他（人数）</label>
-								<div class="ec-select">
-									{{ form_widget(form.other_staff_count) }}
-									{{ form_errors(form.other_staff_count) }}
+								<label class="ec-label required">一人あたり平均労働時間</label>
+								<div class="input-group-append">
+									<div class="ec-input">
+										{{ form_widget(form.parttime_staff_worktime_ave) }}
+										{{ form_errors(form.parttime_staff_worktime_ave) }}
+									</div>
+									<label class="ml-2">時間/1週間</label>
 								</div>
 
-								<label class="ec-label required mr-2">一人あたり平均労働時間（時間/1週間）</label>
-								<div class="ec-select">
-									{{ form_widget(form.other_staff_worktime_ave) }}
-									{{ form_errors(form.other_staff_worktime_ave) }}
+								<label class="ec-label required mr-2">その他</label>
+								<div class="input-group-append">
+									<div class="ec-input">
+										{{ form_widget(form.other_staff_count) }}
+										{{ form_errors(form.other_staff_count) }}
+									</div>
+									<label class="ml-2">名</label>
+								</div>
+
+								<label class="ec-label required">一人あたり平均労働時間</label>
+								<div class="input-group-append">
+									<div class="ec-input">
+										{{ form_widget(form.other_staff_worktime_ave) }}
+										{{ form_errors(form.other_staff_worktime_ave) }}
+									</div>
+									<label class="ml-2">時間/1週間</label>
 								</div>
 							</dd>
 						</dl>
@@ -196,14 +250,17 @@
 								<span class="ec-required">必須</span>
 							</dt>
 							<dd>
-								<div class="ec-select">
-									{{ form_widget(form.breeding_exp_year) }}年
-									{{ form_errors(form.breeding_exp_year) }}
-								</div>
-
-								<div class="ec-select ml-1">
-									{{ form_widget(form.breeding_exp_month) }}ヶ月
-									{{ form_errors(form.breeding_exp_month) }}
+								<div class="input-group-append">
+									<div class="ec-input mt-1" style="width: 100px;">
+										{{ form_widget(form.breeding_exp_year) }}
+										{{ form_errors(form.breeding_exp_year) }}
+									</div>
+									<span>年</span>
+									<div class="ec-select ml-1">
+										{{ form_widget(form.breeding_exp_month) }}
+										{{ form_errors(form.breeding_exp_month) }}
+									</div>
+									<span>ヶ月</span>
 								</div>
 							</dd>
 						</dl>
@@ -270,11 +327,15 @@
 								<span class="ec-required">必須</span>
 							</dt>
 							<dd>
-								{{ form_widget(form.is_now_publising[0]) }}
-								<div class="ec-input ml-3 mr-1">
-									{{ form_widget(form.publish_pet_count) }}頭
-									{{ form_errors(form.publish_pet_count) }}
+								<div class="input-group-append">
+									{{ form_widget(form.is_now_publising[0]) }}
+									<div class="ec-input ml-3 mr-1">
+										{{ form_widget(form.publish_pet_count) }}
+										{{ form_errors(form.publish_pet_count) }}
+									</div>
+									<label class="ml-2">頭</label>
 								</div>
+
 								{{ form_widget(form.is_now_publising[1]) }}
 								{{ form_errors(form.is_now_publising) }}
 							</dd>

@@ -92,7 +92,6 @@
         {{ form_errors(form.pet_sex) }}
         </div>
     </div>
-
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.pet_birthday, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
@@ -102,7 +101,6 @@
         {{ form_errors(form.pet_birthday) }}
         </div>
     </div>
-
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.coat_color, '毛色', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
@@ -112,7 +110,6 @@
         {{ form_errors(form.coat_color) }}
         </div>
     </div>
-
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.future_wait, '成犬時予想体重（ｋｇ）', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
@@ -122,18 +119,6 @@
         {{ form_errors(form.future_wait) }}
         </div>
     </div>
-
-    {#
-    <div class="row mb-3">
-        <div class="col-md-3">
-            {{ form_label(form.dna_check_result, '遺伝子調査結果', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
-        </div>
-        <div class="col-md-8 ec-input">
-            {{ form_widget(form.dna_check_result) }}
-            {{ form_errors(form.dna_check_result) }}
-        </div>
-    </div>
-    #}
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.pr_comment, 'アピールポイント', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
@@ -152,24 +137,6 @@
             {{ form_errors(form.description) }}
         </div>
     </div>
-    {# <div class="row mb-3">
-        <div class="col-md-3">
-            {{ form_label(form.release_status, '公開状況', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
-        </div>
-        <div class="col-md-8">
-            {{ form_widget(form.release_status) }}
-            {{ form_errors(form.release_status) }}
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-3">
-            {{ form_label(form.release_date, '公開日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
-        </div>
-        <div class="col-md-8 ec-select">
-            {{ form_widget(form.release_date) }}
-            {{ form_errors(form.release_date) }}
-        </div>
-    </div> #}
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.is_breeding, '繁殖の可否', { 'label_attr': {'class': 'ec-label' }}) }}
@@ -266,7 +233,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">￥ </span>
                 </div>
-                {{ form_widget(form.price) }}
+                {{ form_widget(form.price , { 'attr': {'style' : 'height: 40px' }}) }}
                 {{ form_errors(form.price) }}
                 </div>
         </div>

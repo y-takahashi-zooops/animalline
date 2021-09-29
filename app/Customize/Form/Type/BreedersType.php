@@ -239,6 +239,10 @@ class BreedersType extends AbstractType
             ->add('thumbnail_path', FileType::class, [
                 'required' => false,
                 'mapped' => false,
+            ])
+            ->add('license_thumbnail_path', FileType::class, [
+                'required' => false,
+                'mapped' => false,
             ]);
     }
 
