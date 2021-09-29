@@ -135,49 +135,51 @@ class VeqtaController extends AbstractController
      */
     public function result(Request $request)
     {
-        if ($request->isMethod('POST')) {
-            $barcode = $request->get('barcode');
-            $checkStatus = $request->get('check_status');
-            $siteType = $barcode[0];
-            $dnaId = substr($barcode, 1);
-
-            $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
-            if (!$Dna) {
-                throw new NotFoundHttpException();
-            }
-            $Pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
-                $this->breederPetsRepository->find($Dna->getPetId()) :
-                $this->conservationPetsRepository->find($Dna->getPetId());
-            if (!$Pet) {
-                throw new NotFoundHttpException();
-            }
-
-            switch ($checkStatus) {
-                case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY: {
-                        $Dna->setCheckStatus($checkStatus);
-                        break;
-                    }
-                case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG: {
-                        $Dna->setCheckStatus($checkStatus);
-                        $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
-                        break;
-                    }
-                default: {
-                        $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL);
-                        $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
-                        $Pet->setReleaseStatus(AnilineConf::RELEASE_STATUS_PUBLIC);
-                        $Pet->setReleaseDate(Carbon::now());
-                    }
-            }
-
-            $savePath = $this->copyFile($request->get('file_name'));
-            $Dna->setFilePath($savePath);
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($Dna);
-            $entityManager->persist($Pet);
-            $entityManager->flush();
+        if (!$request->isMethod('POST')) {
+            return;
         }
+
+        $barcode = $request->get('barcode');
+        $checkStatus = $request->get('check_status');
+        $siteType = $barcode[0];
+        $dnaId = substr($barcode, 1);
+
+        $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
+        if (!$Dna) {
+            throw new NotFoundHttpException();
+        }
+        $Pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
+            $this->breederPetsRepository->find($Dna->getPetId()) :
+            $this->conservationPetsRepository->find($Dna->getPetId());
+        if (!$Pet) {
+            throw new NotFoundHttpException();
+        }
+
+        switch ($checkStatus) {
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY: {
+                    $Dna->setCheckStatus($checkStatus);
+                    break;
+                }
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG: {
+                    $Dna->setCheckStatus($checkStatus);
+                    $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
+                    break;
+                }
+            default: {
+                    $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL);
+                    $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+                    $Pet->setReleaseStatus(AnilineConf::RELEASE_STATUS_PUBLIC);
+                    $Pet->setReleaseDate(Carbon::now());
+                }
+        }
+
+        $savePath = $this->copyFile($request->get('file_name'));
+        $Dna->setFilePath($savePath);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($Dna);
+        $entityManager->persist($Pet);
+        $entityManager->flush();
 
         return;
     }
@@ -238,7 +240,7 @@ class VeqtaController extends AbstractController
             throw new NotFoundHttpException();
         }
         $data['shippingName'] = $Dna->getDnaHeader()->getShippingName();
-        $data['hasRecord'] = $Dna->getCheckStatus() !== AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING;
+        $data['hasRecord'] = $Dna->getCheckStatus() === AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING;
 
         return new JsonResponse($data);
     }

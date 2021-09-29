@@ -71,11 +71,6 @@ class DnaCheckStatusHeader
     private $shipping_pref;
 
     /**
-     * @ORM\Column(name="shipping_name", type="string", length=255, nullable=true)
-     */
-    private $shipping_name;
-
-    /**
      * @ORM\Column(name="shipping_city", type="string", length=255, nullable=true)
      */
     private $shipping_city;
@@ -223,17 +218,6 @@ class DnaCheckStatusHeader
     {
         $this->PrefShipping = $Pref;
 
-        return $this;
-    }
-
-    public function getShippingName(): ?string
-    {
-        return $this->shipping_name;
-    }
-
-    public function setShippingName(?string $shipping_name): self
-    {
-        $this->shipping_name = $shipping_name;
         return $this;
     }
 
