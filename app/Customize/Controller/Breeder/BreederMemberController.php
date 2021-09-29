@@ -995,7 +995,7 @@ class BreederMemberController extends AbstractController
 
     /**
      *
-     * 新規ペット追加
+     * 新規ペット追加完了メッセージ
      *
      * @Route("/breeder/member/pets/new_complete", name="breeder_newpet_complete", methods={"GET","POST"})
      * @Template("animalline/breeder/member/pets/notification.twig")
