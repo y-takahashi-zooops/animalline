@@ -159,12 +159,12 @@ class ShippingScheduleHeader
         return $this->id;
     }
 
-    public function getShippingDateSchedule(): ?\DateTimeInterface
+    public function getShippingDateSchedule(): ?\DateTime
     {
         return $this->shipping_date_schedule;
     }
 
-    public function setShippingDateSchedule(\DateTimeInterface $shipping_date_schedule): self
+    public function setShippingDateSchedule(\DateTime $shipping_date_schedule): self
     {
         $this->shipping_date_schedule = $shipping_date_schedule;
 
@@ -327,12 +327,12 @@ class ShippingScheduleHeader
         return $this;
     }
 
-    public function getShippingDate(): ?\DateTimeInterface
+    public function getShippingDate(): ?\DateTime
     {
         return $this->shipping_date;
     }
 
-    public function setShippingDate(?\DateTimeInterface $shipping_date): self
+    public function setShippingDate(?\DateTime $shipping_date): self
     {
         $this->shipping_date = $shipping_date;
 
