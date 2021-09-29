@@ -25,6 +25,7 @@ use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\ContactType;
 use Customize\Entity\DnaCheckStatusHeader;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
+
 class VeqtaController extends AbstractController
 {
     /**
@@ -83,6 +84,7 @@ class VeqtaController extends AbstractController
         }
         return [];
     }
+
     /**
      * @Route("/veqta/arrive/get_user", name="arrive_get_user")
      * @param Request $request
@@ -91,20 +93,18 @@ class VeqtaController extends AbstractController
     {
         $shippingName = null;
         $show = false;
-        $header = $this->dnaCheckStatusHeaderRepository->find($request->get('id'));
-        if ($header) {
-            $dnaCheckStatuses = $this->dnaCheckStatusRepository->findBy(['DnaHeader' => $header]);
-            if ($dnaCheckStatuses)
-                foreach ($dnaCheckStatuses as $dnaCheckStatus) {
-                    if ($dnaCheckStatus->getCheckStatus() == 3) {
-                        $show = true;
-                        $shippingName = $header->getShippingName();
-                    }
-                }
-            return new JsonResponse(array(['shippingName' => $shippingName, 'show' => $show, 'id' => $request->get('id')]));
+        $name = null;
+        $dnaCheckStatuse = $this->dnaCheckStatusRepository->find($request->get('id'));
+        if ($dnaCheckStatuse) {
+            $header = $this->dnaCheckStatusHeaderRepository->find($dnaCheckStatuse->getDnaHeader());
+            if ($dnaCheckStatuse->getCheckStatus() == 3) {
+                $show = true;
+                $shippingName = $header->getShippingName();
+            }
+            return new JsonResponse(array(['name' => $shippingName, 'show' => $show, 'id' => $request->get('id')]));
         }
 
-        return new JsonResponse($show);
+        return new JsonResponse(array(['name' => $shippingName, 'show' => $show, 'id' => $request->get('id')]));
     }
 
     /**

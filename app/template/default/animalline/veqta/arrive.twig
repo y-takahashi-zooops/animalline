@@ -11,10 +11,11 @@
         },
     }).done(function (data) {
            console.log(data)
-        var name = data[0].shippingName;
+        var name = data[0].name;
         if(data[0].show){
             $('#name').text(name??'')
             $('#input-hidden').val(data[0].id);
+             $('#submit').removeAttr('disabled');
         } else {
             $('#submit').attr('disabled',true);
              alert('データが存在しません');
@@ -33,7 +34,7 @@
                     <div class="col-6">
                         検体バーコード読み込み
                     </div>
-                    <div class="col-6" id="input">
+                    <div class="col-6">
                         <input type="text" class="w-100" id="barcode" maxlength="6">
                     </div>
                 </div>
@@ -50,7 +51,7 @@
                 <div class="col-12">
                     <form name="form-receive-kit" id="form-receive-kit" method="post">
                         <input type="hidden" name="dna-id" value="4" id="input-hidden">
-                        <button type="submit" class="btn btn-warning w-100 m-1" id="submit">キット受領処理</button>
+                        <button type="submit" class="btn btn-warning w-100 m-1" id="submit" disabled>キット受領処理</button>
                     </form>
                 </div>
                 <div class="col-12">
