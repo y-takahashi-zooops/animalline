@@ -113,7 +113,7 @@ function uploadFile() {
     const form = $('#form')[0];
 
     $.ajax({
-        url: "/upload_file",
+        url: "{{ url('upload_file') }}",
         data: new FormData(form),
         type: "post",
         contentType: false,

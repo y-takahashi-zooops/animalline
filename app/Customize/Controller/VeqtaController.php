@@ -125,7 +125,7 @@ class VeqtaController extends AbstractController
                     }
                 default: {
                         $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL);
-                        $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: ???, 62: ????.
+                        $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
                         $Pet->setReleaseStatus(AnilineConf::RELEASE_STATUS_PUBLIC);
                         $Pet->setReleaseDate(Carbon::now());
                     }
@@ -169,7 +169,7 @@ class VeqtaController extends AbstractController
             return '';
         }
 
-        $toFolder = AnilineConf::ANILINE_IMAGE_URL_BASE . '/lisence/';
+        $toFolder = AnilineConf::ANILINE_IMAGE_URL_BASE . '/license/';
         if (!file_exists($toFolder) && !mkdir($toFolder, 0777, true)) {
             throw new Exception('Failed to create folder.');
         }
