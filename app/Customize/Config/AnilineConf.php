@@ -153,6 +153,7 @@ final class AnilineConf
 
     // ステータス確認
     const ANILINE_DNA_CHECK_STATUS_DEFAULT = 1; // 受付
+    const ANILINE_DNA_CHECK_STATUS_CHECKING = 5; // DNA検査中
     const ANILINE_DNA_CHECK_STATUS_NOT_NORMAL = 6; // 検体異
     const ANILINE_DNA_CHECK_STATUS_PASSED = 8; // 検査通過
     const ANILINE_DNA_CHECK_STATUS_NG = 9; // 検査NG

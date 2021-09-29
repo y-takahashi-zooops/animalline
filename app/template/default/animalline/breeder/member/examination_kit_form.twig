@@ -28,9 +28,9 @@
                                 お名前
                             </dt>
                             <dd>
-                                <div class="ec-input{{ has_errors(form.name) ? ' error' }}">
-                                    {{ form_widget(form.name) }}
-                                    {{ form_errors(form.name) }}
+                                <div class="ec-input{{ has_errors(form.shipping_name) ? ' error' }}">
+                                    {{ form_widget(form.shipping_name) }}
+                                    {{ form_errors(form.shipping_name) }}
                                 </div>
                             </dd>
                         </dl>
@@ -129,7 +129,7 @@
     var city = $(this).val() == 1 ? '{{breeder.breederCity}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.breederHouseCity}}' : '{{breederHouseCat ? breederHouseCat.breederHouseCity}}';
     var addr = $(this).val() == 1 ? '{{breeder.breederAddress}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.breederHouseAddress}}' : '{{breederHouseCat ? breederHouseCat.breederHouseAddress}}';
 
-    $("#breeder_kit_dna_name").val(name)
+    $("#breeder_kit_dna_shipping_name").val(name)
     $("#breeder_kit_dna_shipping_zip").val(zip)
     $("#breeder_kit_dna_address_PrefShipping").val(pref_id)
     $("#breeder_kit_dna_address_shipping_city").val(city)
