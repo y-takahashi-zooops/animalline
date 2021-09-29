@@ -95,14 +95,13 @@ class VeqtaController extends AbstractController
      */
     public function result(Request $request)
     {
-        $barcode = $request->get('barcode');
-
         if ($request->isMethod('POST')) {
+            $barcode = $request->get('barcode');
             $checkStatus = $request->get('check_status');
             $siteType = $barcode[0];
             $dnaId = substr($barcode, 1);
-            $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
 
+            $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
             if (!$Dna) {
                 throw new NotFoundHttpException();
             }
@@ -140,14 +139,7 @@ class VeqtaController extends AbstractController
             $entityManager->flush();
         }
 
-        if ($request->isMethod('GET') and $barcode) {
-            $siteType = $barcode[0];
-            $dnaId = substr($barcode, 1);
-            $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
-            $dnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['id' => $dnaId, 'site_type' => $siteType]);
-            $this->readBarCode($dnaCheckStatus);
-        }
-        return [];
+        return;
     }
 
     /**
@@ -192,19 +184,22 @@ class VeqtaController extends AbstractController
     }
 
     /**
-     * Upload file.
-     * @Route("/upload_file", name="upload_file", methods={"POST"})
+     * Read barcode.
+     * @Route("/read_barcode", name="read_barcode", methods={"GET"})
      */
-    public function readBarCode($dnaCheckStatus = null) {
-        $shippingName = null;
-        $isExist = false;
-        if ($dnaCheckStatus) {
-            $dnaCheckStatusHeader = $this->dnaCheckStatusHeaderRepository->findOneBy(['id' => $dnaCheckStatus[0]->getDnaHeader(), ]);
-            if ($dnaCheckStatus[0]->getCheckStatus() == 5) {
-                $isExist = false;
-                $shippingName = $dnaCheckStatusHeader->getShippingName();
-                return new JsonResponse(array(['shippingName' => $shippingName]));
-            }
+    public function readBarCode(Request $request)
+    {
+        $barcode = $request->get('barcode');
+        $siteType = $barcode[0];
+        $dnaId = substr($barcode, 1);
+
+        $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
+        if (!$Dna) {
+            throw new NotFoundHttpException();
         }
+        $data['shippingName'] = $Dna->getDnaHeader()->getShippingName();
+        $data['hasRecord'] = $Dna->getCheckStatus() !== AnilineConf::ANILINE_DNA_CHECK_STATUS_DNA_TEST;
+
+        return new JsonResponse($data);
     }
 }
