@@ -95,6 +95,7 @@ class VeqtaController extends AbstractController
      */
     public function result(Request $request)
     {
+        $barCode = $request->get('barcode');
         if ($request->isMethod('POST')) {
             $barcode = $request->get('barcode');
             $checkStatus = $request->get('check_status');
@@ -124,7 +125,7 @@ class VeqtaController extends AbstractController
                     }
                 default: {
                         $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL);
-                        $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+                        $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: ???, 62: ????.
                         $Pet->setReleaseStatus(AnilineConf::RELEASE_STATUS_PUBLIC);
                         $Pet->setReleaseDate(Carbon::now());
                     }
@@ -141,10 +142,19 @@ class VeqtaController extends AbstractController
 
         $barCode = $request->get('barCode');
         $dnaCheckStatusId = (int)substr($barCode, 1);
+        $siteType = (int)substr($barCode, 0,1);
+        $shippingName = null;
 
-        $dnaCheckStatus = $this->dnaCheckStatusHeaderRepository->find($dnaCheckStatusId);
+        $dnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['id' => $dnaCheckStatusId, 'site_type' => $siteType]);
 
-        return;
+        if ($dnaCheckStatus) {
+            $dnaCheckStatusHeader = $this->dnaCheckStatusHeaderRepository->find($dnaCheckStatus[0]->getDnaHeader());
+            if ($dnaCheckStatus[0]->getCheckStatus() == 5) {
+                    $shippingName = $dnaCheckStatusHeader->getShippingName();
+                    return new JsonResponse(array(['shippingName' => $shippingName]));
+            }
+        }
+        return [];
     }
 
     /**

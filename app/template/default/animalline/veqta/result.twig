@@ -1,13 +1,6 @@
 {% extends 'animalline/veqta/frame.twig' %}
 
 {% block main %}
-<style type="text/css">
-    label.error {
-        display: inline-block;
-        color: red;
-        width: 200px;
-    }
-</style>
 
 <div class="center_section">
     <div class="row">
@@ -18,7 +11,7 @@
                         検体バーコード読み込み
                     </div>
                     <div class="col-6">
-                        <input type="text" class="w-100" placeholder="123456" name="barcode">
+                        <input type="text" class="w-100" placeholder="123456" name="barcode" id="barcode">
                     </div>
                 </div>
 
@@ -27,7 +20,7 @@
                         検体送付者名
                     </div>
                     <div class="col-6">
-                        <span id="sender_name">鈴木　太郎様</span>
+                        <span id="sender_name"></span>
                     </div>
                 </div>
 
@@ -36,7 +29,7 @@
                         検査結果
                     </div>
                     <div class="col-6">
-                        <select name="check_status" required>
+                        <select name="check_status">
                             <option value="">選択してください</option>
                             <option value="4">検体異常</option>
                             <option value="61">クリア</option>
@@ -57,7 +50,7 @@
                 </div>
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-warning w-100 m-1">検査結果登録</button>
+                    <button type="submit" class="btn btn-warning w-100 m-1" id="dnaTestResultRegist" disabled>検査結果登録</button>
                 </div>
                 <div class="col-12">
                     <a href="{{url('veqta_index')}}" class="btn btn-warning w-100 m-1">戻る</a>
@@ -70,50 +63,70 @@
 
 {% block javascript %}
 <script>
-    $(function () {
-        $('#file').on('change', function () {
-            uploadFile();
-        });
-
-        $("#form").validate({
-            rules: {
-                barcode: {
-                    required: true,
-                    minlength: 6,
-                    maxlength: 6
-                }
-            },
-            messages: {
-                barcode: {
-                    required: "サンプルバーコードを入力してください",
-                    minlength: "サンプルバーコードは6文字である必要があります",
-                    maxlength: "サンプルバーコードは6文字である必要があります"
-                }
-            },
-            submitHandler: function (form) {
-                form.submit();
-            }
-        });
+$(function () {
+    $('#file').on('change', function () {
+        uploadFile();
     });
 
-    function uploadFile() {
-        const form = $('#form')[0];
+    $("#form").validate({
+        rules: {
+            barcode: {
+                required: true,
+                minlength: 6,
+                maxlength: 6
+            }
+        },
+        messages: {
+            barcode: {
+                required: "サンプルバーコードを入力してください",
+                minlength: "サンプルバーコードは6文字である必要があります",
+                maxlength: "サンプルバーコードは6文字である必要があります"
+            }
+        },
+        submitHandler: function (form) {
+            form.submit();
+        }
+    });
 
+    if($("#form").valid()) {
         $.ajax({
-            url: "/upload_file",
-            data: new FormData(form),
-            type: "post",
-            contentType: false,
-            processData: false,
-            cache: false,
-            dataType: "json"
-        })
-            .done(function (data) {
-                $('#file_name').val(data.file_name);
-            })
-            .fail(function (err) {
-                console.error(err);
+            url: "{{ url('veqta_result') }}",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'barcode': $('#barcode').val()
+                }
+            }).done(function (data) {
+                $('#sender_name').text(data[0].shippingName);
+            }).fail(function (data) {
+                $('#sender_name').text('');
+                alert('データが存在しません。');
             });
+        document.getElementById("dnaTestResultRegist").disabled = false;
+        
+    } else {
+        document.getElementById("dnaTestResultRegist").disabled = true;
     }
+});
+
+function uploadFile() {
+    const form = $('#form')[0];
+
+    $.ajax({
+        url: "/upload_file",
+        data: new FormData(form),
+        type: "post",
+        contentType: false,
+        processData: false,
+        cache: false,
+        dataType: "json"
+    })
+        .done(function (data) {
+            $('#file_name').val(data.file_name);
+        })
+        .fail(function (err) {
+            console.error(err);
+        });
+}
 </script>
 {% endblock %}
