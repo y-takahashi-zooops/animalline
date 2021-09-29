@@ -1,35 +1,38 @@
 {% extends 'animalline/veqta/frame.twig' %}
 
 {% block main %}
-<div class="center_section">
-    <div class="row">
-        <div class="col-12">
-            <div class="row">
-                <div class="col-6">
-                    検体バーコード読み込み
+    <div class="center_section">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        検体バーコード読み込み
+                    </div>
+                    <div class="col-6">
+                        <input type="text" class="w-100" value="123456789">
+                    </div>
                 </div>
-                <div class="col-6">
-                    <input type="text" class="w-100" value="123456789">
+
+                <div class="row">
+                    <div class="col-6">
+                        検体送付者名
+                    </div>
+                    <div class="col-6">
+                        鈴木　太郎様
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <form name="form-receive-kit" id="form-receive-kit" method="post">
+                        <input type="hidden" name="dna-id" value="4">
+                        <button type="submit" class="btn btn-warning w-100 m-1">キット受領処理</button>
+                    </form>
+                </div>
+                <div class="col-12">
+                    <a href="{{ url('veqta_index') }}" class="btn btn-warning w-100 m-1">戻る</a>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-6">
-                    検体送付者名
-                </div>
-                <div class="col-6">
-                    鈴木　太郎様
-                </div>
-            </div>
-
-            <div class="col-12">
-                <a href="{{url('veqta_arrive')}}" class="btn btn-warning w-100 m-1">キット受領処理</a>
-            </div>
-            <div class="col-12">
-                <a href="{{url('veqta_index')}}" class="btn btn-warning w-100 m-1">戻る</a>
-            </div>
         </div>
-        
     </div>
-</div>
 {% endblock %}

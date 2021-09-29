@@ -13,6 +13,8 @@
 
 namespace Customize\Controller;
 
+use Customize\Config\AnilineConf;
+use Customize\Repository\DnaCheckStatusRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +26,19 @@ use Eccube\Form\Type\Front\ContactType;
 class VeqtaController extends AbstractController
 {
     /**
+     * @var DnaCheckStatusRepository;
+     */
+    protected $dnaCheckStatusRepository;
+
+    public function __construct(
+        DnaCheckStatusRepository $dnaCheckStatusRepository
+    ) {
+        $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
+    }
+
+    /**
+     * Register and receive DNA kit result
+     *
      * @Route("/veqta/", name="veqta_index")
      * @Template("animalline/veqta/index.twig")
      */
@@ -33,11 +48,21 @@ class VeqtaController extends AbstractController
     }
 
     /**
+     * Receive DNA kit result
+     *
      * @Route("/veqta/arrive", name="veqta_arrive")
      * @Template("animalline/veqta/arrive.twig")
      */
-    public function arrive()
+    public function arrive(Request $request)
     {
+        if ($request->get('dna-id') && $request->isMethod('POST')) {
+            $dna = $this->dnaCheckStatusRepository->find((int)$request->get('dna-id'));
+            $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING);
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            return $this->redirectToRoute('veqta_arrive');
+        }
         return [];
     }
 
