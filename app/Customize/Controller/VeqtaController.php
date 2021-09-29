@@ -17,12 +17,14 @@ use Customize\Config\AnilineConf;
 use Customize\Repository\DnaCheckStatusRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\ContactType;
-
+use Customize\Entity\DnaCheckStatusHeader;
+use Customize\Repository\DnaCheckStatusHeaderRepository;
 class VeqtaController extends AbstractController
 {
     /**
@@ -30,9 +32,25 @@ class VeqtaController extends AbstractController
      */
     protected $dnaCheckStatusRepository;
 
+    /**
+     * @var DnaCheckStatusHeaderRepository
+     */
+    protected $dnaCheckStatusHeaderRepository;
+
+
+    /**
+     * Import dna check status constructor.
+     *
+     * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+     * @param DnaCheckStatusRepository $dnaCheckStatusRepository
+     *
+     */
     public function __construct(
-        DnaCheckStatusRepository $dnaCheckStatusRepository
-    ) {
+        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
+        DnaCheckStatusRepository       $dnaCheckStatusRepository
+    )
+    {
+        $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
     }
 
@@ -64,6 +82,29 @@ class VeqtaController extends AbstractController
             return $this->redirectToRoute('veqta_arrive');
         }
         return [];
+    }
+    /**
+     * @Route("/veqta/arrive/get_user", name="arrive_get_user")
+     * @param Request $request
+     */
+    public function getArriveUser(Request $request)
+    {
+        $shippingName = null;
+        $show = false;
+        $header = $this->dnaCheckStatusHeaderRepository->find($request->get('id'));
+        if ($header) {
+            $dnaCheckStatuses = $this->dnaCheckStatusRepository->findBy(['DnaHeader' => $header]);
+            if ($dnaCheckStatuses)
+                foreach ($dnaCheckStatuses as $dnaCheckStatus) {
+                    if ($dnaCheckStatus->getCheckStatus() == 3) {
+                        $show = true;
+                        $shippingName = $header->getShippingName();
+                    }
+                }
+            return new JsonResponse(array(['shippingName' => $shippingName, 'show' => $show, 'id' => $request->get('id')]));
+        }
+
+        return new JsonResponse($show);
     }
 
     /**

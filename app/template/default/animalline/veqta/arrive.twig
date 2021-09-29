@@ -1,5 +1,30 @@
 {% extends 'animalline/veqta/frame.twig' %}
-
+{% block javascript %}
+<script>
+    $('#barcode').on('blur', function(){
+    $.ajax({
+        url: '{{ url('arrive_get_user') }}',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            'id': $('#barcode').val().split("0").pop()
+        },
+    }).done(function (data) {
+           console.log(data)
+        var name = data[0].shippingName;
+        if(data[0].show){
+            $('#name').text(name??'')
+            $('#input-hidden').val(data[0].id);
+        } else {
+            $('#submit').attr('disabled',true);
+             alert('データが存在しません');
+        }
+    }).fail(function (data) {
+        alert('search product failed.');
+    });
+})
+</script>
+{% endblock %}
 {% block main %}
     <div class="center_section">
         <div class="row">
@@ -8,8 +33,8 @@
                     <div class="col-6">
                         検体バーコード読み込み
                     </div>
-                    <div class="col-6">
-                        <input type="text" class="w-100" value="123456789">
+                    <div class="col-6" id="input">
+                        <input type="text" class="w-100" id="barcode" maxlength="6">
                     </div>
                 </div>
 
@@ -18,14 +43,14 @@
                         検体送付者名
                     </div>
                     <div class="col-6">
-                        鈴木　太郎様
+                        <p id="name"></p>
                     </div>
                 </div>
 
                 <div class="col-12">
                     <form name="form-receive-kit" id="form-receive-kit" method="post">
-                        <input type="hidden" name="dna-id" value="4">
-                        <button type="submit" class="btn btn-warning w-100 m-1">キット受領処理</button>
+                        <input type="hidden" name="dna-id" value="4" id="input-hidden">
+                        <button type="submit" class="btn btn-warning w-100 m-1" id="submit">キット受領処理</button>
                     </form>
                 </div>
                 <div class="col-12">
