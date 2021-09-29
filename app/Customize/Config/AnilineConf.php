@@ -129,6 +129,7 @@ final class AnilineConf
 
     const DNA_CHECK_RESULT_1 = 1;
     const DNA_CHECK_RESULT_2 = 2;
+    const DNA_CHECK_RESULT_3 = 3;
 
     const EXERCISE_STATUS_OTHER = 4;
 
@@ -153,8 +154,10 @@ final class AnilineConf
 
     // ステータス確認
     const ANILINE_DNA_CHECK_STATUS_DEFAULT = 1; // 受付
+    const ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY = 4; // 検体異常
     const ANILINE_DNA_CHECK_STATUS_CHECKING = 5; // DNA検査中
     const ANILINE_DNA_CHECK_STATUS_NOT_NORMAL = 6; // 検体異
+    const ANILINE_DNA_CHECK_STATUS_TEST_NG = 7; // 検査NG
     const ANILINE_DNA_CHECK_STATUS_PASSED = 8; // 検査通過
     const ANILINE_DNA_CHECK_STATUS_NG = 9; // 検査NG
     const ANILINE_DNA_CHECK_STATUS_RESENT = 10; // 検体再送付手続済
