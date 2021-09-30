@@ -45,6 +45,7 @@ class StockWasteType extends AbstractType
                     new Assert\GreaterThanOrEqual([
                         'value' => 0,
                     ]),
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('stock_waste_reason', EntityType::class, [
