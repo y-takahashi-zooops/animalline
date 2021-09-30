@@ -3,61 +3,65 @@
 {% set params = app.request.query.all %}
 
 {% block main %}
-    <div class="c-contentsArea__cols">
-        <div class="c-contentsArea__primaryCol">
-            <div class="c-primaryCol">
-                <form id="form_bulk" method="POST" action="">
-                    <input type="hidden" name="dna_id" value="">
-                    <div class="row justify-content-between mb-2">
-                        <div class="col-6"></div>
-                        <div class="col-6 col-sm-4 col-md-3 text-right">
-                            <a class="btn btn-warning btn-block mt-3"
-                                   href="{{ url('breeder_examination_kit_new') }}">検査キット請求</a>
-                            {% if params.is_all is defined and params.is_all == 1 %}
-                            <a class="btn btn-warning btn-block mt-3"
-                                   href="{{ url('breeder_examination_kit') }}">未完了のみ表示</a>
-                            {% else %}
-                            <a class="btn btn-warning btn-block mt-3"
-                                   href="{{ url('breeder_examination_kit', {'is_all': 1}) }}">全件表示</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="card rounded border-0 mb-4 d-block">
-                        <div class="card-body p-0">
-                            <table class="table table-sm dna-table text-center">
-                                <thead>
-                                    <tr class="heading">
-                                        <th class="border-top-0 pt-2 pb-2">ID</th>
-                                        <th class="border-top-0 pt-2 pb-2">出荷数量</th>
-                                        <th class="border-top-0 pt-2 pb-2">出荷ステータス</th>
-                                        <th class="border-top-0 pt-2 pb-2">キット出荷日</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for dna in dnas %}
-                                        <tr>
-                                            <td class="id" data-label="ID">{{ dna.id }}</td>
-                                            <td data-label="出荷数量">{{ dna.kit_unit ? dna.kit_unit : '_' }}</td>
-                                            <td data-label="出荷ステータス">{{ dna.shipping_status == 1 ? '受付' : dna.shipping_status == 2 ? '出荷指示中' : '出荷済' }}</td>
-                                            <td data-label="キット出荷日">{{ dna.kit_shipping_date | date('Y/m/d') }}</td>
-                                        </tr>
+    <section id="breeder-column">
+        <div class="inner">
+            <div class="c-contentsArea__cols">
+                <div class="c-contentsArea__primaryCol">
+                    <div class="c-primaryCol">
+                        <form id="form_bulk" method="POST" action="">
+                            <input type="hidden" name="dna_id" value="">
+                            <div class="row justify-content-between mb-2">
+                                <div class="col-6"></div>
+                                <div class="col-6 col-sm-4 col-md-3 text-right">
+                                    <a class="btn btn-warning btn-block mt-3"
+                                        href="{{ url('breeder_examination_kit_new') }}">検査キット請求</a>
+                                    {% if params.is_all is defined and params.is_all == 1 %}
+                                    <a class="btn btn-warning btn-block mt-3"
+                                        href="{{ url('breeder_examination_kit') }}">未完了のみ表示</a>
                                     {% else %}
-                                        <tr>
-                                            <td colspan="5">結果が０件です。</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="navigation float-right">
-                            {{ knp_pagination_render(dnas) }}
-                        </div>
-                        <div class="row justify-content-md-center mb-4 pb-4"></div>
+                                    <a class="btn btn-warning btn-block mt-3"
+                                        href="{{ url('breeder_examination_kit', {'is_all': 1}) }}">全件表示</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card rounded border-0 mb-4 d-block">
+                                <div class="card-body p-0">
+                                    <table class="table table-sm dna-table text-center">
+                                        <thead>
+                                            <tr class="heading">
+                                                <th class="border-top-0 pt-2 pb-2">ID</th>
+                                                <th class="border-top-0 pt-2 pb-2">出荷数量</th>
+                                                <th class="border-top-0 pt-2 pb-2">出荷ステータス</th>
+                                                <th class="border-top-0 pt-2 pb-2">キット出荷日</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for dna in dnas %}
+                                                <tr>
+                                                    <td class="id" data-label="ID">{{ dna.id }}</td>
+                                                    <td data-label="出荷数量">{{ dna.kit_unit ? dna.kit_unit : '_' }}</td>
+                                                    <td data-label="出荷ステータス">{{ dna.shipping_status == 1 ? '受付' : dna.shipping_status == 2 ? '出荷指示中' : '出荷済' }}</td>
+                                                    <td data-label="キット出荷日">{{ dna.kit_shipping_date | date('Y/m/d') }}</td>
+                                                </tr>
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="5">結果が０件です。</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="navigation float-right">
+                                    {{ knp_pagination_render(dnas) }}
+                                </div>
+                                <div class="row justify-content-md-center mb-4 pb-4"></div>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
