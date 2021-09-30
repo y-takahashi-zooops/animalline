@@ -33,6 +33,7 @@ class ProductClassRepository extends AbstractRepository
      * Increment stock of products
      *
      * @param ProductClass $entity
+     * @param int stock
      * @return int|mixed|string
      */
     public function incrementCount(ProductClass $entity, $stock = 0)
@@ -51,6 +52,7 @@ class ProductClassRepository extends AbstractRepository
      * Decrement favorite count of pet
      *
      * @param ProductClass $entity
+     * @param int stock
      * @return int|mixed|string
      */
     public function decrementCount(ProductClass $entity, $stock = 0)
