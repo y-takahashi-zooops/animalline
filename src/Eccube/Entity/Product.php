@@ -14,6 +14,7 @@
 namespace Eccube\Entity;
 
 use Customize\Entity\ItemWaste;
+use Customize\Entity\ProductSet;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -49,7 +50,7 @@ if (!class_exists('\Eccube\Entity\Product')) {
          */
         public function __toString()
         {
-            return (string) $this->getName();
+            return (string)$this->getName();
         }
 
         public function _calc()
@@ -111,7 +112,7 @@ if (!class_exists('\Eccube\Entity\Product')) {
                                 $this->classCategories1[$ProductClass->getClassCategory1()->getId()] = $ProductClass->getClassCategory1()->getName();
                                 $this->classCategories2[$ProductClass->getClassCategory1()->getId()][$ProductClass->getClassCategory2()->getId()] = $ProductClass->getClassCategory2()->getName();
                             } else {
-                                $this->classCategories1[$ProductClass->getClassCategory1()->getId()] = $ProductClass->getClassCategory1()->getName().($ProductClass->getStockFind() ? '' : trans('front.product.out_of_stock_label'));
+                                $this->classCategories1[$ProductClass->getClassCategory1()->getId()] = $ProductClass->getClassCategory1()->getName() . ($ProductClass->getStockFind() ? '' : trans('front.product.out_of_stock_label'));
                             }
                         }
                     }
@@ -552,6 +553,11 @@ if (!class_exists('\Eccube\Entity\Product')) {
         private $ItemWastes;
 
         /**
+         * @ORM\OneToMany(targetEntity=ProductSet::class, mappedBy="Product")
+         */
+        private $ProductSet;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -562,6 +568,7 @@ if (!class_exists('\Eccube\Entity\Product')) {
             $this->ProductTag = new \Doctrine\Common\Collections\ArrayCollection();
             $this->CustomerFavoriteProducts = new \Doctrine\Common\Collections\ArrayCollection();
             $this->ItemWastes = new ArrayCollection();
+            $this->ProductSet = new ArrayCollection();
         }
 
         public function __clone()
@@ -1084,6 +1091,36 @@ if (!class_exists('\Eccube\Entity\Product')) {
                 // set the owning side to null (unless already changed)
                 if ($itemWaste->getProduct() === $this) {
                     $itemWaste->setProduct(null);
+                }
+            }
+
+            return $this;
+        }
+
+        /**
+         * @return Collection|ProductSet[]
+         */
+        public function getProductSet(): Collection
+        {
+            return $this->ProductSet;
+        }
+
+        public function addProductSet(ProductSet $productSet): self
+        {
+            if (!$this->ProductSet->contains($productSet)) {
+                $this->productSet[] = $productSet;
+                $productSet->setProduct($this);
+            }
+
+            return $this;
+        }
+
+        public function removeProductSet(ProductSet $productSet): self
+        {
+            if ($this->ProductSet->removeElement($productSet)) {
+                // set the owning side to null (unless already changed)
+                if ($productSet->getProduct() === $this) {
+                    $productSet->setProduct(null);
                 }
             }
 

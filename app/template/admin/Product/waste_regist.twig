@@ -21,6 +21,7 @@ file that was distributed with this source code.
 
 {% block main %}
     <form role="form" name="form1" id="form1" method="post" action="" novalidate enctype="multipart/form-data">
+        {{ form_widget(form._token) }}
         <div class="c-contentsArea__cols">
             <div class="c-contentsArea__primaryCol">
                 <div class="c-primaryCol">
@@ -50,7 +51,7 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <p>1</p>
+                                            <p>{{ product ? product.id : '' }}</p>
                                         </div>
                                     </div>
                                 <div class="row">
@@ -60,7 +61,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col mb-2">
-                                        <p>商品名1</p>
+                                        <p>{{ product ? product.name : '' }}</p>
                                     </div>
                                 </div>
                                 <div class="row mb-2">
@@ -69,43 +70,8 @@ file that was distributed with this source code.
                                     </div>
                                     <div class="col">
                                         <div class="form-inline">
-                                            <select class="form-control mr-2">
-                                                <option value=""></option>
-                                                <option value="2016">2016</option>
-                                                <option value="2017">2017</option>
-                                                <option value="2018">2018</option>
-                                                <option value="2019">2019</option>
-                                                <option value="2020">2020</option>
-                                                <option value="2021" selected>2021</option>
-                                            </select>
-                                            /
-                                            <select class="form-control mr-2 ml-2">
-                                                <option value=""></option>
-                                                <option value="1">01</option>
-                                                <option value="2">02</option>
-                                                <option value="3">03</option>
-                                                <option value="4">04</option>
-                                                <option value="5">05</option>
-                                                <option value="6">06</option>
-                                                <option value="7">07</option>
-                                                <option value="8">08</option>
-                                                <option value="9" selected>09</option>
-                                                <option value="10">10</option>
-                                                <option value="11">11</option>
-                                                <option value="12">12</option>
-                                            </select>
-                                            /
-                                            <select class="form-control mr-2 ml-2">
-                                                <option value=""></option>
-                                                <option value="1">01</option>
-                                                <option value="2">02</option>
-                                                <option value="14" selected>14</option>
-                                                <option value="27">27</option>
-                                                <option value="28">28</option>
-                                                <option value="29">29</option>
-                                                <option value="30">30</option>
-                                                <option value="31">31</option>
-                                            </select>
+                                            {{ form_widget(form.waste_date) }}
+                                            {{ form_errors(form.waste_date) }}
                                         </div>
                                     </div>
                                 </div>
@@ -115,7 +81,8 @@ file that was distributed with this source code.
                                     </div>
                                     <div class="col-3">
                                         <div>
-                                            <input type="text" id="admin_product_class_sale_limit" name="admin_product[class][sale_limit]" class="form-control">
+                                            {{ form_widget(form.waste_unit) }}
+                                            {{ form_errors(form.waste_unit) }}
                                         </div>
                                     </div>
                                 </div>
@@ -125,9 +92,8 @@ file that was distributed with this source code.
                                     </div>
                                     <div class="col">
                                         <div>
-                                            <select class="ec-select">
-                                                <option>廃棄理由1</option>
-                                            </select>
+                                            {{ form_widget(form.stock_waste_reason, { attr : {style : 'max-width: auto;' }}) }}
+                                            {{ form_errors(form.stock_waste_reason) }}
                                         </div>
                                     </div>
                                 </div>
@@ -137,7 +103,8 @@ file that was distributed with this source code.
                                     </div>
                                     <div class="col">
                                         <div>
-                                            <textarea rows="4" class="form-control"></textarea>
+                                            {{ form_widget(form.comment, { attr : {style : 'max-width: auto;'}}) }}
+                                            {{ form_errors(form.comment) }}
                                         </div>
                                     </div>
                                 </div>

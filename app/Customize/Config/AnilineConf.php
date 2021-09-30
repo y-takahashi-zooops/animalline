@@ -142,6 +142,7 @@ final class AnilineConf
     // 同期アクション
     const ANILINE_WMS_SYNC_ACTION_PRODUCT = 1; // 商品
     const ANILINE_WMS_SYNC_ACTION_INSTOCK_SCHEDULE = 2; // 入荷予定
+    const ANILINE_WMS_SYNC_ACTION_SCHEDULED_SHIPMENT = 4; // 出荷予定
 
     const ANILINE_WMS_RESULT_SUCCESS = 1;
     const ANILINE_WMS_RESULT_ANNOTATED = 2;
