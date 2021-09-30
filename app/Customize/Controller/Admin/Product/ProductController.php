@@ -14,6 +14,10 @@
 namespace Customize\Controller\Admin\Product;
 
 use Customize\Entity\InstockScheduleHeader;
+use Customize\Entity\StockWaste;
+use Customize\Repository\StockWasteReasonRepository;
+use Customize\Repository\StockWasteRepository;
+use Customize\Service\GetListWasteQueryService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Customize\Config\AnilineConf;
 use Customize\Form\Type\Admin\InstockScheduleHeaderType;
@@ -150,6 +154,21 @@ class ProductController extends BaseProductController
     protected $orderItemTypeRepository;
 
     /**
+     * @var StockWasteRepository
+     */
+    protected $stockWasteRepository;
+
+    /**
+     * @var StockWasteReasonRepository
+     */
+    protected $stockWasteReasonRepository;
+
+    /**
+     * @var GetListWasteQueryService
+     */
+    protected $getListWasteQueryService;
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -167,6 +186,9 @@ class ProductController extends BaseProductController
      * @param InstockScheduleRepository $instockScheduleRepository
      * @param ListInstockQueryService $listInstockQueryService
      * @param OrderItemTypeRepository $orderItemTypeRepository
+     * @param StockWasteRepository $stockWasteRepository
+     * @param StockWasteReasonRepository $stockWasteReasonRepository
+     * @param GetListWasteQueryService $getListWasteQueryService
      */
     public function __construct(
         CsvExportService                $csvExportService,
@@ -183,7 +205,10 @@ class ProductController extends BaseProductController
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
         ListInstockQueryService         $listInstockQueryService,
-        OrderItemTypeRepository         $orderItemTypeRepository
+        OrderItemTypeRepository         $orderItemTypeRepository,
+        StockWasteRepository            $stockWasteRepository,
+        StockWasteReasonRepository      $stockWasteReasonRepository,
+        GetListWasteQueryService        $getListWasteQueryService
     )
     {
         $this->csvExportService = $csvExportService;
@@ -201,6 +226,9 @@ class ProductController extends BaseProductController
         $this->instockScheduleRepository = $instockScheduleRepository;
         $this->listInstockQueryService = $listInstockQueryService;
         $this->orderItemTypeRepository = $orderItemTypeRepository;
+        $this->stockWasteRepository = $stockWasteRepository;
+        $this->stockWasteReasonRepository = $stockWasteReasonRepository;
+        $this->getListWasteQueryService = $getListWasteQueryService;
     }
 
     /**
@@ -1186,9 +1214,35 @@ class ProductController extends BaseProductController
      * @Route("/%eccube_admin_route%/product/waste", name="admin_product_waste")
      * @Template("@admin/Product/waste.twig")
      */
-    public function waste(Request $request)
+    public function waste(PaginatorInterface $paginator, Request $request)
     {
-        return [];
+        $wastes = $this->stockWasteRepository->findAll();
+        if ($request->getMethod('get')) {
+            $dateFrom = [
+                'yearFrom' => $request->get('year_from'),
+                'monthFrom' => $request->get('month_from'),
+            ];
+
+            $dateTo = [
+                'yearTo' => $request->get('year_to'),
+                'monthTo' => $request->get('month_to'),
+            ];
+            $wastes = $this->getListWasteQueryService->search($dateFrom, $dateTo);
+        }
+        $wastes = $paginator->paginate(
+            $wastes,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+        if ($request->get('id_destroy') && $request->getMethod('get')) {
+            $wastes = $this->stockWasteRepository->find($request->get('id_destroy'));
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($wastes);
+            $entityManager->flush();
+        }
+        return [
+            'wastes' => $wastes
+        ];
     }
 
 
