@@ -51,7 +51,7 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <p>{{ product.id }}</p>
+                                            <p>{{ product ? product.id : '' }}</p>
                                         </div>
                                     </div>
                                 <div class="row">
@@ -61,7 +61,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col mb-2">
-                                        <p>{{ product.name }}</p>
+                                        <p>{{ product ? product.name : '' }}</p>
                                     </div>
                                 </div>
                                 <div class="row mb-2">

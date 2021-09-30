@@ -1258,24 +1258,28 @@ class ProductController extends BaseProductController
     {
         $productClassId = $request->get('id');
         $productClass = $this->productClassRepository->find($productClassId);
+        $product = [];
         $stockWasteReasons = $this->stockWasteReasonRepository->findAll();
-        $product = $productClass->getProduct();
 
-        if ($product) {
-            $stockWaste = new StockWaste();
-            $form = $this->createForm(StockWasteType::class,  $stockWaste);
-            $form->handleRequest($request);
+        $stockWaste = new StockWaste();
+        $form = $this->createForm(StockWasteType::class,  $stockWaste);
+        $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $stockWasteReason = $this->stockWasteReasonRepository->find($request->get('stockWasteReason'));
-                $stockWaste->setStockWasteReason($stockWasteReason);
-                $stockWaste->setProduct($product);
-                $stockWaste->setProductClass($productClass);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($stockWaste);
-                $entityManager->flush();
+        if ($productClass) {
+            $product = $productClass->getProduct();
 
-                return $this->redirectToRoute('admin_product_waste');
+            if ($product) {
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $stockWasteReason = $this->stockWasteReasonRepository->find($request->get('stockWasteReason'));
+                    $stockWaste->setStockWasteReason($stockWasteReason)
+                               ->setProduct($product)
+                               ->setProductClass($productClass);
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($stockWaste);
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('admin_product_waste');
+                }
             }
         }
 
