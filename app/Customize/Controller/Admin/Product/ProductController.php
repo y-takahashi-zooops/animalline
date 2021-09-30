@@ -1257,7 +1257,10 @@ class ProductController extends BaseProductController
     {
         $productClassId = $request->get('id');
         $productClass = $this->productClassRepository->find($productClassId);
-        $product = [];
+        if (!$productClass) {
+            throw new NotFoundHttpException();
+        }
+        $product = null;
 
         $stockWaste = new StockWaste();
         $form = $this->createForm(StockWasteType::class, $stockWaste);
@@ -1266,18 +1269,16 @@ class ProductController extends BaseProductController
         if ($productClass) {
             $product = $productClass->getProduct();
 
-            if ($product) {
-                if ($form->isSubmitted() && $form->isValid()) {
-                    $stockProductClass = $request->get('stock_waste')['waste_unit'];
-                    $stockWaste->setProduct($product)
-                    ->setProductClass($productClass);
-                    $entityManager = $this->getDoctrine()->getManager();
-                    $entityManager->persist($stockWaste);
-                    $entityManager->flush();
-                    $this->productClassRepository->decrementCount($productClass, $stockProductClass);
+            if ($form->isSubmitted() && $form->isValid() && $product) {
+                $stockProductClass = $request->get('stock_waste')['waste_unit'];
+                $stockWaste->setProduct($product)
+                           ->setProductClass($productClass);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($stockWaste);
+                $entityManager->flush();
+                $this->productClassRepository->decrementCount($productClass, $stockProductClass);
 
-                    return $this->redirectToRoute('admin_product_waste');
-                }
+                return $this->redirectToRoute('admin_product_waste');
             }
         }
 
