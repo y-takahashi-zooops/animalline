@@ -41,6 +41,11 @@ class StockWasteType extends AbstractType
             ])
             ->add('waste_unit', IntegerType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Assert\GreaterThanOrEqual([
+                        'value' => 0,
+                    ]),
+                ]
             ])
             ->add('stock_waste_reason', EntityType::class, [
                 'class' => 'Customize\Entity\StockWasteReason',
@@ -51,9 +56,7 @@ class StockWasteType extends AbstractType
                 'required' => false,
                 'attr' => ['style' => 'width: 300px'],
                 'constraints' => [
-                    new Assert\GreaterThanOrEqual([
-                        'value' => 0,
-                    ]),
+                    new Assert\NotBlank(),
                 ],
             ])
             ->add('comment', TextareaType::class, [
