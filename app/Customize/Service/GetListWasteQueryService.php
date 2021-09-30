@@ -2,13 +2,7 @@
 
 namespace Customize\Service;
 
-use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\StockWasteRepository;
-use Eccube\Common\EccubeConfig;
-use Eccube\Repository\BaseInfoRepository;
-use Eccube\Repository\MailHistoryRepository;
-use Eccube\Repository\MailTemplateRepository;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class GetListWasteQueryService
 {
@@ -24,11 +18,19 @@ class GetListWasteQueryService
      */
     public function __construct(
         StockWasteRepository $stockWasteRepository
-    )
-    {
+    ) {
         $this->stockWasteRepository = $stockWasteRepository;
     }
 
+
+    /**
+     * Search waste
+     *
+     * @param null $dateFrom
+     * @param null $dateTo
+     * @return array|int|mixed|string
+     * @throws \Exception
+     */
     public function search($dateFrom = null, $dateTo = null)
     {
         $result = $this->stockWasteRepository->createQueryBuilder('w');
