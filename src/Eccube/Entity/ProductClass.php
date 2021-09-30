@@ -43,10 +43,10 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         {
             $productName = $this->getProduct()->getName();
             if ($this->hasClassCategory1()) {
-                $productName .= ' - '.$this->getClassCategory1()->getName();
+                $productName .= ' - ' . $this->getClassCategory1()->getName();
             }
             if ($this->hasClassCategory2()) {
-                $productName .= ' - '.$this->getClassCategory2()->getName();
+                $productName .= ' - ' . $this->getClassCategory2()->getName();
             }
 
             return $productName;
@@ -67,7 +67,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set price01 IncTax
          *
-         * @param  string       $price01_inc_tax
+         * @param string $price01_inc_tax
          *
          * @return ProductClass
          */
@@ -128,7 +128,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set tax_rate
          *
-         * @param  string $tax_rate
+         * @param string $tax_rate
          *
          * @return ProductClass
          */

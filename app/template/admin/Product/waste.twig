@@ -11,23 +11,56 @@ file that was distributed with this source code.
 {% extends '@admin/default_frame.twig' %}
 
 {% set menus = ['product', 'waste'] %}
+{% set params = app.request.query.all %}
 
 {% block title %}廃棄管理{% endblock %}
 {% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
 
 {% block javascript %}
-    <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.core.min.js', 'admin') }}"></script>
+<script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.core.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.widget.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.mouse.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.sortable.min.js', 'admin') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>#}
 
     <script>
-        $(".delete").on('click', function() {
+        function destroy(id) {
+            $('input[name=id_destroy]').val(id);
             $('#DeleteModal').modal('show');
+        }
+
+        $('#search').on('click', function () {
+            var list = $('#searchProductList');
+            list.children().remove();
+            $.ajax({
+                url: "{{ url('admin_waste_search_product') }}",
+                    type: 'POST',
+                    dataType: 'html',
+                    data: {
+                        'keyword': $('#search_product_waste').val()
+                    }
+                }).done(function (data) {
+                    $('#searchProductList').html(data);
+                    $('#ProductModal').modal('show')
+                }).fail(function (data) {
+                    alert('search product failed.');
+                });
         });
-        $("#search").on('click', function() {
-            $('#ProductModal').modal('show');
+
+        $(document).on('click', '#searchProductList ul.pagination li.page-item a.page-link', function (e) {
+            e.preventDefault();
+            var list = $('#searchProductList');
+            list.children().remove();
+            var url = $(this).attr('href');
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'html'
+            }).done(function (data) {
+                $('#searchProductList').html(data);
+            }).fail(function (data) {
+                alert('search product failed.');
+            });
         });
     </script>
 {% endblock %}
@@ -36,7 +69,7 @@ file that was distributed with this source code.
 
 {% block main %}
     <div class="c-outsideBlock">
-        <form id='search_form' method="post" action="#">
+        <form id='search_form' method="get" action="">
             <div class="c-outsideBlock__contents">
                 <div class="row justify-content-start">
                     <div class="col-6">
@@ -44,57 +77,33 @@ file that was distributed with this source code.
                             <label class="col-form-label">期間選択</label>
                             <div class="d-flex align-items-center">
                                 <div class="ec-select">
-                                    <div class="form-inline">           
-                                        <select class="form-control mr-2">
-                                            <option value="2016">2016</option>
-                                            <option value="2017">2017</option>
-                                            <option value="2018">2018</option>
-                                            <option value="2019">2019</option>
-                                            <option value="2020">2020</option>
-                                            <option value="2021">2021</option>
+                                    <div class="form-inline">
+                                        <select class="form-control mr-2" name="year_from">
+                                            {% for i in 2016..2036 %}
+                                                <option value="{{ i }}" {{ params.year_from is defined and params.year_from == i ? 'selected' }}>{{ i }}</option>
+                                            {% endfor %}
                                         </select>
                                         /
-                                        <select class="form-control ml-2">
-                                            <option value="1">01</option>
-                                            <option value="2">02</option>
-                                            <option value="3">03</option>
-                                            <option value="4">04</option>
-                                            <option value="5">05</option>
-                                            <option value="6">06</option>
-                                            <option value="7">07</option>
-                                            <option value="8">08</option>
-                                            <option value="9">09</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
+                                        <select class="form-control ml-2" name="month_from">
+                                            {% for i in 1..12 %}
+                                                <option value="{{ i }}" {{ params.month_from is defined and params.month_from == i ? 'selected' }}>{{ i }}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-auto text-center"><span>〜</span></div>
                                 <div class="ec-select">
-                                    <div class="form-inline">           
-                                        <select class="form-control mr-2">
-                                            <option value="2016">2016</option>
-                                            <option value="2017">2017</option>
-                                            <option value="2018">2018</option>
-                                            <option value="2019">2019</option>
-                                            <option value="2020">2020</option>
-                                            <option value="2021">2021</option>
+                                    <div class="form-inline">
+                                        <select class="form-control mr-2" name="year_to">
+                                            {% for i in 2016..2036 %}
+                                                <option value="{{ i }}" {{ params.year_to is defined and params.year_to == i ? 'selected' }}>{{ i }}</option>
+                                            {% endfor %}
                                         </select>
                                         /
-                                        <select class="form-control ml-2">
-                                            <option value="1">01</option>
-                                            <option value="2">02</option>
-                                            <option value="3">03</option>
-                                            <option value="4">04</option>
-                                            <option value="5">05</option>
-                                            <option value="6">06</option>
-                                            <option value="7">07</option>
-                                            <option value="8">08</option>
-                                            <option value="9">09</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
+                                        <select class="form-control ml-2" name="month_to">
+                                            {% for i in 1..12 %}
+                                                <option value="{{ i }}" {{ params.month_to is defined and params.month_to == i ? 'selected' }}>{{ i }}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
@@ -110,20 +119,23 @@ file that was distributed with this source code.
     </div>
 
     <div class="c-outsideBlock">
-        <form id='search_form' method="post" action="#">
+        <form id='search_form' method="get" action="">
             <div class="c-outsideBlock__contents">
                 <div class="row justify-content-start">
                     <div class="col-6">
                         <div class="mb-2">
-                            <label class="col-form-label" data-tooltip="true" data-placement="top" title="情報を入力して商品の絞りこみ・廃棄情報の登録ができます。">商品名・JANコード<i class="fa fa-question-circle fa-lg ml-1"></i></label>
-                            <input type="text" id="admin_search_product_id" name="admin_search_product[id]" class="form-control">
+                            <label class="col-form-label" data-tooltip="true" data-placement="top"
+                                   title="情報を入力して商品の絞りこみ・廃棄情報の登録ができます。">商品名・JANコード<i
+                                        class="fa fa-question-circle fa-lg ml-1"></i></label>
+                            <input type="text" id="search_product_waste" name="product_keyword"
+                                   class="form-control">
                         </div>
                     </div>
                 </div>
             </div>
             <div class="c-outsideBlock__contents mb-5">
-                {# <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.search'|trans }}</button> #}
-                <button type="button" class="btn btn-ec-conversion px-5" id="search">{{ 'admin.common.search'|trans }}</button>
+                <button type="button" class="btn btn-ec-conversion px-5"
+                        id="search">{{ 'admin.common.search'|trans }}</button>
             </div>
         </form>
     </div>
@@ -131,6 +143,7 @@ file that was distributed with this source code.
         <div class="c-contentsArea__primaryCol">
             <div class="c-primaryCol">
                 <form id="form_bulk" method="POST" action="">
+                    <input type="hidden" name="id_destroy" value="">
                     <div class="card rounded border-0 mb-4 d-block">
                         <div class="card-body p-0">
                             <table class="table table-sm">
@@ -145,167 +158,93 @@ file that was distributed with this source code.
                                 </tr>
                                 </thead>
                                 <tbody>
+                                {% for waste in wastes %}
                                     <tr>
-                                        <td class="align-middle pl-4">1</td>
+                                        <td class="align-middle pl-4">{{ waste.id }}</td>
                                         <td class="align-middle">
-                                            商品1
+                                            {{ waste.Product.name }}
                                         </td>
                                         <td class="align-middle">
-                                            2021/09/10
+                                            {{ waste.wasteDate | date('Y/m/d') }}
                                         </td>
                                         <td class="align-middle">
-                                            20
+                                            {{ waste.wasteUnit }}
                                         </td>
                                         <td class="align-middle">
-                                            廃棄理由1
+                                            {{ waste.StockWasteReason.wasteReason ?? '' }}
                                         </td>
                                         <td>
                                             <div class="col-auto text-right">
-                                                <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top" title="削除">
-                                                    <a class="btn btn-ec-actionIcon delete">
+                                                <div class="d-inline-block mr-2" data-tooltip="true"
+                                                     data-placement="top"
+                                                     title="削除">
+                                                    <a class="btn btn-ec-actionIcon delete"
+                                                       onclick="destroy({{ waste.id }})">
                                                         <i class="fa fa-close fa-lg text-secondary"></i>
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                     </tr>
+                                {% else %}
                                     <tr>
-                                        <td class="align-middle pl-4">2</td>
-                                        <td class="align-middle">
-                                            商品2
-                                        </td>
-                                        <td class="align-middle">
-                                            2021/09/10
-                                        </td>
-                                        <td class="align-middle">
-                                            40
-                                        </td>
-                                        <td class="align-middle">
-                                            廃棄理由2
-                                        </td>
-                                        <td>
-                                            <div class="col-auto text-right">
-                                                <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top" title="削除">
-                                                    <a class="btn btn-ec-actionIcon delete">
-                                                        <i class="fa fa-close fa-lg text-secondary"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
+                                        <td colspan="6">結果が０件です。</td>
                                     </tr>
-                                    <tr>
-                                        <td class="align-middle pl-4">3</td>
-                                        <td class="align-middle">
-                                            商品3
-                                        </td>
-                                        <td class="align-middle">
-                                            2021/09/10
-                                        </td>
-                                        <td class="align-middle">
-                                            30
-                                        </td>
-                                        <td class="align-middle">
-                                            廃棄理由3
-                                        </td>
-                                        <td>
-                                            <div class="col-auto text-right">
-                                                <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top" title="削除">
-                                                    <a class="btn btn-ec-actionIcon delete">
-                                                        <i class="fa fa-close fa-lg text-secondary"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    <!-- 削除モーダル -->
+                    <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog"
+                         aria-labelledby="DeleteModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title font-weight-bold">
+                                        {{ 'admin.common.delete_modal__title'|trans }}
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body text-left">
+                                    <p class="text-left modal-message">削除します。よろしいですか？</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        {{ 'admin.common.cancel'|trans }}
+                                    </button>
+                                    <button type="submit" class="btn btn-ec-delete">
+                                        {{ 'admin.common.delete'|trans }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
-        </div>
-    </div>
-
-    <!-- 削除モーダル -->
-    <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog"
-    aria-labelledby="DeleteModal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold">
-                        {{ 'admin.common.delete_modal__title'|trans }}
-                    </h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body text-left">
-                    <p class="text-left modal-message">削除します。よろしいですか？</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        {{ 'admin.common.cancel'|trans }}
-                    </button>
-                    <a class="btn btn-ec-delete" href="#">
-                        {{ 'admin.common.delete'|trans }}
-                    </a>
-                </div>
+            <div class="navigation float-right">
+                {{ knp_pagination_render(wastes) }}
             </div>
         </div>
     </div>
 
-
     {# 明細表示モーダル #}
-    <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="ProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" id="exampleModalLabel">商品情報</h3>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <table class="table table-sm">
-                        <thead>
-                        <tr>
-                            <th class="border-top-0 pt-2 pb-2 text-center">ID</th>
-                            <th class="border-top-0 pt-2 pb-2 text-center">商品名</th>
-                            <th class="border-top-0 pt-2 pb-2 text-center">在庫数</th>
-                            <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="align-middle text-center">
-                                    1
-                                </td>
-                                <td class="align-middle text-center">
-                                    商品名1
-                                </td>
-                                <td class="align-middle text-center">
-                                    1
-                                </td>
-                                <td class="align-middle pr-3">
-                                    <div class="text-right">
-                                        <div class="px-1 d-inline-block">
-                                            {# <button class="btn btn-ec-actionIcon confirmationModal"
-                                                data-tooltip="true" data-placement="top" title="廃棄情報登録">
-                                                <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
-                                            </button> #}
-                                            <a class="btn btn-ec-actionIcon confirmationModal"
-                                            data-tooltip="true" data-placement="top" title="廃棄情報登録" href="{{url('admin_product_waste_regist', {'id': 1}) }}">
-                                                <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="modal-body" id="searchProductList">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
                 </div>
             </div>
         </div>

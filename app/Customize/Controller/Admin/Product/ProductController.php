@@ -14,6 +14,10 @@
 namespace Customize\Controller\Admin\Product;
 
 use Customize\Entity\InstockScheduleHeader;
+use Customize\Entity\StockWaste;
+use Customize\Repository\StockWasteReasonRepository;
+use Customize\Repository\StockWasteRepository;
+use Customize\Service\GetListWasteQueryService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Customize\Config\AnilineConf;
 use Customize\Form\Type\Admin\InstockScheduleHeaderType;
@@ -35,6 +39,7 @@ use Eccube\Entity\ProductImage;
 use Eccube\Entity\ProductStock;
 use Eccube\Entity\ProductTag;
 use Customize\Entity\Supplier;
+use Customize\Form\Type\Admin\StockWasteType;
 use Customize\Form\Type\Admin\SupplierType;
 use Customize\Repository\SupplierRepository;
 use Eccube\Event\EccubeEvents;
@@ -150,6 +155,21 @@ class ProductController extends BaseProductController
     protected $orderItemTypeRepository;
 
     /**
+     * @var StockWasteRepository
+     */
+    protected $stockWasteRepository;
+
+    /**
+     * @var StockWasteReasonRepository
+     */
+    protected $stockWasteReasonRepository;
+
+    /**
+     * @var GetListWasteQueryService
+     */
+    protected $getListWasteQueryService;
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -167,6 +187,9 @@ class ProductController extends BaseProductController
      * @param InstockScheduleRepository $instockScheduleRepository
      * @param ListInstockQueryService $listInstockQueryService
      * @param OrderItemTypeRepository $orderItemTypeRepository
+     * @param StockWasteRepository $stockWasteRepository
+     * @param StockWasteReasonRepository $stockWasteReasonRepository
+     * @param GetListWasteQueryService $getListWasteQueryService
      */
     public function __construct(
         CsvExportService                $csvExportService,
@@ -183,9 +206,11 @@ class ProductController extends BaseProductController
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
         ListInstockQueryService         $listInstockQueryService,
-        OrderItemTypeRepository         $orderItemTypeRepository
-    )
-    {
+        OrderItemTypeRepository         $orderItemTypeRepository,
+        StockWasteRepository            $stockWasteRepository,
+        StockWasteReasonRepository      $stockWasteReasonRepository,
+        GetListWasteQueryService        $getListWasteQueryService
+    ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
         $this->productImageRepository = $productImageRepository;
@@ -201,6 +226,10 @@ class ProductController extends BaseProductController
         $this->instockScheduleRepository = $instockScheduleRepository;
         $this->listInstockQueryService = $listInstockQueryService;
         $this->orderItemTypeRepository = $orderItemTypeRepository;
+        $this->stockWasteRepository = $stockWasteRepository;
+        $this->stockWasteReasonRepository = $stockWasteReasonRepository;
+        $this->getListWasteQueryService = $getListWasteQueryService;
+        $this->stockWasteReasonRepository = $stockWasteReasonRepository;
     }
 
     /**
@@ -1186,9 +1215,39 @@ class ProductController extends BaseProductController
      * @Route("/%eccube_admin_route%/product/waste", name="admin_product_waste")
      * @Template("@admin/Product/waste.twig")
      */
-    public function waste(Request $request)
+    public function waste(PaginatorInterface $paginator, Request $request)
     {
-        return [];
+        if ($request->get('id_destroy') && $request->isMethod('POST')) {
+            $waste = $this->stockWasteRepository->find($request->get('id_destroy'));
+            $productClass = $waste->getProductClass();
+            $productClass->setStock($productClass->getStock() + $waste->getWasteUnit());
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($productClass);
+            $entityManager->remove($waste);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_product_waste');
+        }
+        $dateFrom = [
+            'yearFrom' => $request->get('year_from'),
+            'monthFrom' => $request->get('month_from'),
+        ];
+
+        $dateTo = [
+            'yearTo' => $request->get('year_to'),
+            'monthTo' => $request->get('month_to'),
+        ];
+        $result = $this->getListWasteQueryService->search($dateFrom, $dateTo);
+
+        $wastes = $paginator->paginate(
+            $result,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return [
+            'wastes' => $wastes
+        ];
     }
 
 
@@ -1200,7 +1259,37 @@ class ProductController extends BaseProductController
      */
     public function waste_regist(Request $request)
     {
-        return [];
+        $productClassId = $request->get('id');
+        $productClass = $this->productClassRepository->find($productClassId);
+        if (!$productClass) {
+            throw new NotFoundHttpException();
+        }
+        $product = null;
+
+        $stockWaste = new StockWaste();
+        $form = $this->createForm(StockWasteType::class, $stockWaste);
+        $form->handleRequest($request);
+
+        if ($productClass) {
+            $product = $productClass->getProduct();
+
+            if ($form->isSubmitted() && $form->isValid() && $product) {
+                $stockProductClass = $request->get('stock_waste')['waste_unit'];
+                $stockWaste->setProduct($product)
+                           ->setProductClass($productClass);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($stockWaste);
+                $entityManager->flush();
+                $this->productClassRepository->decrementCount($productClass, $stockProductClass);
+
+                return $this->redirectToRoute('admin_product_waste');
+            }
+        }
+
+        return [
+            'product' => $product,
+            'form' => $form->createView()
+        ];
     }
 
     /**
@@ -1426,5 +1515,59 @@ class ProductController extends BaseProductController
             $subTotalPrice = $price * $quantity1 + $price * $quantity2 * $quantityBox;
         }
         return $subTotalPrice;
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/product/waste/search/product", name="admin_waste_search_product")
+     * @Route("/%eccube_admin_route%/product/waste/search/product/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_waste_search_product_page")
+     * @Template("@admin/Product/waste_search_product.twig")
+     */
+    public function searchProduct(Request $request, Paginator $paginator, $page_no = null)
+    {
+        if ($request->isXmlHttpRequest() && $this->isTokenValid()) {
+            log_debug('waste search product start.');
+            $page_count = $this->eccubeConfig['eccube_default_page_count'];
+            $session = $this->session;
+
+            if ('POST' === $request->getMethod()) {
+                $page_no = 1;
+
+                $searchData = [
+                    'keyword' => $request->get('keyword'),
+                ];
+
+                $session->set('eccube.admin.waste.product.search', $searchData);
+                $session->set('eccube.admin.waste.product.search.page_no', $page_no);
+            } else {
+                $searchData = (array)$session->get('eccube.admin.waste.product.search');
+                if (is_null($page_no)) {
+                    $page_no = intval($session->get('eccube.admin.waste.product.search.page_no'));
+                } else {
+                    $session->set('eccube.admin.waste.product.search.page_no', $page_no);
+                }
+            }
+
+            $qb = $this->productClassRepository->getQueryBuilderBySearchDataForAdmin($searchData);
+
+            /** @var \Knp\Component\Pager\Pagination\SlidingPagination $pagination */
+            $pagination = $paginator->paginate(
+                $qb,
+                $page_no,
+                $page_count,
+                ['wrap-queries' => true]
+            );
+
+            /** @var $Products \Eccube\Entity\Product[] */
+            $Products = $pagination->getItems();
+
+            if (empty($Products)) {
+                log_debug('waste search product not found.');
+            }
+
+            return [
+                'pagination' => $pagination
+            ];
+        }
+        return [];
     }
 }
