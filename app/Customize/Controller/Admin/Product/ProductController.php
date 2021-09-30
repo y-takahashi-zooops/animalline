@@ -1536,18 +1536,18 @@ class ProductController extends BaseProductController
                     'id' => $request->get('keyword'),
                 ];
 
-                $session->set('eccube.admin.order.product.search', $searchData);
-                $session->set('eccube.admin.order.product.search.page_no', $page_no);
+                $session->set('eccube.admin.waste.product.search', $searchData);
+                $session->set('eccube.admin.waste.product.search.page_no', $page_no);
             } else {
-                $searchData = (array)$session->get('eccube.admin.order.product.search');
+                $searchData = (array)$session->get('eccube.admin.waste.product.search');
                 if (is_null($page_no)) {
-                    $page_no = intval($session->get('eccube.admin.order.product.search.page_no'));
+                    $page_no = intval($session->get('eccube.admin.waste.product.search.page_no'));
                 } else {
-                    $session->set('eccube.admin.order.product.search.page_no', $page_no);
+                    $session->set('eccube.admin.waste.product.search.page_no', $page_no);
                 }
             }
 
-            $qb = $this->productRepository->getQueryBuilderBySearchDataForAdmin($searchData);
+            $qb = $this->productClassRepository->getQueryBuilderBySearchDataForAdmin($searchData);
 
             /** @var \Knp\Component\Pager\Pagination\SlidingPagination $pagination */
             $pagination = $paginator->paginate(
@@ -1565,7 +1565,6 @@ class ProductController extends BaseProductController
             }
 
             return [
-                'Products' => $Products,
                 'pagination' => $pagination
             ];
         }

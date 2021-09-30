@@ -13,7 +13,9 @@
 
 namespace Eccube\Repository;
 
+use Eccube\Doctrine\Query\Queries;
 use Eccube\Entity\ProductClass;
+use Eccube\Util\StringUtil;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -24,9 +26,18 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class ProductClassRepository extends AbstractRepository
 {
-    public function __construct(RegistryInterface $registry)
+    /**
+     * @var Queries
+     */
+    protected $queries;
+
+    public function __construct(
+        RegistryInterface $registry,
+        Queries           $queries
+    )
     {
         parent::__construct($registry, ProductClass::class);
+        $this->queries = $queries;
     }
 
     /**
@@ -65,5 +76,30 @@ class ProductClassRepository extends AbstractRepository
             ->setParameter('id', $entity->getId())
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * get query builder.
+     *
+     * @param array $searchData
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getQueryBuilderBySearchDataForAdmin($searchData)
+    {
+        $qb = $this->createQueryBuilder('pc')
+            ->addSelect('p')
+            ->innerJoin('pc.Product', 'p')
+            ->andWhere('pc.visible = :visible')
+            ->setParameter('visible', true);
+
+        if (isset($searchData['keyword']) && StringUtil::isNotBlank($searchData['keyword'])) {
+            $qb
+                ->andWhere('p.name LIKE :likekeyword OR pc.code LIKE :likekeyword')
+                ->setParameter('likekeyword', '%' . str_replace(['%', '_'], ['\\%', '\\_'], $searchData['keyword']) . '%');
+        }
+        $qb
+            ->orderBy('pc.update_date', 'DESC');
+        return $this->queries->customize(QueryKey::PRODUCT_SEARCH_ADMIN, $qb, $searchData);
     }
 }
