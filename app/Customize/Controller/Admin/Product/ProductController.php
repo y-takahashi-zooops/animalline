@@ -1275,9 +1275,9 @@ class ProductController extends BaseProductController
 
             if ($form->isSubmitted() && $form->isValid() && $product) {
                 $stockProductClass = $productClass->getStock();
-                $stockUnit = $request->get('stock_waste')['waste_unit'] ? $request->get('stock_waste')['waste_unit'] : 0;
+                $stockUnit = $form['waste_unit']->getData() ? $form['waste_unit']->getData() : 0;
 
-                if ($stockProductClass > $stockUnit) {
+                if ($stockProductClass >= $stockUnit) {
                     $stockWaste->setProduct($product)
                                ->setProductClass($productClass);
                     $entityManager = $this->getDoctrine()->getManager();
@@ -1290,7 +1290,7 @@ class ProductController extends BaseProductController
                 }
 
                 $this->addError('admin.common.save_error', 'admin');
-                return $this->redirectToRoute('admin_product_waste_regist', ['id' => $product->getId()]);
+                return $this->redirectToRoute('admin_product_waste_regist', ['id' => $productClass->getId()]);
             }
         }
 
