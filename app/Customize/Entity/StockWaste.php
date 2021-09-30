@@ -80,7 +80,7 @@ class StockWaste
         return $this->Product;
     }
 
-    public function setProductId(?Product $Product): self
+    public function setProduct(?Product $Product): self
     {
         $this->Product = $Product;
 
@@ -92,7 +92,7 @@ class StockWaste
         return $this->ProductClass;
     }
 
-    public function setProductClassId(?ProductClass $ProductClass): self
+    public function setProductClass(?ProductClass $ProductClass): self
     {
         $this->ProductClass = $ProductClass;
 

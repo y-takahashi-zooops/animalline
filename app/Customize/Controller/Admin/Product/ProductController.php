@@ -39,6 +39,7 @@ use Eccube\Entity\ProductImage;
 use Eccube\Entity\ProductStock;
 use Eccube\Entity\ProductTag;
 use Customize\Entity\Supplier;
+use Customize\Form\Type\Admin\StockWasteType;
 use Customize\Form\Type\Admin\SupplierType;
 use Customize\Repository\SupplierRepository;
 use Eccube\Event\EccubeEvents;
@@ -229,6 +230,7 @@ class ProductController extends BaseProductController
         $this->stockWasteRepository = $stockWasteRepository;
         $this->stockWasteReasonRepository = $stockWasteReasonRepository;
         $this->getListWasteQueryService = $getListWasteQueryService;
+        $this->stockWasteReasonRepository = $stockWasteReasonRepository;
     }
 
     /**
@@ -1254,7 +1256,34 @@ class ProductController extends BaseProductController
      */
     public function waste_regist(Request $request)
     {
-        return [];
+        $productClassId = $request->get('id');
+        $productClass = $this->productClassRepository->find($productClassId);
+        $stockWasteReasons = $this->stockWasteReasonRepository->findAll();
+        $product = $productClass->getProduct();
+
+        if ($product) {
+            $stockWaste = new StockWaste();
+            $form = $this->createForm(StockWasteType::class,  $stockWaste);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $stockWasteReason = $this->stockWasteReasonRepository->find($request->get('stockWasteReason'));
+                $stockWaste->setStockWasteReason($stockWasteReason);
+                $stockWaste->setProduct($product);
+                $stockWaste->setProductClass($productClass);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($stockWaste);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('admin_product_waste');
+            }
+        }
+
+        return [
+            'product' => $product,
+            'stockWasteReasons' => $stockWasteReasons,
+            'form' => $form->createView()
+        ];
     }
 
     /**
