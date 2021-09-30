@@ -11,6 +11,7 @@ file that was distributed with this source code.
 {% extends '@admin/default_frame.twig' %}
 
 {% set menus = ['product', 'waste'] %}
+{% set params = app.request.query.all %}
 
 {% block title %}廃棄管理{% endblock %}
 {% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
@@ -27,8 +28,24 @@ file that was distributed with this source code.
             $('input[name=id_destroy]').val(id);
             $('#DeleteModal').modal('show');
         }
-        $("#search").on('click', function() {
-            $('#ProductModal').modal('show');
+
+         $(function(){
+    // 商品検索
+    $('#search').on('click', function () {
+        var list = $('#searchProductList');
+        list.children().remove();
+        $.ajax({
+            url: "{{ url('admin_waste_search_product') }}",
+                type: 'POST',
+                dataType: 'html',
+                data: {
+                    'keyword': $('#search_product_waste').val()
+                }
+            }).done(function (data) {
+                $('#searchProductList').html(data);
+            }).fail(function (data) {
+                alert('search product failed.');
+            });
         });
     </script>
 {% endblock %}
@@ -48,13 +65,13 @@ file that was distributed with this source code.
                                     <div class="form-inline">
                                         <select class="form-control mr-2" name="year_from">
                                             {% for i in 2016..2036 %}
-                                                <option value="{{ i }}">{{ i }}</option>
+                                                <option value="{{ i }}" {{ params.year_from is defined and params.year_from == i ? 'selected' }}>{{ i }}</option>
                                             {% endfor %}
                                         </select>
                                         /
                                         <select class="form-control ml-2" name="month_from">
                                             {% for i in 1..12 %}
-                                                <option value="{{ i }}">{{ i }}</option>
+                                                <option value="{{ i }}" {{ params.month_from is defined and params.month_from == i ? 'selected' }}>{{ i }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -64,13 +81,13 @@ file that was distributed with this source code.
                                     <div class="form-inline">
                                         <select class="form-control mr-2" name="year_to">
                                             {% for i in 2016..2036 %}
-                                                <option value="{{ i }}">{{ i }}</option>
+                                                <option value="{{ i }}" {{ params.year_to is defined and params.year_to == i ? 'selected' }}>{{ i }}</option>
                                             {% endfor %}
                                         </select>
                                         /
                                         <select class="form-control ml-2" name="month_to">
                                             {% for i in 1..12 %}
-                                                <option value="{{ i }}">{{ i }}</option>
+                                                <option value="{{ i }}" {{ params.month_to is defined and params.month_to == i ? 'selected' }}>{{ i }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -87,7 +104,7 @@ file that was distributed with this source code.
     </div>
 
     <div class="c-outsideBlock">
-        <form id='search_form' method="post" action="">
+        <form id='search_form' method="get" action="">
             <div class="c-outsideBlock__contents">
                 <div class="row justify-content-start">
                     <div class="col-6">
@@ -102,7 +119,6 @@ file that was distributed with this source code.
                 </div>
             </div>
             <div class="c-outsideBlock__contents mb-5">
-                {# <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.search'|trans }}</button> #}
                 <button type="button" class="btn btn-ec-conversion px-5"
                         id="search">{{ 'admin.common.search'|trans }}</button>
             </div>
@@ -128,31 +144,32 @@ file that was distributed with this source code.
                                 </thead>
                                 <tbody>
                                 {% for waste in wastes %}
-                                <tr>
-                                    <td class="align-middle pl-4">{{ waste.id }}</td>
-                                    <td class="align-middle">
-                                        {{ waste.Product.name }}
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ waste.wasteDate | date('Y/m/d') }}
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ waste.wasteUnit }}
-                                    </td>
-                                    <td class="align-middle">
-{#                                        {{ waste.WasteReason.wasteReason }}#}
-                                    </td>
-                                    <td>
-                                        <div class="col-auto text-right">
-                                            <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top"
-                                                 title="削除">
-                                                <a class="btn btn-ec-actionIcon delete">
-                                                    <i class="fa fa-close fa-lg text-secondary"></i>
-                                                </a>
+                                    <tr>
+                                        <td class="align-middle pl-4">{{ waste.id }}</td>
+                                        <td class="align-middle">
+                                            {{ waste.Product.name }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ waste.wasteDate | date('Y/m/d') }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ waste.wasteUnit }}
+                                        </td>
+                                        <td class="align-middle">
+                                             {{ waste.StockWasteReason.wasteReason ?? '' }}
+                                        </td>
+                                        <td>
+                                            <div class="col-auto text-right">
+                                                <div class="d-inline-block mr-2" data-tooltip="true"
+                                                     data-placement="top"
+                                                     title="削除">
+                                                    <a class="btn btn-ec-actionIcon delete" onclick="destroy({{ waste.id }})">
+                                                        <i class="fa fa-close fa-lg text-secondary"></i>
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
                                 {% else %}
                                     <tr>
                                         <td colspan="6">結果が０件です。</td>
@@ -191,6 +208,9 @@ file that was distributed with this source code.
                     </div>
                 </form>
             </div>
+            <div class="navigation float-right">
+                {{ knp_pagination_render(wastes) }}
+            </div>
         </div>
     </div>
 
@@ -205,45 +225,7 @@ file that was distributed with this source code.
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <table class="table table-sm">
-                        <thead>
-                        <tr>
-                            <th class="border-top-0 pt-2 pb-2 text-center">ID</th>
-                            <th class="border-top-0 pt-2 pb-2 text-center">商品名</th>
-                            <th class="border-top-0 pt-2 pb-2 text-center">在庫数</th>
-                            <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="align-middle text-center">
-                                1
-                            </td>
-                            <td class="align-middle text-center">
-                                商品名1
-                            </td>
-                            <td class="align-middle text-center">
-                                1
-                            </td>
-                            <td class="align-middle pr-3">
-                                <div class="text-right">
-                                    <div class="px-1 d-inline-block">
-                                        {# <button class="btn btn-ec-actionIcon confirmationModal"
-                                                data-tooltip="true" data-placement="top" title="廃棄情報登録">
-                                                <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
-                                            </button> #}
-                                        <a class="btn btn-ec-actionIcon confirmationModal"
-                                           data-tooltip="true" data-placement="top" title="廃棄情報登録"
-                                           href="{{ url('admin_product_waste_regist', {'id': 1}) }}">
-                                            <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="modal-body" id="searchProductList">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
