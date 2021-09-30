@@ -17,7 +17,7 @@ file that was distributed with this source code.
 {% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
 
 {% block javascript %}
-<script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.core.min.js', 'admin') }}"></script>
+    <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.core.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.widget.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.mouse.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.sortable.min.js', 'admin') }}"></script>
@@ -29,23 +29,22 @@ file that was distributed with this source code.
             $('#DeleteModal').modal('show');
         }
 
-         $(function(){
-    // 商品検索
-    $('#search').on('click', function () {
-        var list = $('#searchProductList');
-        list.children().remove();
-        $.ajax({
-            url: "{{ url('admin_waste_search_product') }}",
-                type: 'POST',
-                dataType: 'html',
-                data: {
-                    'keyword': $('#search_product_waste').val()
-                }
-            }).done(function (data) {
-                $('#searchProductList').html(data);
-            }).fail(function (data) {
-                alert('search product failed.');
-            });
+        $('#search').on('click', function () {
+            var list = $('#searchProductList');
+            list.children().remove();
+            $.ajax({
+                url: "{{ url('admin_waste_search_product') }}",
+                    type: 'POST',
+                    dataType: 'html',
+                    data: {
+                        'keyword': $('#search_product_waste').val()
+                    }
+                }).done(function (data) {
+                    $('#searchProductList').html(data);
+                    $('#ProductModal').modal('show')
+                }).fail(function (data) {
+                    alert('search product failed.');
+                });
         });
     </script>
 {% endblock %}
@@ -156,14 +155,15 @@ file that was distributed with this source code.
                                             {{ waste.wasteUnit }}
                                         </td>
                                         <td class="align-middle">
-                                             {{ waste.StockWasteReason.wasteReason ?? '' }}
+                                            {{ waste.StockWasteReason.wasteReason ?? '' }}
                                         </td>
                                         <td>
                                             <div class="col-auto text-right">
                                                 <div class="d-inline-block mr-2" data-tooltip="true"
                                                      data-placement="top"
                                                      title="削除">
-                                                    <a class="btn btn-ec-actionIcon delete" onclick="destroy({{ waste.id }})">
+                                                    <a class="btn btn-ec-actionIcon delete"
+                                                       onclick="destroy({{ waste.id }})">
                                                         <i class="fa fa-close fa-lg text-secondary"></i>
                                                     </a>
                                                 </div>

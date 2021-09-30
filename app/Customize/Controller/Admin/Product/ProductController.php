@@ -210,8 +210,7 @@ class ProductController extends BaseProductController
         StockWasteRepository            $stockWasteRepository,
         StockWasteReasonRepository      $stockWasteReasonRepository,
         GetListWasteQueryService        $getListWasteQueryService
-    )
-    {
+    ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
         $this->productImageRepository = $productImageRepository;
@@ -1226,6 +1225,8 @@ class ProductController extends BaseProductController
             $entityManager->persist($productClass);
             $entityManager->remove($waste);
             $entityManager->flush();
+
+            return $this->redirectToRoute('admin_product_waste');
         }
         $dateFrom = [
             'yearFrom' => $request->get('year_from'),
@@ -1273,7 +1274,7 @@ class ProductController extends BaseProductController
                 if ($form->isSubmitted() && $form->isValid()) {
                     $stockProductClass = $request->get('stock_waste')['waste_unit'];
                     $stockWaste->setProduct($product)
-                    ->setProductClass($productClass);
+                        ->setProductClass($productClass);
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($stockWaste);
                     $entityManager->flush();
@@ -1513,5 +1514,60 @@ class ProductController extends BaseProductController
             $subTotalPrice = $price * $quantity1 + $price * $quantity2 * $quantityBox;
         }
         return $subTotalPrice;
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/product/waste/search/product", name="admin_waste_search_product")
+     * @Route("/%eccube_admin_route%/product/waste/search/product/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_waste_search_product_page")
+     * @Template("@admin/Product/waste_search_product.twig")
+     */
+    public function searchProduct(Request $request, Paginator $paginator, $page_no = null)
+    {
+        if ($request->isXmlHttpRequest() && $this->isTokenValid()) {
+            log_debug('waste search product start.');
+            $page_count = $this->eccubeConfig['eccube_default_page_count'];
+            $session = $this->session;
+
+            if ('POST' === $request->getMethod()) {
+                $page_no = 1;
+
+                $searchData = [
+                    'id' => $request->get('keyword'),
+                ];
+
+                $session->set('eccube.admin.order.product.search', $searchData);
+                $session->set('eccube.admin.order.product.search.page_no', $page_no);
+            } else {
+                $searchData = (array)$session->get('eccube.admin.order.product.search');
+                if (is_null($page_no)) {
+                    $page_no = intval($session->get('eccube.admin.order.product.search.page_no'));
+                } else {
+                    $session->set('eccube.admin.order.product.search.page_no', $page_no);
+                }
+            }
+
+            $qb = $this->productRepository->getQueryBuilderBySearchDataForAdmin($searchData);
+
+            /** @var \Knp\Component\Pager\Pagination\SlidingPagination $pagination */
+            $pagination = $paginator->paginate(
+                $qb,
+                $page_no,
+                $page_count,
+                ['wrap-queries' => true]
+            );
+
+            /** @var $Products \Eccube\Entity\Product[] */
+            $Products = $pagination->getItems();
+
+            if (empty($Products)) {
+                log_debug('waste search product not found.');
+            }
+
+            return [
+                'Products' => $Products,
+                'pagination' => $pagination
+            ];
+        }
+        return [];
     }
 }
