@@ -1259,7 +1259,6 @@ class ProductController extends BaseProductController
         $productClassId = $request->get('id');
         $productClass = $this->productClassRepository->find($productClassId);
         $product = [];
-        $stockWasteReasons = $this->stockWasteReasonRepository->findAll();
 
         $stockWaste = new StockWaste();
         $form = $this->createForm(StockWasteType::class,  $stockWaste);
@@ -1270,9 +1269,7 @@ class ProductController extends BaseProductController
 
             if ($product) {
                 if ($form->isSubmitted() && $form->isValid()) {
-                    $stockWasteReason = $this->stockWasteReasonRepository->find($request->get('stockWasteReason'));
-                    $stockWaste->setStockWasteReason($stockWasteReason)
-                               ->setProduct($product)
+                    $stockWaste->setProduct($product)
                                ->setProductClass($productClass);
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($stockWaste);
@@ -1285,7 +1282,6 @@ class ProductController extends BaseProductController
 
         return [
             'product' => $product,
-            'stockWasteReasons' => $stockWasteReasons,
             'form' => $form->createView()
         ];
     }

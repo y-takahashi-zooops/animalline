@@ -92,14 +92,8 @@ file that was distributed with this source code.
                                     </div>
                                     <div class="col">
                                         <div>
-                                            <select class="ec-select" name="stockWasteReason">
-                                                <option>選択してください</option>
-                                                {% for stockWasteReason in stockWasteReasons %}
-                                                    <option value={{ stockWasteReason.id }}>
-                                                        {{ stockWasteReason.wasteReason }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
+                                            {{ form_widget(form.stock_waste_reason) }}
+                                            {{ form_errors(form.stock_waste_reason) }}
                                         </div>
                                     </div>
                                 </div>
