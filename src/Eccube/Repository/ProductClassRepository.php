@@ -28,4 +28,40 @@ class ProductClassRepository extends AbstractRepository
     {
         parent::__construct($registry, ProductClass::class);
     }
+
+    /**
+     * Increment stock of products
+     *
+     * @param ProductClass $entity
+     * @return int|mixed|string
+     */
+    public function incrementCount(ProductClass $entity, $stock = 0)
+    {
+        return $this
+            ->createQueryBuilder('pc')
+            ->update()
+            ->set('pc.stock', 'case when pc.stock is null then ' . $stock . ' else pc.stock + 1 end')
+            ->where('pc.id = :id')
+            ->setParameter('id', $entity->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
+     * Decrement favorite count of pet
+     *
+     * @param ProductClass $entity
+     * @return int|mixed|string
+     */
+    public function decrementCount(ProductClass $entity, $stock = 0)
+    {
+        return $this
+            ->createQueryBuilder('pc')
+            ->update()
+            ->set('pc.stock', 'case when pc.stock > 0 then pc.stock - ' . $stock . 'else 0 end')
+            ->where('pc.id = :id')
+            ->setParameter('id', $entity->getId())
+            ->getQuery()
+            ->execute();
+    }
 }
