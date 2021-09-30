@@ -1533,7 +1533,7 @@ class ProductController extends BaseProductController
                 $page_no = 1;
 
                 $searchData = [
-                    'id' => $request->get('keyword'),
+                    'keyword' => $request->get('keyword'),
                 ];
 
                 $session->set('eccube.admin.waste.product.search', $searchData);
