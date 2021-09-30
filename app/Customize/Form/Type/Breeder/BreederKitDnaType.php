@@ -68,9 +68,12 @@ class BreederKitDnaType extends AbstractType
                 ],
             ])
             ->add('shipping_name', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'attr' => [
                     'readonly' => true,
+                ],
+                'constraints' => [
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('shipping_zip', TextType::class, [
@@ -97,7 +100,7 @@ class BreederKitDnaType extends AbstractType
                     'readonly' => true,
                 ]])
             ->add('shipping_tel', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'constraints' => [
                     new Assert\Length([
                         'max' => 11,
@@ -106,6 +109,7 @@ class BreederKitDnaType extends AbstractType
                         'type' => 'numeric',
                         'message' => 'form_error.numeric_only',
                     ]),
+                    new Assert\NotBlank()
                 ],
                 'attr' => [
                     'placeholder' => 'common.phone_number_sample',
@@ -114,11 +118,12 @@ class BreederKitDnaType extends AbstractType
                 'trim' => true,
             ])
             ->add('kit_unit', IntegerType::class, [
-                'required' => false,
+                'required' => true,
                 'constraints' => [
                     new Assert\GreaterThanOrEqual([
-                        'value' => 0,
+                        'value' => 1,
                     ]),
+                    new Assert\NotBlank()
                 ]
             ]);
     }

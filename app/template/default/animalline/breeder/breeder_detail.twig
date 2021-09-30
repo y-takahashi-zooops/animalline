@@ -1,5 +1,5 @@
 {% set site_type = 'breeder' %}
-{% extends 'ani_frame.twig' %}
+{% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
     <div class="sub-title d-sm-flex align-items-center">
@@ -69,7 +69,7 @@
             </p>
         </div>
     </div>
-    <div class="m-2 p-2"></div>
+    {# <div class="m-2 p-2"></div>
     <div class="sub-title">
         <h2>このブリーダーが扱うペット一覧</h2>
     </div>
@@ -98,7 +98,6 @@
                         <div class="m-2"></div>
                         <h4>{{ pet.prComment }}</h4>
                         <div class="m-2"></div>
-                        {# <h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4> #}
                         <div class="m-4"></div>
                         <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}
                             <span>円（税込）</span>
@@ -109,11 +108,43 @@
         {% else %}
             メッセージが見つかりません
         {% endfor %}
-    </div>
-    <div class="m-2 p-2"></div>
-    <div class="navigation">
-        {{ knp_pagination_render(pets) }}
-    </div>
+    </div> #}
+    <section id="breeder-column" class="breeder-column_dog">
+        <div class="inner">
+            <div class="breeder-column__main_section_title">
+                <h3>このブリーダーが扱うペット一覧</h3>
+            </div>
+            <div class="breeder-column__main_section_body">
+            <ul>
+                {% for pet in pets %}
+                    <li>
+                        <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
+                        <figure>
+                            <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                        class="card-img-top" alt="Pet-image">
+                        　</figure>
+                        <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
+                        <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
+                        <div class="type"><span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>茶色</span></div>
+                        <div class="publish">掲載日：2021年09月15日</div>
+                        <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
+                        <p>{{ pet.prComment|nl2br }}</p>
+                        </a>
+                    </li>
+                {% else %}
+                    <span class="mb-2">結果が０件です。</span>
+                {% endfor %}
+            </ul>
+            </div>
+            <div class="navigation">
+            {{ knp_pagination_render(pets) }}
+            </div>
+        </div>
+        <div class="m-2 p-2"></div>
+        <div class="navigation">
+            {{ knp_pagination_render(pets) }}
+        </div>
+    </section>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">

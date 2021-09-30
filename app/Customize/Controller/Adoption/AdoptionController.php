@@ -557,4 +557,15 @@ class AdoptionController extends AbstractController
     {
         return;
     }
+    
+    /**
+     * 利用規約.
+     *
+     * @Route("/adoption/terms", name="adoption_terms")
+     * @Template("animalline/adoption/terms.twig")
+     */
+    public function terms(Request $request)
+    {
+        return;
+    }
 }

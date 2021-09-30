@@ -10,15 +10,23 @@ $("#confirm-yes").click(function (e) {
 var bs_modal = $('#modal-crop');
 var image = document.getElementById('image');
 var cropper, reader, file, size;
+var breederImgFlg = false;
+
 
 $("body").on("change", "#breeders_thumbnail_path", function (e) {
+    breederImgFlg = true;
+});
+$("body").on("change", "#breeders_license_thumbnail_path", function (e) {
+    breederImgFlg = false;
+});
+
+$("body").on("change", ".thumbnail_path", function (e) {
     e.preventDefault();
     var files = e.target.files;
     var done = function (url) {
         image.src = url;
         bs_modal.modal('show');
     };
-
 
     if (files && files.length > 0) {
         file = files[0];
@@ -69,8 +77,14 @@ $("#crop").click(function () {
                 data: {image: base64data},
                 success: function (data) {
                     bs_modal.modal('hide');
-                    $('#img_thumbnail').attr('src', '/' + data).removeClass('hidden')
-                    $('#breeder_src_path').val('/' + data);
+                    // $('#img_thumbnail').attr('src', '/' + data).removeClass('hidden')
+                    if( breederImgFlg == true ){
+                        $('#img_thumbnail').attr('src', '/' + data).removeClass('hidden')
+                        $('#breeder_src_path').val('/' + data);
+                    } else {
+                        $('#img_license_thumbnail').attr('src', '/' + data).removeClass('hidden')
+                        $('#breeder_license_src_path').val('/' + data);
+                    }
                 }
             });
         };

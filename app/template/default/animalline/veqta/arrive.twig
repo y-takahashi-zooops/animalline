@@ -3,6 +3,7 @@
 <script>
     $(document).on('keyup', '#barcode', function() {
     if ($(this).val().length == 6) {
+    $(this).prop('disabled', true);
     $.ajax({
     url: '{{ url('arrive_get_user') }}',
             type: 'POST',
@@ -19,11 +20,14 @@
                 $('#submit').attr('disabled',true);
                  alert('データが存在しません');
             }
+            $('#barcode').removeAttr('disabled');
         }).fail(function () {
             console.log('search DNA failed.');
+            $('#barcode').removeAttr('disabled');
         });
     } else {
         $('#name').text('')
+        $('#barcode').removeAttr('disabled');
     }
 })
 </script>

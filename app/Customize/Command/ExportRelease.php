@@ -3,6 +3,7 @@
 namespace Customize\Command;
 
 use Carbon\Carbon;
+use Customize\Config\AnilineConf;
 use Customize\Entity\ShippingSchedule;
 use Customize\Entity\ShippingScheduleHeader;
 use Customize\Entity\WmsSyncInfo;
@@ -74,8 +75,7 @@ class ExportRelease extends Command
         ShippingScheduleRepository       $shippingScheduleRepository,
         ShippingRepository               $shippingRepository,
         OrderItemRepository              $orderItemRepository
-    )
-    {
+    ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
@@ -119,7 +119,7 @@ class ExportRelease extends Command
 
         $now = Carbon::now();
 
-        $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => 4], ['sync_date' => 'DESC']);
+        $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_SCHEDULED_SHIPMENT], ['sync_date' => 'DESC']);
 
         $query = $this->shippingRepository->createQueryBuilder('s');
         $query->where('s.update_date <= :to')
@@ -164,15 +164,15 @@ class ExportRelease extends Command
 
                         // 着荷時刻を佐川用コードに変換
                         $shippingDeliveryTime = $shipping->getShippingDeliveryTime();
-                        if( $shippingDeliveryTime == "午前" ){
+                        if ($shippingDeliveryTime == "午前") {
                             $shippingDeliveryTimeCode = "01";
-                        } elseif( $shippingDeliveryTime == "12:00～14:00" ){
+                        } elseif ($shippingDeliveryTime == "12:00～14:00") {
                             $shippingDeliveryTimeCode = "12";
-                        } elseif( $shippingDeliveryTime == "14:00～16:00" ){
+                        } elseif ($shippingDeliveryTime == "14:00～16:00") {
                             $shippingDeliveryTimeCode = "14";
-                        } elseif( $shippingDeliveryTime == "16:00～18:00" ){
+                        } elseif ($shippingDeliveryTime == "16:00～18:00") {
                             $shippingDeliveryTimeCode = "16";
-                        } elseif( $shippingDeliveryTime == "18:00～21:00" ){
+                        } elseif ($shippingDeliveryTime == "18:00～21:00") {
                             $shippingDeliveryTimeCode = "04";
                         }
 
@@ -189,11 +189,13 @@ class ExportRelease extends Command
                             ->setDiscountedPrice($order->getDiscount())
                             ->setTaxPrice($order->getTax())
                             ->setPostagePrice($order->getDeliveryFeeTotal())
-                            ->setTotalWeight($orderItem->getProductClass()
-                                ->getProduct()->getItemWeight()
+                            ->setTotalWeight(
+                                $orderItem->getProductClass()
+                                    ->getProduct()->getItemWeight()
                             )
                             ->setShippingUnits(round(
-                                (float)$orderItem->getProductClass()->getProduct()->getItemWeight() / 20))
+                                (float)$orderItem->getProductClass()->getProduct()->getItemWeight() / 20
+                            ))
                             ->setWmsSendDate($now)
                             ->setIsCancel(0);
                         $em->persist($shippingScheduleHeader);

@@ -1,5 +1,5 @@
 {% set site_type = 'breeder' %}
-{% extends 'ani_frame.twig' %}
+{% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
     <div class="ec-role">
@@ -11,7 +11,7 @@
         <div class="ec-off3Grid ec-text-ac">
             <div class="ec-off3Grid__cell">
                 <div class="ec-reportHeading">
-                    <h2 style="font-size: 24px;">
+                    <h2>
                     {% if breeder.ExaminationStatus == 1 %}
                         審査結果の通知をお待ちください。<br/>
                     {% elseif breeder.ExaminationStatus == 0 %}
