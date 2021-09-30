@@ -37,6 +37,7 @@ class StockWasteType extends AbstractType
             ->add('waste_date', DateType::class, [
                 'format' => 'yyyy-MM-dd',
                 'required' => false,
+                'placeholder' => '--'
             ])
             ->add('waste_unit', IntegerType::class, [
                 'required' => false,
@@ -48,14 +49,18 @@ class StockWasteType extends AbstractType
                     return $stockWasteReason->getWasteReason();
                 },
                 'required' => false,
+                'attr' => ['style' => 'width: 300px'],
                 'constraints' => [
-                    new Assert\NotBlank(),
+                    new Assert\GreaterThanOrEqual([
+                        'value' => 0,
+                    ]),
                 ],
             ])
             ->add('comment', TextareaType::class, [
                 'required' => false,
                 'attr' => [
-                    'rows' => 5
+                    'rows' => 5,
+                    'style' => 'width: 800px'
                 ]
             ]);
     }
