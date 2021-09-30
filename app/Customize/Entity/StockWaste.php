@@ -46,9 +46,10 @@ class StockWaste
     private $waste_unit;
 
     /**
-     * @ORM\Column(name="waste_reason_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity=StockWasteReason::class, inversedBy="StockWaste")
+     * @ORM\JoinColumn(name="waste_reason_id", nullable=true)
      */
-    private $waste_reason_id;
+    private $StockWasteReason;
 
     /**
      * @ORM\Column(name="comment", type="text", nullable=true)
@@ -122,14 +123,14 @@ class StockWaste
         return $this;
     }
 
-    public function getWasteReasonId(): ?int
+    public function getStockWasteReason(): ?StockWasteReason
     {
-        return $this->waste_reason_id;
+        return $this->StockWasteReason;
     }
 
-    public function setWasteReasonId(?int $waste_reason_id): self
+    public function setStockWasteReason(?StockWasteReason $StockWasteReason): self
     {
-        $this->waste_reason_id = $waste_reason_id;
+        $this->StockWasteReason = $StockWasteReason;
 
         return $this;
     }

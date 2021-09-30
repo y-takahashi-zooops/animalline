@@ -3,6 +3,8 @@
 namespace Customize\Entity;
 
 use Customize\Repository\StockWasteReasonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,6 +41,16 @@ class StockWasteReason
      * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
     private $update_date;
+
+    /**
+     * @ORM\OneToMany(targetEntity=StockWaste::class, mappedBy="StockWasteReason")
+     */
+    private $StockWaste;
+
+    public function __construct()
+    {
+        $this->StockWaste = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -84,5 +96,13 @@ class StockWasteReason
         $this->update_date = $updateDate;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|StockWaste[]
+     */
+    public function getStockWaste(): Collection
+    {
+        return $this->StockWaste;
     }
 }
