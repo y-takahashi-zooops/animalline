@@ -1275,7 +1275,7 @@ class ProductController extends BaseProductController
 
             if ($form->isSubmitted() && $form->isValid() && $product) {
                 $stockProductClass = $productClass->getStock();
-                $stockUnit = $request->get('stock_waste')['waste_unit'];
+                $stockUnit = $request->get('stock_waste')['waste_unit'] ? $request->get('stock_waste')['waste_unit'] : 0;
 
                 if ($stockProductClass > $stockUnit) {
                     $stockWaste->setProduct($product)
