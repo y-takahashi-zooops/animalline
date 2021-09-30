@@ -210,8 +210,7 @@ class ProductController extends BaseProductController
         StockWasteRepository            $stockWasteRepository,
         StockWasteReasonRepository      $stockWasteReasonRepository,
         GetListWasteQueryService        $getListWasteQueryService
-    )
-    {
+    ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
         $this->productImageRepository = $productImageRepository;
@@ -1218,30 +1217,30 @@ class ProductController extends BaseProductController
      */
     public function waste(PaginatorInterface $paginator, Request $request)
     {
-        $wastes = $this->stockWasteRepository->findAll();
-        if ($request->getMethod('get')) {
-            $dateFrom = [
-                'yearFrom' => $request->get('year_from'),
-                'monthFrom' => $request->get('month_from'),
-            ];
-
-            $dateTo = [
-                'yearTo' => $request->get('year_to'),
-                'monthTo' => $request->get('month_to'),
-            ];
-            $wastes = $this->getListWasteQueryService->search($dateFrom, $dateTo);
+        if ($request->get('id_destroy') && $request->isMethod('POST')) {
+            $waste = $this->stockWasteRepository->find($request->get('id_destroy'));
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($waste);
+            $entityManager->flush();
         }
+
+        $dateFrom = [
+            'yearFrom' => $request->get('year_from'),
+            'monthFrom' => $request->get('month_from'),
+        ];
+
+        $dateTo = [
+            'yearTo' => $request->get('year_to'),
+            'monthTo' => $request->get('month_to'),
+        ];
+        $result = $this->getListWasteQueryService->search($dateFrom, $dateTo);
+
         $wastes = $paginator->paginate(
-            $wastes,
+            $result,
             $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
-        if ($request->get('id_destroy') && $request->getMethod('get')) {
-            $wastes = $this->stockWasteRepository->find($request->get('id_destroy'));
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($wastes);
-            $entityManager->flush();
-        }
+
         return [
             'wastes' => $wastes
         ];
@@ -1262,7 +1261,7 @@ class ProductController extends BaseProductController
         $stockWasteReasons = $this->stockWasteReasonRepository->findAll();
 
         $stockWaste = new StockWaste();
-        $form = $this->createForm(StockWasteType::class,  $stockWaste);
+        $form = $this->createForm(StockWasteType::class, $stockWaste);
         $form->handleRequest($request);
 
         if ($productClass) {

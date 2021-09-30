@@ -1,0 +1,41 @@
+<table class="table table-sm">
+    <thead>
+    <tr>
+        <th class="border-top-0 pt-2 pb-2 text-center">ID</th>
+        <th class="border-top-0 pt-2 pb-2 text-center">商品名</th>
+        <th class="border-top-0 pt-2 pb-2 text-center">在庫数</th>
+        <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        {% for Product in pagination %}
+        <td class="align-middle text-center">
+            {{ Product.id }}
+        </td>
+        <td class="align-middle text-center">
+            {{ Product.name }}
+        </td>
+        <td class="align-middle text-center">
+            {{ Product.ProductClass.stock }}
+        </td>
+        <td class="align-middle pr-3">
+            <div class="text-right">
+                <div class="px-1 d-inline-block">
+                    <a class="btn btn-ec-actionIcon confirmationModal"
+                       data-tooltip="true" data-placement="top" title="廃棄情報登録"
+                       href="{{ url('admin_product_waste_regist', {'id': Product.id}) }}">
+                        <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% if pagination.totalItemCount > 0 %}
+    <div id="product_pagination" class="row justify-content-md-center mb-4">
+        {% include "@admin/pager.twig" with {'pages': pagination.paginationData, 'routes': 'admin_waste_search_product_page'} %}
+    </div>
+{% endif %}
