@@ -13,6 +13,7 @@
 
 namespace Eccube\Entity;
 
+use Customize\Entity\ProductSet;
 use Customize\Entity\ShippingSchedule;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -343,9 +344,15 @@ use Doctrine\ORM\Mapping as ORM;
          */
         private $ShippingSchedule;
 
+        /**
+         * @ORM\OneToMany(targetEntity=ProductSet::class, mappedBy="ProductClass")
+         */
+        private $ProductSet;
+
         public function __construct()
         {
             $this->ShippingSchedule = new ArrayCollection();
+            $this->ProductSet = new ArrayCollection();
         }
 
         public function __clone()
@@ -845,5 +852,13 @@ use Doctrine\ORM\Mapping as ORM;
         public function getShippingSchedule(): Collection
         {
             return $this->ShippingSchedule;
+        }
+
+        /**
+         * @return Collection|ProductSet[]
+         */
+        public function getProductSet(): Collection
+        {
+            return $this->ProductSet;
         }
     }
