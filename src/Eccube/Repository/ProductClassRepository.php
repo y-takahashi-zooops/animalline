@@ -47,7 +47,7 @@ class ProductClassRepository extends AbstractRepository
      * @param int stock
      * @return int|mixed|string
      */
-    public function incrementCount(ProductClass $entity, $stock = 0)
+    public function incrementStock(ProductClass $entity, $stock = 0)
     {
         return $this
             ->createQueryBuilder('pc')
@@ -60,13 +60,13 @@ class ProductClassRepository extends AbstractRepository
     }
 
     /**
-     * Decrement favorite count of pet
-     *
+     * Decrement stock of products
+     * 
      * @param ProductClass $entity
      * @param int stock
      * @return int|mixed|string
      */
-    public function decrementCount(ProductClass $entity, $stock = 0)
+    public function decrementStock(ProductClass $entity, $stock = 0)
     {
         return $this
             ->createQueryBuilder('pc')

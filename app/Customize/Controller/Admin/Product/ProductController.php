@@ -1280,7 +1280,7 @@ class ProductController extends BaseProductController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($stockWaste);
                 $entityManager->flush();
-                $this->productClassRepository->decrementCount($productClass, $stockProductClass);
+                $this->productClassRepository->decrementStock($productClass, $stockProductClass);
 
                 return $this->redirectToRoute('admin_product_waste');
             }
