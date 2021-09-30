@@ -2,46 +2,12 @@
 {% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
-{# <div class="main">
-    <h2 class="py-2 mt-4 mb-4">掲載中のペット</h2>
-    <a class="btn basic-btn accent-btn bg-accent text-align-center my-1"
-        href={{ path('adoption_configuration_pets_new', {'conservation_id': conservation.id}) }}>追加</a>
-
-    <div class="row mt-4">
-        {% for pet in pets %}
-            <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
-                <div class="catalog-card">
-                    <a href="{{ url('adoption_configuration_pets_edit', {'id': pet.id}) }}">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}"
-                                class="card-img-top" alt="...">
-                    </a>
-                    <div class="card-body bg-white">
-                        <h3 class="color-gray-500 font-weight-600">{{ pet.BreedsType.breedsName ?? '' }}</h3>
-                        <div class="m-4"></div>
-                        <div class="d-flex">
-                            <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
-                        </div>
-                        <div class="mb-2"></div>
-                        <div class="m-4"></div>
-                        <a class="btn basic-btn btn-primary text-align-center my-2"
-                            href={{ path('adoption_configuration_pets_edit', {'id': pet.id}) }}>編集</a>
-                    </div>
-                </div>
-            </div>
-        {% else %}
-            結果が０件です。
-        {% endfor %}
-    </div>
-</div>
-</body> #}
-<section id="adoption-column" class="adoption-column_dog">
+    <section id="adoption-column" class="adoption-column_dog">
         <div class="inner">
             <div class="row mb-2">
-                <div class="col-9"></div>
-                <div class="col-3">
-                    {# <a href={{ path('adoption_mypage_pets_new', {'adoption_id': adoption.id} )  }} class="btn btn-warning w-100 text-align-center my-1"> #}
-                    {# TODO:リンク先の作成(configrationになっているので、Memberの方に移す) #}
-                    <a href="#" class="btn btn-warning w-100 text-align-center my-1">
+                <div class="col-sm-9"></div>
+                <div class="col-12 col-sm-3">
+                    <a href={{ path('adoption_pets_new', {'conservation_id': conservation.id} )  }} class="btn btn-warning w-100 text-align-center my-1">
                         追加                            
                     </a>
                 </div>
@@ -55,9 +21,7 @@
                 <ul>
                     {% for pet in pets %}
                         <li>
-                            {# TODO:リンクの作成 #}
-                            <a href="#">
-                            {# <a href="{{ url('adoption_mypage_pets_edit', {'id': pet.id}) }}"> #}
+                            <a href="{{ url('adoption_pets_edit', {'id': pet.id}) }}">
                                 <figure>
                                     <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}" class="card-img-top" alt="Pet-image"></figure>
                                 </a>
@@ -72,7 +36,7 @@
                                     {{ pet.price|number_format(0) }}
                                     円（税込）                                  
                                 </div>
-                                <a href={{ path('adoption_mypage_pets_edit', {'id': pet.id} )  }} class="btn w-100 btn-warning text-align-center my-1">
+                                <a href={{ path('adoption_pets_edit', {'id': pet.id} )  }} class="btn w-100 btn-warning text-align-center my-1">
                                     編集                                        
                                 </a>
                             </li>

@@ -29,7 +29,7 @@ class AdoptionPetsTestController extends Controller
     }
 
     /**
-     * @Route("/new/{conservation_id}", name="adoption_pets_new", methods={"GET","POST"})
+     * @Route("/new/{conservation_id}", name="adoption_pets_new_test", methods={"GET","POST"})
      */
     public function new(Request $request, ConservationsRepository $conservationsRepository): Response
     {
@@ -87,7 +87,7 @@ class AdoptionPetsTestController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="adoption_pets_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="adoption_pets_edit_test", methods={"GET","POST"})
      */
     public function edit(Request $request, ConservationPets $conservationPet): Response
     {

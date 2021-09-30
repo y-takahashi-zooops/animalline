@@ -2,107 +2,111 @@
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
-    <div class="ec-pageHeader">
-        <h1>検査キット請求</h1>
-    </div>
-    <div class="ec-off1Grid">
-        <div class="ec-off1Grid__cell">
-            <form method="post" action="" novalidate name="dna-kit-form">
-                {{ form_widget(form._token) }}
-                <h2>送付先情報</h2>
-                <div class="ec-borderedDefs">
-                    <div class="mb-5">
-                        <dl>
-                            <dt>
-                                送付先住所
-                            </dt>
-                            <dd>
-                                <div class="ec-select{{ has_errors(form.choice_address) ? ' error' }}">
-                                    {{ form_widget(form.choice_address) }}
-                                    {{ form_errors(form.choice_address) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                お名前
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.shipping_name) ? ' error' }}">
-                                    {{ form_widget(form.shipping_name) }}
-                                    {{ form_errors(form.shipping_name) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                住所
-                            </dt>
-                            <dd>
-                                <div class="ec-zipInput{{ has_errors(form.shipping_zip) ? ' error' }}">
-                                    <span>{{ '〒'|trans }}</span>
-                                    {{ form_widget(form.shipping_zip) }}
-                                    <div class="ec-zipInputHelp">
-                                        <div class="ec-zipInputHelp__icon">
-                                            <div class="ec-icon"><img
-                                                        src="/html/template/default/assets/icon/question-white.svg"
-                                                        alt="">
-                                            </div>
+    <section id="breeder-column" class="breeder-column_dog">
+        <div class="inner">
+            <div class="ec-pageHeader">
+                <h1>検査キット請求</h1>
+            </div>
+            <div class="ec-off1Grid">
+                <div class="ec-off1Grid__cell">
+                    <form method="post" action="" novalidate name="dna-kit-form">
+                        {{ form_widget(form._token) }}
+                        <h2>送付先情報</h2>
+                        <div class="ec-borderedDefs">
+                            <div class="mb-5">
+                                <dl>
+                                    <dt>
+                                        送付先住所
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.choice_address) ? ' error' }}">
+                                            {{ form_widget(form.choice_address) }}
+                                            {{ form_errors(form.choice_address) }}
                                         </div>
-                                        <a href="https://www.post.japanpost.jp/zipcode/"
-                                           target="_blank"><span>郵便番号検索</span></a>
-                                    </div>
-                                    {{ form_errors(form.shipping_zip) }}
-                                </div>
-                                <div class="ec-select{{ has_errors(form.address.PrefShipping) ? ' error' }}"
-                                     onmousedown="(function(e){ e.preventDefault(); })(event, this)">
-                                    {{ form_widget(form.address.PrefShipping) }}
-                                    {{ form_errors(form.address.PrefShipping) }}
-                                </div>
-                                <div class="ec-input{{ has_errors(form.address.shipping_city) ? ' error' }}">
-                                    {{ form_widget(form.address.shipping_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-                                    {{ form_errors(form.address.shipping_city) }}
-                                </div>
-                                <div class="ec-input{{ has_errors(form.address.shipping_address) ? ' error' }}">
-                                    {{ form_widget(form.address.shipping_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-                                    {{ form_errors(form.address.shipping_address) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                電話番号
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.shipping_tel) ? ' error' }}">
-                                    {{ form_widget(form.shipping_tel) }}
-                                    {{ form_errors(form.shipping_tel) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                キット数量
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.kit_unit) ? ' error' }}">
-                                    {{ form_widget(form.kit_unit) }}
-                                    {{ form_errors(form.kit_unit) }}
-                                </div>
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-                <div class="ec-registerRole__actions">
-                    <div class="ec-off4Grid">
-                        <div class="ec-off4Grid__cell">
-                            <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        お名前
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.shipping_name) ? ' error' }}">
+                                            {{ form_widget(form.shipping_name) }}
+                                            {{ form_errors(form.shipping_name) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        住所
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-zipInput{{ has_errors(form.shipping_zip) ? ' error' }}">
+                                            <span>{{ '〒'|trans }}</span>
+                                            {{ form_widget(form.shipping_zip) }}
+                                            <div class="ec-zipInputHelp">
+                                                <div class="ec-zipInputHelp__icon">
+                                                    <div class="ec-icon"><img
+                                                                src="/html/template/default/assets/icon/question-white.svg"
+                                                                alt="">
+                                                    </div>
+                                                </div>
+                                                <a href="https://www.post.japanpost.jp/zipcode/"
+                                                target="_blank"><span>郵便番号検索</span></a>
+                                            </div>
+                                            {{ form_errors(form.shipping_zip) }}
+                                        </div>
+                                        <div class="ec-select{{ has_errors(form.address.PrefShipping) ? ' error' }}"
+                                            onmousedown="(function(e){ e.preventDefault(); })(event, this)">
+                                            {{ form_widget(form.address.PrefShipping) }}
+                                            {{ form_errors(form.address.PrefShipping) }}
+                                        </div>
+                                        <div class="ec-input{{ has_errors(form.address.shipping_city) ? ' error' }}">
+                                            {{ form_widget(form.address.shipping_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                            {{ form_errors(form.address.shipping_city) }}
+                                        </div>
+                                        <div class="ec-input{{ has_errors(form.address.shipping_address) ? ' error' }}">
+                                            {{ form_widget(form.address.shipping_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                            {{ form_errors(form.address.shipping_address) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        電話番号
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.shipping_tel) ? ' error' }}">
+                                            {{ form_widget(form.shipping_tel) }}
+                                            {{ form_errors(form.shipping_tel) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        キット数量
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.kit_unit) ? ' error' }}">
+                                            {{ form_widget(form.kit_unit) }}
+                                            {{ form_errors(form.kit_unit) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                            </div>
                         </div>
-                    </div>
+                        <div class="ec-registerRole__actions">
+                            <div class="ec-off4Grid">
+                                <div class="ec-off4Grid__cell">
+                                    <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </section>
     {{ include('animalline/components/_modal_confirm.twig') }}
     <input type="hidden" id="issetHouseDog" value="{{ breederHouseDog ? 'true' : 'false' }}">
     <input type="hidden" id="issetHouseCat" value="{{ breederHouseCat ? 'true' : 'false' }}">

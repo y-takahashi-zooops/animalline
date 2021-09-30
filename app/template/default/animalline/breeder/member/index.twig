@@ -6,7 +6,6 @@
     <div class="row">
         <div class="main-container col-12">
             <h1>マイページ</h1>
-
             <div class="row">
                 <div class="col-lg-4 col-md-12">
                     <a href="{{url('breeder_favorite')}}" class="btn btn-warning btn-block mt-3" role="button">お気に入り一覧</a>
@@ -17,18 +16,16 @@
             </div>
             <div class="m-2 p-2"></div>
             {% if user.is_breeder == 0 %}
-            <h3>ブリーダー登録申請</h3>
-            <div class="row">
-                <div class="col-lg-4 col-md-12">
-                    <a href="{{url('breeder_examination')}}" class="btn btn-warning btn-block mt-3" role="button">ブリーダー申請を行う</a>
+                <h3>ブリーダー登録申請</h3>
+                <div class="row">
+                    <div class="col-lg-4 col-md-12">
+                        <a href="{{url('breeder_examination')}}" class="btn btn-warning btn-block mt-3" role="button">ブリーダー申請を行う</a>
+                    </div>
                 </div>
-            </div>
             {% endif %}
-
             {% if user.is_breeder == 1 %}
                 <div class="m-2 p-2"></div>
                 <h1>ブリーダー様管理メニュー</h1>
-
                 {% if breeder %}
                     <div class="row">
                         <div class="col-lg-4 col-md-12">
@@ -54,7 +51,7 @@
                         <a href="{{url('breeder_pet_list')}}" class="btn btn-warning btn-block mt-3" role="button">ペット管理</a>
                     </div>
                     <div class="col-lg-4 col-md-12">
-                        <a href="{{path('breeder_examination_kit')}}" class="btn btn-warning btn-block mt-3" role="button">DNA検査キット請求</a>
+                        <a href="{{url('breeder_examination_kit')}}" class="btn btn-warning btn-block mt-3" role="button">DNA検査キット請求</a>
                     </div>
                     <div class="col-lg-4 col-md-12">
                         <a href="{{url('breeder_examination_status')}}" class="btn btn-warning btn-block mt-3" role="button">検査状況確認</a>

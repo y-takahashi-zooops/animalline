@@ -15,7 +15,7 @@
         {{ form_label(form.breeds_type, '犬種(猫種)', { 'label_attr': {'class': 'ec-label' }}) }}
         </div>
         <div class="col-md-8 ec-input ec-select">
-        {{ form_widget(form.breeds_type, { 'attr': { 'style': 'font-size: 1.6rem' }}) }}
+        {{ form_widget(form.breeds_type) }}
         {{ form_errors(form.breeds_type) }}
         </div>
     </div>

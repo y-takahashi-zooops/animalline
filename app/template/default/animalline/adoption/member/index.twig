@@ -6,15 +6,12 @@
     <div class="row">
         <div class="main-container col-12">
             <h1>マイページ</h1>
-
             <div class="row">
                 <div class="col-lg-4 col-md-12">
-                    <a href="{{url('adoption_favorite')}}" class="btn btn-warning btn-block mt-3"
-                        role="button">お気に入り一覧</a>
+                    <a href="{{url('adoption_favorite')}}" class="btn btn-warning btn-block mt-3" role="button">お気に入り一覧</a>
                 </div>
                 <div class="col-lg-4 col-md-12">
-                    <a href="{{url('adoption_get_message_mypage')}}" class="btn btn-warning btn-block mt-3"
-                        role="button">取引メッセージ</a>
+                    <a href="{{url('adoption_all_message')}}" class="btn btn-warning btn-block mt-3" role="button">取引メッセージ</a>
                 </div>
             </div>
             <div class="m-2 p-2"></div>
@@ -22,16 +19,15 @@
                 <h3>保護団体登録申請</h3>
                 <div class="row">
                     <div class="col-lg-4 col-md-12">
-                        <a href="{{url('adoption_examination')}}" class="btn btn-warning btn-block mt-3"
-                            role="button">保護団体申請を行う</a>
+                        <a href="{{url('adoption_examination')}}" class="btn btn-warning btn-block mt-3" role="button">保護団体申請を行う</a>
                     </div>
                 </div>
             {% endif %}
             {% if user.isConservation == 1 %}
-            <div class="m-2 p-2"></div>
-            <h1>保護団体様管理メニュー</h1>
-            <div class="row">
-                    {% if conservation %}
+                <div class="m-2 p-2"></div>
+                <h1>保護団体様管理メニュー</h1>
+                {% if conservation %}
+                    <div class="row">
                         <div class="col-lg-4 col-md-12">
                             <a href="{{url('adoption_baseinfo',{'return_path': "adoption_mypage"})}}" class="btn btn-warning btn-block mt-3" role="button">基本情報編集</a>
                         </div>
@@ -45,25 +41,28 @@
                                 <a href="{{path('adoption_house_info',{'pet_type': 2, 'return_path': "adoption_mypage" })}}" class="btn btn-warning btn-block mt-3" role="button">猫舎情報登録</a>
                             </div>
                         {% endif %}
-                    {% endif %}
+                    </div>
+                {% endif %}
+                <div class="row">
+                    <div class="col-lg-4 col-md-12">
+                        <a href="{{url('adoption_all_message')}}" class="btn btn-warning btn-block mt-3" role="button">問い合わせ対応</a>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <a href="{{url('adoption_pet_list')}}" class="btn btn-warning btn-block mt-3" role="button">ペット管理</a>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <a href="{{url('adoption_examination_kit')}}" class="btn btn-warning btn-block mt-3" role="button">DNA検査キット請求</a>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <a href="{{url('adoption_examination_status')}}" class="btn btn-warning btn-block mt-3" role="button">検査状況確認</a>
+                    </div>
                 </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-12">
-                    <a href="{{url('get_message_adoption_configration')}}" class="btn btn-warning btn-block mt-3"
-                        role="button">問い合わせ対応</a>
-                </div>
-                <div class="col-lg-4 col-md-12">
-                    <a href="{{url('adoption_pet_list')}}" class="btn btn-warning btn-block mt-3" role="button">ペット管理</a>
-                </div>
-                <div class="col-lg-4 col-md-12">
-                    <a href="{{url('adoption_examination_status')}}" class="btn btn-warning btn-block mt-3" role="button">検査状況確認</a>
-                </div>
-            </div>
             {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
 {% endblock %}
 {% block javascript %}{% endblock %}

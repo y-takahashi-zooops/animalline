@@ -1,22 +1,21 @@
-{% set site_type = 'breeder' %}
-{% extends 'animalline/breeder/frame.twig' %}
+{% set site_type = 'adoption' %}
+{% extends 'animalline/adoption/frame.twig' %}
 {% block main %}
-    <section id="breeder-column" class="breeder-column_dog">
+    <section id="adoption-column" class="adoption-column_dog">
         <div class="inner">
-
             <div class="row mb-2">
                 <div class="col-sm-3 col-6">
-                    <a href={{ path('breeder_pet_list') }} class="btn btn-warning w-100 text-align-center my-1">
+                    <a href={{ path('adoption_pet_list') }} class="btn btn-warning w-100 text-align-center my-1">
                         <i class="fas fa-arrow-left ml-1"></i>
                         ペット一覧                            
                     </a>
                 </div>
             </div>
-            <div class="breeder-column__main_section_title" style="text-align: center">
+            <div class="adoption-column__main_section_title" style="text-align: center;">
                 <h3>ペット情報編集</h3>
             </div>
-            <div class="breeder-column__main_section_body">
-                {{ include('animalline/breeder/member/pets/_form.twig') }}
+            <div class="adoption-column__main_section_body">
+                {{ include('animalline/adoption/member/pets/_form.twig', {'button_label': 'Update'}) }}
                 <input hidden id="form-edit">
             </div>
         </div>
@@ -25,17 +24,42 @@
 
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> {# current jquery slim not support ajax #}
-<script src="{{ asset('assets/js/breeder_pets.js') }}"></script>
+<script src="{{ asset('assets/js/conservation_pets.js') }}"></script>
 <script>
-    $("[type='file']").each(function(){
-        if ($(this).attr("id") !== 'breeder_pets_thumbnail_path') {
-            $(this).attr('disabled', true);
+    var subSrc = '{{ constant("Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE") }}';
+    var thumbnailPath = '{{ adoption_pet.thumbnailPath }}';
+    var petImages = {{ pet_mages | json_encode | raw }};
+    let disabledFlag = true;
+    $(document).ready(function() {
+        if (thumbnailPath) {
+            $('#conservation_pets_thumbnail_path').hide();
+            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', '/' + subSrc + thumbnailPath);
+            $('#conservation_pets_thumbnail_path').parent().find('img').show();
+            $('#conservation_pets_thumbnail_path').parent().parent().find('button').show();
+            $(`input.conservation_pets_thumbnail_path`).val('/' + subSrc + thumbnailPath);
+            disabledFlag = false;
         }
+        petImages.forEach((p) => {
+            setImageToBox(p.image_uri, p.sort_order - 1)
+        });
     });
     var inputImageId = '';
     var bs_modal = $('#modal');
     var image = document.getElementById('image');
     var cropper, reader, file, size;
+    function setImageToBox(image, key) {
+        const id = 'conservation_pets_image' + key;
+        $(`#${ id }`).attr('disabled', disabledFlag);
+        if (image.length > 0) {
+            $(`#${ id }`).hide();
+            $(`#${ id }`).parent().find('img').attr('src', '/' + subSrc + image);
+            $(`#${ id }`).parent().find('img').show();
+            $(`#${ id }`).parent().parent().find('button').show();
+            $(`input.${ id }`).val('/' +  subSrc + image);
+        } else {
+            disabledFlag = true;
+        }
+    }
     $(".form-control-file").change(function (e) {
         inputImageId = e.target.id;
         var files = e.target.files;
@@ -90,7 +114,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: "/breeder/configration/pets/upload",
+                    url: "/adoption/configration/pets/upload",
                     data: {image: base64data},
                     success: function (data) {
                         bs_modal.modal('hide');
@@ -161,7 +185,7 @@
         $(`input.${ e.target.classList[1] }`).val(thumbnailSrc);
 
         $('#img_thumbnail').attr('src', currentSrc);
-        $(`input.breeder_pets_thumbnail_path`).val(currentSrc);
+        $(`input.conservation_pets_thumbnail_path`).val(currentSrc);
     });
 </script>
 {% endblock %}

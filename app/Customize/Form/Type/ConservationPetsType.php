@@ -141,6 +141,7 @@ class ConservationPetsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ConservationPets::class,
+            'customer' => null
         ]);
     }
 }

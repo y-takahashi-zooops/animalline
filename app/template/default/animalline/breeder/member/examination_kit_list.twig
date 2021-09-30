@@ -10,7 +10,7 @@
                     <input type="hidden" name="dna_id" value="">
                     <div class="row justify-content-between mb-2">
                         <div class="col-6"></div>
-                        <div class="col-2 text-right">
+                        <div class="col-6 col-sm-4 col-md-3 text-right">
                             <a class="btn btn-warning btn-block mt-3"
                                    href="{{ url('breeder_examination_kit_new') }}">検査キット請求</a>
                             {% if params.is_all is defined and params.is_all == 1 %}
@@ -26,7 +26,7 @@
                         <div class="card-body p-0">
                             <table class="table table-sm dna-table text-center">
                                 <thead>
-                                    <tr>
+                                    <tr class="heading">
                                         <th class="border-top-0 pt-2 pb-2">ID</th>
                                         <th class="border-top-0 pt-2 pb-2">出荷数量</th>
                                         <th class="border-top-0 pt-2 pb-2">出荷ステータス</th>
@@ -36,10 +36,10 @@
                                 <tbody>
                                     {% for dna in dnas %}
                                         <tr>
-                                            <td>{{ dna.id }}</td>
-                                            <td>{{ dna.kit_unit ? dna.kit_unit : '_' }}</td>
-                                            <td>{{ dna.shipping_status == 1 ? '受付' : dna.shipping_status == 2 ? '出荷指示中' : '出荷済' }}</td>
-                                            <td>{{ dna.kit_shipping_date | date('Y/m/d') }}</td>
+                                            <td class="id" data-label="ID">{{ dna.id }}</td>
+                                            <td data-label="出荷数量">{{ dna.kit_unit ? dna.kit_unit : '_' }}</td>
+                                            <td data-label="出荷ステータス">{{ dna.shipping_status == 1 ? '受付' : dna.shipping_status == 2 ? '出荷指示中' : '出荷済' }}</td>
+                                            <td data-label="キット出荷日">{{ dna.kit_shipping_date | date('Y/m/d') }}</td>
                                         </tr>
                                     {% else %}
                                         <tr>

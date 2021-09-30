@@ -1,16 +1,23 @@
 {% extends 'animalline/veqta/frame.twig' %}
 
 {% block main %}
-<div class="center_section">
+<div class="main">
     <div class="row">
-        <div style="margin:auto">
-            検体状況管理
-        </div>
-        <div class="col-12">
-            <a href="{{url('veqta_arrive')}}" class="btn btn-warning w-100 m-1">検査キット到着確認</a>
-        </div>
-        <div class="col-12">
-            <a href="{{url('veqta_result')}}" class="btn btn-warning w-100 m-1">検査結果登録</a>
+        <div class="main-container col-12">
+            <h1>検体状況管理</h1>
+
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-12 col-md-8">
+                    <a href="{{url('veqta_arrive')}}" class="btn btn-warning w-100 m-1">検査キット到着確認</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-12 col-md-8">
+                    <a href="{{url('veqta_result')}}" class="btn btn-warning w-100 m-1">検査結果登録</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

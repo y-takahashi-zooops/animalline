@@ -2,45 +2,46 @@
 {% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
-<div class="main">
-    <div class="row">
-        <div class="main-container col-12">
-            <h1>マイページ</h1>
-            <div class="m-2 p-2"></div>
-            {% for rootMessage in rootMessages %}
-            <div class="m-1 p-1"></div>
-            <div class="row">
-                <div class="col-12">
-                    <a href={{ url('adoption_mypage_messages', {'id': rootMessage.id}) }}>
-                        <div class="d-sm-flex justify-content-between py-3 border adoption-border rounded">
-                            <div class="ml-5">
-                                <h3>{{
-                                    rootMessage.Conservation.getConservationHouseByPetType(rootMessage.pet.petKind).conservationHouseName
-                                    ?? '' }}</h3>
-                                <h3>{{ rootMessage.contactTitle }}</h3>
-                            </div>
-                            <div class="d-sm-flex justify-content-between w-550">
-                                <h4 class="mr-sm-5 ml-5">状態：{{
-                                    constant('Customize\\Config\\AnilineConf::CONTRACT_STATUSES')[rootMessage.contractStatus]
-                                    ?? '－' }}</h4>
-                                <h4 class="mr-sm-5 ml-5">
-                                    返信日時：{{ rootMessage.lastMessageDate.format('Y年m月d日　H:i') ?? '－' }}
-                                    <br>
-                                    {{ rootMessage.conservationCheck ? '未読あり' }}
-                                </h4>
-                            </div>
+    <div class="main">
+        <div class="row">
+            <div class="main-container col-12">
+                <h1>取引メッセージ一覧</h1>
+                <div class="m-3 p-3"></div>
+                {% for message in listMessages %}
+                    <div class="row">
+                        <div class="col-12">
+                            <a href="{{ url('adoption_message', {'id': message.Id}) }}">
+                                <div class="d-sm-flex justify-content-between py-3 border adoption-border rounded bg-white">
+                                    <div class="ml-5">
+                                        {# <h3>{{rootMessage.Conservation.getConservationHouseByPetType(rootMessage.pet.petKind).conservationHouseName
+                                        ?? '' }}</h3> #}
+                                        {# TODO:名前が出ていないので出るよう修正 #}
+                                        <h3>{{ message.Conservation.conservationHouseName ?? '' }}</h3>
+                                        <h3>{{ message.contactTitle ?? '' }}</h3>
+                                    </div>
+                                    <div class="d-sm-flex justify-content-between w-550">
+                                        <h4 class="mr-sm-5 ml-5">
+                                            {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
+                                            状態：{{ status[message.contractStatus] }}
+                                        </h4>
+                                        <h4 class="mr-sm-5 ml-5 text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}
+                                            <br>
+                                            {{ message.customerNewMsg ? '未読あり' }}
+                                        </h4>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
+                    </div>
+                    <div class="m-1 p-1"></div>
+                {% else %}
+                    結果が０件です。
+                {% endfor %}
             </div>
-            {% else %}
-            結果が０件です。
-            {% endfor %}
         </div>
     </div>
-</div>
 {% endblock %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
 {% endblock %}
 {% block javascript %}{% endblock %}

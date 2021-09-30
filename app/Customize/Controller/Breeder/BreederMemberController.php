@@ -255,28 +255,10 @@ class BreederMemberController extends AbstractController
     {
         $user = $this->getUser();
         $breeder = $this->breedersRepository->find($user);
-        /*
-        $rootMessages = $this->breederContactsRepository
-            ->findBy(
-                [
-                    'Customer' => $this->getUser(),
-                    'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
-                    'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
-                ]
-            );
 
-        $lastReplies = [];
-        foreach ($rootMessages as $rootMessage) {
-            $lastReply = $this->breederContactsRepository
-                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
-            $lastReplies[$rootMessage->getId()] = $lastReply;
-        }
-        */
         $pets = $this->breederQueryService->findBreederFavoritePets($this->getUser()->getId());
 
         return $this->render('animalline/breeder/member/index.twig', [
-            //'rootMessages' => $rootMessages,
-            //'lastReplies' => $lastReplies,
             'breeder' => $breeder,
             'pets' => $pets,
             'user' => $this->getUser(),
@@ -289,7 +271,7 @@ class BreederMemberController extends AbstractController
      * @Route("/breeder/member/all_message", name="breeder_all_message")
      * @Template("animalline/breeder/member/breeder_message.twig")
      */
-    public function all_message(Request $request)
+    public function all_message()
     {
         $listMessages = $this->breederContactHeaderRepository->findBy(['Customer' => $this->getUser()], ['last_message_date' => 'DESC']);
 
@@ -301,7 +283,7 @@ class BreederMemberController extends AbstractController
     /**
      * 取引メッセージ画面
      *
-     * @Route("/breeder/member/message/{id}", name="breeder_message")
+     * @Route("/breeder/member/message/{id}", name="breeder_message", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/member/message.twig")
      */
     public function message(Request $request, BreederContactHeader $msgHeader)
@@ -727,7 +709,7 @@ class BreederMemberController extends AbstractController
     }
 
     /**
-     * お気に入り
+     * お気に入り一覧画面
      *
      * @Route("/breeder/member/favorite", name="breeder_favorite")
      * @Template("animalline/breeder/favorite.twig")
@@ -797,7 +779,7 @@ class BreederMemberController extends AbstractController
     }
 
     /**
-     * Page contact
+     * お問い合わせ画面
      *
      * @Route("/breeder/member/contact/{pet_id}", name="breeder_contact", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/breeder/contact.twig")
@@ -915,10 +897,9 @@ class BreederMemberController extends AbstractController
     }
 
     /**
-     *
      * 新規ペット追加
      *
-     * @Route("/breeder/member/pets/new/{breeder_id}", name="breeder_mypage_pets_new", methods={"GET","POST"})
+     * @Route("/breeder/member/pets/new/{breeder_id}", name="breeder_pets_new", methods={"GET","POST"})
      */
     public function breeder_pets_new(Request $request, BreedersRepository $breedersRepository): Response
     {
@@ -1008,7 +989,7 @@ class BreederMemberController extends AbstractController
     /**
      * ペット情報編集
      *
-     * @Route("/breeder/member/pets/edit/{id}", name="breeder_mypage_pets_edit", methods={"GET","POST"})
+     * @Route("/breeder/member/pets/edit/{id}", name="breeder_pets_edit", methods={"GET","POST"})
      */
     public function breeder_pets_edit(Request $request, BreederPets $breederPet): Response
     {
@@ -1021,7 +1002,6 @@ class BreederMemberController extends AbstractController
         );
         $request->request->set('thumbnail_path', $breederPet->getThumbnailPath());
         $form->handleRequest($request);
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             $petId = $breederPet->getId();
@@ -1050,7 +1030,6 @@ class BreederMemberController extends AbstractController
             ];
         }
 
-        $customer = $this->getUser();
 
         return $this->render('animalline/breeder/member/pets/edit.twig', [
             'breeder_pet' => $breederPet,
@@ -1058,7 +1037,6 @@ class BreederMemberController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
 
     /**
      * Copy image and retrieve new url of the copy

@@ -639,13 +639,15 @@ Styleguide 1.1.6
   margin: 20px 0 30px;
   padding: 0;
   text-align: center;
-  font-size: 24px;
+  /* font-size: 24px; */
+  font-size: 2rem;
   font-weight: bold;
 }
 
 .ec-reportHeading h1, .ec-reportHeading h2, .ec-reportHeading h3, .ec-reportHeading h4, .ec-reportHeading h5, .ec-reportHeading h6, .ec-reportHeading p {
   font-weight: bold;
-  font-size: 24px;
+  /* font-size: 24px; */
+  font-size: 2rem;
 }
 
 /**

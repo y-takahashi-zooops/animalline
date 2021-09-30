@@ -165,7 +165,7 @@
                 <div class="col-1"></div>
                 <div class="col-12 col-sm-10">
                     <div class="py-3">
-                        <form action="{{ path('adoption_mypage_messages', {'id': rootMessage.id}) }}" method="post">
+                        <form action="{{ path('adoption_message', {'id': rootMessage.id}) }}" method="post">
                             <textarea required {{ isScroll ? 'autofocus' }} aria-label="dialog-chat" class="col-12"
                                 rows="5" name="reply_message" placeholder="返信メッセージ"></textarea>
                             <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">送信</button>

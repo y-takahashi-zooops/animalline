@@ -33,38 +33,52 @@
 </script>
 {% endblock %}
 {% block main %}
-    <div class="center_section">
-        <div class="row">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-6">
-                        検体バーコード読み込み
+<section>
+    <div class="inner">
+        <div class="ec-pageHeader">
+            <h1>{{ '検査キット登録確認'|trans }}</h1>
+        </div>
+        <div class="ec-off1Grid">
+            <div class="ec-off1Grid__cell">
+                <form method="POST" action="" enctype="multipart/form-data" id="form">
+                    <div class="ec-borderedDefs">
+                        <div class="mb-5">
+                            <dl>
+                                <dt>
+                                    検体バーコード読み込み
+                                </dt>
+                                <dd>
+                                    <div class="ec-input">
+                                        <input type="text" class="w-100" id="barcode" maxlength="6">
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    検体送付者名
+                                </dt>
+                                <dd>
+                                    <div class="ec-input">
+                                        <input type="text" class="w-100" placeholder="田中太郎" name="name" id="name">
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <input type="text" class="w-100" id="barcode" maxlength="6">
+                    <div class="ec-registerRole__actions">
+                        <div class="ec-off4Grid">
+                            <div class="ec-off4Grid__cell">
+                                <form name="form-receive-kit" id="form-receive-kit" method="post">
+                                    <input type="hidden" name="dna-id" value="" id="input-hidden">
+                                    <button type="submit" class="btn btn-warning w-100 m-1" id="submit" disabled>キット受領処理</button>
+                                </form>
+                                <a href="{{ url('veqta_index') }}" class="btn btn-warning w-100 m-1">戻る</a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        検体送付者名
-                    </div>
-                    <div class="col-6">
-                        <span id="name"></span>
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <form name="form-receive-kit" id="form-receive-kit" method="post">
-                        <input type="hidden" name="dna-id" value="" id="input-hidden">
-                        <button type="submit" class="btn btn-warning w-100 m-1" id="submit" disabled>キット受領処理</button>
-                    </form>
-                </div>
-                <div class="col-12">
-                    <a href="{{ url('veqta_index') }}" class="btn btn-warning w-100 m-1">戻る</a>
-                </div>
+                </form>
             </div>
-
         </div>
     </div>
+</section>
 {% endblock %}
