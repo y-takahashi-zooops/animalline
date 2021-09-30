@@ -53,7 +53,7 @@ class StockWasteType extends AbstractType
                 'choice_label' => function (\Customize\Entity\StockWasteReason $stockWasteReason) {
                     return $stockWasteReason->getWasteReason();
                 },
-                'required' => false,
+                'required' => true,
                 'attr' => ['style' => 'width: 300px'],
                 'constraints' => [
                     new Assert\NotBlank(),
