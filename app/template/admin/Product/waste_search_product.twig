@@ -8,29 +8,33 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-        {% for Product in pagination %}
-        <td class="align-middle text-center">
-            {{ Product.id }}
-        </td>
-        <td class="align-middle text-center">
-            {{ Product.name }}
-        </td>
-        <td class="align-middle text-center">
-            {{ Product.ProductClass.stock }}
-        </td>
-        <td class="align-middle pr-3">
-            <div class="text-right">
-                <div class="px-1 d-inline-block">
-                    <a class="btn btn-ec-actionIcon confirmationModal"
-                       data-tooltip="true" data-placement="top" title="廃棄情報登録"
-                       href="{{ url('admin_product_waste_regist', {'id': Product.id}) }}">
-                        <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
-                    </a>
+    {% for Product in pagination %}
+        <tr>
+            <td class="align-middle text-center">
+                {{ Product.id }}
+            </td>
+            <td class="align-middle text-center">
+                {{ Product.name }}
+            </td>
+            <td class="align-middle text-center">
+                {# {{ Product.ProductClass.stock }} #}1
+            </td>
+            <td class="align-middle pr-3">
+                <div class="text-right">
+                    <div class="px-1 d-inline-block">
+                        <a class="btn btn-ec-actionIcon confirmationModal"
+                           data-tooltip="true" data-placement="top" title="廃棄情報登録"
+                           href="{{ url('admin_product_waste_regist', {'id': Product.id}) }}">
+                            <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </td>
-    </tr>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="4">結果が０件です。</td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
