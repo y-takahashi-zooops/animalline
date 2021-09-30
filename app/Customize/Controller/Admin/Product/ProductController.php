@@ -210,7 +210,8 @@ class ProductController extends BaseProductController
         StockWasteRepository            $stockWasteRepository,
         StockWasteReasonRepository      $stockWasteReasonRepository,
         GetListWasteQueryService        $getListWasteQueryService
-    ) {
+    )
+    {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
         $this->productImageRepository = $productImageRepository;
@@ -1219,11 +1220,13 @@ class ProductController extends BaseProductController
     {
         if ($request->get('id_destroy') && $request->isMethod('POST')) {
             $waste = $this->stockWasteRepository->find($request->get('id_destroy'));
+            $productClass = $waste->getProductClass();
+            $productClass->setStock($productClass->getStock() + $waste->getWasteUnit());
             $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($productClass);
             $entityManager->remove($waste);
             $entityManager->flush();
         }
-
         $dateFrom = [
             'yearFrom' => $request->get('year_from'),
             'monthFrom' => $request->get('month_from'),
