@@ -1220,7 +1220,7 @@ class ProductController extends BaseProductController
         if ($request->get('id_destroy') && $request->isMethod('POST')) {
             $waste = $this->stockWasteRepository->find($request->get('id_destroy'));
             $productClass = $waste->getProductClass();
-            $productClass->setStock($productClass->getStock() + $waste->getWasteUnit());
+            $productClass->setStock((int) $productClass->getStock() + $waste->getWasteUnit());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($productClass);
             $entityManager->remove($waste);
