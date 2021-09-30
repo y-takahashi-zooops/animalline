@@ -1268,11 +1268,13 @@ class ProductController extends BaseProductController
 
             if ($product) {
                 if ($form->isSubmitted() && $form->isValid()) {
+                    $stockProductClass = $request->get('stock_waste')['waste_unit'];
                     $stockWaste->setProduct($product)
-                               ->setProductClass($productClass);
+                    ->setProductClass($productClass);
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($stockWaste);
                     $entityManager->flush();
+                    $this->productClassRepository->decrementCount($productClass, $stockProductClass);
 
                     return $this->redirectToRoute('admin_product_waste');
                 }
