@@ -114,7 +114,7 @@ class ExportDnaKitShippingSchedule extends Command
                 'to' => $now,
                 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT
             ])
-            ->orderBy('dna.update_date', 'DESC');
+            ->orderBy('dna.id', 'ASC');
 
         $SyncInfo = $this->wmsSyncInfoRepository->findOneBy(
             ['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_SCHEDULED_SHIPMENT],
@@ -146,7 +146,7 @@ class ExportDnaKitShippingSchedule extends Command
             $record['retail_price'] = 0;
             $record['delivery_unit_price'] = 0;
             $record['shipping_company_code'] = '000003';
-            $record['delivery_address'] = "{$record['shipping_pref']}, {$record['shipping_city']}, {$record['shipping_address']}.";
+            $record['delivery_address'] = $record['shipping_pref'] . ' ' . $record['shipping_city'] . ' ' . $record['shipping_address'];
             $record['delivery_destination_classification'] = '1';
             $record['total_product_amount'] = 0;
             $record['discount_amount'] = 0;
