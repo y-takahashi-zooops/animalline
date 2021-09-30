@@ -63,6 +63,6 @@ class GetListWasteQueryService
             }
         }
 
-        return $result->addOrderBy('w.waste_date', 'DESC')->getQuery()->getResult();
+        return $result->orderBy('w.update_date', 'DESC')->getQuery()->getResult();
     }
 }

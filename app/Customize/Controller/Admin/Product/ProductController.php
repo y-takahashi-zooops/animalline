@@ -13,6 +13,7 @@
 
 namespace Customize\Controller\Admin\Product;
 
+use Carbon\Carbon;
 use Customize\Entity\InstockScheduleHeader;
 use Customize\Entity\StockWaste;
 use Customize\Repository\StockWasteReasonRepository;
@@ -1280,10 +1281,12 @@ class ProductController extends BaseProductController
                 if ($stockProductClass >= $stockUnit) {
                     $stockWaste->setProduct($product)
                                ->setProductClass($productClass);
+                    $this->productClassRepository->decrementStock($productClass, $stockUnit);
+                    $productClass->setUpdateDate(Carbon::now());
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($stockWaste);
+                    $entityManager->persist($productClass);
                     $entityManager->flush();
-                    $this->productClassRepository->decrementStock($productClass, $stockUnit);
 
                     $this->addSuccess('admin.common.save_complete', 'admin');
                     return $this->redirectToRoute('admin_product_waste');
