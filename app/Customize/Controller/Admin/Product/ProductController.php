@@ -21,6 +21,7 @@ use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\InstockScheduleRepository;
 use Customize\Service\ListInstockQueryService;
 use Customize\Entity\InstockSchedule;
+use Customize\Entity\StockWaste;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
 use Eccube\Controller\AbstractController;
@@ -35,7 +36,9 @@ use Eccube\Entity\ProductImage;
 use Eccube\Entity\ProductStock;
 use Eccube\Entity\ProductTag;
 use Customize\Entity\Supplier;
+use Customize\Form\Type\Admin\StockWasteType;
 use Customize\Form\Type\Admin\SupplierType;
+use Customize\Repository\StockWasteReasonRepository;
 use Customize\Repository\SupplierRepository;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
@@ -150,6 +153,11 @@ class ProductController extends BaseProductController
     protected $orderItemTypeRepository;
 
     /**
+     * @var StockWasteReasonRepository
+     */
+    protected $stockWasteReasonRepository;
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -167,6 +175,7 @@ class ProductController extends BaseProductController
      * @param InstockScheduleRepository $instockScheduleRepository
      * @param ListInstockQueryService $listInstockQueryService
      * @param OrderItemTypeRepository $orderItemTypeRepository
+     * @param StockWasteReasonRepository $stockWasteReasonRepository
      */
     public function __construct(
         CsvExportService                $csvExportService,
@@ -183,7 +192,8 @@ class ProductController extends BaseProductController
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
         ListInstockQueryService         $listInstockQueryService,
-        OrderItemTypeRepository         $orderItemTypeRepository
+        OrderItemTypeRepository         $orderItemTypeRepository,
+        StockWasteReasonRepository      $stockWasteReasonRepository
     )
     {
         $this->csvExportService = $csvExportService;
@@ -201,6 +211,7 @@ class ProductController extends BaseProductController
         $this->instockScheduleRepository = $instockScheduleRepository;
         $this->listInstockQueryService = $listInstockQueryService;
         $this->orderItemTypeRepository = $orderItemTypeRepository;
+        $this->stockWasteReasonRepository = $stockWasteReasonRepository;
     }
 
     /**
@@ -1200,7 +1211,34 @@ class ProductController extends BaseProductController
      */
     public function waste_regist(Request $request)
     {
-        return [];
+        $productClassId = $request->get('id');
+        $productClass = $this->productClassRepository->find($productClassId);
+        $stockWasteReasons = $this->stockWasteReasonRepository->findAll();
+        $product = $productClass->getProduct();
+
+        if ($product) {
+            $stockWaste = new StockWaste();
+            $form = $this->createForm(StockWasteType::class,  $stockWaste);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $stockWasteReason = $this->stockWasteReasonRepository->find($request->get('stockWasteReason'));
+                $stockWaste->setStockWasteReason($stockWasteReason);
+                $stockWaste->setProduct($product);
+                $stockWaste->setProductClass($productClass);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($stockWaste);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('admin_product_waste');
+            }
+        }
+
+        return [
+            'product' => $product,
+            'stockWasteReasons' => $stockWasteReasons,
+            'form' => $form->createView()
+        ];
     }
 
     /**
