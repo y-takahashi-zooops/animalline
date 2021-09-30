@@ -13,6 +13,7 @@
 
 namespace Eccube\Entity;
 
+use Customize\Entity\StockWaste;
 use Customize\Entity\ShippingSchedule;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -343,9 +344,15 @@ use Doctrine\ORM\Mapping as ORM;
          */
         private $ShippingSchedule;
 
+        /**
+         * @ORM\OneToMany(targetEntity=StockWaste::class, mappedBy="ProductClass")
+         */
+        private $StockWaste;
+
         public function __construct()
         {
             $this->ShippingSchedule = new ArrayCollection();
+            $this->StockWaste = new ArrayCollection();
         }
 
         public function __clone()
@@ -845,5 +852,13 @@ use Doctrine\ORM\Mapping as ORM;
         public function getShippingSchedule(): Collection
         {
             return $this->ShippingSchedule;
+        }
+
+        /**
+         * @return Collection|StockWaste[]
+         */
+        public function getStockWaste(): Collection
+        {
+            return $this->StockWaste;
         }
     }

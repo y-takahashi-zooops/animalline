@@ -13,6 +13,9 @@
 
 namespace Eccube\Entity;
 
+use Customize\Entity\StockWaste;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 if (!class_exists('\Eccube\Entity\ProductClass')) {
@@ -332,6 +335,19 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
          * })
          */
         private $Creator;
+
+        /**
+         * @ORM\OneToMany(targetEntity=StockWaste::class, mappedBy="ProductClass")
+         */
+        private $StockWaste;
+
+        /**
+         * Constructor
+         */
+        public function __construct()
+        {
+            $this->StockWaste = new ArrayCollection();
+        }
 
         public function __clone()
         {
@@ -822,6 +838,14 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         public function getPointRate()
         {
             return $this->point_rate;
+        }
+
+        /**
+         * @return Collection|StockWaste[]
+         */
+        public function getStockWaste(): Collection
+        {
+            return $this->StockWaste;
         }
     }
 }

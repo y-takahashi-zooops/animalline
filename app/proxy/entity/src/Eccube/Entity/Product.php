@@ -14,6 +14,7 @@
 namespace Eccube\Entity;
 
 use Customize\Entity\ItemWaste;
+use Customize\Entity\StockWaste;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -554,6 +555,11 @@ use Doctrine\ORM\Mapping as ORM;
         private $ItemWastes;
 
         /**
+         * @ORM\OneToMany(targetEntity=StockWaste::class, mappedBy="Product")
+         */
+        private $StockWaste;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -564,6 +570,7 @@ use Doctrine\ORM\Mapping as ORM;
             $this->ProductTag = new \Doctrine\Common\Collections\ArrayCollection();
             $this->CustomerFavoriteProducts = new \Doctrine\Common\Collections\ArrayCollection();
             $this->ItemWastes = new ArrayCollection();
+            $this->StockWaste = new ArrayCollection();
         }
 
         public function __clone()
@@ -1090,5 +1097,13 @@ use Doctrine\ORM\Mapping as ORM;
             }
 
             return $this;
+        }
+
+        /**
+         * @return Collection|StockWaste[]
+         */
+        public function getStockWaste(): Collection
+        {
+            return $this->StockWaste;
         }
     }
