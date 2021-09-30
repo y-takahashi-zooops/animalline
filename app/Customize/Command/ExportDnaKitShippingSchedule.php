@@ -15,7 +15,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Validator\Constraints\Length;
 
 class ExportDnaKitShippingSchedule extends Command
 {
@@ -55,10 +54,10 @@ class ExportDnaKitShippingSchedule extends Command
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      */
     public function __construct(
-        EntityManagerInterface          $entityManager,
-        WmsSyncInfoRepository           $wmsSyncInfoRepository,
+        EntityManagerInterface $entityManager,
+        WmsSyncInfoRepository $wmsSyncInfoRepository,
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
-        DnaCheckStatusRepository       $dnaCheckStatusRepository
+        DnaCheckStatusRepository $dnaCheckStatusRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -126,8 +125,7 @@ class ExportDnaKitShippingSchedule extends Command
                 ->setParameter('from', $SyncInfo->getSyncDate());
         }
 
-        $records = $qb->getQuery()->getArrayResult();
-        if (!$records) {
+        if (!$records = $qb->getQuery()->getArrayResult()) {
             echo "Records not found.\n";
             return;
         }
@@ -164,8 +162,8 @@ class ExportDnaKitShippingSchedule extends Command
             $record['slip_output_order'] = $dnaNo;
 
             $row = [];
-            foreach ($cols as $value) {
-                $row[] = $record[$value] ?? null; // null for blank field
+            foreach ($cols as $col) {
+                $row[] = $record[$col] ?? null; // null for blank field
             }
             $rows[] = $row;
 
@@ -173,10 +171,14 @@ class ExportDnaKitShippingSchedule extends Command
         }
 
         $dir = 'var/tmp/wms/shipping_schedule/';
-        if (!file_exists($dir) && !mkdir($dir, 0777, true)) throw new Exception("Can't create directory.");
+        if (!file_exists($dir) && !mkdir($dir, 0777, true)) {
+            throw new Exception("Can't create directory.");
+        }
         $filename = "SHUSJI_{$now->format('Ymd_His')}.csv";
         $csvPath = $dir . $filename;
-        if (!$csvFile = fopen($csvPath, 'w+')) throw new Exception("Can't create file.");
+        if (!$csvFile = fopen($csvPath, 'w+')) {
+            throw new Exception("Can't create file.");
+        }
 
         foreach ($rows as $row) {
             fputcsv($csvFile, $row);
@@ -186,8 +188,8 @@ class ExportDnaKitShippingSchedule extends Command
         $em = $this->entityManager;
 
         // reduce query duplicate records
-        $uniqueIds = array_unique($dnaHeaderIds);
-        foreach ($uniqueIds as $id) {
+        $uniqIds = array_unique($dnaHeaderIds);
+        foreach ($uniqIds as $id) {
             $Header = $this->dnaCheckStatusHeaderRepository->find($id);
             $Header->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_INSTRUCTING);
             $em->persist($Header);
