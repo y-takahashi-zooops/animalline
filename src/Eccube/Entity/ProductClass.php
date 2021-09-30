@@ -13,6 +13,9 @@
 
 namespace Eccube\Entity;
 
+use Customize\Entity\ProductSet;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 if (!class_exists('\Eccube\Entity\ProductClass')) {
@@ -40,10 +43,10 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         {
             $productName = $this->getProduct()->getName();
             if ($this->hasClassCategory1()) {
-                $productName .= ' - '.$this->getClassCategory1()->getName();
+                $productName .= ' - ' . $this->getClassCategory1()->getName();
             }
             if ($this->hasClassCategory2()) {
-                $productName .= ' - '.$this->getClassCategory2()->getName();
+                $productName .= ' - ' . $this->getClassCategory2()->getName();
             }
 
             return $productName;
@@ -64,7 +67,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set price01 IncTax
          *
-         * @param  string       $price01_inc_tax
+         * @param string $price01_inc_tax
          *
          * @return ProductClass
          */
@@ -125,7 +128,7 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         /**
          * Set tax_rate
          *
-         * @param  string $tax_rate
+         * @param string $tax_rate
          *
          * @return ProductClass
          */
@@ -332,6 +335,19 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
          * })
          */
         private $Creator;
+
+        /**
+         * @ORM\OneToMany(targetEntity=ProductSet::class, mappedBy="ProductClass")
+         */
+        private $ProductSet;
+
+        /**
+         * Constructor
+         */
+        public function __construct()
+        {
+            $this->ProductSet = new ArrayCollection();
+        }
 
         public function __clone()
         {
@@ -822,6 +838,36 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         public function getPointRate()
         {
             return $this->point_rate;
+        }
+
+        /**
+         * @return Collection|ProductSet[]
+         */
+        public function getProductSet(): Collection
+        {
+            return $this->ProductSet;
+        }
+
+        public function addProductSet(ProductSet $productSet): self
+        {
+            if (!$this->ProductSet->contains($productSet)) {
+                $this->productSet[] = $productSet;
+                $productSet->setProduct($this);
+            }
+
+            return $this;
+        }
+
+        public function removeProductSet(ProductSet $productSet): self
+        {
+            if ($this->ProductSet->removeElement($productSet)) {
+                // set the owning side to null (unless already changed)
+                if ($productSet->getProduct() === $this) {
+                    $productSet->setProduct(null);
+                }
+            }
+
+            return $this;
         }
     }
 }

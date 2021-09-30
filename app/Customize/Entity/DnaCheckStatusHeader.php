@@ -45,14 +45,14 @@ class DnaCheckStatusHeader
     private $shipping_status;
 
     /**
-     * @ORM\Column(name="shipping_name", type="string", length=255, nullable=true)
-     */
-    private $shipping_name;
-
-    /**
      * @ORM\Column(name="kit_unit", type="smallint", nullable=true)
      */
     private $kit_unit;
+
+    /**
+     * @ORM\Column(name="shipping_name", type="string", length=255, nullable=true)
+     */
+    private $shipping_name;
 
     /**
      * @ORM\Column(name="shipping_zip", type="string", length=7, nullable=true)
@@ -173,18 +173,6 @@ class DnaCheckStatusHeader
         return $this;
     }
 
-    public function getShippingName(): ?string
-    {
-        return $this->shipping_name;
-    }
-
-    public function setShippingName(string $shipping_name): self
-    {
-        $this->shipping_name = $shipping_name;
-
-        return $this;
-    }
-
     public function getKitUnit(): ?int
     {
         return $this->kit_unit;
@@ -194,6 +182,17 @@ class DnaCheckStatusHeader
     {
         $this->kit_unit = $kit_unit;
 
+        return $this;
+    }
+
+    public function getShippingName(): ?string
+    {
+        return $this->shipping_name;
+    }
+
+    public function setShippingName(?string $shipping_name): self
+    {
+        $this->shipping_name = $shipping_name;
         return $this;
     }
 
