@@ -68,16 +68,6 @@ class ProductClassRepository extends AbstractRepository
      */
     public function decrementStock(ProductClass $entity, $stock = 0)
     {
-        if ($stock = 0) {
-            return $this
-                ->createQueryBuilder('pc')
-                ->update()
-                ->set('pc.stock', 'case when pc.stock > 0 then pc.stock else 0 end')
-                ->where('pc.id = :id')
-                ->setParameter('id', $entity->getId())
-                ->getQuery()
-                ->execute();
-        }
         return $this
             ->createQueryBuilder('pc')
             ->update()

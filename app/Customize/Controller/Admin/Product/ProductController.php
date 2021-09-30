@@ -1274,15 +1274,23 @@ class ProductController extends BaseProductController
             $product = $productClass->getProduct();
 
             if ($form->isSubmitted() && $form->isValid() && $product) {
-                $stockProductClass = $request->get('stock_waste')['waste_unit'];
-                $stockWaste->setProduct($product)
-                           ->setProductClass($productClass);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($stockWaste);
-                $entityManager->flush();
-                $this->productClassRepository->decrementStock($productClass, $stockProductClass);
+                $stockProductClass = $productClass->getStock();
+                $stockUnit = $request->get('stock_waste')['waste_unit'];
 
-                return $this->redirectToRoute('admin_product_waste');
+                if ($stockProductClass > $stockUnit) {
+                    $stockWaste->setProduct($product)
+                               ->setProductClass($productClass);
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($stockWaste);
+                    $entityManager->flush();
+                    $this->productClassRepository->decrementStock($productClass, $stockUnit);
+
+                    $this->addSuccess('admin.common.save_complete', 'admin');
+                    return $this->redirectToRoute('admin_product_waste');
+                }
+
+                $this->addError('admin.common.save_error', 'admin');
+                return $this->redirectToRoute('admin_product_waste_regist', ['id' => $product->getId()]);
             }
         }
 

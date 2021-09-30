@@ -92,7 +92,7 @@ file that was distributed with this source code.
                                     </div>
                                     <div class="col">
                                         <div>
-                                            {{ form_widget(form.stock_waste_reason) }}
+                                            {{ form_widget(form.stock_waste_reason, { attr : {style : 'max-width: auto;' }}) }}
                                             {{ form_errors(form.stock_waste_reason) }}
                                         </div>
                                     </div>
@@ -103,7 +103,7 @@ file that was distributed with this source code.
                                     </div>
                                     <div class="col">
                                         <div>
-                                            {{ form_widget(form.comment) }}
+                                            {{ form_widget(form.comment, { attr : {style : 'max-width: auto;'}}) }}
                                             {{ form_errors(form.comment) }}
                                         </div>
                                     </div>
