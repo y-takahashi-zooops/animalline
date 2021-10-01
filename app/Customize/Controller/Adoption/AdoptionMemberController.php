@@ -739,12 +739,12 @@ class AdoptionMemberController extends AbstractController
         $barCode = substr($request->get('bar_code'), 1);
         $DnaId = (int)$barCode;
         $Dna = $this->dnaCheckStatusRepository->find($DnaId);
-        $DnaHeader = $Dna->getDnaHeader();
         if (!$Dna) {
             throw new HttpException\NotFoundHttpException();
         }
         $user = $this->getUser();
         $is_conservation = $user->getIsConservation();
+        $DnaHeader = $Dna->getDnaHeader();
         $conservation = $this->conservationsRepository->find($DnaHeader->getRegisterId());
         if ($is_conservation == 0) {
             return $this->render('animalline/adopution/member/examination_guidance.twig', [
