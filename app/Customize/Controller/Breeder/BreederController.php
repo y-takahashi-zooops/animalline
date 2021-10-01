@@ -139,6 +139,15 @@ class BreederController extends AbstractController
     }
 
     /**
+     * @Route("/breeder/guide/cat", name="breeder_guide_cat")
+     * @Template("animalline/breeder/guide/cat.twig")
+     */
+    public function breeder_guide_cat()
+    {
+        return [];
+    }
+
+    /**
      * @Route("/breeder/pet/search/result", name="breeder_pet_search_result")
      * @Template("animalline/breeder/pet/search_result.twig")
      */
@@ -208,6 +217,7 @@ class BreederController extends AbstractController
         $id = $request->get('id');
         $isFavorite = false;
         $breederPet = $this->breederPetsRepository->find($id);
+        $petKind = $breederPet->getPetKind();
         $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         if ($favorite) {
             $isFavorite = true;
@@ -233,6 +243,7 @@ class BreederController extends AbstractController
             'animalline/breeder/pet/detail.twig',
             [
                 'breederPet' => $breederPet,
+                'petKind' => $petKind,
                 'images' => $images,
                 'video' => $video,
                 'isFavorite' => $isFavorite,

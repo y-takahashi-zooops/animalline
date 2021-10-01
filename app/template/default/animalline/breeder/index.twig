@@ -84,9 +84,12 @@
         <div class="breeder-column-row">
           <div class="breeder-column__main">
             <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
-              <div class="breeder-column__main_section_title">
-                <h3>新着のペット</h3>
+            <div class="breeder-column__main_section_title">
+              <h3>新着のペット</h3>
+              <div class="breeder-column__main_section_title_btn">
+                <a href=""><i class="bi bi-list"></i>一覧へ</a>
               </div>
+            </div>
               <div class="breeder-column__main_section_body">
                 <ul>
                   {% for pet in newPets %}
@@ -119,6 +122,9 @@
             <div class="breeder-column__main_section" id="breeder-column__main_section_dog_recommend">
               <div class="breeder-column__main_section_title">
                 <h3>注目のペット</h3>
+                <div class="breeder-column__main_section_title_btn">
+                  <a href=""><i class="bi bi-list"></i>一覧へ</a>
+                </div>
               </div>
               <div class="breeder-column__main_section_body">
                 <ul>
@@ -191,11 +197,14 @@
                         <p>柴</p>
                         </a>
                     </li>
-                  </ul>
+              </ul>
                 {% else %}
                   <div class="breeder-column__main_section" id="breeder-column__main_section_dog_popular">
                     <div class="breeder-column__main_section_title">
                       <h3>人気の猫種</h3>
+                      <div class="breeder-column__main_section_title_btn">
+                        <a href=""><i class="bi bi-list"></i>一覧へ</a>
+                      </div>
                     </div>
                     <div class="breeder-column__main_section_body breeder-column__main_section_popular_body">
                     <ul>

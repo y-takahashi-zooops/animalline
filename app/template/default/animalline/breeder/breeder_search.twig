@@ -80,60 +80,60 @@
             <img src="{{ app.request.schemeAndHttpHost ~ (breeder.thumbnailPath | default | length > 0 ? breeder.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}" class="w-100 mb-4 mb-sm-0">
         </div>
         <div class="breeder-info col-sm-8">
-            <h3 class="font-weight-500 color-gray-500">{{ breeder.licenseHouseName }}ブリーダー</h3>
+            <h4 class="font-weight-500 color-gray-500">{{ breeder.licenseHouseName }}ブリーダー</h4>
             <div class="m-1 p-1"></div>
             <div class="d-flex">
-                <h4>総合評価</h4>
+                <h5>総合評価</h5>
                 <div class="m-1 p-1"></div>
                 <img src="/html/template/default/assets/img/star-icon.svg">
                 <div class="m-1 p-1"></div>
-                <h4>{{ breeder.breederRank }}</h4>
+                <h5>{{ breeder.breederRank }}</h5>
             </div>
             <div class="m-1 p-1"></div>
             <div class="d-flex">
-                <h4>動物取扱業登録番号：</h4>
-                <h4>{{ breeder.licenseNo }}</h4>
+                <h5>動物取扱業登録番号：</h5>
+                <h5>{{ breeder.licenseNo }}</h5>
                 <div class="m-1 p-1"></div>
-                <h4>登録：</h4>
-                <h4>{{ breeder.licenseRegistDate | date('Y/m/d') }}</h4>
+                <h5>登録：</h5>
+                <h5>{{ breeder.licenseRegistDate | date('Y/m/d') }}</h5>
             </div>
             <div class="m-1 p-1"></div>
             <div class="d-flex">
-                <h4>有効期限：</h4>
-                <h4>{{ breeder.licenseExpireDate | date('Y/m/d') }}</h4>
+                <h5>有効期限：</h5>
+                <h5>{{ breeder.licenseExpireDate | date('Y/m/d') }}</h5>
                 <div class="m-1 p-1"></div>
-                <h4>動物取扱責任者：</h4>
-                <h4>{{ breeder.licenseManagerName }}</h4>
+                <h5>動物取扱責任者：</h5>
+                <h5>{{ breeder.licenseManagerName }}</h5>
             </div>
             <div class="m-1 p-1"></div>
             <div class="d-flex">
-                <h4>犬舎所在地：</h4>
+                <h5>犬舎所在地：</h5>
                 {% set breederHouseDog = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
                 {% set breederHouseCat = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
                 {% if (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
-                    <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' ~ ' ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
+                    <h5>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' ~ ' ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h5>
                 {% elseif (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
-                    <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' }}</h4>
+                    <h5>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' }}</h5>
                 {% else %}
-                    <h4>{{ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
+                    <h5>{{ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h5>
                 {% endif %}
             </div>
             <div class="m-1 p-1"></div>
             <div class="d-flex">
-                <h4>審査ステータス：</h4>
+                <h5>審査ステータス：</h5>
                 {% if breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_SUBMIT') %}
-                    <h4>審査前</h4>
+                    <h5>審査前</h5>
                 {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK') %}
-                    <h4>審査中</h4>
+                    <h5>審査中</h5>
                 {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK') %}
-                    <h4>審査OK</h4>
+                    <h5>審査OK</h5>
                 {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG') %}
-                    <h4>審査NG</h4>
+                    <h5>審査NG</h5>
                 {% endif %}
             </div>
             <div class="m-2 p-2"></div>
             <a href="{{ url('breeder_detail', {'breeder_id': breeder.Id}) }}">
-                <h4 class="color-breeder">ブリーダー詳細ページへ</h4>
+                <h5 class="color-breeder">ブリーダー詳細ページへ</h5>
             </a>
         </div>
     </div>

@@ -1,0 +1,217 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+
+{% block main %}
+  <main role="main">
+    <section id="guide-mv">
+      <div class="guide-mv__title">
+        <h2><img src="{{ asset('assets/img/guide/guide-mv-cat.png') }}" width="346" height="346" alt="お迎えガイド(猫の場合)"/></h2>
+      </div>
+      <div class="guide-mv__link">
+        <a href="{{url('breeder_guide_dog')}}"><img src="{{ asset('assets/img/guide/guide-mv-link-dog.png') }}"  width="123" height="123" alt="犬の場合はこちら"/></a>
+      </div>
+    </section>
+    
+    <section id="guide-nav">
+      <div class="inner">
+        <ul>
+          <li><a href="#guide-content01">子猫の選び方</a></li>
+          <li><a href="#guide-content02">子猫を迎える前に</a></li>
+        </ul>
+      </div>
+    </section>
+    
+    <section id="guide-content01" class="guide-content01_cat">
+      <div class="inner">
+        <div class="content-box">
+          <div class="content-box__num"><img src="{{ asset('assets/img/guide/guide-num01.png') }}"  width="132" height="132" alt="1"/></div>
+          <div class="content-box__title">
+            <h2>子猫の選び方</h2>
+            <p>〜自分に（または家族に）合うネコちゃんを探す〜</p>
+          </div>
+          <div class="content-box__body">
+            <dl>
+              <dt>初心者におすすめ</dt>
+              <dd><i class="bi bi-chevron-right"></i>スコティッシュフォールド</dd>
+               <dd><i class="bi bi-chevron-right"></i>マンチカン</dd>
+               <dd><i class="bi bi-chevron-right"></i>ラグドール</dd>
+               <dd><i class="bi bi-chevron-right"></i>ペルシャ</dd>
+               <dd><i class="bi bi-chevron-right"></i>エキゾチックショートヘア</dd>
+               <dd><i class="bi bi-chevron-right"></i>ミヌエット</dd>
+               <dd><i class="bi bi-chevron-right"></i>ロシアンブルー</dd>
+               <dd><i class="bi bi-chevron-right"></i>アメショ</dd>
+               <dd><i class="bi bi-chevron-right"></i>ブリ</dd>
+               <dd><i class="bi bi-chevron-right"></i>ティッシュショートヘア</dd>
+            </dl>
+            <dl>
+              <dt>温厚で大人しい</dt>
+              <dd><i class="bi bi-chevron-right"></i>スコティッシュフォールド</dd>
+              <dd><i class="bi bi-chevron-right"></i>サイベリアン</dd>
+              <dd><i class="bi bi-chevron-right"></i>ラグドール</dd>
+              <dd><i class="bi bi-chevron-right"></i>メインクーン</dd>
+              <dd><i class="bi bi-chevron-right"></i>ペルシャ</dd>
+              <dd><i class="bi bi-chevron-right"></i>エキゾチックショートヘア</dd>
+              <dd><i class="bi bi-chevron-right"></i>ミヌエット</dd>
+              <dd><i class="bi bi-chevron-right"></i>ノルウェージャンフォレストキャット</dd>
+              <dd><i class="bi bi-chevron-right"></i>ブリ</dd>
+              <dd><i class="bi bi-chevron-right"></i>ティッシュショートヘア</dd>
+            </dl>
+            <dl>
+              <dt>お手入れがラク</dt>
+              <dd><i class="bi bi-chevron-right"></i>エキゾチックショートヘア</dd>
+              <dd><i class="bi bi-chevron-right"></i>アメリカンショートヘア</dd>
+              <dd><i class="bi bi-chevron-right"></i>ブリティッシュショートヘア</dd>
+              <dd><i class="bi bi-chevron-right"></i>アビシニアン</dd>
+              <dd><i class="bi bi-chevron-right"></i>シンガプーラ</dd>
+              <dd><i class="bi bi-chevron-right"></i>ロシアンブルー</dd>
+              <dd><i class="bi bi-chevron-right"></i>日本猫</dd>
+            </dl>
+            <dl>
+              <dt>遊び好きで活発</dt>
+              <dd><i class="bi bi-chevron-right"></i>ベンガル
+              <dd><i class="bi bi-chevron-right"></i>ノルウェージャンフォレストキャット</dd>
+              <dd><i class="bi bi-chevron-right"></i>サイベリアン</dd>
+              <dd><i class="bi bi-chevron-right"></i>マンチカン</dd>
+              <dd><i class="bi bi-chevron-right"></i>アビシニアン</dd>
+              <dd><i class="bi bi-chevron-right"></i>アメリカンショートヘア</dd>
+              <dd><i class="bi bi-chevron-right"></i>シンガプーラ</dd>
+            </dl>
+          </div>
+          <div class="content-box__merit">
+            <h3>もちろん個体差はありますが、猫は性別によって性格が異なるといわれています 。</h3>
+            <div class="content-box__merit_body">
+              <article>
+                <h4><i class="bi bi-gender-male"></i>オス猫</h4>
+                <p>甘えん坊で人懐っこい。やんちゃで好奇心旺盛、食欲旺盛。外に出たがりやすい。外の世界に強い興味を持っている。<br>
+オス猫の体は、メス猫より大きく筋肉質でたくましいので、動きがダイナミックです。<br>
+人間の男の人よりは、比較的女の人の方に甘えたり懐いたりする傾向もあります。</p>
+              </article>
+              <article>
+                <h4><i class="bi bi-gender-female"></i>メス猫</h4>
+                <p>慎重で警戒心が強い。おっとりしていて、静かに遊ぶ傾向がある。クールでマイペース。短気で攻撃的な一面もある本来、子育てはメス猫だけで行っている生き物なので、精神は落ち着いていて、自立心が高いです。<br>
+飼い主への依存度は低く、一匹でお留守番をさせても問題行動を起こすことは少ない傾向にあります。<br>
+また、気分屋なので甘えたい時は甘えますが、構ってほしくない時は無視したり、急に冷めたりと、気分がコロコロ変わって態度も急変します。</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="guide-content02" class="guide-content02_cat">
+      <div class="inner">
+        <div class="content-box">
+          <div class="content-box__num"><img src="{{ asset('assets/img/guide/guide-num02.png') }}"  width="132" height="132" alt="2"/></div>
+          <div class="content-box__title">
+            <h2>子猫を迎える前に</h2>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="guide-content03" class="guide-content03_cat">
+      <div class="inner">
+        <div class="content-box">
+          <div class="content-box__title">
+            <h2>飼い主に必要な条件</h2>
+          </div>
+          <div class="content-box__body">
+            <div class="content-box__body_list">
+              <ul>
+                <li>
+                  <div class="content-box__body_list_num"><span>1</span></div>
+                  <h3>住宅がペットを飼える<br>
+                    状況にあること</h3>
+                  <p>ペットと安心して暮らすためには、ペットを飼える住宅に住んでいることが絶対条件です。<br>
+                  また「ペット飼育可 」の集合住宅であっても決められたルールを守り、その集合住宅はもとより、周辺の住宅や環境への配慮を心がけなければなりません。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>2</span></div>
+                  <h3>ペットを迎えることに<br>
+                    家族全員の同意があること</h3>
+                    <p>ペットを家族に迎えるにあたっては、その家族全員が合意していることが大切で。十数年の命を持つ犬や猫を飼う際には特に重要です。<br>
+                    どのような家庭でも、10年以上の歴史を重ねていくうちには、家族構成や生活環境の変化が起こる可能性があります。そのような中であっても、家族全員が動物と暮らすことに同意しているのであれば、家族に迎え入れた動物もその一員であることが前提となった対応がなされていくでしょう。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>3</span></div>
+                  <h3>動物アレルギーの<br>
+                    心配がないこと</h3>
+                    <p>家族内にアレルギー体質の方がいる場合には、事前に専門病院で動物アレルギーについても検査をしてもらいましょう。もし動物アレルギー発症の可能性がある場合には、どのような対策を講じるか、飼う、飼わないも含めて家族内で十分話し合いをしましょう。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>4</span></div>
+                  <h3>そのペットの寿命まで終生<br>
+                    飼養飼育する覚悟があること</h3>
+                    <p>犬も猫も、適正に飼育すれば10年以上生きることができる動物です。動物を迎え入れた家庭は、そのペットの命を、寿命をまっとうするまで預かることになります。10年以上にわたって給餌、給水、快適な生活環境、健康管理を続けなければなりません。<br>
+                      ペットを飼いたいと思ったら、このことも十分考えてください。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>5</span></div>
+                  <h3>世話をする体力があり、<br>
+                    その時間を割けること</h3>
+                  <p>ペットを家族に迎えれば、飼い主は当然その動物のために時間を割かなければなりません。食餌や水を適切に与え、トイレの掃除、快適な生活空間の維持、犬の場合は散歩、種類によってはブラッシングなどの手入れなど、これらをこなせる時間と体力がなければなりません。<br>
+                  子供の希望で飼い始める家庭もよくありますが、数か月後には世話は親の担当になってしまった、などもまれなことではありません。<br>
+                  これらのことを十分に念頭に置いて、動物種、成長した時の大きさなどを、飼うか飼わないかを含めて、検討してください。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>6</span></div>
+                  <h3>高齢になったペットの<br>
+                    介護をする心構えがあること</h3>
+                    <p>適切に飼育すれば、ペットも長生きします。しかしそれに伴ってペットも老衰や認知症になるケースが増えていきます。動物を家族に迎え入れる以上、高齢になった動物の介護をする心構えも必要です。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>7</span></div>
+                  <h3>経済的負担を<br>
+                    考慮すること</h3>
+                    <p>ペットは生きています。食餌代ばかりでなく、生活用品、ワクチン代など、人と同じようにいろいろな費用がかかります。特に医療費は、病気やけがによっては思わぬ高額になる場合もあります。<br>
+                    民間社会によるペット保険はありますが、公的な保険制度はありません。動物を家族に迎えれば経済的に負担がかかる、ということも承知しておく必要があります。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>8</span></div>
+                  <h3>必要なしつけと周囲への<br>
+                    配慮ができること</h3>
+                    <p>ペットと家庭内で楽しく暮らすには、ペットにある程度のルールを覚えてもらう必要があります。<br>
+                    最近では、悪いこと飼い主にとって不都合なこと をしたら「罰を与えて叱る」しつけではなく、家族として楽しく暮らすためのルールを「誘導して覚えてもらう」タイプのしつけが主流になってきています。しつけをするのも動物との絆を深め、楽しみの一つとすることができます。<br>
+                    と同時に、飼い主もペットを飼ううえでのマナーを十分に心得、家庭外、近隣社会に対して迷惑をかけないように配慮することが必要です。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>9</span></div>
+                  <h3>引越しや転勤の際にも<br>
+                    継続飼育する覚悟があること</h3>
+                    <p>家族構成や、生活環境の変化、また、仕事の都合などで転居する必要が生じる場合があります。
+                    しかし、ペットを家族として迎え入れているのであれば 、転居先にペット飼育可の住宅を探すなど、ペットの終生飼養を心がけなければなりません。<br>
+                    これらのことを十分に念頭に置いて、動物種、成長した時の大きさなどを、飼うか飼わないかを含めて、検討してください。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>10</span></div>
+                  <h3>飼えなくなった場合の<br>
+                    受け皿を考えておくこと</h3>
+                    <p>これまで、①から⑨までペットを飼ううえでの心構えを考えてきましたが、それでも不慮の事故など、さまざまな事情で飼えなくなってしまうケースが出てくることがあるかもしれません。<br>
+                      万が一に際に、代わりに飼ってくれる人を見つけておくことも重要です。</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <div class="pageback">
+      <a href="./"><i class="bi bi-arrow-return-left"></i></a>
+    </div>
+    <div class="pagetop">
+      <a href="#wrapper"><i class="bi bi-arrow-bar-up"></i></a>
+    </div>
+      
+  </main>
+{% endblock %}
+
+{% block javascript %}
+<script>  
+  document.title = "Animalline｜お迎えガイド(猫編)";
+</script>
+{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+{% endblock %}
