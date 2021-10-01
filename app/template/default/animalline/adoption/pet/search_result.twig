@@ -2,34 +2,34 @@
 {% extends 'animalline/adoption/frame.twig' %}
 {% set params = app.request.query.all %}
 {% block main %}
-	<section id="adoption-mv">
+	<section id="breeder-mv" class="adoption">
       <div class="inner">
-        <div class="adoption-mv__container">
-          <div class="adoption-mv__text">
+        <div class="breeder-mv__container">
+          <div class="breeder-mv__text">
             <h2>テキストが入りますテキストが入りますテキストが入ります</h2>
-            <div class="adoption-mv__text_logo"><img src="{{ asset('assets/img/breeder-mv-logo.png') }}" alt="Animalline Breeder"/></div>
+            <div class="breeder-mv__text_logo"><img src="{{ asset('assets/img/breeder-mv-logo.png') }}" alt="Animalline Breeder"/></div>
             <p>キャッチコピーが入ります。</p>
-            <div class="adoption-mv__text_btn">
+            <div class="breeder-mv__text_btn">
               <ul>
                 {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-                    <li class="adoption-mv__text_btn_dog"><span><i>犬を探す</i></a></li>
-                    <li class="adoption-mv__text_btn_cat"><a href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>猫を探す</i></a></li>
+                    <li class="breeder-mv__text_btn_dog"><span><i>犬を探す</i></a></li>
+                    <li class="breeder-mv__text_btn_cat"><a href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>猫を探す</i></a></li>
                 {% else %}
-                    <li class="adoption-mv__text_btn_dog"><a href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>犬を探す</i></a></li>
-                    <li class="adoption-mv__text_btn_cat"><span><i>猫を探す</i></a></li>
+                    <li class="breeder-mv__text_btn_dog"><a href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>犬を探す</i></a></li>
+                    <li class="breeder-mv__text_btn_cat"><span><i>猫を探す</i></a></li>
                 {% endif %}
               </ul>
             </div>
           </div>
-          <div class="adoption-mv__search">
-            <div class="adoption-mv__search_wrap adoption-mv__search_dog">
-              <div class="adoption-mv__search_title">
+          <div class="breeder-mv__search">
+            <div class="breeder-mv__search_wrap breeder-mv__search_dog">
+              <div class="breeder-mv__search_title">
                 <h2>犬を探す</h2>
               </div>
-              <div class="adoption-mv__search_body">
+              <div class="breeder-mv__search_body">
                 <form action="{{ url('adoption_pet_search_result') }}" method="get">
                   <input type="hidden" name="pet_kind" value="{{ petKind }}">
-                  <div class="adoption-mv__search_top">
+                  <div class="breeder-mv__search_top">
                     <div class="select-container">
                       <select class="form_dropdown w-100" id="formControlSelect1" name="breed_type">
                         <option value="">種類</option>
@@ -40,8 +40,8 @@
                       </select>
                     </div>
                   </div>
-                  <div class="adoption-mv__search_bottom">
-                    <div class="adoption-mv__search_bottom_w50">
+                  <div class="breeder-mv__search_bottom">
+                    <div class="breeder-mv__search_bottom_w50">
                       <div class="select-container">
                         <select class="form_dropdown w-100" id="formControlSelect2" name="gender">
                           <option value="">性別</option>
@@ -52,7 +52,7 @@
                         </select>
                       </div>
                     </div>
-                    <div class="adoption-mv__search_bottom_w50">
+                    <div class="breeder-mv__search_bottom_w50">
                       <div class="select-container">
                         <select class="form_dropdown w-100" id="formControlSelect3" name="region">
                             <option value="">都道府県</option>
@@ -67,7 +67,7 @@
 							%} checked {% endif %}>隣の都道府県も検索</label>
                     </div>
                   </div>
-                  <div class="adoption-mv__search_btn">
+                  <div class="breeder-mv__search_btn">
                     <button><i class="bi bi-check2-square"></i>この条件で検索する</button>
                   </div>
                 </form>
@@ -82,7 +82,7 @@
 	<div>
 		<div class="m-2 p-2"></div>
 		<div class="row">
-			{% include 'side.twig' %}
+			{{ include('animalline/adoption/side.twig') }}
 			<div class="main-container col-sm-9">
 				<h2>検索結果</h2>
 				<div class="m-3 p-3"></div>

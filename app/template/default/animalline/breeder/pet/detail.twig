@@ -11,7 +11,7 @@
                             <h2 class="float-left">
                                 {{ breederPet.breedsType.breedsName ?? '' }}
                             </h2>
-                            <div class="col-md-3 col-12 float-right btn-like mb-3{{ isFavorite ? " red-heart" : " " }}" data-id="{{ breederPet.id }}" data-login="{{ isLoggedIn }}">
+                            <div class="col-md-3 col-12 float-right btn-like mb-3{{ isFavorite ? "red-heart" : "" }}" data-id="{{ breederPet.id }}" data-login="{{ isLoggedIn }}">
                                 <a>
                                     <svg width="24" height="20" class="heart-icon">
                                         <path d="M19.469 1.262c-5.284-1.53-7.47 4.142-7.47 4.142S9.815-.269 4.532 1.262C-1.937 3.138.44 13.832 12 19.333c11.559-5.501 13.938-16.195 7.469-18.07z" stroke="#FF424F" stroke-width="1.5" fill="{{ isFavorite ? '#FF424F' : 'none' }}" fill-rule="evenodd" stroke-linejoin="round"></path>
@@ -58,7 +58,7 @@
                                     <div class="col-12 breeder_section_detail">
                                         <div class="row">
                                             <div class="col-12 col-md-4 contents_col_bold">
-                                                種類                                                                    
+                                                種類
                                             </div>
                                             <div class="col-12 col-md-8 contents_col_normal">
                                                 {{ breederPet.breedsType.breedsName ?? '' }}
@@ -68,7 +68,7 @@
                                     <div class="col-12 breeder_section_detail">
                                         <div class="row">
                                             <div class="col-12 col-md-4 contents_col_bold">
-                                                性別                                                             
+                                                性別
                                             </div>
                                             <div class="col-12 col-md-8 contents_col_normal">
                                                 {{ breederPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}
@@ -79,7 +79,7 @@
                                         <div class="row">
                                             {% set breederHouse = breederPet.Breeder.getBreederHouseByPetType(breederPet.petKind) %}
                                             <div class="col-12 col-md-4 contents_col_bold">
-                                                見学地域                                                           
+                                                見学地域
                                             </div>
                                             <div class="col-12 col-md-8 contents_col_normal">
                                                 {{ breederHouse.breederHouseCity ~ ' ' ~ breederHouse.breederHousePref ?? '' }}
@@ -89,7 +89,7 @@
                                     <div class="col-12 breeder_section_detail">
                                         <div class="row">
                                             <div class="col-12 col-md-4 contents_col_bold">
-                                                誕生日                                                         
+                                                誕生日
                                             </div>
                                             <div class="col-12 col-md-8 contents_col_normal">
                                                 {{ breederPet.petBirthday.format('Y年m月d日') ?? '' }}
@@ -149,17 +149,16 @@
                                     <div class="col-12 breeder_section_detail">
                                         <div class="row">
                                             <div class="col-12 col-md-4 contents_col_bold">
-                                                成犬時予想体重                                                 
+                                                成犬時予想体重
                                             </div>
                                             <div class="col-12 col-md-8 contents_col_normal">
-                                                {{ breederPet.futureWait }}
-                                                kg                                                   
+                                                {{ breederPet.futureWait }}kg
                                             </div>
                                         </div>
                                     </div>
                                     <div class="breeder_section_header">
                                         <i class="fas fa-paw"></i>
-                                        PRコメント                                 
+                                        PRコメント
                                     </div>
                                     <div class="col-12 breeder_section_detail">
                                         <div class="row">
@@ -170,13 +169,12 @@
                                     </div>
                                     <div class="breeder_section_header">
                                         <i class="fas fa-paw"></i>
-                                        金額                                         
+                                        金額 
                                     </div>
                                     <div class="col-12 breeder_section_detail">
                                         <div class="row">
                                             <div class="col-12 contents_col_price">
-                                                {{ breederPet.price|number_format(0) }}
-                                                円（税込）                                                
+                                                {{ breederPet.price|number_format(0) }}円（税込）
                                             </div>
                                         </div>
                                     </div>
@@ -193,7 +191,7 @@
                                     </div>
                                     <div class="breeder_section_header_orange">
                                         <i class="fas fa-paw"></i>
-                                        紹介文                            
+                                        紹介文
                                     </div>
                                     <div class="col-12 breeder_section_detail">
                                         <div class="row">
@@ -215,7 +213,7 @@
                                     </div>
                                     <div class="breeder_section_header_orange">
                                         <i class="fas fa-paw"></i>
-                                        引き渡し時期                               
+                                        引き渡し時期
                                     </div>
                                     <div class="col-12 breeder_section_detail">
                                         <div class="row">
@@ -226,7 +224,7 @@
                                     </div>
                                     <div class="breeder_section_header_orange">
                                         <i class="fas fa-paw"></i>
-                                        引き渡し方法                             
+                                        引き渡し方法
                                     </div>
                                     <div class="col-12 breeder_section_detail">
                                         <div class="row">
@@ -249,7 +247,7 @@
                                     <div class="m-2 p-2"></div>
                                     <div class="breeder_section_header">
                                         <i class="fas fa-paw"></i>
-                                        ブリーダー紹介                     
+                                        ブリーダー紹介    
                                     </div>
                                 </div>
 

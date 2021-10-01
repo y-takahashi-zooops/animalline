@@ -2,8 +2,8 @@
     <div class="breeder-column__side_bnr">
         <ul>
             <li class="breeder-column__side_bnr_breeder">
-                <a href="{{url('breeder_search')}}">
-                    <i class="bi bi-search"></i>ブリーダー検索はこちら
+                <a href="{{url('adoption_search')}}">
+                    <i class="bi bi-search"></i>保護団体検索はこちら
                 </a>
             </li>
             <li class="breeder-column__side_bnr_ec">
@@ -12,13 +12,7 @@
                 </a>
             </li>
             <li class="breeder-column__side_bnr_guide">
-            {% if petKind %}
-                {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-                    <a href="{{ url('breeder_guide_dog') }}">お迎えガイド</a>
-                {% else %}
-                    <a href="{{ url('breeder_guide_cat') }}">お迎えガイド</a>
-                {% endif %}
-            {% endif %}
+                <a href="{{ url('breeder_guide_dog') }}">お迎えガイド</a>
             </li>
             <li class="breeder-column__side_bnr_learning">
             <a href="https://dc-trainers.net/">ペットの家庭教師</a>
@@ -44,25 +38,25 @@
             <li class="parent" style="color: #fff"><i class="bi bi-caret-right-fill"></i>サイズ
                 <ul>
                     <li>
-                        <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
+                        <a href="{{ url('adoption_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
                         'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_TINNY')}) }}">
                             <i class="bi bi-chevron-right"></i>超小型犬
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
+                        <a href="{{ url('adoption_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
                         'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_SMALL')}) }}">
                             <i class="bi bi-chevron-right"></i>小型犬
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
+                        <a href="{{ url('adoption_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
                         'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_MEDIUM')}) }}">
                             <i class="bi bi-chevron-right"></i>中型犬
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
+                        <a href="{{ url('adoption_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
                         'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_BIG')}) }}">
                             <i class="bi bi-chevron-right"></i>大型犬
                         </a>
@@ -74,9 +68,9 @@
     <div class="breeder-column__side_info">
         <ul>
         <li><a href="{{ url('ani_contact') }}"><i class="bi bi-envelope"></i>お問い合わせ</a></li>
-        <li><a href="{{ url('breeder_company') }}"><i class="bi bi-building"></i>会社概要</a></li>
-        <li><a href="{{ url('breeder_terms') }}"><i class="bi bi-file-text"></i>利用規約</a></li>
-        <li><a href="{{ url('breeder_policy') }}"><i class="bi bi-shield-check"></i>プライバシーポリシー</a></li>
+        <li><a href="{{ url('adoption_company') }}"><i class="bi bi-building"></i>会社概要</a></li>
+        <li><a href="{{ url('adoption_terms') }}"><i class="bi bi-file-text"></i>利用規約</a></li>
+        <li><a href="{{ url('adoption_policy') }}"><i class="bi bi-shield-check"></i>プライバシーポリシー</a></li>
         </ul>
     </div>  
 </div>

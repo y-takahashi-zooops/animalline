@@ -25,38 +25,21 @@
         <header>
             <div class="wrap">
             <div class="header-left">
-                <div class="header-logo"><h1><a href="{{url('breeder_top')}}"><img src="{{ asset('assets/img/logo.png') }}" width="610" height="80" alt="Animalline"/></a></h1></div>
-                {#
+                <div class="header-logo">
+                    <a href="{{url('breeder_top')}}">
+                        <img src="{{ asset('assets/img/logo.png') }}" width="610" height="80" alt="Animalline"/>
+                    </a>
+                </div>
                 <div class="header-count">
                 <div class="header-count__dogs"><span>子犬掲載数</span><strong><i>2,652</i>頭</strong></div>
                 <div class="header-count__breeders"><span>ブリーダー数</span><strong><i>2,562</i>人</strong></div>
                 </div>
-                #}
+               
             </div>
             <div class="header-right">
                 <ul>
-                <li class="member">
-                    <a href="{{url('entry')}}?ReturnPath=breeder_top" class="btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                    </svg>
-                    <span>会員登録</span>
-                    </a>
-                </li>
-                <li class="breeder">
-                    <a href="{{url('entry')}}?ReturnPath=breeder_mypage" class="btn">
-                    <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="ブリーダー登録"/></i>
-                    <span>ブリーダー登録</span>
-                    </a>
-                </li>
-                <li class="adoption">
-                    <a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn">
-                    <i><img src="{{ asset('assets/img/guide/icon-care.png') }}" width="12" height="12" alt="保護団体登録"/></i>
-                    <span>保護団体登録</span>
-                    </a>
-                </li>
                 {% if is_granted('ROLE_USER') %}
-                    <li class="login">
+                    {# <li class="login">
                         <a href="{{url('breeder_mypage')}}" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
@@ -64,8 +47,68 @@
                         </svg>
                         <span>マイページ</span>
                         </a>
+                    </li> #}
+                        {% if app.user.isBreeder == 0 %}
+                        <li class="breeder">
+                            <a href="{{url('entry')}}?ReturnPath=breeder_mypage" class="btn">
+                            <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="ブリーダー登録"/></i>
+                            <span>ブリーダー登録</span>
+                            </a>
+                        </li>
+                        {% else %}
+                            <li class="breeder">
+                                <a href="{{url('breeder_mypage')}}" class="btn">
+                                <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="ブリーダー登録"/></i>
+                                <span>ブリーダーマイページ</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% if app.user.isConservation == 0 %}
+                            <li class="adoption">
+                                <a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn">
+                                <i><img src="{{ asset('assets/img/guide/icon-care.png') }}" width="12" height="12" alt="保護団体登録"/></i>
+                                <span>保護団体登録</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="adoption">
+                                <a href="{{url('adoption_mypage')}}" class="btn">
+                                <i><img src="{{ asset('assets/img/guide/icon-care.png') }}" width="12" height="12" alt="保護団体登録"/></i>
+                                <span>保護団体マイページ</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    <li class="logout">
+                        <a href="{{url('logout')}}" class="btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                        </svg>
+                        <span>ログアウト</span>
+                        </a>
                     </li>
                 {% else %}
+                    <li class="member">
+                        <a href="{{url('entry')}}?ReturnPath=breeder_top" class="btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg>
+                        <span>会員登録</span>
+                        </a>
+                    </li>
+                        <li class="breeder">
+                        <a href="{{url('entry')}}?ReturnPath=breeder_mypage" class="btn">
+                        <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="ブリーダー登録"/></i>
+                        <span>ブリーダー登録</span>
+                        </a>
+                    </li>
+                    <li class="adoption">
+                        <a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn">
+                        <i><img src="{{ asset('assets/img/guide/icon-care.png') }}" width="12" height="12" alt="保護団体登録"/></i>
+                        <span>保護団体登録</span>
+                        </a>
+                    </li>
                     <li class="login">
                         <a href="{{url('breeder_login')}}" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -95,7 +138,7 @@
         <footer>
             <div class="inner">
             <div class="footer-row">
-                <div class="footer-logo"><a href=""><img src="{{ asset('assets/img/guide/logo.png') }}" width="305" height="40" alt="Animalline"/></a></div>
+                <div class="footer-logo"><a href=""><img src="{{ asset('assets/img/logo.png') }}" width="305" height="40" alt="Animalline"/></a></div>
                 <div class="footer-link">
                 <a href="">会社概要</a>｜<a href="">特定商取引法に基づく表記</a>｜<a href="">プライバシーポリシー</a>
                 </div>
