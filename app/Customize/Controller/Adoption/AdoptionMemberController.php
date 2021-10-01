@@ -732,21 +732,21 @@ class AdoptionMemberController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/adoption/member/pets/new/{bar_code}", name="adoption_pets_new", methods={"GET","POST"}, requirements={"breeder_id" = "^\d{6}$"})
+     * @Route("/adoption/member/pets/new/{bar_code}", name="adoption_pets_new", methods={"GET","POST"}, requirements={"bar_code" = "^\d{6}$"})
      */
-    public function adoption_pets_new(Request $request, ConservationsRepository $conservationsRepository): Response
+    public function adoption_pets_new(Request $request): Response
     {
         $barCode = substr($request->get('bar_code'), 1);
-        $dnaId = (int)$barCode;
-        $dna = $this->dnaCheckStatusRepository->find($dnaId);
-        if (!$dna) {
+        $DnaId = (int)$barCode;
+        $Dna = $this->dnaCheckStatusRepository->find($DnaId);
+        $DnaHeader = $Dna->getDnaHeader();
+        if (!$Dna) {
             throw new HttpException\NotFoundHttpException();
         }
         $user = $this->getUser();
         $is_conservation = $user->getIsConservation();
+        $conservation = $this->conservationsRepository->find($DnaHeader->getRegisterId());
         if ($is_conservation == 0) {
-            $conservation = $conservationsRepository->find($request->get('conservation_id'));
-
             return $this->render('animalline/adopution/member/examination_guidance.twig', [
                 'conservation' => $conservation
             ]);
@@ -759,9 +759,7 @@ class AdoptionMemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $dnaHeader = $dna->getDnaHeader();
             $entityManager = $this->getDoctrine()->getManager();
-            $conservation = $conservationsRepository->find($dnaHeader->getRegisterId());
             $conservationPet->setConservation($conservation);
             $conservationPet->setDnaCheckResult(0);
             $conservationPet->setReleaseStatus(0);
@@ -769,9 +767,9 @@ class AdoptionMemberController extends AbstractController
             $entityManager->persist($conservationPet);
             $entityManager->flush();
             $petId = $conservationPet->getId();
-            $dna->setPetId($petId)
+            $Dna->setPetId($petId)
                 ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED);
-            $entityManager->persist($dna);
+            $entityManager->persist($Dna);
             $entityManager->flush();
             $img0 = $this->setImageSrc($request->get('img0'), $petId);
             $img1 = $this->setImageSrc($request->get('img1'), $petId);
