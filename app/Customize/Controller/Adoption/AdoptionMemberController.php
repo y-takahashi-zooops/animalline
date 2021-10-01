@@ -248,7 +248,7 @@ class AdoptionMemberController extends AbstractController
         ]);
     }
 
-    
+
     /**
      * 取引メッセージ画面
      *
@@ -399,8 +399,8 @@ class AdoptionMemberController extends AbstractController
 
             // Customer情報から初期情報をセット
             $Customer = $this->customerRepository->find($user);
-            $form->get('owner_name')->setData($Customer->getname01() ."　". $Customer->getname02());
-            $form->get('owner_kana')->setData($Customer->getkana01() ."　". $Customer->getkana02());
+            $form->get('owner_name')->setData($Customer->getname01() . "　" . $Customer->getname02());
+            $form->get('owner_kana')->setData($Customer->getkana01() . "　" . $Customer->getkana02());
             $form->get('zip')->setData($Customer->getPostalCode());
             $form->get('addr')->get('PrefId')->setData($Customer->getPref());
             $form->get('addr')->get('city')->setData($Customer->getAddr01());
@@ -732,10 +732,16 @@ class AdoptionMemberController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/adoption/member/pets/new/{conservation_id}", name="adoption_pets_new", methods={"GET","POST"})
+     * @Route("/adoption/member/pets/new/{bar_code}", name="adoption_pets_new", methods={"GET","POST"}, requirements={"breeder_id" = "^\d{6}$"})
      */
     public function adoption_pets_new(Request $request, ConservationsRepository $conservationsRepository): Response
     {
+        $barCode = substr($request->get('bar_code'), 1);
+        $dnaId = (int)$barCode;
+        $dna = $this->dnaCheckStatusRepository->find($dnaId);
+        if (!$dna) {
+            throw new HttpException\NotFoundHttpException();
+        }
         $user = $this->getUser();
         $is_conservation = $user->getIsConservation();
         if ($is_conservation == 0) {
@@ -753,8 +759,9 @@ class AdoptionMemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $dnaHeader = $dna->getDnaHeader();
             $entityManager = $this->getDoctrine()->getManager();
-            $conservation = $conservationsRepository->find($request->get('conservation_id'));
+            $conservation = $conservationsRepository->find($dnaHeader->getRegisterId());
             $conservationPet->setConservation($conservation);
             $conservationPet->setDnaCheckResult(0);
             $conservationPet->setReleaseStatus(0);
@@ -762,6 +769,10 @@ class AdoptionMemberController extends AbstractController
             $entityManager->persist($conservationPet);
             $entityManager->flush();
             $petId = $conservationPet->getId();
+            $dna->setPetId($petId)
+                ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED);
+            $entityManager->persist($dna);
+            $entityManager->flush();
             $img0 = $this->setImageSrc($request->get('img0'), $petId);
             $img1 = $this->setImageSrc($request->get('img1'), $petId);
             $img2 = $this->setImageSrc($request->get('img2'), $petId);
@@ -811,6 +822,7 @@ class AdoptionMemberController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
     /**
      *
      * 新規ペット追加完了メッセージ
