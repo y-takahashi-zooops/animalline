@@ -1,0 +1,182 @@
+<?php
+
+namespace Customize\Controller\Breeder;
+
+use Customize\Config\AnilineConf;
+use Customize\Repository\BreedsRepository;
+use Customize\Repository\CoatColorsRepository;
+use Customize\Service\BreederQueryService;
+use Customize\Repository\BreederContactsRepository;
+use Customize\Repository\SendoffReasonRepository;
+use Eccube\Repository\Master\PrefRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Customize\Repository\BreederPetImageRepository;
+use Customize\Repository\BreedersRepository;
+use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\PetsFavoriteRepository;
+use Eccube\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Exception as HttpException;
+use Eccube\Event\EccubeEvents;
+use Eccube\Event\EventArgs;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+class BreederSearchController extends AbstractController
+{
+    /**
+     * @var BreedersRepository
+     */
+    protected $breedersRepository;
+
+    /**
+     * @var BreederPetsRepository
+     */
+    protected $breederPetsRepository;
+
+    /**
+     * @var BreederPetImageRepository
+     */
+    protected $breederPetImageRepository;
+
+    /**
+     * @var BreederContactsRepository
+     */
+    protected $breederContactsRepository;
+
+    /**
+     * @var BreederQueryService
+     */
+    protected $breederQueryService;
+
+    /**
+     * @var PetsFavoriteRepository
+     */
+    protected $petsFavoriteRepository;
+
+    /**
+     * @var SendoffReasonRepository
+     */
+    protected $sendoffReasonRepository;
+
+    /**
+     * @var PrefRepository
+     */
+    protected $prefRepository;
+
+    /**
+     * BreederController constructor.
+     *
+     * @param BreederContactsRepository $breederContactsRepository
+     * @param BreederPetImageRepository $breederPetImageRepository
+     * @param BreederQueryService $breederQueryService
+     * @param PetsFavoriteRepository $petsFavoriteRepository
+     * @param SendoffReasonRepository $sendoffReasonRepository
+     * @param BreedersRepository $breedersRepository
+     * @param BreederPetsRepository $breederPetsRepository
+     */
+    public function __construct(
+        BreederContactsRepository $breederContactsRepository,
+        BreederPetImageRepository $breederPetImageRepository,
+        BreederQueryService       $breederQueryService,
+        PetsFavoriteRepository    $petsFavoriteRepository,
+        SendoffReasonRepository   $sendoffReasonRepository,
+        BreedersRepository        $breedersRepository,
+        BreederPetsRepository     $breederPetsRepository,
+        PrefRepository            $prefRepository
+    ) {
+        $this->breederContactsRepository = $breederContactsRepository;
+        $this->breederPetImageRepository = $breederPetImageRepository;
+        $this->breederQueryService = $breederQueryService;
+        $this->petsFavoriteRepository = $petsFavoriteRepository;
+        $this->sendoffReasonRepository = $sendoffReasonRepository;
+        $this->breedersRepository = $breedersRepository;
+        $this->breederPetsRepository = $breederPetsRepository;
+        $this->prefRepository = $prefRepository;
+    }
+
+    /**
+     * @Route("/breeder/pet/search/result", name="breeder_pet_search_result")
+     * @Template("animalline/breeder/pet/search_result.twig")
+     */
+    public function petSearchResult(PaginatorInterface $paginator, Request $request): Response
+    {
+        $petResults = $this->breederQueryService->searchPetsResult($request);
+        $pets = $paginator->paginate(
+            $petResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
+        $regions = $this->prefRepository->findAll();
+
+        return $this->render('animalline/breeder/pet/search_result.twig', [
+            'pets' => $pets,
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions
+        ]);
+    }
+
+    /**
+     * ブリーダー検索
+     *
+     * @Route("/breeder/breeder_search", name="breeder_search")
+     * @Template("/animalline/breeder/breeder_search.twig")
+     */
+    public function breeder_search(PaginatorInterface $paginator, Request $request): Response
+    {
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
+        $regions = $this->prefRepository->findAll();
+        $breederResults = $this->breederQueryService->searchBreedersResult($request, $petKind);
+        $breeders = $paginator->paginate(
+            $breederResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return $this->render('animalline/breeder/breeder_search.twig', [
+            'breeders' => $breeders,
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions
+        ]);
+    }
+
+    /**
+     * Get pet data by pet kind
+     *
+     * @Route("/breeder_pet_data_by_pet_kind", name="breeder_pet_data_by_pet_kind", methods={"GET"})
+     */
+    public function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
+    {
+        $petKind = $request->get('pet_kind');
+        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
+        $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
+        $formattedBreeds = [];
+        foreach ($breeds as $breed) {
+            $formattedBreeds[] = [
+                'id' => $breed->getId(),
+                'name' => $breed->getBreedsName()
+            ];
+        }
+        $formattedColors = [];
+        foreach ($colors as $color) {
+            $formattedColors[] = [
+                'id' => $color->getId(),
+                'name' => $color->getCoatColorName()
+            ];
+        }
+        $data = [
+            'breeds' => $formattedBreeds,
+            'colors' => $formattedColors
+        ];
+
+        return new JsonResponse($data);
+    }
+}
