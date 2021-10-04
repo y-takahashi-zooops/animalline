@@ -30,7 +30,8 @@ file that was distributed with this source code.
                 data: {
                     'id': $('#admin_search_product_id').val(),
                     'category_id': $('#admin_search_product_category_id').val(),
-                    'is_instock': true
+                    'is_instock': true,
+                    'reIndex': true
                 }
             }).done(function (data) {
                 $('#searchProductModalList').html(data);
