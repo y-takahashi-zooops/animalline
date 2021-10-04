@@ -248,7 +248,7 @@ class AdoptionMemberController extends AbstractController
         ]);
     }
 
-    
+
     /**
      * 取引メッセージ画面
      *
@@ -399,8 +399,8 @@ class AdoptionMemberController extends AbstractController
 
             // Customer情報から初期情報をセット
             $Customer = $this->customerRepository->find($user);
-            $form->get('owner_name')->setData($Customer->getname01() ."　". $Customer->getname02());
-            $form->get('owner_kana')->setData($Customer->getkana01() ."　". $Customer->getkana02());
+            $form->get('owner_name')->setData($Customer->getname01() . "　" . $Customer->getname02());
+            $form->get('owner_kana')->setData($Customer->getkana01() . "　" . $Customer->getkana02());
             $form->get('zip')->setData($Customer->getPostalCode());
             $form->get('addr')->get('PrefId')->setData($Customer->getPref());
             $form->get('addr')->get('city')->setData($Customer->getAddr01());
@@ -732,15 +732,21 @@ class AdoptionMemberController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/adoption/member/pets/new/{conservation_id}", name="adoption_pets_new", methods={"GET","POST"})
+     * @Route("/adoption/member/pets/new/{bar_code}", name="adoption_pets_new", methods={"GET","POST"}, requirements={"bar_code" = "^\d{6}$"})
      */
-    public function adoption_pets_new(Request $request, ConservationsRepository $conservationsRepository): Response
+    public function adoption_pets_new(Request $request): Response
     {
+        $barCode = substr($request->get('bar_code'), 1);
+        $DnaId = (int)$barCode;
+        $Dna = $this->dnaCheckStatusRepository->find($DnaId);
+        if (!$Dna) {
+            throw new HttpException\NotFoundHttpException();
+        }
         $user = $this->getUser();
         $is_conservation = $user->getIsConservation();
+        $DnaHeader = $Dna->getDnaHeader();
+        $conservation = $this->conservationsRepository->find($DnaHeader->getRegisterId());
         if ($is_conservation == 0) {
-            $conservation = $conservationsRepository->find($request->get('conservation_id'));
-
             return $this->render('animalline/adopution/member/examination_guidance.twig', [
                 'conservation' => $conservation
             ]);
@@ -754,7 +760,6 @@ class AdoptionMemberController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $conservation = $conservationsRepository->find($request->get('conservation_id'));
             $conservationPet->setConservation($conservation);
             $conservationPet->setDnaCheckResult(0);
             $conservationPet->setReleaseStatus(0);
@@ -762,6 +767,10 @@ class AdoptionMemberController extends AbstractController
             $entityManager->persist($conservationPet);
             $entityManager->flush();
             $petId = $conservationPet->getId();
+            $Dna->setPetId($petId)
+                ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED);
+            $entityManager->persist($Dna);
+            $entityManager->flush();
             $img0 = $this->setImageSrc($request->get('img0'), $petId);
             $img1 = $this->setImageSrc($request->get('img1'), $petId);
             $img2 = $this->setImageSrc($request->get('img2'), $petId);
@@ -811,6 +820,7 @@ class AdoptionMemberController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
     /**
      *
      * 新規ペット追加完了メッセージ
