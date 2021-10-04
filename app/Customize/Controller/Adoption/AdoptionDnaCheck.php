@@ -235,8 +235,8 @@ class AdoptionDnaCheck extends AbstractController
 
         $userId = $this->getUser()->getId();
         $isAll = $request->get('is_all') ?? false;
-        // TODO:dnaQueryServiceにfilterDnaAdoptionMemberを実装
-        $results = $this->dnaQueryService->filterDnaBreederMember($userId, $isAll);
+
+        $results = $this->dnaQueryService->filterDnaAdoptionMember($userId, $isAll);
         $dnas = $paginator->paginate(
             $results,
             $request->query->getInt('page', 1),

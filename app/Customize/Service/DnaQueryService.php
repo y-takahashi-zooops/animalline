@@ -172,4 +172,30 @@ class DnaQueryService
         return $queryConservation->orderBy('dna.update_date', 'DESC')
             ->addOrderBy('dna.id', 'DESC')->getQuery()->getArrayResult();
     }
+
+    /**
+     * Adoption member DNA filter.
+     *
+     * @param int $registerId
+     * @param bool $isAll
+     * @return array
+     */
+    public function filterDnaAdoptionMember(int $registerId, bool $isAll): array
+    {
+        $queryBreeder = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
+            ->join('Customize\Entity\ConservationPets', 'cp', 'WITH', 'dna.pet_id = cp.id')
+            ->join('Customize\Entity\DnaCheckStatusHeader', 'dcsh', 'WITH', 'dna.DnaHeader = dcsh.id')
+            ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
+            ->where('dcsh.register_id = :register_id')
+            ->andWhere('dna.site_type = :site_type')
+            ->setParameters([':register_id' => $registerId, ':site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION])
+            ->select('dna.id as dna_id, cp.id as pet_id, cp.thumbnail_path, cp.pet_kind, b.breeds_name, dna.check_status, dcsh.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
+        if (!$isAll) {
+            $queryBreeder->andWhere($queryBreeder->expr()->notIn('dna.check_status', self::EXCLUDES));
+        }
+        return $queryBreeder->orderBy('dna.update_date', 'DESC')
+            ->addOrderBy('dna.id', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }
