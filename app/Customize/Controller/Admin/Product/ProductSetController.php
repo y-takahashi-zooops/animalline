@@ -14,6 +14,7 @@
 namespace Customize\Controller\Admin\Product;
 
 use Eccube\Controller\AbstractController;
+use Eccube\Form\Type\Admin\SearchProductType;
 use Eccube\Repository\ProductClassRepository;
 use Eccube\Repository\ProductRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -52,7 +53,7 @@ class ProductSetController extends AbstractController
      * @Route("/%eccube_admin_route%/product/set/{id}", name="admin_product_set")
      * @Template("@admin/Product/product_set.twig")
      */
-    public function product_set(Request $request,$id)
+    public function product_set(Request $request, $id)
     {
         $Product = $this->productRepository->find($id);
         $ProductClass = $this->productClassRepository->findOneBy(['Product' => $Product]);
@@ -60,9 +61,13 @@ class ProductSetController extends AbstractController
         // if ($form->isSubmitted() && $form->isValid()) {
         // }
 
+        // 商品検索フォーム
+        $searchProductModalForm = $this->createForm(SearchProductType::class);
+
         return [
             'Product' => $Product,
             'ProductClass' => $ProductClass,
+            'searchProductModalForm' => $searchProductModalForm->createView()
         ];
     }
 }
