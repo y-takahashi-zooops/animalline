@@ -41,7 +41,7 @@ class ProductTypeExtension extends AbstractTypeExtension
             'required' => false,
             'constraints' => [
                 new Assert\NotBlank(),
-                new Assert\Range(['min' => 1, 'max' => 999.99]),
+                new Assert\Range(['min' =>  0.1, 'max' => 999.99]),
             ],
         ]);
     }

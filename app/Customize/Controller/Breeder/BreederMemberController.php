@@ -168,8 +168,7 @@ class BreederMemberController extends AbstractController
         DnaQueryService                  $dnaQueryService,
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
         DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository
-    )
-    {
+    ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
@@ -899,14 +898,20 @@ class BreederMemberController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/breeder/member/pets/new/{breeder_id}", name="breeder_pets_new", methods={"GET","POST"})
+     * @Route("/breeder/member/pets/new/{barcode}", name="breeder_pets_new", methods={"GET","POST"}, requirements={"barcode" = "^\d{6}$"})
      */
-    public function breeder_pets_new(Request $request, BreedersRepository $breedersRepository): Response
+    public function breeder_pets_new(Request $request, $barcode): Response
     {
+        $dnaId = substr($barcode, 1);
+        if (!$Dna = $this->dnaCheckStatusRepository->find($dnaId)) {
+            throw new NotFoundHttpException();
+        }
+        $breederId = $Dna->getDnaHeader()->getRegisterId();
+
         $user = $this->getUser();
         $is_breeder = $user->getIsBreeder();
         if ($is_breeder == 0) {
-            $breeder = $breedersRepository->find($request->get('breeder_id'));
+            $breeder = $this->breedersRepository->find($breederId);
 
             return $this->render('animalline/breeder/member/examination_guidance.twig', [
                 'breeder' => $breeder
@@ -921,7 +926,7 @@ class BreederMemberController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $breeder = $breedersRepository->find($request->get('breeder_id'));
+            $breeder = $this->breedersRepository->find($breederId);
             $breederPet->setBreeder($breeder);
             $breederPet->setDnaCheckResult(0);
             $breederPet->setReleaseStatus(0);
@@ -957,12 +962,17 @@ class BreederMemberController extends AbstractController
                 ->addBreederPetImage($petImage4)
                 ->setThumbnailPath($img0);
 
+            // update dna check status
+            $Dna->setPetId($breederPet->getId())
+                ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED);
+
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($breederPet);
+            $entityManager->persist($Dna);
             $entityManager->flush();
 
             return $this->redirectToRoute('breeder_newpet_complete');
