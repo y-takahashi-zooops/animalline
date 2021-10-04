@@ -2,147 +2,302 @@
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
-    <div class="sub-title d-sm-flex align-items-center">
-        <h2>{{ breeder.licenseHouseName }}ブリーダー</h2>
-        <div class="mr-5"></div>
-        <div class="d-block d-sm-none m-2 p-2"></div>
-        <h3>総合評価</h3>
-        <div class="mr-2"></div>
-        <img src="/html/template/default/assets/img/star-icon.svg">
-        <div class="mr-2"></div>
-        <h3>{{ breeder.breederRank|number_format(1) }}</h3>
-    </div>
-    <div class="m-2 p-2"></div>
-    <div class="row">
-        <div class="col-sm-6">
-            <img src="{{ app.request.schemeAndHttpHost ~ (breeder.thumbnailPath | default | length > 0 ? breeder.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
-                 class="w-100">
-            <div class="d-block d-sm-none m-2 p-2"></div>
-        </div>
-    </div>
-    <div class="m-3 p-3"></div>
-    <div class="row">
-        <div class="breeder-info col-12">
-            <div class="d-sm-flex">
-                <div class="d-flex mr-4">
-                    <h4 class="color-gray-500">動物取扱業登録番号：</h4>
-                    <h4>{{ breeder.licenseNo }}</h4>
-                </div>
-                <div class="m-1 p-1"></div>
-                <div class="d-flex">
-                    <h4 class="color-gray-500">登録：</h4>
-                    <h4>{{ breeder.licenseRegistDate | date('Y/m/d') }}</h4>
-                </div>
-            </div>
-            <div class="m-1 p-1"></div>
-            <div class="d-sm-flex">
-                <div class="d-flex mr-4">
-                    <h4 class="color-gray-500">有効期限：</h4>
-                    <h4>{{ breeder.licenseExpireDate | date('Y/m/d') }}</h4>
-                </div>
-                <div class="m-1 p-1"></div>
-                <div class="d-flex">
-                    <h4 class="color-gray-500">動物取扱責任者：</h4>
-                    <h4>{{ breeder.licenseManagerName }}</h4>
-                </div>
-            </div>
-            <div class="m-1 p-1"></div>
-            <div class="d-flex">
-                <h4 class="color-gray-500">犬舎所在地：</h4>
-                {% set breederHouseDog = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
-                {% set breederHouseCat = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
-                {% if (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
-                    <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' ~ ' ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
-                {% elseif (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
-                    <h4>{{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' }}</h4>
-                {% else %}
-                    <h4>{{ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}</h4>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    <div class="m-2 p-2"></div>
-    <div class="row">
-        <div class="col-12">
-            <p>
-                {{ breeder.prText }}
-            </p>
-        </div>
-    </div>
-    {# <div class="m-2 p-2"></div>
-    <div class="sub-title">
-        <h2>このブリーダーが扱うペット一覧</h2>
-    </div>
-    <div class="m-2 p-2"></div>
-    <div class="row">
-        {% for pet in pets %}
-            <div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
-                <div class="catalog-card">
-                    <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
-                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
-                             class="card-img-top" alt="Pet-image">
-                    </a>
-                    <div class="card-body bg-white">
-                        <h3 class="color-gray-500 font-weight-600">{{ pet.getBreedsType().getBreedsName() ?? '' }}</h3>
-                        <div class="m-4"></div>
-                        <div class="d-flex">
-                            <h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
-                            <h4>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h4>
+<section id="breeder-column" class="breeder-column_dog">
+        <div class="inner">
+            <div>
+                <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
+                {# <div class="breeder-column__main_section_title">
+                    <h3>検索結果</h3>
+                </div> #}
+                <div class="breeder-column__main_section_body">
+                    <h2>{{ breeder.licenseHouseName }}ブリーダー</h2>
+                    <div class="d-flex">
+                        <h4>総合評価</h4>
+                        <div class="mr-2"></div>
+                        <img src="/html/template/default/assets/img/star-icon.svg">
+                        <div class="mr-2"></div>
+                        <h4>{{ breeder.breederRank|number_format(1) }}</h4>
+                    </div>
+                    <div>
+                        <div class="row mb-2">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-6">
+                                <img src="{{ app.request.schemeAndHttpHost ~ (breeder.thumbnailPath | default | length > 0 ? breeder.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                    class="w-100">
+                                <div class="d-block d-sm-none m-2 p-2"></div>
+                            </div>
                         </div>
-                        <div class="mb-2"></div>
-                        <div class="d-flex">
-                            {% set breederHouse = pet.Breeder.getBreederHouseByPetType(pet.petKind) %}
-                            <h4 class="mr-3">{{ breederHouse.breederHousePref ~ ' ' ~ breederHouse.breederHouseCity ?? '' }}</h4>
-                            <h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
+                        <div class="breeder_section_header">
+                            <i class="fas fa-paw"></i>
+                            基本情報
                         </div>
-                        <div class="m-2"></div>
-                        <h4>{{ pet.prComment }}</h4>
-                        <div class="m-2"></div>
-                        <div class="m-4"></div>
-                        <h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}
-                            <span>円（税込）</span>
-                        </h3>
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    運営者氏名
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {{ breeder.breederName }}({{ breeder.breederKana }})
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    取扱ペット種別
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {% if breeder.handlingPetKind == 0 %}犬・猫
+                                    {% elseif breeder.handlingPetKind == 1 %}犬
+                                    {% elseif breeder.handlingPetKind == 2 %}猫
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    電話番号
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {{ breeder.breederTel }}
+                                </div>
+                            </div>
+                        </div>
+                        {% if breeder.breederFax %}
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        FAX番号
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {{ breeder.breederFax }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    住所
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {{ breeder.breederPref }} 
+                                    {{ breeder.breederCity }}
+                                    {{ breeder.breederAddress }}
+                                    {{ breeder.breederBuillding ?? '' }}
+                                </div>
+                            </div>
+                        </div>
+                        {% if breeder.handlingPetKind == 0 or breeder.handlingPetKind == 1 %}
+                            <div class="breeder_section_header">
+                                <i class="fas fa-paw"></i>
+                                犬舎情報
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        運営者名
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {{ dogHouse.breederHouseName }} ({{ dogHouse.breederHouseKana }})
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        犬舎住所
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {{ dogHouse.breederHousePref }} 
+                                        {{ dogHouse.breederHouseCity }}
+                                        {{ dogHouse.breederHouseAddress }}
+                                        {{ dogHouse.breederHouseBuillding ?? '' }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if breeder.handlingPetKind == 0 or breeder.handlingPetKind == 2 %}
+                            <div class="breeder_section_header">
+                                <i class="fas fa-paw"></i>
+                                猫舎情報
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        運営者氏名
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {{ catHouse.breederHouseName }} ( {{ catHouse.breederHouseKana }})
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        猫舎住所
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {{ catHouse.breederHousePref }} 
+                                        {{ catHouse.breederHouseCity }}
+                                        {{ catHouse.breederHouseAddress }}
+                                        {{ catHouse.breederHouseBuillding ?? '' }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="breeder_section_header">
+                            <i class="fas fa-paw"></i>
+                            登録証情報
+                        </div>
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    運営責任者氏名
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {{ breeder.licenseName }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    登録証番号
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {{ breeder.licenseNo }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    事業所名称
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {{ breeder.licenseHouseName }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    事業所所在地
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {{ breeder.licensePref }}
+                                    {{ breeder.licenseCity }}
+                                    {{ breeder.licenseAddress }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    動物取扱者証氏名
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {{ breeder.licenseManagerName }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    取扱業種別
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {% if breeder.licenseType == 1 %}販売業
+                                    {% elseif breeder.licenseType == 2 %}保管業
+                                    {% elseif breeder.licenseType == 3 %}貸出業
+                                    {% elseif breeder.licenseType == 4 %}訓練業
+                                    {% elseif breeder.licenseType == 5 %}展示業
+                                    {% elseif breeder.licenseType == 6 %}その他
+                                    {% else %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    登録日
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {{ breeder.licenseRegistDate| date('Y/m/d') }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 breeder_section_detail">
+                            <div class="row">
+                                <div class="col-12 col-md-4 contents_col_bold">
+                                    期限
+                                </div>
+                                <div class="col-12 col-md-8 contents_col_normal">
+                                    {{ breeder.licenseExpireDate| date('Y/m/d') }}
+                                </div>
+                            </div>
+                        </div>
+                        {% if breeder.prText %}
+                            <div class="breeder_section_header">
+                                <i class="fas fa-paw"></i>
+                                自己PR
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 contents_col_normal">
+                                        {{ breeder.prText | nl2br }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if breeder.regalEffort %}
+                            <div class="breeder_section_header">
+                                <i class="fas fa-paw"></i>
+                                動物愛護法改正への対応
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 contents_col_normal">
+                                        {{ breeder.regalEffort | nl2br }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-        {% else %}
-            メッセージが見つかりません
-        {% endfor %}
-    </div> #}
-    <section id="breeder-column" class="breeder-column_dog">
-        <div class="inner">
             <div class="breeder-column__main_section_title">
                 <h3>このブリーダーが扱うペット一覧</h3>
             </div>
             <div class="breeder-column__main_section_body">
-            <ul>
-                {% for pet in pets %}
-                    <li>
-                        <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
-                        <figure>
-                            <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
-                        class="card-img-top" alt="Pet-image">
-                        　</figure>
-                        <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
-                        <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
-                        <div class="type"><span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>茶色</span></div>
-                        <div class="publish">掲載日：2021年09月15日</div>
-                        <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
-                        <p>{{ pet.prComment|nl2br }}</p>
-                        </a>
-                    </li>
-                {% else %}
-                    <span class="mb-2">結果が０件です。</span>
-                {% endfor %}
-            </ul>
+                <ul>
+                    {% for pet in pets %}
+                        <li>
+                            <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
+                            <figure>
+                                <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                            class="card-img-top" alt="Pet-image">
+                            　</figure>
+                            <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
+                            <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
+                            <div class="type"><span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>茶色</span></div>
+                            <div class="publish">掲載日：2021年09月15日</div>
+                            <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
+                            <p>{{ pet.prComment|nl2br }}</p>
+                            </a>
+                        </li>
+                    {% else %}
+                        <span class="mb-2">結果が０件です。</span>
+                    {% endfor %}
+                </ul>
             </div>
             <div class="navigation">
             {{ knp_pagination_render(pets) }}
             </div>
-        </div>
-        <div class="m-2 p-2"></div>
-        <div class="navigation">
-            {{ knp_pagination_render(pets) }}
         </div>
     </section>
 {% endblock %}

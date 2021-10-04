@@ -11,6 +11,8 @@ use Customize\Repository\BreedsRepository;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationPetImageRepository;
+use Customize\Repository\ConservationsRepository;
+use Customize\Repository\ConservationsHousesRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Customize\Repository\SendoffReasonRepository;
 use Eccube\Controller\AbstractController;
@@ -27,6 +29,7 @@ use Customize\Form\Type\ConservationContactType;
 use Customize\Service\AdoptionQueryService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use DateTime;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AdoptionController extends AbstractController
 {
@@ -71,6 +74,16 @@ class AdoptionController extends AbstractController
     protected $prefRepository;
 
     /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
+     * @var ConservationsHousesRepository
+     */
+    protected $conservationsHousesRepository;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
@@ -81,6 +94,8 @@ class AdoptionController extends AbstractController
      * @param SendoffReasonRepository $sendoffReasonRepository
      * @param BreedsRepository $breedsRepository
      * @param PrefRepository $prefRepository
+     * @param ConservationsRepository $conservationsRepository
+     * @param ConservationsHousesRepository $conservationsHousesRepository
      */
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
@@ -90,7 +105,9 @@ class AdoptionController extends AbstractController
         PetsFavoriteRepository         $petsFavoriteRepository,
         SendoffReasonRepository        $sendoffReasonRepository,
         BreedsRepository               $breedsRepository,
-        PrefRepository                 $prefRepository
+        PrefRepository                 $prefRepository,
+        ConservationsRepository        $conservationsRepository,
+        ConservationsHousesRepository  $conservationsHousesRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
@@ -100,6 +117,8 @@ class AdoptionController extends AbstractController
         $this->sendoffReasonRepository = $sendoffReasonRepository;
         $this->breedsRepository = $breedsRepository;
         $this->prefRepository = $prefRepository;
+        $this->conservationsRepository = $conservationsRepository;
+        $this->conservationsHousesRepository = $conservationsHousesRepository;
     }
 
     /**
@@ -337,6 +356,40 @@ class AdoptionController extends AbstractController
             'breeds' => $breeds,
             'regions' => $regions
         ]);
+    }
+
+    
+    /**
+     * 保護団体詳細
+     * 
+     * @Route("/adoption/adoption_search/{adoption_id}", name="adoption_detail", requirements={"adoption_id" = "\d+"})
+     * @Template("/animalline/adoption/adoption_detail.twig")
+     */
+    public function adoption_detail(Request $request, $adoption_id, PaginatorInterface $paginator)
+    {
+        $conservation = $this->conservationsRepository->find($adoption_id);
+        if (!$conservation) throw new NotFoundHttpException();
+
+        $handling_pet_kind = $conservation->getHandlingPetKind();
+        $dogHouse = $this->conservationsHousesRepository->findOneBy(["Conservation" => $conservation, "pet_type" => 1]);
+        $catHouse = $this->conservationsHousesRepository->findOneBy(["Conservation" => $conservation, "pet_type" => 2]);
+
+        $petResults = $this->conservationPetsRepository->findBy([
+            'Conservation' => $conservation,
+            'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC
+        ]);
+        $pets = $paginator->paginate(
+            $petResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return compact(
+            'conservation',
+            'dogHouse',
+            'catHouse',
+            'pets'
+        );
     }
 
     /**
