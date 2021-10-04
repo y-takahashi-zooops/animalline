@@ -155,6 +155,7 @@ final class AnilineConf
 
     // ステータス確認
     const ANILINE_DNA_CHECK_STATUS_DEFAULT = 1; // 受付
+    const ANILINE_DNA_CHECK_STATUS_PET_REGISTERED = 3; // ペット登録完了
     const ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY = 4; // 検体異常
     const ANILINE_DNA_CHECK_STATUS_CHECKING = 5; // DNA検査中
     const ANILINE_DNA_CHECK_STATUS_NOT_NORMAL = 6; // 検体異
