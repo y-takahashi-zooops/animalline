@@ -1,0 +1,118 @@
+<?php
+
+/*
+ * This file is part of EC-CUBE
+ *
+ * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ *
+ * http://www.ec-cube.co.jp/
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Customize\Controller\Admin;
+
+use Customize\Config\AnilineConf;
+use Customize\Repository\ConservationsRepository;
+use Customize\Service\MailService;
+use Eccube\Controller\AbstractController;
+use Eccube\Repository\CustomerRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+class AdoptionExaminationController extends AbstractController
+{
+    /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
+     * @var MailService
+     */
+    protected $mailService;
+
+    /**
+     * AdoptionExaminationController constructor.
+     *
+     * @param ConservationsRepository $conservationsRepository
+     * @param CustomerRepository $customerRepository
+     * @param MailService $mailService
+     */
+
+    public function __construct(
+        ConservationsRepository        $conservationsRepository,
+        CustomerRepository             $customerRepository,
+        MailService                    $mailService
+    ) {
+        $this->conservationsRepository = $conservationsRepository;
+        $this->customerRepository = $customerRepository;
+        $this->mailService = $mailService;
+    }
+
+    /**
+     * 審査情報表示保護団体管理
+     *
+     * @Route("/%eccube_admin_route%/adoption/examination/{id}", name="admin_adoption_examination", requirements={"id" = "\d+"})
+     * @Template("@admin/Adoption/examination.twig")
+     */
+    public function Examination(Request $request)
+    {
+        return;
+    }
+
+    /**
+     * 審査結果登録保護団体管理
+     *
+     * @Route("/%eccube_admin_route%/adoption/examination/regist/{id}", name="admin_adoption_examination_regist", requirements={"id" = "\d+"})
+     * @Template("@admin/Adoption/examination_regist.twig")
+     */
+    public function Examination_regist(Request $request)
+    {
+        $conservationId = $request->get("id");
+        $conservation = $this->conservationsRepository->find($conservationId);
+        if (!$conservation) throw new NotFoundHttpException();
+        /** @var $Customer \Eccube\Entity\Customer */
+        $Customer = $this->customerRepository->find($conservationId);
+        if (!$Customer) throw new NotFoundHttpException();
+
+        $comment = $request->get('examination_result_comment');
+        $data = [
+            'name' => "{$Customer->getName01()} {$Customer->getName02()}",
+            'examination_comment' => "<span id='ex-comment'>{$comment}</span>"
+        ];
+
+        if ($request->isMethod('POST')) {
+            $result = (int)$request->get('examination_result');
+            $conservation->setExaminationStatus($result);
+
+            $data['examination_comment'] = $comment;
+            if ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK) {
+                $this->mailService->sendAdoptionExaminationMailAccept($Customer, $data);
+                $Customer->setIsConservation(1);
+            } else if ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG) {
+                $this->mailService->sendAdoptionExaminationMailReject($Customer, $data);
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($Customer);
+            $entityManager->flush();
+
+            $this->addSuccess('審査結果を登録しました。', 'admin');
+            return $this->redirectToRoute('admin_adoption_list');
+        }
+
+        return compact(
+            'data',
+            'conservation'
+        );
+    }
+}

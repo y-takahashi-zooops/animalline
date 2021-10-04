@@ -14,7 +14,6 @@
 namespace Customize\Controller\Admin;
 
 use Customize\Entity\Breeders;
-use Customize\Form\Type\Admin\BreederExaminationInfoType;
 use Customize\Form\Type\AdminBreederType;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreedersRepository;
@@ -27,10 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
-use Customize\Entity\BreederPets;
-use Customize\Entity\BreederExaminationInfo;
 use Customize\Form\Type\Admin\BreederHouseType;
-use Customize\Form\Type\Admin\BreederPetsType;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\CoatColorsRepository;
@@ -247,179 +243,6 @@ class BreederController extends AbstractController
             'form' => $form->createView(),
             'house' => $house,
             'isEnablePetType' => $isEnablePetType
-        ];
-    }
-
-    /**
-     * 審査情報表示ブリーダー管理
-     *
-     * @Route("/%eccube_admin_route%/breeder/examination/{id}", name="admin_breeder_examination", requirements={"id" = "\d+"})
-     * @Template("@admin/Breeder/examination.twig")
-     */
-    public function Examination(Request $request)
-    {
-        $breeder = $this->breedersRepository->find($request->get('id'));
-        $breederExaminationInfos = $this->breederExaminationInfoRepository->findBy(['Breeder' => $breeder]);
-        if (!$breederExaminationInfos) throw new NotFoundHttpException();
-        $breederExaminationInfo = $breederExaminationInfos[0];
-        $isEnablePetType = count($breederExaminationInfos) > 1;
-        if ($request->get('pet_type')) {
-            $breederExaminationInfo = $this->breederExaminationInfoRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => $request->get('pet_type')]);
-            if (!$breederExaminationInfo) throw new NotFoundHttpException();
-        }
-
-        $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo, ['disabled' => true]);
-        $form->handleRequest($request);
-        return [
-            'form' => $form->createView(),
-            'petType' => $breederExaminationInfo->getPetType() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫',
-            'isEnablePetType' => $isEnablePetType,
-            'breederExaminationInfo' => $breederExaminationInfo
-        ];
-    }
-
-    /**
-     * 審査結果登録ブリーダー管理
-     *
-     * @Route("/%eccube_admin_route%/breeder/examination/regist/{id}", name="admin_breeder_examination_regist", requirements={"id" = "\d+"})
-     * @Template("@admin/Breeder/examination_regist.twig")
-     */
-    public function Examination_regist(Request $request, BreederExaminationInfo $examination)
-    {
-        $breederId = $examination->getBreeder()->getId();
-        /** @var $Customer \Eccube\Entity\Customer */
-        $Customer = $this->customerRepository->find($breederId);
-        if (!$Customer) throw new NotFoundHttpException();
-
-        $comment = $request->get('examination_result_comment');
-        $data = [
-            'name' => "{$Customer->getName01()} {$Customer->getName02()}",
-            'examination_comment' => "<span id='ex-comment'>{$comment}</span>"
-        ];
-
-        if ($request->isMethod('POST')) {
-            $result = (int)$request->get('examination_result');
-            $examination->setExaminationResult($result)
-                ->setExaminationResultComment($comment)
-                ->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_COMPLETE);
-
-            $breeder = $this->breedersRepository->find($breederId);
-
-            // breederの審査ステータスを変更
-            if ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
-                $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK);
-            } elseif ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_NG) {
-                $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG);
-            }
-
-            $data['examination_comment'] = $comment;
-            if ($result === AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
-                $this->mailService->sendBreederExaminationMailAccept($Customer, $data);
-                $Customer->setIsBreeder(1);
-            } else {
-                $this->mailService->sendBreederExaminationMailReject($Customer, $data);
-            }
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($examination);
-            $entityManager->persist($Customer);
-            $entityManager->flush();
-
-            $this->addSuccess('審査結果を登録しました。', 'admin');
-            return $this->redirectToRoute('admin_breeder_examination', ['id' => $breederId]);
-        }
-
-        return compact(
-            'examination',
-            'data'
-        );
-    }
-
-    /**
-     * ペット一覧ブリーダー管理
-     *
-     * @Route("/%eccube_admin_route%/breeder/pet/list/{id}", name="admin_breeder_pet_list", requirements={"id" = "\d+"})
-     * @Template("@admin/Breeder/pet/index.twig")
-     */
-    public function pet_index(PaginatorInterface $paginator, Request $request)
-    {
-        $criteria = [];
-        $criteria['id'] = $request->get('id');
-        $breeds = $this->breedsRepository->findAll();
-
-        switch ($request->get('pet_kind')) {
-            case 1:
-                $criteria['pet_kind'] = [AnilineConf::ANILINE_PET_KIND_DOG];
-                break;
-            case 2:
-                $criteria['pet_kind'] = [AnilineConf::ANILINE_PET_KIND_CAT];
-                break;
-            default:
-                break;
-        }
-
-
-        if ($request->get('breed_type')) {
-            $criteria['breed_type'] = $request->get('breed_type');
-        }
-
-        $order = [];
-        $field = $request->get('field') ?? 'create_date';
-        $direction = $request->get('direction') ?? 'DESC';
-        $order['field'] = $field;
-        $order['direction'] = $direction;
-
-        $results = $this->breederQueryService->filterPetAdmin($criteria, $order);
-        $pets = $paginator->paginate(
-            $results,
-            $request->query->getInt('page', 1),
-            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
-        );
-        $direction = 'ASC';
-        if ($request->get('direction')) {
-            $direction = $request->get('direction') == 'ASC' ? 'DESC' : 'ASC';
-        }
-
-        return $this->render('@admin/Breeder/pet/index.twig', [
-            'id' => $request->get('id'),
-            'pets' => $pets,
-            'direction' => $direction,
-            'breeds' => $breeds
-        ]);
-    }
-
-    /**
-     * ペット情報編集ブリーダー管理
-     *
-     * @Route("/%eccube_admin_route%/breeder/pet/edit/{id}", name="admin_breeder_pet_edit", requirements={"id" = "\d+"})
-     * @Template("@admin/Breeder/pet/edit.twig")
-     */
-    public function pet_edit(Request $request, BreederPets $breederPet)
-    {
-        $form = $this->createForm(BreederPetsType::class, $breederPet);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $breederPet->setBreedsType($this->breedsRepository->find($request->get('breeds_type')));
-            $breederPet->setCoatColor($this->coatColorsRepository->find($request->get('coat_color')));
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($breederPet);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('admin_breeder_pet_list', ['id' => $breederPet->getBreeder()->getId()]);
-        }
-
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $breederPet->getPetKind()]);
-        $colors = $this->coatColorsRepository->findBy(['pet_kind' => $breederPet->getPetKind()]);
-        $images = $this->breederPetImageRepository->findBy(['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
-
-        return [
-            'form' => $form->createView(),
-            'breederPet' => $breederPet,
-            'breeds' => $breeds,
-            'colors' => $colors,
-            'images' => $images
         ];
     }
 }
