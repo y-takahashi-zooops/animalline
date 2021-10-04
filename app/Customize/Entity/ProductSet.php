@@ -27,7 +27,13 @@ class ProductSet
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="ProductSet")
      * @ORM\JoinColumn(name="parent_product_id", nullable=true)
      */
-    private $parentProduct;
+    private $ParentProduct;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ProductClass::class)
+     * @ORM\JoinColumn(name="parent_product_class_id", nullable=true)
+     */
+    private $ParentProductClass;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="ProductSet")
@@ -37,9 +43,14 @@ class ProductSet
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductClass::class, inversedBy="ProductSet")
-     * @ORM\JoinColumn(name="product_class_id", nullable=false)
+     * @ORM\JoinColumn(name="product_class_id", nullable=true)
      */
     private $ProductClass;
+
+    /**
+     * @ORM\Column(name="set_unit", type="smallint", nullable=true)
+     */
+    private $set_unit;
 
     /**
      * @var \DateTime
@@ -62,12 +73,24 @@ class ProductSet
 
     public function getParentProduct(): ?Product
     {
-        return $this->parentProduct;
+        return $this->ParentProduct;
     }
 
-    public function setParentProduct(Product $parentProduct): self
+    public function setParentProduct(Product $ParentProduct): self
     {
-        $this->parentProduct = $parentProduct;
+        $this->ParentProduct = $ParentProduct;
+
+        return $this;
+    }
+
+    public function getParentProductClass(): ?ProductClass
+    {
+        return $this->ParentProductClass;
+    }
+
+    public function setParentProductClass(ProductClass $ParentProductClass): self
+    {
+        $this->ParentProductClass = $ParentProductClass;
 
         return $this;
     }
@@ -92,6 +115,18 @@ class ProductSet
     public function setProductClassId(ProductClass $ProductClass): self
     {
         $this->ProductClass = $ProductClass;
+
+        return $this;
+    }
+
+    public function getSetUnit(): ?int
+    {
+        return $this->set_unit;
+    }
+
+    public function setSetUnit(int $set_unit): self
+    {
+        $this->set_unit = $set_unit;
 
         return $this;
     }
