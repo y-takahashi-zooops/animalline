@@ -1,0 +1,138 @@
+<?php
+
+namespace Customize\Controller\Adoption;
+
+use Customize\Config\AnilineConf;
+use Customize\Entity\PetsFavorite;
+use Customize\Repository\BreedsRepository;
+use Customize\Repository\ConservationContactsRepository;
+use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\ConservationPetImageRepository;
+use Customize\Repository\ConservationsHousesRepository;
+use Customize\Repository\ConservationsRepository;
+use Customize\Repository\PetsFavoriteRepository;
+use Eccube\Controller\AbstractController;
+use Eccube\Repository\Master\PrefRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception as HttpException;
+use Symfony\Component\Routing\Annotation\Route;
+use Customize\Service\AdoptionQueryService;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class AdoptionSearchController extends AbstractController
+{
+    /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
+     * @var ConservationsHousesRepository
+     */
+    protected $conservationsHouseRepository;
+
+    /**
+     * @var DnaQueryService;
+     */
+    protected $dnaQueryService;
+
+    /**
+     * @var BreedsRepository
+     */
+    protected $breedsRepository;
+
+    /**
+     * @var PrefRepository
+     */
+    protected $prefRepository;
+
+    /**
+     * ConservationController constructor.
+     *
+     * @param ConservationsRepository $conservationsRepository
+     * @param ConservationsHousesRepository $conservationsHouseRepository
+     * @param AdoptionQueryService $conservationQueryService
+     * @param BreedsRepository $breedsRepository
+     * @param PrefRepository $prefRepository
+     */
+    public function __construct(
+        ConservationsRepository             $conservationsRepository,
+        ConservationsHousesRepository       $conservationsHouseRepository,
+        AdoptionQueryService                $adoptionQueryService,
+        BreedsRepository                    $breedsRepository,
+        PrefRepository                      $prefRepository
+    )
+    {
+        $this->conservationsRepository = $conservationsRepository;
+        $this->conservationsHouseRepository = $conservationsHouseRepository;
+        $this->adoptionQueryService = $adoptionQueryService;
+        $this->breedsRepository = $breedsRepository;
+        $this->prefRepository = $prefRepository;
+    }
+
+    /**
+     * 保護団体検索
+     *
+     * @Route("/adoption/adoption_search", name="adoption_search")
+     * @Template("/animalline/adoption/adoption_search.twig")
+     */
+    public function adoption_search(PaginatorInterface $paginator, Request $request): Response
+    {
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $regions = $this->prefRepository->findAll();
+        $adoptionResults = $this->adoptionQueryService->searchAdoptionsResult($request, $petKind);
+        $adoptions = $paginator->paginate(
+            $adoptionResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return $this->render('animalline/adoption/adoption_search.twig', [
+            'adoptions' => $adoptions,
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions
+        ]);
+    }
+
+    /**
+     * ペット検索画面.
+     *
+     * @Route("/adoption/pet/search", name="adoption_pet_search")
+     * @Template("animalline/adoption/pet/search.twig")
+     */
+    public function petSearch(Request $request)
+    {
+        return;
+    }
+
+    /**
+     * ペット検索結果.
+     *
+     * @Route("/adoption/pet/search/result", name="adoption_pet_search_result")
+     * @Template("animalline/adoption/pet/search_result.twig")
+     */
+    public function petSearchResult(PaginatorInterface $paginator, Request $request): Response
+    {
+        $petResults = $this->adoptionQueryService->searchPetsResult($request);
+        $pets = $paginator->paginate(
+            $petResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
+        $regions = $this->prefRepository->findAll();
+
+        return $this->render('animalline/adoption/pet/search_result.twig', [
+            'pets' => $pets,
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions
+        ]);
+    }
+}
