@@ -158,8 +158,9 @@ class AdoptionQueryService
         }
 
         if ($request->get('region')) {
-            $query->innerJoin('Customize\Entity\ConservationHouse', 'ch', 'WITH', 'c.id = ch.Conservation')
-                ->andWhere('ch.ConservationHousePrefId = :pref')
+            // $query->innerJoin('Customize\Entity\ConservationHouse', 'ch', 'WITH', 'c.id = ch.Conservation')
+            $query->innerJoin('Customize\Entity\ConservationsHouse', 'ch', 'WITH', 'c.id = ch.Conservation')
+                ->andWhere('ch.Pref = :pref')
                 ->setParameter('pref', $request->get('region'));
             if ($request->get('adjacent')) {
                 $queryHouse = $this->prefAdjacentRepository->createQueryBuilder('pa')
@@ -170,7 +171,7 @@ class AdoptionQueryService
                 $result = $queryHouse->getQuery()
                     ->getArrayResult();
                 $arr = array_column($result, 'adjacent_pref_id');
-                $query->orWhere('ch.ConservationHousePrefId in (:arr)')
+                $query->orWhere('ch.Pref in (:arr)')
                     ->setParameter('arr', $arr)
                     ->andWhere('cp.pet_kind = :pet_kind')
                     ->setParameter('pet_kind', $request->get('pet_kind'));

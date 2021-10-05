@@ -78,58 +78,45 @@
       </div>
     </section>
 	
-	{# <div class="bg-primary"> #}
-	<div>
-		<div class="m-2 p-2"></div>
-		<div class="row">
-			{{ include('animalline/adoption/side.twig') }}
-			<div class="main-container col-sm-9">
-				<h2>検索結果</h2>
-				<div class="m-3 p-3"></div>
-				
-				<div class="row">
-					{% for pet in pets %}
-						<div class="card col-sm-6 col-md-3 border-0 bg-none mb-4">
-							<div class="catalog-card">
-								<a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
-									<img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
-									     class="card-img-top" alt="Pet-image">
-								</a>
-								<div class="card-body bg-white">
-									<h3 class="color-gray-500 font-weight-600">{{ pet.getBreedsType().getBreedsName() ?? '' }}</h3>
-									<div class="m-4"></div>
-									<div class="d-flex">
-										<h4 class="mr-2">{{ pet.petBirthday|date('Y年m月d日') }}生</h4>
-										<h4>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h4>
-									</div>
-									<div class="mb-2"></div>
-									<div class="d-flex">
-										{% set conservationHouse = pet.Conservation.getConservationHouseByPetType(pet.petKind) %}
-										<h4 class="mr-3">{{ conservationHouse.conservationHousePref ~ ' ' ~ conservationHouse.conservationHouseCity ?? '' }}</h4>
-										<h4>{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h4>
-									</div>
-									<div class="m-2"></div>
-									<h4>{{ pet.prComment }}</h4>
-									<div class="m-2"></div>
-									{# <h4>掲載日{{ pet.releaseDate|date('Y年m月d日') }}</h4> #}
-									<div class="m-4"></div>
-									<h3 class="color-gray-500 font-weight-600">{{ pet.price|number_format(0) }}<span>円（税込）</span>
-									</h3>
-								</div>
-							</div>
-						</div>
-					{% else %}
-						メッセージが見つかりません
-					{% endfor %}
-				</div>
-				<div class="m-2 p-2"></div>
-				<div class="navigation">
-					{{ knp_pagination_render(pets) }}
-				</div>
-				<div class="m-2 p-2"></div>
-			</div>
-		</div>
-	</div>
+  <section id="breeder-column" class="breeder-column_dog">
+      <div class="inner">
+        <div class="breeder-column-row">
+          <div class="breeder-column__main">
+            <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
+              <div class="breeder-column__main_section_title">
+                <h3>検索結果</h3>
+              </div>
+              <div class="breeder-column__main_section_body">
+                <ul>
+                    {% for pet in pets %}
+                        <li>
+                            <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
+                            <figure>
+                              <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                            class="card-img-top" alt="Pet-image">
+                          　</figure>
+                            <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
+                            <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
+                            <div class="type"><span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>茶色</span></div>
+                            <div class="publish">掲載日：2021年09月15日</div>
+                            <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
+                            <p>{{ pet.prComment|nl2br }}</p>
+                            </a>
+                        </li>
+                    {% else %}
+                        <span class="mb-2">結果が０件です。</span>
+                    {% endfor %}
+                </ul>
+              </div>
+              <div class="navigation">
+                {{ knp_pagination_render(pets) }}
+              </div>
+            </div>
+          </div>
+          {{ include('animalline/breeder/side.twig') }}
+        </div>
+      </div>
+  </section>
 {% endblock %}
 
 {% block stylesheet %}

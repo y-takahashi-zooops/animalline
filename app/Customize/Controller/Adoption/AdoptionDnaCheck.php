@@ -48,7 +48,7 @@ class AdoptionDnaCheck extends AbstractController
     protected $conservationsRepository;
 
     /**
-     * @var ConservationHouse
+     * @var ConservationsHousesRepository
      */
     protected $conservationsHousesRepository;
 

@@ -3,132 +3,170 @@
 {% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
-    <div class="section-search">
-        <div class="main">
-            {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-                <nav class="nav nav-pills search-nav m-2 d-none d-flex">
-                    <a class="nav-item nav-link active bg-adoption col-md-3"
-                    href="{{ url('adoption_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
-                        <h2 class="text-white text-align-center">犬を飼育</h2>
-                    </a>
-                    <a class="nav-item nav-link border bg-white col-md-3"
-                    href="{{ url('adoption_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
-                <h2 class="color-gray-300 text-align-center">猫を飼育</h2>
-                    </a>
-                </nav>
-            {% else %}
-                <nav class="nav nav-pills search-nav m-2 d-none d-flex">
-                    <a class="nav-item nav-link px-5 py-2 border bg-white col-md-3"
-                    href="{{ url('adoption_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
-                        <h2 class="color-gray-300 text-align-center">犬を飼育</h2>
-                    </a>
-                    <a class="nav-item nav-link active bg-adoption px-5 py-2 col-md-3"
-                    href="{{ url('adoption_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
-                        <h2 class="text-white text-align-center">猫を飼育</h2>
-                    </a>
-                </nav>
-            {% endif %}
-            <div class="m-2 p-2"></div>
-            <form action="{{ url('adoption_search') }}" method="get">
-                <input type="hidden" name="pet_kind" value="{{ petKind }}">
-                <div class="row">
-                    <div class="col-md-5 select-container mb-2 mb-sm-none">
-                        <select class="form_dropdown w-100" id="formControlSelect1" name="breed_type">
-                            <option value="">種類</option>
-                            {% for breed in breeds %}
-								    <option value="{{ breed.id }}" {% if params.breed_type is defined and params.breed_type== breed.id
-								    %} selected {% endif %}>{{ breed.breedsName }}</option>
-                            {% endfor %}
-                        </select>
+    <section id="breeder-mv" class="adoption">
+        <div class="inner">
+            <div class="breeder-mv__container">
+                <div class="breeder-mv__text">
+                    <h2>テキストが入りますテキストが入りますテキストが入ります</h2>
+                    <div class="breeder-mv__text_logo">
+                        <img src="{{ asset('assets/img/breeder-mv-logo.png') }}" alt="Animalline Breeder" />
                     </div>
-                    <div class="col-md-3 select-container">
-                        <select class="form_dropdown w-100" id="formControlSelect3" name="region">
-                                <option value="">都道府県</option>
-                                {% for region in regions %}
-                                    <option value="{{ region.id }}" {% if params.region is defined and params.region == region.id
-                                    %} selected {% endif %}>{{ region.name }}</option>
-                                {% endfor %}
-                        </select>
-						<label><input type="checkbox" name="adjacent" value="1" {% if params.adjacent is defined and params.adjacent == 1
-							%} checked {% endif %}> 隣の都道府県も検索</label>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="text" id="adoption_house_name" placeholder="保護団体名" class="form-control w-80 p-2 h-15" name="license" 
-                               {% if params.license is defined %} value="{{ params.license }}" {% endif %}>
+                    <p>キャッチコピーが入ります。</p>
+                    <div class="breeder-mv__text_btn">
+                        <ul>
+                            {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+                                <li class="breeder-mv__text_btn_dog">
+                                    <span><i>犬を飼育</i></span>
+                                </li>
+                                <li class="breeder-mv__text_btn_cat">
+                                    <a href="{{ url('adoption_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
+                                        <i>猫を飼育</i>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="breeder-mv__text_btn_dog">
+                                    <a href="{{ url('adoption_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">>
+                                        <i>犬を飼育</i>
+                                    </a>
+                                </li>
+                                <li class="breeder-mv__text_btn_cat">
+                                    <span><i>猫を飼育</i></span>
+                                </li>
+                            {% endif %}
+                        </ul>
                     </div>
                 </div>
-                <div class="row">
-                    <div style="margin: 0 auto;">
-                        <a href="#">
-                            <button class="search_button bg-accent mt-3">検索する</button>
-                        </a>
+                <div class="breeder-mv__search">
+                    <div class="breeder-mv__search_wrap breeder-mv__search_dog">
+                        <div class="breeder-mv__search_title breeder_search">
+                            <h2>保護団体を探す</h2>
+                        </div>
+                        <div class="breeder-mv__search_body">
+                            <form action="{{ url('adoption_search') }}" method="get">
+                                <input type="hidden" name="pet_kind" value="{{ petKind }}">
+                                <div class="breeder-mv__search_top">
+                                    <div class="select-container">
+                                        <select class="form_dropdown w-100" id="formControlSelect1" name="breed_type">
+                                            <option value="">種類</option>
+                                            {% for breed in breeds %}
+                                                <option value="{{ breed.id }}" {% if params.breed_type is defined and params.breed_type== breed.id %} selected {% endif %}>
+                                                    {{ breed.breedsName }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="breeder-mv__search_bottom">
+                                    <div class="breeder-mv__search_bottom_w50">
+                                        <div class="select-container">
+                                            <select class="form_dropdown w-100" id="formControlSelect3" name="region">
+                                                <option value="">都道府県</option>
+                                                {% for region in regions %}
+                                                    <option value="{{ region.id }}" {% if params.region is defined and params.region == region.id %} selected {% endif %}>
+                                                        {{ region.name }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <label>
+                                            <input type="checkbox" name="adjacent" value="1" {% if params.adjacent is defined and params.adjacent == 1 %} checked {% endif %}>
+                                                隣の都道府県も検索
+                                        </label>
+                                    </div>
+                                    <div class="breeder-mv__search_bottom_w50">
+                                        <div class="select-container">
+                                            <input type="text" id="breeder_house_name" placeholder="保護団体名" class="form_input w-100" name="license" {% if params.license is defined %} value="{{ params.license }}" {% endif %}></div>
+                                        </div>
+                                    </div>
+                                    <div class="breeder-mv__search_btn">
+                                        <button><i class="bi bi-check2-square"></i>この条件で検索する</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
-    <div class="m-4 p-4"></div>
-    <div class="row">
-        <div class="col-12">
-            <h2 class="font-weight-500">検索結果</h2>
-        </div>
-    </div>
-    <div class="m-2 p-2"></div>
-    {% for adoption in adoptions %}
-    <div class="row ml-2">
-        <div class="adoption-img col-md-3 col-sm-4">
-            <img src="{{ app.request.schemeAndHttpHost ~ (adoption.thumbnailPath | default | length > 0 ? adoption.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}" class="w-100 mb-4 mb-sm-0">
-        </div>
-        <div class="adoption-info col-sm-8">
-            <h3 class="font-weight-500 color-gray-500">{{ adoption.ownerName }}</h3>
+    </section>
 
-
-            <div class="m-1 p-1"></div>
-            <div class="d-flex">
-                <h4>犬舎所在地：</h4>
-                {% set adoptionHouseDog = adoption.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
-                {% set adoptionHouseCat = adoption.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
-                {% if (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
-                    <h4>{{ adoptionHouseDog.adoptionHousePref ~ adoptionHouseDog.adoptionHouseCity ?? '' ~ ' ' ~ adoptionHouseCat.adoptionHousePref ~ adoptionHouseCat.adoptionHouseCity ?? '' }}</h4>
-                {% elseif (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
-                    <h4>{{ adoptionHouseDog.ConservationHousePref ~ adoptionHouseDog.ConservationHouseCity ?? '' }}</h4>
+    <section id="breeder-column" class="breeder-column_dog">
+        <div class="inner">
+            <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
+                <div class="breeder-column__main_section_title">
+                    <h3>検索結果</h3>
+            </div>
+            <div class="breeder-column__main_section_body">
+                {% for adoption in adoptions %}
+                    <div class="row ml-2 mb-4">
+                        <div class="breeder-img col-md-3 col-sm-4">
+                            {# <a href="{{ url('breeder_detail', {'breeder_id': breeder.Id}) }}"> #}
+                            <img src="{{ app.request.schemeAndHttpHost ~ (adoption.thumbnailPath | default | length > 0 ? adoption.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}" class="w-100 mb-4 mb-sm-0">
+                            {# </a> #}
+                        </div>
+                        <div class="breeder-info col-sm-8">
+                            <h4 class="font-weight-500 color-gray-500">
+                                {{ adoption.organizationName }}                              
+                            </h4>
+                            <div class="d-flex mb-1">
+                                <h6>運営者氏名：</h6>
+                                <h6>
+                                    {{ adoption.ownerName }}({{ adoption.ownerKana }})
+                                </h6>
+                            </div>
+                            <div class="d-flex mb-1">
+                                <h6>犬舎所在地：</h6>
+                                {% set adoptionHouseDog = adoption.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                {% set adoptionHouseCat = adoption.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
+                                {% if (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
+                                    <h6>
+                                        {{ adoptionHouseDog.conservationHousePref ~ adoptionHouseDog.conservationHouseCity ?? '' ~ ' ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}
+                                    </h6>
+                                {% elseif (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                    <h6>
+                                        {{ adoptionHouseDog.conservationHousePref ~ adoptionHouseDog.conservationHouseCity ?? '' }}
+                                    </h6>
+                                {% else %}
+                                    <h6>
+                                        {{ adoptionHouseCat.conservationHousePref ~ breederHouseCat.conservationHouseCity ?? '' }}
+                                    </h6>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex mb-1">
+                                <h6>審査ステータス：</h6>
+                                {% if adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_SUBMIT') %}
+                                    <h6>審査前</h6>
+                                {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK') %}
+                                    <h6>審査中</h6>
+                                {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK') %}
+                                    <h6>審査OK</h6>
+                                {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG') %}
+                                    <h6>審査NG</h6>
+                                {% endif %}
+                            </div>
+                            <a href="{{ url('adoption_detail', {'adoption_id': adoption.Id}) }}">
+                                <h5 class="color-adoption">保護団体詳細ページへ</h5>
+                            </a>
+                            </div>
+                        </div>
+                        {% if adoption.prText %}
+                            <div class="row ml-2 mb-4">
+                                <div class="col-12" style="background:#fff3dd">
+                                <h6 style="border-bottom: 1px dotted #cd8362; color:#cd8362;">PRコメント</h6>
+                                <h6>{{ adoption.prText |nl2br }}</h6>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
                 {% else %}
-                    <h4>{{ adoptionHouseCat.adoptionHousePref ~ adoptionHouseCat.adoptionHouseCity ?? '' }}</h4>
-                {% endif %}
+                    検索条件に該当する保護団体が存在しません。
+                {% endfor %}
+                <div class="navigation float-right">
+                    {{ knp_pagination_render(adoptions) }}
+                </div>    
             </div>
-            <div class="m-1 p-1"></div>
-            <div class="d-flex">
-                <h4>審査ステータス：</h4>
-                {% if adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_SUBMIT') %}
-                    <h4>審査前</h4>
-                {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK') %}
-                    <h4>審査中</h4>
-                {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK') %}
-                    <h4>審査OK</h4>
-                {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG') %}
-                    <h4>審査NG</h4>
-                {% endif %}
-            </div>
-            <div class="m-2 p-2"></div>
-            <a href="{{ url('adoption_detail', {'adoption_id': adoption.Id}) }}">
-                <h4 class="color-adoption">ブリーダー詳細ページへ</h4>
-            </a>
         </div>
-    </div>
-    <div class="m-2 p-2"></div>
-    <div class="row">
-        <div class="col-12">
-            <p>
-                {{ adoption.prText }}
-            </p>
-        </div>
-    </div>
-    {% else %}
-        検索条件に該当するブリーダーが存在しません。
-    {% endfor %}
-    <div class="navigation float-right">
-        {{ knp_pagination_render(adoptions) }}
-    </div>
+    </section>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
