@@ -168,8 +168,6 @@ class VeqtaController extends AbstractController
             default: {
                     $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL);
                     $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
-                    $Pet->setReleaseStatus(AnilineConf::RELEASE_STATUS_PUBLIC);
-                    $Pet->setReleaseDate(Carbon::now());
                 }
         }
 
