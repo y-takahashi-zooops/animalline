@@ -84,8 +84,14 @@
             uploadFile();
         });
 
-        $('#barcode').blur(function () {
-            callShippingName();
+        $('#barcode').on('change', function () {
+            if ($(this).val().length == 6) {
+                $(this).prop('disabled', true);
+                callShippingName();
+            } else {
+                $('#name').val('')
+                $('#barcode').removeAttr('disabled');
+            }
         });
     });
 
