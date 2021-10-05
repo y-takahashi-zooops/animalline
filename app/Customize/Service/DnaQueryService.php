@@ -80,7 +80,7 @@ class DnaQueryService
         $queryConservation = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->innerJoin('dna.DnaHeader', 'dnah')
             ->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'dna.pet_id = cp.id')
-            ->join('Eccube\Entity\Customer', 'c', 'WITH', 'dnah.register_id = c.id and dnah.register_id = cp.Conservation')
+            ->join('Eccube\Entity\Customer', 'c', 'WITH', 'dnah.register_id = c.id')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
             ->where('dna.site_type = :site_type')
             ->setParameters(['site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION])
