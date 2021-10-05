@@ -57,8 +57,7 @@ class DnaQueryService
         DnaCheckStatusRepository       $dnaCheckStatusRepository,
         BreedersRepository             $breedersRepository,
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
-    )
-    {
+    ) {
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
@@ -79,11 +78,13 @@ class DnaQueryService
         $checkStatus = $criteria['check_status'] ?? '';
 
         $queryConservation = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
-            ->innerJoin('Customize\Entity\DnaCheckStatusHeader', 'dnah')
-            ->join('Customize\Entity\ConservationPets', 'cp', 'WITH', 'dna.pet_id = cp.id')
+            ->innerJoin('dna.DnaHeader', 'dnah')
+            ->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'dna.pet_id = cp.id')
             ->join('Eccube\Entity\Customer', 'c', 'WITH', 'dnah.register_id = c.id and dnah.register_id = cp.Conservation')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
-            ->select('dna.id as dna_id, dna.site_type, cp.id as pet_id, c.id as customer_id, cp.thumbnail_path, cp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
+            ->where('dna.site_type = :site_type')
+            ->setParameters(['site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION])
+            ->select('dna.id as dna_id, dna.site_type, cp.id as pet_id, c.id as customer_id, cp.thumbnail_path, cp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date, dna.file_path');
         if (!empty($customerName)) {
             $queryConservation->andWhere('c.name01 like :customer_name or c.name02 like :customer_name')
                 ->setParameter(':customer_name', '%' . $criteria['customer_name'] . '%');
@@ -100,11 +101,13 @@ class DnaQueryService
             ->addOrderBy('dna.id', 'DESC')->getQuery()->getArrayResult();
 
         $queryBreeder = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
-            ->innerJoin('Customize\Entity\DnaCheckStatusHeader', 'dnah')
-            ->join('Customize\Entity\BreederPets', 'bp', 'WITH', 'dna.pet_id = bp.id')
-            ->join('Eccube\Entity\Customer', 'c', 'WITH', 'dnah.register_id = c.id and dnah.register_id = bp.Breeder')
+            ->innerJoin('dna.DnaHeader', 'dnah')
+            ->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'dna.pet_id = bp.id')
+            ->join('Eccube\Entity\Customer', 'c', 'WITH', 'dnah.register_id = c.id')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
-            ->select('dna.id as dna_id, dna.site_type, bp.id as pet_id, c.id as customer_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date');
+            ->where('dna.site_type = :site_type')
+            ->setParameters(['site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
+            ->select('dna.id as dna_id, dna.site_type, bp.id as pet_id, c.id as customer_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date, dna.file_path');
         if (!empty($customerName)) {
             $queryBreeder->andWhere('c.name01 like :customer_name or c.name02 like :customer_name')
                 ->setParameter(':customer_name', '%' . $criteria['customer_name'] . '%');
