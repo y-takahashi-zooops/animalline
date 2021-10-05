@@ -3,12 +3,16 @@
 namespace Customize\Controller\Admin;
 
 use Customize\Config\AnilineConf;
+use Customize\Entity\DnaCheckStatus;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DnaController extends AbstractController
@@ -31,8 +35,7 @@ class DnaController extends AbstractController
     public function __construct(
         DnaQueryService          $dnaQueryService,
         DnaCheckStatusRepository $dnaCheckStatusRepository
-    )
-    {
+    ) {
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
     }
@@ -87,5 +90,26 @@ class DnaController extends AbstractController
         return [
             'dnas' => $dnas
         ];
+    }
+
+    /**
+     * Download PDF
+     *
+     * @Route("/%eccube_admin_route%/dna/examination_status/download_pdf/{id}", requirements={"id" = "\d+"}, name="admin_dna_download_pdf")
+     *
+     * @param DnaCheckStatus $dnaCheckStatus
+     * @return BinaryFileResponse
+     */
+    public function download(DnaCheckStatus $dnaCheckStatus): BinaryFileResponse
+    {
+        if (!$pdfPath = $dnaCheckStatus->getFilePath()) {
+            throw new NotFoundHttpException("Pdf DNA not found!");
+        }
+        $nameArr = explode("/", $pdfPath);
+        $fileName = end($nameArr);
+        $response = new BinaryFileResponse($pdfPath);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
+
+        return $response;
     }
 }
