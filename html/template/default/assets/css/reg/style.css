@@ -15,7 +15,7 @@ img,abbr,acronym,fieldset{border:0;}
 
 html{
 	font: 3.5vw/1.9 'Noto Sans JP', Arial, Verdana, 游ゴシック, YuGothic,'ヒラギノ角ゴ ProN W3', 'Hiragino Kaku Gothic ProN', メイリオ, Meiryo,sans-serif;
-	font-weight: 300;
+	font-weight: 500;
 	-webkit-text-size-adjust:100%;
 	overflow-x: hidden;
 	color: #000;
@@ -51,9 +51,14 @@ a:active, a:focus,input:active, input:focus{outline:0;}
 	color: #000;
 }
 
+#mainImg {
+	margin: 1rem auto 1rem auto;
+	width: 80%;
+	text-align: center;
+}
+
 #mainImg img{
-	width: 100%;
-	margin-bottom: 10px;
+	
 }
 
 /* フッター
@@ -95,6 +100,17 @@ section h2 span {
 	padding: 0 80px;
 }
 
+.fullimg {
+	width: 90%;
+	text-align: center;
+	margin: auto;
+}
+
+.fullimg img {
+	width: 100%;
+	height: auto;
+}
+
 .inner{
 	width: 94%;
 	margin: 0 auto;
@@ -102,10 +118,10 @@ section h2 span {
 }
 
 .innerS{
-	font-size: 0.8rem;
-	width: 60%;
+	font-size: min(0.6rem,25px);
+	width: 80%;
 	margin: 0 auto;
-	padding-bottom: 30px;
+	padding-bottom: 15px;
 }
 
 .companyS{
@@ -123,7 +139,7 @@ section h2 span {
 }
 
 .buttonS{
-	width: 100%;
+	width: min(80%,700px);
 	margin: 0 auto;
 	padding-bottom: 10px;
 	padding-top: 10px;
@@ -133,12 +149,12 @@ section h2 span {
 .btn,
 a.btn,
 button.btn {
-	font-size: min(1rem,40px);
+	font-size: min(0.6rem,30px);
 	font-weight: 700;
 	line-height: 1.5;
 	position: relative;
 	display: inline-block;
-	padding: 1rem 4rem;
+	padding: 0.8rem 1rem;
 	cursor: pointer;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -340,7 +356,7 @@ a.btn--green:hover {
 @media only screen and (max-width: 640px){
 	.innerS{
 		width: 94%;
-		padding-bottom: 70px;
+		padding-bottom: 1rem;
 	}
 	.col3 li{
 		line-height: 1.7;
@@ -352,6 +368,7 @@ a.btn--green:hover {
 		padding: 30px;
 		margin-bottom: 20px;
 	}
+	/*
 	#gallery li{
 		float: none;
 		width: 100%;
@@ -363,6 +380,7 @@ a.btn--green:hover {
 	#sec04_02{
 		padding: 50px 20px;
 	}
+	*/
 }
 
 @media only screen and (max-width: 799px){

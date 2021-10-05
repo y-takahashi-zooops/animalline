@@ -101,6 +101,15 @@ class BreederController extends AbstractController
     }
 
     /**
+     * @Route("/breeder/reg", name="breeder_reg")
+     * @Template("animalline/breeder/reg_index.twig")
+     */
+    public function breeder_index_reg(Request $request)
+    {
+        return[];
+    }
+
+    /**
      * @Route("/breeder/", name="breeder_top")
      * @Template("animalline/breeder/index.twig")
      */
@@ -128,7 +137,7 @@ class BreederController extends AbstractController
             'favoritePets' => $favoritePets,
         ]);
     }
-
+    
     /**
      * @Route("/breeder/guide/dog", name="breeder_guide_dog")
      * @Template("animalline/breeder/guide/dog.twig")

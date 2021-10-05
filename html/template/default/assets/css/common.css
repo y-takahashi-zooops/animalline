@@ -1344,7 +1344,7 @@ BREEDER - ADOPTION
 }
 .breeder-mv__search_btn button i{
   position:absolute;
-  top:12px;
+  /* top:12px; */
   left:40px;
   font-size:30px;
 }

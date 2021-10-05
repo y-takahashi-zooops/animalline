@@ -44,15 +44,6 @@
             <div class="header-right">
                 <ul>
                 {% if is_granted('ROLE_USER') %}
-                    {# ブリーダー登録が済んでいない場合のみ表示 #}
-                    {% if app.user.isBreeder == 0 %}
-                        <li class="breeder">
-                            <a href="{{url('breeder_examination')}}" class="btn">
-                            <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="ブリーダー登録"/></i>
-                            <span>ブリーダー登録</span>
-                            </a>
-                        </li>
-                    {% endif %}
                     <li class="logout">
                         <a href="{{url('logout')}}" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -72,6 +63,12 @@
                         </a>
                     </li>
                 {% else %}
+                    <li class="breeder">
+                        <a href="{{url('entry')}}?ReturnPath=breeder_mypage" class="btn">
+                        <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="ブリーダー登録"/></i>
+                        <span>ブリーダー登録</span>
+                        </a>
+                    </li>
                     <li class="login">
                         <a href="{{url('breeder_login')}}" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
