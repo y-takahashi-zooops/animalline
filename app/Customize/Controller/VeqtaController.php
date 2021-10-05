@@ -145,9 +145,15 @@ class VeqtaController extends AbstractController
         $dnaId = substr($barcode, 1);
 
         $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
+        if (!$Dna) {
+            throw new NotFoundHttpException();
+        }
         $Pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
             $this->breederPetsRepository->find($Dna->getPetId()) :
             $this->conservationPetsRepository->find($Dna->getPetId());
+        if (!$Pet) {
+            throw new NotFoundHttpException();
+        }
 
         switch ($checkStatus) {
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY: {
