@@ -29,7 +29,7 @@
                 </nav>
             {% endif %}
             <div class="m-2 p-2"></div>
-            <form action="{{ url('adoption_search') }}" method="get">
+            <form action="{{ url('adoption_search') }}" method="post">
                 <input type="hidden" name="pet_kind" value="{{ petKind }}">
                 <div class="row">
                     <div class="col-md-5 select-container mb-2 mb-sm-none">
@@ -59,9 +59,7 @@
                 </div>
                 <div class="row">
                     <div style="margin: 0 auto;">
-                        <a href="#">
-                            <button class="search_button bg-accent mt-3">検索する</button>
-                        </a>
+                        <button class="search_button bg-accent mt-3" type="submit">検索する</button>
                     </div>
                 </div>
             </form>
@@ -99,11 +97,20 @@
                 <div class="m-1 p-1"></div>
                 <h4>動物取扱責任者：</h4>
             </div>
+            <h3 class="font-weight-500 color-gray-500">{{ adoption.ownerName }}</h3>
+
             <div class="m-1 p-1"></div>
             <div class="d-flex">
                 <h4>犬舎所在地：</h4>
                 {% set adoptionHouseDog = adoption.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
                 {% set adoptionHouseCat = adoption.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
+                {% if (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
+                    <h4>{{ adoptionHouseDog.conservationHousePref ~ adoptionHouseDog.adoptionHouseCity ?? '' ~ ' ' ~ adoptionHouseCat.conservationHousePref ~ adoptionHouseCat.adoptionHouseCity ?? '' }}</h4>
+                {% elseif (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                    <h4>{{ adoptionHouseDog.conservationHousePref ~ adoptionHouseDog.conservationHouseCity ?? '' }}</h4>
+                {% else %}
+                    <h4>{{ adoptionHouseCat.conservationHousePref ~ adoptionHouseCat.adoptionHouseCity ?? '' }}</h4>
+                {% endif %}
             </div>
             <div class="m-1 p-1"></div>
             <div class="d-flex">

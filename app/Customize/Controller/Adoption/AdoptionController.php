@@ -8,6 +8,8 @@ use Customize\Repository\BreedsRepository;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationPetImageRepository;
+use Customize\Repository\ConservationsRepository;
+use Customize\Repository\ConservationsHousesRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Controller\AbstractController;
 use Eccube\Repository\Master\PrefRepository;
@@ -19,6 +21,8 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Service\AdoptionQueryService;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use DateTime;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AdoptionController extends AbstractController
 {
@@ -58,6 +62,16 @@ class AdoptionController extends AbstractController
     protected $prefRepository;
 
     /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
+     * @var ConservationsHousesRepository
+     */
+    protected $conservationsHousesRepository;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
@@ -67,6 +81,8 @@ class AdoptionController extends AbstractController
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param BreedsRepository $breedsRepository
      * @param PrefRepository $prefRepository
+     * @param ConservationsRepository $conservationsRepository
+     * @param ConservationsHousesRepository $conservationsHousesRepository
      */
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
@@ -75,7 +91,9 @@ class AdoptionController extends AbstractController
         AdoptionQueryService           $adoptionQueryService,
         PetsFavoriteRepository         $petsFavoriteRepository,
         BreedsRepository               $breedsRepository,
-        PrefRepository                 $prefRepository
+        PrefRepository                 $prefRepository,
+        ConservationsRepository        $conservationsRepository,
+        ConservationsHousesRepository  $conservationsHousesRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
@@ -84,6 +102,8 @@ class AdoptionController extends AbstractController
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->breedsRepository = $breedsRepository;
         $this->prefRepository = $prefRepository;
+        $this->conservationsRepository = $conservationsRepository;
+        $this->conservationsHousesRepository = $conservationsHousesRepository;
     }
 
     /**
@@ -147,42 +167,6 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * favorite pet
-     *
-     * @Route("/adoption/pet/detail/favorite_pet", name="favorite_pet")
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function favoritePet(Request $request)
-    {
-        $id = $request->get('id');
-        $pet = $this->conservationPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
-        $entityManager = $this->getDoctrine()->getManager();
-        if (!$favorite) {
-            $petKind = $pet->getPetKind();
-            $favorite_pet = new PetsFavorite();
-            $favorite_pet->setCustomer($this->getUser())
-                ->setPetId($id)
-                ->setSiteCategory(AnilineConf::SITE_CATEGORY_CONSERVATION)
-                ->setPetKind($petKind);
-            $entityManager->persist($favorite_pet);
-            $entityManager->flush();
-
-            $this->conservationPetsRepository->incrementCount($pet);
-        } else {
-            $entityManager->remove($favorite);
-            $entityManager->flush();
-
-            $this->conservationPetsRepository->decrementCount($pet);
-
-            return new JsonResponse('unliked');
-        }
-
-        return new JsonResponse('liked');
-    }
-
-    /**
      * よくある質問.
      *
      * @Route("/adoption/faq", name="adoption_faq")
@@ -215,31 +199,38 @@ class AdoptionController extends AbstractController
         return;
     }
 
-    // /**
-    //  * 保護団体検索
-    //  *
-    //  * @Route("/adoption/adoption_search", name="adoption_search")
-    //  * @Template("/animalline/adoption/adoption_search.twig")
-    //  */
-    // public function adoption_search(PaginatorInterface $paginator, Request $request): Response
-    // {
-    //     $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-    //     $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
-    //     $regions = $this->prefRepository->findAll();
-    //     $adoptionResults = $this->adoptionQueryService->searchAdoptionsResult($request, $petKind);
-    //     $adoptions = $paginator->paginate(
-    //         $adoptionResults,
-    //         $request->query->getInt('page', 1),
-    //         AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
-    //     );
+    /**
+     * 保護団体詳細
+     * 
+     * @Route("/adoption/adoption_search/{adoption_id}", name="adoption_detail", requirements={"adoption_id" = "\d+"})
+     * @Template("/animalline/adoption/adoption_detail.twig")
+     */
+    public function adoption_detail(Request $request, $adoption_id, PaginatorInterface $paginator)
+    {
+        $conservation = $this->conservationsRepository->find($adoption_id);
+        if (!$conservation) throw new NotFoundHttpException();
 
-    //     return $this->render('animalline/adoption/adoption_search.twig', [
-    //         'adoptions' => $adoptions,
-    //         'petKind' => $petKind,
-    //         'breeds' => $breeds,
-    //         'regions' => $regions
-    //     ]);
-    // }
+        $handling_pet_kind = $conservation->getHandlingPetKind();
+        $dogHouse = $this->conservationsHousesRepository->findOneBy(["Conservation" => $conservation, "pet_type" => 1]);
+        $catHouse = $this->conservationsHousesRepository->findOneBy(["Conservation" => $conservation, "pet_type" => 2]);
+
+        $petResults = $this->conservationPetsRepository->findBy([
+            'Conservation' => $conservation,
+            'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC
+        ]);
+        $pets = $paginator->paginate(
+            $petResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return compact(
+            'conservation',
+            'dogHouse',
+            'catHouse',
+            'pets'
+        );
+    }
 
     /**
      * 保護団体リスト.

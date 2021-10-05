@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\BreedersRepository;
+use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Controller\AbstractController;
@@ -30,6 +31,10 @@ class BreederController extends AbstractController
      * @var BreedersRepository
      */
     protected $breedersRepository;
+    /**
+     * @var BreedersHouseRepository
+     */
+    protected $breederHouseRepository;
 
     /**
      * @var BreederPetsRepository
@@ -75,6 +80,7 @@ class BreederController extends AbstractController
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
      * @param BreedersRepository $breedersRepository
+     * @param BreederHouseRepository $breederHouseRepository
      * @param BreederPetsRepository $breederPetsRepository
      */
     public function __construct(
@@ -84,6 +90,7 @@ class BreederController extends AbstractController
         PetsFavoriteRepository    $petsFavoriteRepository,
         SendoffReasonRepository   $sendoffReasonRepository,
         BreedersRepository        $breedersRepository,
+        BreederHouseRepository    $breederHouseRepository,
         BreederPetsRepository     $breederPetsRepository,
         PrefRepository            $prefRepository
     ) {
@@ -93,8 +100,18 @@ class BreederController extends AbstractController
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->sendoffReasonRepository = $sendoffReasonRepository;
         $this->breedersRepository = $breedersRepository;
+        $this->breederHouseRepository = $breederHouseRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->prefRepository = $prefRepository;
+    }
+
+    /**
+     * @Route("/breeder/reg", name="breeder_reg")
+     * @Template("animalline/breeder/reg_index.twig")
+     */
+    public function breeder_index_reg(Request $request)
+    {
+        return[];
     }
 
     /**
@@ -125,7 +142,7 @@ class BreederController extends AbstractController
             'favoritePets' => $favoritePets,
         ]);
     }
-
+    
     /**
      * @Route("/breeder/guide/dog", name="breeder_guide_dog")
      * @Template("animalline/breeder/guide/dog.twig")
@@ -268,6 +285,10 @@ class BreederController extends AbstractController
         $breeder = $this->breedersRepository->find($breeder_id);
         if (!$breeder) throw new NotFoundHttpException();
 
+        $handling_pet_kind = $breeder->getHandlingPetKind();
+        $dogHouse = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 1]);
+        $catHouse = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 2]);
+
         $petResults = $this->breederPetsRepository->findBy([
             'Breeder' => $breeder,
             'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC
@@ -280,6 +301,8 @@ class BreederController extends AbstractController
 
         return compact(
             'breeder',
+            'dogHouse',
+            'catHouse',
             'pets'
         );
     }

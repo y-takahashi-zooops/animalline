@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="description" content="安心・安全のペットライフをご提供します">
 <meta name="viewport" content="width=device-width">
-<title>アニマルライン | 保護団体様新規登録</title>
+<title>アニマルライン | ブリーダー新規登録</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" media="all" href="{{ asset('assets/css/reg/style.css') }}">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script src="{{ asset('assets/js/reg/script.js') }}"></script>
@@ -12,19 +13,30 @@
 
 <body id="top">
 <div id="mainImg">
-	<img src="{{ asset('assets/img/reg/breeder_top.png') }}" alt="">
+	<img src="{{ asset('assets/img/reg/top.png') }}" alt="">
 </div>
-
+<section id="sec01">
+	<img src="{{ asset('assets/img/reg/prereg_title.png') }}" alt="">
+</section>
 <!-- MESSAGE -->
 <section id="sec01">
-	<header>
-		<h2>安心・安全への取り組み</h2>
-	</header>
-	<div class="innerS">
-		大事に育てたワンちゃん、猫ちゃんを直接新しいご家族に託したい。そう考えるブリーダー様は多くいらっしゃると思います。Animalline Breederはそんな皆様のお手伝いをしたいという想いから生まれました。当サイトに掲載されるワンちゃん、猫ちゃんは全頭ＤＮＡ検査を行いますので、安心して新しいご家族に引き渡すことができ、ブリーダー様のブランド価値を守ります。
-	</div>
+	<img src="{{ asset('assets/img/reg/section.png') }}" alt="">
 
-	<div class="buttonS">
+	<img src="{{ asset('assets/img/reg/breeder_merit_01.png') }}" alt="">
+	<div class="innerS" style="padding-bottom:0px">
+		<p>取引成立時の販売手数料は業界最安値の１５％となっております。ブリーダー様の負担を減らし、気軽に登録して頂き生体販売の機会を増やす事でブリーダー様を応援するマッチング・プラットフォームです。</p>
+	</div>
+	<img src="{{ asset('assets/img/reg/campaign.png') }}" alt="">
+	<img src="{{ asset('assets/img/reg/breeder_merit_02.png') }}" alt="">
+	<div class="innerS">
+		<p>マッチング・サービスを利用したペットオーナーに商品販売、ペット保険等の各種サービスを提供。 その売上の一部を還元し、販売時のみの利益以外の長期的かつ継続的な安定収入につなげます。</p>
+	</div>
+	<img src="{{ asset('assets/img/reg/breeder_merit_03.png') }}" alt="">
+	<div class="innerS">
+		<p>遺伝病発症リスクが分かる遺伝病DNA検査にて、発症リスクのない生体のみプラットフォームに掲載します。検査費用はアニマルラインが負担致しますので、ブリーダー様には負担はございませんので安心してご登録ください。</p>
+		<img src="{{ asset('assets/img/reg/dna_check.png') }}" style="margin-top:1rem; alt="">
+	</div>
+	<div class="buttonS"">
 		<a href="{{url('entry')}}?ReturnPath=breeder_mypage" class="btn btn--orange">新規登録してペットを掲載する</a>
 	</div>
 </section>
@@ -46,25 +58,22 @@
 <!-- BRAND --> 
 <section id="sec02">
     <div class="titleS">
-	    <img src="{{ asset('assets/img/reg/title_merit.png') }}" alt="">
+	    <img src="{{ asset('assets/img/reg/animalline_info_title.png') }}" alt="">
     </div>
-
-	<ul id="gallery">
-		<li><img src="{{ asset('assets/img/reg/merit01.png') }}" width="426" height="426" alt=""></li>
-        <li><img src="{{ asset('assets/img/reg/merit02.png') }}" width="426" height="426" alt=""></li>
-		<li><img src="{{ asset('assets/img/reg/merit03.png') }}" width="426" height="426" alt=""></li>
-	</ul>
+	<div class="fullimg">
+		<img src="{{ asset('assets/img/reg/animalline_info.png') }}" alt="">
+	</div>
+	<div class="innerS">
+		<p>「ブリーダー」「動物保護団体」「ペットオーナー」3者すべてに“やさしい”ビジネスモデルを目指します。
+「ブリーダーの皆さま」には参加メリットを、「ペットオーナー」には安心・安全を提供します。</p>
+	</div>
 </section>
 <!-- // STORY -->
 
 <!-- PROJECT -->
 <section id="sec03">
-	<header>
-		<h2><span>様々な提供サービス</span></h2>
-	</header>
 	<div class="innerS">
-		<img src="{{ asset('assets/img/reg/img_02.jpg') }}" width="726" height="333" alt="">
-		<p>アニマルラインは消耗品の販売から保険、しつけサービスまでワンちゃん、猫ちゃんに関する幅広いサービスを提供していきます。ブリーダー様の顧客による様々なサービスの利用からインセンティブをお支払いすることで、飼養施設の安定した運営の手助けをいたします。</p>
+		<img src="{{ asset('assets/img/reg/site_image.png') }}" alt="">
 	</div>
 </section>
 <!-- // PROJECT -->
@@ -75,27 +84,8 @@
 	<a href="{{url('breeder_login')}}?ReturnPath=breeder_mypage" class="btn btn--green">既に登録している方(ログイン)</a>
 </div>
 <!-- COMPANY -->
-<section id="sec05">
-	<header>
-		<h2><span>Company</span></h2>
-	</header>
-	<div class="companyS">
-		<ul class="col2">
-			<li>
-				<p>株式会社 企画/海</p>
-				<p>〒168-0074<br>東京都杉並区上高井戸1-22-12</p>
-				<p>TEL 03-3290-1211</p>
-				<p>営業時間 : 9：30～18：30<br>日曜・祝日を除く</p>
-			</li>
-			<li>
-				<div id="map">
-					<!-- GOOGLE MAP -->
-					<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7708.664646729858!2d139.60464713721387!3d35.674681607410406!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f22768a585b3%3A0x68a9ba6feff0558e!2z44CSMTY4LTAwNzQg5p2x5Lqs6YO95p2J5Lim5Yy65LiK6auY5LqV5oi477yR5LiB55uu77yS77yS4oiS77yR77yS!5e0!3m2!1sja!2sjp!4v1632141728567!5m2!1sja!2sjp" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-					<!-- // GOOGLE MAP -->
-				</div>
-			</li>
-		</ul>
-	</div>
+<section id="mainImg">
+	<img src="{{ asset('assets/img/reg/animalline_footer.png') }}" alt="">
 </section>
 <!-- // COMPANY -->
 
