@@ -70,6 +70,14 @@ file that was distributed with this source code.
                         </li>
                     </ul>
                 </div>
+            {% else %}
+                <div class="c-outsideBlock__contents mb-5">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <span class="font-weight-bold">検査状況:&nbsp;</span>全て
+                        </li>
+                    </ul>
+                </div>
             {% endif %}
         </form>
     </div>
@@ -134,7 +142,8 @@ file that was distributed with this source code.
                                                     style="max-width: 50px">
                                             {% endif %}
                                         </td>
-                                        <td class="align-middle">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
+                                        <td class="align-middle">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' :
+                                            dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT') ? '猫' : '_' }}</td>
                                         <td class="align-middle">{{ dna.breeds_name }}</td>
                                         <td class="align-middle">{{ check_status[dna.check_status] }}</td>
                                         <td class="align-middle">{{ dna.kit_shipping_date is empty ? '_' : dna.kit_shipping_date | date('Y/m/d H:i') }}</td>
