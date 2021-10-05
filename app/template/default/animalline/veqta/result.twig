@@ -86,7 +86,6 @@
 
         $('#barcode').on('change', function () {
             if ($(this).val().length == 6) {
-                $(this).prop('disabled', true);
                 callShippingName();
             } else {
                 $('#name').val('')
