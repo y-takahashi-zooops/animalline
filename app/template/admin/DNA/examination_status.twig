@@ -126,10 +126,15 @@ file that was distributed with this source code.
                                         <td></td>
                                         <td class="align-middle">{{ dna.dna_id }}</td>
                                         <td class="align-middle">
-                                            <a target="_blank" href="{{ url(dna.site_type == constant('Customize\\Config\\AnilineConf::ANILINE_SITE_TYPE_BREEDER') ? 'breeder_pet_detail' : 'adoption_pet_detail', {'id':dna.pet_id}) }}">
+                                            {% if dna.pet_id %}
+                                                <a target="_blank" href="{{ url(dna.site_type == constant('Customize\\Config\\AnilineConf::ANILINE_SITE_TYPE_BREEDER') ? 'breeder_pet_detail' : 'adoption_pet_detail', {'id':dna.pet_id}) }}">
+                                                    <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}"
+                                                        style="max-width: 50px">
+                                                </a>
+                                            {% else %}
                                                 <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}"
-                                                     style="max-width: 50px">
-                                            </a>
+                                                    style="max-width: 50px">
+                                            {% endif %}
                                         </td>
                                         <td class="align-middle">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
                                         <td class="align-middle">{{ dna.breeds_name }}</td>
@@ -148,7 +153,7 @@ file that was distributed with this source code.
                                                 </div>
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="審査結果表示">
-                                                    <a href="#" class="btn btn-ec-actionIcon">
+                                                    <a {% if (true) %} href="{{ url('admin_dna_download_pdf', {'id':dna.dna_id}) }}" {% else %} disabled {% endif %} class="btn btn-ec-actionIcon">
                                                         <i class="fa fa-files-o fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>

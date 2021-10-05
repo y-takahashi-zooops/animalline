@@ -6,12 +6,16 @@ use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
+use Customize\Entity\DnaCheckStatus;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DnaController extends AbstractController
@@ -44,9 +48,9 @@ class DnaController extends AbstractController
      * @param ConservationPetsRepository $conservationPetsRepository
      */
     public function __construct(
-        DnaQueryService          $dnaQueryService,
-        DnaCheckStatusRepository $dnaCheckStatusRepository,
-        BreederPetsRepository $breederPetsRepository,
+        DnaQueryService            $dnaQueryService,
+        DnaCheckStatusRepository   $dnaCheckStatusRepository,
+        BreederPetsRepository      $breederPetsRepository,
         ConservationPetsRepository $conservationPetsRepository
     )
     {
@@ -76,14 +80,14 @@ class DnaController extends AbstractController
             return $this->redirectToRoute('admin_dna_examination_status');
         }
 
-        if($request->get('change-status-id') && $request->isMethod('POST')){
+        if ($request->get('change-status-id') && $request->isMethod('POST')) {
             $dna = $this->dnaCheckStatusRepository->find($request->get('change-status-id'));
             $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PUBLIC);
-            if($dna->getSiteType() == AnilineConf::ANILINE_SITE_TYPE_BREEDER){
+            if ($dna->getSiteType() == AnilineConf::ANILINE_SITE_TYPE_BREEDER) {
                 $pet = $this->breederPetsRepository->find($dna->getPetId());
                 $pet->setReleaseStatus(1)
                     ->setReleaseDate(Carbon::now());
-            }else{
+            } else {
                 $pet = $this->conservationPetsRepository->find($dna->getPetId());
                 $pet->setReleaseStatus(1)
                     ->setReleaseDate(Carbon::now());
@@ -124,5 +128,26 @@ class DnaController extends AbstractController
         return [
             'dnas' => $dnas
         ];
+    }
+
+    /**
+     * Download PDF
+     *
+     * @Route("/%eccube_admin_route%/dna/examination_status/download_pdf/{id}", requirements={"id" = "\d+"}, name="admin_dna_download_pdf")
+     *
+     * @param DnaCheckStatus $dnaCheckStatus
+     * @return BinaryFileResponse
+     */
+    public function download(DnaCheckStatus $dnaCheckStatus): BinaryFileResponse
+    {
+        if (!$pdfPath = $dnaCheckStatus->getFilePath()) {
+            throw new NotFoundHttpException("Pdf DNA not found!");
+        }
+        $nameArr = explode("/", $pdfPath);
+        $fileName = end($nameArr);
+        $response = new BinaryFileResponse($pdfPath);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
+
+        return $response;
     }
 }
