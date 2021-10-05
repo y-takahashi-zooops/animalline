@@ -84,7 +84,7 @@ class DnaQueryService
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
             ->where('dna.site_type = :site_type')
             ->setParameters(['site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION])
-            ->select('dna.id as dna_id, dna.site_type, cp.id as pet_id, c.id as customer_id, cp.thumbnail_path, cp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date, dna.file_path');
+            ->select('dna.id as dna_id, dna.site_type, cp.id as pet_id, c.id as customer_id, cp.thumbnail_path, cp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date, dna.file_path, dna.update_date');
         if (!empty($customerName)) {
             $queryConservation->andWhere('c.name01 like :customer_name or c.name02 like :customer_name')
                 ->setParameter(':customer_name', '%' . $criteria['customer_name'] . '%');
@@ -97,8 +97,7 @@ class DnaQueryService
             $queryConservation->andWhere('dna.check_status = :check_status')
                 ->setParameter(':check_status', $checkStatus);
         }
-        $resultConservation = $queryConservation->orderBy('dna.update_date', 'DESC')
-            ->addOrderBy('dna.id', 'DESC')->getQuery()->getArrayResult();
+        $resultConservation = $queryConservation->getQuery()->getArrayResult();
 
         $queryBreeder = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->innerJoin('dna.DnaHeader', 'dnah')
@@ -107,7 +106,7 @@ class DnaQueryService
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
             ->where('dna.site_type = :site_type')
             ->setParameters(['site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
-            ->select('dna.id as dna_id, dna.site_type, bp.id as pet_id, c.id as customer_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date, dna.file_path');
+            ->select('dna.id as dna_id, dna.site_type, bp.id as pet_id, c.id as customer_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date, dna.file_path, dna.update_date');
         if (!empty($customerName)) {
             $queryBreeder->andWhere('c.name01 like :customer_name or c.name02 like :customer_name')
                 ->setParameter(':customer_name', '%' . $criteria['customer_name'] . '%');
@@ -120,10 +119,19 @@ class DnaQueryService
             $queryBreeder->andWhere('dna.check_status = :check_status')
                 ->setParameter(':check_status', $checkStatus);
         }
-        $resultBreeder = $queryBreeder->orderBy('dna.update_date', 'DESC')
-            ->addOrderBy('dna.id', 'DESC')->getQuery()->getArrayResult();
+        $resultBreeder = $queryBreeder->getQuery()->getArrayResult();
 
-        return array_merge($resultBreeder, $resultConservation);
+        $totalResult = array_merge($resultBreeder, $resultConservation);
+        // order by update_date > dna_id desc
+        usort(
+            $totalResult,
+            fn ($x, $y) =>
+            [$y['update_date']->getTimestamp(), $y['dna_id']]
+                <=>
+                [$x['update_date']->getTimestamp(), $x['dna_id']]
+        );
+
+        return $totalResult;
     }
 
     /**

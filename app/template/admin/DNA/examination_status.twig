@@ -60,9 +60,7 @@ file that was distributed with this source code.
 
             <div class="c-outsideBlock__contents mb-5">
                 <button class="btn btn-ec-conversion px-5" type="submit">検索</button>
-                {% if(params.customer_name is defined or params.pet_kind is defined or params.check_status is defined) %}
-                    <span class="font-weight-bold ml-2">検索結果：{{ dnas.count() }}件が該当しました</span>
-                {% endif %}
+                <span class="font-weight-bold ml-2">検索結果：{{ dnas.count() }}件が該当しました</span>
             </div>
             {% if(params.check_status is defined and params.check_status ) %}
                 <div class="c-outsideBlock__contents mb-5">
