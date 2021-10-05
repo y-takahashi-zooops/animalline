@@ -138,13 +138,12 @@ file that was distributed with this source code.
                                                         style="max-width: 50px">
                                                 </a>
                                             {% else %}
-                                                <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}"
-                                                    style="max-width: 50px">
+                                                _
                                             {% endif %}
                                         </td>
                                         <td class="align-middle">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' :
                                             dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT') ? '猫' : '_' }}</td>
-                                        <td class="align-middle">{{ dna.breeds_name }}</td>
+                                        <td class="align-middle">{{ dna.pet_id ? dna.breeds_name : '_' }}</td>
                                         <td class="align-middle">{{ check_status[dna.check_status] }}</td>
                                         <td class="align-middle">{{ dna.kit_shipping_date is empty ? '_' : dna.kit_shipping_date | date('Y/m/d H:i') }}</td>
                                         <td class="align-middle">{{ dna.kit_return_date is empty ? '_' : dna.kit_return_date | date('Y/m/d H:i') }}</td>
@@ -174,10 +173,6 @@ file that was distributed with this source code.
                                                 </div>
                                             </div>
                                         </td>
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <td colspan="10">結果が０件です。</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
