@@ -214,7 +214,7 @@ class AdoptionDnaCheck extends AbstractController
      */
     public function examination_status(Request $request, PaginatorInterface $paginator)
     {
-        $dnaId = (int)$request->get('dna_id');
+        $dnaId = (int)$request->get('dna-id');
         if ($request->isMethod('POST') && $dnaId) {
             $dna = $this->dnaCheckStatusRepository->find($dnaId);
             if (!$dna) {
