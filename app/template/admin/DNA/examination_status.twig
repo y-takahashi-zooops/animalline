@@ -80,6 +80,7 @@ file that was distributed with this source code.
             <div class="c-primaryCol">
                 <form id="form_bulk" method="post" action="">
                     <input type="hidden" name="dna-id" value="">
+                    <input type="hidden" name="change-status-id" value="">
                     <div class="row justify-content-between mb-2">
                         <div class="col-6">
                             <div id="btn_bulk" class="d-none">
@@ -140,7 +141,7 @@ file that was distributed with this source code.
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="検査キット再送付">
-                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL') ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
+                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED') ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
                                                         <i class="fa fa-vial fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>
@@ -154,7 +155,7 @@ file that was distributed with this source code.
                                                 </div>
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="公開ステータス変更">
-                                                    <a href="#" class="btn btn-ec-actionIcon">
+                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED') ? 'onclick=changeStatus('~dna.dna_id~')' : 'disabled' }}>
                                                         <i class="fa fa-eye fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>
@@ -169,6 +170,32 @@ file that was distributed with this source code.
                                 {% endfor %}
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="modal fade" id="confirm-modal-status" tabindex="-1" role="dialog"
+                             aria-labelledby="confirm-modal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title font-weight-bold">
+                                            確認ダイアログ
+                                        </h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-left">
+                                        <p class="text-left modal-message">ペット情報を公開しますか？</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+                                            いいえ
+                                        </button>
+                                        <button class="btn btn-ec-conversion" type="submit">
+                                            はい
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog"
                              aria-labelledby="confirm-modal" aria-hidden="true">
@@ -211,6 +238,11 @@ file that was distributed with this source code.
     function change(id) {
     $('input[name=dna-id]').val(id);
     $('#confirm-modal').modal('show');
+};
+    function changeStatus(id) {
+        console.log('1');
+    $('input[name=change-status-id]').val(id);
+    $('#confirm-modal-status').modal('show');
 };
     $(".btn-ec-conversion").on('click', function() {
     setTimeout(function () {

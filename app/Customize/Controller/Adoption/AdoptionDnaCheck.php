@@ -223,7 +223,7 @@ class AdoptionDnaCheck extends AbstractController
 
             $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
             $newDna = clone $dna;
-            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_DEFAULT);
+            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($dna);
