@@ -82,8 +82,10 @@ class ProductSetController extends AbstractController
         if (!$Product || !$ProductClass) {
             throw new NotFoundHttpException();
         }
+        $countSet = 0;
         $OriginSets = new ArrayCollection();
         foreach ($this->productSetRepository->findBy(['ParentProduct' => $Product]) as $set) {
+            $countSet++;
             $item = new OrderItem;
             $item->setId($set->getId());
             $item->setOrderItemType($this->orderItemTypeRepository->find(1));
@@ -117,8 +119,6 @@ class ProductSetController extends AbstractController
                 case 'register':
                     if ($form->isValid()) {
                         $Product->setProductSet(); // clear temp orderitem data
-                        $this->entityManager->persist($Product);
-
                         $idDb = [];
                         $idReq = [];
                         foreach ($this->productSetRepository->findBy(['ParentProduct' => $Product]) as $item) {
@@ -162,7 +162,8 @@ class ProductSetController extends AbstractController
             'searchProductModalForm' => $searchProductModalForm->createView(),
             'Product' => $Product,
             'ProductClass' => $ProductClass,
-            'id' => $id
+            'id' => $id,
+            'count' => $countSet
         ];
     }
 }

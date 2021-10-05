@@ -1383,6 +1383,7 @@ class ProductController extends BaseProductController
         $TargetInstock = null;
         $totalPrice = 0;
         $subTotalPrices = [];
+        $count = 0;
 
         if ($id) {
             $TargetInstock = $this->instockScheduleHeaderRepository->find($id);
@@ -1392,6 +1393,7 @@ class ProductController extends BaseProductController
             // 編集前の受注情報を保持
             $OriginItems = new ArrayCollection();
             foreach ($TargetInstock->getInstockSchedule() as $schedule) {
+                $count++;
                 $item = new OrderItem;
                 $item->setId($schedule->getId());
                 $item->setOrderItemType($this->orderItemTypeRepository->find(1));
@@ -1501,7 +1503,8 @@ class ProductController extends BaseProductController
             'Order' => $TargetInstock,
             'id' => $id,
             'totalPrice' => $totalPrice,
-            'subtotalPrices' => $subTotalPrices
+            'subtotalPrices' => $subTotalPrices,
+            'count' => $count
         ];
     }
 

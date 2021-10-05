@@ -17,6 +17,7 @@ file that was distributed with this source code.
 
 {% block javascript %}
 <script>
+    localStorage.setItem("index", {{ count }});
     $(function(){
     // 商品検索
     $('#search').on('click', function () {

@@ -23,6 +23,7 @@ file that was distributed with this source code.
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.sortable.min.js', 'admin') }}"></script>
 
     <script>
+        localStorage.setItem("index", {{ count }});
         $(function(){
             $('#search').on('click', function () {
             var list = $('#searchProductModalList');
