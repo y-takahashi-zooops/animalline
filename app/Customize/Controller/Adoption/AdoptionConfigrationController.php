@@ -95,7 +95,7 @@ class AdoptionConfigrationController extends AbstractController
     {
         $rootMessages = $this->conservationContactHeaderRepository->findBy(
             [
-                'Conservation' => $this->getUser()
+                'Customer' => $this->getUser()
             ],
             ['send_date' => 'DESC']
         );
