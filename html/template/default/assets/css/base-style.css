@@ -627,6 +627,25 @@ th, td {
     background-repeat: no-repeat;
 }
 
+.form_input {
+    /* styling */
+    background-color: white;
+    border: thin solid rgb(201, 201, 201);
+    border-radius: 4px;
+    display: inline-block;
+    font: inherit;
+    line-height: 1.5em;
+    padding: 0.5em 3.5em 0.5em 1em;
+  
+    /* reset */
+    margin: 0;      
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
 .search_button {
     border: none;
 	padding: 0 40px;

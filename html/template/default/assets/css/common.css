@@ -1297,6 +1297,10 @@ BREEDER - ADOPTION
   width:57px;
   height:57px;
 }
+.breeder-mv__search_dog .breeder_search:before,
+.breeder-mv__search_cat .breeder_search:before{
+  background:none;
+}
 .breeder-mv__search_cat .breeder-mv__search_title:before{
   background:url(../img/breeder-icon-search-cat.png) no-repeat center /contain;
 }
@@ -1344,7 +1348,7 @@ BREEDER - ADOPTION
 }
 .breeder-mv__search_btn button i{
   position:absolute;
-  /* top:12px; */
+  top:22px;
   left:40px;
   font-size:30px;
 }
@@ -1727,6 +1731,18 @@ BREEDER - ADOPTION
     background-position: calc(100% - 25px) calc(1.5em + 2px), calc(100% - 20px) calc(1.5em + 2px), calc(100% - 2.5em) .5em;
     background-size: 5px 5px, 5px 5px, 1px 2.5em;
     background-repeat: no-repeat;
+}
+
+.form_input {
+  color:#707070;
+  font-size:20px;
+    background-color: white;
+    border: thin solid rgb(201, 201, 201);
+    border-radius: 10px;
+    display: inline-block;
+    line-height: 1.5em;
+    padding: 1em 3.5em 1em 1em;
+    margin: 0;
 }
 
 /*------------------

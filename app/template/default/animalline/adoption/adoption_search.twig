@@ -80,31 +80,9 @@
             <img src="{{ app.request.schemeAndHttpHost ~ (adoption.thumbnailPath | default | length > 0 ? adoption.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}" class="w-100 mb-4 mb-sm-0">
         </div>
         <div class="adoption-info col-sm-8">
-            <h3 class="font-weight-500 color-gray-500">{{ adoption.licenseHouseName }}ブリーダー</h3>
-            <div class="m-1 p-1"></div>
-            <div class="d-flex">
-                <h4>総合評価</h4>
-                <div class="m-1 p-1"></div>
-                <img src="/html/template/default/assets/img/star-icon.svg">
-                <div class="m-1 p-1"></div>
-                <h4>{{ adoption.adoptionRank }}</h4>
-            </div>
-            <div class="m-1 p-1"></div>
-            <div class="d-flex">
-                <h4>動物取扱業登録番号：</h4>
-                <h4>{{ adoption.licenseNo }}</h4>
-                <div class="m-1 p-1"></div>
-                <h4>登録：</h4>
-                <h4>{{ adoption.licenseRegistDate | date('Y/m/d') }}</h4>
-            </div>
-            <div class="m-1 p-1"></div>
-            <div class="d-flex">
-                <h4>有効期限：</h4>
-                <h4>{{ adoption.licenseExpireDate | date('Y/m/d') }}</h4>
-                <div class="m-1 p-1"></div>
-                <h4>動物取扱責任者：</h4>
-                <h4>{{ adoption.licenseManagerName }}</h4>
-            </div>
+            <h3 class="font-weight-500 color-gray-500">{{ adoption.ownerName }}</h3>
+
+
             <div class="m-1 p-1"></div>
             <div class="d-flex">
                 <h4>犬舎所在地：</h4>
@@ -113,7 +91,7 @@
                 {% if (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
                     <h4>{{ adoptionHouseDog.adoptionHousePref ~ adoptionHouseDog.adoptionHouseCity ?? '' ~ ' ' ~ adoptionHouseCat.adoptionHousePref ~ adoptionHouseCat.adoptionHouseCity ?? '' }}</h4>
                 {% elseif (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
-                    <h4>{{ adoptionHouseDog.adoptionHousePref ~ adoptionHouseDog.adoptionHouseCity ?? '' }}</h4>
+                    <h4>{{ adoptionHouseDog.ConservationHousePref ~ adoptionHouseDog.ConservationHouseCity ?? '' }}</h4>
                 {% else %}
                     <h4>{{ adoptionHouseCat.adoptionHousePref ~ adoptionHouseCat.adoptionHouseCity ?? '' }}</h4>
                 {% endif %}
