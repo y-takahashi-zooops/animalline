@@ -234,9 +234,6 @@ class VeqtaController extends AbstractController
         $dnaId = substr($barcode, 1);
 
         $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
-        if (!$Dna) {
-            throw new NotFoundHttpException();
-        }
         $data['shippingName'] = $Dna->getDnaHeader()->getShippingName();
         $data['hasRecord'] = $Dna->getCheckStatus() === AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING;
 

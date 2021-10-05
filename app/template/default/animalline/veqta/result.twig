@@ -27,7 +27,7 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-input">
-                                            <input type="text" class="w-100" name="name" id="name" readonly>
+                                            <input type="text" class="w-100" name="sender_name" id="sender_name" disabled>
                                         </div>
                                     </dd>
                                 </dl>
@@ -118,7 +118,7 @@
                 'barcode': $('#barcode').val()
             }
         }).done(function ({ shippingName, hasRecord }) {
-            $('#sender_name').text(shippingName);
+            $('#sender_name').val(shippingName);
             $('#dnaTestResultRegist').attr('disabled', !hasRecord);
             if (!hasRecord) alert('データが存在しません。');
         }).fail(function (err) {
