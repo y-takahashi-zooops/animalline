@@ -63,7 +63,7 @@
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="検査キット再請求">
-                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL') ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
+                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED') ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
                                                         <i class="fa fa-vial fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>
