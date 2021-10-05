@@ -48,7 +48,7 @@ file that was distributed with this source code.
                             <label class="col-form-label">検査状況</label>
                             <select class="ec-select form-control" name="check_status">
                                 <option value="">選択してください</option>
-                                {% set check_status = {1:'受付', 2:'出荷指示中', 3:'出荷済', 4:'DNAチェック中', 6:'検体異常', 7:'DNA検査中', 8:'検査通過', 9:'検査NG', 10:'検体再送付手続済'} %}
+                                {% set check_status = {1:'キット発送中 ', 3:'ペット登録完了・返送中', 4:'検体異常', 5: 'DNA検査中', 6:'検査通過', 7:'検査NG', 8:'検体再送付手続済', 9:'ペット情報公開済'} %}
                                 {% for key, value in check_status %}
                                     <option value="{{ key }}" {{ params.check_status is defined and params.check_status == key ? 'selected' }}>{{ value }}</option>
                                 {% endfor %}
@@ -153,7 +153,7 @@ file that was distributed with this source code.
                                                 </div>
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="審査結果表示">
-                                                    <a {% if (true) %} href="{{ url('admin_dna_download_pdf', {'id':dna.dna_id}) }}" {% else %} disabled {% endif %} class="btn btn-ec-actionIcon">
+                                                    <a {% if (dna.file_path) %} href="{{ url('admin_dna_download_pdf', {'id':dna.dna_id}) }}" {% else %} disabled {% endif %} class="btn btn-ec-actionIcon">
                                                         <i class="fa fa-files-o fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>
@@ -245,7 +245,6 @@ file that was distributed with this source code.
     $('#confirm-modal').modal('show');
 };
     function changeStatus(id) {
-        console.log('1');
     $('input[name=change-status-id]').val(id);
     $('#confirm-modal-status').modal('show');
 };
