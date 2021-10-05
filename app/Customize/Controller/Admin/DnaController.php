@@ -96,6 +96,8 @@ class DnaController extends AbstractController
             $em->persist($dna);
             $em->persist($pet);
             $em->flush();
+
+            return $this->redirectToRoute('admin_dna_examination_status');
         }
 
         $criteria = [];

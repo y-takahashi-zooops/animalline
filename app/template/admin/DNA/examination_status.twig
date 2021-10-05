@@ -153,7 +153,7 @@ file that was distributed with this source code.
                                                 </div>
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="審査結果表示">
-                                                    <a {% if (true) %} href="{{ url('admin_dna_download_pdf', {'id':dna.dna_id}) }}" {% else %} disabled {% endif %} class="btn btn-ec-actionIcon">
+                                                    <a {% if (dna.file_path) %} href="{{ url('admin_dna_download_pdf', {'id':dna.dna_id}) }}" {% else %} disabled {% endif %} class="btn btn-ec-actionIcon">
                                                         <i class="fa fa-files-o fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>
@@ -245,7 +245,6 @@ file that was distributed with this source code.
     $('#confirm-modal').modal('show');
 };
     function changeStatus(id) {
-        console.log('1');
     $('input[name=change-status-id]').val(id);
     $('#confirm-modal-status').modal('show');
 };
