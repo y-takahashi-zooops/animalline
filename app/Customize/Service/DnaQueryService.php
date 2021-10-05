@@ -153,31 +153,6 @@ class DnaQueryService
     }
 
     /**
-     * Adoption member DNA filter
-     *
-     * @param array $criteria
-     * @return array
-     */
-    public function filterDnaAdoption(array $criteria): array
-    {
-        $queryConservation = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
-            ->join('Customize\Entity\ConservationPets', 'cp', 'WITH', 'dna.pet_id = cp.id')
-            ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
-            ->select('dna.id as dna_id, cp.id as pet_id, cp.thumbnail_path, cp.pet_kind, b.breeds_name, 
-            dna.check_status, dna.kit_shipping_date, dna.kit_return_date, dna.check_return_date')
-            ->where('dna.register_id =:adoption_id')
-            ->setParameter(':adoption_id', $criteria['conservation_id'])
-            ->andWhere('dna.site_type =:site_type')
-            ->setParameter(':site_type', AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
-        if (!$criteria['is_all']) {
-            $queryConservation->andWhere('dna.check_status NOT IN (:excludes)')->setParameter(':excludes', self::EXCLUDES);
-        }
-
-        return $queryConservation->orderBy('dna.update_date', 'DESC')
-            ->addOrderBy('dna.id', 'DESC')->getQuery()->getArrayResult();
-    }
-
-    /**
      * Adoption member DNA filter.
      *
      * @param int $registerId
