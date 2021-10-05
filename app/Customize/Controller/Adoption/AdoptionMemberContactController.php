@@ -217,7 +217,7 @@ class AdoptionMemberContactController extends AbstractController
         $entityManager->persist($rootMessage);
         $entityManager->flush();
 
-        return $this->redirectToRoute('adoption_mypage_messages', ['id' => $rootMessage->getId()]);
+        return $this->redirectToRoute('adoption_message', ['id' => $rootMessage->getId()]);
     }
 
     /**
@@ -242,6 +242,6 @@ class AdoptionMemberContactController extends AbstractController
         $entityManager->persist($conservationContact);
         $entityManager->flush();
 
-        return $this->redirectToRoute('adoption_mypage_messages', ['id' => $rootMessage->getId()]);
+        return $this->redirectToRoute('adoption_message', ['id' => $rootMessage->getId()]);
     }
 }
