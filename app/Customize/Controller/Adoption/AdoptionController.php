@@ -2,10 +2,7 @@
 
 namespace Customize\Controller\Adoption;
 
-use Carbon\Carbon;
 use Customize\Config\AnilineConf;
-use Customize\Entity\ConservationContactHeader;
-use Customize\Entity\ConservationContacts;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\ConservationContactsRepository;
@@ -14,7 +11,6 @@ use Customize\Repository\ConservationPetImageRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Repository\ConservationsHousesRepository;
 use Customize\Repository\PetsFavoriteRepository;
-use Customize\Repository\SendoffReasonRepository;
 use Eccube\Controller\AbstractController;
 use Eccube\Repository\Master\PrefRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -23,9 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Eccube\Event\EccubeEvents;
-use Eccube\Event\EventArgs;
-use Customize\Form\Type\ConservationContactType;
 use Customize\Service\AdoptionQueryService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use DateTime;
@@ -59,11 +52,6 @@ class AdoptionController extends AbstractController
     protected $petsFavoriteRepository;
 
     /**
-     * @var SendoffReasonRepository
-     */
-    protected $sendoffReasonRepository;
-
-    /**
      * @var BreedsRepository
      */
     protected $breedsRepository;
@@ -91,7 +79,6 @@ class AdoptionController extends AbstractController
      * @param ConservationContactsRepository $conservationContactsRepository
      * @param AdoptionQueryService $adoptionQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
-     * @param SendoffReasonRepository $sendoffReasonRepository
      * @param BreedsRepository $breedsRepository
      * @param PrefRepository $prefRepository
      * @param ConservationsRepository $conservationsRepository
@@ -103,7 +90,6 @@ class AdoptionController extends AbstractController
         ConservationContactsRepository $conservationContactsRepository,
         AdoptionQueryService           $adoptionQueryService,
         PetsFavoriteRepository         $petsFavoriteRepository,
-        SendoffReasonRepository        $sendoffReasonRepository,
         BreedsRepository               $breedsRepository,
         PrefRepository                 $prefRepository,
         ConservationsRepository        $conservationsRepository,
@@ -114,7 +100,6 @@ class AdoptionController extends AbstractController
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
-        $this->sendoffReasonRepository = $sendoffReasonRepository;
         $this->breedsRepository = $breedsRepository;
         $this->prefRepository = $prefRepository;
         $this->conservationsRepository = $conservationsRepository;
@@ -149,43 +134,6 @@ class AdoptionController extends AbstractController
             'favoritePets' => $favoritePets,
         ]);
     }
-    
-    /**
-     * ペット検索画面.
-     *
-     * @Route("/adoption/pet/search", name="adoption_pet_search")
-     * @Template("animalline/adoption/pet/search.twig")
-     */
-    public function petSearch(Request $request)
-    {
-        return;
-    }
-
-    /**
-     * ペット検索結果.
-     *
-     * @Route("/adoption/pet/search/result", name="adoption_pet_search_result")
-     * @Template("animalline/adoption/pet/search_result.twig")
-     */
-    public function petSearchResult(PaginatorInterface $paginator, Request $request): Response
-    {
-        $petResults = $this->adoptionQueryService->searchPetsResult($request);
-        $pets = $paginator->paginate(
-            $petResults,
-            $request->query->getInt('page', 1),
-            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
-        );
-        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
-        $regions = $this->prefRepository->findAll();
-
-        return $this->render('animalline/adoption/pet/search_result.twig', [
-            'pets' => $pets,
-            'petKind' => $petKind,
-            'breeds' => $breeds,
-            'regions' => $regions
-        ]);
-    }
 
     /**
      * 保護団体用ユーザーページ
@@ -216,87 +164,6 @@ class AdoptionController extends AbstractController
             'rootMessages' => $rootMessages,
             'lastReplies' => $lastReplies
         ]);
-    }
-
-    /**
-     * ペット詳細
-     *
-     * @Route("/adoption/pet/detail/{id}", name="adoption_pet_detail", requirements={"id" = "\d+"})
-     * @Template("animalline/adoption/pet/detail.twig")
-     */
-    public function petDetail(Request $request)
-    {
-        $isLoggedIn = (bool)$this->getUser();
-        $id = $request->get('id');
-        $isFavorite = false;
-        $conservationPet = $this->conservationPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
-        if ($favorite) {
-            $isFavorite = true;
-        }
-        if (!$conservationPet) {
-            throw new HttpException\NotFoundHttpException();
-        }
-
-        $images = $this->conservationPetImageRepository->findBy(
-            [
-                'ConservationPet' => $conservationPet,
-                'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE
-            ]
-        );
-        $video = $this->conservationPetImageRepository->findOneBy(
-            [
-                'ConservationPet' => $conservationPet,
-                'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
-            ]
-        );
-
-        return $this->render(
-            'animalline/adoption/pet/detail.twig',
-            [
-                'conservationPet' => $conservationPet,
-                'images' => $images,
-                'video' => $video,
-                'isFavorite' => $isFavorite,
-                'isLoggedIn' => $isLoggedIn
-            ]
-        );
-    }
-
-    /**
-     * favorite pet
-     *
-     * @Route("/adoption/pet/detail/favorite_pet", name="favorite_pet")
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function favoritePet(Request $request)
-    {
-        $id = $request->get('id');
-        $pet = $this->conservationPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
-        $entityManager = $this->getDoctrine()->getManager();
-        if (!$favorite) {
-            $petKind = $pet->getPetKind();
-            $favorite_pet = new PetsFavorite();
-            $favorite_pet->setCustomer($this->getUser())
-                ->setPetId($id)
-                ->setSiteCategory(AnilineConf::SITE_CATEGORY_CONSERVATION)
-                ->setPetKind($petKind);
-            $entityManager->persist($favorite_pet);
-            $entityManager->flush();
-
-            $this->conservationPetsRepository->incrementCount($pet);
-        } else {
-            $entityManager->remove($favorite);
-            $entityManager->flush();
-
-            $this->conservationPetsRepository->decrementCount($pet);
-
-            return new JsonResponse('unliked');
-        }
-
-        return new JsonResponse('liked');
     }
 
     /**
@@ -333,33 +200,6 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * 保護団体検索
-     *
-     * @Route("/adoption/adoption_search", name="adoption_search")
-     * @Template("/animalline/adoption/adoption_search.twig")
-     */
-    public function adoption_search(PaginatorInterface $paginator, Request $request): Response
-    {
-        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
-        $regions = $this->prefRepository->findAll();
-        $adoptionResults = $this->adoptionQueryService->searchAdoptionsResult($request, $petKind);
-        $adoptions = $paginator->paginate(
-            $adoptionResults,
-            $request->query->getInt('page', 1),
-            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
-        );
-
-        return $this->render('animalline/adoption/adoption_search.twig', [
-            'adoptions' => $adoptions,
-            'petKind' => $petKind,
-            'breeds' => $breeds,
-            'regions' => $regions
-        ]);
-    }
-
-    
-    /**
      * 保護団体詳細
      * 
      * @Route("/adoption/adoption_search/{adoption_id}", name="adoption_detail", requirements={"adoption_id" = "\d+"})
@@ -393,24 +233,6 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * お気に入り一覧.
-     *
-     * @Route("/adoption/member/favorite", name="adoption_favorite")
-     * @Template("animalline/adoption/favorite.twig")
-     */
-    public function favorite(PaginatorInterface $paginator, Request $request): ?Response
-    {
-        $favoritePetResults = $this->conservationPetsRepository->findByFavoriteCount();
-        $favoritePets = $paginator->paginate(
-            $favoritePetResults,
-            $request->query->getInt('page', 1),
-            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
-        );
-
-        return $this->render('animalline/adoption/favorite.twig', ['pets' => $favoritePets]);
-    }
-
-    /**
      * 保護団体リスト.
      *
      * @Route("/adoption/list", name="adoption_list")
@@ -421,79 +243,6 @@ class AdoptionController extends AbstractController
         return;
     }
 
-    /**
-     * お問い合わせ.
-     *
-     * @Route("/adoption/member/contact/{pet_id}", name="adpotion_contact", requirements={"pet_id" = "\d+"})
-     * @Template("/animalline/adoption/contact.twig")
-     */
-    public function contact(Request $request)
-    {
-        $id = $request->get('pet_id');
-        $pet = $this->conservationPetsRepository->find($id);
-        if (!$pet) {
-            throw new HttpException\NotFoundHttpException();
-        }
-
-        $contact = new ConservationContactHeader();
-        $builder = $this->formFactory->createBuilder(ConservationContactType::class, $contact);
-        $event = new EventArgs(
-            [
-                'builder' => $builder,
-                'contact' => $contact
-            ],
-            $request
-        );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
-
-        $form = $builder->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($request->get('mode')) {
-                case 'confirm':
-                    return $this->render(
-                        'animalline/adoption/contact_confirm.twig',
-                        [
-                            'form' => $form->createView(),
-                            'id' => $id
-                        ]
-                    );
-
-                case 'complete':
-                    $contact
-                        ->setSendDate(Carbon::now())
-                        ->setPet($pet)
-                        ->setConservation($pet->getConservation())
-                        ->setCustomer($this->getUser());
-                    $entityManager = $this->getDoctrine()->getManager();
-                    $entityManager->persist($contact);
-                    $entityManager->flush();
-
-                    return $this->redirectToRoute('adoption_contact_complete', ['pet_id' => $id]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'id' => $id
-        ];
-    }
-
-    /**
-     * お問い合わせ完了画面
-     *
-     * @Route("/adoption/member/contact/{pet_id}/complete", name="adoption_contact_complete", requirements={"pet_id" = "\d+"})
-     * @Template("/animalline/adoption/contact_complete.twig")
-     */
-    public function complete(Request $request)
-    {
-        return $this->render('animalline/adoption/contact_complete.twig', [
-            'id' => $request->get('pet_id')
-        ]);
-    }
-
-      
     /**
      * 会社概要.
      *

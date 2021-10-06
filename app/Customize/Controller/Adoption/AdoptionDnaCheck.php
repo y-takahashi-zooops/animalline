@@ -7,7 +7,6 @@ use Customize\Entity\DnaCheckStatusHeader;
 use Customize\Form\Type\Adoption\ConservationKitDnaType;
 use Customize\Service\AdoptionQueryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Entity\ConservationsHouse;
 use Customize\Entity\DnaCheckStatus;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
@@ -24,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use DateTime;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AdoptionDnaCheck extends AbstractController
 {
@@ -48,7 +48,7 @@ class AdoptionDnaCheck extends AbstractController
     protected $conservationsRepository;
 
     /**
-     * @var ConservationHouse
+     * @var ConservationsHousesRepository
      */
     protected $conservationsHousesRepository;
 
@@ -204,5 +204,45 @@ class AdoptionDnaCheck extends AbstractController
             'conservationHouseCat' => $conservationHouseCat,
             'conservationHouseDog' => $conservationHouseDog
         ];
+    }
+
+    /**
+     * 検査状況確認
+     *
+     * @Route("/adoption/member/examination_status", name="adoption_examination_status")
+     * @Template("animalline/adoption/member/examination_status.twig")
+     */
+    public function examination_status(Request $request, PaginatorInterface $paginator)
+    {
+        $dnaId = (int)$request->get('dna-id');
+        if ($request->isMethod('POST') && $dnaId) {
+            $dna = $this->dnaCheckStatusRepository->find($dnaId);
+            if (!$dna) {
+                throw new NotFoundHttpException();
+            }
+
+            $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
+            $newDna = clone $dna;
+            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($dna);
+            $em->persist($newDna);
+            $em->flush();
+
+            return $this->redirectToRoute('adoption_examination_status');
+        }
+
+        $userId = $this->getUser()->getId();
+        $isAll = $request->get('is_all') ?? false;
+
+        $results = $this->dnaQueryService->filterDnaAdoptionMember($userId, $isAll);
+        $dnas = $paginator->paginate(
+            $results,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE)
+        );
+
+        return compact('dnas');
     }
 }

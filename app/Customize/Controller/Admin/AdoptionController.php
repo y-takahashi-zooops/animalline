@@ -19,8 +19,6 @@ use Customize\Repository\BreedsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Entity\Conservations;
-use Customize\Entity\ConservationPets;
-use Customize\Form\Type\Admin\ConservationPetsType;
 use Customize\Repository\CoatColorsRepository;
 use Customize\Repository\ConservationPetImageRepository;
 use Customize\Form\Type\Admin\ConservationsType;
@@ -33,7 +31,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AdoptionController extends AbstractController
 {
@@ -187,147 +184,6 @@ class AdoptionController extends AbstractController
         return $this->render('@admin/Adoption/house.twig', [
             'conservations' => $conservations,
             'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * 審査情報表示保護団体管理
-     *
-     * @Route("/%eccube_admin_route%/adoption/examination/{id}", name="admin_adoption_examination", requirements={"id" = "\d+"})
-     * @Template("@admin/Adoption/examination.twig")
-     */
-    public function Examination(Request $request)
-    {
-        return;
-    }
-
-    /**
-     * 審査結果登録保護団体管理
-     *
-     * @Route("/%eccube_admin_route%/adoption/examination/regist/{id}", name="admin_adoption_examination_regist", requirements={"id" = "\d+"})
-     * @Template("@admin/Adoption/examination_regist.twig")
-     */
-    public function Examination_regist(Request $request)
-    {
-        $conservationId = $request->get("id");
-        $conservation = $this->conservationsRepository->find($conservationId);
-        if (!$conservation) throw new NotFoundHttpException();
-        /** @var $Customer \Eccube\Entity\Customer */
-        $Customer = $this->customerRepository->find($conservationId);
-        if (!$Customer) throw new NotFoundHttpException();
-
-        $comment = $request->get('examination_result_comment');
-        $data = [
-            'name' => "{$Customer->getName01()} {$Customer->getName02()}",
-            'examination_comment' => "<span id='ex-comment'>{$comment}</span>"
-        ];
-
-        if ($request->isMethod('POST')) {
-            $result = (int)$request->get('examination_result');
-            $conservation->setExaminationStatus($result);
-
-            $data['examination_comment'] = $comment;
-            if ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK) {
-                $this->mailService->sendAdoptionExaminationMailAccept($Customer, $data);
-                $Customer->setIsConservation(1);
-            } else if ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG) {
-                $this->mailService->sendAdoptionExaminationMailReject($Customer, $data);
-            }
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($Customer);
-            $entityManager->flush();
-
-            $this->addSuccess('審査結果を登録しました。', 'admin');
-            return $this->redirectToRoute('admin_adoption_list');
-        }
-
-        return compact(
-            'data',
-            'conservation'
-        );
-    }
-
-    /**
-     * ペット一覧保護団体管理
-     *
-     * @Route("/%eccube_admin_route%/adoption/pet/list/{id}", name="admin_adoption_pet_list", requirements={"id" = "\d+"})
-     * @Template("@admin/Adoption/pet/index.twig")
-     */
-    public function pet_index(PaginatorInterface $paginator, Request $request)
-    {
-        $criteria['conservation_id'] = $request->get('id');
-
-        switch ($request->get('pet_kind')) {
-            case 1:
-                $criteria['pet_kind'] = AnilineConf::ANILINE_PET_KIND_DOG;
-                break;
-            case 2:
-                $criteria['pet_kind'] = AnilineConf::ANILINE_PET_KIND_CAT;
-                break;
-            default:
-                break;
-        }
-
-        if ($request->get('breed_type')) {
-            $criteria['breed_type'] = $request->get('breed_type');
-        }
-
-        $field = $request->get('field') ?? 'create_date';
-        $direction = $request->get('direction') ?? 'DESC';
-        $order['field'] = $field;
-        $order['direction'] = $direction;
-
-
-        $results = $this->adoptionQueryService->filterPetAdmin($criteria, $order);
-        $pets = $paginator->paginate(
-            $results,
-            $request->query->getInt('page', 1),
-            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
-        );
-
-        $breeds = $this->breedsRepository->findAll();
-
-        return $this->render('@admin/Adoption/pet/index.twig', [
-            'conservationId' => $request->get('id'),
-            'breeds' => $breeds,
-            'pets' => $pets,
-            'direction' => $request->get('direction') == 'ASC' ? 'DESC' : 'ASC'
-        ]);
-    }
-
-    /**
-     * ペット情報編集保護団体管理
-     *
-     * @Route("/%eccube_admin_route%/adoption/pet/edit/{id}", name="admin_adoption_pet_edit", requirements={"id" = "\d+"})
-     * @Template("@admin/Adoption/pet/edit.twig")
-     */
-    public function pet_edit(Request $request, ConservationPets $conservationPet)
-    {
-        $form = $this->createForm(ConservationPetsType::class, $conservationPet);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $conservationPet->setBreedsType($this->breedsRepository->find($request->get('breeds_type')));
-            $conservationPet->setCoatColor($this->coatColorsRepository->find($request->get('coat_color')));
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($conservationPet);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('admin_adoption_pet_list', ['id' => $conservationPet->getConservation()->getId()]);
-        }
-
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()]);
-        $colors = $this->coatColorsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()]);
-        $images = $this->conservationPetImageRepository->findBy(['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
-
-        return $this->render('@admin/Adoption/pet/edit.twig', [
-            'form' => $form->createView(),
-            'conservationPet' => $conservationPet,
-            'breeds' => $breeds,
-            'colors' => $colors,
-            'images' => $images,
         ]);
     }
 }

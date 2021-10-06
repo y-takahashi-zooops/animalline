@@ -13,7 +13,7 @@
             },
         }).done(function (data) {
             if(data.isDisable){
-                $('#name').text(data.shipping_name ?? '')
+                $('#name').val(data.shipping_name ?? '')
                 $('#input-hidden').val(data.dnaId);
                 $('#submit').removeAttr('disabled');
             } else {

@@ -45,7 +45,7 @@ file that was distributed with this source code.
     }
 
     // 受注明細行を追加する.
-    function fnAddOrderItem($row, product_id, type, product_name, is_instock = null) {
+    function fnAddOrderItem($row, product_id, type, product_name, is_instock = null, reIndex = null) {
         // 規格1の要素を取得
         var $sele1 = $row.find('select[name=classcategory_id1]');
         // 規格2の要素を取得
@@ -88,7 +88,7 @@ file that was distributed with this source code.
         }
 
         var prototype = $collectionHolder.data('prototype');
-        var index = is_instock ? $collectionHolder.data('next-index') : index + 1;
+        index = reIndex ? ($collectionHolder.data('next-index') ? $collectionHolder.data('next-index') : localStorage.getItem("index")) : index + 1;
         var newForm = prototype.replace(/__name__/g, index);
         $collectionHolder.children('tbody').append(newForm);
         var $lastRow = $collectionHolder.children('tbody').children('tr').last();
@@ -176,7 +176,7 @@ file that was distributed with this source code.
                     {% endif %}
                 </td>
                 <td class="align-middle pr-3 text-right">
-                    <button type="button" class="btn btn-ec-actionIcon" onclick="fnAddOrderItem($(this).parent().parent(), {{ Product.id }}, {{ constant('Eccube\\Entity\\Master\\OrderItemType::PRODUCT') }}, '{{ Product.name|escape('js') }}', {{ is_instock }})" name="mode" value="modal">
+                    <button type="button" class="btn btn-ec-actionIcon" onclick="fnAddOrderItem($(this).parent().parent(), {{ Product.id }}, {{ constant('Eccube\\Entity\\Master\\OrderItemType::PRODUCT') }}, '{{ Product.name|escape('js') }}', {{ is_instock }}, {{ reIndex }})" name="mode" value="modal">
                         <i class="fa fa-plus fa-lg font-weight-bold text-secondary"></i>
                     </button>
                 </td>
