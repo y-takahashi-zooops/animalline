@@ -76,6 +76,21 @@ class BreederExamController extends AbstractController
     protected $dnaCheckStatusHeaderRepository;
 
     /**
+     * @var PetsFavoriteRepository
+     */
+    private $petsFavoriteRepository;
+
+    /**
+     * @var SendoffReasonRepository
+     */
+    private $sendoffReasonRepository;
+
+    /**
+     * @var BreederContactHeaderRepository
+     */
+    private $breederContactHeaderRepository;
+
+    /**
      * BreederController constructor.
      *
      * @param SendoffReasonRepository $sendoffReasonRepository
@@ -87,6 +102,7 @@ class BreederExamController extends AbstractController
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+     * @param PetsFavoriteRepository $petsFavoriteRepository
      */
     public function __construct(
         PetsFavoriteRepository           $petsFavoriteRepository,

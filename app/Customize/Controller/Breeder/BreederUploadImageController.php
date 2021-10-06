@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BreederUploadImageController extends AbstractController
 {
-
     /**
      * Upload image
      *

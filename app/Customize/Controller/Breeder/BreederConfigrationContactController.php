@@ -71,15 +71,12 @@ class BreederConfigrationContactController extends AbstractController
             $name[$message->getId()] = "{$message->getCustomer()->getName01()} {$message->getCustomer()->getName02()}";
         }
 
-        //$pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
-
         return $this->render(
             'animalline/breeder/configration/get_message.twig',
             [
                 'rootMessages' => $rootMessages,
                 'name' => $name,
                 'breeder' => $this->getUser(),
-                //'pets' => $pets
             ]
         );
     }
