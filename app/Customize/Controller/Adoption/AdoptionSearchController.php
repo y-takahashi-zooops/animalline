@@ -11,6 +11,7 @@ use Customize\Repository\ConservationPetImageRepository;
 use Customize\Repository\ConservationsHousesRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Repository\PetsFavoriteRepository;
+use Customize\Service\DnaQueryService;
 use Eccube\Controller\AbstractController;
 use Eccube\Repository\Master\PrefRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -50,11 +51,16 @@ class AdoptionSearchController extends AbstractController
     protected $prefRepository;
 
     /**
+     * @var AdoptionQueryService
+     */
+    private $adoptionQueryService;
+
+    /**
      * ConservationController constructor.
      *
      * @param ConservationsRepository $conservationsRepository
      * @param ConservationsHousesRepository $conservationsHouseRepository
-     * @param AdoptionQueryService $conservationQueryService
+     * @param AdoptionQueryService $adoptionQueryService
      * @param BreedsRepository $breedsRepository
      * @param PrefRepository $prefRepository
      */
@@ -97,17 +103,6 @@ class AdoptionSearchController extends AbstractController
             'breeds' => $breeds,
             'regions' => $regions
         ]);
-    }
-
-    /**
-     * ペット検索画面.
-     *
-     * @Route("/adoption/pet/search", name="adoption_pet_search")
-     * @Template("animalline/adoption/pet/search.twig")
-     */
-    public function petSearch(Request $request)
-    {
-        return;
     }
 
     /**

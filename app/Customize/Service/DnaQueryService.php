@@ -41,6 +41,7 @@ class DnaQueryService
         AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT,
         AnilineConf::ANILINE_DNA_CHECK_STATUS_PUBLIC
     ];
+
     /**
      * BreederQueryService constructor.
      *
@@ -124,10 +125,11 @@ class DnaQueryService
         // order by update_date > dna_id desc
         usort(
             $totalResult,
-            fn ($x, $y) =>
-            [$y['update_date']->getTimestamp(), $y['dna_id']]
-                <=>
-                [$x['update_date']->getTimestamp(), $x['dna_id']]
+            function ($x, $y) {
+                return [$y['update_date']->getTimestamp(), $y['dna_id']]
+                    <=>
+                    [$x['update_date']->getTimestamp(), $x['dna_id']];
+            }
         );
 
         return $totalResult;

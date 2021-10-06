@@ -67,7 +67,7 @@ class AdoptionQueryService
      */
     public function getBreedsHavePet($petKind): array
     {
-        $result = $this->breedsRepository->createQueryBuilder('b')
+        return $this->breedsRepository->createQueryBuilder('b')
             ->select()
             ->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'b.id = cp.BreedsType')
             ->where('b.pet_kind = :pet_kind and cp.BreedsType is not null')
@@ -75,17 +75,15 @@ class AdoptionQueryService
             ->orderBy('b.sort_order', 'ASC')
             ->getQuery()
             ->getResult();
-
-        return $result;
     }
 
     /**
-     * Retrive conservation pets
+     * Retrieve conservation pets
      *
      * @param Object $request
      * @return array
      */
-    public function searchPetsResult($request)
+    public function searchPetsResult($request): array
     {
         $query = $this->conservationPetsRepository->createQueryBuilder('p')
             ->join('p.Conservation', 'c')
@@ -197,7 +195,7 @@ class AdoptionQueryService
      */
     public function findAdoptionFavoritePets($customerId)
     {
-        $query = $this->petsFavoriteRepository->createQueryBuilder('pf')
+        return $this->petsFavoriteRepository->createQueryBuilder('pf')
             ->select('cp')
             ->innerJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'cp.id = pf.pet_id')
             ->orderBy('pf.update_date', 'DESC')
@@ -205,7 +203,6 @@ class AdoptionQueryService
             ->setParameter('customer_id', $customerId)
             ->getQuery()
             ->getResult();
-        return $query;
     }
 
     /**

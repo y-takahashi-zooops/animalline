@@ -56,6 +56,7 @@ class ProductSetController extends AbstractController
      * @param ProductClassRepository $productClassRepository
      * @param ProductRepository $productRepository
      * @param ProductSetRepository $productSetRepository
+     * @param OrderItemTypeRepository $orderItemTypeRepository
      */
     public function __construct(
         ProductClassRepository  $productClassRepository,
@@ -162,7 +163,6 @@ class ProductSetController extends AbstractController
             'searchProductModalForm' => $searchProductModalForm->createView(),
             'Product' => $Product,
             'ProductClass' => $ProductClass,
-            'id' => $id,
             'count' => $countSet
         ];
     }

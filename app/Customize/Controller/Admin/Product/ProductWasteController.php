@@ -15,24 +15,11 @@ namespace Customize\Controller\Admin\Product;
 
 use Carbon\Carbon;
 use Customize\Entity\StockWaste;
-use Customize\Repository\StockWasteReasonRepository;
 use Customize\Repository\StockWasteRepository;
-use Customize\Service\GetListWasteQueryService;
 use Customize\Config\AnilineConf;
-use Customize\Service\ListInstockQueryService;
-use Eccube\Entity\BaseInfo;
 use Customize\Form\Type\Admin\StockWasteType;
-use Customize\Repository\SupplierRepository;
-use Eccube\Repository\BaseInfoRepository;
-use Eccube\Repository\CategoryRepository;
-use Eccube\Repository\Master\PageMaxRepository;
-use Eccube\Repository\Master\ProductStatusRepository;
 use Eccube\Repository\ProductClassRepository;
-use Eccube\Repository\ProductImageRepository;
-use Eccube\Repository\ProductRepository;
-use Eccube\Repository\TagRepository;
-use Eccube\Repository\TaxRuleRepository;
-use Eccube\Service\CsvExportService;
+use Exception;
 use Knp\Component\Pager\Paginator;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -40,74 +27,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Controller\Admin\Product\ProductController as BaseProductController;
-use Eccube\Repository\Master\OrderItemTypeRepository;
 
 class ProductWasteController extends BaseProductController
 {
     /**
-     * @var CsvExportService
-     */
-    protected $csvExportService;
-
-    /**
      * @var ProductClassRepository
      */
     protected $productClassRepository;
-
-    /**
-     * @var ProductImageRepository
-     */
-    protected $productImageRepository;
-
-    /**
-     * @var TaxRuleRepository
-     */
-    protected $taxRuleRepository;
-
-    /**
-     * @var CategoryRepository
-     */
-    protected $categoryRepository;
-
-    /**
-     * @var ProductRepository
-     */
-    protected $productRepository;
-
-    /**
-     * @var SupplierRepository
-     */
-    protected $supplierRepository;
-
-    /**
-     * @var BaseInfo
-     */
-    protected $BaseInfo;
-
-    /**
-     * @var PageMaxRepository
-     */
-    protected $pageMaxRepository;
-
-    /**
-     * @var ProductStatusRepository
-     */
-    protected $productStatusRepository;
-
-    /**
-     * @var TagRepository
-     */
-    protected $tagRepository;
-
-    /**
-     * @var ListInstockQueryService
-     */
-    protected $listInstockQueryService;
-
-    /**
-     * @var OrderItemTypeRepository
-     */
-    protected $orderItemTypeRepository;
 
     /**
      * @var StockWasteRepository
@@ -115,67 +41,17 @@ class ProductWasteController extends BaseProductController
     protected $stockWasteRepository;
 
     /**
-     * @var StockWasteReasonRepository
-     */
-    protected $stockWasteReasonRepository;
-
-    /**
-     * @var GetListWasteQueryService
-     */
-    protected $getListWasteQueryService;
-
-    /**
      * ProductWasteController constructor.
      *
-     * @param CsvExportService $csvExportService
      * @param ProductClassRepository $productClassRepository
-     * @param ProductImageRepository $productImageRepository
-     * @param TaxRuleRepository $taxRuleRepository
-     * @param CategoryRepository $categoryRepository
-     * @param ProductRepository $productRepository
-     * @param BaseInfoRepository $baseInfoRepository
-     * @param PageMaxRepository $pageMaxRepository
-     * @param ProductStatusRepository $productStatusRepository
-     * @param TagRepository $tagRepository
-     * @param SupplierRepository $supplierRepository
-     * @param ListInstockQueryService $listInstockQueryService
-     * @param OrderItemTypeRepository $orderItemTypeRepository
      * @param StockWasteRepository $stockWasteRepository
-     * @param StockWasteReasonRepository $stockWasteReasonRepository
-     * @param GetListWasteQueryService $getListWasteQueryService
      */
     public function __construct(
-        CsvExportService                $csvExportService,
-        ProductClassRepository          $productClassRepository,
-        ProductImageRepository          $productImageRepository,
-        TaxRuleRepository               $taxRuleRepository,
-        CategoryRepository              $categoryRepository,
-        ProductRepository               $productRepository,
-        BaseInfoRepository              $baseInfoRepository,
-        PageMaxRepository               $pageMaxRepository,
-        ProductStatusRepository         $productStatusRepository,
-        TagRepository                   $tagRepository,
-        SupplierRepository              $supplierRepository,
-        OrderItemTypeRepository         $orderItemTypeRepository,
-        StockWasteRepository            $stockWasteRepository,
-        StockWasteReasonRepository      $stockWasteReasonRepository,
-        GetListWasteQueryService        $getListWasteQueryService
+        ProductClassRepository     $productClassRepository,
+        StockWasteRepository       $stockWasteRepository
     ) {
-        $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
-        $this->productImageRepository = $productImageRepository;
-        $this->taxRuleRepository = $taxRuleRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->productRepository = $productRepository;
-        $this->BaseInfo = $baseInfoRepository->get();
-        $this->pageMaxRepository = $pageMaxRepository;
-        $this->productStatusRepository = $productStatusRepository;
-        $this->tagRepository = $tagRepository;
-        $this->supplierRepository = $supplierRepository;
-        $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->stockWasteRepository = $stockWasteRepository;
-        $this->getListWasteQueryService = $getListWasteQueryService;
-        $this->stockWasteReasonRepository = $stockWasteReasonRepository;
     }
 
     /**
@@ -183,13 +59,14 @@ class ProductWasteController extends BaseProductController
      *
      * @Route("/%eccube_admin_route%/product/waste", name="admin_product_waste")
      * @Template("@admin/Product/waste.twig")
+     * @throws Exception
      */
     public function waste(PaginatorInterface $paginator, Request $request)
     {
         if ($request->get('id_destroy') && $request->isMethod('POST')) {
             $waste = $this->stockWasteRepository->find($request->get('id_destroy'));
             $productClass = $waste->getProductClass();
-            $productClass->setStock((int) $productClass->getStock() + $waste->getWasteUnit());
+            $productClass->setStock((int)$productClass->getStock() + $waste->getWasteUnit());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($productClass);
             $entityManager->remove($waste);
@@ -206,7 +83,7 @@ class ProductWasteController extends BaseProductController
             'yearTo' => $request->get('year_to'),
             'monthTo' => $request->get('month_to'),
         ];
-        $result = $this->getListWasteQueryService->search($dateFrom, $dateTo);
+        $result = $this->stockWasteRepository->search($dateFrom, $dateTo);
 
         $wastes = $paginator->paginate(
             $result,
@@ -233,37 +110,36 @@ class ProductWasteController extends BaseProductController
         if (!$productClass) {
             throw new NotFoundHttpException();
         }
-        $product = null;
 
         $stockWaste = new StockWaste();
         $form = $this->createForm(StockWasteType::class, $stockWaste);
         $form->handleRequest($request);
 
-        if ($productClass) {
-            $product = $productClass->getProduct();
 
-            if ($form->isSubmitted() && $form->isValid() && $product) {
-                $stockProductClass = $productClass->getStock();
-                $stockUnit = $form['waste_unit']->getData() ? $form['waste_unit']->getData() : 0;
+        $product = $productClass->getProduct();
 
-                if ($stockProductClass >= $stockUnit) {
-                    $stockWaste->setProduct($product)
-                               ->setProductClass($productClass);
-                    $this->productClassRepository->decrementStock($productClass, $stockUnit);
-                    $productClass->setUpdateDate(Carbon::now());
-                    $entityManager = $this->getDoctrine()->getManager();
-                    $entityManager->persist($stockWaste);
-                    $entityManager->persist($productClass);
-                    $entityManager->flush();
+        if ($form->isSubmitted() && $form->isValid() && $product) {
+            $stockProductClass = $productClass->getStock();
+            $stockUnit = $form['waste_unit']->getData() ? $form['waste_unit']->getData() : 0;
 
-                    $this->addSuccess('admin.common.save_complete', 'admin');
-                    return $this->redirectToRoute('admin_product_waste');
-                }
+            if ($stockProductClass >= $stockUnit) {
+                $stockWaste->setProduct($product)
+                    ->setProductClass($productClass);
+                $this->productClassRepository->decrementStock($productClass, $stockUnit);
+                $productClass->setUpdateDate(Carbon::now());
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($stockWaste);
+                $entityManager->persist($productClass);
+                $entityManager->flush();
 
-                $this->addError('admin.common.save_error', 'admin');
-                return $this->redirectToRoute('admin_product_waste_regist', ['id' => $productClass->getId()]);
+                $this->addSuccess('admin.common.save_complete', 'admin');
+                return $this->redirectToRoute('admin_product_waste');
             }
+
+            $this->addError('admin.common.save_error', 'admin');
+            return $this->redirectToRoute('admin_product_waste_regist', ['id' => $productClass->getId()]);
         }
+
 
         return [
             'product' => $product,
@@ -272,11 +148,13 @@ class ProductWasteController extends BaseProductController
     }
 
     /**
+     * Search product for waster regist
+     *
      * @Route("/%eccube_admin_route%/product/waste/search/product", name="admin_waste_search_product")
      * @Route("/%eccube_admin_route%/product/waste/search/product/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_waste_search_product_page")
      * @Template("@admin/Product/waste_search_product.twig")
      */
-    public function searchProduct(Request $request, Paginator $paginator, $page_no = null)
+    public function searchProduct(Request $request, Paginator $paginator, $page_no = null): array
     {
         if ($request->isXmlHttpRequest() && $this->isTokenValid()) {
             log_debug('waste search product start.');

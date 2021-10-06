@@ -2,8 +2,6 @@
 
 namespace Customize\Form\Type\Admin;
 
-use Eccube\Common\EccubeConfig;
-use Eccube\Entity\Product;
 use Eccube\Form\Type\Admin\OrderItemType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -16,17 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductSetType extends AbstractType
 {
-    /**
-     * @var EccubeConfig
-     */
-    protected $eccubeConfig;
-
-    public function __construct(
-        EccubeConfig $eccubeConfig
-    ) {
-        $this->eccubeConfig = $eccubeConfig;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

@@ -8,6 +8,7 @@ use Customize\Repository\BreedersRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\PrefAdjacentRepository;
+use Doctrine\ORM\NonUniqueResultException;
 
 class BreederQueryService
 {
@@ -61,7 +62,7 @@ class BreederQueryService
 
     public function getBreedsHavePet($petKind): array
     {
-        $result = $this->breedsRepository->createQueryBuilder('b')
+        return $this->breedsRepository->createQueryBuilder('b')
             ->select()
             ->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.BreedsType')
             ->where('b.pet_kind = :pet_kind and bp.BreedsType is not null')
@@ -69,8 +70,6 @@ class BreederQueryService
             ->orderBy('b.sort_order', 'ASC')
             ->getQuery()
             ->getResult();
-
-        return $result;
     }
 
     /**
@@ -139,7 +138,7 @@ class BreederQueryService
      * @param int $petKind
      * @return array
      */
-    public function searchBreedersResult($request, $petKind): array
+    public function searchBreedersResult($request, int $petKind): array
     {
         $query = $this->breedersRepository->createQueryBuilder('b')
             ->innerJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.Breeder')
@@ -187,9 +186,9 @@ class BreederQueryService
      * @param int $customerId
      * @return array
      */
-    public function findBreederFavoritePets($customerId)
+    public function findBreederFavoritePets(int $customerId): array
     {
-        $query = $this->petsFavoriteRepository->createQueryBuilder('pf')
+        return $this->petsFavoriteRepository->createQueryBuilder('pf')
             ->select('bp')
             ->innerJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'bp.id = pf.pet_id')
             ->orderBy('pf.update_date', 'DESC')
@@ -197,14 +196,14 @@ class BreederQueryService
             ->setParameter('customer_id', $customerId)
             ->getQuery()
             ->getResult();
-        return $query;
     }
 
     /**
-     * Retrive breeder pets
+     * Retrieve breeder pets
      *
      * @param Object $breederId
-     * @return array
+     * @return float
+     * @throws NonUniqueResultException
      */
     public function calculateBreederRank($breederId): float
     {

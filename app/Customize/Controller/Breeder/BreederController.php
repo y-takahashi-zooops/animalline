@@ -29,7 +29,7 @@ class BreederController extends AbstractController
      */
     protected $breedersRepository;
     /**
-     * @var BreedersHouseRepository
+     * @var BreederHouseRepository
      */
     protected $breederHouseRepository;
 
