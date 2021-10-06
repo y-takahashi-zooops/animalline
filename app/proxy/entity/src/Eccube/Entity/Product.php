@@ -555,7 +555,7 @@ class Product extends \Eccube\Entity\AbstractEntity
     private $ItemWastes;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProductSet::class, mappedBy="Product")
+     * @ORM\OneToMany(targetEntity=ProductSet::class, mappedBy="ParentProduct")
      */
     private $ProductSet;
 
@@ -1107,11 +1107,17 @@ class Product extends \Eccube\Entity\AbstractEntity
         return $this->ProductSet;
     }
 
-    public function addProductSet(ProductSet $productSet): self
+    public function setProductSet(): self
     {
-        if (!$this->ProductSet->contains($productSet)) {
-            $this->productSet[] = $productSet;
-            $productSet->setProduct($this);
+        $this->ProductSet = new ArrayCollection();
+
+        return $this;
+    }
+
+    public function addProductSet(OrderItem $ProductSet): self
+    {
+        if (!$this->ProductSet->contains($ProductSet)) {
+            $this->ProductSet[] = $ProductSet;
         }
 
         return $this;

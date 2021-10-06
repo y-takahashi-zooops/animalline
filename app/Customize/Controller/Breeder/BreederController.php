@@ -4,8 +4,6 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Service\BreederQueryService;
-use Carbon\Carbon;
-use Customize\Entity\BreederContacts;
 use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\SendoffReasonRepository;
 use Eccube\Repository\Master\PrefRepository;
@@ -24,7 +22,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
-use Customize\Form\Type\Breeder\BreederContactType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -165,30 +162,6 @@ class BreederController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/pet/search/result", name="breeder_pet_search_result")
-     * @Template("animalline/breeder/pet/search_result.twig")
-     */
-    public function petSearchResult(PaginatorInterface $paginator, Request $request): Response
-    {
-        $petResults = $this->breederQueryService->searchPetsResult($request);
-        $pets = $paginator->paginate(
-            $petResults,
-            $request->query->getInt('page', 1),
-            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
-        );
-        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
-        $regions = $this->prefRepository->findAll();
-
-        return $this->render('animalline/breeder/pet/search_result.twig', [
-            'pets' => $pets,
-            'petKind' => $petKind,
-            'breeds' => $breeds,
-            'regions' => $regions
-        ]);
-    }
-
-    /**
      * ブリーダー用ユーザーページ
      *
      * @Route("/breeder/member/", name="breeder_mypage")
@@ -301,45 +274,6 @@ class BreederController extends AbstractController
         }
 
         return new JsonResponse('liked');
-    }
-
-    /**
-     * Page complete
-     * 
-     * @Route("/breeder/member/contact/{pet_id}/complete", name="breeder_contact_complete", requirements={"pet_id" = "\d+"})
-     * @Template("/animalline/breeder/contact_complete.twig")
-     */
-    public function complete(Request $request)
-    {
-        return $this->render('animalline/breeder/contact_complete.twig', [
-            'id' => $request->get('pet_id')
-        ]);
-    }
-
-    /**
-     * ブリーダー検索
-     * 
-     * @Route("/breeder/breeder_search", name="breeder_search")
-     * @Template("/animalline/breeder/breeder_search.twig")
-     */
-    public function breeder_search(PaginatorInterface $paginator, Request $request): Response
-    {
-        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
-        $regions = $this->prefRepository->findAll();
-        $breederResults = $this->breederQueryService->searchBreedersResult($request, $petKind);
-        $breeders = $paginator->paginate(
-            $breederResults,
-            $request->query->getInt('page', 1),
-            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
-        );
-
-        return $this->render('animalline/breeder/breeder_search.twig', [
-            'breeders' => $breeders,
-            'petKind' => $petKind,
-            'breeds' => $breeds,
-            'regions' => $regions
-        ]);
     }
 
     /**

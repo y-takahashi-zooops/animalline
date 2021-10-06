@@ -2,29 +2,8 @@
 
 namespace Customize\Controller\Breeder;
 
-use Carbon\Carbon;
-use Customize\Config\AnilineConf;
-use Customize\Entity\BreederContactHeader;
-use Customize\Entity\BreederContacts;
-
-use Customize\Entity\BreederExaminationInfo;
-use Customize\Entity\BreederPetImage;
-use Customize\Entity\BreederPets;
-use Customize\Form\Type\BreederExaminationInfoType;
-use Customize\Form\Type\BreederPetsType;
-use Customize\Form\Type\BreedersType;
-use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\BreederExaminationInfoRepository;
-use Customize\Entity\BreederHouse;
-use Customize\Entity\Breeders;
-use Customize\Repository\BreederHouseRepository;
-use Customize\Repository\BreederPetsRepository;
-use Customize\Repository\BreederPetImageRepository;
-use Customize\Repository\BreedersRepository;
-use Customize\Repository\BreedsRepository;
-use Customize\Repository\CoatColorsRepository;
-use Customize\Repository\SendoffReasonRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use DateTime;
 
 class BreederConfigrationController extends AbstractController
 {
@@ -42,95 +20,21 @@ class BreederConfigrationController extends AbstractController
     protected $breederContactsRepository;
 
     /**
-     * @var BreederContactHeaderRepository
-     */
-    protected $breederContactHeaderRepository;
-
-    /**
-     * @var BreederPetsRepository
-     */
-    protected $breederPetsRepository;
-
-    /**
-     * @var BreederPetImageRepository
-     */
-    protected $breederPetImageRepository;
-
-    /**
      * @var BreederExaminationInfoRepository
      */
     protected $breederExaminationInfoRepository;
 
     /**
-     * @var BreederHouseRepository
-     */
-    protected $breederHouseRepository;
-
-
-    /**
-     * @var SendoffReasonRepository
-     */
-    protected $sendoffReasonRepository;
-
-    /**
      * BreederConfigrationController constructor.
      * @param BreederContactsRepository $breederContactsRepository
-     * @param BreederContactHeaderRepository $breederContactHeaderRepository
-     * @param BreederPetsRepository $breederPetsRepository
-     * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
-     * @param SendoffReasonRepository $sendoffReasonRepository
      */
     public function __construct(
         BreederContactsRepository        $breederContactsRepository,
-        BreederContactHeaderRepository   $breederContactHeaderRepository,
-        BreederPetsRepository            $breederPetsRepository,
-        BreederPetImageRepository        $breederPetImageRepository,
-        BreederExaminationInfoRepository $breederExaminationInfoRepository,
-        BreederHouseRepository           $breederHouseRepository,
-        SendoffReasonRepository          $sendoffReasonRepository
+        BreederExaminationInfoRepository $breederExaminationInfoRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
-        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
-        $this->breederPetsRepository = $breederPetsRepository;
-        $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
-        $this->breederHouseRepository = $breederHouseRepository;
-        $this->sendoffReasonRepository = $sendoffReasonRepository;
-    }
-
-    /**
-     * Page All message's breeder
-     * 
-     * @Route("/breeder/configration/all_message", name="get_message_breeder_configration")
-     * @Template("animalline/breeder/configration/get_message.twig")
-     */
-    public function get_message_breeder_configration(Request $request)
-    {
-        $rootMessages = $this->breederContactHeaderRepository->findBy(
-            [
-                'Breeder' => $this->getUser()
-            ],
-            ['last_message_date' => 'DESC']
-        );
-
-        $lastReplies = [];
-        $name = [];
-        foreach ($rootMessages as $message) {
-            $name[$message->getId()] = "{$message->getCustomer()->getName01()} {$message->getCustomer()->getName02()}";
-        }
-
-        //$pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
-
-        return $this->render(
-            'animalline/breeder/configration/get_message.twig',
-            [
-                'rootMessages' => $rootMessages,
-                'name' => $name,
-                'breeder' => $this->getUser(),
-                //'pets' => $pets
-            ]
-        );
     }
 
     /**

@@ -1,6 +1,6 @@
 {% set site_type = 'adoption' %}
 {% extends 'animalline/adoption/frame.twig' %}
-{% set check_status = {1:'受付', 2:'出荷指示中', 3:'出荷済', 4:'DNAチェック中', 6:'検体異常', 7:'DNA検査中', 8:'検査通過', 9:'検査NG', 10:'検体再送付手続済'} %}
+{% set check_status = {1:'キット発送中 ', 3:'ペット登録完了・返送中', 4:'検体異常', 5: 'DNA検査中', 6:'検査通過', 7:'検査NG', 8:'検体再送付手続済', 9:'ペット情報公開済'} %}
 {% set params = app.request.query.all %}
 
 {% block main %}
@@ -55,7 +55,7 @@
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="検査キット再送付">
-                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL') ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
+                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED') ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
                                                         <i class="fa fa-vial fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>

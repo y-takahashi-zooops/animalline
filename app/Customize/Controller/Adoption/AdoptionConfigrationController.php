@@ -4,14 +4,9 @@ namespace Customize\Controller\Adoption;
 
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
-use Customize\Entity\ConservationContactHeader;
 use Customize\Entity\ConservationContacts;
-use Customize\Entity\ConservationPets;
-use Customize\Entity\ConservationPetImage;
 use Customize\Entity\ConservationsHouse;
-use Customize\Entity\DnaCheckStatus;
 use Customize\Form\Type\ConservationHouseType;
-use Customize\Form\Type\ConservationPetsType;
 use Customize\Form\Type\ConservationsType;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationContactHeaderRepository;
@@ -26,7 +21,6 @@ use Eccube\Repository\Master\PrefRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -101,7 +95,7 @@ class AdoptionConfigrationController extends AbstractController
     {
         $rootMessages = $this->conservationContactHeaderRepository->findBy(
             [
-                'Conservation' => $this->getUser()
+                'Customer' => $this->getUser()
             ],
             ['send_date' => 'DESC']
         );

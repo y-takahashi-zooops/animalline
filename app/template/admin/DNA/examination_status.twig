@@ -28,8 +28,8 @@ file that was distributed with this source code.
                     <div class="col-6">
                         <div class="mb-2">
                             <label class="col-form-label" data-tooltip="true" data-placement="top"
-                                   title="情報を入力して一覧の絞り込み検索ができます。">顧客名<i
-                                        class="fa fa-question-circle fa-lg ml-1"></i></label>
+                                   title="情報を入力して一覧の絞り込み検索ができます。">ブリーダーの名称・保護団体の名称
+                                <i class="fa fa-question-circle fa-lg ml-1"></i></label>
                             <input type="text" name="customer_name" class="form-control"
                                    value="{{ params.customer_name is defined ? params.customer_name }}"/>
                         </div>
@@ -48,7 +48,7 @@ file that was distributed with this source code.
                             <label class="col-form-label">検査状況</label>
                             <select class="ec-select form-control" name="check_status">
                                 <option value="">選択してください</option>
-                                {% set check_status = {1:'受付', 2:'出荷指示中', 3:'出荷済', 4:'DNAチェック中', 6:'検体異常', 7:'DNA検査中', 8:'検査通過', 9:'検査NG', 10:'検体再送付手続済'} %}
+                                {% set check_status = {1:'キット発送中 ', 3:'ペット登録完了・返送中', 4:'検体異常', 5: 'DNA検査中', 6:'検査通過', 7:'検査NG', 8:'検体再送付手続済', 9:'ペット情報公開済'} %}
                                 {% for key, value in check_status %}
                                     <option value="{{ key }}" {{ params.check_status is defined and params.check_status == key ? 'selected' }}>{{ value }}</option>
                                 {% endfor %}
@@ -60,15 +60,21 @@ file that was distributed with this source code.
 
             <div class="c-outsideBlock__contents mb-5">
                 <button class="btn btn-ec-conversion px-5" type="submit">検索</button>
-                {% if(params.customer_name is defined or params.pet_kind is defined or params.check_status is defined) %}
-                    <span class="font-weight-bold ml-2">検索結果：{{ dnas.count() }}件が該当しました</span>
-                {% endif %}
+                <span class="font-weight-bold ml-2">検索結果：{{ dnas.count() }}件が該当しました</span>
             </div>
             {% if(params.check_status is defined and params.check_status ) %}
                 <div class="c-outsideBlock__contents mb-5">
                     <ul class="list-inline">
                         <li class="list-inline-item">
                             <span class="font-weight-bold">検査状況:&nbsp;</span>{{ check_status[params.check_status] }}
+                        </li>
+                    </ul>
+                </div>
+            {% else %}
+                <div class="c-outsideBlock__contents mb-5">
+                    <ul class="list-inline">
+                        <li class="list-inline-item">
+                            <span class="font-weight-bold">検査状況:&nbsp;</span>全て
                         </li>
                     </ul>
                 </div>
@@ -80,6 +86,7 @@ file that was distributed with this source code.
             <div class="c-primaryCol">
                 <form id="form_bulk" method="post" action="">
                     <input type="hidden" name="dna-id" value="">
+                    <input type="hidden" name="change-status-id" value="">
                     <div class="row justify-content-between mb-2">
                         <div class="col-6">
                             <div id="btn_bulk" class="d-none">
@@ -125,13 +132,18 @@ file that was distributed with this source code.
                                         <td></td>
                                         <td class="align-middle">{{ dna.dna_id }}</td>
                                         <td class="align-middle">
-                                            <a target="_blank" href="{{ url(dna.site_type == constant('Customize\\Config\\AnilineConf::ANILINE_SITE_TYPE_BREEDER') ? 'breeder_pet_detail' : 'adoption_pet_detail', {'id':dna.pet_id}) }}">
-                                                <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}"
-                                                     style="max-width: 50px">
-                                            </a>
+                                            {% if dna.pet_id %}
+                                                <a target="_blank" href="{{ url(dna.site_type == constant('Customize\\Config\\AnilineConf::ANILINE_SITE_TYPE_BREEDER') ? 'breeder_pet_detail' : 'adoption_pet_detail', {'id':dna.pet_id}) }}">
+                                                    <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}"
+                                                        style="max-width: 50px">
+                                                </a>
+                                            {% else %}
+                                                _
+                                            {% endif %}
                                         </td>
-                                        <td class="align-middle">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
-                                        <td class="align-middle">{{ dna.breeds_name }}</td>
+                                        <td class="align-middle">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' :
+                                            dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT') ? '猫' : '_' }}</td>
+                                        <td class="align-middle">{{ dna.pet_id ? dna.breeds_name : '_' }}</td>
                                         <td class="align-middle">{{ check_status[dna.check_status] }}</td>
                                         <td class="align-middle">{{ dna.kit_shipping_date is empty ? '_' : dna.kit_shipping_date | date('Y/m/d H:i') }}</td>
                                         <td class="align-middle">{{ dna.kit_return_date is empty ? '_' : dna.kit_return_date | date('Y/m/d H:i') }}</td>
@@ -140,21 +152,21 @@ file that was distributed with this source code.
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="検査キット再送付">
-                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_NOT_NORMAL') ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
+                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED') ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
                                                         <i class="fa fa-vial fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>
                                                 </div>
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="審査結果表示">
-                                                    <a href="#" class="btn btn-ec-actionIcon">
+                                                    <a {% if (dna.file_path) %} href="{{ url('admin_dna_download_pdf', {'id':dna.dna_id}) }}" {% else %} disabled {% endif %} class="btn btn-ec-actionIcon">
                                                         <i class="fa fa-files-o fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>
                                                 </div>
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="公開ステータス変更">
-                                                    <a href="#" class="btn btn-ec-actionIcon">
+                                                    <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED') ? 'onclick=changeStatus('~dna.dna_id~')' : 'disabled' }}>
                                                         <i class="fa fa-eye fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>
@@ -162,13 +174,35 @@ file that was distributed with this source code.
                                             </div>
                                         </td>
                                     </tr>
-                                {% else %}
-                                    <tr>
-                                        <td colspan="10">結果が０件です。</td>
-                                    </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="modal fade" id="confirm-modal-status" tabindex="-1" role="dialog"
+                             aria-labelledby="confirm-modal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title font-weight-bold">
+                                            確認ダイアログ
+                                        </h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-left">
+                                        <p class="text-left modal-message">ペット情報を公開しますか？</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+                                            いいえ
+                                        </button>
+                                        <button class="btn btn-ec-conversion" type="submit">
+                                            はい
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog"
                              aria-labelledby="confirm-modal" aria-hidden="true">
@@ -211,6 +245,10 @@ file that was distributed with this source code.
     function change(id) {
     $('input[name=dna-id]').val(id);
     $('#confirm-modal').modal('show');
+};
+    function changeStatus(id) {
+    $('input[name=change-status-id]').val(id);
+    $('#confirm-modal-status').modal('show');
 };
     $(".btn-ec-conversion").on('click', function() {
     setTimeout(function () {
