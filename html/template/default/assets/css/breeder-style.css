@@ -115,13 +115,3 @@ video {
 .w-550 {
     width: 550px;
 }
-
-/* 吹き出し */
-  
-.balloon-left:after {
-    border-right: 14px solid #49bb6b;
-}
-  
-.balloon-right:after {
-    border-left: 14px solid #49bb6b;
-}  

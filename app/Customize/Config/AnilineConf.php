@@ -34,7 +34,7 @@ final class AnilineConf
     const ROOT_MESSAGE_ID = 0;
 
     const MESSAGE_FROM_USER = 1;
-    const MESSAGE_FROM_CONFIGURATION = 2;
+    const MESSAGE_FROM_MEMBER = 2;
 
     const CONTACT_TYPE_INQUIRY = 1;
     const CONTACT_TYPE_VISIT_REQUEST = 2;

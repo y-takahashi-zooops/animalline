@@ -198,7 +198,7 @@ class BreederConfigrationController extends AbstractController
 
         if ($replyMessage) {
             $breederContact->setBreederHeader($rootMessage)
-                ->setMessageFrom(AnilineConf::MESSAGE_FROM_CONFIGURATION)
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription($description)
                 ->setSendDate(new DateTime());
             $entityManager = $this->getDoctrine()->getManager();
@@ -232,7 +232,7 @@ class BreederConfigrationController extends AbstractController
                 ->setSendoffReason($reasonCancel);
 
             $breederContact = (new BreederContacts())
-                ->setMessageFrom(AnilineConf::MESSAGE_FROM_CONFIGURATION)
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription('今回の取引非成立となりました')
                 ->setSendDate(Carbon::now())
                 ->setBreederHeader($rootMessage);

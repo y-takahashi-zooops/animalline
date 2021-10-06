@@ -10439,150 +10439,55 @@ Styleguide 22.1
 /*# sourceMappingURL=style.css.map */
 
 /* 取引メッセージ画面 */
-/* 吹き出し */
-.balloon-left {
-  position: relative;
-  display: inline-block;
-  margin: 0.5em 0 1.5em;
-  padding: 7px 10px;
-  min-width: 120px;
-  max-width: 100%;
-  font-size: 16px;
-  background: #FFF;
-  box-sizing: border-box;
-}
-
-.balloon-left:before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: -24px;
-  margin-top: -12px;
-  border: 12px solid transparent;
-  border-right: 12px solid #FFF;
-  z-index: 2;
-}
-
-.balloon-left:after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: -30px;
-  margin-top: -14px;
-  border: 14px solid transparent;
-  z-index: 1;
-}
-
-.balloon-left p {
-  margin: 0;
-  padding: 0;
-}
-
-.balloon-right {
-  position: relative;
-  display: inline-block;
-  margin: 0.5em 0 1.5em;
-  padding: 7px 10px;
-  min-width: 120px;
-  max-width: 100%;
-  font-size: 16px;
-  background: #FFF;
-  box-sizing: border-box;
-}
-
-.balloon-right:before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -24px;
-  margin-top: -12px;
-  border: 12px solid transparent;
-  border-left: 12px solid #FFF;
-  z-index: 2;
-}
-
-.balloon-right:after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -30px;
-  margin-top: -14px;
-  border: 14px solid transparent;
-  z-index: 1;
-}
-
-.balloon-right p {
-  margin: 0;
-  padding: 0;
-}
-
-/* ユーザーイメージ */
-.user-img {
-  display: flex; 
-  justify-content: flex-end; 
-  align-items: center; 
-  padding-right: 0;
-}
-
-/* 保護団体イメージ */
-.adoption-img,
-.breeder-img {
-  display: flex;
-  align-items: center;
-  padding-left: 0;
-
-}
-
-/* 文章 */
-.breeder-info h3{
-  font-weight: 500;
-}
-
-/* ペットリスト */
-.petList {
-  width:100%;
-  margin:0;
-  padding:0;
-  display:-webkit-box;
-  display:-moz-box;
-  display:-ms-box;
-  display:-webkit-flexbox;
-  display:-moz-flexbox;
-  display:-ms-flexbox;
-  display:-webkit-flex;
-  display:-moz-flex;
-  display:-ms-flex;
-  display:flex;
-  -webkit-box-lines:multiple;
-  -moz-box-lines:multiple;
-  -webkit-flex-wrap:wrap;
-  -moz-flex-wrap:wrap;
-  -ms-flex-wrap:wrap;
-  flex-wrap:wrap;
-}
-.petList li {
-  padding-bottom: 35px;
-  position: relative;
-}
-.petList li p {
-  font-size:90%;
-  margin-bottom: 0.25rem
-}
-.petList .price {
-  padding: 0;
-  display: block;
-  position: absolute;
-  bottom: 0px;
+.balloon {
   width: 100%;
+  margin: 1.5em 0;
+  overflow: hidden;
 }
 
-.side-contents {
-  border-radius:5px;
-  padding: 0.4rem;
-  font-size: 0.8rem;
+.balloon .icon {
+  float: left;
+  margin-right: -90px;
+  width: 40px;
 }
-.side-contents a {
-  color: #fff; 
+
+.balloon .icon img{
+  border: solid 3px #d7ebfe;
+  border-radius: 50%;
+}
+
+.message {
+  display: inline-block;
+  position: relative; 
+  margin-left: 65px;
+  padding: 17px 13px;
+  border-radius: 12px;
+  background: #d7ebfe;
+  width: calc(100% - 65px);
+}
+
+.message-left:after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 18px; 
+  left: -24px;
+  border: 12px solid transparent;
+  border-right: 12px solid #d7ebfe;
+}
+
+.message-right {
+  margin-left: 41px;
+}
+
+.message-right:after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 18px; 
+  right: -24px;
+  border: 12px solid transparent;
+  border-left: 12px solid #d7ebfe;
 }
 
 .img-container{
@@ -10598,36 +10503,6 @@ Styleguide 22.1
   border-bottom-left-radius: 5px;
 }
 
-/* TOPページメニュー */
-.ec-menuRole {
-  display: block;
-  width: 100%;
-}
-.ec-menuRole .ec-itemNav .ec-itemNav__nav {
-  width: 100%;
-}
-
-.ec-menuRole a {
-  color: inherit;
-  text-decoration: none;
-}
-.ec-menuRole a:hover {
-  text-decoration: none;
-}
-
-.header-button {
-  background: #F08300;
-  border-radius:  5px;
-  color: #fff;
-}
-
-label.error {
-  display: inline-block;
-  color:red;
-  width: 300px;
-  font-size: 14px;
-  font-weight: bold;
-}
 @media only screen and (max-width: 576px) {
   .btn{
     font-size: 1.5rem;
