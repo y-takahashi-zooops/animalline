@@ -11,7 +11,7 @@
                             <h2 class="float-left">
                                 {{ breederPet.breedsType.breedsName ?? '' }}
                             </h2>
-                            <div class="col-md-3 col-12 float-right btn-like mb-3{{ isFavorite ? "red-heart" : "" }}" data-id="{{ breederPet.id }}" data-login="{{ isLoggedIn }}">
+                            <div class="col-md-3 col-12 float-right btn-like mb-3 {{ isFavorite ? "red-heart" : "" }}" data-id="{{ breederPet.id }}" data-login="{{ isLoggedIn }}">
                                 <a>
                                     <svg width="24" height="20" class="heart-icon">
                                         <path d="M19.469 1.262c-5.284-1.53-7.47 4.142-7.47 4.142S9.815-.269 4.532 1.262C-1.937 3.138.44 13.832 12 19.333c11.559-5.501 13.938-16.195 7.469-18.07z" stroke="#FF424F" stroke-width="1.5" fill="{{ isFavorite ? '#FF424F' : 'none' }}" fill-rule="evenodd" stroke-linejoin="round"></path>
@@ -50,236 +50,295 @@
                                     <div class="m-2 p-2"></div>
                                 {% endif %}
                                 {# <div class="row"> #}
-                                <div>
-                                    <div class="breeder_section_header">
-                                        <i class="fas fa-paw"></i>
-                                        基本情報
-                                    </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 col-md-4 contents_col_bold">
-                                                種類
-                                            </div>
-                                            <div class="col-12 col-md-8 contents_col_normal">
-                                                {{ breederPet.breedsType.breedsName ?? '' }}
-                                            </div>
+                                <div class="breeder_section_header">
+                                    <i class="fas fa-paw"></i>
+                                    基本情報
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            種類
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ breederPet.breedsType.breedsName ?? '' }}
                                         </div>
                                     </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 col-md-4 contents_col_bold">
-                                                性別
-                                            </div>
-                                            <div class="col-12 col-md-8 contents_col_normal">
-                                                {{ breederPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}
-                                            </div>
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            性別
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ breederPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}
                                         </div>
                                     </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            {% set breederHouse = breederPet.Breeder.getBreederHouseByPetType(breederPet.petKind) %}
-                                            <div class="col-12 col-md-4 contents_col_bold">
-                                                見学地域
-                                            </div>
-                                            <div class="col-12 col-md-8 contents_col_normal">
-                                                {{ breederHouse.breederHouseCity ~ ' ' ~ breederHouse.breederHousePref ?? '' }}
-                                            </div>
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        {% set breederHouse = breederPet.Breeder.getBreederHouseByPetType(breederPet.petKind) %}
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            見学地域
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ breederHouse.breederHouseCity ~ ' ' ~ breederHouse.breederHousePref ?? '' }}
                                         </div>
                                     </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 col-md-4 contents_col_bold">
-                                                誕生日
-                                            </div>
-                                            <div class="col-12 col-md-8 contents_col_normal">
-                                                {{ breederPet.petBirthday.format('Y年m月d日') ?? '' }}
-                                            </div>
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            誕生日
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ breederPet.petBirthday.format('Y年m月d日') ?? '' }}
                                         </div>
                                     </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 col-md-4 contents_col_bold">
-                                                毛色                                                          
-                                            </div>
-                                            <div class="col-12 col-md-8 contents_col_normal">
-                                                {{ breederPet.coatColor.coatColorName ?? '' }}
-                                            </div>
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            毛色                                                          
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ breederPet.coatColor.coatColorName ?? '' }}
                                         </div>
                                     </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 col-md-4 contents_col_bold">
-                                                血統書の有無                                                  
-                                            </div>
-                                            <div class="col-12 col-md-8 contents_col_normal">
-                                                {{ breederPet.getIsPedigree() == 0 ? '無' : '有' }}
-                                            </div>
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            血統書の有無                                                  
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ breederPet.getIsPedigree() == 0 ? '無' : '有' }}
                                         </div>
                                     </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 col-md-4 contents_col_bold">
-                                                ワクチン代負担                                               
-                                            </div>
-                                            <div class="col-12 col-md-8 contents_col_normal">
-                                                {{ breederPet.getIsPedigree() == 0 ? '代金に含まない' : '代金に含む' }}
-                                            </div>
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            ワクチン代負担                                               
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ breederPet.getIsPedigree() == 0 ? '代金に含まない' : '代金に含む' }}
                                         </div>
                                     </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 col-md-4 contents_col_bold">
-                                                繁殖の可否                                                    
-                                            </div>
-                                            <div class="col-12 col-md-8 contents_col_normal">
-                                                {{ breederPet.getIsBreeding() == 0 ? '否' : '可' }}
-                                            </div>
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            繁殖の可否                                                    
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ breederPet.getIsBreeding() == 0 ? '否' : '可' }}
                                         </div>
                                     </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 col-md-4 contents_col_bold">
-                                                ブリーダーへの販売可否                                     
-                                            </div>
-                                            <div class="col-12 col-md-8 contents_col_normal">
-                                                {{ breederPet.getIsBreeding() == 0 ? '否' : '可' }}
-                                            </div>
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            ブリーダーへの販売可否                                     
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ breederPet.getIsBreeding() == 0 ? '否' : '可' }}
                                         </div>
                                     </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 col-md-4 contents_col_bold">
-                                                成犬時予想体重
-                                            </div>
-                                            <div class="col-12 col-md-8 contents_col_normal">
-                                                {{ breederPet.futureWait }}kg
-                                            </div>
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            成犬時予想体重
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ breederPet.futureWait }}kg
                                         </div>
                                     </div>
-                                    <div class="breeder_section_header">
-                                        <i class="fas fa-paw"></i>
-                                        PRコメント
-                                    </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 contents_col_normal">
-                                                {{ breederPet.prComment | nl2br }}
-                                            </div>
+                                </div>
+                                <div class="col-12 contents_col_normal mt-4 mb-4 pl-4 pr-4" style="background:#f7f5f0; border:1px solid #dcdfe1; border-radius: 3px;">
+                                    <h6 class="text-align-center mb-2" style="color:#399634">
+                                        <i class="fas fa-info-circle"></i>
+                                        【生後56日を過ぎていない子犬の引き渡しについて】
+                                    </h6>
+                                    動物愛護法により、生後56日を過ぎていない子犬の引き渡しが禁止されています。</br>
+                                    この子犬はまだ生後56日を過ぎていませんので、すぐに引き渡しを行う事はできません。</br>
+                                    生後56日を過ぎていなくてもブリーダーの下で親犬や兄弟犬と共に飼養されている環境であれば購入検討のためにご見学することは可能です。</br>
+                                </div>
+                                <div class="breeder_section_header">
+                                    <i class="fas fa-paw"></i>
+                                    PRコメント
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 contents_col_normal">
+                                            {{ breederPet.prComment | nl2br }}
                                         </div>
                                     </div>
-                                    <div class="breeder_section_header">
-                                        <i class="fas fa-paw"></i>
-                                        金額 
-                                    </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 contents_col_price">
-                                                {{ breederPet.price|number_format(0) }}円（税込）
-                                            </div>
+                                </div>
+                                <div class="breeder_section_header">
+                                    <i class="fas fa-paw"></i>
+                                    金額 
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 contents_col_price">
+                                            {{ breederPet.price|number_format(0) }}円（税込）
                                         </div>
                                     </div>
-                                    <div class="col-12 btn_center">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
-                                                    <button class="btn basic-btn breeder-btn">
-                                                        お問い合わせ                                                  
-                                                    </button>
-                                                </a>
-                                            </div>
+                                </div>
+                                <div class="col-12 btn_center">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
+                                                <button class="btn basic-btn breeder-btn" style="height:65px;">
+                                                    この子犬の見学希望／お問い合わせ(無料)                                                  
+                                                </button>
+                                            </a>
                                         </div>
-                                    </div>
-                                    <div class="breeder_section_header_orange">
-                                        <i class="fas fa-paw"></i>
-                                        紹介文
-                                    </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 contents_col_normal">
-                                                {{ breederPet.description | nl2br }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="breeder_section_header_orange">
-                                        <i class="fas fa-paw"></i>
-                                        生体保障内容                                
-                                    </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 contents_col_normal">
-                                                {{ breederPet.getGuarantee() | nl2br }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="breeder_section_header_orange">
-                                        <i class="fas fa-paw"></i>
-                                        引き渡し時期
-                                    </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 contents_col_normal">
-                                                {{ breederPet.getDeliveryTime() | nl2br }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="breeder_section_header_orange">
-                                        <i class="fas fa-paw"></i>
-                                        引き渡し方法
-                                    </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 contents_col_normal">
-                                                {{ breederPet.getDeliveryWay() | nl2br }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="breeder_section_header_orange">
-                                        <i class="fas fa-paw"></i>
-                                        支払方法                     
-                                    </div>
-                                    <div class="col-12 breeder_section_detail">
-                                        <div class="row">
-                                            <div class="col-12 contents_col_normal">
-                                                {{ breederPet.getPaymentMethod() | nl2br }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="m-2 p-2"></div>
-                                    <div class="breeder_section_header">
-                                        <i class="fas fa-paw"></i>
-                                        ブリーダー紹介    
                                     </div>
                                 </div>
 
+                                <div class="mb-4 mt-4">
+                                    <div class="breeder_section_header">
+                                        {# <i class="fas fa-paw"></i> #}
+                                        アニマルラインを通して子犬をご購入いただくと下記の特典が受けられます！
+                                    </div>
+                                    <table class="tbl_benefits">
+                                        <tr>
+                                            <th>1ヶ月間の<br>無料ペット保険</th>
+                                            <td>
+                                                アニマルラインを通じて子犬をご購入いただいた方に、<b>ペット保険大手アニコム損保の保険を1ヶ月間無料</b>でお付けいたします。(ブリーダーが提供する生体保証とは別の補償になります。)<br>
+                                                ご利用には別途お申し込みが必要になります。<br>
+                                                ※無料ペット保険の補償期間を過ぎた場合・子犬がお迎え時点で1歳を超えていた場合はお申し込みができません。<br>
+                                                <a href="#">詳細はこちらをご覧ください。</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>充実のご成約特典</th>
+                                            <td>
+                                                アニマルラインを通じて子犬をご購入いただきますと、
+                                                <b>子犬のためのフード2種</b>、
+                                                <b>消臭剤（1,650円相当）</b>、
+                                                <b>電話相談サービス</b>、
+                                                <b>総額5,000円分のクーポン</b>、
+                                                <b>乳酸菌ミルクサプリ</b>、
+                                                <b>飼育本</b>、
+                                                を無料でお付けいたします。サービスのご利用には別途お申し込みが必要になります。
+                                                <br>
+                                                <a href="#">詳細はこちらをご覧ください。</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>安心の取引保証</th>
+                                            <td>
+                                                みんなのブリーダーを通じて子犬をご購入いただき、子犬代金支払い後に子犬の引き渡しを受けられない詐欺行為があった場合は当サイトが<b>全額返金保証</b>いたします。
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="breeder_section_header_orange">
+                                    <i class="fas fa-paw"></i>
+                                    紹介文
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 contents_col_normal">
+                                            {{ breederPet.description | nl2br }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="breeder_section_header_orange">
+                                    <i class="fas fa-paw"></i>
+                                    生体保障内容                                
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 contents_col_normal">
+                                            {{ breederPet.getGuarantee() | nl2br }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="breeder_section_header_orange">
+                                    <i class="fas fa-paw"></i>
+                                    引き渡し時期
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 contents_col_normal">
+                                            {{ breederPet.getDeliveryTime() | nl2br }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="breeder_section_header_orange">
+                                    <i class="fas fa-paw"></i>
+                                    引き渡し方法
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 contents_col_normal">
+                                            {{ breederPet.getDeliveryWay() | nl2br }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="breeder_section_header_orange">
+                                    <i class="fas fa-paw"></i>
+                                    支払方法                     
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 contents_col_normal">
+                                            {{ breederPet.getPaymentMethod() | nl2br }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 btn_center">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
+                                                <button class="btn basic-btn breeder-btn" style="height:65px;">
+                                                    この子犬の見学希望／お問い合わせ(無料)                                                  
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 contents_col_normal mt-4 mb-4 pl-4 pr-4" style="background:#f7f5f0; border:1px solid #dcdfe1; border-radius: 3px;">
+                                    当サイトではお客様に最も信頼されるブリーダー子犬 直販サイトを目指して、</br>
+                                    子犬情報およびブリーダー情報の正確性向上に努めております。</br>
+                                    当サイトに掲載されている情報で誤解を招く表現、事実と異なる表現などのお気づきの点がございましたら</br>
+                                    事務局へのお問い合わせフォームよりご連絡をお願いいたします。</br>
+                                </div>
+                                <div class="m-2 p-2"></div>
+                                <div class="breeder_section_header">
+                                    <i class="fas fa-paw"></i>
+                                    ブリーダー紹介    
+                                </div>
                                 <div class="m-2 p-2"></div>
                                 <div class="row ml-2">
                                     <div class="breeder-img col-sm-4">
                                         <img alt="..." src="{{ breederPet.Breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}" class="w-100 mb-4 mb-sm-0"></div>
                                         <div class="breeder-info col-sm-8">
-                                            <h3 class="font-weight-500 color-gray-500">
+                                            <h3 class="font-weight-500 color-gray-500 mb-4">
                                                 {{ breederPet.Breeder.getLicenseHouseName() }}
                                             </h3>
-                                            <div class="m-1 p-1"></div>
-                                            <div class="d-flex">
+                                            <div class="d-flex mb-2">
                                                 <h6>
                                                     総合評価                                          
                                                 </h6>
-                                                <div class="m-1 p-1"></div>
                                                 <img src="{{ asset('assets/img/star-icon.svg') }}">
                                                     <div class="m-1 p-1"></div>
                                                     <h6>
                                                         {{ breederPet.Breeder.getBreederRank() }}
                                                     </h6>
                                                 </div>
-                                                <div class="m-1 p-1"></div>
-                                                <div class="d-flex">
+                                                <div class="d-flex mb-2">
                                                     <h6>
                                                         動物取扱業登録番号：                                             
                                                     </h6>
                                                     <h6>
-                                                        {{ breederPet.Breeder.getLicenseNo() }}
+                                                        {{ breederPet.Breeder.getLicenseNo() }}&emsp;
                                                     </h6>
-                                                    <div class="m-1 p-1"></div>
                                                     <h6>
                                                         登録：                                                     
                                                     </h6>
@@ -287,15 +346,13 @@
                                                         {{ breederPet.Breeder.getLicenseRegistDate()|date('Y/m/d') }}
                                                     </h6>
                                                 </div>
-                                                <div class="m-1 p-1"></div>
-                                                <div class="d-flex">
+                                                <div class="d-flex mb-2">
                                                     <h6>
-                                                        有効期限：                                                 
+                                                        有効期限：
                                                     </h6>
                                                     <h6>
-                                                        {{ breederPet.Breeder.getLicenseExpireDate()|date('Y/m/d') }}
+                                                        {{ breederPet.Breeder.getLicenseExpireDate()|date('Y/m/d') }}&emsp;
                                                     </h6>
-                                                    <div class="m-1 p-1"></div>
                                                     <h6>
                                                         動物取扱責任者：                                                
                                                     </h6>
@@ -303,8 +360,7 @@
                                                         {{ breederPet.Breeder.getLicenseManagerName() }}
                                                     </h6>
                                                 </div>
-                                                <div class="m-1 p-1"></div>
-                                                <div class="d-flex">
+                                                <div class="d-flex mb-4">
                                                     <h6>
                                                         犬舎所在地：                                                   
                                                     </h6>
@@ -324,7 +380,6 @@
                                                         </h6>
                                                     {% endif %}
                                                 </div>
-                                                <div class="m-1 p-1"></div>
                                                 <!--
                                                     <div class="d-flex">
                                                         <h6>犬舎見学：</h6>
@@ -332,7 +387,6 @@
                                                         <h6>{{ ex_status[breederPet.Breeder.examinationStatus] }}</h6>
                                                     </div>
                                                 -->
-                                                <div class="m-2 p-2"></div>
                                                 <a href="{{ url('breeder_detail', {'breeder_id':breederPet.Breeder.id}) }}">
                                                     <h4 class="color-breeder">
                                                         ブリーダー詳細ページへ                                               
@@ -342,7 +396,7 @@
                                         </div>
                                         <div class="m-2 p-2"></div>
                                         {# <div class="row"> #}
-                                        <div>
+                                        {# <div>
                                             <div class="breeder_section_header_orange">
                                                 <i class="fas fa-paw"></i>
                                                 PRコメント                                        
@@ -366,7 +420,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> #}
                                     </div>
                                 </div>
                             </div>
