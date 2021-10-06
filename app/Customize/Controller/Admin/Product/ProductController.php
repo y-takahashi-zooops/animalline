@@ -156,7 +156,6 @@ class ProductController extends BaseProductController
      * @param OrderItemTypeRepository $orderItemTypeRepository
      * @param StockWasteRepository $stockWasteRepository
      * @param StockWasteReasonRepository $stockWasteReasonRepository
-     * @throws \Exception
      */
     public function __construct(
         CsvExportService                $csvExportService,
@@ -189,7 +188,6 @@ class ProductController extends BaseProductController
         $this->instockScheduleRepository = $instockScheduleRepository;
         $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->stockWasteRepository = $stockWasteRepository;
-        $this->stockWasteReasonRepository = $stockWasteReasonRepository;
         $this->stockWasteReasonRepository = $stockWasteReasonRepository;
     }
 

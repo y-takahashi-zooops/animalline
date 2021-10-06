@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Customize\Controller\Admin;
+namespace Customize\Controller\Admin\Adoption;
 
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreedsRepository;

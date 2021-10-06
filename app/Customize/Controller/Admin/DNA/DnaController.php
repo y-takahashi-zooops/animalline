@@ -1,6 +1,6 @@
 <?php
 
-namespace Customize\Controller\Admin;
+namespace Customize\Controller\Admin\DNA;
 
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
@@ -52,8 +52,7 @@ class DnaController extends AbstractController
         DnaCheckStatusRepository   $dnaCheckStatusRepository,
         BreederPetsRepository      $breederPetsRepository,
         ConservationPetsRepository $conservationPetsRepository
-    )
-    {
+    ) {
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -85,13 +84,11 @@ class DnaController extends AbstractController
             $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PUBLIC);
             if ($dna->getSiteType() == AnilineConf::ANILINE_SITE_TYPE_BREEDER) {
                 $pet = $this->breederPetsRepository->find($dna->getPetId());
-                $pet->setReleaseStatus(1)
-                    ->setReleaseDate(Carbon::now());
             } else {
                 $pet = $this->conservationPetsRepository->find($dna->getPetId());
-                $pet->setReleaseStatus(1)
-                    ->setReleaseDate(Carbon::now());
             }
+            $pet->setReleaseStatus(1)
+                ->setReleaseDate(Carbon::now());
             $em = $this->getDoctrine()->getManager();
             $em->persist($dna);
             $em->persist($pet);

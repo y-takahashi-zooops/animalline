@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Customize\Controller\Admin;
+namespace Customize\Controller\Admin\Breeder;
 
 use Customize\Form\Type\Admin\BreederExaminationInfoType;
 use Customize\Repository\BreederExaminationInfoRepository;
@@ -60,8 +60,7 @@ class BreederExaminationController extends AbstractController
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         CustomerRepository               $customerRepository,
         MailService                      $mailService
-    )
-    {
+    ) {
         $this->breedersRepository = $breedersRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
         $this->customerRepository = $customerRepository;
@@ -74,16 +73,20 @@ class BreederExaminationController extends AbstractController
      * @Route("/%eccube_admin_route%/breeder/examination/{id}", name="admin_breeder_examination", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/examination.twig")
      */
-    public function Examination(Request $request)
+    public function Examination(Request $request): array
     {
         $breeder = $this->breedersRepository->find($request->get('id'));
         $breederExaminationInfos = $this->breederExaminationInfoRepository->findBy(['Breeder' => $breeder]);
-        if (!$breederExaminationInfos) throw new NotFoundHttpException();
+        if (!$breederExaminationInfos) {
+            throw new NotFoundHttpException();
+        }
         $breederExaminationInfo = $breederExaminationInfos[0];
         $isEnablePetType = count($breederExaminationInfos) > 1;
         if ($request->get('pet_type')) {
             $breederExaminationInfo = $this->breederExaminationInfoRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => $request->get('pet_type')]);
-            if (!$breederExaminationInfo) throw new NotFoundHttpException();
+            if (!$breederExaminationInfo) {
+                throw new NotFoundHttpException();
+            }
         }
 
         $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo, ['disabled' => true]);
@@ -107,7 +110,9 @@ class BreederExaminationController extends AbstractController
         $breederId = $examination->getBreeder()->getId();
         /** @var $Customer \Eccube\Entity\Customer */
         $Customer = $this->customerRepository->find($breederId);
-        if (!$Customer) throw new NotFoundHttpException();
+        if (!$Customer) {
+            throw new NotFoundHttpException();
+        }
 
         $comment = $request->get('examination_result_comment');
         $data = [
