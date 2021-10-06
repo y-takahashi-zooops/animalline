@@ -34,7 +34,7 @@ file that was distributed with this source code.
         $('#list-schedule').text('ローディング');
 
         $.ajax({
-            url: '/aniconfig/shipping_schedules_by_header',
+            url: '{{ url("get_shipping_schedules_by_header") }}',
             type: 'get',
             dataType: 'json',
             data: {
@@ -82,7 +82,7 @@ file that was distributed with this source code.
         $('#warehouse_code').text('');
 
         $.ajax({
-            url: '/aniconfig/shipping_schedule',
+            url: '{{ url("get_shipping_schedule") }}',
             type: 'get',
             dataType: 'json',
             data: {
@@ -275,7 +275,6 @@ file that was distributed with this source code.
                                 <p id="warehouse_code"></p>
                             </div>
                         </div>
-
                         <span id="alert-schedule-detail"></span>
                     </div>
                 </div>

@@ -3,6 +3,7 @@
 namespace Customize\Form\Type\Admin;
 
 use Customize\Entity\StockWaste;
+use Customize\Entity\StockWasteReason;
 use Customize\Repository\StockWasteReasonRepository;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Eccube\Common\EccubeConfig;
@@ -13,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+
 class StockWasteType extends AbstractType
 {
     /**
@@ -36,22 +38,29 @@ class StockWasteType extends AbstractType
         $builder
             ->add('waste_date', DateType::class, [
                 'format' => 'yyyy-MM-dd',
-                'required' => false,
+                'data' => new \DateTime(),
+                'required' => true,
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--']
             ])
             ->add('waste_unit', IntegerType::class, [
                 'required' => true,
                 'constraints' => [
                     new Assert\GreaterThanOrEqual([
-                        'value' => 0,
+                        'value' => 1,
                     ]),
                     new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'min' => 1
                 ]
             ])
             ->add('stock_waste_reason', EntityType::class, [
+                'attr' => [
+                    'style' => 'width: auto'
+                ],
                 'class' => 'Customize\Entity\StockWasteReason',
                 'placeholder' => 'common.select',
-                'choice_label' => function (\Customize\Entity\StockWasteReason $stockWasteReason) {
+                'choice_label' => function (StockWasteReason $stockWasteReason) {
                     return $stockWasteReason->getWasteReason();
                 },
                 'required' => true,
@@ -62,7 +71,7 @@ class StockWasteType extends AbstractType
             ->add('comment', TextareaType::class, [
                 'required' => false,
                 'attr' => [
-                    'rows' => 5
+                    'rows' => 6
                 ]
             ]);
     }

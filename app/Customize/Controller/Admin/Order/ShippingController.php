@@ -130,8 +130,7 @@ class ShippingController extends BaseShippingController
         PurchaseFlow                     $orderPurchaseFlow,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
         ShippingScheduleRepository       $shippingScheduleRepository
-    )
-    {
+    ) {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
         $this->categoryRepository = $categoryRepository;
@@ -361,9 +360,10 @@ class ShippingController extends BaseShippingController
      * @Route("/%eccube_admin_route%/shipping/instructions", name="admin_shipping_instructions")
      * @Template("@admin/Order/shipping_instructions.twig")
      */
-    public function instructions(PaginatorInterface $paginator, Request $request)
+    public function instructions(PaginatorInterface $paginator, Request $request): array
     {
         $shippingScheduleHeaderList = $this->shippingScheduleHeaderRepository->findAll();
+
         $shippingScheduleHeaders = $paginator->paginate(
             $shippingScheduleHeaderList,
             $request->query->getInt('page', 1),
@@ -380,7 +380,7 @@ class ShippingController extends BaseShippingController
      * @Route("/%eccube_admin_route%/shipping/detail/{id}", requirements={"id" = "\d+"}, name="admin_shipping_detail")
      * @Template("@admin/Order/shipping_detail.twig")
      */
-    public function detail(Request $request, ShippingScheduleHeader $shippingScheduleHeader)
+    public function detail(ShippingScheduleHeader $shippingScheduleHeader): array
     {
         return compact(
             'shippingScheduleHeader'
@@ -392,20 +392,22 @@ class ShippingController extends BaseShippingController
      *
      * @Route("/%eccube_admin_route%/shipping_schedules_by_header", name="get_shipping_schedules_by_header", methods={"GET"})
      */
-    public function getShippingSchedulesByHeader(Request $request)
+    public function getShippingSchedulesByHeader(Request $request): JsonResponse
     {
         $headerId = $request->get('headerId');
-        $schedules = $this->shippingScheduleRepository->findBy(['header_id' => $headerId]);
+        $schedules = $this->shippingScheduleRepository->findBy(['ShippingScheduleHeader' => $headerId]);
 
         $data = [];
         foreach ($schedules as $schedule) {
+            $productName = $schedule->getProductClass()->getProduct()->getName() . '<br>' .
+                $schedule->getProductClass()->getCode();
             $item = [
                 'schedule_id' => $schedule->getId(),
-                'product_name' => $schedule->getOrderDetail()->getProductClass()->getProduct()->getName() ?? '',
+                'product_name' => $productName,
                 'quantity' => $schedule->getOrderDetail()->getQuantity(),
                 'warehouse_code' => $schedule->getWarehouseCode()
             ];
-            $data[] = $item;
+            array_push($data, $item);
         }
 
         return new JsonResponse($data);
@@ -416,10 +418,12 @@ class ShippingController extends BaseShippingController
      *
      * @Route("/%eccube_admin_route%/shipping_schedule", name="get_shipping_schedule", methods={"GET"})
      */
-    public function getShippingSchedule(Request $request)
+    public function getShippingSchedule(Request $request): JsonResponse
     {
         $scheduleId = $request->get('scheduleId');
-        if (!$schedule = $this->shippingScheduleRepository->find($scheduleId)) throw new NotFoundHttpException();
+        if (!$schedule = $this->shippingScheduleRepository->find($scheduleId)) {
+            throw new NotFoundHttpException();
+        }
 
         $data = [
             'schedule_id' => $scheduleId,

@@ -4,11 +4,8 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
-use Carbon\Carbon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Form\Type\BreedersType;
 use Customize\Form\Type\Breeder\BreederHouseType;
-use Customize\Entity\Breeders;
 use Customize\Entity\BreederHouse;
 use Customize\Repository\BreederPetsRepository;
 use Eccube\Repository\Master\PrefRepository;
@@ -17,18 +14,8 @@ use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpKernel\Exception as HttpException;
-use Eccube\Event\EccubeEvents;
-use Eccube\Event\EventArgs;
-use Customize\Form\Type\Breeder\BreederContactType;
-use Customize\Repository\DnaCheckStatusHeaderRepository;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Eccube\Form\Type\Front\CustomerLoginType;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederHouseController extends AbstractController
 {

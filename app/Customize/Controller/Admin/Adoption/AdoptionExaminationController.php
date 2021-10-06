@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Customize\Controller\Admin;
+namespace Customize\Controller\Admin\Adoption;
 
 use Customize\Config\AnilineConf;
 use Customize\Repository\ConservationsRepository;
@@ -79,10 +79,14 @@ class AdoptionExaminationController extends AbstractController
     {
         $conservationId = $request->get("id");
         $conservation = $this->conservationsRepository->find($conservationId);
-        if (!$conservation) throw new NotFoundHttpException();
+        if (!$conservation) {
+            throw new NotFoundHttpException();
+        }
         /** @var $Customer \Eccube\Entity\Customer */
         $Customer = $this->customerRepository->find($conservationId);
-        if (!$Customer) throw new NotFoundHttpException();
+        if (!$Customer) {
+            throw new NotFoundHttpException();
+        }
 
         $comment = $request->get('examination_result_comment');
         $data = [
@@ -98,7 +102,7 @@ class AdoptionExaminationController extends AbstractController
             if ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK) {
                 $this->mailService->sendAdoptionExaminationMailAccept($Customer, $data);
                 $Customer->setIsConservation(1);
-            } else if ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG) {
+            } elseif ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG) {
                 $this->mailService->sendAdoptionExaminationMailReject($Customer, $data);
             }
 

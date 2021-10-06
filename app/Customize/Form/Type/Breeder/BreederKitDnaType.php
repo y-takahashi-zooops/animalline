@@ -123,7 +123,10 @@ class BreederKitDnaType extends AbstractType
                     new Assert\GreaterThanOrEqual([
                         'value' => 1,
                     ]),
-                    new Assert\NotBlank()
+                    new Assert\NotBlank(),
+                    new Assert\LessThanOrEqual([
+                        'value' => 32767
+                    ])
                 ]
             ]);
     }

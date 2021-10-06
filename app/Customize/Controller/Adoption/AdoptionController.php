@@ -107,6 +107,8 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * adoption index
+     *
      * @Route("/adoption/", name="adoption_top")
      * @Template("animalline/adoption/index.twig")
      */

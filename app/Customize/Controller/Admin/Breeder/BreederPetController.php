@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Customize\Controller\Admin;
+namespace Customize\Controller\Admin\Breeder;
 
 use Customize\Repository\BreedsRepository;
 use Customize\Service\BreederQueryService;
@@ -56,12 +56,11 @@ class BreederPetController extends AbstractController
      * @param BreederQueryService $breederQueryService
      */
     public function __construct(
-        BreedsRepository                 $breedsRepository,
-        CoatColorsRepository             $coatColorsRepository,
-        BreederPetImageRepository        $breederPetImageRepository,
-        BreederQueryService              $breederQueryService
-    )
-    {
+        BreedsRepository          $breedsRepository,
+        CoatColorsRepository      $coatColorsRepository,
+        BreederPetImageRepository $breederPetImageRepository,
+        BreederQueryService       $breederQueryService
+    ) {
         $this->breedsRepository = $breedsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->coatColorsRepository = $coatColorsRepository;

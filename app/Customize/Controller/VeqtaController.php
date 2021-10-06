@@ -26,6 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Customize\Service\VeqtaQueryService;
+use Knp\Component\Pager\PaginatorInterface;
 
 class VeqtaController extends AbstractController
 {
@@ -50,24 +52,32 @@ class VeqtaController extends AbstractController
     protected $dnaCheckStatusRepository;
 
     /**
+     * @var VeqtaQueryService
+     */
+    protected $veqtaQueryService;
+
+    /**
      * VeqtaController constructor.
      *
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
+     * @param VeqtaQueryService $veqtaQueryService
      */
 
     public function __construct(
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
         BreederPetsRepository $breederPetsRepository,
         ConservationPetsRepository $conservationPetsRepository,
-        DnaCheckStatusRepository $dnaCheckStatusRepository
+        DnaCheckStatusRepository $dnaCheckStatusRepository,
+        VeqtaQueryService $veqtaQueryService
     ) {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
+        $this->veqtaQueryService = $veqtaQueryService;
     }
 
     /**
@@ -87,9 +97,17 @@ class VeqtaController extends AbstractController
      * @Route("/veqta/pet_list", name="veqta_pet_list")
      * @Template("animalline/veqta/pet_list.twig")
      */
-    public function pet_list()
+    public function pet_list(Request $request, PaginatorInterface $paginator)
     {
-        return [];
+        $dnasResult = $this->veqtaQueryService->filterPetList();
+        $dnas = $paginator->paginate(
+            $dnasResult,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE)
+        );
+        return compact(
+            'dnas'
+        );
     }
 
     /**

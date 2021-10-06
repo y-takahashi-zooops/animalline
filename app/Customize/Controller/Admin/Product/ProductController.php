@@ -15,11 +15,8 @@ namespace Customize\Controller\Admin\Product;
 
 use Customize\Repository\StockWasteReasonRepository;
 use Customize\Repository\StockWasteRepository;
-use Customize\Service\GetListWasteQueryService;
-use Customize\Config\AnilineConf;
 use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\InstockScheduleRepository;
-use Customize\Service\ListInstockQueryService;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\Constant;
 use Eccube\Entity\BaseInfo;
@@ -32,9 +29,6 @@ use Eccube\Entity\ProductClass;
 use Eccube\Entity\ProductImage;
 use Eccube\Entity\ProductStock;
 use Eccube\Entity\ProductTag;
-use Customize\Entity\Supplier;
-use Customize\Form\Type\Admin\SupplierType;
-use Customize\Repository\SupplierRepository;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Admin\ProductType;
@@ -52,7 +46,6 @@ use Eccube\Service\CsvExportService;
 use Eccube\Util\CacheUtil;
 use Eccube\Util\FormUtil;
 use Knp\Component\Pager\Paginator;
-use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Filesystem\Filesystem;
@@ -101,11 +94,6 @@ class ProductController extends BaseProductController
     protected $productRepository;
 
     /**
-     * @var SupplierRepository
-     */
-    protected $supplierRepository;
-
-    /**
      * @var BaseInfo
      */
     protected $BaseInfo;
@@ -136,11 +124,6 @@ class ProductController extends BaseProductController
     protected $instockScheduleRepository;
 
     /**
-     * @var ListInstockQueryService
-     */
-    protected $listInstockQueryService;
-
-    /**
      * @var OrderItemTypeRepository
      */
     protected $orderItemTypeRepository;
@@ -156,11 +139,6 @@ class ProductController extends BaseProductController
     protected $stockWasteReasonRepository;
 
     /**
-     * @var GetListWasteQueryService
-     */
-    protected $getListWasteQueryService;
-
-    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -173,14 +151,11 @@ class ProductController extends BaseProductController
      * @param PageMaxRepository $pageMaxRepository
      * @param ProductStatusRepository $productStatusRepository
      * @param TagRepository $tagRepository
-     * @param SupplierRepository $supplierRepository
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      * @param InstockScheduleRepository $instockScheduleRepository
-     * @param ListInstockQueryService $listInstockQueryService
      * @param OrderItemTypeRepository $orderItemTypeRepository
      * @param StockWasteRepository $stockWasteRepository
      * @param StockWasteReasonRepository $stockWasteReasonRepository
-     * @param GetListWasteQueryService $getListWasteQueryService
      */
     public function __construct(
         CsvExportService                $csvExportService,
@@ -193,14 +168,11 @@ class ProductController extends BaseProductController
         PageMaxRepository               $pageMaxRepository,
         ProductStatusRepository         $productStatusRepository,
         TagRepository                   $tagRepository,
-        SupplierRepository              $supplierRepository,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
-        ListInstockQueryService         $listInstockQueryService,
         OrderItemTypeRepository         $orderItemTypeRepository,
         StockWasteRepository            $stockWasteRepository,
-        StockWasteReasonRepository      $stockWasteReasonRepository,
-        GetListWasteQueryService        $getListWasteQueryService
+        StockWasteReasonRepository      $stockWasteReasonRepository
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -212,14 +184,10 @@ class ProductController extends BaseProductController
         $this->pageMaxRepository = $pageMaxRepository;
         $this->productStatusRepository = $productStatusRepository;
         $this->tagRepository = $tagRepository;
-        $this->supplierRepository = $supplierRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
         $this->instockScheduleRepository = $instockScheduleRepository;
-        $this->listInstockQueryService = $listInstockQueryService;
         $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->stockWasteRepository = $stockWasteRepository;
-        $this->stockWasteReasonRepository = $stockWasteReasonRepository;
-        $this->getListWasteQueryService = $getListWasteQueryService;
         $this->stockWasteReasonRepository = $stockWasteReasonRepository;
     }
 
@@ -1131,72 +1099,5 @@ class ProductController extends BaseProductController
         }
 
         return $this->redirectToRoute('admin_product', ['resume' => Constant::ENABLED]);
-    }
-
-    /**
-     * 仕入先管理
-     *
-     * @Route("/%eccube_admin_route%/product/supplier", name="admin_product_supplier")
-     * @Template("@admin/Product/supplier.twig")
-     */
-    public function supplier(Request $request, PaginatorInterface $paginator)
-    {
-        $idDestroy = $request->get('id-destroy');
-        if ($idDestroy) {
-            $supplier = $this->supplierRepository->find($request->get('id-destroy'));
-            $issetProduct = $this->productClassRepository->findBy(['supplier_code' => $supplier->getSupplierCode()]);
-            if (!$issetProduct) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->remove($supplier);
-                $entityManager->flush();
-            }
-            return $this->redirectToRoute('admin_product_supplier');
-        }
-        $supplierNew = new Supplier();
-
-        $form = $this->createForm(SupplierType::class, $supplierNew);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($supplierNew);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('admin_product_supplier');
-        }
-
-        $suppliers = $this->supplierRepository->findAll();
-        $formUpdate = [];
-        foreach ($suppliers as $supplier) {
-            $uniqueFormName = 'Form' . $supplier->getId();
-            $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, SupplierType::class, $supplier);
-            $formUpdate[$uniqueFormName] = $formHandle;
-            $supplier->is_destroy = (bool)$this->productClassRepository->findBy(['supplier_code' => $supplier->getSupplierCode()]);
-        }
-        $formUpdateView = [];
-        foreach ($formUpdate as $formName => $formHandle) {
-            if ($request->get('supplier-id')) {
-                $supplier = $this->supplierRepository->find($request->get('supplier-id'));
-                $formHandle->handleRequest($request);
-                if ($formHandle->isSubmitted() && $formHandle->isValid()) {
-                    $entityManager = $this->getDoctrine()->getManager();
-                    $entityManager->persist($supplier);
-                    $entityManager->flush();
-                }
-            }
-            $formUpdateView[$formName] = $formHandle->createView();
-        }
-
-        $results = $paginator->paginate(
-            $suppliers,
-            $request->query->getInt('page') ?: 1,
-            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
-        );
-
-        return $this->render('@admin/Product/supplier.twig', [
-            'suppliers' => $results,
-            'form' => $form->createView(),
-            'form_update' => $formUpdateView
-        ]);
     }
 }

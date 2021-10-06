@@ -3,33 +3,19 @@
 namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
-use Customize\Repository\BreederContactHeaderRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Form\Type\BreederExaminationInfoType;
 use Customize\Entity\BreederHouse;
 use Customize\Entity\BreederExaminationInfo;
-use Customize\Repository\BreederPetsRepository;
-use Customize\Repository\PetsFavoriteRepository;
-use Eccube\Repository\Master\PrefRepository;
-use Customize\Repository\SendoffReasonRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederExaminationInfoRepository;
-use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\DnaQueryService;
-use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpKernel\Exception as HttpException;
-use Eccube\Event\EccubeEvents;
-use Eccube\Event\EventArgs;
-use Customize\Repository\DnaCheckStatusHeaderRepository;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Eccube\Form\Type\Front\CustomerLoginType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederExamController extends AbstractController
@@ -44,16 +30,6 @@ class BreederExamController extends AbstractController
      * @var BreederHouse
      */
     protected $breederHouseRepository;
-
-    /**
-     * @var PrefRepository
-     */
-    protected $prefRepository;
-
-    /**
-     * @var BreederPetsRepository
-     */
-    protected $breederPetsRepository;
 
     /**
      * @var BreederExaminationInfoRepository
@@ -71,47 +47,26 @@ class BreederExamController extends AbstractController
     protected $dnaCheckStatusRepository;
 
     /**
-     * @var DnaCheckStatusHeaderRepository;
-     */
-    protected $dnaCheckStatusHeaderRepository;
-
-    /**
      * BreederController constructor.
      *
-     * @param SendoffReasonRepository $sendoffReasonRepository
      * @param BreedersRepository $breedersRepository
-     * @param PrefRepository $prefRepository
      * @param BreederHouseRepository $breederHouseRepository
-     * @param BreederPetsRepository $breederPetsRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
-     * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      */
     public function __construct(
-        PetsFavoriteRepository           $petsFavoriteRepository,
-        SendoffReasonRepository          $sendoffReasonRepository,
         BreedersRepository               $breedersRepository,
-        PrefRepository                   $prefRepository,
         BreederHouseRepository           $breederHouseRepository,
-        BreederPetsRepository            $breederPetsRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
-        BreederContactHeaderRepository   $breederContactHeaderRepository,
         DnaQueryService                  $dnaQueryService,
-        DnaCheckStatusRepository         $dnaCheckStatusRepository,
-        DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository
+        DnaCheckStatusRepository         $dnaCheckStatusRepository
     ) {
-        $this->petsFavoriteRepository = $petsFavoriteRepository;
-        $this->sendoffReasonRepository = $sendoffReasonRepository;
         $this->breedersRepository = $breedersRepository;
-        $this->prefRepository = $prefRepository;
         $this->breederHouseRepository = $breederHouseRepository;
-        $this->breederPetsRepository = $breederPetsRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
-        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
-        $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
     }
 
     /**

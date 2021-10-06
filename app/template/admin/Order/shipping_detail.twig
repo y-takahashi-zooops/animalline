@@ -248,7 +248,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <p>{{ shippingScheduleHeader.isCancel == 1 ? '有' : '無' }}</p>
+                                    <p>{{ shippingScheduleHeader.isCancel ? '有' : '無' }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -268,7 +268,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <p>{{ shippingScheduleHeader.Order.id }}</p>
+                                    <p>{{ shippingScheduleHeader.Shipping.Order.id }}</p>
                                 </div>
                             </div>
                             <div class="row">

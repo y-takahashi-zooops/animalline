@@ -24,16 +24,10 @@ use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpKernel\Exception as HttpException;
-use Eccube\Event\EccubeEvents;
-use Eccube\Event\EventArgs;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Eccube\Form\Type\Front\CustomerLoginType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederPetController extends AbstractController
