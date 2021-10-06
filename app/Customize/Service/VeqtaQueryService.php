@@ -42,10 +42,8 @@ class VeqtaQueryService
     }
 
     /**
-     * Adoption member DNA filter.
+     * Filter Pet List.
      *
-     * @param int $registerId
-     * @param bool $isAll
      * @return array
      */
     public function filterPetList(): array
@@ -53,7 +51,7 @@ class VeqtaQueryService
         $queryConservation = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'dna.pet_id = cp.id')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
-            ->where('dna.check_status = 3')
+            ->where('dna.check_status = ' . AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED)
             ->andWhere('dna.site_type = :site_type')
             ->setParameters(['site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION])
             ->select('dna.id as dna_id, dna.site_type, b.breeds_name, cp.pet_birthday, dna.check_status, dna.kit_pet_register_date, dna.update_date');
@@ -62,7 +60,7 @@ class VeqtaQueryService
         $queryBreeder = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'dna.pet_id = bp.id')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
-            ->where('dna.check_status = 3')
+            ->where('dna.check_status = ' . AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED)
             ->andWhere('dna.site_type = :site_type')
             ->setParameters(['site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
             ->select('dna.id as dna_id, dna.site_type, b.breeds_name, bp.pet_birthday, dna.check_status, dna.kit_pet_register_date, dna.update_date');
@@ -73,10 +71,11 @@ class VeqtaQueryService
         // order by update_date > dna_id desc
         usort(
             $totalResult,
-            fn ($x, $y) =>
-            [$y['update_date']->getTimestamp(), $y['dna_id']]
-                <=>
-                [$x['update_date']->getTimestamp(), $x['dna_id']]
+            function ($x, $y) {
+                return [$y['update_date']->getTimestamp(), $y['dna_id']]
+                    <=>
+                    [$x['update_date']->getTimestamp(), $x['dna_id']];
+            }
         );
 
         return $totalResult;

@@ -27,6 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Customize\Service\VeqtaQueryService;
+use Knp\Component\Pager\PaginatorInterface;
 
 class VeqtaController extends AbstractController
 {
@@ -96,11 +97,16 @@ class VeqtaController extends AbstractController
      * @Route("/veqta/pet_list", name="veqta_pet_list")
      * @Template("animalline/veqta/pet_list.twig")
      */
-    public function pet_list()
+    public function pet_list(Request $request, PaginatorInterface $paginator)
     {
-        $dnas = $this->veqtaQueryService->filterPetList();
+        $dnasResult = $this->veqtaQueryService->filterPetList();
+        $dnas = $paginator->paginate(
+            $dnasResult,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE)
+        );
         return compact(
-            'dnas',
+            'dnas'
         );
     }
 
