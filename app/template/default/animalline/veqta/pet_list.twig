@@ -20,7 +20,7 @@
                             <td class="id" data-label="No">{{ dna.dna_id }}</td>
                             <td data-label="犬種">{{ dna.breeds_name }}</td>
                             <td data-label="生年月日">{{ dna.pet_birthday | date('Y/m/d') }}</td>
-                            <td data-label="ペット情報登録日時">{{ dna.kit_pet_register_date | date('Y/m/d') }}</td>
+                            <td data-label="ペット情報登録日時">{{ dna.kit_pet_register_date | date('Y/m/d H:i') }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
