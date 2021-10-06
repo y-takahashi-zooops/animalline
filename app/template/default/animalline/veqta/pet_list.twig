@@ -1,0 +1,47 @@
+{% extends 'animalline/veqta/frame.twig' %}
+
+{% block main %}
+<div class="main">
+    <div class="row">
+        <div class="main-container col-12">
+            <h1>検査対象ペット一覧</h1>
+            <table class="table table-sm dna-table text-center">
+                <thead>
+                    <tr class="heading">
+                        <th class="border-top-0 pt-2 pb-2">No.</th>
+                        <th class="border-top-0 pt-2 pb-2">犬種</th>
+                        <th class="border-top-0 pt-2 pb-2">生年月日</th>
+                        <th class="border-top-0 pt-2 pb-2">ペット情報登録日時</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="id" data-label="No">1</td>
+                        <td data-label="犬種">トイプードル</td>
+                        <td data-label="生年月日">2019/01/01</td>
+                        <td data-label="ペット情報登録日時">2021/10/06 10:00</td>
+                    </tr>
+                    <tr>
+                        <td class="id" data-label="No">2</td>
+                        <td data-label="犬種">フレンチブルドッグ</td>
+                        <td data-label="生年月日">2019/01/01</td>
+                        <td data-label="ペット情報登録日時">2021/10/05 09:00</td>
+                    </tr>
+                    <tr>
+                        <td class="id" data-label="ID">3</td>
+                        <td data-label="犬種">マルチーズ</td>
+                        <td data-label="生年月日">2019/01/01</td>
+                        <td data-label="ペット情報登録日時">2021/10/06 08:00</td>
+                    </tr>
+                    <tr>
+                        <td class="id" data-label="ID">4</td>
+                        <td data-label="犬種">柴</td>
+                        <td data-label="生年月日">2019/01/01</td>
+                        <td data-label="ペット情報登録日時">2021/10/06 10:00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -168,114 +168,114 @@ class BreederConfigrationController extends AbstractController
      * 
      * @Route("/breeder/configration/pets/new/{breeder_id}", name="breeder_configuration_pets_new", methods={"GET","POST"})
      */
-    public function breeder_configuration_pets_new(Request $request, BreedersRepository $breedersRepository): Response
-    {
-        $breederPet = new BreederPets();
-        $form = $this->createForm(BreederPetsType::class, $breederPet);
-        $form->handleRequest($request);
+    // public function breeder_configuration_pets_new(Request $request, BreedersRepository $breedersRepository): Response
+    // {
+    //     $breederPet = new BreederPets();
+    //     $form = $this->createForm(BreederPetsType::class, $breederPet);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $breeder = $breedersRepository->find($request->get('breeder_id'));
-            $breederPet->setBreeder($breeder);
-            $breederPet->setDnaCheckResult(0);
-            $breederPet->setReleaseStatus(1);
-            $entityManager->persist($breederPet);
-            $entityManager->flush();
-            $petId = $breederPet->getId();
-            $img0 = $this->setImageSrc($request->get('img0'), $petId);
-            $img1 = $this->setImageSrc($request->get('img1'), $petId);
-            $img2 = $this->setImageSrc($request->get('img2'), $petId);
-            $img3 = $this->setImageSrc($request->get('img3'), $petId);
-            $img4 = $this->setImageSrc($request->get('img4'), $petId);
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $breeder = $breedersRepository->find($request->get('breeder_id'));
+    //         $breederPet->setBreeder($breeder);
+    //         $breederPet->setDnaCheckResult(0);
+    //         $breederPet->setReleaseStatus(1);
+    //         $entityManager->persist($breederPet);
+    //         $entityManager->flush();
+    //         $petId = $breederPet->getId();
+    //         $img0 = $this->setImageSrc($request->get('img0'), $petId);
+    //         $img1 = $this->setImageSrc($request->get('img1'), $petId);
+    //         $img2 = $this->setImageSrc($request->get('img2'), $petId);
+    //         $img3 = $this->setImageSrc($request->get('img3'), $petId);
+    //         $img4 = $this->setImageSrc($request->get('img4'), $petId);
 
-            $petImage0 = (new BreederPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img0)->setSortOrder(1)
-                ->setBreederPetId($breederPet);
-            $petImage1 = (new BreederPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img1)->setSortOrder(2)
-                ->setBreederPetId($breederPet);
-            $petImage2 = (new BreederPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img2)->setSortOrder(3)
-                ->setBreederPetId($breederPet);
-            $petImage3 = (new BreederPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img3)->setSortOrder(4)
-                ->setBreederPetId($breederPet);
-            $petImage4 = (new BreederPetImage())
-                ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img4)->setSortOrder(5)
-                ->setBreederPetId($breederPet);
-            $breederPet
-                ->addBreederPetImage($petImage0)
-                ->addBreederPetImage($petImage1)
-                ->addBreederPetImage($petImage2)
-                ->addBreederPetImage($petImage3)
-                ->addBreederPetImage($petImage4)
-                ->setThumbnailPath($img0);
+    //         $petImage0 = (new BreederPetImage())
+    //             ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img0)->setSortOrder(1)
+    //             ->setBreederPetId($breederPet);
+    //         $petImage1 = (new BreederPetImage())
+    //             ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img1)->setSortOrder(2)
+    //             ->setBreederPetId($breederPet);
+    //         $petImage2 = (new BreederPetImage())
+    //             ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img2)->setSortOrder(3)
+    //             ->setBreederPetId($breederPet);
+    //         $petImage3 = (new BreederPetImage())
+    //             ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img3)->setSortOrder(4)
+    //             ->setBreederPetId($breederPet);
+    //         $petImage4 = (new BreederPetImage())
+    //             ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img4)->setSortOrder(5)
+    //             ->setBreederPetId($breederPet);
+    //         $breederPet
+    //             ->addBreederPetImage($petImage0)
+    //             ->addBreederPetImage($petImage1)
+    //             ->addBreederPetImage($petImage2)
+    //             ->addBreederPetImage($petImage3)
+    //             ->addBreederPetImage($petImage4)
+    //             ->setThumbnailPath($img0);
 
-            $entityManager->persist($petImage0);
-            $entityManager->persist($petImage1);
-            $entityManager->persist($petImage2);
-            $entityManager->persist($petImage3);
-            $entityManager->persist($petImage4);
-            $entityManager->persist($breederPet);
-            $entityManager->flush();
+    //         $entityManager->persist($petImage0);
+    //         $entityManager->persist($petImage1);
+    //         $entityManager->persist($petImage2);
+    //         $entityManager->persist($petImage3);
+    //         $entityManager->persist($petImage4);
+    //         $entityManager->persist($breederPet);
+    //         $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_pet_list');
-        }
+    //         return $this->redirectToRoute('breeder_pet_list');
+    //     }
 
-        return $this->render('animalline/breeder/configration/pets/new.twig', [
-            'form' => $form->createView()
-        ]);
-    }
+    //     return $this->render('animalline/breeder/configration/pets/new.twig', [
+    //         'form' => $form->createView()
+    //     ]);
+    // }
 
     /**
      * Breeder edit pets
      * 
      * @Route("/breeder/configration/pets/edit/{id}", name="breeder_configuration_pets_edit", methods={"GET","POST"})
      */
-    public function breeder_configuration_pets_edit(Request $request, BreederPets $breederPet): Response
-    {
-        $form = $this->createForm(BreederPetsType::class, $breederPet);
-        $breederPetImages = $this->breederPetImageRepository->findBy(
-            ['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
-            ['sort_order' => 'ASC']
-        );
-        $request->request->set('thumbnail_path', $breederPet->getThumbnailPath());
-        $form->handleRequest($request);
+    // public function breeder_configuration_pets_edit(Request $request, BreederPets $breederPet): Response
+    // {
+    //     $form = $this->createForm(BreederPetsType::class, $breederPet);
+    //     $breederPetImages = $this->breederPetImageRepository->findBy(
+    //         ['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
+    //         ['sort_order' => 'ASC']
+    //     );
+    //     $request->request->set('thumbnail_path', $breederPet->getThumbnailPath());
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $petId = $breederPet->getId();
-            $img0 = $this->setImageSrc($request->get('img0'), $petId);
-            $img1 = $this->setImageSrc($request->get('img1'), $petId);
-            $img2 = $this->setImageSrc($request->get('img2'), $petId);
-            $img3 = $this->setImageSrc($request->get('img3'), $petId);
-            $img4 = $this->setImageSrc($request->get('img4'), $petId);
-            $entityManager = $this->getDoctrine()->getManager();
-            $breederPet->setThumbnailPath($img0);
-            $entityManager->persist($breederPet);
-            foreach ($breederPetImages as $key => $image) {
-                $image->setImageUri(${'img' . $key});
-                $entityManager->persist($image);
-            }
-            $entityManager->flush();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $petId = $breederPet->getId();
+    //         $img0 = $this->setImageSrc($request->get('img0'), $petId);
+    //         $img1 = $this->setImageSrc($request->get('img1'), $petId);
+    //         $img2 = $this->setImageSrc($request->get('img2'), $petId);
+    //         $img3 = $this->setImageSrc($request->get('img3'), $petId);
+    //         $img4 = $this->setImageSrc($request->get('img4'), $petId);
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $breederPet->setThumbnailPath($img0);
+    //         $entityManager->persist($breederPet);
+    //         foreach ($breederPetImages as $key => $image) {
+    //             $image->setImageUri(${'img' . $key});
+    //             $entityManager->persist($image);
+    //         }
+    //         $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_pet_list');
-        }
+    //         return $this->redirectToRoute('breeder_pet_list');
+    //     }
 
-        $petImages = [];
-        foreach ($breederPetImages as $image) {
-            $petImages[] = [
-                'image_uri' => $image->getImageUri(),
-                'sort_order' => $image->getSortOrder()
-            ];
-        }
+    //     $petImages = [];
+    //     foreach ($breederPetImages as $image) {
+    //         $petImages[] = [
+    //             'image_uri' => $image->getImageUri(),
+    //             'sort_order' => $image->getSortOrder()
+    //         ];
+    //     }
 
-        return $this->render('animalline/breeder/configration/pets/edit.twig', [
-            'breeder_pet' => $breederPet,
-            'pet_mages' => $petImages,
-            'form' => $form->createView()
-        ]);
-    }
+    //     return $this->render('animalline/breeder/configration/pets/edit.twig', [
+    //         'breeder_pet' => $breederPet,
+    //         'pet_mages' => $petImages,
+    //         'form' => $form->createView()
+    //     ]);
+    // }
 
     /**
      * Copy image and retrieve new url of the copy
@@ -321,52 +321,52 @@ class BreederConfigrationController extends AbstractController
      * 
      * @Route("/breeder_pet_data_by_pet_kind", name="breeder_pet_data_by_pet_kind", methods={"GET"})
      */
-    public function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
-    {
-        $petKind = $request->get('pet_kind');
-        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
-        $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
-        $formattedBreeds = [];
-        foreach ($breeds as $breed) {
-            $formattedBreeds[] = [
-                'id' => $breed->getId(),
-                'name' => $breed->getBreedsName()
-            ];
-        }
-        $formattedColors = [];
-        foreach ($colors as $color) {
-            $formattedColors[] = [
-                'id' => $color->getId(),
-                'name' => $color->getCoatColorName()
-            ];
-        }
-        $data = [
-            'breeds' => $formattedBreeds,
-            'colors' => $formattedColors
-        ];
+    // public function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
+    // {
+    //     $petKind = $request->get('pet_kind');
+    //     $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
+    //     $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
+    //     $formattedBreeds = [];
+    //     foreach ($breeds as $breed) {
+    //         $formattedBreeds[] = [
+    //             'id' => $breed->getId(),
+    //             'name' => $breed->getBreedsName()
+    //         ];
+    //     }
+    //     $formattedColors = [];
+    //     foreach ($colors as $color) {
+    //         $formattedColors[] = [
+    //             'id' => $color->getId(),
+    //             'name' => $color->getCoatColorName()
+    //         ];
+    //     }
+    //     $data = [
+    //         'breeds' => $formattedBreeds,
+    //         'colors' => $formattedColors
+    //     ];
 
-        return new JsonResponse($data);
-    }
+    //     return new JsonResponse($data);
+    // }
 
     /**
      * Upload image
      * 
      * @Route("/breeder/configration/pets/upload", name="breeder_pets_upload_crop_image", methods={"POST"}, options={"expose"=true})
      */
-    public function upload(Request $request)
-    {
-        if (!file_exists(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/')) {
-            mkdir(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/', 0777, 'R');
-        }
-        $folderPath = AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/';
-        $image_parts = explode(";base64,", $_POST['image']);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type = $image_type_aux[1];
-        $image_base64 = base64_decode($image_parts[1]);
-        $file = $folderPath . uniqid() . '.' . $image_type;
-        file_put_contents($file, $image_base64);
-        return new JsonResponse($file);
-    }
+    // public function upload(Request $request)
+    // {
+    //     if (!file_exists(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/')) {
+    //         mkdir(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/', 0777, 'R');
+    //     }
+    //     $folderPath = AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/';
+    //     $image_parts = explode(";base64,", $_POST['image']);
+    //     $image_type_aux = explode("image/", $image_parts[0]);
+    //     $image_type = $image_type_aux[1];
+    //     $image_base64 = base64_decode($image_parts[1]);
+    //     $file = $folderPath . uniqid() . '.' . $image_type;
+    //     file_put_contents($file, $image_base64);
+    //     return new JsonResponse($file);
+    // }
 
     /**
      * Breeder base information
@@ -374,37 +374,37 @@ class BreederConfigrationController extends AbstractController
      * @Route("/breeder/configration/baseinfo", name="breeder_baseinfo")
      * @Template("/animalline/breeder/configration/baseinfo.twig")
      */
-    public function baseinfo(Request $request, BreedersRepository $breedersRepository)
-    {
-        $user = $this->getUser();
+    // public function baseinfo(Request $request, BreedersRepository $breedersRepository)
+    // {
+    //     $user = $this->getUser();
 
-        $breederData = $breedersRepository->find($user);
-        if (!$breederData) {
-            $breederData = new Breeders;
-            $breederData->setId($user->getId());
-        }
-        $builder = $this->formFactory->createBuilder(BreedersType::class, $breederData);
+    //     $breederData = $breedersRepository->find($user);
+    //     if (!$breederData) {
+    //         $breederData = new Breeders;
+    //         $breederData->setId($user->getId());
+    //     }
+    //     $builder = $this->formFactory->createBuilder(BreedersType::class, $breederData);
 
-        $form = $builder->getForm();
-        $form->handleRequest($request);
+    //     $form = $builder->getForm();
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $thumbnail_path = $request->get('thumbnail_path') ? $request->get('thumbnail_path') : $breederData->getThumbnailPath();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $thumbnail_path = $request->get('thumbnail_path') ? $request->get('thumbnail_path') : $breederData->getThumbnailPath();
 
-            $breederData->setBreederPref($breederData->getPrefBreeder())
-                ->setLicensePref($breederData->getPrefLicense())
-                ->setThumbnailPath($thumbnail_path);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($breederData);
-            $entityManager->flush();
-            return $this->redirectToRoute('breeder_member');
-        }
+    //         $breederData->setBreederPref($breederData->getPrefBreeder())
+    //             ->setLicensePref($breederData->getPrefLicense())
+    //             ->setThumbnailPath($thumbnail_path);
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->persist($breederData);
+    //         $entityManager->flush();
+    //         return $this->redirectToRoute('breeder_member');
+    //     }
 
-        return [
-            'breederData' => $breederData,
-            'form' => $form->createView()
-        ];
-    }
+    //     return [
+    //         'breederData' => $breederData,
+    //         'form' => $form->createView()
+    //     ];
+    // }
 
     /**
      * Page examination infomation's breeder

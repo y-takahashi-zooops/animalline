@@ -82,6 +82,17 @@ class VeqtaController extends AbstractController
     }
 
     /**
+     * Pet list
+     *
+     * @Route("/veqta/pet_list", name="veqta_pet_list")
+     * @Template("animalline/veqta/pet_list.twig")
+     */
+    public function pet_list()
+    {
+        return [];
+    }
+
+    /**
      * Receive DNA kit result
      *
      * @Route("/veqta/arrive", name="veqta_arrive")
