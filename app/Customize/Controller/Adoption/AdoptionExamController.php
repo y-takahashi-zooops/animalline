@@ -163,6 +163,8 @@ class AdoptionExamController extends AbstractController
      * 審査結果提出
      *
      * @Route("/adoption/member/examination/submit", name="adoption_examination_submit")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function examination_submit(Request $request)
     {

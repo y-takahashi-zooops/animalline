@@ -82,6 +82,8 @@ class ConservationPetController extends AbstractController
      * 新規ペット追加
      *
      * @Route("/adoption/member/pets/new/{bar_code}", name="adoption_pets_new", methods={"GET","POST"}, requirements={"bar_code" = "^\d{6}$"})
+     * @param Request $request
+     * @return Response
      */
     public function adoption_pets_new(Request $request): Response
     {
@@ -186,6 +188,9 @@ class ConservationPetController extends AbstractController
      * ペット情報編集
      *
      * @Route("/adoption/member/pets/edit/{id}", name="adoption_pets_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param ConservationPets $conservationPet
+     * @return Response
      */
     public function adoption_pets_edit(Request $request, ConservationPets $conservationPet): Response
     {
