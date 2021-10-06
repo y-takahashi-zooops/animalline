@@ -56,7 +56,7 @@ class VeqtaQueryService
             ->where('dna.check_status = 3')
             ->andWhere('dna.site_type = :site_type')
             ->setParameters(['site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION])
-            ->select('dna.id as dna_id, dna.site_type, b.breeds_name, cp.pet_birthday, dna.check_status, dna.kit_pet_register_date');
+            ->select('dna.id as dna_id, dna.site_type, b.breeds_name, cp.pet_birthday, dna.check_status, dna.kit_pet_register_date, dna.update_date');
         $resultConservation = $queryConservation->getQuery()->getArrayResult();
 
         $queryBreeder = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
@@ -65,7 +65,7 @@ class VeqtaQueryService
             ->where('dna.check_status = 3')
             ->andWhere('dna.site_type = :site_type')
             ->setParameters(['site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
-            ->select('dna.id as dna_id, dna.site_type, b.breeds_name, bp.pet_birthday, dna.check_status, dna.kit_pet_register_date');
+            ->select('dna.id as dna_id, dna.site_type, b.breeds_name, bp.pet_birthday, dna.check_status, dna.kit_pet_register_date, dna.update_date');
         $resultBreeder = $queryBreeder->getQuery()->getArrayResult();
 
         $totalResult = array_merge($resultBreeder, $resultConservation);
