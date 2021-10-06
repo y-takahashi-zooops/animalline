@@ -15,30 +15,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="id" data-label="No">1</td>
-                        <td data-label="犬種">トイプードル</td>
-                        <td data-label="生年月日">2019/01/01</td>
-                        <td data-label="ペット情報登録日時">2021/10/06 10:00</td>
-                    </tr>
-                    <tr>
-                        <td class="id" data-label="No">2</td>
-                        <td data-label="犬種">フレンチブルドッグ</td>
-                        <td data-label="生年月日">2019/01/01</td>
-                        <td data-label="ペット情報登録日時">2021/10/05 09:00</td>
-                    </tr>
-                    <tr>
-                        <td class="id" data-label="ID">3</td>
-                        <td data-label="犬種">マルチーズ</td>
-                        <td data-label="生年月日">2019/01/01</td>
-                        <td data-label="ペット情報登録日時">2021/10/06 08:00</td>
-                    </tr>
-                    <tr>
-                        <td class="id" data-label="ID">4</td>
-                        <td data-label="犬種">柴</td>
-                        <td data-label="生年月日">2019/01/01</td>
-                        <td data-label="ペット情報登録日時">2021/10/06 10:00</td>
-                    </tr>
+                    {% for dna in dnas %}
+                        <tr>
+                            <td class="id" data-label="No">{{ dna.id }}</td>
+                            <td data-label="犬種">{{ dna.breeds_name }}</td>
+                            <td data-label="生年月日">{{ dna.pet_birthday | date('Y/m/d H:i') }}</td>
+                            <td data-label="ペット情報登録日時">{{ dna.kit_pet_register_date | date('Y/m/d H:i') }}</td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

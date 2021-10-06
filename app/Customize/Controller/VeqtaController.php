@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Customize\Service\VeqtaQueryService;
 
 class VeqtaController extends AbstractController
 {
@@ -50,24 +51,32 @@ class VeqtaController extends AbstractController
     protected $dnaCheckStatusRepository;
 
     /**
+     * @var VeqtaQueryService
+     */
+    protected $veqtaQueryService;
+
+    /**
      * VeqtaController constructor.
      *
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
+     * @param VeqtaQueryService $veqtaQueryService
      */
 
     public function __construct(
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
         BreederPetsRepository $breederPetsRepository,
         ConservationPetsRepository $conservationPetsRepository,
-        DnaCheckStatusRepository $dnaCheckStatusRepository
+        DnaCheckStatusRepository $dnaCheckStatusRepository,
+        VeqtaQueryService $veqtaQueryService
     ) {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
+        $this->veqtaQueryService = $veqtaQueryService;
     }
 
     /**
@@ -89,7 +98,10 @@ class VeqtaController extends AbstractController
      */
     public function pet_list()
     {
-        return [];
+        $dnas = $this->veqtaQueryService->filterPetList();
+        return compact(
+            'dnas',
+        );
     }
 
     /**
