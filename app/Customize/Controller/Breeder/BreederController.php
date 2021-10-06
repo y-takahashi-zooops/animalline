@@ -17,11 +17,8 @@ use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
-use Eccube\Event\EccubeEvents;
-use Eccube\Event\EventArgs;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -115,6 +112,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * Page Breeder
+     * 
      * @Route("/breeder/", name="breeder_top")
      * @Template("animalline/breeder/index.twig")
      */
@@ -277,6 +276,8 @@ class BreederController extends AbstractController
     }
 
     /**
+     * Page Breeder detail
+     * 
      * @Route("/breeder/breeder_search/{breeder_id}", name="breeder_detail", requirements={"breeder_id" = "\d+"})
      * @Template("/animalline/breeder/breeder_detail.twig")
      */

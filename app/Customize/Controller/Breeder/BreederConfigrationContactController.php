@@ -11,8 +11,6 @@ use Customize\Repository\SendoffReasonRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
@@ -65,7 +63,6 @@ class BreederConfigrationContactController extends AbstractController
             ['last_message_date' => 'DESC']
         );
 
-        $lastReplies = [];
         $name = [];
         foreach ($rootMessages as $message) {
             $name[$message->getId()] = "{$message->getCustomer()->getName01()} {$message->getCustomer()->getName02()}";

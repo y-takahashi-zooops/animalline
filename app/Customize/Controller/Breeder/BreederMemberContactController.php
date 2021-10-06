@@ -13,23 +13,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\BreederContacts;
 use Customize\Entity\BreederContactHeader;
 use Customize\Repository\BreederPetsRepository;
-use Eccube\Repository\Master\PrefRepository;
 use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\SendoffReasonRepository;
 use Customize\Repository\BreedersRepository;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\Breeder\BreederContactType;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Eccube\Form\Type\Front\CustomerLoginType;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederMemberContactController extends AbstractController
 {

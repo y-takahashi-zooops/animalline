@@ -10,16 +10,12 @@ use Customize\Entity\Breeders;
 use Customize\Repository\BreedersRepository;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederMemberController extends AbstractController
 {
