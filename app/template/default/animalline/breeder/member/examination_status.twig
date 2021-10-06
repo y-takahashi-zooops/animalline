@@ -12,7 +12,7 @@
                     <input type="hidden" name="dna_id" value="">
                     <div class="row justify-content-between mb-2">
                         <div class="col-6"></div>
-                        <div class="col-2 text-right">
+                        <div class="col-4 col-md-2 text-right">
                             {% if params.is_all is defined and params.is_all == 1 %}
                                 <a class="btn btn-warning btn-block mt-3"
                                    href="{{ url('breeder_examination_status') }}">未完了のみ表示</a>
@@ -25,7 +25,7 @@
                     <div class="card rounded border-0 mb-4 d-block">
                         <div class="card-body p-0">
                             <table class="table table-sm dna-table text-center">
-                                <thead>
+                                <thead class="heading">
                                 <tr>
                                     <th class="border-top-0 pt-2 pb-2">ID</th>
                                     <th class="border-top-0 pt-2 pb-2">画像</th>
@@ -40,7 +40,7 @@
                                 <tbody>
                                 {% for dna in dnas %}
                                     <tr>
-                                        <td class="align-middle">{{ dna.dna_id }}</td>
+                                        <td class="align-middle id" data-label="ID">{{ dna.dna_id }}</td>
                                         <td class="align-middle">
                                             <a target="_blank"
                                                href="{{ url('breeder_pet_detail', {'id': dna.pet_id}) }}">
@@ -48,15 +48,15 @@
                                                      src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}">
                                             </a>
                                         </td>
-                                        <td class="align-middle">
+                                        <td class="align-middle" data-label="種別">
                                             {{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}
                                         </td>
-                                        <td class="align-middle">{{ dna.breeds_name }}</td>
-                                        <td class="align-middle">{{ check_status[dna.check_status] }}</td>
-                                        <td class="align-middle">
+                                        <td class="align-middle" data-label="犬種/猫種">{{ dna.breeds_name }}</td>
+                                        <td class="align-middle" data-label="検査ステータス">{{ check_status[dna.check_status] }}</td>
+                                        <td class="align-middle" data-label="キット出荷">
                                             {{ dna.kit_shipping_date is empty ? '_' : dna.kit_shipping_date | date('Y/m/d') }}
                                         </td>
-                                        <td class="align-middle">
+                                        <td class="align-middle" data-label="キット返送">
                                             {{ dna.kit_return_date is empty ? '_' : dna.kit_return_date | date('Y/m/d') }}
                                         </td>
                                         <td class="align-middle pr-3" colspan="3">
