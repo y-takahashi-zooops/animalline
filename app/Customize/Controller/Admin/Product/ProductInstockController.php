@@ -18,10 +18,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Customize\Form\Type\Admin\InstockScheduleHeaderType;
 use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\InstockScheduleRepository;
-use Customize\Service\ListInstockQueryService;
 use Customize\Entity\InstockSchedule;
 use Customize\Repository\SupplierRepository;
 use Eccube\Form\Type\Admin\SearchProductType;
+use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,11 +50,6 @@ class ProductInstockController extends BaseProductController
     protected $instockScheduleRepository;
 
     /**
-     * @var ListInstockQueryService
-     */
-    protected $listInstockQueryService;
-
-    /**
      * @var OrderItemTypeRepository
      */
     protected $orderItemTypeRepository;
@@ -65,20 +60,17 @@ class ProductInstockController extends BaseProductController
      * @param SupplierRepository $supplierRepository
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      * @param InstockScheduleRepository $instockScheduleRepository
-     * @param ListInstockQueryService $listInstockQueryService
      * @param OrderItemTypeRepository $orderItemTypeRepository
      */
     public function __construct(
         SupplierRepository              $supplierRepository,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
-        ListInstockQueryService         $listInstockQueryService,
         OrderItemTypeRepository         $orderItemTypeRepository
     ) {
         $this->supplierRepository = $supplierRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
         $this->instockScheduleRepository = $instockScheduleRepository;
-        $this->listInstockQueryService = $listInstockQueryService;
         $this->orderItemTypeRepository = $orderItemTypeRepository;
     }
 
@@ -87,13 +79,13 @@ class ProductInstockController extends BaseProductController
      *
      * @Route("/%eccube_admin_route%/product/instock", name="admin_product_instock_list")
      * @Template("@admin/Product/instock_list.twig")
+     * @throws Exception
      */
-    public function instock_list(PaginatorInterface $paginator, Request $request)
+    public function instock_list(PaginatorInterface $paginator, Request $request): array
     {
-        $instockDate = new InstockScheduleHeader();
         $supplier = [];
         $instocks = null;
-        if ($request->getMethod('get')) {
+        if ($request->isMethod('GET')) {
             $orderDate = [
                 'orderDateYear' => $request->get('order_date_year'),
                 'orderDateMonth' => $request->get('order_date_month'),
@@ -105,7 +97,7 @@ class ProductInstockController extends BaseProductController
                 'scheduleDateMonth' => $request->get('arrival_date_schedule_month'),
                 'scheduleDateDay' => $request->get('arrival_date_schedule_day')
             ];
-            $instocks = $this->listInstockQueryService->search($orderDate, $scheduleDate);
+            $instocks = $this->instockScheduleHeaderRepository->search($orderDate, $scheduleDate);
         }
         if ($instocks) {
             foreach ($instocks as $instock) {
@@ -123,7 +115,7 @@ class ProductInstockController extends BaseProductController
         return [
             'instocks' => $instocks,
             'supplier' => $supplier,
-            'count' => $count,
+            'count' => $count
         ];
     }
 
@@ -132,7 +124,7 @@ class ProductInstockController extends BaseProductController
      *
      * @Route("/%eccube_admin_route%/product/instock/delete", name="admin_product_instock_delete")
      */
-    public function deleteInstock(Request $request)
+    public function deleteInstock(Request $request): JsonResponse
     {
         $entityManager = $this->getDoctrine()->getManager();
         if ($request->get('id')) {
@@ -159,7 +151,6 @@ class ProductInstockController extends BaseProductController
      */
     public function instock_registration(Request $request, $id = null)
     {
-        $TargetInstock = null;
         $totalPrice = 0;
         $subTotalPrices = [];
         $count = 0;
@@ -293,13 +284,12 @@ class ProductInstockController extends BaseProductController
      * @param $item
      * @return float|int
      */
-    public function calcPrice($item)
+    private function calcPrice($item)
     {
         $price = $item->getPrice();
         $quantity1 = $item->getQuantity();
         $quantity2 = $item->getTaxRate();
         $quantityBox = $item->getProduct()->getQuantityBox();
-        $subTotalPrice = 0;
         if ($quantity1 == 0) {
             $subTotalPrice = $price * $quantity2 * $quantityBox;
         } elseif ($quantity2 == 0) {
