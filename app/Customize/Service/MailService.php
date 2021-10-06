@@ -15,7 +15,6 @@ namespace Customize\Service;
 
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\BaseInfo;
-use Customize\Entity\Conservations;
 use Eccube\Entity\MailHistory;
 use Eccube\Entity\MailTemplate;
 use Eccube\Entity\Order;
@@ -101,14 +100,14 @@ class MailService
      * @param $Customer 会員情報
      * @param string $activateUrl アクティベート用url
      */
-    public function sendCustomerConfirmMail(\Customize\Entity\Conservations $Conservation, $activateUrl)
+    public function sendCustomerConfirmMail(\Eccube\Entity\Customer $Customer, $activateUrl)
     {
         log_info('仮会員登録メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_confirm_mail_template_id']);
 
         $body = $this->twig->render($MailTemplate->getFileName(), [
-            'Conservation' => $Conservation,
+            'Customer' => $Customer,
             'BaseInfo' => $this->BaseInfo,
             'activateUrl' => $activateUrl,
         ]);
@@ -116,7 +115,7 @@ class MailService
         $message = (new \Swift_Message())
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Conservation->getEmail()])
+            ->setTo([$Customer->getEmail()])
             ->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
@@ -125,7 +124,7 @@ class MailService
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
         if (!is_null($htmlFileName)) {
             $htmlBody = $this->twig->render($htmlFileName, [
-                'Conservation' => $Conservation,
+                'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
                 'activateUrl' => $activateUrl,
             ]);
@@ -141,7 +140,7 @@ class MailService
         $event = new EventArgs(
             [
                 'message' => $message,
-                'Conservation' => $Conservation,
+                'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
                 'activateUrl' => $activateUrl,
             ],
@@ -161,21 +160,21 @@ class MailService
      *
      * @param $Customer 会員情報
      */
-    public function sendCustomerCompleteMail(\Customize\Entity\Conservations $Conservation)
+    public function sendCustomerCompleteMail(\Eccube\Entity\Customer $Customer)
     {
         log_info('会員登録完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_complete_mail_template_id']);
 
         $body = $this->twig->render($MailTemplate->getFileName(), [
-            'Conservation' => $Conservation,
+            'Customer' => $Customer,
             'BaseInfo' => $this->BaseInfo,
         ]);
 
         $message = (new \Swift_Message())
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Conservation->getEmail()])
+            ->setTo([$Customer->getEmail()])
             ->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
@@ -184,7 +183,7 @@ class MailService
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
         if (!is_null($htmlFileName)) {
             $htmlBody = $this->twig->render($htmlFileName, [
-                'Conservation' => $Conservation,
+                'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
             ]);
 
@@ -199,7 +198,7 @@ class MailService
         $event = new EventArgs(
             [
                 'message' => $message,
-                'Conservation' => $Conservation,
+                'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
             ],
             null
@@ -732,6 +731,10 @@ class MailService
      */
     public function getHtmlTemplate($templateName)
     {
+        //HTMLテンプレートを無効にする
+        return null;
+        
+        /*
         // メールテンプレート名からHTMLメール用テンプレート名を生成
         $fileName = explode('.', $templateName);
         $suffix = '.html';
@@ -743,6 +746,7 @@ class MailService
         } else {
             return null;
         }
+        */
     }
 
     /**

@@ -64,16 +64,6 @@ class InstockSchedule
     private $arrival_quantity;
 
     /**
-     * @ORM\Column(name="arrival_box_schedule", type="smallint", nullable=false)
-     */
-    private $arrival_box_schedule;
-
-    /**
-     * @ORM\Column(name="arrival_box", type="smallint", nullable=true)
-     */
-    private $arrival_box;
-
-    /**
      * @ORM\ManyToOne(targetEntity=ProductClass::class)
      * @ORM\JoinColumn(name="product_class_id", nullable=false)
      */
@@ -190,30 +180,6 @@ class InstockSchedule
     public function setArrivalQuantity(?int $arrival_quantity): self
     {
         $this->arrival_quantity = $arrival_quantity;
-
-        return $this;
-    }
-
-    public function getArrivalBoxSchedule(): ?int
-    {
-        return $this->arrival_box_schedule;
-    }
-
-    public function setArrivalBoxSchedule(int $arrival_box_schedule): self
-    {
-        $this->arrival_box_schedule = $arrival_box_schedule;
-
-        return $this;
-    }
-
-    public function getArrivalBox(): ?int
-    {
-        return $this->arrival_box;
-    }
-
-    public function setArrivalBox(?int $arrival_box): self
-    {
-        $this->arrival_box = $arrival_box;
 
         return $this;
     }
