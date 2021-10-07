@@ -9,6 +9,7 @@ use Customize\Repository\SendoffReasonRepository;
 use Eccube\Repository\Master\PrefRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
+use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederHouseRepository;
@@ -69,6 +70,11 @@ class BreederController extends AbstractController
     protected $prefRepository;
 
     /**
+     * @var BreederExaminationInfoRepository
+     */
+    protected $breederExaminationInfoRepository;
+
+    /**
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
@@ -79,6 +85,7 @@ class BreederController extends AbstractController
      * @param BreedersRepository $breedersRepository
      * @param BreederHouseRepository $breederHouseRepository
      * @param BreederPetsRepository $breederPetsRepository
+     * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
@@ -89,7 +96,8 @@ class BreederController extends AbstractController
         BreedersRepository        $breedersRepository,
         BreederHouseRepository    $breederHouseRepository,
         BreederPetsRepository     $breederPetsRepository,
-        PrefRepository            $prefRepository
+        PrefRepository            $prefRepository,
+        BreederExaminationInfoRepository $breederExaminationInfoRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
@@ -100,6 +108,7 @@ class BreederController extends AbstractController
         $this->breederHouseRepository = $breederHouseRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->prefRepository = $prefRepository;
+        $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
     }
 
     /**
@@ -206,6 +215,16 @@ class BreederController extends AbstractController
         $id = $request->get('id');
         $isFavorite = false;
         $breederPet = $this->breederPetsRepository->find($id);
+        $pedigree = $breederPet->getPedigree();
+        $breederExamInfo = null;
+
+        if (!$pedigree) {
+            $breeder = $this->breedersRepository->find($breederPet->getBreeder());
+            $breederExamInfo = $this->breederExaminationInfoRepository->findOneBy([
+                'Breeder' => $breeder->getId(),
+                'pet_type' => $breederPet->getPetKind()
+            ]);
+        }
         $petKind = $breederPet->getPetKind();
         $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         if ($favorite) {
@@ -236,7 +255,9 @@ class BreederController extends AbstractController
                 'images' => $images,
                 'video' => $video,
                 'isFavorite' => $isFavorite,
-                'isLoggedIn' => $isLoggedIn
+                'isLoggedIn' => $isLoggedIn,
+                'breederExamInfo' => $breederExamInfo,
+                'pedigree' => $pedigree
             ]
         );
     }

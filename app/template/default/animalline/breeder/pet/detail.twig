@@ -111,7 +111,7 @@
                                             血統書の有無                                                  
                                         </div>
                                         <div class="col-12 col-md-8 contents_col_normal">
-                                            {{ breederPet.getIsPedigree() == 1 ? '有（団体名）' : '有（その他の入力内容テキスト）' }}
+                                            {{ pedigree ? pedigree.pedigreeName : breederExamInfo.pedigreeOrganizationOther }}
                                         </div>
                                     </div>
                                 </div>

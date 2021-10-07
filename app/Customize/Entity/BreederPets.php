@@ -162,7 +162,7 @@ class BreederPets
 
     /**
      * @ORM\ManyToOne(targetEntity=Pedigree::class)
-     * @ORM\JoinColumn(name="pedigree_id", nullable=false)
+     * @ORM\JoinColumn(name="pedigree_id", nullable=true)
      */
     private $Pedigree;
 
@@ -554,12 +554,12 @@ class BreederPets
         return $this->update_date;
     }
 
-    public function getPedigreeId(): ?Pedigree
+    public function getPedigree(): ?Pedigree
     {
         return $this->Pedigree;
     }
 
-    public function setPedigreeId(?Pedigree $Pedigree): self
+    public function setPedigree(?Pedigree $Pedigree): self
     {
         $this->Pedigree = $Pedigree;
 
