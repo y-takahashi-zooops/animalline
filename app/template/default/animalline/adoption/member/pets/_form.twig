@@ -256,6 +256,12 @@
             border: 1px dotted;
             width: 150px;
             height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .preview_box svg {
+            cursor: pointer;
         }
         .img_preview {
             display: none;
@@ -304,5 +310,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
-<script src="{{ asset('assets/js/conservation_pets.js') }}"></script>
 {% endblock %}
