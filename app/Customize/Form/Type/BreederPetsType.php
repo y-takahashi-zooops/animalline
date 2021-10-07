@@ -105,7 +105,7 @@ class BreederPetsType extends AbstractType
                 ],
                 'expanded' => true,
             ])
-            ->add('pedigree_id', EntityType::class, [
+            ->add('Pedigree', EntityType::class, [
                 'class' => 'Customize\Entity\Pedigree',
                 'choice_label' => function (\Customize\Entity\Pedigree $petdigree) {
                     return $petdigree->getPedigreeName();
