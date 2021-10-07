@@ -1,77 +1,80 @@
 {% block main %}
-    <div class="ec-role">
-        <div class="ec-pageHeader">
-            <h1>{{ '会社概要'|trans }}</h1>
-        </div>
-        <div class="ec-off1Grid">
-            {# <div class="ec-off1Grid__cell">
-                <div class="ec-borderedDefs">
-                    {% if BaseInfo.shop_name|default is not empty %}
-                        <dl id="help_about_box__shop_name">
-                            <dt>
-                                <label class="ec-label">{{ '店名'|trans }}</label>
-                            </dt>
-                            <dd>{{ BaseInfo.shop_name }}</dd>
-                        </dl>
-                    {% endif %}
-                    {% if BaseInfo.company_name|default is not empty %}
-                        <dl id="help_about_box__company_name">
-                            <dt>
-                                <label class="ec-label">{{ '会社名'|trans }}</label>
-                            </dt>
-                            <dd>{{ BaseInfo.company_name }}</dd>
-                        </dl>
-                    {% endif %}
-
-                    {% if BaseInfo.postal_code|default is not empty %}
-                        <dl id="help_about_box__address">
-                            <dt>
-                                <label class="ec-label">{{ '住所'|trans }}</label>
-                            </dt>
-                            <dd>{{ '〒'|trans }}{{ BaseInfo.postal_code }}<br />
-                                {{ BaseInfo.pref }}{{ BaseInfo.addr01 }}{{ BaseInfo.addr02 }}
-                            </dd>
-                        </dl>
-                    {% endif %}
-
-                    {% if BaseInfo.phone_number|default is not empty %}
-                        <dl id="help_about_box__phone_number">
-                            <dt>
-                                <label class="ec-label">{{ '電話番号'|trans }}</label>
-                            </dt>
-                            <dd>{{ BaseInfo.phone_number }}</dd>
-                        </dl>
-                    {% endif %}
-
-                    {% if BaseInfo.business_hour|default is not empty %}
-                        <dl id="help_about_box__business_hour">
-                            <dt>
-                                <label class="ec-label">{{ '店舗営業時間'|trans }}</label>
-                            </dt>
-                            <dd>{{ BaseInfo.business_hour }}</dd>
-                        </dl>
-                    {% endif %}
-
-                    {% if BaseInfo.good_traded|default is not empty %}
-                        <dl id="help_about_box__good_traded">
-                            <dt>
-                                <label class="ec-label">{{ '取り扱い商品'|trans }}</label>
-                            </dt>
-                            <dd>{{ BaseInfo.good_traded|nl2br }}</dd>
-                        </dl>
-                    {% endif %}
-
-                    {% if BaseInfo.message|default is not empty %}
-                        <dl id="help_about_box__message">
-                            <dt>
-                                <label class="ec-label">{{ 'メッセージ'|trans }}</label>
-                            </dt>
-                            <dd>{{ BaseInfo.message|nl2br }}</dd>
-                        </dl>
-                    {% endif %}
+    <section id="breeder-column">
+        <div class="inner">
+            <div class="ec-role">
+                <div class="ec-pageHeader">
+                    <h1>{{ '会社概要'|trans }}</h1>
                 </div>
-            </div> #}
+                <div class="ec-off1Grid">
+                    {# <div class="ec-off1Grid__cell">
+                        <div class="ec-borderedDefs">
+                            {% if BaseInfo.shop_name|default is not empty %}
+                                <dl id="help_about_box__shop_name">
+                                    <dt>
+                                        <label class="ec-label">{{ '店名'|trans }}</label>
+                                    </dt>
+                                    <dd>{{ BaseInfo.shop_name }}</dd>
+                                </dl>
+                            {% endif %}
+                            {% if BaseInfo.company_name|default is not empty %}
+                                <dl id="help_about_box__company_name">
+                                    <dt>
+                                        <label class="ec-label">{{ '会社名'|trans }}</label>
+                                    </dt>
+                                    <dd>{{ BaseInfo.company_name }}</dd>
+                                </dl>
+                            {% endif %}
+
+                            {% if BaseInfo.postal_code|default is not empty %}
+                                <dl id="help_about_box__address">
+                                    <dt>
+                                        <label class="ec-label">{{ '住所'|trans }}</label>
+                                    </dt>
+                                    <dd>{{ '〒'|trans }}{{ BaseInfo.postal_code }}<br />
+                                        {{ BaseInfo.pref }}{{ BaseInfo.addr01 }}{{ BaseInfo.addr02 }}
+                                    </dd>
+                                </dl>
+                            {% endif %}
+
+                            {% if BaseInfo.phone_number|default is not empty %}
+                                <dl id="help_about_box__phone_number">
+                                    <dt>
+                                        <label class="ec-label">{{ '電話番号'|trans }}</label>
+                                    </dt>
+                                    <dd>{{ BaseInfo.phone_number }}</dd>
+                                </dl>
+                            {% endif %}
+
+                            {% if BaseInfo.business_hour|default is not empty %}
+                                <dl id="help_about_box__business_hour">
+                                    <dt>
+                                        <label class="ec-label">{{ '店舗営業時間'|trans }}</label>
+                                    </dt>
+                                    <dd>{{ BaseInfo.business_hour }}</dd>
+                                </dl>
+                            {% endif %}
+
+                            {% if BaseInfo.good_traded|default is not empty %}
+                                <dl id="help_about_box__good_traded">
+                                    <dt>
+                                        <label class="ec-label">{{ '取り扱い商品'|trans }}</label>
+                                    </dt>
+                                    <dd>{{ BaseInfo.good_traded|nl2br }}</dd>
+                                </dl>
+                            {% endif %}
+
+                            {% if BaseInfo.message|default is not empty %}
+                                <dl id="help_about_box__message">
+                                    <dt>
+                                        <label class="ec-label">{{ 'メッセージ'|trans }}</label>
+                                    </dt>
+                                    <dd>{{ BaseInfo.message|nl2br }}</dd>
+                                </dl>
+                            {% endif %}
+                        </div>
+                    </div> #}
+                </div>
+            </div>
         </div>
-    </div>
-</body>
+    </section>
 {% endblock %}

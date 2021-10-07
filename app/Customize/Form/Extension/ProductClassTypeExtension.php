@@ -19,13 +19,16 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Eccube\Form\Type\PriceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Customize\Repository\SupplierRepository;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class ProductClassTypeExtension.
  */
 class ProductClassTypeExtension extends AbstractTypeExtension
-{ 
+{
 
     /**
      * @var SupplierRepository
@@ -38,10 +41,10 @@ class ProductClassTypeExtension extends AbstractTypeExtension
     }
 
     /**
-    * {@inheritdoc}
-    */
-   public function buildForm(FormBuilderInterface $builder, array $options)
-   {
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         // 仕入先ドロップダウン
         $choices = [];
         $suppliers = $this->supplierRepository->findAll();
@@ -49,24 +52,61 @@ class ProductClassTypeExtension extends AbstractTypeExtension
             $choices[$supplier->getSupplierName()] = $supplier->getId();
         }
 
-        $builder            
-        ->add('supplier_code', ChoiceType::class, [
-            'choices' => $choices,
-            'placeholder' => 'common.select'
-        ])
-        ->add('item_cost', PriceType::class, [
-            'required' => false,
-            'constraints' => [
-                new Assert\NotBlank(),
-            ],
-        ]);
-   }
+        $builder
+            ->add('code', TextType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
+            ])
+            ->add('supplier_code', ChoiceType::class, [
+                'choices' => $choices,
+                'placeholder' => 'common.select'
+            ])
+            ->add('jan_code', IntegerType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Assert\Length([
+                        'min' => 13,
+                        'max' => 13,
+                    ]),
+                ]
+            ])
+            ->add('stock_code', TextType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Assert\Length([
+                        'min' => 5,
+                        'max' => 5,
+                    ]),
+                    new Assert\NotBlank(),
+                    new Assert\Regex(['pattern' => '/^\d{5}$/']),
+                ]
+            ])
+            ->add('item_cost', PriceType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+            ])
+            ->add('incentive_ratio', NumberType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Assert\GreaterThanOrEqual([
+                        'value' => 0,
+                    ]),
+                    new Assert\NotBlank(),
+                    new Assert\LessThanOrEqual([
+                        'value' => 100
+                    ])
+                ]
+            ]);
+    }
 
-   /**
-    * {@inheritdoc}
-    */
-   public function getExtendedType()
-   {
-       return ProductClassType::class;
-   }
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtendedType()
+    {
+        return ProductClassType::class;
+    }
 }

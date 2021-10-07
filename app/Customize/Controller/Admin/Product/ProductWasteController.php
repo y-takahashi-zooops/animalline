@@ -20,6 +20,7 @@ use Customize\Repository\StockWasteRepository;
 use Customize\Config\AnilineConf;
 use Eccube\Entity\BaseInfo;
 use Customize\Form\Type\Admin\StockWasteType;
+use Eccube\Controller\AbstractController;
 use Eccube\Repository\BaseInfoRepository;
 use Eccube\Repository\CategoryRepository;
 use Eccube\Repository\Master\PageMaxRepository;
@@ -36,10 +37,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Eccube\Controller\Admin\Product\ProductController as BaseProductController;
 use Eccube\Repository\Master\OrderItemTypeRepository;
 
-class ProductWasteController extends BaseProductController
+class ProductWasteController extends AbstractController
 {
     /**
      * @var CsvExportService

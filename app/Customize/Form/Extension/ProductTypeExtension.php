@@ -31,12 +31,6 @@ class ProductTypeExtension extends AbstractTypeExtension
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder            
-        ->add('quantity_box', NumberType::class, [
-            'required' => false,
-            'constraints' => [
-                new Assert\NotBlank(),
-            ],
-        ])
         ->add('item_weight', NumberType::class, [
             'required' => false,
             'constraints' => [
