@@ -119,7 +119,8 @@ class ConservationPetController extends AbstractController
             $entityManager->flush();
             $petId = $conservationPet->getId();
             $Dna->setPetId($petId)
-                ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED);
+                ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED)
+                ->setKitPetRegisterDate(new \DateTime);
             $entityManager->persist($Dna);
             $entityManager->flush();
             $img0 = $this->setImageSrc($request->get('img0'), $petId);

@@ -2,9 +2,7 @@
 
 namespace Customize\Command;
 
-use Customize\Config\AnilineConf;
 use Doctrine\ORM\EntityManagerInterface;
-use Eccube\Entity\ProductStock;
 use Eccube\Repository\ProductStockRepository;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -65,8 +63,7 @@ class ImportInstockSchedule extends Command
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
         ProductStockRepository          $productStockRepository
-    )
-    {
+    ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
@@ -108,7 +105,7 @@ class ImportInstockSchedule extends Command
         $fp = fopen($csvpath, 'r');
         if ($fp === FALSE) {
             //エラー
-            throw new \Exception('Error: Failed to open file');
+            throw new Exception('Error: Failed to open file');
         }
 
         log_info('商品CSV取込開始');
@@ -127,8 +124,7 @@ class ImportInstockSchedule extends Command
             $Instock = $this->instockScheduleRepository->findOneBy(['id' => $instockId, 'InstockHeader' => $headerId]);
             if ($Instock) {
                 $Instock->setItemCode01($data[8])
-                    ->setArrivalQuantity($data[12] ? $data[12] : NULL)
-                    ->setArrivalBox($data[13] ? $data[13] : NULL);
+                    ->setArrivalQuantity($data[12] ? $data[12] : NULL);
                 $ProductStock = $this->productStockRepository->findOneBy(['ProductClass' => $Instock->getProductClass()]);
                 $ProductStock->setStock($ProductStock->getStock() + $Instock->getArrivalQuantity());
                 $em->persist($Instock);

@@ -15,11 +15,21 @@ namespace Customize\Controller\Admin\Product;
 
 use Carbon\Carbon;
 use Customize\Entity\StockWaste;
+use Customize\Repository\StockWasteReasonRepository;
 use Customize\Repository\StockWasteRepository;
 use Customize\Config\AnilineConf;
+use Eccube\Entity\BaseInfo;
 use Customize\Form\Type\Admin\StockWasteType;
+use Eccube\Repository\BaseInfoRepository;
+use Eccube\Repository\CategoryRepository;
+use Eccube\Repository\Master\PageMaxRepository;
+use Eccube\Repository\Master\ProductStatusRepository;
 use Eccube\Repository\ProductClassRepository;
-use Exception;
+use Eccube\Repository\ProductImageRepository;
+use Eccube\Repository\ProductRepository;
+use Eccube\Repository\TagRepository;
+use Eccube\Repository\TaxRuleRepository;
+use Eccube\Service\CsvExportService;
 use Knp\Component\Pager\Paginator;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -27,13 +37,64 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Controller\Admin\Product\ProductController as BaseProductController;
+use Eccube\Repository\Master\OrderItemTypeRepository;
 
 class ProductWasteController extends BaseProductController
 {
     /**
+     * @var CsvExportService
+     */
+    protected $csvExportService;
+
+    /**
      * @var ProductClassRepository
      */
     protected $productClassRepository;
+
+    /**
+     * @var ProductImageRepository
+     */
+    protected $productImageRepository;
+
+    /**
+     * @var TaxRuleRepository
+     */
+    protected $taxRuleRepository;
+
+    /**
+     * @var CategoryRepository
+     */
+    protected $categoryRepository;
+
+    /**
+     * @var ProductRepository
+     */
+    protected $productRepository;
+
+    /**
+     * @var BaseInfo
+     */
+    protected $BaseInfo;
+
+    /**
+     * @var PageMaxRepository
+     */
+    protected $pageMaxRepository;
+
+    /**
+     * @var ProductStatusRepository
+     */
+    protected $productStatusRepository;
+
+    /**
+     * @var TagRepository
+     */
+    protected $tagRepository;
+
+    /**
+     * @var OrderItemTypeRepository
+     */
+    protected $orderItemTypeRepository;
 
     /**
      * @var StockWasteRepository
@@ -41,17 +102,55 @@ class ProductWasteController extends BaseProductController
     protected $stockWasteRepository;
 
     /**
+     * @var StockWasteReasonRepository
+     */
+    protected $stockWasteReasonRepository;
+
+    /**
      * ProductWasteController constructor.
      *
+     * @param CsvExportService $csvExportService
      * @param ProductClassRepository $productClassRepository
+     * @param ProductImageRepository $productImageRepository
+     * @param TaxRuleRepository $taxRuleRepository
+     * @param CategoryRepository $categoryRepository
+     * @param ProductRepository $productRepository
+     * @param BaseInfoRepository $baseInfoRepository
+     * @param PageMaxRepository $pageMaxRepository
+     * @param ProductStatusRepository $productStatusRepository
+     * @param TagRepository $tagRepository
+     * @param OrderItemTypeRepository $orderItemTypeRepository
      * @param StockWasteRepository $stockWasteRepository
+     * @param StockWasteReasonRepository $stockWasteReasonRepository
      */
     public function __construct(
-        ProductClassRepository     $productClassRepository,
-        StockWasteRepository       $stockWasteRepository
+        CsvExportService                $csvExportService,
+        ProductClassRepository          $productClassRepository,
+        ProductImageRepository          $productImageRepository,
+        TaxRuleRepository               $taxRuleRepository,
+        CategoryRepository              $categoryRepository,
+        ProductRepository               $productRepository,
+        BaseInfoRepository              $baseInfoRepository,
+        PageMaxRepository               $pageMaxRepository,
+        ProductStatusRepository         $productStatusRepository,
+        TagRepository                   $tagRepository,
+        OrderItemTypeRepository         $orderItemTypeRepository,
+        StockWasteRepository            $stockWasteRepository,
+        StockWasteReasonRepository      $stockWasteReasonRepository
     ) {
+        $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
+        $this->productImageRepository = $productImageRepository;
+        $this->taxRuleRepository = $taxRuleRepository;
+        $this->categoryRepository = $categoryRepository;
+        $this->productRepository = $productRepository;
+        $this->BaseInfo = $baseInfoRepository->get();
+        $this->pageMaxRepository = $pageMaxRepository;
+        $this->productStatusRepository = $productStatusRepository;
+        $this->tagRepository = $tagRepository;
+        $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->stockWasteRepository = $stockWasteRepository;
+        $this->stockWasteReasonRepository = $stockWasteReasonRepository;
     }
 
     /**
