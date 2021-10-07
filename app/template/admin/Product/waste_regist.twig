@@ -70,7 +70,9 @@ file that was distributed with this source code.
                                     </div>
                                     <div class="col">
                                         <div class="form-inline">
-                                            {{ form_widget(form.waste_date) }}
+                                            {{ form_widget(form.waste_date.year) }}<span>&nbsp;/&nbsp;</span>
+                                            {{ form_widget(form.waste_date.month) }}<span>&nbsp;/&nbsp;</span>
+                                            {{ form_widget(form.waste_date.day) }}
                                             {{ form_errors(form.waste_date) }}
                                         </div>
                                     </div>
@@ -136,5 +138,3 @@ file that was distributed with this source code.
         </div>
     </form>
 {% endblock %}
-
-

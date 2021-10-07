@@ -122,6 +122,7 @@
                         $(`#${ inputImageId }`).hide();
                         $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data)
                         $(`#${ inputImageId }`).parent().find('.img_preview').show();
+                        $(`#${ inputImageId }`).parent().find('.img_preview').removeClass('d-none');
                         $(`#${ inputImageId }`).parent().parent().find('button').show();
                         $(`input.${ inputImageId }`).val('/' + data);
                     }
@@ -155,6 +156,7 @@
             $(this).parent().find('.btn_set_thumbnail').hide();
             $(this).parent().parent().find('.img_preview').hide();
             $(this).parent().parent().find('.img_preview').attr('src', '');
+            $(this).parent().parent().find('.img_preview').addClass('d-none');
             $(this).parent().parent().find('.form-control-file').show();
             $(`input.${ e.target.classList[1] }`).val('');
 
@@ -168,6 +170,7 @@
             lastItem = imageArr.pop();
             $(`#${ lastItem.class }`).show();
             $(`#${ lastItem.class }`).parent().find(".img_preview").attr('src', '');
+            $(`#${ lastItem.class }`).parent().find(".img_preview").addClass('d-none');
             $(`#${ lastItem.class }`).parent().parent().find("button").hide();
              $(`input.${ lastItem.class }`).val('');
             if (lastItem.class !== inputFileIds.pop()) {

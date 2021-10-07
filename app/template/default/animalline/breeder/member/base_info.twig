@@ -43,8 +43,8 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.handling_pet_kind) ? ' error' }}">
-                                        {{ form_widget(form.handling_pet_kind) }}
-                                        {{ form_errors(form.handling_pet_kind) }}      
+                                            {{ form_widget(form.handling_pet_kind) }}
+                                            {{ form_errors(form.handling_pet_kind) }}
                                         </div>
                                     </dd>
                                 </dl>
@@ -65,7 +65,7 @@
                                                     </div>
                                                 </div>
                                                 <a href="https://www.post.japanpost.jp/zipcode/"
-                                                target="_blank"><span>郵便番号検索</span></a>
+                                                   target="_blank"><span>郵便番号検索</span></a>
                                             </div>
                                             {{ form_errors(form.breeder_zip) }}
                                         </div>
@@ -134,14 +134,16 @@
                                     <dd>
                                         <div class="media-body">
                                             <img id="img_thumbnail"
-                                                class="img_preview mb-2 {{ breederData.thumbnailPath ? '' : 'hidden' }}"
-                                                src="{{ breederData.thumbnailPath }}" alt="..."
-                                                style="width: 200px; border: 1px solid #ddd;"/>
+                                                 class="img_preview mb-2 {{ breederData.thumbnailPath ? '' : 'hidden' }}"
+                                                 src="{{ breederData.thumbnailPath }}" alt="..."
+                                                 style="width: 200px; border: 1px solid #ddd;"/>
                                             {{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'thumbnail_path'  } }) }}
                                             {{ form_errors(form.thumbnail_path) }}
                                             <input type="hidden" name="thumbnail_path" id="breeder_src_path">
                                         </div>
-                                        <a class="btn btn-ec-regular mr-2" onclick="$('#breeders_thumbnail_path').click()" style="background: #f0f0f0; border: 1px solid black;">
+                                        <a class="btn btn-ec-regular mr-2"
+                                           onclick="$('#breeders_thumbnail_path').click()"
+                                           style="background: #f0f0f0; border: 1px solid black;">
                                             {{ 'admin.common.file_select'|trans }}
                                         </a>
                                     </dd>
@@ -150,7 +152,9 @@
                             <div class="mb-5">
                                 <div class="d-flex" style="border-bottom:1px dotted #ccc">
                                     <h2 class="mr-4 mt-1">動物取扱業登録証情報</h2>
-                                    <button class="btn btn-ec-regular btn-secondary m-2" id="copy" type="button">ブリーダー情報コピー</button>
+                                    <button class="btn btn-ec-regular btn-secondary m-2" id="copy" type="button">
+                                        ブリーダー情報コピー
+                                    </button>
                                 </div>
                                 <dl>
                                     <dt>
@@ -170,14 +174,17 @@
                                     <dd>
                                         <div class="media-body">
                                             <img id="img_license_thumbnail"
-                                                class="img_preview mb-2 {{ breederData.licenseThumbnailPath ? '' : 'hidden' }}"
-                                                src="{{ breederData.licenseThumbnailPath }}" alt="..."
-                                                style="width: 200px; border: 1px solid #ddd;"/>
-                                                {{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'thumbnail_path'  } }) }}
-                                                {{ form_errors(form.license_thumbnail_path) }}
-                                            <input type="hidden" name="license_thumbnail_path" id="breeder_license_src_path">
+                                                 class="img_preview mb-2 {{ breederData.licenseThumbnailPath ? '' : 'hidden' }}"
+                                                 src="{{ breederData.licenseThumbnailPath }}" alt="..."
+                                                 style="width: 200px; border: 1px solid #ddd;"/>
+                                            {{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'thumbnail_path'  } }) }}
+                                            {{ form_errors(form.license_thumbnail_path) }}
+                                            <input type="hidden" name="license_thumbnail_path"
+                                                   id="breeder_license_src_path">
                                         </div>
-                                        <a class="btn btn-ec-regular mr-2" onclick="$('#breeders_license_thumbnail_path').click()" style="background: #f0f0f0; border: 1px solid black;">
+                                        <a class="btn btn-ec-regular mr-2"
+                                           onclick="$('#breeders_license_thumbnail_path').click()"
+                                           style="background: #f0f0f0; border: 1px solid black;">
                                             {{ 'admin.common.file_select'|trans }}
                                         </a>
                                     </dd>
@@ -210,7 +217,7 @@
                                                     </div>
                                                 </div>
                                                 <a href="https://www.post.japanpost.jp/zipcode/"
-                                                target="_blank"><span>郵便番号検索</span></a>
+                                                   target="_blank"><span>郵便番号検索</span></a>
                                             </div>
                                             {{ form_errors(form.license_zip) }}
                                         </div>
@@ -292,8 +299,9 @@
                         <div class="ec-registerRole__actions">
                             <div class="ec-off4Grid">
                                 <div class="ec-off4Grid__cell">
-                                    <input type="hidden" name="return_path" value="{{ return_path }}" />
-                                    <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
+                                    <input type="hidden" name="return_path" value="{{ return_path }}"/>
+                                    <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -302,56 +310,11 @@
             </div>
         </div>
     </section>
-    <div class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" id="modal-crop" tabindex="-1"
-         role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modalLabel">画像切り抜き</h3>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="img-container">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <!--  default image where we will set the src via jquery-->
-                                <img id="image" alt="">
-                            </div>
-                            <div class="col-md-4">
-                                <div class="preview"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-                    <button type="button" class="btn btn-primary" id="crop">切り抜き</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     {{ include('animalline/components/_modal_confirm.twig') }}
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
-    <style>
-        img#image {
-            display: block;
-            max-width: 100%;
-        }
-
-        .preview {
-            overflow: hidden;
-            width: 200px;
-            height: 200px;
-            margin-left: 25px;
-            border: 1px solid red;
-        }
-    </style>
 {% endblock %}
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>

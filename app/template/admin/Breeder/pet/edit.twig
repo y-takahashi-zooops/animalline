@@ -190,34 +190,6 @@ file that was distributed with this source code.
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            <span>繁殖の可否</span>
-                                            <span class="badge badge-primary ml-1">
-                                                {{ 'admin.common.required'|trans }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        {{ form_widget(form.is_breeding) }}
-                                        {{ form_errors(form.is_breeding) }} 
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>ブリーダーへの販売可否</span>
-                                            <span class="badge badge-primary ml-1">
-                                                {{ 'admin.common.required'|trans }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        {{ form_widget(form.is_selling) }}
-                                        {{ form_errors(form.is_selling) }}   
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
                                             <span>生体保障内容</span>
                                         </div>
                                     </div>
@@ -257,50 +229,12 @@ file that was distributed with this source code.
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            <span>引き渡し時期</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        {{ form_widget(form.delivery_time) }}
-                                        {{ form_errors(form.delivery_time) }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
                                             <span>引き渡し方法</span>
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
                                         {{ form_widget(form.delivery_way) }}
                                         {{ form_errors(form.delivery_way) }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>支払い方法</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        {{ form_widget(form.payment_method) }}
-                                        {{ form_errors(form.payment_method) }}
-                                    </div>
-                                </div>
-                                <div class="row" hidden>
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>予約金</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">￥ </span>
-                                            </div>
-                                            {{ form_widget(form.reservation_fee) }}
-                                            {{ form_errors(form.reservation_fee) }}
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">

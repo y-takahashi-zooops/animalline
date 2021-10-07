@@ -104,7 +104,7 @@ class BreederConfigrationContactController extends AbstractController
 
         if ($replyMessage) {
             $breederContact->setBreederHeader($rootMessage)
-                ->setMessageFrom(AnilineConf::MESSAGE_FROM_CONFIGURATION)
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription($description)
                 ->setSendDate(new DateTime());
             $entityManager = $this->getDoctrine()->getManager();

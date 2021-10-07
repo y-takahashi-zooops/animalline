@@ -9,6 +9,7 @@ use Customize\Repository\SendoffReasonRepository;
 use Eccube\Repository\Master\PrefRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
+use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederHouseRepository;
@@ -69,6 +70,11 @@ class BreederController extends AbstractController
     protected $prefRepository;
 
     /**
+     * @var BreederExaminationInfoRepository
+     */
+    protected $breederExaminationInfoRepository;
+
+    /**
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
@@ -79,6 +85,7 @@ class BreederController extends AbstractController
      * @param BreedersRepository $breedersRepository
      * @param BreederHouseRepository $breederHouseRepository
      * @param BreederPetsRepository $breederPetsRepository
+     * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
@@ -89,7 +96,8 @@ class BreederController extends AbstractController
         BreedersRepository        $breedersRepository,
         BreederHouseRepository    $breederHouseRepository,
         BreederPetsRepository     $breederPetsRepository,
-        PrefRepository            $prefRepository
+        PrefRepository            $prefRepository,
+        BreederExaminationInfoRepository $breederExaminationInfoRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
@@ -100,6 +108,7 @@ class BreederController extends AbstractController
         $this->breederHouseRepository = $breederHouseRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->prefRepository = $prefRepository;
+        $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
     }
 
     /**
@@ -124,7 +133,7 @@ class BreederController extends AbstractController
         $regions = $this->prefRepository->findAll();
         $newPets = $this->breederPetsRepository->findBy(
             ['pet_kind' => $petKind],
-            ['release_date' => 'DESC'],
+            ['update_date' => 'DESC'],
             AnilineConf::NUMBER_ITEM_TOP
         );
         $favoritePets = $this->breederPetsRepository->findBy(
@@ -206,6 +215,29 @@ class BreederController extends AbstractController
         $id = $request->get('id');
         $isFavorite = false;
         $breederPet = $this->breederPetsRepository->find($id);
+        $pedigree = $breederPet->getPedigree();
+        $breederExamInfo = null;
+
+        $isPedigree = $breederPet->getIsPedigree();
+        if ($isPedigree == 1) {
+            $breeder = $this->breedersRepository->find($breederPet->getBreeder());
+            $breederExamInfo = $this->breederExaminationInfoRepository->findOneBy([
+                'Breeder' => $breeder->getId(),
+                'pet_type' => $breederPet->getPetKind(),
+                'pedigree_organization' => 3
+            ]);
+            if (!$breederExamInfo) {
+                $breederExamInfo = $this->breederExaminationInfoRepository->findOneBy([
+                    'Breeder' => $breeder->getId(),
+                    'pet_type' => $breederPet->getPetKind(),
+                    'pedigree_organization' => [
+                        1,
+                        2
+                    ]
+                ]);
+            }
+        }
+
         $petKind = $breederPet->getPetKind();
         $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         if ($favorite) {
@@ -236,7 +268,9 @@ class BreederController extends AbstractController
                 'images' => $images,
                 'video' => $video,
                 'isFavorite' => $isFavorite,
-                'isLoggedIn' => $isLoggedIn
+                'isLoggedIn' => $isLoggedIn,
+                'breederExamInfo' => $breederExamInfo,
+                'pedigree' => $pedigree
             ]
         );
     }
@@ -291,8 +325,7 @@ class BreederController extends AbstractController
         $catHouse = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 2]);
 
         $petResults = $this->breederPetsRepository->findBy([
-            'Breeder' => $breeder,
-            'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC
+            'Breeder' => $breeder
         ]);
         $pets = $paginator->paginate(
             $petResults,
