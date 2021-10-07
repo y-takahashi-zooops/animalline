@@ -87,11 +87,8 @@ class DnaController extends AbstractController
             } else {
                 $pet = $this->conservationPetsRepository->find($dna->getPetId());
             }
-            $pet->setReleaseStatus(1)
-                ->setReleaseDate(Carbon::now());
             $em = $this->getDoctrine()->getManager();
             $em->persist($dna);
-            $em->persist($pet);
             $em->flush();
 
             return $this->redirectToRoute('admin_dna_examination_status');
