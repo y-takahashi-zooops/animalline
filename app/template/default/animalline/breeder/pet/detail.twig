@@ -111,7 +111,7 @@
                                             血統書の有無                                                  
                                         </div>
                                         <div class="col-12 col-md-8 contents_col_normal">
-                                            {{ pedigree ? pedigree.pedigreeName : breederExamInfo.pedigreeOrganizationOther }}
+                                            {{ pedigree.isPedigree != 0 ? '有（' . pedigree.pedigreeName . '）' : '有（' . breederExamInfo.pedigreeOrganizationOther . '）' }}
                                         </div>
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@
                                             ワクチン代負担                                               
                                         </div>
                                         <div class="col-12 col-md-8 contents_col_normal">
-                                            {{ breederPet.getIncludeVaccineFee() == 0 ? '代金に含まない（ワクチン代詳細テキスト）' : '代金に含む' }}
+                                            {{ breederPet.getVacineDetail ? '代金に含む' : '代金に含まない（ワクチン代詳細テキスト）'  }}
                                         </div>
                                     </div>
                                 </div>
