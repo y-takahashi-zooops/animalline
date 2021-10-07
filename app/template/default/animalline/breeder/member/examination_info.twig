@@ -383,6 +383,33 @@
 {% endblock %}
 
 {% block javascript %}
+<script>
+	$(document).ready(function() {
+		var pet_type = {{ petTypeId }}
+			 const isEdit = !!$('#form-edit').length;
+        	if (isEdit) {
+            pedigree = $('#breeder_examination_info_group_organization').val();
+       		}
+			$.ajax({
+				type: 'get',
+				url: '/breeder_pedigree_data_by_pet_kind',
+				dataType: 'json',
+				data: {
+						pet_kind: pet_type
+					}
+			})
+			.done(function (data) {
+				const { pedigrees } = data;
+				$('#breeder_examination_info_group_organization').empty();
+				pedigrees.forEach(pedigree => {
+				$('#breeder_examination_info_group_organization').append(new Option(pedigree.name, pedigree.id));
+				});
+			})
+			.fail(function (err) {
+				console.error(err);
+		})
+	});
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="{{ asset('assets/js/examinationinfo.js') }}"></script>

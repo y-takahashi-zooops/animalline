@@ -3,6 +3,7 @@
 namespace Customize\Form\Type;
 
 use Customize\Entity\BreederExaminationInfo;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,13 +40,12 @@ class BreederExaminationInfoType extends AbstractType
                 ],
                 'expanded' => true,
             ])
-            ->add('group_organization', ChoiceType::class, [
+            ->add('group_organization', EntityType::class, [
+                'class' => 'Customize\Entity\Pedigree',
+                'choice_label' => function (\Customize\Entity\Pedigree $pedigree) {
+                    return $pedigree->getPedigreeName();
+                },
                 'required' => false,
-                'choices' => [
-                    '----' => '',
-                    'JKC' => AnilineConf::PEDIGREE_ORGANIZATION_JKC,
-                    'KC'  => AnilineConf::PEDIGREE_ORGANIZATION_KC,
-                ],
             ])
             ->add('pedigree_organization_other', TextType::class, [
                 'attr' => [
