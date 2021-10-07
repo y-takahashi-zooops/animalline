@@ -3,6 +3,8 @@
 namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
+use Customize\Entity\Pedigree;
+use Customize\Repository\PedigreeRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Form\Type\BreederExaminationInfoType;
 use Customize\Entity\BreederHouse;
@@ -14,6 +16,7 @@ use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -186,7 +189,8 @@ class BreederExamController extends AbstractController
         return $this->render('animalline/breeder/member/examination_info.twig', [
             'form' => $form->createView(),
             'isEdit' => $isEdit,
-            'petType' => $petType == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫'
+            'petType' => $petType == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫',
+            'petTypeId' => $request->get('pet_type')
         ]);
     }
 
@@ -258,5 +262,29 @@ class BreederExamController extends AbstractController
         );
 
         return compact('dnas');
+    }
+
+    /**
+     * Get pedigree data by pet kind
+     *
+     * @Route("/breeder_pedigree_data_by_pet_kind", name="breeder_pedigree_data_by_pet_kind", methods={"GET"})
+     */
+    public function breederPedigreeDataByPetKind(Request $request, PedigreeRepository $pedigreeRepository)
+    {
+        $petKind = $request->get('pet_kind');
+        $pedigrees = $pedigreeRepository->findBy(['pet_kind' => $petKind]);
+        $formattedPedigree = [];
+        foreach ($pedigrees as $pedigree) {
+            $formattedPedigree[] = [
+                'id' => $pedigree->getId(),
+                'name' => $pedigree->getPedigreeName()
+            ];
+        }
+
+        $data = [
+            'pedigrees' => $formattedPedigree
+        ];
+
+        return new JsonResponse($data);
     }
 }
