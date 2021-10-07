@@ -111,7 +111,7 @@
                                             血統書の有無                                                  
                                         </div>
                                         <div class="col-12 col-md-8 contents_col_normal">
-                                            {{ breederPet.getIsPedigree() == 0 ? '無' : '有' }}
+                                            {{ breederPet.getIsPedigree() == 1 ? '有（団体名）' : '有（その他の入力内容テキスト）' }}
                                         </div>
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@
                                             ワクチン代負担                                               
                                         </div>
                                         <div class="col-12 col-md-8 contents_col_normal">
-                                            {{ breederPet.getIsPedigree() == 0 ? '代金に含まない' : '代金に含む' }}
+                                            {{ breederPet.getIncludeVaccineFee() == 0 ? '代金に含まない（ワクチン代詳細テキスト）' : '代金に含む' }}
                                         </div>
                                     </div>
                                 </div>
@@ -263,13 +263,6 @@
                                     <i class="fas fa-paw"></i>
                                     引き渡し時期
                                 </div>
-                                <div class="col-12 breeder_section_detail">
-                                    <div class="row">
-                                        <div class="col-12 contents_col_normal">
-                                            {{ breederPet.getDeliveryTime() | nl2br }}
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="breeder_section_header_orange">
                                     <i class="fas fa-paw"></i>
                                     引き渡し方法
@@ -284,13 +277,6 @@
                                 <div class="breeder_section_header_orange">
                                     <i class="fas fa-paw"></i>
                                     支払方法                     
-                                </div>
-                                <div class="col-12 breeder_section_detail">
-                                    <div class="row">
-                                        <div class="col-12 contents_col_normal">
-                                            {{ breederPet.getPaymentMethod() | nl2br }}
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="col-12 btn_center">
                                     <div class="row">
