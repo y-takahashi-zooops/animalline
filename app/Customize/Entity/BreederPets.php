@@ -107,12 +107,6 @@ class BreederPets
     private $vaccine_detail;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customize\Entity\Pedigree", inversedBy="BreederPets")
-     * @ORM\JoinColumn(name="pedigree_id", nullable=true)
-     */
-    private $Pedigree;
-
-    /**
      * @ORM\Column(name="delivery_way", type="text", nullable=true)
      */
     private $delivery_way;
@@ -165,6 +159,12 @@ class BreederPets
      * @ORM\OneToMany(targetEntity=BreederEvaluations::class, mappedBy="pet_id")
      */
     private $BreederEvaluations;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Pedigree::class)
+     * @ORM\JoinColumn(name="pedigree_id", nullable=false)
+     */
+    private $Pedigree;
 
     public function __construct()
     {
@@ -331,18 +331,6 @@ class BreederPets
     public function setIsPedigree(int $is_pedigree): self
     {
         $this->is_pedigree = $is_pedigree;
-
-        return $this;
-    }
-
-    public function getPedigree(): ?Pedigree
-    {
-        return $this->Pedigree;
-    }
-
-    public function setPedigree(?Pedigree $Pedigree): self
-    {
-        $this->Pedigree = $Pedigree;
 
         return $this;
     }
@@ -564,5 +552,17 @@ class BreederPets
     public function getUpdateDate()
     {
         return $this->update_date;
+    }
+
+    public function getPedigreeId(): ?Pedigree
+    {
+        return $this->Pedigree;
+    }
+
+    public function setPedigreeId(?Pedigree $Pedigree): self
+    {
+        $this->Pedigree = $Pedigree;
+
+        return $this;
     }
 }
