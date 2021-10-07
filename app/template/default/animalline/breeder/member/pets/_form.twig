@@ -333,16 +333,31 @@ $(document).ready(function() {
             $("#pedigreeSelect").hide();
         }
     });
-
-    $("#breeder_pets_pet_kind").change(function() {
-        $.ajax({
-            url: "otherCatchesMap.php>",
-            success: function(msg){
-            $("#results").html(msg);
-            }
-        });
-    });
 });
+
+$('#breeder_pets_pet_kind').change( function() {
+    pet_kind = $('#breeder_pets_pet_kind').val();
+    pedigree = $('#breeder_pets_Pedigree').val();
+    $.ajax({
+        type: 'get',
+        url: '/breeder_pedigree_data_by_pet_kind',
+        dataType: 'json',
+        data: {
+                pet_kind: pet_kind
+            }
+    })
+    .done(function (data) {
+        const { pedigrees } = data;
+        $('#breeder_pets_Pedigree').empty();
+        pedigrees.forEach(pedigree => {
+            $('#breeder_pets_Pedigree').append(new Option(pedigree.name, pedigree.id));
+        });
+    })
+    .fail(function (err) {
+        console.error(err);
+    })
+});
+
 
 </script>
 {% endblock %}
