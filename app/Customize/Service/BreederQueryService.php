@@ -81,9 +81,7 @@ class BreederQueryService
     public function searchPetsResult($request): array
     {
         $query = $this->breederPetsRepository->createQueryBuilder('p')
-            ->join('p.Breeder', 'c')
-            ->where('p.release_status = :release_status')
-            ->setParameter('release_status', AnilineConf::RELEASE_STATUS_PUBLIC);
+            ->join('p.Breeder', 'c');
 
         if ($request->get('pet_kind')) {
             $query->andWhere('p.pet_kind = :pet_kind')
@@ -126,7 +124,7 @@ class BreederQueryService
             }
         }
 
-        return $query->addOrderBy('p.release_date', 'DESC')
+        return $query->addOrderBy('p.update_date', 'DESC')
             ->getQuery()
             ->getResult();
     }

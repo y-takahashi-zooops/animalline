@@ -124,7 +124,7 @@ class BreederController extends AbstractController
         $regions = $this->prefRepository->findAll();
         $newPets = $this->breederPetsRepository->findBy(
             ['pet_kind' => $petKind],
-            ['release_date' => 'DESC'],
+            ['update_date' => 'DESC'],
             AnilineConf::NUMBER_ITEM_TOP
         );
         $favoritePets = $this->breederPetsRepository->findBy(
@@ -291,8 +291,7 @@ class BreederController extends AbstractController
         $catHouse = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 2]);
 
         $petResults = $this->breederPetsRepository->findBy([
-            'Breeder' => $breeder,
-            'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC
+            'Breeder' => $breeder
         ]);
         $pets = $paginator->paginate(
             $petResults,
