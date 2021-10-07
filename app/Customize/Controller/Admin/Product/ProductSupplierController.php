@@ -17,14 +17,14 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\Supplier;
 use Customize\Form\Type\Admin\SupplierType;
 use Customize\Repository\SupplierRepository;
+use Eccube\Controller\AbstractController;
 use Eccube\Repository\ProductClassRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Eccube\Controller\Admin\Product\ProductController as BaseProductController;
 
-class ProductSupplierController extends BaseProductController
+class ProductSupplierController extends AbstractController
 {
     /**
      * @var SupplierRepository

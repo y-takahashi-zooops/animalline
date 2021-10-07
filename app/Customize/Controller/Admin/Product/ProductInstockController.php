@@ -20,6 +20,7 @@ use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\InstockScheduleRepository;
 use Customize\Entity\InstockSchedule;
 use Customize\Repository\SupplierRepository;
+use Eccube\Controller\AbstractController;
 use Eccube\Form\Type\Admin\SearchProductType;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
@@ -28,11 +29,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Eccube\Controller\Admin\Product\ProductController as BaseProductController;
 use Eccube\Entity\OrderItem;
 use Eccube\Repository\Master\OrderItemTypeRepository;
 
-class ProductInstockController extends BaseProductController
+class ProductInstockController extends AbstractController
 {
     /**
      * @var SupplierRepository
