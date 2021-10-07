@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -75,7 +76,17 @@ class BreederPetsType extends AbstractType
             ])
             ->add('future_wait', IntegerType::class)
             //->add('dna_check_result', IntegerType::class)
-            ->add('pr_comment', TextareaType::class)
+            ->add('pr_comment', TextType::class, [
+                'attr' => [
+                    'maxlength' => 64,
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 64,
+                    ]),
+                ],
+                'required' => false,
+            ])
             ->add('description', TextareaType::class)
             ->add('guarantee', TextareaType::class)
             ->add('is_pedigree', ChoiceType::class, [
