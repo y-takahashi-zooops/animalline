@@ -110,10 +110,7 @@ class BreederPetsType extends AbstractType
                 'choice_label' => function (\Customize\Entity\Pedigree $petdigree) {
                     return $petdigree->getPedigreeName();
                 },
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
+                'required' => false,
             ])
             ->add('include_vaccine_fee', ChoiceType::class, [
                 'choices'  => [

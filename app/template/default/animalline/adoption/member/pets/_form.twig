@@ -94,7 +94,9 @@
             {{ form_label(form.pet_birthday, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
         </div>
         <div class="col-md-5 ec-select">
-            {{ form_widget(form.pet_birthday) }}
+            {{ form_widget(form.pet_birthday.year) }}<span>&nbsp;/&nbsp;</span>
+            {{ form_widget(form.pet_birthday.month) }}<span>&nbsp;/&nbsp;</span>
+            {{ form_widget(form.pet_birthday.day) }}
             {{ form_errors(form.pet_birthday) }}
         </div>
     </div>

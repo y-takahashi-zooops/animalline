@@ -97,7 +97,9 @@
         {{ form_label(form.pet_birthday, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
         </div>
         <div class="col-md-8 ec-input ec-select">
-        {{ form_widget(form.pet_birthday) }}
+        {{ form_widget(form.pet_birthday.year) }}<span>&nbsp;/&nbsp;</span>
+        {{ form_widget(form.pet_birthday.month) }}<span>&nbsp;/&nbsp;</span>
+        {{ form_widget(form.pet_birthday.day) }}
         {{ form_errors(form.pet_birthday) }}
         </div>
     </div>
@@ -330,6 +332,15 @@ $(document).ready(function() {
         } else if (is_pedigree == 0) {
             $("#pedigreeSelect").hide();
         }
+    });
+
+    $("#breeder_pets_pet_kind").change(function() {
+        $.ajax({
+            url: "otherCatchesMap.php>",
+            success: function(msg){
+            $("#results").html(msg);
+            }
+        });
     });
 });
 
