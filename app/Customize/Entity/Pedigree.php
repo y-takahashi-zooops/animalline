@@ -22,7 +22,7 @@ class Pedigree
     private $id;
 
     /**
-     * @ORM\Column(namr="pet_kind", type="smallint", nullable = false)
+     * @ORM\Column(name="pet_kind", type="smallint", nullable = false)
      */
     private $pet_kind;
 
