@@ -122,6 +122,7 @@
                         $(`#${ inputImageId }`).hide();
                         $(`#${ inputImageId }`).parent().find('.img_preview').attr('src', '/' + data)
                         $(`#${ inputImageId }`).parent().find('.img_preview').show();
+                        $(`#${ inputImageId }`).parent().find('.img_preview').removeClass('d-none');
                         $(`#${ inputImageId }`).parent().parent().find('button').show();
                         $(`input.${ inputImageId }`).val('/' + data);
                     }
