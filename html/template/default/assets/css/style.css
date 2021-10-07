@@ -10060,7 +10060,8 @@ Styleguide 22.1
     border-bottom: none;
     margin: 0 10px;
     padding: 0;
-    text-decoration: underline;
+    /* text-decoration: underline; */
+    text-decoration: none;
   }
   .ec-footerTitle {
     padding: 50px 0 80px;
