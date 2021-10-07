@@ -3,6 +3,8 @@
 namespace Customize\Entity;
 
 use Customize\Repository\PedigreeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -45,6 +47,16 @@ class Pedigree
      */
     private $update_date;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BreederPets::class, mappedBy="Pedigree")
+     */
+    private $BreederPets;
+
+    public function __construct()
+    {
+        $this->BreederPets = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -72,6 +84,14 @@ class Pedigree
         $this->pedigree_name = $pedigree_name;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|BreederPets[]
+     */
+    public function getBreederPets(): Collection
+    {
+        return $this->BreederPets;
     }
 
     /**
