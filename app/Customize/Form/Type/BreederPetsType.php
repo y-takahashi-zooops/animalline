@@ -87,7 +87,16 @@ class BreederPetsType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('description', TextareaType::class)
+            ->add('description', TextType::class, [
+                'attr' => [
+                    'maxlength' => 64,
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 64,
+                    ]),
+                ],
+            ])
             ->add('guarantee', TextareaType::class)
             ->add('is_pedigree', ChoiceType::class, [
                 'choices'  => [
