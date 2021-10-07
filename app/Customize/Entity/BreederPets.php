@@ -24,13 +24,13 @@ class BreederPets
     private $id;
 
     /**
-     * @ORM\Column(name="pet_kind", type="smallint")
+     * @ORM\Column(name="pet_kind", type="smallint", nullable=true)
      */
     private $pet_kind;
 
     /**
      * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="BreederPets")
-     * @ORM\JoinColumn(name="breeder_id", nullable=false)
+     * @ORM\JoinColumn(name="breeder_id", nullable=true)
      */
     private $Breeder;
 
@@ -41,12 +41,12 @@ class BreederPets
     private $BreedsType;
 
     /**
-     * @ORM\Column(name="pet_sex", type="smallint")
+     * @ORM\Column(name="pet_sex", type="smallint", nullable=true)
      */
     private $pet_sex;
 
     /**
-     * @ORM\Column(name="pet_birthday", type="date")
+     * @ORM\Column(name="pet_birthday", type="date", nullable=true)
      */
     private $pet_birthday;
 
@@ -62,62 +62,62 @@ class BreederPets
     private $future_wait;
 
     /**
-     * @ORM\Column(name="dna_check_result", type="integer", options={"default" = 0})
+     * @ORM\Column(name="dna_check_result", type="integer", options={"default" = 0}, nullable=true)
      */
     private $dna_check_result;
 
     /**
-     * @ORM\Column(name="pr_comment", type="text")
+     * @ORM\Column(name="pr_comment", type="text", nullable=true)
      */
     private $pr_comment;
 
     /**
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\Column(name="is_breeding", type="smallint")
+     * @ORM\Column(name="is_breeding", type="smallint", nullable=true)
      */
     private $is_breeding;
 
     /**
-     * @ORM\Column(name="is_selling", type="smallint")
+     * @ORM\Column(name="is_selling", type="smallint", nullable=true)
      */
     private $is_selling;
 
     /**
-     * @ORM\Column(name="guarantee", type="text")
+     * @ORM\Column(name="guarantee", type="text", nullable=true)
      */
     private $guarantee;
 
     /**
-     * @ORM\Column(name="is_pedigree", type="smallint")
+     * @ORM\Column(name="is_pedigree", type="smallint", nullable=true)
      */
     private $is_pedigree;
 
     /**
-     * @ORM\Column(name="include_vaccine_fee", type="smallint")
+     * @ORM\Column(name="include_vaccine_fee", type="smallint", nullable=true)
      */
     private $include_vaccine_fee;
 
     /**
-     * @ORM\Column(name="delivery_time", type="text")
+     * @ORM\Column(name="delivery_time", type="text", nullable=true)
      */
     private $delivery_time;
 
     /**
-     * @ORM\Column(name="delivery_way", type="text")
+     * @ORM\Column(name="delivery_way", type="text", nullable=true)
      */
     private $delivery_way;
 
     /**
-     * @ORM\Column(name="payment_method", type="text")
+     * @ORM\Column(name="payment_method", type="text", nullable=true)
      */
     private $payment_method;
 
     /**
-     * @ORM\Column(name="reservation_fee", type="integer")
+     * @ORM\Column(name="reservation_fee", type="integer", nullable=true)
      */
     private $reservation_fee = 0;
 
