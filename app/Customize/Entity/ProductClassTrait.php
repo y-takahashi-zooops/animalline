@@ -31,7 +31,7 @@ trait ProductClassTrait
     public $item_cost;
 
     /**
-     * @ORM\Column(name="incentive_ratio", type="smallint", nullable=false, options={"default":5})
+     * @ORM\Column(name="incentive_ratio", type="integer", nullable=false, options={"default":5})
      */
     private $incentive_ratio;
 
