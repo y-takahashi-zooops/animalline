@@ -111,10 +111,17 @@
                                             血統書の有無                                                  
                                         </div>
                                         <div class="col-12 col-md-8 contents_col_normal">
-                                        {% if breederPet.isPedigree != 0 %}
-                                            有（ {{ pedigree.pedigreeName ? pedigree.pedigreeName : '_' }} ）
+                                        
+                                        {% if breederPet.isPedigree == 1 %}
+                                            {% if breederExamInfo == null %}
+                                                無
+                                            {% elseif breederExamInfo.pedigreeOrganization == 1 or breederExamInfo.pedigreeOrganization == 2 %}
+                                                有（ {{ pedigree.pedigreeName ? pedigree.pedigreeName : '_' }} ）
+                                            {% elseif breederExamInfo.pedigreeOrganization == 3 %}
+                                                有（ {{ breederExamInfo.pedigreeOrganizationOther ? breederExamInfo.pedigreeOrganizationOther : '_' }} ）
+                                            {% endif %}
                                         {% else %}
-                                            有（ {{ breederExamInfo.pedigreeOrganizationOther ? breederExamInfo.pedigreeOrganizationOther : '_' }} ）
+                                            無
                                         {% endif %}
                                         </div>
                                     </div>
@@ -125,7 +132,11 @@
                                             ワクチン代負担                                               
                                         </div>
                                         <div class="col-12 col-md-8 contents_col_normal">
-                                            {{ breederPet.getVaccineDetail ? '代金に含まない（ワクチン代詳細テキスト）' : '代金に含む' }}
+                                            {% if breederPet.getIncludeVaccineFee == 0 %}
+                                                代金に含まない（{{ breederPet.getVaccineDetail() }}）
+                                            {% else %}
+                                                代金に含む
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>

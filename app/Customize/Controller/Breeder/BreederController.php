@@ -218,13 +218,26 @@ class BreederController extends AbstractController
         $pedigree = $breederPet->getPedigree();
         $breederExamInfo = null;
 
-        if (!$pedigree) {
+        $isPedigree = $breederPet->getIsPedigree();
+        if ($isPedigree == 1) {
             $breeder = $this->breedersRepository->find($breederPet->getBreeder());
             $breederExamInfo = $this->breederExaminationInfoRepository->findOneBy([
                 'Breeder' => $breeder->getId(),
-                'pet_type' => $breederPet->getPetKind()
+                'pet_type' => $breederPet->getPetKind(),
+                'pedigree_organization' => 3
             ]);
+            if (!$breederExamInfo) {
+                $breederExamInfo = $this->breederExaminationInfoRepository->findOneBy([
+                    'Breeder' => $breeder->getId(),
+                    'pet_type' => $breederPet->getPetKind(),
+                    'pedigree_organization' => [
+                        1,
+                        2
+                    ]
+                ]);
+            }
         }
+
         $petKind = $breederPet->getPetKind();
         $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
         if ($favorite) {
