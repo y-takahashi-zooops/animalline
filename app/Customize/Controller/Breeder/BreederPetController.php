@@ -254,7 +254,8 @@ class BreederPetController extends AbstractController
 
             // update dna check status
             $Dna->setPetId($breederPet->getId())
-                ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED);
+                ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED)
+                ->setKitPetRegisterDate(new \DateTime);
 
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);

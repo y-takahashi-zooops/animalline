@@ -78,14 +78,13 @@ file that was distributed with this source code.
                             <div class="d-flex align-items-center">
                                 <div class="ec-select">
                                     <div class="form-inline">
-                                        <select class="form-control mr-2" name="year_from">
+                                        <select class="form-control" name="year_from">
                                             <option value="">----</option>
                                             {% for i in 2016..2036 %}
                                                 <option value="{{ i }}" {{ params.year_from is defined and params.year_from == i ? 'selected' }}>{{ i }}</option>
                                             {% endfor %}
-                                        </select>
-                                        /
-                                        <select class="form-control ml-2" name="month_from">
+                                        </select><span>&nbsp;/&nbsp;</span>
+                                        <select class="form-control" name="month_from">
                                             <option value="">--</option>
                                             {% for i in 1..12 %}
                                                 <option value="{{ i }}" {{ params.month_from is defined and params.month_from == i ? 'selected' }}>{{ i }}</option>
@@ -96,14 +95,13 @@ file that was distributed with this source code.
                                 <div class="col-auto text-center"><span>〜</span></div>
                                 <div class="ec-select">
                                     <div class="form-inline">
-                                        <select class="form-control mr-2" name="year_to">
+                                        <select class="form-control" name="year_to">
                                             <option value="">----</option>
                                             {% for i in 2016..2036 %}
                                                 <option value="{{ i }}" {{ params.year_to is defined and params.year_to == i ? 'selected' }}>{{ i }}</option>
                                             {% endfor %}
-                                        </select>
-                                        /
-                                        <select class="form-control ml-2" name="month_to">
+                                        </select><span>&nbsp;/&nbsp;</span>
+                                        <select class="form-control" name="month_to">
                                             <option value="">--</option>
                                             {% for i in 1..12 %}
                                                 <option value="{{ i }}" {{ params.month_to is defined and params.month_to == i ? 'selected' }}>{{ i }}</option>

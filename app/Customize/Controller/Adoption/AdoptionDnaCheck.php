@@ -189,9 +189,7 @@ class AdoptionDnaCheck extends AbstractController
             for ($i = 0; $i < $kitUnit; $i++) {
                 $Dna = (new DnaCheckStatus)
                     ->setDnaHeader($dnaCheckSatusHeader)
-                    ->setPetId($dnaCheckSatusHeader->getPetId())
-                    ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
-                    ->setKitPetRegisterDate(new DateTime);
+                    ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
                 $entityManager->persist($Dna);
             }
             $entityManager->flush();

@@ -50,8 +50,10 @@ class InstockScheduleHeaderType extends AbstractType
 
         $builder
             ->add('order_date', DateType::class, [
+                'years' => range(date('Y')-1, date('Y')),
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
+                'data' => new \DateTime(),
             ])
             ->add('supplier_code', ChoiceType::class, [
                 'placeholder' => 'common.select',
@@ -62,8 +64,10 @@ class InstockScheduleHeaderType extends AbstractType
                 ],
             ])
             ->add('arrival_date_schedule', DateType::class, [
+                'years' => range(date('Y')-1, date('Y')),
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
+                'data' => new \DateTime(),
             ])
             ->add('remark_text', TextareaType::class, [
                 'required' => false,

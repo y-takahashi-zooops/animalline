@@ -168,7 +168,6 @@ class ProductInstockController extends BaseProductController
                 $item->setId($schedule->getId());
                 $item->setOrderItemType($this->orderItemTypeRepository->find(1));
                 $item->setQuantity($schedule->getArrivalQuantitySchedule());
-                $item->setTaxRate($schedule->getArrivalBoxSchedule());
                 $item->setPrice($schedule->getProductClass()->getItemCost());
                 $item->setProduct($schedule->getProductClass()->getProduct());
                 $item->setProductClass($schedule->getProductClass());
@@ -187,7 +186,7 @@ class ProductInstockController extends BaseProductController
             $TargetInstock->setInstockSchedule();
             foreach ($OriginItems as $key => $item) {
                 $TargetInstock->addInstockSchedule($item);
-                $subTotalPrices[$key] = $this->calcPrice($item);
+                $subTotalPrices[$key] = $item->getPrice() * $item->getQuantity();
             }
             $totalPrice = array_sum($subTotalPrices);
         } else {
@@ -207,7 +206,7 @@ class ProductInstockController extends BaseProductController
             $subTotalPrices = [];
             $items = $form['InstockSchedule']->getData();
             foreach ($items as $key => $item) {
-                $subTotalPrices[$key] = $this->calcPrice($item);
+                $subTotalPrices[$key] = $item->getPrice() * $item->getQuantity();
             }
             $totalPrice = array_sum($subTotalPrices);
             switch ($request->get('mode')) {
@@ -230,7 +229,6 @@ class ProductInstockController extends BaseProductController
                                 $InstockSchedule->setJanCode($item->getProductCode())
                                     ->setPurchasePrice($subTotalPrices[$key])
                                     ->setArrivalQuantitySchedule($item->getQuantity())
-                                    ->setArrivalBoxSchedule($item->getTaxRate())
                                     ->setProductClass($item->getProductClass());
                             } else {
                                 $InstockSchedule = (new InstockSchedule())
@@ -241,7 +239,6 @@ class ProductInstockController extends BaseProductController
                                     ->setJanCode($item->getProductCode())
                                     ->setPurchasePrice($subTotalPrices[$key])
                                     ->setArrivalQuantitySchedule($item->getQuantity())
-                                    ->setArrivalBoxSchedule($item->getTaxRate())
                                     ->setProductClass($item->getProductClass());
                             }
                             $this->entityManager->persist($InstockSchedule);
@@ -276,27 +273,5 @@ class ProductInstockController extends BaseProductController
             'subtotalPrices' => $subTotalPrices,
             'count' => $count
         ];
-    }
-
-    /**
-     * Calculate instock price
-     *
-     * @param $item
-     * @return float|int
-     */
-    private function calcPrice($item)
-    {
-        $price = $item->getPrice();
-        $quantity1 = $item->getQuantity();
-        $quantity2 = $item->getTaxRate();
-        $quantityBox = $item->getProduct()->getQuantityBox();
-        if ($quantity1 == 0) {
-            $subTotalPrice = $price * $quantity2 * $quantityBox;
-        } elseif ($quantity2 == 0) {
-            $subTotalPrice = $price * $quantity1;
-        } else {
-            $subTotalPrice = $price * $quantity1 + $price * $quantity2 * $quantityBox;
-        }
-        return $subTotalPrice;
     }
 }
