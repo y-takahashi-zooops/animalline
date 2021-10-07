@@ -9,7 +9,6 @@ use Customize\Repository\WmsSyncInfoRepository;
 use Customize\Repository\SupplierRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Repository\ProductRepository;
-use Exception;
 use Eccube\Repository\ProductClassRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -49,7 +48,7 @@ class ExportProduct extends Command
      * @var SupplierRepository
      */
     protected $supplierRepository;
-    
+
 
     /**
      * ExportProduct constructor.
@@ -66,8 +65,7 @@ class ExportProduct extends Command
         ProductClassRepository $productClassRepository,
         ProductRepository      $productRepository,
         SupplierRepository     $supplierRepository
-    )
-    {
+    ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
@@ -105,14 +103,13 @@ class ExportProduct extends Command
         $qb = $this->productClassRepository->createQueryBuilder('pc');
         $qb->select(
             'p.id',
-            'pc.code as productCode',
+            'pc.jan_code as productCode',
             'p.name',
             'pc.price02',
             '(pc.price02 * :with_tax) as price02Tax',
             'pc.item_cost',
             'pc.supplier_code',
-            'pc.code as jan_code',
-            'p.quantity_box'
+            'pc.jan_code as jan_code'
         )
             ->leftJoin('pc.Product', 'p')
             ->where('p.update_date <= :to')
@@ -128,52 +125,52 @@ class ExportProduct extends Command
             $wms->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_PRODUCT)
                 ->setSyncDate(Carbon::now());
             //try {
-                $csvPath = $dir . $filename;
-                $csvh = fopen($csvPath, 'w+') or die("Can't open file");
-                $d = ',';
-                $e = '"';
+            $csvPath = $dir . $filename;
+            $csvh = fopen($csvPath, 'w+') or die("Can't open file");
+            $d = ',';
+            $e = '"';
 
-                $result = [];
-                foreach ($records as $record) {
-                    
-                    $supplier = $this->supplierRepository->find($record['supplier_code']);
-                    $product = $this->productRepository->find($record['id']);
+            $result = [];
+            foreach ($records as $record) {
 
-                    $record['supplier_code'] = $supplier->getSupplierCode();
-                    if(is_null($record['productCode']) || strlen($record['productCode']) < 13){
-                        $record['itemCode'] = $product->getFreeArea();
-                        $record['jan_code'] = "";
-                    }
-                    $record['quantity_box'] = 1;
+                $supplier = $this->supplierRepository->findOneBy(['supplier_code' => $record['supplier_code']]);
+                $product = $this->productRepository->find($record['id']);
 
-                    $record['year'] = '99';
-                    $record['seasonCode'] = '01';
-                    $record['subSeasonCode'] = null;
-                    $record['brandCode'] = '0001';
-                    $record['subBrandCode'] = null;
-                    $record['itemCode'] = '0001';
-                    $record['subItemCode'] = null;
-                    $record['gender'] = '2';
-                    $record['taxCode'] = '01';
-                    $record['remarks'] = null;
-                    $record['productNum'] = null;
-                    $record['colorCode'] = '9999';
-                    $record['sizeCode'] = '1';
-                    $record['price02Tax'] = round($record['price02Tax'], 0);
-                    $record['price02'] = round($record['price02'], 0);
-                    $sorted = [];
-                    foreach ($fieldSorted as $value) {
-                        array_push($sorted, $record[$value]);
-                    }
-                    array_push($result, $sorted);
+                $record['supplier_code'] = $supplier->getSupplierCode();
+                if (is_null($record['productCode']) || strlen($record['productCode']) < 13) {
+                    $record['itemCode'] = $product->getFreeArea();
+                    $record['jan_code'] = "";
                 }
-                foreach ($result as $item) {
-                    fputcsv($csvh, $item, $d, $e);
-                }
-                fclose($csvh);
+                $record['quantity_box'] = 1;
 
-                $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
-                echo 'Export succeeded.' . "\n";
+                $record['year'] = '99';
+                $record['seasonCode'] = '01';
+                $record['subSeasonCode'] = null;
+                $record['brandCode'] = '0001';
+                $record['subBrandCode'] = null;
+                $record['itemCode'] = '0001';
+                $record['subItemCode'] = null;
+                $record['gender'] = '2';
+                $record['taxCode'] = '01';
+                $record['remarks'] = null;
+                $record['productNum'] = null;
+                $record['colorCode'] = '9999';
+                $record['sizeCode'] = '1';
+                $record['price02Tax'] = round($record['price02Tax'], 0);
+                $record['price02'] = round($record['price02'], 0);
+                $sorted = [];
+                foreach ($fieldSorted as $value) {
+                    array_push($sorted, $record[$value]);
+                }
+                array_push($result, $sorted);
+            }
+            foreach ($result as $item) {
+                fputcsv($csvh, $item, $d, $e);
+            }
+            fclose($csvh);
+
+            $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
+            echo 'Export succeeded.' . "\n";
             /*
             } catch (Exception $e) {
                 $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_ERROR)

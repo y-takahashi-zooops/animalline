@@ -4,8 +4,6 @@ namespace Customize\Command;
 
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
-use Customize\Entity\InstockSchedule;
-use Customize\Entity\InstockScheduleHeader;
 use Customize\Entity\WmsSyncInfo;
 use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\InstockScheduleRepository;
@@ -59,8 +57,7 @@ class ExportInstockSchedule extends Command
         WmsSyncInfoRepository           $wmsSyncInfoRepository,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository
-    )
-    {
+    ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
@@ -100,7 +97,7 @@ class ExportInstockSchedule extends Command
             'isd.jan_code as productNumberCode',
             'isd.jan_code as jANCode',
             'isd.arrival_quantity_schedule as quantity',
-            'isd.arrival_box_schedule as caseQuantity'
+            'isd.arrival_quantity_schedule as caseQuantity'
         )
             ->innerJoin('isd.InstockHeader', 'ihd')
             ->leftJoin('Customize\Entity\Supplier', 's', 'WITH', 'ihd.supplier_code = s.supplier_code')
@@ -157,6 +154,5 @@ class ExportInstockSchedule extends Command
         $em->flush();
 
         echo "Export succeeded.\n";
-
     }
 }
