@@ -53,26 +53,6 @@ class BreederPetsType extends AbstractType
                     'rows' => 5
                 ]
             ])
-            ->add('is_breeding', ChoiceType::class, [
-                'choices' => [
-                    '可' => AnilineConf::CAN_BE,
-                    '不可' => AnilineConf::NONE
-                ],
-                'attr' => [
-                    'class' => 'form-check-inline ec-radio'
-                ],
-                'expanded' => true
-            ])
-            ->add('is_selling', ChoiceType::class, [
-                'choices' => [
-                    '可' => AnilineConf::CAN_BE,
-                    '不可' => AnilineConf::NONE
-                ],
-                'attr' => [
-                    'class' => 'form-check-inline ec-radio'
-                ],
-                'expanded' => true
-            ])
             ->add('guarantee', TextareaType::class, [
                 'required' => false,
                 'attr' => [
@@ -99,26 +79,11 @@ class BreederPetsType extends AbstractType
                 ],
                 'expanded' => true
             ])
-            ->add('delivery_time', TextareaType::class, [
-                'required' => false,
-                'attr' => [
-                    'rows' => 5
-                ]
-            ])
             ->add('delivery_way', TextareaType::class, [
                 'required' => false,
                 'attr' => [
                     'rows' => 5
                 ]
-            ])
-            ->add('payment_method', TextareaType::class, [
-                'required' => false,
-                'attr' => [
-                    'rows' => 5
-                ]
-            ])
-            ->add('reservation_fee', IntegerType::class, [
-                'required' => false
             ])
             ->add('price', IntegerType::class, [
                 'required' => false
