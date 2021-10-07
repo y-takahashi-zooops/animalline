@@ -285,6 +285,9 @@ class AdminBreederType extends AbstractType
             // ])
             ->add('thumbnail_path', HiddenType::class, [
                 'required' => false
+            ])
+            ->add('license_thumbnail_path', HiddenType::class, [
+                'required' => false
             ]);
     }
 
