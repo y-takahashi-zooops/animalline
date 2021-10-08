@@ -53,6 +53,28 @@ class CustomTopController extends AbstractController
     }
 
     /**
+     * プライバシーポリシー
+     * 
+     * @Route("/policy", name="ani_policy")
+     * @Template("ani_policy.twig")
+     */
+    public function policy()
+    {
+        return [];
+    }
+
+    /**
+     * 特定商取引法に基づく表記
+     * 
+     * @Route("/tradelaw", name="ani_tradelaw")
+     * @Template("ani_tradelaw.twig")
+     */
+    public function tradelaw()
+    {
+        return [];
+    }
+
+    /**
      * 会社概要
      * 
      * @Route("/company", name="ani_company")

@@ -1,0 +1,11 @@
+{% set site_type = 'adoption' %}
+{% extends 'animalline/adoption/frame.twig' %}
+{% form_theme form 'Form/form_div_layout.twig' %}
+
+{% block main %}
+   {{ include('contact_confirm.twig') }}
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
