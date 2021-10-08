@@ -57,7 +57,7 @@ class BreederPets
     private $CoatColor;
 
     /**
-     * @ORM\Column(name="future_wait", type="smallint", nullable=true)
+     * @ORM\Column(name="future_wait", type="integer", nullable=true)
      */
     private $future_wait;
 
@@ -165,6 +165,17 @@ class BreederPets
      * @ORM\JoinColumn(name="pedigree_id", nullable=true)
      */
     private $Pedigree;
+
+    /**
+     * @ORM\Column(name="pedigree_code", type="integer", nullable=true)
+     */
+    private $pedigree_code;
+    
+    /**
+     * @ORM\Column(name="microchip_code ", type="integer", nullable=true)
+     */
+    private $microchip_code;
+
 
     public function __construct()
     {
@@ -562,6 +573,30 @@ class BreederPets
     public function setPedigree(?Pedigree $Pedigree): self
     {
         $this->Pedigree = $Pedigree;
+
+        return $this;
+    }
+    
+    public function getPedigreeCode(): ?int
+    {
+        return $this->pedigree_code;
+    }
+
+    public function setPedigreeCode(int $pedigree_code): self
+    {
+        $this->pedigree_code = $pedigree_code;
+
+        return $this;
+    }
+    
+    public function getMicrochipCode (): ?int
+    {
+        return $this->microchip_code ;
+    }
+
+    public function setMicrochipCode(int $microchip_code ): self
+    {
+        $this->microchip_code  = $microchip_code ;
 
         return $this;
     }
