@@ -60,7 +60,18 @@ class DnaController extends AbstractController
     }
 
     /**
-     * 検査状況確認DNA検査
+     * DNA検査項目一覧
+     *
+     * @Route("/%eccube_admin_route%/dna/examination_items", name="admin_dna_examination_items")
+     * @Template("@admin/DNA/examination_items.twig")
+     */
+    public function examination_items(Request $request)
+    {
+        return[];
+    }
+
+    /**
+     * DNA検査状況確認
      *
      * @Route("/%eccube_admin_route%/dna/examination_status", name="admin_dna_examination_status")
      * @Template("@admin/DNA/examination_status.twig")

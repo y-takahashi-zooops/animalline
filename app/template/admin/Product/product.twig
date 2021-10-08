@@ -474,6 +474,9 @@ file that was distributed with this source code.
                                                  title="{{ 'tooltip.product.product_code'|trans }}">
                                                 <span>{{ 'admin.product.product_code'|trans }}</span>
                                                 <i class="fa fa-question-circle fa-lg ml-1"></i>
+                                                <span class="badge badge-primary ml-1">
+                                                    {{ 'admin.common.required'|trans }}
+                                                </span>
                                             </div>
                                         </div>
                                         <div class="col mb-2">
@@ -513,23 +516,7 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                     </div>
-                                    {# Product追加カラム #}
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <div class="d-inline-block">
-                                                <span>ケース入り数</span>
-                                                <span class="badge badge-primary ml-1">
-                                                    {{ 'admin.common.required'|trans }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col mb-2">
-                                            <div>
-                                                {{ form_widget(form.quantity_box) }}
-                                                {{ form_errors(form.quantity_box) }}
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {# ▼ Product追加カラム #}
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="d-inline-block">
@@ -546,7 +533,7 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                     </div>
-                                    {# ProductClass追加カラム #}
+                                    {# ▼ ProductClass追加カラム #}
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="d-inline-block">
@@ -557,6 +544,35 @@ file that was distributed with this source code.
                                             <div>
                                                 {{ form_widget(form.class.supplier_code) }}
                                                 {{ form_errors(form.class.supplier_code) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                <span>JANコード</span>
+                                            </div>
+                                        </div>
+                                        <div class="col mb-2">
+                                            <div>
+                                                {{ form_widget(form.class.jan_code) }}
+                                                {{ form_errors(form.class.jan_code) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                <span>在庫コード</span>
+                                                <span class="badge badge-primary ml-1">
+                                                    {{ 'admin.common.required'|trans }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col mb-2">
+                                            <div>
+                                                {{ form_widget(form.class.stock_code) }}
+                                                {{ form_errors(form.class.stock_code) }}
                                             </div>
                                         </div>
                                     </div>
@@ -576,6 +592,23 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                <span>インセンティブ率(%)</span>
+                                                <span class="badge badge-primary ml-1">
+                                                    {{ 'admin.common.required'|trans }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col mb-2">
+                                            <div>
+                                                {{ form_widget(form.class.incentive_ratio) }}
+                                                {{ form_errors(form.class.incentive_ratio) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {# ▲ ProductClass追加カラム #}
 
                                     {% if BaseInfo.option_product_delivery_fee %}
                                         <div class="row">

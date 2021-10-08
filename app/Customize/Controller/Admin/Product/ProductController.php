@@ -412,7 +412,10 @@ class ProductController extends BaseProductController
             $Product
                 ->addProductClass($ProductClass)
                 ->setStatus($ProductStatus);
+            // 初期値追加 
             $ProductClass
+                ->setStockCode('00001')
+                ->setIncentiveRatio(5)
                 ->setVisible(true)
                 ->setStockUnlimited(true)
                 ->setProduct($Product);

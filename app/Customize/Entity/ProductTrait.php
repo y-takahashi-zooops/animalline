@@ -11,38 +11,9 @@ use Eccube\Annotation\EntityExtension;
 trait ProductTrait
 {
     /**
-    * @ORM\Column(name="quantity_box",type="integer", nullable=false, options={"default":0})
-    */
-    public $quantity_box;
-
-    /**
     * @ORM\Column(name="item_weight", type="decimal", precision=5, scale=2, nullable=false, options={"default":0})
     */
     public $item_weight;
-
-    /**
-    * Set quantity_box.
-    *
-    * @param integer $quantity_box
-    *
-    * @return Product
-    */
-    public function setQuantityBox($quantity_box)
-    {
-        $this->quantity_box = $quantity_box;
-
-        return $this;
-    }
-
-    /**
-    * Get quantity_box.
-    *
-    * @return integer
-    */
-    public function getQuantityBox()
-    {
-        return $this->quantity_box;
-    }
 
     /**
     * Set item_weight.
