@@ -28,19 +28,19 @@ file that was distributed with this source code.
                     <div class="col-6">
                         <div class="mb-2">
                             <label class="col-form-label">種別</label>
-                            <select class="form-control" id="pet_kind" name="pet_kind">
+                            <select class="form-control" id="pet_kind" name="pet_kind" required>
                                 {% set kindNames = ['選択してください', '犬', '猫'] %}
                                 {% for i in 0..2 %}
-                                    <option value="{{ i }}" {% if (params.pet_kind is defined and params.pet_kind == i) or petType == i  %} selected {% endif %}>{{ kindNames[i] }}</option>
+                                    <option value="{{ i }}" {% if (params.pet_kind is defined and params.pet_kind == i) or petType == i %} selected {% endif %}>{{ kindNames[i] }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="mb-2">
                             <label class="col-form-label">犬種/猫種</label>
-                            <select class="form-control" id="breeds" name="pet_breeds">
+                            <select class="form-control" id="breeds" name="pet_breeds" required>
                                 <option value="" selected="selected">選択してください</option>
                                 {% for breed in breedOptions %}
-                                    <option value="{{ breed.id }}" {% if (params.pet_breeds is defined and params.pet_breeds== breed.id) or breed.id == breeds  %} selected {% endif %}>{{ breed.breedsName }}</option>
+                                    <option value="{{ breed.id }}" {% if (params.pet_breeds is defined and params.pet_breeds== breed.id) or breed.id == breeds %} selected {% endif %}>{{ breed.breedsName }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -112,7 +112,7 @@ file that was distributed with this source code.
                             <ul class="list-group list-group-flush sortable-container">
                                 <li class="list-group-item">
                                     <form method="post" action="{{ url('admin_dna_examination_items', params) }}"
-                                    class="form-row">
+                                          class="form-row">
                                         <div class="col-auto align-self-center">
                                             <span>検査項目</span>
                                         </div>
@@ -151,19 +151,26 @@ file that was distributed with this source code.
                                                      data-placement="top"
                                                      title="廃止">
                                                     {% if dna_check_kind.deleteFlg == 0 %}
-                                                        <a class="btn btn-ec-actionIcon ban"
-                                                           data-id="{{ dna_check_kind.id }}">
-                                                            <i class="fa fa-ban fa-lg text-secondary"></i>
-                                                        </a>
+                                                        <div class="d-inline-block mr-2" data-tooltip="true"
+                                                             data-placement="top"
+                                                             title="廃止">
+                                                            <a class="btn btn-ec-actionIcon ban"
+                                                               data-id="{{ dna_check_kind.id }}">
+                                                                <i class="fa fa-ban fa-lg text-secondary"></i>
+                                                            </a>
+                                                        </div>
                                                     {% elseif dna_check_kind.deleteFlg == 1 %}
-                                                        <a class="btn btn-ec-actionIcon lift"
-                                                           data-id="{{ dna_check_kind.id }}">
-                                                            <i class="far fa-circle fa-lg text-secondary"></i>
-                                                        </a>
+                                                        <div class="d-inline-block mr-2" data-tooltip="true"
+                                                             data-placement="top"
+                                                             title="廃止">
+                                                            <a class="btn btn-ec-actionIcon lift"
+                                                               data-id="{{ dna_check_kind.id }}">
+                                                                <i class="far fa-circle fa-lg text-secondary"></i>
+                                                            </a>
+                                                        </div>
                                                     {% endif %}
                                                 </div>
                                             </div>
-                                        </div>
                                     </li>
                                 {% else %}
                                     <li>結果が０件です。</li>
@@ -309,7 +316,7 @@ file that was distributed with this source code.
 
                 $('#BanModal').modal('hide');
                 $('#LiftModal').modal('hide');
-                location.reload();
+                location.href = "{{ url('admin_dna_examination_items', params) }}";
             })
             .fail(function (err) {
                 console.error(err);
