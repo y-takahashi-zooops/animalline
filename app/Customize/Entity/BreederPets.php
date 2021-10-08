@@ -166,6 +166,16 @@ class BreederPets
      */
     private $Pedigree;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $pedigree_code;
+
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $microchip_code;
+
     public function __construct()
     {
         $this->BreederPetImages = new ArrayCollection();
@@ -562,6 +572,30 @@ class BreederPets
     public function setPedigree(?Pedigree $Pedigree): self
     {
         $this->Pedigree = $Pedigree;
+
+        return $this;
+    }
+
+    public function getPedigreeCode(): ?string
+    {
+        return $this->pedigree_code;
+    }
+
+    public function setPedigreeCode(string $pedigree_code): self
+    {
+        $this->pedigree_code = $pedigree_code;
+
+        return $this;
+    }
+
+    public function getMicrochipCode(): ?string
+    {
+        return $this->microchip_code;
+    }
+
+    public function setMicrochipCode(?string $microchip_code): self
+    {
+        $this->microchip_code = $microchip_code;
 
         return $this;
     }

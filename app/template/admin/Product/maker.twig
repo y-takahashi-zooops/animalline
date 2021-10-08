@@ -42,58 +42,31 @@ file that was distributed with this source code.
                                 <li class="list-group-item">
                                     <div class="row">
                                         <div class="col-1"><strong>ID</strong></div>
-                                        <div class="col-4"><strong> 仕入先名</strong></div>
-                                        <div class="col-3"><strong>仕入先コード</strong></div>
+                                        <div class="col-4"><strong>メーカー名</strong></div>
                                     </div>
                                 </li>
-                                {% for supplier in suppliers %}
+                                {% for maker in makers %}
                                     <li id="ex-class_name-2" class="list-group-item sortable-item"
                                         data-class-name-id="2" data-sort-no="2">
-                                        <div class="row justify-content-around mode-view {{ form_errors(form_update['Form'~supplier.id].supplier_name) ? 'd-none' : '' }}"
-                                             id="mode-view-{{ supplier.id }}">
-                                            <div class="col-1 d-flex align-items-center">{{ supplier.id }}</div>
+                                        <div class="row justify-content-around mode-view"
+                                             id="mode-view-{{ maker.id }}">
+                                            <div class="col-1 d-flex align-items-center">{{ maker.id }}</div>
                                             <div class="col-4 d-flex align-items-center">
-                                                <span>{{ supplier.supplierName }}</span>
-                                            </div>
-                                            <div class="col d-flex align-items-center">
-                                                <span>{{ supplier.supplierCode }}</span>
+                                                <span>{{ maker.makerName }}</span>
                                             </div>
                                             <div class="col-auto text-right">
                                                 <a class="btn btn-ec-actionIcon mr-2 action-edit" data-tooltip="true"
-                                                   data-placement="top" title="編集" onclick="edit({{ supplier.id }})">
+                                                   data-placement="top" title="編集" onclick="edit({{ maker.id }})">
                                                     <i class="fa fa-pencil fa-lg text-secondary"></i>
                                                 </a>
                                                 <div class="d-inline-block mr-2" data-tooltip="true"
                                                      data-placement="top" title="削除">
-                                                    <a class="btn btn-ec-actionIcon" {{ supplier.is_destroy ? 'disabled' : 'onclick=destroy('~supplier.id~')' }}>
+                                                    <a class="btn btn-ec-actionIcon" {{ maker.is_destroy ? 'disabled' : 'onclick=destroy('~maker.id~')' }}>
                                                         <i class="fa fa-close fa-lg text-secondary"></i>
                                                     </a>
                                                 </div>
                                             </div>
                                         </div>
-                                        <form class="form-row {{ form_errors(form_update['Form'~supplier.id].supplier_name) ? '' : 'd-none' }} mode-edit" method="post" action=""
-                                              id="mode-edit-{{ supplier.id }}">
-                                            {{ form_widget(form_update['Form'~supplier.id]._token) }}
-                                            <input type="hidden" name="supplier-id" value="{{ supplier.id }}">
-                                            <div class="col-auto align-self-center"><span>仕入先名</span></div>
-                                            <div class="col-auto align-items-center">
-                                                {{ form_widget(form_update['Form'~supplier.id].supplier_name) }}
-                                                {{ form_errors(form_update['Form'~supplier.id].supplier_name) }}
-                                            </div>
-                                            <div class="col-auto align-self-center"><span>仕入先コード</span></div>
-                                            <div class="col-auto align-items-center">
-                                                {{ form_widget(form_update['Form'~supplier.id].supplier_code,  { 'attr': { 'readonly': 'true' }}) }}
-                                                {{ form_errors(form_update['Form'~supplier.id].supplier_code) }}
-                                            </div>
-                                            <div class="col-auto align-items-center">
-                                                <button class="btn btn-ec-conversion" type="submit">決定</button>
-                                            </div>
-                                            <div class="col-auto align-items-center">
-                                                <button class="btn btn-ec-sub action-edit-cancel" type="button"
-                                                        onclick="cancel({{ supplier.id }})">キャンセル
-                                                </button>
-                                            </div>
-                                        </form>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -117,7 +90,7 @@ file that was distributed with this source code.
                                             <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
                                                 {{ 'admin.common.cancel'|trans }}
                                             </button>
-                                            <form action="" name="destroy-supplier">
+                                            <form action="" name="destroy-maker">
                                                 <input type="hidden" name="id-destroy" value="">
                                                 <button class="btn btn-ec-delete" type="submit">
                                                     {{ 'admin.common.delete'|trans }}
@@ -131,7 +104,7 @@ file that was distributed with this source code.
                     </div>
                 </div>
                 <div class="navigation float-right">
-                    {{ knp_pagination_render(suppliers) }}
+                    {{ knp_pagination_render(makers) }}
                 </div>
             </div>
         </div>
