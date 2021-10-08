@@ -93,7 +93,7 @@ file that was distributed with this source code.
                                             method="post" action="" id="mode-edit-{{ maker.id }}">
                                             {{ form_widget(form_update['Form'~maker.id]._token) }}
                                             <input type="hidden" name="product-maker-id" value="{{ maker.id }}">
-                                            <div class="col-auto align-self-center"><span>仕入先名</span></div>
+                                            <div class="col-auto align-self-center"><span>メーカー名</span></div>
                                             <div class="col-auto align-items-center">
                                                 {{ form_widget(form_update['Form'~maker.id].maker_name) }}
                                                 {{ form_errors(form_update['Form'~maker.id].maker_name) }}
