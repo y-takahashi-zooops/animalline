@@ -50,7 +50,7 @@ class CustomizeNav implements EccubeNav
 						'url' => 'admin_product_supplier',
 					],
 					'maker' => [
-						'name' => 'プロデューサー管理',
+						'name' => 'メーカー管理',
 						'url' => 'admin_product_maker',
 					],
 					'waste' => [
