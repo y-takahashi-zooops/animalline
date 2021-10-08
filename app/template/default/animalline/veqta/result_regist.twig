@@ -1,0 +1,166 @@
+{% extends 'animalline/veqta/frame.twig' %}
+
+{% block main %}
+    <section>
+        <div class="inner">
+            <div class="ec-pageHeader">
+                <h1>{{ '検査結果登録'|trans }}</h1>
+            </div>
+            <div class="ec-off1Grid">
+                <div class="ec-off1Grid__cell">
+                    <form method="POST" action="" enctype="multipart/form-data" id="form">
+                        <div class="ec-borderedDefs">
+                            <div class="mb-5">
+                                <dl>
+                                    <dt>
+                                        検体バーコード読み込み
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <input type="text" class="w-100" placeholder="123456" name="barcode" id="barcode" minlength="6" maxlength="6">
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        検体送付者名
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <input type="text" class="w-100" name="sender_name" id="sender_name" disabled>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        犬種
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <input type="text" class="w-100" name="sender_name" id="sender_name" disabled>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        検査結果
+                                    </dt>
+                                    <dd>
+                                        {# TODO:alm_dna_check_kindsのcheck_kindをdtとする #}
+                                        <dl>
+                                            <dt>
+                                                〇〇病遺伝子検査
+                                            </dt>
+                                            <dd>
+                                                <div class="ec-select ml-4 mt-2">
+                                                    <select name="check_status" required>
+                                                        <option value="">選択してください</option>
+                                                        <option value="4">検体異常</option>
+                                                        <option value="61">クリア</option>
+                                                        <option value="62">キャリア</option>
+                                                        <option value="7">アフェクテッド</option>
+                                                    </select>
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                                ■■検査
+                                            </dt>
+                                            <dd>
+                                                <div class="ec-select ml-4 mt-2">
+                                                    <select name="check_status" required>
+                                                        <option value="">選択してください</option>
+                                                        <option value="4">検体異常</option>
+                                                        <option value="61">クリア</option>
+                                                        <option value="62">キャリア</option>
+                                                        <option value="7">アフェクテッド</option>
+                                                    </select>
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>
+                                                ▲▲検査
+                                            </dt>
+                                            <dd>
+                                                <div class="ec-select ml-4 mt-2">
+                                                    <select name="check_status" required>
+                                                        <option value="">選択してください</option>
+                                                        <option value="4">検体異常</option>
+                                                        <option value="61">クリア</option>
+                                                        <option value="62">キャリア</option>
+                                                        <option value="7">アフェクテッド</option>
+                                                    </select>
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        総合検査結果
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select">
+                                            <select name="check_status" required>
+                                                <option value="">選択してください</option>
+                                                <option value="4">検体異常</option>
+                                                <option value="61">クリア</option>
+                                                <option value="62">キャリア</option>
+                                                <option value="7">アフェクテッド</option>
+                                            </select>
+                                        </div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="ec-registerRole__actions">
+                            <div class="ec-off4Grid">
+                                <div class="ec-off4Grid__cell">
+                                    <button type="submit" class="btn btn-warning w-100 m-1" id="dnaTestResultRegist"
+                                        disabled>検査結果登録</button>
+                                    <a href="{{url('veqta_index')}}" class="btn btn-warning w-100 m-1">戻る</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $(function () {
+        $('#barcode').on('change', function () {
+            if ($(this).val().length == 6) {
+                callShippingName();
+            } else {
+                $('#name').val('')
+                $('#barcode').removeAttr('disabled');
+            }
+        });
+    });
+
+    function callShippingName() {
+        $.ajax({
+            url: "{{ url('read_barcode') }}",
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                'barcode': $('#barcode').val()
+            }
+        }).done(function ({ shippingName, hasRecord }) {
+            $('#sender_name').val(shippingName);
+            $('#dnaTestResultRegist').attr('disabled', !hasRecord);
+            if (!hasRecord) alert('データが存在しません。');
+        }).fail(function (err) {
+            $('#sender_name').text('');
+            $('#dnaTestResultRegist').attr('disabled', true);
+            console.error(err);
+        });
+    }
+</script>
+{% endblock %}
