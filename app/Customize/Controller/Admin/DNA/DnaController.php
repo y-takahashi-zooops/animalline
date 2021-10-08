@@ -7,12 +7,14 @@ use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Entity\DnaCheckStatus;
+use Customize\Repository\BreedsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -67,7 +69,30 @@ class DnaController extends AbstractController
      */
     public function examination_items(Request $request)
     {
-        return[];
+        $dna_check_kinds = [];
+        return compact('dna_check_kinds');
+    }
+
+    /**
+     * Get breeds by pet kind
+     *
+     * @Route("/breeds_by_pet_kind", name="breeds_by_pet_kind", methods={"GET"})
+     */
+    public function breedsByPetKind(Request $request, BreedsRepository $breedsRepository)
+    {
+        $petKind = $request->get('pet_kind');
+        $Breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
+        $formattedBreeds = [];
+        foreach ($Breeds as $Breed) {
+            $formattedBreeds[] = [
+                'id' => $Breed->getId(),
+                'name' => $Breed->getBreedsName()
+            ];
+        }
+
+        return new JsonResponse([
+            'breeds' => $formattedBreeds
+        ]);
     }
 
     /**
