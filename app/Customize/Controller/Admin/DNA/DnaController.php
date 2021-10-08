@@ -71,8 +71,7 @@ class DnaController extends AbstractController
         ConservationPetsRepository $conservationPetsRepository,
         DnaCheckKindsRepository    $dnaCheckKindsRepository,
         BreedsRepository           $breedsRepository
-    )
-    {
+    ) {
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -93,7 +92,6 @@ class DnaController extends AbstractController
         if ($request->isMethod('GET')) {
             $petType = $request->get('pet_kind');
             $breeds = $request->get('pet_breeds');
-            $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds]);
         }
         if ($request->isMethod('POST')) {
             $petType = $request->get('petType');
@@ -106,7 +104,11 @@ class DnaController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($dnaCheckKind);
             $em->flush();
+
+            return $this->redirectToRoute('admin_dna_examination_items', ['pet_kind' => $petType, 'pet_breeds' => $breeds]);
         }
+        $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds], ['update_date' => 'DESC', 'id' => 'DESC']);
+        $breedOptions = $this->breedsRepository->findBy(['pet_kind' => $petType]);
         $dna_check_kinds = $paginator->paginate(
             $dna_check_kinds,
             $request->query->getInt('page', 1),
@@ -115,7 +117,8 @@ class DnaController extends AbstractController
         return compact(
             'dna_check_kinds',
             'petType',
-            'breeds'
+            'breeds',
+            'breedOptions'
         );
     }
 
@@ -149,7 +152,7 @@ class DnaController extends AbstractController
     public function deleteExaminationItem(Request $request, DnaCheckKindsRepository $dnaCheckKindsRepository)
     {
         $id = $request->get('id');
-        if(!$id || !$DnaCheckKind = $dnaCheckKindsRepository->find($id)) {
+        if (!$id || !$DnaCheckKind = $dnaCheckKindsRepository->find($id)) {
             return new JsonResponse(['isSuccess' => false], 404);
         }
 
