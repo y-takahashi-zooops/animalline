@@ -87,7 +87,7 @@ class DnaController extends AbstractController
      * @Route("/%eccube_admin_route%/dna/examination_items", name="admin_dna_examination_items")
      * @Template("@admin/DNA/examination_items.twig")
      */
-    public function examination_items(Request $request)
+    public function examination_items(PaginatorInterface $paginator, Request $request)
     {
         $dna_check_kinds = [];
         if ($request->isMethod('GET')) {
@@ -108,6 +108,11 @@ class DnaController extends AbstractController
         }
         $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds]);
         $breedOptions = $this->breedsRepository->findBy(['pet_kind' => $petType]);
+        $dna_check_kinds = $paginator->paginate(
+            $dna_check_kinds,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
         return compact(
             'dna_check_kinds',
             'petType',
