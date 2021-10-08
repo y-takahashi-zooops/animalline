@@ -11,6 +11,7 @@ file that was distributed with this source code.
 {% extends '@admin/default_frame.twig' %}
 
 {% set menus = ['dna', 'dna_examination_items'] %}
+{% set params = app.request.query.all %}
 
 {% block title %}{{ '検査項目管理'|trans }}{% endblock %}
 {% block sub_title %}{{ 'DNA検査'|trans }}{% endblock %}
@@ -26,19 +27,21 @@ file that was distributed with this source code.
                 <div class="col-6">
                     <div class="mb-2">
                         <label class="col-form-label">種別</label>
-                        <select class="form-control">
-                            <option value="" selected="selected">選択してください</option>
-                            <option value="1">犬</option>
-                            <option value="2">猫</option>
-                        </select>    
+                        <select class="form-control" id="pet_kind" name="pet_kind">
+                            {% set kindNames = ['選択してください', '犬', '猫'] %}
+                            {% for i in 0..2 %}
+                                <option value="{{ i }}" {% if params.pet_kind is defined and params.pet_kind == i %} selected {% endif %}>{{ kindNames[i] }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="mb-2">
                         <label class="col-form-label">犬種/猫種</label>
-                        <select class="form-control">
+                        <select class="form-control" id="breeds">
                             <option value="" selected="selected">選択してください</option>
-                            <option value="1">トイプードル</option>
-                            <option value="2">マルチーズ</option>
-                        </select>    
+                            {% for breed in breeds %}
+                                <option value="{{ breed.id }}" {% if params.breeds is defined and params.breeds == breed.Id %} selected {% endif %}>{{ breed.breedsName }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
             </div>
@@ -122,24 +125,32 @@ file that was distributed with this source code.
                                         <div class="col-3"><strong>ステータス</strong></div>
                                     </div>
                                 </li>
+                                {% for dna_check_kind in dna_check_kinds %}
                                 <li id="ex-class_name-2" class="list-group-item">
                                     <div class="row justify-content-around mode-view">
                                         <div class="col-4 d-flex align-items-center">
-                                            <span>〇〇病遺伝子検査</span>
+                                            <span>{{ dna_check_kind.checkKind }}</span>
                                         </div>
                                         <div class="col d-flex align-items-center">
-                                            <span>実施中</span>
+                                            <span>{{ dna_check_kind.deleteFlg == 0 ? '実施中' : '廃止' }}</span>
                                         </div>
                                         <div class="col-auto text-right">
                                             <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top" title="廃止">
-                                                <a class="btn btn-ec-actionIcon ban">
-                                                    <i class="fa fa-ban fa-lg text-secondary"></i>
-                                                </a>
+                                                {% if dna_check_kind.deleteFlg == 0 %}
+                                                    <a class="btn btn-ec-actionIcon ban">
+                                                        <i class="fa fa-ban fa-lg text-secondary"></i>
+                                                    </a>
+                                                {% elseif dna_check_kind.deleteFlg == 1 %}
+                                                    <a class="btn btn-ec-actionIcon lift">
+                                                        <i class="far fa-circle fa-lg text-secondary"></i>
+                                                    </a>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>
                                 </li>
-                                <li class="list-group-item">
+                                {% endfor %}
+                                {# <li class="list-group-item">
                                     <div class="row justify-content-around mode-view">
                                         <div class="col-4 d-flex align-items-center">
                                             <span>〇〇検査</span>
@@ -155,7 +166,7 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                     </div>
-                                </li>
+                                </li> #}
                             </ul>
                         </div>
                     </div>
