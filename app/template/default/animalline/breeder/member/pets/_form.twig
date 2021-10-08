@@ -335,9 +335,12 @@ $(document).ready(function() {
     });
 });
 
-$('#breeder_pets_pet_kind').change( function() {
-    pet_kind = $('#breeder_pets_pet_kind').val();
-    pedigree = $('#breeder_pets_Pedigree').val();
+$('#breeder_pets_pet_kind').ready( function() {
+    pet_kind = 1;
+    $('#breeder_pets_pet_kind').change( function() {
+        pet_kind = $('#breeder_pets_pet_kind').val();
+        pedigree = $('#breeder_pets_Pedigree').val();
+    });
     $.ajax({
         type: 'get',
         url: '/breeder_pedigree_data_by_pet_kind',
@@ -357,7 +360,6 @@ $('#breeder_pets_pet_kind').change( function() {
         console.error(err);
     })
 });
-
 
 </script>
 {% endblock %}

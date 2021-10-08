@@ -42,7 +42,7 @@ file that was distributed with this source code.
                                 <li class="list-group-item">
                                     <div class="row">
                                         <div class="col-1"><strong>ID</strong></div>
-                                        <div class="col-4"><strong>メーカー名</strong></div>
+                                        <div class="col-5"><strong>メーカー名</strong></div>
                                     </div>
                                 </li>
                                 {% for maker in makers %}
@@ -51,17 +51,17 @@ file that was distributed with this source code.
                                         <div class="row justify-content-around mode-view"
                                              id="mode-view-{{ maker.id }}">
                                             <div class="col-1 d-flex align-items-center">{{ maker.id }}</div>
-                                            <div class="col-4 d-flex align-items-center">
+                                            <div class="col-5 d-flex align-items-center">
                                                 <span>{{ maker.makerName }}</span>
                                             </div>
-                                            <div class="col-auto text-right">
+                                            <div class="col-6 text-right">
                                                 <a class="btn btn-ec-actionIcon mr-2 action-edit" data-tooltip="true"
                                                    data-placement="top" title="編集" onclick="edit({{ maker.id }})">
                                                     <i class="fa fa-pencil fa-lg text-secondary"></i>
                                                 </a>
                                                 <div class="d-inline-block mr-2" data-tooltip="true"
                                                      data-placement="top" title="削除">
-                                                    <a class="btn btn-ec-actionIcon" {{ maker.is_destroy ? 'disabled' : 'onclick=destroy('~maker.id~')' }}>
+                                                    <a class="btn btn-ec-actionIcon">
                                                         <i class="fa fa-close fa-lg text-secondary"></i>
                                                     </a>
                                                 </div>
