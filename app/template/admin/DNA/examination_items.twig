@@ -173,7 +173,9 @@ file that was distributed with this source code.
                                             </div>
                                     </li>
                                 {% else %}
-                                    <li>結果が０件です。</li>
+                                    {% if params.pet_breeds is defined or params.pet_breeds is defined %}
+                                        <li>結果が０件です。</li>
+                                    {% endif %}
                                 {% endfor %}
                                 {# <li class="list-group-item">
                         <div class="row justify-content-around mode-view">
@@ -316,7 +318,7 @@ file that was distributed with this source code.
 
                 $('#BanModal').modal('hide');
                 $('#LiftModal').modal('hide');
-                location.href = "{{ url('admin_dna_examination_items', params) }}";
+                location.href = `/aniconfig/dna/examination_items?pet_kind=${$('#pet_kind').val()}&pet_breeds=${$('#breeds').val()}`;
             })
             .fail(function (err) {
                 console.error(err);
