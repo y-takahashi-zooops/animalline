@@ -106,7 +106,7 @@ class DnaController extends AbstractController
             $em->persist($dnaCheckKind);
             $em->flush();
         }
-        $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds]);
+        $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds], ['id' => 'DESC', 'update_date'=>'DESC']);
         $breedOptions = $this->breedsRepository->findBy(['pet_kind' => $petType]);
         $dna_check_kinds = $paginator->paginate(
             $dna_check_kinds,
