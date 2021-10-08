@@ -29,8 +29,9 @@ file that was distributed with this source code.
                         <div class="mb-2">
                             <label class="col-form-label">種別</label>
                             <select class="form-control" id="pet_kind" name="pet_kind" required>
-                                {% set kindNames = ['選択してください', '犬', '猫'] %}
-                                {% for i in 0..2 %}
+                                <option value="" selected="selected">選択してください</option>
+                                {% set kindNames = ['犬', '猫'] %}
+                                {% for i in 0..1 %}
                                     <option value="{{ i }}" {% if (params.pet_kind is defined and params.pet_kind == i) or petType == i %} selected {% endif %}>{{ kindNames[i] }}</option>
                                 {% endfor %}
                             </select>
