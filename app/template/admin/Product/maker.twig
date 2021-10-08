@@ -15,6 +15,28 @@ file that was distributed with this source code.
 {% block title %}プロデューサー管理{% endblock %}
 {% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
 
+{% block javascript %}
+<script>
+    function edit(id) {
+        document.getElementById("mode-view-" + id).classList.add("d-none");
+        document.getElementById("mode-edit-" + id).classList.remove("d-none");
+    };
+    function cancel(id) {
+        document.getElementById("mode-view-" + id).classList.remove("d-none");
+        document.getElementById("mode-edit-" + id).classList.add("d-none");
+    };
+    function destroy(id) {
+        $('input[name=id-destroy').val(id);
+        $('#DeleteModal').modal('show');
+    };
+
+    $(".btn-ec-delete").on('click', function () {
+        setTimeout(function () {
+            $('#DeleteModal').modal('hide');
+        }, 2000);
+    });
+</script>
+{% endblock %}
 
 {% block stylesheet %}{% endblock %}
 
@@ -67,6 +89,23 @@ file that was distributed with this source code.
                                                 </div>
                                             </div>
                                         </div>
+                                        <form class="form-row {{ form_errors(form_update['Form'~maker.id].maker_name) ? '' : 'd-none' }} mode-edit"
+                                            method="post" action="" id="mode-edit-{{ maker.id }}">
+                                            {{ form_widget(form_update['Form'~maker.id]._token) }}
+                                            <input type="hidden" name="product-maker-id" value="{{ maker.id }}">
+                                            <div class="col-auto align-self-center"><span>仕入先名</span></div>
+                                            <div class="col-auto align-items-center">
+                                                {{ form_widget(form_update['Form'~maker.id].maker_name) }}
+                                                {{ form_errors(form_update['Form'~maker.id].maker_name) }}
+                                            </div>
+                                            <div class="col-auto align-items-center">
+                                                <button class="btn btn-ec-conversion" type="submit">決定</button>
+                                            </div>
+                                            <div class="col-auto align-items-center">
+                                                <button class="btn btn-ec-sub action-edit-cancel" type="button" onclick="cancel({{ maker.id }})">キャンセル
+                                                </button>
+                                            </div>
+                                        </form>
                                     </li>
                                 {% endfor %}
                             </ul>
