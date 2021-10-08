@@ -9556,7 +9556,7 @@ Styleguide 22.1
     border-bottom: 1px solid #ccc;
     margin: 10px 16px 48px;
     padding: 8px;
-    font-size: 32px;
+    font-size: 40px;
     font-weight: bold;
   }
   .ec-heading-bold {
@@ -10060,7 +10060,8 @@ Styleguide 22.1
     border-bottom: none;
     margin: 0 10px;
     padding: 0;
-    text-decoration: underline;
+    /* text-decoration: underline; */
+    text-decoration: none;
   }
   .ec-footerTitle {
     padding: 50px 0 80px;
