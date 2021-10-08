@@ -107,7 +107,7 @@ class DnaController extends AbstractController
 
             return $this->redirectToRoute('admin_dna_examination_items', ['pet_kind' => $petType, 'pet_breeds' => $breeds]);
         }
-        $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds], ['id' => 'DESC', 'update_date' => 'DESC']);
+        $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds], ['update_date' => 'DESC', 'id' => 'DESC']);
         $breedOptions = $this->breedsRepository->findBy(['pet_kind' => $petType]);
         $dna_check_kinds = $paginator->paginate(
             $dna_check_kinds,
