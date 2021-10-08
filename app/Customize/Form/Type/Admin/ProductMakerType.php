@@ -25,18 +25,18 @@ class ProductMakerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('maker_name', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'maxlength' => 20,
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => 20,
-                    ]),
-                    new Assert\NotBlank()
-                ]
-            ])
+        ->add('maker_name', TextType::class, [
+            'required' => true,
+            'attr' => [
+                'maxlength' => 20,
+            ],
+            'constraints' => [
+                new Assert\Length([
+                    'max' => 20,
+                ]),
+                new Assert\NotBlank()
+            ]
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
