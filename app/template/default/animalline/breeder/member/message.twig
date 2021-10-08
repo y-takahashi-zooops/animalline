@@ -2,7 +2,7 @@
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
-    <section id="breeder-column" class="breeder-column_dog">
+    <section id="breeder-column">
         <div class="inner">
             <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
                 <div class="breeder-column__main_section_title">
@@ -121,7 +121,7 @@
                             </div>
                         </div>
                     </div>
-                    <h6 style="text-align: right;">{{ message.sendDate | date('Y/m/d h:i')}}</h6>
+                    <h6 class="text-right">{{ message.sendDate | date('Y/m/d h:i')}}</h6>
                     <div class="m-2 p-2"></div>
 
                     {# 返信メッセージ #}
@@ -137,7 +137,7 @@
                                 {# <div class="icon">
                                     <img src="{{ rootMessage.Conservation.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}">  
                                 </div> #}
-                                <h6 style="text-align: right; padding-right:24px;">{{ listMessage.sendDate | date('Y/m/d H:i') }}</h6>
+                                <h6 class="text-right" style="padding-right:24px;">{{ listMessage.sendDate | date('Y/m/d H:i') }}</h6>
                             </div>
                         {# ユーザーからの返信 #}
                         {% else %}
@@ -150,7 +150,7 @@
                                         {{ listMessage.contactDescription|nl2br }}
                                     </div>
                                 </div>
-                                <h6 style="text-align: right;">{{ listMessage.sendDate | date('Y/m/d H:i') }}</h6>
+                                <h6 class="text-right">{{ listMessage.sendDate | date('Y/m/d H:i') }}</h6>
                             </div>
                         {% endif %}
                     {% endfor %}
