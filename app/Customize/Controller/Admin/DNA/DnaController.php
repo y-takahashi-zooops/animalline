@@ -90,12 +90,14 @@ class DnaController extends AbstractController
     public function examination_items(Request $request)
     {
         $dna_check_kinds = [];
-        $petType = $request->get('pet_kind');
-        $breeds = $request->get('breeds');
         if ($request->isMethod('GET')) {
+            $petType = $request->get('pet_kind');
+            $breeds = $request->get('pet_breeds');
             $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds]);
         }
         if ($request->isMethod('POST')) {
+            $petType = $request->get('petType');
+            $breeds = $request->get('breeds');
             $dnaCheckKind = new DnaCheckKinds();
             $breed = $this->breedsRepository->find($breeds);
             $dnaCheckKind->setCheckKind($request->get('check_kind'))
