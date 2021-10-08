@@ -31,7 +31,7 @@ file that was distributed with this source code.
                             <select class="form-control" id="pet_kind" name="pet_kind">
                                 {% set kindNames = ['選択してください', '犬', '猫'] %}
                                 {% for i in 0..2 %}
-                                    <option value="{{ i }}" {% if params.pet_kind is defined and params.pet_kind==i %} selected {% endif %}>{{ kindNames[i] }}</option>
+                                    <option value="{{ i }}" {% if (params.pet_kind is defined and params.pet_kind == i) or petType == i  %} selected {% endif %}>{{ kindNames[i] }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -39,6 +39,9 @@ file that was distributed with this source code.
                             <label class="col-form-label">犬種/猫種</label>
                             <select class="form-control" id="breeds" name="pet_breeds">
                                 <option value="" selected="selected">選択してください</option>
+                                {% for breed in breedOptions %}
+                                    <option value="{{ breed.id }}" {% if (params.pet_breeds is defined and params.pet_breeds== breed.id) or breed.id == breeds  %} selected {% endif %}>{{ breed.breedsName }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -155,6 +158,8 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                     </li>
+                                {% else %}
+                                    <li>メッセージが見つかりません</li>
                                 {% endfor %}
                                 {# <li class="list-group-item">
                         <div class="row justify-content-around mode-view">
@@ -201,7 +206,7 @@ file that was distributed with this source code.
                         キャンセル
                     </button>
                     <input type="hidden" class="id-destroy-ban" value="">
-                    <button class="btn btn-ec-delete" type="submit" id="delete-ban">廃止</form>
+                    <button class="btn btn-ec-delete" type="submit" id="delete-ban">廃止</button>
                 </div>
             </div>
         </div>
@@ -227,7 +232,6 @@ file that was distributed with this source code.
                     </button>
                     <input type="hidden" class="id-destroy-lift" value="">
                     <button class="btn btn-ec-delete" id="delete-lift">解除</button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -306,8 +310,7 @@ file that was distributed with this source code.
     $('#breeds').on('change', function () {
         $('#pet_kind_value').val($('#pet_kind').val());
         $('#breed_value').val($('#breeds').val());
-        $('#check_kind').attr("disabled", false);
-        $('#check_kind_id').attr("disabled", false);
+        $('#check_kind, #check_kind_id').attr("disabled", !$('#breeds').val());
 });
 </script>
 {% endblock %}

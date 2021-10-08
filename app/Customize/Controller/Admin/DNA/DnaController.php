@@ -93,7 +93,6 @@ class DnaController extends AbstractController
         if ($request->isMethod('GET')) {
             $petType = $request->get('pet_kind');
             $breeds = $request->get('pet_breeds');
-            $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds]);
         }
         if ($request->isMethod('POST')) {
             $petType = $request->get('petType');
@@ -107,10 +106,13 @@ class DnaController extends AbstractController
             $em->persist($dnaCheckKind);
             $em->flush();
         }
+        $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds]);
+        $breedOptions = $this->breedsRepository->findBy(['pet_kind' => $petType]);
         return compact(
             'dna_check_kinds',
             'petType',
-            'breeds'
+            'breeds',
+            'breedOptions'
         );
     }
 
