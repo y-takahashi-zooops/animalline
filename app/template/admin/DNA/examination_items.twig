@@ -148,33 +148,29 @@ file that was distributed with this source code.
                                                 <span>{{ dna_check_kind.deleteFlg == 0 ? '実施中' : '廃止' }}</span>
                                             </div>
                                             <div class="col-auto text-right">
-                                                <div class="d-inline-block mr-2" data-tooltip="true"
-                                                     data-placement="top"
-                                                     title="廃止">
-                                                    {% if dna_check_kind.deleteFlg == 0 %}
-                                                        <div class="d-inline-block mr-2" data-tooltip="true"
-                                                             data-placement="top"
-                                                             title="廃止">
-                                                            <a class="btn btn-ec-actionIcon ban"
-                                                               data-id="{{ dna_check_kind.id }}">
-                                                                <i class="fa fa-ban fa-lg text-secondary"></i>
-                                                            </a>
-                                                        </div>
-                                                    {% elseif dna_check_kind.deleteFlg == 1 %}
-                                                        <div class="d-inline-block mr-2" data-tooltip="true"
-                                                             data-placement="top"
-                                                             title="廃止">
-                                                            <a class="btn btn-ec-actionIcon lift"
-                                                               data-id="{{ dna_check_kind.id }}">
-                                                                <i class="far fa-circle fa-lg text-secondary"></i>
-                                                            </a>
-                                                        </div>
-                                                    {% endif %}
-                                                </div>
+                                                {% if dna_check_kind.deleteFlg == 0 %}
+                                                    <div class="d-inline-block mr-2" data-tooltip="true"
+                                                            data-placement="top"
+                                                            title="廃止">
+                                                        <a class="btn btn-ec-actionIcon ban"
+                                                            data-id="{{ dna_check_kind.id }}">
+                                                            <i class="fa fa-ban fa-lg text-secondary"></i>
+                                                        </a>
+                                                    </div>
+                                                {% elseif dna_check_kind.deleteFlg == 1 %}
+                                                    <div class="d-inline-block mr-2" data-tooltip="true"
+                                                            data-placement="top"
+                                                            title="解除">
+                                                        <a class="btn btn-ec-actionIcon lift"
+                                                            data-id="{{ dna_check_kind.id }}">
+                                                            <i class="far fa-circle fa-lg text-secondary"></i>
+                                                        </a>
+                                                    </div>
+                                                {% endif %}
                                             </div>
                                     </li>
                                 {% else %}
-                                    {% if params.pet_breeds is defined or params.pet_breeds is defined %}
+                                    {% if params.pet_kind is defined or params.pet_breeds is defined %}
                                         <li>結果が０件です。</li>
                                     {% endif %}
                                 {% endfor %}

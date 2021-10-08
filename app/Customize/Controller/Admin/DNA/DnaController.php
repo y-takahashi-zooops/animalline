@@ -71,8 +71,7 @@ class DnaController extends AbstractController
         ConservationPetsRepository $conservationPetsRepository,
         DnaCheckKindsRepository    $dnaCheckKindsRepository,
         BreedsRepository           $breedsRepository
-    )
-    {
+    ) {
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -105,8 +104,10 @@ class DnaController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($dnaCheckKind);
             $em->flush();
+
+            return $this->redirectToRoute('admin_dna_examination_items', ['pet_kind' => $petType, 'pet_breeds' => $breeds]);
         }
-        $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds], ['id' => 'DESC', 'update_date'=>'DESC']);
+        $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds], ['id' => 'DESC', 'update_date' => 'DESC']);
         $breedOptions = $this->breedsRepository->findBy(['pet_kind' => $petType]);
         $dna_check_kinds = $paginator->paginate(
             $dna_check_kinds,
@@ -151,7 +152,7 @@ class DnaController extends AbstractController
     public function deleteExaminationItem(Request $request, DnaCheckKindsRepository $dnaCheckKindsRepository)
     {
         $id = $request->get('id');
-        if(!$id || !$DnaCheckKind = $dnaCheckKindsRepository->find($id)) {
+        if (!$id || !$DnaCheckKind = $dnaCheckKindsRepository->find($id)) {
             return new JsonResponse(['isSuccess' => false], 404);
         }
 
