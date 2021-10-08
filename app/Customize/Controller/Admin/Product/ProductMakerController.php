@@ -75,7 +75,10 @@ class ProductMakerController extends BaseProductController
         }
 
         // update product maker
-        $Makers = $this->productMakerRepository->findAll();
+        $Makers = $this->productMakerRepository->findBy(
+            [],
+            ['update_date' => 'DESC']
+        );
         $formUpdate = [];
         foreach ($Makers as $Maker) {
             $uniqueFormName = 'Form' . $Maker->getId();
