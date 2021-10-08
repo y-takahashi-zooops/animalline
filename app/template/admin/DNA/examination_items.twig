@@ -29,11 +29,11 @@ file that was distributed with this source code.
                         <div class="mb-2">
                             <label class="col-form-label">種別</label>
                             <select class="form-control" id="pet_kind" name="pet_kind" required>
-                                <option value="" selected="selected">選択してください</option>
                                 {% set kindNames = ['犬', '猫'] %}
-                                {% for i in 0..1 %}
-                                    <option value="{{ i }}" {% if (params.pet_kind is defined and params.pet_kind == i) or petType == i %} selected {% endif %}>{{ kindNames[i] }}</option>
-                                {% endfor %}
+                                <option value="" selected="selected">選択してください</option>
+                                <option value="1" {% if (params.pet_kind is defined and params.pet_kind == 1) or petType == 1 %} selected {% endif %}>犬</option>
+                                <option value="2" {% if (params.pet_kind is defined and params.pet_kind == 2) or petType == 2 %} selected {% endif %}>猫</option>
+
                             </select>
                         </div>
                         <div class="mb-2">
