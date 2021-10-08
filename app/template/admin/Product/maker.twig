@@ -1,0 +1,151 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['product', 'maker'] %}
+
+{% block title %}メーカー管理{% endblock %}
+{% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
+
+{% block javascript %}
+<script>
+    function edit(id) {
+        document.getElementById("mode-view-" + id).classList.add("d-none");
+        document.getElementById("mode-edit-" + id).classList.remove("d-none");
+    };
+    function cancel(id) {
+        document.getElementById("mode-view-" + id).classList.remove("d-none");
+        document.getElementById("mode-edit-" + id).classList.add("d-none");
+    };
+    function destroy(id) {
+        $('input[name=id-destroy').val(id);
+        $('#DeleteModal').modal('show');
+    };
+
+    $(".btn-ec-delete").on('click', function () {
+        setTimeout(function () {
+            $('#DeleteModal').modal('hide');
+        }, 2000);
+    });
+</script>
+{% endblock %}
+
+{% block stylesheet %}{% endblock %}
+
+{% block main %}
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div id="ex-primaryCol" class="c-primaryCol">
+                <div class="card rounded border-0 mb-4">
+                    <div class="card-body p-0">
+                        <div class="card rounded border-0">
+                            <ul class="list-group list-group-flush sortable-container">
+                                <li class="list-group-item">
+                                    {{ form_start(form, {'attr': { 'class': 'form-row', 'id': 'form-create' }}) }}
+                                    <div class="col-auto align-self-center">
+                                        <span>メーカー名</span></div>
+                                    <div class="col-3 mr-2">
+                                        {{ form_widget(form.maker_name) }}
+                                        {{ form_errors(form.maker_name) }}
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-ec-regular" type="submit">新規作成</button>
+                                    </div>
+                                    {{ form_end(form) }}
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-1"><strong>ID</strong></div>
+                                        <div class="col-5"><strong>メーカー名</strong></div>
+                                    </div>
+                                </li>
+                                {% for maker in makers %}
+                                    <li id="ex-class_name-2" class="list-group-item sortable-item"
+                                        data-class-name-id="2" data-sort-no="2">
+                                        <div class="row justify-content-around mode-view"
+                                             id="mode-view-{{ maker.id }}">
+                                            <div class="col-1 d-flex align-items-center">{{ maker.id }}</div>
+                                            <div class="col-5 d-flex align-items-center">
+                                                <span>{{ maker.makerName }}</span>
+                                            </div>
+                                            <div class="col-6 text-right">
+                                                <a class="btn btn-ec-actionIcon mr-2 action-edit" data-tooltip="true"
+                                                   data-placement="top" title="編集" onclick="edit({{ maker.id }})">
+                                                    <i class="fa fa-pencil fa-lg text-secondary"></i>
+                                                </a>
+                                                <div class="d-inline-block mr-2" data-tooltip="true"
+                                                     data-placement="top" title="削除">
+                                                    <a class="btn btn-ec-actionIcon" {{ 'onclick=destroy('~maker.id~')' }}>
+                                                        <i class="fa fa-close fa-lg text-secondary"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <form class="form-row {{ form_errors(form_update['Form'~maker.id].maker_name) ? '' : 'd-none' }} mode-edit"
+                                            method="post" action="" id="mode-edit-{{ maker.id }}">
+                                            {{ form_widget(form_update['Form'~maker.id]._token) }}
+                                            <input type="hidden" name="product-maker-id" value="{{ maker.id }}">
+                                            <div class="col-auto align-self-center"><span>仕入先名</span></div>
+                                            <div class="col-auto align-items-center">
+                                                {{ form_widget(form_update['Form'~maker.id].maker_name) }}
+                                                {{ form_errors(form_update['Form'~maker.id].maker_name) }}
+                                            </div>
+                                            <div class="col-auto align-items-center">
+                                                <button class="btn btn-ec-conversion" type="submit">決定</button>
+                                            </div>
+                                            <div class="col-auto align-items-center">
+                                                <button class="btn btn-ec-sub action-edit-cancel" type="button" onclick="cancel({{ maker.id }})">キャンセル
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <!-- 削除モーダル -->
+                            <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="DeleteModal" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title font-weight-bold">
+                                                {{ 'admin.common.delete_modal__title'|trans }}
+                                            </h5>
+                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body text-left">
+                                            <p class="text-left modal-message">削除します。よろしいですか？</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+                                                {{ 'admin.common.cancel'|trans }}
+                                            </button>
+                                            <form action="" name="destroy-maker">
+                                                <input type="hidden" name="id-destroy" value="">
+                                                <button class="btn btn-ec-delete" type="submit">
+                                                    {{ 'admin.common.delete'|trans }}
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation float-right">
+                    {{ knp_pagination_render(makers) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
