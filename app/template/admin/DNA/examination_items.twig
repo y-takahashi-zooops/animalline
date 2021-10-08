@@ -17,42 +17,39 @@ file that was distributed with this source code.
 {% block sub_title %}{{ 'DNA検査'|trans }}{% endblock %}
 
 {% block stylesheet %}
-<link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
 {% endblock stylesheet %}
 
 {% block main %}
-<div class="c-outsideBlock">
-    <div class="c-outsideBlock__contents">
-        <div class="row justify-content-start">
-            <div class="col-6">
-                <div class="mb-2">
-                    <label class="col-form-label">種別</label>
-                    <select class="form-control" id="pet_kind" name="pet_kind">
-                        {% set kindNames = ['選択してください', '犬', '猫'] %}
-                        {% for i in 0..2 %}
-                        <option value="{{ i }}" {% if params.pet_kind is defined and params.pet_kind==i %} selected {%
-                            endif %}>{{ kindNames[i] }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="mb-2">
-                    <label class="col-form-label">犬種/猫種</label>
-                    <select class="form-control" id="breeds">
-                        <option value="" selected="selected">選択してください</option>
-                        {% for breed in breeds %}
-                        <option value="{{ breed.id }}" {% if params.breeds is defined and params.breeds==breed.Id %}
-                            selected {% endif %}>{{ breed.breedsName }}</option>
-                        {% endfor %}
-                    </select>
+    <form method="get" class="form-row" action="{{ url('admin_dna_examination_items') }}">
+        <div class="c-outsideBlock">
+            <div class="c-outsideBlock__contents">
+                <div class="row justify-content-start">
+                    <div class="col-6">
+                        <div class="mb-2">
+                            <label class="col-form-label">種別</label>
+                            <select class="form-control" id="pet_kind" name="pet_kind">
+                                {% set kindNames = ['選択してください', '犬', '猫'] %}
+                                {% for i in 0..2 %}
+                                    <option value="{{ i }}" {% if params.pet_kind is defined and params.pet_kind==i %} selected {% endif %}>{{ kindNames[i] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="col-form-label">犬種/猫種</label>
+                            <select class="form-control" id="breeds" name="pet_breeds">
+                                <option value="" selected="selected">選択してください</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="c-outsideBlock__contents mb-5">
+                <button class="btn btn-ec-conversion px-5" type="submit">表示</button>
+            </div>
         </div>
-    </div>
-    <div class="c-outsideBlock__contents mb-5">
-        <button class="btn btn-ec-conversion px-5" type="submit">表示</button>
-    </div>
-</div>
-{# <div class="c-contentsArea__cols">
+    </form>
+    {# <div class="c-contentsArea__cols">
     <div class="c-contentsArea__primaryCol">
         <div class="c-primaryCol">
             <div class="card rounded border-0 mb-4 d-block">
@@ -103,59 +100,62 @@ file that was distributed with this source code.
 </div>
 </div>
 </div> #}
-<div class="c-contentsArea__cols">
-    <div class="c-contentsArea__primaryCol">
-        <div class="c-primaryCol">
-            <div class="card rounded border-0 mb-4">
-                <div class="card-body p-0">
-                    <div class="card rounded border-0">
-                        <ul class="list-group list-group-flush sortable-container">
-                            <li class="list-group-item">
-                                <form method="post" class="form-row">
-                                    <div class="col-auto align-self-center">
-                                        <span>検査項目</span>
-                                    </div>
-                                    <div class="col-4 mr-2">
-                                        <input type="text" required="required" maxlength="64" class="form-control" />
-                                    </div>
-                                    <div class="col-auto">
-                                        <button class="btn btn-ec-regular" type="submit">新規作成</button>
-                                    </div>
-                    </div>
-                    </form>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-4"><strong>検査項目</strong></div>
-                            <div class="col-3"><strong>ステータス</strong></div>
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <div class="card rounded border-0 mb-4">
+                    <div class="card-body p-0">
+                        <div class="card rounded border-0">
+                            <ul class="list-group list-group-flush sortable-container">
+                                <li class="list-group-item">
+                                    <form method="post" class="form-row">
+                                        <div class="col-auto align-self-center">
+                                            <span>検査項目</span>
+                                        </div>
+                                        <div class="col-4 mr-2">
+                                            <input type="text" required="required" maxlength="64" class="form-control"/>
+                                            <input type="hidden" value="{{ checkKind }}" name="check_kind"/>
+                                            <input type="hidden" value="{{ breeds }}" name="breeds"/>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button class="btn btn-ec-regular" type="submit">新規作成</button>
+                                        </div>
                         </div>
-                    </li>
-                    {% for dna_check_kind in dna_check_kinds %}
-                    <li id="ex-class_name-2" class="list-group-item">
-                        <div class="row justify-content-around mode-view">
-                            <div class="col-4 d-flex align-items-center">
-                                <span>{{ dna_check_kind.checkKind }}</span>
+                        </form>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4"><strong>検査項目</strong></div>
+                                <div class="col-3"><strong>ステータス</strong></div>
                             </div>
-                            <div class="col d-flex align-items-center">
-                                <span>{{ dna_check_kind.deleteFlg == 0 ? '実施中' : '廃止' }}</span>
-                            </div>
-                            <div class="col-auto text-right">
-                                <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top" title="廃止">
-                                    {% if dna_check_kind.deleteFlg == 0 %}
-                                    <a class="btn btn-ec-actionIcon ban">
-                                        <i class="fa fa-ban fa-lg text-secondary"></i>
-                                    </a>
-                                    {% elseif dna_check_kind.deleteFlg == 1 %}
-                                    <a class="btn btn-ec-actionIcon lift">
-                                        <i class="far fa-circle fa-lg text-secondary"></i>
-                                    </a>
-                                    {% endif %}
+                        </li>
+                        {% for dna_check_kind in dna_check_kinds %}
+                            <li id="ex-class_name-2" class="list-group-item">
+                                <div class="row justify-content-around mode-view">
+                                    <div class="col-4 d-flex align-items-center">
+                                        <span>{{ dna_check_kind.checkKind }}</span>
+                                    </div>
+                                    <div class="col d-flex align-items-center">
+                                        <span>{{ dna_check_kind.deleteFlg == 0 ? '実施中' : '廃止' }}</span>
+                                    </div>
+                                    <div class="col-auto text-right">
+                                        <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top"
+                                             title="廃止">
+                                            {% if dna_check_kind.deleteFlg == 0 %}
+                                                <a class="btn btn-ec-actionIcon ban">
+                                                    <i class="fa fa-ban fa-lg text-secondary"></i>
+                                                </a>
+                                            {% elseif dna_check_kind.deleteFlg == 1 %}
+                                                <a class="btn btn-ec-actionIcon lift">
+                                                    <i class="far fa-circle fa-lg text-secondary"></i>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </li>
-                    {% endfor %}
-                    {# <li class="list-group-item">
+                            </li>
+                        {% endfor %}
+                        {# <li class="list-group-item">
                         <div class="row justify-content-around mode-view">
                             <div class="col-4 d-flex align-items-center">
                                 <span>〇〇検査</span>
@@ -172,109 +172,109 @@ file that was distributed with this source code.
                             </div>
                         </div>
                     </li> #}
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</div>
+    </div>
 
-<!-- 廃止モーダル -->
-<div class="modal fade" id="BanModal" tabindex="-1" role="dialog" aria-labelledby="BanModal" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title font-weight-bold">
-                    廃止します
-                </h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body text-left">
-                <p class="text-left modal-message">廃止します。よろしいですか？</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
-                    キャンセル
-                </button>
-                <form action="" name="destroy-supplier">
-                    <input type="hidden" name="id-destroy" value="">
-                    <button class="btn btn-ec-delete" type="submit">
-                        廃止
+    <!-- 廃止モーダル -->
+    <div class="modal fade" id="BanModal" tabindex="-1" role="dialog" aria-labelledby="BanModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold">
+                        廃止します
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
                     </button>
-                </form>
+                </div>
+                <div class="modal-body text-left">
+                    <p class="text-left modal-message">廃止します。よろしいですか？</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+                        キャンセル
+                    </button>
+                    <form action="" name="destroy-supplier">
+                        <input type="hidden" name="id-destroy" value="">
+                        <button class="btn btn-ec-delete" type="submit">
+                            廃止
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- 廃止解除モーダル -->
-<div class="modal fade" id="LiftModal" tabindex="-1" role="dialog" aria-labelledby="LiftModal" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title font-weight-bold">
-                    廃止を解除します
-                </h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body text-left">
-                <p class="text-left modal-message">廃止を解除します。よろしいですか？</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
-                    キャンセル
-                </button>
-                <form action="" name="destroy-supplier">
-                    <input type="hidden" name="id-destroy" value="">
-                    <button class="btn btn-ec-delete" type="submit">
-                        解除
+    <!-- 廃止解除モーダル -->
+    <div class="modal fade" id="LiftModal" tabindex="-1" role="dialog" aria-labelledby="LiftModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold">
+                        廃止を解除します
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
                     </button>
-                </form>
+                </div>
+                <div class="modal-body text-left">
+                    <p class="text-left modal-message">廃止を解除します。よろしいですか？</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+                        キャンセル
+                    </button>
+                    <form action="" name="destroy-supplier">
+                        <input type="hidden" name="id-destroy" value="">
+                        <button class="btn btn-ec-delete" type="submit">
+                            解除
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
 {% block javascript %}
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 <script>
     $(".ban").on('click', function () {
-        $('#BanModal').modal('show');
-    });
+    $('#BanModal').modal('show');
+});
     $(".lift").on('click', function () {
-        $('#LiftModal').modal('show');
-    });
+    $('#LiftModal').modal('show');
+});
 
     $('#pet_kind').on('change', function () {
-        getDataByPetKind(this);
-    });
+    getDataByPetKind(this);
+});
 
     function getDataByPetKind(petKindSelect) {
-        let breed = null;
+    let breed = null;
 
-        $.ajax({
-            type: 'get',
-            url: '/breeds_by_pet_kind',
-            dataType: 'json',
-            data: {
-                pet_kind: petKindSelect.value
-            }
-        })
-            .done(function (data) {
-                const { breeds } = data;
-                $('#breeds').empty();
-                $('#breeds').append(new Option('選択してください', ''));
-                breeds.forEach(breed => {
-                    $('#breeds').append(new Option(breed.name, breed.id));
-                });
-            })
-            .fail(function (err) {
-                console.error(err);
-            });
-    }
+    $.ajax({
+    type: 'get',
+    url: '/breeds_by_pet_kind',
+    dataType: 'json',
+    data: {
+    pet_kind: petKindSelect.value
+}
+})
+    .done(function (data) {
+    const {breeds} = data;
+    $('#breeds').empty();
+    $('#breeds').append(new Option('選択してください', ''));
+    breeds.forEach(breed => {
+    $('#breeds').append(new Option(breed.name, breed.id));
+});
+})
+    .fail(function (err) {
+    console.error(err);
+});
+}
 </script>
 {% endblock %}

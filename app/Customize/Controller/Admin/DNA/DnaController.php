@@ -8,6 +8,7 @@ use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Entity\DnaCheckStatus;
 use Customize\Repository\BreedsRepository;
+use Customize\Repository\DnaCheckKindsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Controller\AbstractController;
@@ -43,22 +44,31 @@ class DnaController extends AbstractController
     protected $conservationPetsRepository;
 
     /**
+     * @var DnaCheckKindsRepository;
+     */
+    protected $dnaCheckKindsRepository;
+
+    /**
      * DnaController constructor
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param ConservationPetsRepository $conservationPetsRepository
+     * @param DnaCheckKindsRepository $dnaCheckKindsRepository
      */
     public function __construct(
         DnaQueryService            $dnaQueryService,
         DnaCheckStatusRepository   $dnaCheckStatusRepository,
         BreederPetsRepository      $breederPetsRepository,
-        ConservationPetsRepository $conservationPetsRepository
-    ) {
+        ConservationPetsRepository $conservationPetsRepository,
+        DnaCheckKindsRepository    $dnaCheckKindsRepository
+    )
+    {
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
     }
 
     /**
@@ -70,7 +80,16 @@ class DnaController extends AbstractController
     public function examination_items(Request $request)
     {
         $dna_check_kinds = [];
-        return compact('dna_check_kinds');
+        $checkKind = $request->get('pet_kind');
+        $breeds = $request->get('pet_breeds');
+        if ($request->isMethod('GET')) {
+            $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['check_kind' => $request->get('pet_kind'), 'Breeds' => $request->get('pet_breeds')]);
+        }
+        return compact(
+            'dna_check_kinds',
+            'checkKind',
+            'breeds'
+        );
     }
 
     /**
