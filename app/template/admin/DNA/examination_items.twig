@@ -21,7 +21,7 @@ file that was distributed with this source code.
 {% endblock stylesheet %}
 
 {% block main %}
-    <form method="get" class="form-row" action="{{ url('admin_dna_examination_items') }}">
+    <form method="get" action="{{ url('admin_dna_examination_items') }}">
         <div class="c-outsideBlock">
             <div class="c-outsideBlock__contents">
                 <div class="row justify-content-start">
@@ -108,18 +108,23 @@ file that was distributed with this source code.
                         <div class="card rounded border-0">
                             <ul class="list-group list-group-flush sortable-container">
                                 <li class="list-group-item">
-                                    <form method="post" class="form-row" action="{{ url('admin_dna_examination_items') }}">
+                                    <form method="post" class="form-row"
+                                          action="{{ url('admin_dna_examination_items') }}">
                                         <div class="col-auto align-self-center">
                                             <span>検査項目</span>
                                         </div>
-                                        <div class="col-4 mr-2" >
-                                            <input type="text" required="required" maxlength="64" class="form-control" id="check_kind"
+                                        <div class="col-4 mr-2">
+                                            <input type="text" required="required" maxlength="64" class="form-control"
+                                                   id="check_kind"
                                                    name="check_kind" {{ breeds ? '' : 'disabled' }}/>
-                                            <input type="hidden" value="{{ petType }}" name="petType" id = "pet_kind_value"/>
-                                            <input type="hidden" value="{{ breeds }}" name="breeds" id = "breed_value"/>
+                                            <input type="hidden" value="{{ petType }}" name="petType"
+                                                   id="pet_kind_value"/>
+                                            <input type="hidden" value="{{ breeds }}" name="breeds" id="breed_value"/>
                                         </div>
                                         <div class="col-auto">
-                                            <button class="btn btn-ec-regular" type="submit" id="check_kind_id" {{ breeds ? '' : 'disabled' }}>新規作成</button>
+                                            <button class="btn btn-ec-regular" type="submit"
+                                                    id="check_kind_id" {{ breeds ? '' : 'disabled' }}>新規作成
+                                            </button>
                                         </div>
                                     </form>
                                 </li>
@@ -143,11 +148,13 @@ file that was distributed with this source code.
                                                      data-placement="top"
                                                      title="廃止">
                                                     {% if dna_check_kind.deleteFlg == 0 %}
-                                                        <a class="btn btn-ec-actionIcon ban" data-id="{{dna_check_kind.id}}">
+                                                        <a class="btn btn-ec-actionIcon ban"
+                                                           data-id="{{ dna_check_kind.id }}">
                                                             <i class="fa fa-ban fa-lg text-secondary"></i>
                                                         </a>
                                                     {% elseif dna_check_kind.deleteFlg == 1 %}
-                                                        <a class="btn btn-ec-actionIcon lift" data-id="{{dna_check_kind.id}}">
+                                                        <a class="btn btn-ec-actionIcon lift"
+                                                           data-id="{{ dna_check_kind.id }}">
                                                             <i class="far fa-circle fa-lg text-secondary"></i>
                                                         </a>
                                                     {% endif %}
@@ -204,7 +211,7 @@ file that was distributed with this source code.
                         キャンセル
                     </button>
                     <input type="hidden" class="id-destroy-ban" value="">
-                    <button class="btn btn-ec-delete" type="submit" id="delete-ban">廃止</form>
+                    <button class="btn btn-ec-delete" type="submit" id="delete-ban">廃止</button>
                 </div>
             </div>
         </div>
@@ -230,7 +237,6 @@ file that was distributed with this source code.
                     </button>
                     <input type="hidden" class="id-destroy-lift" value="">
                     <button class="btn btn-ec-delete" id="delete-lift">解除</button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -240,24 +246,22 @@ file that was distributed with this source code.
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 <script>
     $(".ban").on('click', function () {
-        $('#BanModal').modal('show');
-        $('.id-destroy-ban').val($(this).data('id'));
-    });
+    $('#BanModal').modal('show');
+    $('.id-destroy-ban').val($(this).data('id'));
+});
     $(".lift").on('click', function () {
-        $('#LiftModal').modal('show');
-        $('.id-destroy-lift').val($(this).data('id'));
-    });
+    $('#LiftModal').modal('show');
+    $('.id-destroy-lift').val($(this).data('id'));
+});
 
     $('#pet_kind').on('change', function () {
-        getDataByPetKind(this);
-    });
+    getDataByPetKind(this);
+});
 
     function getDataByPetKind(petKindSelect) {
-        let breed = null;
-
-        $.ajax({
-            type: 'get',
-            url: '{{ url("breeds_by_pet_kind") }}',
+    $.ajax({
+        type: 'get',
+        url: '{{ url("breeds_by_pet_kind") }}',
             dataType: 'json',
             data: {
                 pet_kind: petKindSelect.value
