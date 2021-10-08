@@ -12,7 +12,7 @@ file that was distributed with this source code.
 
 {% set menus = ['product', 'maker'] %}
 
-{% block title %}仕入先管理{% endblock %}
+{% block title %}プロデューサー管理{% endblock %}
 {% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
 
 
@@ -29,7 +29,7 @@ file that was distributed with this source code.
                                 <li class="list-group-item">
                                     {{ form_start(form, {'attr': { 'class': 'form-row', 'id': 'form-create' }}) }}
                                     <div class="col-auto align-self-center">
-                                        <span>仕入先名</span></div>
+                                        <span>メーカー名</span></div>
                                     <div class="col-3 mr-2">
                                         {{ form_widget(form.maker_name) }}
                                         {{ form_errors(form.maker_name) }}
