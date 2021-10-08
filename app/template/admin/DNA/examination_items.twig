@@ -111,8 +111,8 @@ file that was distributed with this source code.
                         <div class="card rounded border-0">
                             <ul class="list-group list-group-flush sortable-container">
                                 <li class="list-group-item">
-                                    <form method="post" class="form-row"
-                                          action="{{ url('admin_dna_examination_items') }}">
+                                    <form method="post" action="{{ url('admin_dna_examination_items', params) }}"
+                                    class="form-row">
                                         <div class="col-auto align-self-center">
                                             <span>検査項目</span>
                                         </div>
@@ -133,14 +133,14 @@ file that was distributed with this source code.
                                 </li>
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col-4"><strong>検査項目</strong></div>
-                                        <div class="col-3"><strong>ステータス</strong></div>
+                                        <div class="col-6"><strong>検査項目</strong></div>
+                                        <div class="col"><strong>ステータス</strong></div>
                                     </div>
                                 </li>
                                 {% for dna_check_kind in dna_check_kinds %}
                                     <li id="ex-class_name-2" class="list-group-item">
                                         <div class="row justify-content-around mode-view">
-                                            <div class="col-4 d-flex align-items-center">
+                                            <div class="col-6 d-flex align-items-center">
                                                 <span>{{ dna_check_kind.checkKind }}</span>
                                             </div>
                                             <div class="col d-flex align-items-center">
@@ -188,10 +188,10 @@ file that was distributed with this source code.
                             </ul>
                         </div>
                     </div>
-                    <div class="navigation float-right">
-                        {{ knp_pagination_render(dna_check_kinds) }}
-                    </div>
                 </div>
+            </div>
+            <div class="navigation float-right">
+                {{ knp_pagination_render(dna_check_kinds) }}
             </div>
         </div>
     </div>
