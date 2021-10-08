@@ -142,11 +142,11 @@ file that was distributed with this source code.
                                         <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top"
                                              title="廃止">
                                             {% if dna_check_kind.deleteFlg == 0 %}
-                                                <a class="btn btn-ec-actionIcon ban">
+                                                <a class="btn btn-ec-actionIcon ban" data-id="{{dna_check_kind.id}}">
                                                     <i class="fa fa-ban fa-lg text-secondary"></i>
                                                 </a>
                                             {% elseif dna_check_kind.deleteFlg == 1 %}
-                                                <a class="btn btn-ec-actionIcon lift">
+                                                <a class="btn btn-ec-actionIcon lift" data-id="{{dna_check_kind.id}}">
                                                     <i class="far fa-circle fa-lg text-secondary"></i>
                                                 </a>
                                             {% endif %}
@@ -199,12 +199,8 @@ file that was distributed with this source code.
                     <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
                         キャンセル
                     </button>
-                    <form action="" name="destroy-supplier">
-                        <input type="hidden" name="id-destroy" value="">
-                        <button class="btn btn-ec-delete" type="submit">
-                            廃止
-                        </button>
-                    </form>
+                    <input type="hidden" class="id-destroy-ban" value="">
+                    <button class="btn btn-ec-delete" type="submit" id="delete-ban">廃止</form>
                 </div>
             </div>
         </div>
@@ -228,11 +224,8 @@ file that was distributed with this source code.
                     <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
                         キャンセル
                     </button>
-                    <form action="" name="destroy-supplier">
-                        <input type="hidden" name="id-destroy" value="">
-                        <button class="btn btn-ec-delete" type="submit">
-                            解除
-                        </button>
+                    <input type="hidden" class="id-destroy-lift" value="">
+                    <button class="btn btn-ec-delete" id="delete-lift">解除</button>
                     </form>
                 </div>
             </div>
@@ -243,38 +236,71 @@ file that was distributed with this source code.
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 <script>
     $(".ban").on('click', function () {
-    $('#BanModal').modal('show');
-});
+        $('#BanModal').modal('show');
+        $('.id-destroy-ban').val($(this).data('id'));
+    });
     $(".lift").on('click', function () {
-    $('#LiftModal').modal('show');
-});
+        $('#LiftModal').modal('show');
+        $('.id-destroy-lift').val($(this).data('id'));
+    });
 
     $('#pet_kind').on('change', function () {
-    getDataByPetKind(this);
-});
+        getDataByPetKind(this);
+    });
 
     function getDataByPetKind(petKindSelect) {
-    let breed = null;
+        let breed = null;
 
-    $.ajax({
-    type: 'get',
-    url: '/breeds_by_pet_kind',
-    dataType: 'json',
-    data: {
-    pet_kind: petKindSelect.value
-}
-})
-    .done(function (data) {
-    const {breeds} = data;
-    $('#breeds').empty();
-    $('#breeds').append(new Option('選択してください', ''));
-    breeds.forEach(breed => {
-    $('#breeds').append(new Option(breed.name, breed.id));
-});
-})
-    .fail(function (err) {
-    console.error(err);
-});
-}
+        $.ajax({
+            type: 'get',
+            url: '{{ url("breeds_by_pet_kind") }}',
+            dataType: 'json',
+            data: {
+                pet_kind: petKindSelect.value
+            }
+        })
+            .done(function (data) {
+                const { breeds } = data;
+                $('#breeds').empty();
+                $('#breeds').append(new Option('選択してください', ''));
+                breeds.forEach(breed => {
+                    $('#breeds').append(new Option(breed.name, breed.id));
+                });
+            })
+            .fail(function (err) {
+                console.error(err);
+            });
+    }
+
+    $("#delete-ban").on('click', function () {
+        deleteDnaCheckKind($('.id-destroy-ban').val());
+    });
+    $("#delete-lift").on('click', function () {
+        deleteDnaCheckKind($('.id-destroy-lift').val());
+    });
+
+    function deleteDnaCheckKind(id) {
+        $.ajax({
+            url: '{{ url("admin_examination_items_delete") }}',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                'id': id
+            }
+        })
+            .done(function ({ isSuccess }) {
+                if (!isSuccess) {
+                    alert('Delete failed.');
+                    return;
+                }
+
+                $('#BanModal').modal('hide');
+                $('#LiftModal').modal('hide');
+                location.reload();
+            })
+            .fail(function (err) {
+                console.error(err);
+            });
+    }
 </script>
 {% endblock %}
