@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -75,21 +76,26 @@ class BreederPetsType extends AbstractType
             ])
             ->add('future_wait', IntegerType::class)
             //->add('dna_check_result', IntegerType::class)
-            ->add('pr_comment', TextareaType::class)
-            ->add('description', TextareaType::class)
-            ->add('is_breeding', ChoiceType::class, [
-                'choices'  => [
-                    '可'   => '1',
-                    '不可' => '0',
+            ->add('pr_comment', TextType::class, [
+                'attr' => [
+                    'maxlength' => 64,
                 ],
-                'expanded' => true,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 64,
+                    ]),
+                ],
+                'required' => false,
             ])
-            ->add('is_selling', ChoiceType::class, [
-                'choices'  => [
-                    '可'   => '1',
-                    '不可' => '0',
+            ->add('description', TextType::class, [
+                'attr' => [
+                    'maxlength' => 64,
                 ],
-                'expanded' => true,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 64,
+                    ]),
+                ],
             ])
             ->add('guarantee', TextareaType::class)
             ->add('is_pedigree', ChoiceType::class, [
@@ -99,6 +105,13 @@ class BreederPetsType extends AbstractType
                 ],
                 'expanded' => true,
             ])
+            ->add('Pedigree', EntityType::class, [
+                'class' => 'Customize\Entity\Pedigree',
+                'choice_label' => function (\Customize\Entity\Pedigree $petdigree) {
+                    return $petdigree->getPedigreeName();
+                },
+                'required' => false,
+            ])
             ->add('include_vaccine_fee', ChoiceType::class, [
                 'choices'  => [
                     'あり'   => '1',
@@ -106,10 +119,7 @@ class BreederPetsType extends AbstractType
                 ],
                 'expanded' => true,
             ])
-            ->add('delivery_time', TextareaType::class)
             ->add('delivery_way', TextareaType::class)
-            ->add('payment_method', TextareaType::class)
-            ->add('reservation_fee', IntegerType::class)
             ->add('thumbnail_path', FileType::class, [
                 'required' => false,
                 'mapped' => false,
@@ -159,14 +169,6 @@ class BreederPetsType extends AbstractType
                 ],
                 'data_class' => null
             ])
-            // ->add('release_status', ChoiceType::class, [
-            //     'choices' =>
-            //     [
-            //         '非公開' => AnilineConf::RELEASE_STATUS_PRIVATE,
-            //         '公開' => AnilineConf::RELEASE_STATUS_PUBLIC
-            //     ]
-            // ])
-            // ->add('release_date', DateType::class)
             ->add('price', IntegerType::class);
 
             $customer = $options['customer'];

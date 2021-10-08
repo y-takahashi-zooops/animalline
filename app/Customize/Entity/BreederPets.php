@@ -24,13 +24,13 @@ class BreederPets
     private $id;
 
     /**
-     * @ORM\Column(name="pet_kind", type="smallint")
+     * @ORM\Column(name="pet_kind", type="smallint", nullable=true)
      */
     private $pet_kind;
 
     /**
      * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="BreederPets")
-     * @ORM\JoinColumn(name="breeder_id", nullable=false)
+     * @ORM\JoinColumn(name="breeder_id", nullable=true)
      */
     private $Breeder;
 
@@ -41,12 +41,12 @@ class BreederPets
     private $BreedsType;
 
     /**
-     * @ORM\Column(name="pet_sex", type="smallint")
+     * @ORM\Column(name="pet_sex", type="smallint", nullable=true)
      */
     private $pet_sex;
 
     /**
-     * @ORM\Column(name="pet_birthday", type="date")
+     * @ORM\Column(name="pet_birthday", type="date", nullable=true)
      */
     private $pet_birthday;
 
@@ -62,64 +62,54 @@ class BreederPets
     private $future_wait;
 
     /**
-     * @ORM\Column(name="dna_check_result", type="integer", options={"default" = 0})
+     * @ORM\Column(name="dna_check_result", type="integer", options={"default" = 0}, nullable=true)
      */
     private $dna_check_result;
 
     /**
-     * @ORM\Column(name="pr_comment", type="text")
+     * @ORM\Column(name="pr_comment", type="text", nullable=true)
      */
     private $pr_comment;
 
     /**
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\Column(name="is_breeding", type="smallint")
+     * @ORM\Column(name="is_breeding", type="smallint", nullable=true)
      */
     private $is_breeding;
 
     /**
-     * @ORM\Column(name="is_selling", type="smallint")
+     * @ORM\Column(name="is_selling", type="smallint", nullable=true)
      */
     private $is_selling;
 
     /**
-     * @ORM\Column(name="guarantee", type="text")
+     * @ORM\Column(name="guarantee", type="text", nullable=true)
      */
     private $guarantee;
 
     /**
-     * @ORM\Column(name="is_pedigree", type="smallint")
+     * @ORM\Column(name="is_pedigree", type="smallint", nullable=true)
      */
     private $is_pedigree;
 
     /**
-     * @ORM\Column(name="include_vaccine_fee", type="smallint")
+     * @ORM\Column(name="include_vaccine_fee", type="smallint", nullable=true)
      */
     private $include_vaccine_fee;
 
     /**
-     * @ORM\Column(name="delivery_time", type="text")
+     * @ORM\Column(name="vaccine_detail", type="string", length=128, nullable=true)
      */
-    private $delivery_time;
+    private $vaccine_detail;
 
     /**
-     * @ORM\Column(name="delivery_way", type="text")
+     * @ORM\Column(name="delivery_way", type="text", nullable=true)
      */
     private $delivery_way;
-
-    /**
-     * @ORM\Column(name="payment_method", type="text")
-     */
-    private $payment_method;
-
-    /**
-     * @ORM\Column(name="reservation_fee", type="integer")
-     */
-    private $reservation_fee = 0;
 
     /**
      * @ORM\Column(name="price", type="integer")
@@ -130,16 +120,6 @@ class BreederPets
      * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
      */
     private $thumbnail_path;
-
-    /**
-     * @ORM\Column(name="release_status", type="smallint", options={"default" = 0}, nullable=true)
-     */
-    private $release_status;
-
-    /**
-     * @ORM\Column(name="release_date", type="date", nullable=true)
-     */
-    private $release_date;
 
     /**
      * @var \DateTime
@@ -179,6 +159,12 @@ class BreederPets
      * @ORM\OneToMany(targetEntity=BreederEvaluations::class, mappedBy="pet_id")
      */
     private $BreederEvaluations;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Pedigree::class)
+     * @ORM\JoinColumn(name="pedigree_id", nullable=true)
+     */
+    private $Pedigree;
 
     public function __construct()
     {
@@ -361,14 +347,14 @@ class BreederPets
         return $this;
     }
 
-    public function getDeliveryTime(): ?string
+    public function getVaccineDetail(): ?string
     {
-        return $this->delivery_time;
+        return $this->vaccine_detail;
     }
 
-    public function setDeliveryTime(string $delivery_time): self
+    public function setVaccineDetail(string $vaccine_detail): self
     {
-        $this->delivery_time = $delivery_time;
+        $this->vaccine_detail = $vaccine_detail;
 
         return $this;
     }
@@ -381,30 +367,6 @@ class BreederPets
     public function setDeliveryWay(string $delivery_way): self
     {
         $this->delivery_way = $delivery_way;
-
-        return $this;
-    }
-
-    public function getPaymentMethod(): ?string
-    {
-        return $this->payment_method;
-    }
-
-    public function setPaymentMethod(string $payment_method): self
-    {
-        $this->payment_method = $payment_method;
-
-        return $this;
-    }
-
-    public function getReservationFee(): ?int
-    {
-        return $this->reservation_fee;
-    }
-
-    public function setReservationFee(int $reservation_fee): self
-    {
-        $this->reservation_fee = $reservation_fee;
 
         return $this;
     }
@@ -429,30 +391,6 @@ class BreederPets
     public function setThumbnailPath(string $thumbnail_path): self
     {
         $this->thumbnail_path = $thumbnail_path;
-
-        return $this;
-    }
-
-    public function getReleaseStatus(): ?int
-    {
-        return $this->release_status;
-    }
-
-    public function setReleaseStatus(int $release_status): self
-    {
-        $this->release_status = $release_status;
-
-        return $this;
-    }
-
-    public function getReleaseDate(): ?\DateTimeInterface
-    {
-        return $this->release_date;
-    }
-
-    public function setReleaseDate(\DateTimeInterface $release_date): self
-    {
-        $this->release_date = $release_date;
 
         return $this;
     }
@@ -614,5 +552,17 @@ class BreederPets
     public function getUpdateDate()
     {
         return $this->update_date;
+    }
+
+    public function getPedigree(): ?Pedigree
+    {
+        return $this->Pedigree;
+    }
+
+    public function setPedigree(?Pedigree $Pedigree): self
+    {
+        $this->Pedigree = $Pedigree;
+
+        return $this;
     }
 }

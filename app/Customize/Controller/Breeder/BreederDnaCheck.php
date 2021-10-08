@@ -206,9 +206,7 @@ class BreederDnaCheck extends AbstractController
             for ($i = 0; $i < $kitUnit; $i++) {
                 $Dna = (new DnaCheckStatus)
                     ->setDnaHeader($dnaCheckSatusHeader)
-                    ->setPetId($dnaCheckSatusHeader->getPetId())
-                    ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
-                    ->setKitPetRegisterDate(new DateTime);
+                    ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER);
                 $entityManager->persist($Dna);
             }
             $entityManager->flush();

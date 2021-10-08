@@ -225,7 +225,7 @@ class ExportRelease extends Command
                             'ss.warehouse_code as warehouseCode',
                             'ss.item_code_01 as productNumberCode',
                             'ss.item_code_02 as colorCode',
-                            'ss.jan_code as JAN_code',
+                            'pc.jan_code as JAN_code',
                             'ss.quantity as numberOfShippingInstructions',
                             'ss.standerd_price as retailPrice',
                             'ss.selling_price as deliveryUnitPrice',
@@ -244,6 +244,7 @@ class ExportRelease extends Command
                         )
                             ->innerJoin('ss.ShippingScheduleHeader', 'ssh')
                             ->leftJoin('ssh.Shipping', 's')
+                            ->leftJoin('ss.ProductClass', 'pc')
                             ->where('ssh.Shipping = :shipping')
                             ->andWhere('s.update_date <= :to')
                             ->setParameters(['to' => $now, 'shipping' => $shipping]);
