@@ -108,54 +108,55 @@ file that was distributed with this source code.
                         <div class="card rounded border-0">
                             <ul class="list-group list-group-flush sortable-container">
                                 <li class="list-group-item">
-                                    <form method="post" class="form-row">
+                                    <form method="post" class="form-row" action="{{ url('admin_dna_examination_items') }}">
                                         <div class="col-auto align-self-center">
                                             <span>検査項目</span>
                                         </div>
-                                        <div class="col-4 mr-2">
-                                            <input type="text" required="required" maxlength="64" class="form-control"/>
-                                            <input type="hidden" value="{{ checkKind }}" name="check_kind"/>
-                                            <input type="hidden" value="{{ breeds }}" name="breeds"/>
+                                        <div class="col-4 mr-2" >
+                                            <input type="text" required="required" maxlength="64" class="form-control" id="check_kind"
+                                                   name="check_kind" {{ breeds ? '' : 'disabled' }}/>
+                                            <input type="hidden" value="{{ petType }}" name="petType" id = "pet_kind_value"/>
+                                            <input type="hidden" value="{{ breeds }}" name="breeds" id = "breed_value"/>
                                         </div>
                                         <div class="col-auto">
-                                            <button class="btn btn-ec-regular" type="submit">新規作成</button>
+                                            <button class="btn btn-ec-regular" type="submit" id="check_kind_id" {{ breeds ? '' : 'disabled' }}>新規作成</button>
                                         </div>
-                        </div>
-                        </form>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-4"><strong>検査項目</strong></div>
-                                <div class="col-3"><strong>ステータス</strong></div>
-                            </div>
-                        </li>
-                        {% for dna_check_kind in dna_check_kinds %}
-                            <li id="ex-class_name-2" class="list-group-item">
-                                <div class="row justify-content-around mode-view">
-                                    <div class="col-4 d-flex align-items-center">
-                                        <span>{{ dna_check_kind.checkKind }}</span>
+                                    </form>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-4"><strong>検査項目</strong></div>
+                                        <div class="col-3"><strong>ステータス</strong></div>
                                     </div>
-                                    <div class="col d-flex align-items-center">
-                                        <span>{{ dna_check_kind.deleteFlg == 0 ? '実施中' : '廃止' }}</span>
-                                    </div>
-                                    <div class="col-auto text-right">
-                                        <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top"
-                                             title="廃止">
-                                            {% if dna_check_kind.deleteFlg == 0 %}
-                                                <a class="btn btn-ec-actionIcon ban" data-id="{{dna_check_kind.id}}">
-                                                    <i class="fa fa-ban fa-lg text-secondary"></i>
-                                                </a>
-                                            {% elseif dna_check_kind.deleteFlg == 1 %}
-                                                <a class="btn btn-ec-actionIcon lift" data-id="{{dna_check_kind.id}}">
-                                                    <i class="far fa-circle fa-lg text-secondary"></i>
-                                                </a>
-                                            {% endif %}
+                                </li>
+                                {% for dna_check_kind in dna_check_kinds %}
+                                    <li id="ex-class_name-2" class="list-group-item">
+                                        <div class="row justify-content-around mode-view">
+                                            <div class="col-4 d-flex align-items-center">
+                                                <span>{{ dna_check_kind.checkKind }}</span>
+                                            </div>
+                                            <div class="col d-flex align-items-center">
+                                                <span>{{ dna_check_kind.deleteFlg == 0 ? '実施中' : '廃止' }}</span>
+                                            </div>
+                                            <div class="col-auto text-right">
+                                                <div class="d-inline-block mr-2" data-tooltip="true"
+                                                     data-placement="top"
+                                                     title="廃止">
+                                                    {% if dna_check_kind.deleteFlg == 0 %}
+                                                        <a class="btn btn-ec-actionIcon ban" data-id="{{dna_check_kind.id}}">
+                                                            <i class="fa fa-ban fa-lg text-secondary"></i>
+                                                        </a>
+                                                    {% elseif dna_check_kind.deleteFlg == 1 %}
+                                                        <a class="btn btn-ec-actionIcon lift" data-id="{{dna_check_kind.id}}">
+                                                            <i class="far fa-circle fa-lg text-secondary"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </li>
-                        {% endfor %}
-                        {# <li class="list-group-item">
+                                    </li>
+                                {% endfor %}
+                                {# <li class="list-group-item">
                         <div class="row justify-content-around mode-view">
                             <div class="col-4 d-flex align-items-center">
                                 <span>〇〇検査</span>
@@ -172,12 +173,12 @@ file that was distributed with this source code.
                             </div>
                         </div>
                     </li> #}
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- 廃止モーダル -->
@@ -302,5 +303,11 @@ file that was distributed with this source code.
                 console.error(err);
             });
     }
+    $('#breeds').on('change', function () {
+        $('#pet_kind_value').val($('#pet_kind').val());
+        $('#breed_value').val($('#breeds').val());
+        $('#check_kind').attr("disabled", false);
+        $('#check_kind_id').attr("disabled", false);
+});
 </script>
 {% endblock %}

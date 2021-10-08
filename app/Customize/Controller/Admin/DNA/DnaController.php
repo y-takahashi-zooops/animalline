@@ -4,6 +4,7 @@ namespace Customize\Controller\Admin\DNA;
 
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
+use Customize\Entity\DnaCheckKinds;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Entity\DnaCheckStatus;
@@ -13,6 +14,7 @@ use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
+use phpDocumentor\Reflection\Types\AbstractList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,19 +51,26 @@ class DnaController extends AbstractController
     protected $dnaCheckKindsRepository;
 
     /**
+     * @var BreedsRepository;
+     */
+    protected $breedsRepository;
+
+    /**
      * DnaController constructor
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
+     * @param BreedsRepository $breedsRepository
      */
     public function __construct(
         DnaQueryService            $dnaQueryService,
         DnaCheckStatusRepository   $dnaCheckStatusRepository,
         BreederPetsRepository      $breederPetsRepository,
         ConservationPetsRepository $conservationPetsRepository,
-        DnaCheckKindsRepository    $dnaCheckKindsRepository
+        DnaCheckKindsRepository    $dnaCheckKindsRepository,
+        BreedsRepository           $breedsRepository
     )
     {
         $this->dnaQueryService = $dnaQueryService;
@@ -69,6 +78,7 @@ class DnaController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
+        $this->breedsRepository = $breedsRepository;
     }
 
     /**
@@ -80,14 +90,24 @@ class DnaController extends AbstractController
     public function examination_items(Request $request)
     {
         $dna_check_kinds = [];
-        $checkKind = $request->get('pet_kind');
-        $breeds = $request->get('pet_breeds');
+        $petType = $request->get('pet_kind');
+        $breeds = $request->get('breeds');
         if ($request->isMethod('GET')) {
-            $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['check_kind' => $request->get('pet_kind'), 'Breeds' => $request->get('pet_breeds')]);
+            $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds]);
+        }
+        if ($request->isMethod('POST')) {
+            $dnaCheckKind = new DnaCheckKinds();
+            $breed = $this->breedsRepository->find($breeds);
+            $dnaCheckKind->setCheckKind($request->get('check_kind'))
+                ->setBreeds($breed)
+                ->setDeleteFlg(0);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($dnaCheckKind);
+            $em->flush();
         }
         return compact(
             'dna_check_kinds',
-            'checkKind',
+            'petType',
             'breeds'
         );
     }
@@ -123,14 +143,14 @@ class DnaController extends AbstractController
     {
         $id = $request->get('id');
         if(!$id || !$DnaCheckKind = $dnaCheckKindsRepository->find($id)) {
-            return new JsonResponse(['isSuceess' => false], 404);
+            return new JsonResponse(['isSuccess' => false], 404);
         }
 
         $entityManager = $this->getDoctrine()->getManager();
         $DnaCheckKind->setDeleteFlg(!$DnaCheckKind->getDeleteFlg());
         $entityManager->flush();
 
-        return new JsonResponse(['isSuceess' => true]);
+        return new JsonResponse(['isSuccess' => true]);
     }
 
     /**
