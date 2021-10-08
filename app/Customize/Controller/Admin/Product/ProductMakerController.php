@@ -31,7 +31,7 @@ class ProductMakerController extends BaseProductController
     protected $productMakerRepository;
 
     /**
-     * ProductController constructor.
+     * Product maker controller constructor.
      *
      * @param ProductMakerRepository $productMakerRepository
      */
@@ -42,38 +42,72 @@ class ProductMakerController extends BaseProductController
     }
 
     /**
-     * 仕入先管理
+     * メーカーマスタ管理実装
      *
      * @Route("/%eccube_admin_route%/product/maker", name="admin_product_maker")
      * @Template("@admin/Product/maker.twig")
      */
-    public function supplier(Request $request, PaginatorInterface $paginator)
+    public function productMaker(Request $request, PaginatorInterface $paginator)
     {
-
-        $makerNew = new ProductMaker();
-
-        $form = $this->createForm(ProductMakerType::class, $makerNew);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        // delete product maker
+        $idDestroy = $request->get('id-destroy');
+        if (
+            $idDestroy &&
+            $Maker = $this->productMakerRepository->find($idDestroy)
+        ) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($makerNew);
+            $entityManager->remove($Maker);
             $entityManager->flush();
 
             return $this->redirectToRoute('admin_product_maker');
         }
 
-        $makers = $this->supplierRepository->findAll();
+        // create product maker
+        $Maker = new ProductMaker();
+        $form = $this->createForm(ProductMakerType::class, $Maker);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($Maker);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_product_maker');
+        }
+
+        // update product maker
+        $Makers = $this->productMakerRepository->findAll();
+        $formUpdate = [];
+        foreach ($Makers as $Maker) {
+            $uniqueFormName = 'Form' . $Maker->getId();
+            $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, ProductMakerType::class, $Maker);
+            $formUpdate[$uniqueFormName] = $formHandle;
+        }
+        $formUpdateView = [];
+        foreach ($formUpdate as $formName => $formHandle) {
+            $makerId = $request->get('product-maker-id');
+            if (
+                $makerId &&
+                $Maker = $this->productMakerRepository->find($makerId)
+            ) {
+                $formHandle->handleRequest($request);
+                if ($formHandle->isSubmitted() && $formHandle->isValid()) {
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($Maker);
+                    $entityManager->flush();
+                }
+            }
+            $formUpdateView[$formName] = $formHandle->createView();
+        }
 
         $results = $paginator->paginate(
-            $makers,
+            $Makers,
             $request->query->getInt('page') ?: 1,
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
-
         return [
             'makers' => $results,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'form_update' => $formUpdateView
         ];
     }
 }
