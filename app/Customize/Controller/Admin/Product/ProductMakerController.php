@@ -63,7 +63,7 @@ class ProductMakerController extends BaseProductController
             return $this->redirectToRoute('admin_product_maker');
         }
 
-        $makers = $this->supplierRepository->findAll();
+        $makers = $this->productMakerRepository->findAll();
 
         $results = $paginator->paginate(
             $makers,
