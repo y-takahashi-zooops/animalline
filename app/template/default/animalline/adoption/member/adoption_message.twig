@@ -13,15 +13,15 @@
                             <a href="{{ url('adoption_message', {'id': message.Id}) }}">
                                 <div class="row">
                                     <div class="col-md-2 col-3" style="display: grid; place-items: center;">
-                                        <h5 class="p-2 rounded" style="background:#539b34; color:#fff;">
+                                        <h6 class="p-2 rounded" style="background:#539b34; color:#fff;">
                                             {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
                                             {{ status[message.contractStatus] }}
-                                        </h5>
+                                        </h6>
                                     </div>
                                     <div class="col-md-10 col-9">
                                         <h5>{{ message.contactTitle ?? '' }}</h5>
                                         <h5>{{ message.Conservation.organizationName ?? '' }}</h5>
-                                        <h6 class="ml-5 text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}
+                                        <h6 class="text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}
                                             <br>
                                             {{ message.customerNewMsg ? '未読あり' }}
                                         </h6>
