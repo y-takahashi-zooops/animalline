@@ -3,6 +3,8 @@
 namespace Customize\Entity;
 
 use Customize\Repository\DnaCheckKindsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -50,6 +52,16 @@ class DnaCheckKinds
      * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
     private $update_date;
+
+    /**
+     * @ORM\OneToMany(targetEntity=DnaCheckStatusDetail::class, mappedBy="CheckKinds")
+     */
+    private $CheckStatusDetails;
+
+    public function __construct()
+    {
+        $this->CheckStatusDetails = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -116,6 +128,36 @@ class DnaCheckKinds
     public function setUpdateDate($updateDate)
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DnaCheckStatusDetail[]
+     */
+    public function getCheckStatusDetails(): Collection
+    {
+        return $this->CheckStatusDetails;
+    }
+
+    public function addCheckStatusDetail(DnaCheckStatusDetail $checkStatusDetail): self
+    {
+        if (!$this->CheckStatusDetails->contains($checkStatusDetail)) {
+            $this->CheckStatusDetails[] = $checkStatusDetail;
+            $checkStatusDetail->setCheckKinds($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCheckStatusDetail(DnaCheckStatusDetail $checkStatusDetail): self
+    {
+        if ($this->CheckStatusDetails->removeElement($checkStatusDetail)) {
+            // set the owning side to null (unless already changed)
+            if ($checkStatusDetail->getCheckKinds() === $this) {
+                $checkStatusDetail->setCheckKinds(null);
+            }
+        }
 
         return $this;
     }
