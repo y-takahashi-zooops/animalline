@@ -17,6 +17,7 @@ use Customize\Repository\DnaCheckKindsRepository;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
+use Customize\Entity\DnaCheckStatusDetail;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
@@ -80,8 +81,7 @@ class VeqtaController extends AbstractController
         DnaCheckStatusRepository       $dnaCheckStatusRepository,
         VeqtaQueryService              $veqtaQueryService,
         DnaCheckKindsRepository        $dnaCheckKindsRepository
-    )
-    {
+    ) {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
@@ -196,22 +196,19 @@ class VeqtaController extends AbstractController
         }
 
         switch ($checkStatus) {
-            case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY:
-            {
-                $Dna->setCheckStatus($checkStatus);
-                break;
-            }
-            case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
-            {
-                $Dna->setCheckStatus($checkStatus);
-                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
-                break;
-            }
-            default:
-            {
-                $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
-                $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
-            }
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY: {
+                    $Dna->setCheckStatus($checkStatus);
+                    break;
+                }
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG: {
+                    $Dna->setCheckStatus($checkStatus);
+                    $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
+                    break;
+                }
+            default: {
+                    $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
+                    $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+                }
         }
 
         $savePath = $this->copyFile($request->get('file_name'));
@@ -237,7 +234,7 @@ class VeqtaController extends AbstractController
         }
 
         $barcode = $request->get('barcode');
-        $checkStatus = $request->get('check_status');
+        $checkStatus = $request->get('check_status_total');
         $siteType = $barcode[0];
         $dnaId = substr($barcode, 1);
 
@@ -253,28 +250,38 @@ class VeqtaController extends AbstractController
         }
 
         switch ($checkStatus) {
-            case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY:
-            {
-                $Dna->setCheckStatus($checkStatus);
-                break;
-            }
-            case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
-            {
-                $Dna->setCheckStatus($checkStatus);
-                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
-                break;
-            }
-            default:
-            {
-                $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
-                $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY: {
+                    $Dna->setCheckStatus($checkStatus);
+                    break;
+                }
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG: {
+                    $Dna->setCheckStatus($checkStatus);
+                    $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
+                    break;
+                }
+            default: {
+                    $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
+                    $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+                }
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        if ($checkStatus != AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY) {
+            $dnaDetailData = $request->get('check_status');
+            for ($i = 1; $i <= count($dnaDetailData['status']); $i++) {
+                if ($dnaDetailData['status'][$i] == AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY) {
+                    continue;
+                }
+
+                $DnaDetail = (new DnaCheckStatusDetail)
+                    ->setCheckResult($dnaDetailData['status'][$i])
+                    ->setCheckStatus($Dna)
+                    ->setCheckKinds($this->dnaCheckKindsRepository->find($dnaDetailData['kind'][$i]));
+                $entityManager->persist($DnaDetail);
             }
         }
 
-        $savePath = $this->copyFile($request->get('file_name'));
-        $Dna->setFilePath($savePath);
-
-        $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($Dna);
         $entityManager->persist($Pet);
         $entityManager->flush();

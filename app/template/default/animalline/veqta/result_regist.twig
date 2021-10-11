@@ -50,10 +50,12 @@
                                         <dl>
                                             <dt>
                                                 〇〇病遺伝子検査
+                                                <!-- TODO: replace check_kind_id to value -->
+                                                <input hidden name="check_status[kind][1]" value="1">
                                             </dt>
                                             <dd>
                                                 <div class="ec-select ml-4 mt-2">
-                                                    <select name="check_status" required>
+                                                    <select name="check_status[status][1]" required>
                                                         <option value="">選択してください</option>
                                                         <option value="4">検体異常</option>
                                                         <option value="61">クリア</option>
@@ -66,10 +68,11 @@
                                         <dl>
                                             <dt>
                                                 ■■検査
+                                                <input hidden name="check_status[kind][2]" value="2">
                                             </dt>
                                             <dd>
                                                 <div class="ec-select ml-4 mt-2">
-                                                    <select name="check_status" required>
+                                                    <select name="check_status[status][2]" required>
                                                         <option value="">選択してください</option>
                                                         <option value="4">検体異常</option>
                                                         <option value="61">クリア</option>
@@ -82,10 +85,12 @@
                                         <dl>
                                             <dt>
                                                 ▲▲検査
+                                                <input hidden name="check_status[kind][3]" value="3">
                                             </dt>
                                             <dd>
                                                 <div class="ec-select ml-4 mt-2">
-                                                    <select name="check_status" required>
+                                                    
+                                                    <select name="check_status[status][3]" required>
                                                         <option value="">選択してください</option>
                                                         <option value="4">検体異常</option>
                                                         <option value="61">クリア</option>
@@ -103,7 +108,7 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-select">
-                                            <select name="check_status" required>
+                                            <select name="check_status_total" required>
                                                 <option value="">選択してください</option>
                                                 <option value="4">検体異常</option>
                                                 <option value="61">クリア</option>
