@@ -215,7 +215,7 @@ class BreederPetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if($request->get('breeder_pets')['is_pedigree'] == 0) $breederPet->setPedigreeCode('0');
+            if($request->get('breeder_pets')['is_pedigree'] == 0 || $request->get('breeder_pets')['pedigree_code']) $breederPet->setPedigreeCode('0');
             $entityManager = $this->getDoctrine()->getManager();
             $breeder = $this->breedersRepository->find($breederId);
             $breederPet->setBreeder($breeder);
@@ -305,6 +305,7 @@ class BreederPetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if($request->get('breeder_pets')['is_pedigree'] == 0 || $request->get('breeder_pets')['pedigree_code']) $breederPet->setPedigreeCode('0');
             $petId = $breederPet->getId();
             $img0 = $this->setImageSrc($request->get('img0'), $petId);
             $img1 = $this->setImageSrc($request->get('img1'), $petId);
