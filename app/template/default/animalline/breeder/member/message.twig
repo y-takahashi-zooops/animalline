@@ -59,11 +59,7 @@
                             <h3 class="font-weight-500 color-gray-500 mb-4">{{ breeder.licenseHouseName }}
                                 ブリーダー</h3>
                             <div class="d-flex mb-2">
-                                <h6>総合評価</h6>
-                                <div class="m-1 p-1"></div>
-                                <img alt="..." src="{{ asset('assets/img/star-icon.svg') }}">
-                                <div class="m-1 p-1"></div>
-                                <h6>{{ breeder.breederRank }}</h6>
+                                {{ include('animalline/components/_rating_block.twig', { 'point': breeder.breederRank() }, ignore_missing = false) }}
                             </div>
                             <div class="d-flex mb-2">
                                 <h6>動物取扱業登録番号：</h6>
