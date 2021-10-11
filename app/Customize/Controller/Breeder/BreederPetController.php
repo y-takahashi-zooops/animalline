@@ -215,6 +215,7 @@ class BreederPetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if($request->get('breeder_pets')['is_pedigree'] == 0) $breederPet->setPedigreeCode('0');
             $entityManager = $this->getDoctrine()->getManager();
             $breeder = $this->breedersRepository->find($breederId);
             $breederPet->setBreeder($breeder);
