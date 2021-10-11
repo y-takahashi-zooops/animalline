@@ -294,13 +294,15 @@
                                             <h3 class="font-weight-500 color-gray-500 mb-4">
                                                 {{ breederPet.Breeder.getLicenseHouseName() }}
                                             </h3>
-                                            <div class="d-flex mb-2">
+                                            <div class="d-flex mb-2 rating">
                                                 <h6>
                                                     総合評価                                          
                                                 </h6>
-                                                <img src="{{ asset('assets/img/star-icon.svg') }}">
-                                                    <div class="m-1 p-1"></div>
-                                                    <h6>
+                                                <div class = "stars-outer">
+                                                    <div class = "stars-inner"></div>
+                                                </div>
+{#                                                    <div class="m-1 p-1"></div>#}
+                                                    <h6 class = "number-rating">
                                                         {{ breederPet.Breeder.getBreederRank() }}
                                                     </h6>
                                                 </div>
@@ -407,10 +409,44 @@
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <style>
+        .stars-outer {
+            position: relative;
+            display: inline-block;
+        }
+        .stars-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+        }
+        .stars-outer::before {
+            content: "\f005 \f005 \f005 \f005 \f005";
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            color:#ccc;
+        }
+        .stars-inner::before {
+            content: "\f005 \f005 \f005 \f005 \f005";
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            color:#f8ce0b;
+        }
+    </style>
 {% endblock %}
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="{{ asset('assets/js/breeder_favorite.js') }}"></script>
+<script>
+    const starTotal = 5;
+    document.addEventListener('DOMContentLoaded', getRating());
+    function getRating() {
+        const starPercentage = ({{ breederPet.Breeder.getBreederRank() }} / starTotal) * 100;
+        document.querySelector('.stars-inner').style.width = `${Math.round(starPercentage/10)*10}%`;
+    }
+</script>
 <script>
     function toggleNav() {
         var body = document.body;
