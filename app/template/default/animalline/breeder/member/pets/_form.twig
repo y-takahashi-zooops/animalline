@@ -157,13 +157,33 @@
             {{ form_errors(form.is_pedigree) }}
         </div>
     </div>
-    <div class="row mb-3" id="pedigreeSelect">
-        <div class="col-md-3">
-        {{ form_label(form.Pedigree, '血統証団体', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+    <div id="pedigreeSelect">
+        <div class="row mb-3">
+            <div class="col-md-3">
+            {{ form_label(form.Pedigree, '血統証団体', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+            </div>
+            <div class="col-md-8 ec-input ec-select">
+            {{ form_widget(form.Pedigree) }}
+            {{ form_errors(form.Pedigree) }}
+            </div>
         </div>
-        <div class="col-md-8 ec-input ec-select">
-        {{ form_widget(form.Pedigree) }}
-        {{ form_errors(form.Pedigree) }}
+        <div class="row mb-3">
+            <div class="col-md-3">
+            {{ form_label(form.pedigree_code, '血統証番号', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+            </div>
+            <div class="col-md-8 ec-input">
+            {{ form_widget(form.pedigree_code) }}
+            {{ form_errors(form.pedigree_code) }}
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            {{ form_label(form.microchip_code, 'マイクロチップID', { 'label_attr': {'class': 'ec-label' }}) }}
+        </div>
+        <div class="col-md-8 ec-input">
+            {{ form_widget(form.microchip_code, {'attr': {'style': 'display:flex;'}}) }}
+            {{ form_errors(form.microchip_code) }}
         </div>
     </div>
     <div class="row mb-3">
@@ -324,6 +344,9 @@ function petKindChange(){
 window.onload = petKindChange;
 
 $("#pedigreeSelect").hide();
+if(breeder_pets_is_pedigree_0.checked){ 
+    $("#pedigreeSelect").show();
+}
 $(document).ready(function() {
     $("input[name$='breeder_pets[is_pedigree]']").click(function() {
         var is_pedigree = $(this).val();

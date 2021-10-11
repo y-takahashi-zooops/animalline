@@ -159,10 +159,65 @@ class VeqtaController extends AbstractController
 
     /**
      * Dna result regist.
+     * ※差し替え予定
      * @Route("/veqta/result", name="veqta_result")
      * @Template("animalline/veqta/result.twig")
      */
     public function result(Request $request)
+    {
+        if (!$request->isMethod('POST')) {
+            return;
+        }
+
+        $barcode = $request->get('barcode');
+        $checkStatus = $request->get('check_status');
+        $siteType = $barcode[0];
+        $dnaId = substr($barcode, 1);
+
+        $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
+        if (!$Dna) {
+            throw new NotFoundHttpException();
+        }
+        $Pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
+            $this->breederPetsRepository->find($Dna->getPetId()) :
+            $this->conservationPetsRepository->find($Dna->getPetId());
+        if (!$Pet) {
+            throw new NotFoundHttpException();
+        }
+
+        switch ($checkStatus) {
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY: {
+                    $Dna->setCheckStatus($checkStatus);
+                    break;
+                }
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG: {
+                    $Dna->setCheckStatus($checkStatus);
+                    $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
+                    break;
+                }
+            default: {
+                    $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
+                    $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+                }
+        }
+
+        $savePath = $this->copyFile($request->get('file_name'));
+        $Dna->setFilePath($savePath);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($Dna);
+        $entityManager->persist($Pet);
+        $entityManager->flush();
+
+        return;
+    }
+
+    /**
+     * DNA検査結果登録.
+     * @Route("/veqta/result_regist", name="veqta_result_regist")
+     * @Template("animalline/veqta/result_regist.twig")
+     */
+    public function result_regist(Request $request)
     {
         if (!$request->isMethod('POST')) {
             return;

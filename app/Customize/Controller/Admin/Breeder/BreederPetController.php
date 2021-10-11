@@ -121,7 +121,7 @@ class BreederPetController extends AbstractController
     }
 
     /**
-     * ペット情報編集ブリーダー管理
+     * ペット情報編集
      *
      * @Route("/%eccube_admin_route%/breeder/pet/edit/{id}", name="admin_breeder_pet_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/pet/edit.twig")

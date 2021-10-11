@@ -23,6 +23,10 @@ use Customize\Service\AdoptionQueryService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use DateTime;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Eccube\Event\EventArgs;
+use Eccube\Form\Type\Front\ContactType;
+use Eccube\Event\EccubeEvents;
+use Eccube\Service\MailService;
 
 class AdoptionController extends AbstractController
 {
@@ -72,6 +76,11 @@ class AdoptionController extends AbstractController
     protected $conservationsHousesRepository;
 
     /**
+     * @var MailService
+     */
+    protected $mailService;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
@@ -83,6 +92,7 @@ class AdoptionController extends AbstractController
      * @param PrefRepository $prefRepository
      * @param ConservationsRepository $conservationsRepository
      * @param ConservationsHousesRepository $conservationsHousesRepository
+     * @param MailService $mailService
      */
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
@@ -93,7 +103,8 @@ class AdoptionController extends AbstractController
         BreedsRepository               $breedsRepository,
         PrefRepository                 $prefRepository,
         ConservationsRepository        $conservationsRepository,
-        ConservationsHousesRepository  $conservationsHousesRepository
+        ConservationsHousesRepository  $conservationsHousesRepository,
+        MailService                    $mailService
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
@@ -104,6 +115,7 @@ class AdoptionController extends AbstractController
         $this->prefRepository = $prefRepository;
         $this->conservationsRepository = $conservationsRepository;
         $this->conservationsHousesRepository = $conservationsHousesRepository;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -287,5 +299,85 @@ class AdoptionController extends AbstractController
     public function terms(Request $request)
     {
         return;
+    }
+
+    /**
+     * 問い合わせ.
+     *
+     * @Route("/adoption/ani_contact", name="adoption_ani_contact")
+     * @Template("animalline/adoption/ani_contact.twig")
+     */
+    public function ani_contact(Request $request)
+    {
+       
+        $builder = $this->formFactory->createBuilder(ContactType::class);
+
+        if ($this->isGranted('ROLE_USER')) {
+            /** @var Customer $user */
+            $user = $this->getUser();
+            $builder->setData(
+                [
+                    'name01' => $user->getName01(),
+                    'name02' => $user->getName02(),
+                    'kana01' => $user->getKana01(),
+                    'kana02' => $user->getKana02(),
+                    'postal_code' => $user->getPostalCode(),
+                    'pref' => $user->getPref(),
+                    'addr01' => $user->getAddr01(),
+                    'addr02' => $user->getAddr02(),
+                    'phone_number' => $user->getPhoneNumber(),
+                    'email' => $user->getEmail(),
+                ]
+            );
+        }
+
+        // FRONT_CONTACT_INDEX_INITIALIZE
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            switch ($request->get('mode')) {
+                case 'confirm':
+                    $form = $builder->getForm();
+                    $form->handleRequest($request);
+
+                    return $this->render('animalline/adoption/ani_contact_confirm.twig', [
+                        'form' => $form->createView(),
+                    ]);
+
+                case 'complete':
+
+                    $data = $form->getData();
+
+                    $event = new EventArgs(
+                        [
+                            'form' => $form,
+                            'data' => $data,
+                        ],
+                        $request
+                    );
+                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+
+                    $data = $event->getArgument('data');
+
+                    // メール送信
+                    $this->mailService->sendContactMail($data);
+
+                    // return $this->redirect($this->generateUrl('contact_complete'));
+                    return $this->render('animalline/adoption/ani_contact_complete.twig');
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
     }
 }

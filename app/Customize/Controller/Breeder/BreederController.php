@@ -16,12 +16,16 @@ use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Controller\AbstractController;
+use Eccube\Event\EccubeEvents;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Eccube\Event\EventArgs;
+use Eccube\Form\Type\Front\ContactType;
+use Eccube\Service\MailService;
 
 class BreederController extends AbstractController
 {
@@ -75,6 +79,11 @@ class BreederController extends AbstractController
     protected $breederExaminationInfoRepository;
 
     /**
+     * @var MailService
+     */
+    protected $mailService;
+
+    /**
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
@@ -86,6 +95,7 @@ class BreederController extends AbstractController
      * @param BreederHouseRepository $breederHouseRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
+     * @param MailService $mailService
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
@@ -97,7 +107,8 @@ class BreederController extends AbstractController
         BreederHouseRepository    $breederHouseRepository,
         BreederPetsRepository     $breederPetsRepository,
         PrefRepository            $prefRepository,
-        BreederExaminationInfoRepository $breederExaminationInfoRepository
+        BreederExaminationInfoRepository $breederExaminationInfoRepository,
+        MailService                      $mailService
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
@@ -109,6 +120,7 @@ class BreederController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->prefRepository = $prefRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -383,5 +395,84 @@ class BreederController extends AbstractController
     public function terms(Request $request)
     {
         return;
+    }
+    
+    /**
+     * 問い合わせ.
+     *
+     * @Route("/breeder/ani_contact", name="breeder_ani_contact")
+     * @Template("animalline/breeder/ani_contact.twig")
+     */
+    public function ani_contact(Request $request)
+    {
+        $builder = $this->formFactory->createBuilder(ContactType::class);
+
+        if ($this->isGranted('ROLE_USER')) {
+            /** @var Customer $user */
+            $user = $this->getUser();
+            $builder->setData(
+                [
+                    'name01' => $user->getName01(),
+                    'name02' => $user->getName02(),
+                    'kana01' => $user->getKana01(),
+                    'kana02' => $user->getKana02(),
+                    'postal_code' => $user->getPostalCode(),
+                    'pref' => $user->getPref(),
+                    'addr01' => $user->getAddr01(),
+                    'addr02' => $user->getAddr02(),
+                    'phone_number' => $user->getPhoneNumber(),
+                    'email' => $user->getEmail(),
+                ]
+            );
+        }
+
+        // FRONT_CONTACT_INDEX_INITIALIZE
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            switch ($request->get('mode')) {
+                case 'confirm':
+                    $form = $builder->getForm();
+                    $form->handleRequest($request);
+
+                    return $this->render('animalline/breeder/ani_contact_confirm.twig', [
+                        'form' => $form->createView(),
+                    ]);
+
+                case 'complete':
+
+                    $data = $form->getData();
+
+                    $event = new EventArgs(
+                        [
+                            'form' => $form,
+                            'data' => $data,
+                        ],
+                        $request
+                    );
+                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+
+                    $data = $event->getArgument('data');
+
+                    // メール送信
+                    $this->mailService->sendContactMail($data);
+
+                    // return $this->redirect($this->generateUrl('contact_complete'));
+                    return $this->render('animalline/breeder/ani_contact_complete.twig');
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
     }
 }
