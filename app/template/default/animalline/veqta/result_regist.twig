@@ -98,7 +98,7 @@
         }
     });
     $(document).on('change', 'select[name=check_status_total]', function() {
-    if ($(this).val() == 4) {console.log('ok')
+    if ($(this).val() == 4) {
     $('.check_kind_select').removeAttr('required');
 } else {
     $('.check_kind_select').attr('required', true);
@@ -118,10 +118,10 @@
             if (data['hasRecord']) {
             $('#sender_name').val(data['shippingName']);
             $('#breed_name').val(data['breed']);
-            $('#dnaTestResultRegist').attr('disabled', !data['hasRecord']);
+            $('#dnaTestResultRegist').attr('disabled', !data['checkKind']?.length);
             data['checkKind'].forEach(el => {
             $('#check_result_kinds').append(` <dl style="display: flex; align-items: center;">
-                                            <dt style="word-break: break-word; padding-top: 0;">
+                                            <dt style="word-break: break-word; padding-top: 0; width: 70%;">
                                                 ${el['check_kind']}
                                                 <input hidden name="check_status[kind][]" value="${el['id']}">
                                             </dt>

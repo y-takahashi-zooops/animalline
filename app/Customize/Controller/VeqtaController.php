@@ -214,6 +214,8 @@ class VeqtaController extends AbstractController
         $entityManager->persist($Dna);
         $entityManager->persist($Pet);
         $entityManager->flush();
+
+        return $this->redirectToRoute('veqta_result');
     }
 
     /**
@@ -259,19 +261,22 @@ class VeqtaController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         if ($checkStatus != AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY) {
-            $dnaDetailData = $request->get('check_status');
-            for ($i = 0; $i < count($dnaDetailData['kind']); $i++) {
-                $DnaDetail = (new DnaCheckStatusDetail)
-                    ->setCheckResult($dnaDetailData['status'][$dnaDetailData['kind'][$i]])
-                    ->setCheckStatus($Dna)
-                    ->setCheckKinds($this->dnaCheckKindsRepository->find($dnaDetailData['kind'][$i]));
-                $entityManager->persist($DnaDetail);
+            if ($dnaDetailData = $request->get('check_status')) {
+                for ($i = 0; $i < count($dnaDetailData['kind']); $i++) {
+                    $DnaDetail = (new DnaCheckStatusDetail)
+                        ->setCheckResult($dnaDetailData['status'][$dnaDetailData['kind'][$i]])
+                        ->setCheckStatus($Dna)
+                        ->setCheckKinds($this->dnaCheckKindsRepository->find($dnaDetailData['kind'][$i]));
+                    $entityManager->persist($DnaDetail);
+                }
             }
         }
 
         $entityManager->persist($Dna);
         $entityManager->persist($Pet);
         $entityManager->flush();
+
+        return $this->redirectToRoute('veqta_result_regist');
     }
 
     /**
