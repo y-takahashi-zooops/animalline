@@ -110,16 +110,27 @@
                                 ブリーダー                                
                             </h4>
                             <div class="d-flex mb-1">
-                                <h4>
+                                <h6>
                                     総合評価 :
-                                </h4>
-                                <div class = "stars-outer">
-                                    <div class = "stars-inner"></div>
-                                </div>
+                                </h6>
+                                <!-- 1 star  -->
+                                <i class="{{ breederPet.Breeder.getBreederRank() == 0 ? 'far fa-star' : ( breederPet.Breeder.getBreederRank()  > 0 and  breederPet.Breeder.getBreederRank() ) < 1 ? 'fas fa-star-half-alt' : 'fas fa-star'}}"></i>
+
+                                <!-- 2 star  -->
+                                <i class="{{ breederPet.Breeder.getBreederRank() > 1 and breederPet.Breeder.getBreederRank() < 2 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 2 ? 'fas fa-star' : 'far fa-star'}}"></i>
+
+                                <!-- 3 star  -->
+                                <i class="{{ breederPet.Breeder.getBreederRank() > 2 and breederPet.Breeder.getBreederRank() < 3 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 3 ? 'fas fa-star' : 'far fa-star'}}"></i>
+
+                                <!-- 4 star  -->
+                                <i class="{{ breederPet.Breeder.getBreederRank() > 3 and breederPet.Breeder.getBreederRank() < 4 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 4 ? 'fas fa-star' : 'far fa-star'}}"></i>
+
+                                <!-- 5 star  -->
+                                <i class="{{ breederPet.Breeder.getBreederRank() > 4 and breederPet.Breeder.getBreederRank() < 5 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 5 ? 'fas fa-star' : 'far fa-star'}}"></i>
                                 <div class="m-1 p-1"></div>
-                                <h4 class = "number-rating">
+                                <h6 class="number-rating">
                                     {{ breederPet.Breeder.getBreederRank() }}
-                                </h4>
+                                </h6>
                             </div>
                                 <div class="d-flex mb-1">
                                     <h6>動物取扱業登録番号：</h6>
@@ -200,42 +211,11 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
     <style>
-        .stars-outer {
-            position: relative;
-            display: inline-block;
-            bottom: 5px;
-            margin-left: 15px;
-        }
-        .stars-inner {
-            position: absolute;
-            top: 0;
-            left: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            width: 0;
-        }
-        .stars-outer::before {
-            content: "\f005 \f005 \f005 \f005 \f005";
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            color:#ccc;
-        }
-        .stars-inner::before {
-            content: "\f005 \f005 \f005 \f005 \f005";
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            color:#f8ce0b;
+        .fas {
+            color: #f8ce0b;
         }
     </style>
 {% endblock %}
 {% block javascript %}
-<script>
-    const starTotal = 5;
-    document.addEventListener('DOMContentLoaded', getRating());
-    function getRating() {
-    const starPercentage = ({{ breederPet.Breeder.getBreederRank() }} / starTotal) * 100;
-        document.querySelector('.stars-inner').style.width = `${Math.round(starPercentage/10)*10}%`;
-    }
-</script>
 {% endblock %}
                 
