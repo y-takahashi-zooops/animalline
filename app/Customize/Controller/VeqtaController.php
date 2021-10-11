@@ -13,6 +13,7 @@
 
 namespace Customize\Controller;
 
+use Customize\Repository\DnaCheckKindsRepository;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
@@ -57,6 +58,11 @@ class VeqtaController extends AbstractController
     protected $veqtaQueryService;
 
     /**
+     * @var DnaCheckKindsRepository
+     */
+    protected $dnaCheckKindsRepository;
+
+    /**
      * VeqtaController constructor.
      *
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
@@ -64,20 +70,24 @@ class VeqtaController extends AbstractController
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      * @param VeqtaQueryService $veqtaQueryService
+     * @param DnaCheckKindsRepository $dnaCheckKindsRepository
      */
 
     public function __construct(
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
-        BreederPetsRepository $breederPetsRepository,
-        ConservationPetsRepository $conservationPetsRepository,
-        DnaCheckStatusRepository $dnaCheckStatusRepository,
-        VeqtaQueryService $veqtaQueryService
-    ) {
+        BreederPetsRepository          $breederPetsRepository,
+        ConservationPetsRepository     $conservationPetsRepository,
+        DnaCheckStatusRepository       $dnaCheckStatusRepository,
+        VeqtaQueryService              $veqtaQueryService,
+        DnaCheckKindsRepository        $dnaCheckKindsRepository
+    )
+    {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->veqtaQueryService = $veqtaQueryService;
+        $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
     }
 
     /**
@@ -186,19 +196,22 @@ class VeqtaController extends AbstractController
         }
 
         switch ($checkStatus) {
-            case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY: {
-                    $Dna->setCheckStatus($checkStatus);
-                    break;
-                }
-            case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG: {
-                    $Dna->setCheckStatus($checkStatus);
-                    $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
-                    break;
-                }
-            default: {
-                    $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
-                    $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
-                }
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY:
+            {
+                $Dna->setCheckStatus($checkStatus);
+                break;
+            }
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
+            {
+                $Dna->setCheckStatus($checkStatus);
+                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
+                break;
+            }
+            default:
+            {
+                $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
+                $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+            }
         }
 
         $savePath = $this->copyFile($request->get('file_name'));
@@ -240,19 +253,22 @@ class VeqtaController extends AbstractController
         }
 
         switch ($checkStatus) {
-            case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY: {
-                    $Dna->setCheckStatus($checkStatus);
-                    break;
-                }
-            case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG: {
-                    $Dna->setCheckStatus($checkStatus);
-                    $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
-                    break;
-                }
-            default: {
-                    $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
-                    $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
-                }
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY:
+            {
+                $Dna->setCheckStatus($checkStatus);
+                break;
+            }
+            case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
+            {
+                $Dna->setCheckStatus($checkStatus);
+                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
+                break;
+            }
+            default:
+            {
+                $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
+                $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+            }
         }
 
         $savePath = $this->copyFile($request->get('file_name'));
@@ -309,7 +325,10 @@ class VeqtaController extends AbstractController
 
     /**
      * Read barcode.
+     *
      * @Route("/read_barcode", name="read_barcode", methods={"GET"})
+     * @param Request $request
+     * @return JsonResponse
      */
     public function readBarCode(Request $request)
     {
@@ -318,9 +337,15 @@ class VeqtaController extends AbstractController
         $dnaId = substr($barcode, 1);
 
         $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
+        if ($Dna->getSiteType() == AnilineConf::SITE_CATEGORY_BREEDER) {
+            $pet = $this->breederPetsRepository->find($Dna->getPetId());
+        } else {
+            $pet = $this->conservationPetsRepository->find($Dna->getPetId());
+        }
+        $data['breed'] = $pet->getBreedsType()->getBreedsName();
+        $data['checkKind'] = $this->dnaCheckKindsRepository->findBy(['Breeds' => $pet->getBreedsType()]);
         $data['shippingName'] = $Dna->getDnaHeader()->getShippingName();
         $data['hasRecord'] = $Dna->getCheckStatus() === AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING;
-
         return new JsonResponse($data);
     }
 }

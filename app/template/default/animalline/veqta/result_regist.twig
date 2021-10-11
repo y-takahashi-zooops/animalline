@@ -37,7 +37,7 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-input">
-                                            <input type="text" class="w-100" name="sender_name" id="sender_name" disabled>
+                                            <input type="text" class="w-100" name="breed_name" id="breed_name" disabled>
                                         </div>
                                     </dd>
                                 </dl>
@@ -152,10 +152,12 @@
             data: {
                 'barcode': $('#barcode').val()
             }
-        }).done(function ({ shippingName, hasRecord }) {
-            $('#sender_name').val(shippingName);
-            $('#dnaTestResultRegist').attr('disabled', !hasRecord);
-            if (!hasRecord) alert('データが存在しません。');
+        }).done(function (data) {
+console.log(data);
+            $('#sender_name').val(data['shippingName']);
+            $('#breed_name').val(data['breed']);
+            $('#dnaTestResultRegist').attr('disabled', !data['hasRecord']);
+            if (!data['hasRecord']) alert('データが存在しません。');
         }).fail(function (err) {
             $('#sender_name').text('');
             $('#dnaTestResultRegist').attr('disabled', true);
