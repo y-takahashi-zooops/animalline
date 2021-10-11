@@ -310,27 +310,7 @@
                                         {{ breederPet.Breeder.getLicenseHouseName() }}
                                     </h3>
                                     <div class="d-flex mb-2">
-                                        <h6>
-                                            総合評価 :
-                                        </h6>
-                                        <!-- 1 star  -->
-                                        <i class="{{ breederPet.Breeder.getBreederRank() == 0 ? 'far fa-star' : ( breederPet.Breeder.getBreederRank()  > 0 and  breederPet.Breeder.getBreederRank() ) < 1 ? 'fas fa-star-half-alt' : 'fas fa-star'}}"></i>
-
-                                        <!-- 2 star  -->
-                                        <i class="{{ breederPet.Breeder.getBreederRank() > 1 and breederPet.Breeder.getBreederRank() < 2 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 2 ? 'fas fa-star' : 'far fa-star'}}"></i>
-
-                                        <!-- 3 star  -->
-                                        <i class="{{ breederPet.Breeder.getBreederRank() > 2 and breederPet.Breeder.getBreederRank() < 3 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 3 ? 'fas fa-star' : 'far fa-star'}}"></i>
-
-                                        <!-- 4 star  -->
-                                        <i class="{{ breederPet.Breeder.getBreederRank() > 3 and breederPet.Breeder.getBreederRank() < 4 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 4 ? 'fas fa-star' : 'far fa-star'}}"></i>
-
-                                        <!-- 5 star  -->
-                                        <i class="{{ breederPet.Breeder.getBreederRank() > 4 and breederPet.Breeder.getBreederRank() < 5 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 5 ? 'fas fa-star' : 'far fa-star'}}"></i>
-                                        <div class="m-1 p-1"></div>
-                                        <h6 class="number-rating">
-                                            {{ breederPet.Breeder.getBreederRank() }}
-                                        </h6>
+                                        {{ include('animalline/components/_rating_block.twig', { 'point': breederPet.Breeder.breederRank() }, ignore_missing = false) }}
                                     </div>
                                     <div class="d-flex mb-2">
                                         <h6>
@@ -435,11 +415,6 @@
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
-    <style>
-       .fas {
-           color: #f8ce0b;
-       }
-    </style>
 {% endblock %}
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

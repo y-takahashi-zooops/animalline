@@ -1,0 +1,26 @@
+<h6>総合評価 :</h6>
+
+<div class="m-1 p-1"></div>
+
+<!-- 1 star  -->
+<i class="{{ point == 0 ? 'far fa-star' : ( point  > 0 and  point ) < 1 ? 'fas fa-star-half-alt' : 'fas fa-star' }}"></i>
+<!-- 2 star  -->
+<i class="{{ point > 1 and point < 2 ? 'fas fa-star-half-alt' : point >= 2 ? 'fas fa-star' : 'far fa-star' }}"></i>
+<!-- 3 star  -->
+<i class="{{ point > 2 and point < 3 ? 'fas fa-star-half-alt' : point >= 3 ? 'fas fa-star' : 'far fa-star' }}"></i>
+<!-- 4 star  -->
+<i class="{{ point > 3 and point < 4 ? 'fas fa-star-half-alt' : point >= 4 ? 'fas fa-star' : 'far fa-star' }}"></i>
+<!-- 5 star  -->
+<i class="{{ point > 4 and point < 5 ? 'fas fa-star-half-alt' : point >= 5 ? 'fas fa-star' : 'far fa-star' }}"></i>
+
+<div class="m-1 p-1"></div>
+
+<h6 class="number-rating">
+    {{ point }}
+</h6>
+
+<style>
+    .fas, .far {
+        color: #f8ce0b;
+    }
+</style>

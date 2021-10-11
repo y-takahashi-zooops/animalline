@@ -9,7 +9,7 @@
                 <div class="breeder-mv__text">
                     <h2>テキストが入りますテキストが入りますテキストが入ります</h2>
                     <div class="breeder-mv__text_logo">
-                        <img src="{{ asset('assets/img/breeder-mv-logo.png') }}" alt="Animalline Breeder" />
+                        <img src="{{ asset('assets/img/breeder-mv-logo.png') }}" alt="Animalline Breeder"/>
                     </div>
                     <p>キャッチコピーが入ります。</p>
                     <div class="breeder-mv__text_btn">
@@ -69,18 +69,21 @@
                                             </select>
                                         </div>
                                         <label>
-                                            <input type="checkbox" name="adjacent" value="1" {% if params.adjacent is defined and params.adjacent == 1 %} checked {% endif %}>
-                                                隣の都道府県も検索
+                                            <input type="checkbox" name="adjacent"
+                                                   value="1" {% if params.adjacent is defined and params.adjacent == 1 %} checked {% endif %}>
+                                            隣の都道府県も検索
                                         </label>
                                     </div>
                                     <div class="breeder-mv__search_bottom_w50">
                                         <div class="select-container">
-                                            <input type="text" id="breeder_house_name" placeholder="ブリーダー名" class="form_input w-100" name="license" {% if params.license is defined %} value="{{ params.license }}" {% endif %}></div>
+                                            <input type="text" id="breeder_house_name" placeholder="ブリーダー名"
+                                                   class="form_input w-100"
+                                                   name="license" {% if params.license is defined %} value="{{ params.license }}" {% endif %}>
                                         </div>
                                     </div>
-                                    <div class="breeder-mv__search_btn">
-                                        <button><i class="bi bi-check2-square"></i>この条件で検索する</button>
-                                    </div>
+                                </div>
+                                <div class="breeder-mv__search_btn">
+                                    <button><i class="bi bi-check2-square"></i>この条件で検索する</button>
                                 </div>
                             </form>
                         </div>
@@ -95,127 +98,102 @@
             <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
                 <div class="breeder-column__main_section_title">
                     <h3>検索結果</h3>
-            </div>
-            <div class="breeder-column__main_section_body">
-                {% for breeder in breeders %}
+                </div>
+                <div class="breeder-column__main_section_body">
+                    {% for breeder in breeders %}
                     <div class="row ml-2 mb-4">
                         <div class="breeder-img col-md-3 col-sm-4">
                             {# <a href="{{ url('breeder_detail', {'breeder_id': breeder.Id}) }}"> #}
-                            <img src="{{ app.request.schemeAndHttpHost ~ (breeder.thumbnailPath | default | length > 0 ? breeder.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}" class="w-100 mb-4 mb-sm-0">
+                            <img src="{{ app.request.schemeAndHttpHost ~ (breeder.thumbnailPath | default | length > 0 ? breeder.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                 class="w-100 mb-4 mb-sm-0">
                             {# </a> #}
                         </div>
                         <div class="breeder-info col-sm-8">
                             <h4 class="font-weight-500 color-gray-500">
                                 {{ breeder.licenseHouseName }}
-                                ブリーダー                                
+                                ブリーダー
                             </h4>
                             <div class="d-flex mb-1">
+                                {{ include('animalline/components/_rating_block.twig', { 'point': breeder.breederRank() }, ignore_missing = false) }}
+                            </div>
+                            <div class="d-flex mb-1">
+                                <h6>動物取扱業登録番号：</h6>
                                 <h6>
-                                    総合評価 :
+                                    {{ breeder.licenseNo }}
                                 </h6>
-                                <!-- 1 star  -->
-                                <i class="{{ breederPet.Breeder.getBreederRank() == 0 ? 'far fa-star' : ( breederPet.Breeder.getBreederRank()  > 0 and  breederPet.Breeder.getBreederRank() ) < 1 ? 'fas fa-star-half-alt' : 'fas fa-star'}}"></i>
-
-                                <!-- 2 star  -->
-                                <i class="{{ breederPet.Breeder.getBreederRank() > 1 and breederPet.Breeder.getBreederRank() < 2 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 2 ? 'fas fa-star' : 'far fa-star'}}"></i>
-
-                                <!-- 3 star  -->
-                                <i class="{{ breederPet.Breeder.getBreederRank() > 2 and breederPet.Breeder.getBreederRank() < 3 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 3 ? 'fas fa-star' : 'far fa-star'}}"></i>
-
-                                <!-- 4 star  -->
-                                <i class="{{ breederPet.Breeder.getBreederRank() > 3 and breederPet.Breeder.getBreederRank() < 4 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 4 ? 'fas fa-star' : 'far fa-star'}}"></i>
-
-                                <!-- 5 star  -->
-                                <i class="{{ breederPet.Breeder.getBreederRank() > 4 and breederPet.Breeder.getBreederRank() < 5 ? 'fas fa-star-half-alt' : breederPet.Breeder.getBreederRank() >= 5 ? 'fas fa-star' : 'far fa-star'}}"></i>
                                 <div class="m-1 p-1"></div>
-                                <h6 class="number-rating">
-                                    {{ breederPet.Breeder.getBreederRank() }}
+                                <h6>登録：</h6>
+                                <h6>
+                                    {{ breeder.licenseRegistDate | date('Y/m/d') }}
                                 </h6>
                             </div>
-                                <div class="d-flex mb-1">
-                                    <h6>動物取扱業登録番号：</h6>
-                                    <h6>
-                                        {{ breeder.licenseNo }}
-                                    </h6>
-                                    <div class="m-1 p-1"></div>
-                                    <h6>登録：</h6>
-                                    <h6>
-                                        {{ breeder.licenseRegistDate | date('Y/m/d') }}
-                                    </h6>
-                                </div>
-                                <div class="d-flex mb-1">
-                                    <h6>有効期限：</h6>
-                                    <h6>
-                                        {{ breeder.licenseExpireDate | date('Y/m/d') }}
-                                    </h6>
-                                    <div class="m-1 p-1"></div>
-                                    <h6>動物取扱責任者：</h6>
-                                    <h6>
-                                        {{ breeder.licenseManagerName }}
-                                    </h6>
-                                </div>
-                                <div class="d-flex mb-1">
-                                    <h6>犬舎所在地：</h6>
-                                    {% set breederHouseDog = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
-                                    {% set breederHouseCat = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
-                                    {% if (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
-                                        <h6>
-                                            {{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' ~ ' ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}
-                                        </h6>
-                                    {% elseif (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
-                                        <h6>
-                                            {{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' }}
-                                        </h6>
-                                    {% else %}
-                                        <h6>
-                                            {{ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}
-                                        </h6>
-                                    {% endif %}
-                                </div>
-                                <div class="d-flex mb-1">
-                                    <h6>審査ステータス：</h6>
-                                    {% if breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_SUBMIT') %}
-                                        <h6>審査前</h6>
-                                    {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK') %}
-                                        <h6>審査中</h6>
-                                    {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK') %}
-                                        <h6>審査OK</h6>
-                                    {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG') %}
-                                        <h6>審査NG</h6>
-                                    {% endif %}
-                                </div>
-                                <a href="{{ url('breeder_detail', {'breeder_id': breeder.Id}) }}">
-                                    <h5 class="color-breeder">ブリーダー詳細ページへ</h5>
-                                </a>
+                            <div class="d-flex mb-1">
+                                <h6>有効期限：</h6>
+                                <h6>
+                                    {{ breeder.licenseExpireDate | date('Y/m/d') }}
+                                </h6>
+                                <div class="m-1 p-1"></div>
+                                <h6>動物取扱責任者：</h6>
+                                <h6>
+                                    {{ breeder.licenseManagerName }}
+                                </h6>
                             </div>
+                            <div class="d-flex mb-1">
+                                <h6>犬舎所在地：</h6>
+                                {% set breederHouseDog = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                {% set breederHouseCat = breeder.getBreederHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
+                                {% if (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
+                                    <h6>
+                                        {{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' ~ ' ' ~ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}
+                                    </h6>
+                                {% elseif (breeder.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                    <h6>
+                                        {{ breederHouseDog.breederHousePref ~ breederHouseDog.breederHouseCity ?? '' }}
+                                    </h6>
+                                {% else %}
+                                    <h6>
+                                        {{ breederHouseCat.breederHousePref ~ breederHouseCat.breederHouseCity ?? '' }}
+                                    </h6>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex mb-1">
+                                <h6>審査ステータス：</h6>
+                                {% if breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_SUBMIT') %}
+                                    <h6>審査前</h6>
+                                {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK') %}
+                                    <h6>審査中</h6>
+                                {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK') %}
+                                    <h6>審査OK</h6>
+                                {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG') %}
+                                    <h6>審査NG</h6>
+                                {% endif %}
+                            </div>
+                            <a href="{{ url('breeder_detail', {'breeder_id': breeder.Id}) }}">
+                                <h5 class="color-breeder">ブリーダー詳細ページへ</h5>
+                            </a>
                         </div>
-                        {% if breeder.prText %}
-                            <div class="row ml-2 mb-4">
-                                <div class="col-12" style="background:#fff3dd">
+                    </div>
+                    {% if breeder.prText %}
+                        <div class="row ml-2 mb-4">
+                            <div class="col-12" style="background:#fff3dd">
                                 <h6 style="border-bottom: 1px dotted #cd8362; color:#cd8362;">PRコメント</h6>
                                 <h6>{{ breeder.prText |nl2br }}</h6>
-                                </div>
                             </div>
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
+                </div>
                 {% else %}
                     検索条件に該当するブリーダーが存在しません。
                 {% endfor %}
                 <div class="navigation float-right">
                     {{ knp_pagination_render(breeders) }}
-                </div>    
+                </div>
             </div>
         </div>
     </section>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
-    <style>
-        .fas {
-            color: #f8ce0b;
-        }
-    </style>
 {% endblock %}
-{% block javascript %}
-{% endblock %}
+{% block javascript %}{% endblock %}
                 
