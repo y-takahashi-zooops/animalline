@@ -38,8 +38,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Repository\Master\OrderItemTypeRepository;
+use Customize\Controller\Admin\Product\ProductController as BaseProductController;
 
-class ProductWasteController extends AbstractController
+class ProductWasteController extends BaseProductController
 {
     /**
      * @var CsvExportService
