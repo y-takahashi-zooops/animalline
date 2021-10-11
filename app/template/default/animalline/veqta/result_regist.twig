@@ -17,7 +17,8 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-input">
-                                            <input type="text" class="w-100" placeholder="123456" name="barcode" id="barcode" minlength="6" maxlength="6">
+                                            <input type="text" class="w-100" placeholder="123456" name="barcode"
+                                                   id="barcode" minlength="6" maxlength="6">
                                         </div>
                                     </dd>
                                 </dl>
@@ -27,7 +28,8 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-input">
-                                            <input type="text" class="w-100" name="sender_name" id="sender_name" disabled>
+                                            <input type="text" class="w-100" name="sender_name" id="sender_name"
+                                                   disabled>
                                         </div>
                                     </dd>
                                 </dl>
@@ -45,61 +47,7 @@
                                     <dt>
                                         検査結果
                                     </dt>
-                                    <dd>
-                                        {# TODO:alm_dna_check_kindsのcheck_kindをdtとする #}
-                                        <dl>
-                                            <dt>
-                                                〇〇病遺伝子検査
-                                                <!-- TODO: replace check_kind_id to value -->
-                                                <input hidden name="check_status[kind][1]" value="1">
-                                            </dt>
-                                            <dd>
-                                                <div class="ec-select ml-4 mt-2">
-                                                    <select name="check_status[status][1]" required>
-                                                        <option value="">選択してください</option>
-                                                        <option value="4">検体異常</option>
-                                                        <option value="61">クリア</option>
-                                                        <option value="62">キャリア</option>
-                                                        <option value="7">アフェクテッド</option>
-                                                    </select>
-                                                </div>
-                                            </dd>
-                                        </dl>
-                                        <dl>
-                                            <dt>
-                                                ■■検査
-                                                <input hidden name="check_status[kind][2]" value="2">
-                                            </dt>
-                                            <dd>
-                                                <div class="ec-select ml-4 mt-2">
-                                                    <select name="check_status[status][2]" required>
-                                                        <option value="">選択してください</option>
-                                                        <option value="4">検体異常</option>
-                                                        <option value="61">クリア</option>
-                                                        <option value="62">キャリア</option>
-                                                        <option value="7">アフェクテッド</option>
-                                                    </select>
-                                                </div>
-                                            </dd>
-                                        </dl>
-                                        <dl>
-                                            <dt>
-                                                ▲▲検査
-                                                <input hidden name="check_status[kind][3]" value="3">
-                                            </dt>
-                                            <dd>
-                                                <div class="ec-select ml-4 mt-2">
-                                                    
-                                                    <select name="check_status[status][3]" required>
-                                                        <option value="">選択してください</option>
-                                                        <option value="4">検体異常</option>
-                                                        <option value="61">クリア</option>
-                                                        <option value="62">キャリア</option>
-                                                        <option value="7">アフェクテッド</option>
-                                                    </select>
-                                                </div>
-                                            </dd>
-                                        </dl>
+                                    <dd id="check_result_kinds">
                                     </dd>
                                 </dl>
                                 <dl>
@@ -124,8 +72,9 @@
                             <div class="ec-off4Grid">
                                 <div class="ec-off4Grid__cell">
                                     <button type="submit" class="btn btn-warning w-100 m-1" id="dnaTestResultRegist"
-                                        disabled>検査結果登録</button>
-                                    <a href="{{url('veqta_index')}}" class="btn btn-warning w-100 m-1">戻る</a>
+                                            disabled>検査結果登録
+                                    </button>
+                                    <a href="{{ url('veqta_index') }}" class="btn btn-warning w-100 m-1">戻る</a>
                                 </div>
                             </div>
                         </div>
@@ -139,32 +88,61 @@
 {% block javascript %}
 <script>
     $(function () {
-        $('#barcode').on('change', function () {
-            if ($(this).val().length == 6) {
-                callShippingName();
-            } else {
-                $('#name').val('')
-                $('#barcode').removeAttr('disabled');
-            }
-        });
+    $('#barcode').on('change', function () {
+        if ($(this).val().length == 6) {
+            callShippingName();
+        } else {
+            $('#sender_name').val('');
+            $('#breed_name').val('');
+            $('#barcode').removeAttr('disabled');
+        }
     });
+    $(document).on('change', 'select[name=check_status_total]', function() {
+    if ($(this).val() == 4) {console.log('ok')
+    $('.check_kind_select').removeAttr('required');
+} else {
+    $('.check_kind_select').attr('required', true);
+}
+});
+});
 
     function callShippingName() {
-        $.ajax({
-            url: "{{ url('read_barcode') }}",
+    $.ajax({
+        url: "{{ url('read_barcode') }}",
             type: 'GET',
             dataType: 'json',
             data: {
                 'barcode': $('#barcode').val()
             }
         }).done(function (data) {
-console.log(data);
+            if (data['hasRecord']) {
             $('#sender_name').val(data['shippingName']);
             $('#breed_name').val(data['breed']);
             $('#dnaTestResultRegist').attr('disabled', !data['hasRecord']);
-            if (!data['hasRecord']) alert('データが存在しません。');
+            data['checkKind'].forEach(el => {
+            $('#check_result_kinds').append(` <dl style="display: flex; align-items: center;">
+                                            <dt style="word-break: break-word; padding-top: 0;">
+                                                ${el['check_kind']}
+                                                <input hidden name="check_status[kind][]" value="${el['id']}">
+                                            </dt>
+                                            <dd>
+                                                <div class="ec-select ml-4 mt-2">
+                                                    <select class="check_kind_select" name="check_status[status][${el['id']}]" required>
+                                                        <option value="">選択してください</option>
+                                                        <option value="1">クリア</option>
+                                                        <option value="2">キャリア</option>
+                                                        <option value="3">アフェクテッド</option>
+                                                    </select>
+                                                </div>
+                                            </dd>
+                                        </dl>`)
+                                        });
+            } else {
+             alert('データが存在しません。');
+             }
         }).fail(function (err) {
-            $('#sender_name').text('');
+            $('#sender_name').val('');
+            $('#breed_name').val('');
             $('#dnaTestResultRegist').attr('disabled', true);
             console.error(err);
         });
