@@ -294,14 +294,14 @@
                                             <h3 class="font-weight-500 color-gray-500 mb-4">
                                                 {{ breederPet.Breeder.getLicenseHouseName() }}
                                             </h3>
-                                            <div class="d-flex mb-2 rating">
+                                            <div class="d-flex mb-2">
                                                 <h6>
-                                                    総合評価                                          
+                                                    総合評価 :
                                                 </h6>
                                                 <div class = "stars-outer">
                                                     <div class = "stars-inner"></div>
                                                 </div>
-{#                                                    <div class="m-1 p-1"></div>#}
+                                                    <div class="m-1 p-1"></div>
                                                     <h6 class = "number-rating">
                                                         {{ breederPet.Breeder.getBreederRank() }}
                                                     </h6>
@@ -413,6 +413,8 @@
         .stars-outer {
             position: relative;
             display: inline-block;
+            bottom: 5px;
+            margin-left: 15px;
         }
         .stars-inner {
             position: absolute;
