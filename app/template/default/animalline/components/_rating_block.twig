@@ -3,7 +3,7 @@
 <div class="m-1 p-1"></div>
 
 <!-- 1 star  -->
-<i class="{{ point == 0 ? 'far fa-star' : ( point  > 0 and  point ) < 1 ? 'fas fa-star-half-alt' : 'fas fa-star' }}"></i>
+<i class="{{ point == 0 ? 'far fa-star' : (point  > 0 and  point  < 1) ? 'fas fa-star-half-alt' : 'fas fa-star' }}"></i>
 <!-- 2 star  -->
 <i class="{{ point > 1 and point < 2 ? 'fas fa-star-half-alt' : point >= 2 ? 'fas fa-star' : 'far fa-star' }}"></i>
 <!-- 3 star  -->
