@@ -22,8 +22,7 @@
 }
 
 .date select {
-    width: 100px;
-    margin-right: 10px;
+    width: 80px;
 }
 
 a[disabled], button[disabled] {

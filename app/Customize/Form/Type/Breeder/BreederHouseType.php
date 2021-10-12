@@ -103,7 +103,7 @@ class BreederHouseType extends AbstractType
                 'trim' => true,
             ])
             ->add('breeder_house_house_fax', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'constraints' => [
                     new Assert\Length([
                         'max' => 11,
@@ -112,6 +112,7 @@ class BreederHouseType extends AbstractType
                         'type' => 'numeric',
                         'message' => 'form_error.numeric_only',
                     ]),
+                    new Assert\NotBlank()
                 ],
                 'attr' => [
                     'placeholder' => 'common.phone_number_sample',
