@@ -25,6 +25,7 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\BreederExaminationInfo;
 use Customize\Form\Type\Breeder\BreederHouseType;
 use Customize\Repository\BreederHouseRepository;
+use Customize\Form\Type\AdminBreederType;
 use Eccube\Repository\CustomerRepository;
 use Customize\Service\MailService;
 
@@ -108,8 +109,11 @@ class BreederExaminationController extends AbstractController
         $formDogKind->handleRequest($request);
         $formCatKind = $this->createForm(BreederHouseType::class, $breederHouseCatKind[0], ['disabled' => true]);
         $formCatKind->handleRequest($request);
+        $formBreeder = $this->createForm(AdminBreederType::class, $breeder);
+
         return [
             'form' => $form->createView(),
+            'formBreeder' => $formBreeder->createView(),
             'petType' => $breederExaminationInfo->getPetType() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫',
             'isEnablePetType' => $isEnablePetType,
             'breederExaminationInfo' => $breederExaminationInfo,
