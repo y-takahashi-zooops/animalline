@@ -14,6 +14,8 @@
 namespace Customize\Controller\Admin\Adoption;
 
 use Customize\Config\AnilineConf;
+use Customize\Entity\Conservations;
+use Customize\Form\Type\Admin\ConservationsType;
 use Customize\Repository\ConservationsRepository;
 use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;
@@ -64,9 +66,14 @@ class AdoptionExaminationController extends AbstractController
      * @Route("/%eccube_admin_route%/adoption/examination/{id}", name="admin_adoption_examination", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/examination.twig")
      */
-    public function Examination(Request $request)
+    public function Examination(Request $request, Conservations $conservations)
     {
-        return;
+        $formAdoption = $this->createForm(ConservationsType::class, $conservations);
+
+        return [
+            'formAdoption' => $formAdoption->createView(),
+            'conservation' => $conservations
+        ];
     }
 
     /**
