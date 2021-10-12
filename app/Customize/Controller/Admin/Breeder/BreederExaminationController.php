@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederExaminationInfo;
+use Customize\Form\Type\AdminBreederType;
 use Eccube\Repository\CustomerRepository;
 use Customize\Service\MailService;
 
@@ -91,8 +92,11 @@ class BreederExaminationController extends AbstractController
 
         $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo, ['disabled' => true]);
         $form->handleRequest($request);
+        $formBreeder = $this->createForm(AdminBreederType::class, $breeder);
+
         return [
             'form' => $form->createView(),
+            'formBreeder' => $formBreeder->createView(),
             'petType' => $breederExaminationInfo->getPetType() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫',
             'isEnablePetType' => $isEnablePetType,
             'breederExaminationInfo' => $breederExaminationInfo
