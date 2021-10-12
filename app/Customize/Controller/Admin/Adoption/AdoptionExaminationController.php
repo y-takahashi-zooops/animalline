@@ -69,13 +69,13 @@ class AdoptionExaminationController extends AbstractController
      */
     public function Examination(Conservations $conservations): array
     {
-        $formAdoption = $this->createForm(ConservationsType::class, $conservations);
+        $formAdoption = $this->createForm(ConservationsType::class, $conservations, ['disabled' => true]);
 
         $conservationsHouseDog = $conservations->getConservationHouseByPetType(AnilineConf::ANILINE_PET_KIND_DOG);
-        $formHouseDog = $this->createForm(ConservationHouseType::class, $conservationsHouseDog);
+        $formHouseDog = $this->createForm(ConservationHouseType::class, $conservationsHouseDog, ['disabled' => true]);
 
         $conservationsHouseCat = $conservations->getConservationHouseByPetType(AnilineConf::ANILINE_PET_KIND_CAT);
-        $formHouseCat = $this->createForm(ConservationHouseType::class, $conservationsHouseCat);
+        $formHouseCat = $this->createForm(ConservationHouseType::class, $conservationsHouseCat, ['disabled' => true]);
 
         return [
             'formAdoption' => $formAdoption->createView(),

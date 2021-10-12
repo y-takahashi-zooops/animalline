@@ -52,7 +52,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-6 mb-2">
-                                    {{ form_widget(formAdoption.organization_name, { 'attr': { 'disabled': 'true' }}) }}
+                                    {{ form_widget(formAdoption.organization_name) }}
                                     {{ form_errors(formAdoption.organization_name) }}
                                 </div>
                             </div>
@@ -63,7 +63,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-2 mb-2">
-                                    {{ form_widget(formAdoption.handling_pet_kind, { 'attr': { 'disabled': 'true' }}) }}
+                                    {{ form_widget(formAdoption.handling_pet_kind) }}
                                     {{ form_errors(formAdoption.handling_pet_kind) }}
                                 </div>
                             </div>
@@ -86,7 +86,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-6 mb-2">
-                                    {{ form_widget(formAdoption.owner_name, { 'attr': { 'disabled': 'true' }}) }}
+                                    {{ form_widget(formAdoption.owner_name) }}
                                     {{ form_errors(formAdoption.owner_name) }}
                                 </div>
                             </div>
@@ -97,7 +97,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-6 mb-2">
-                                    {{ form_widget(formAdoption.owner_kana, { 'attr': { 'disabled': 'true' }}) }}
+                                    {{ form_widget(formAdoption.owner_kana) }}
                                     {{ form_errors(formAdoption.owner_kana) }}
                                 </div>
                             </div>
@@ -111,7 +111,7 @@ file that was distributed with this source code.
                                         </div>
                                         <div class="col-2 mb-2">
                                             <div class="ec-zipInput{{ has_errors(formAdoption.zip) ? ' error' }}">
-                                                {{ form_widget(formAdoption.zip, { 'attr': { 'disabled': 'true' }}) }}
+                                                {{ form_widget(formAdoption.zip) }}
                                                 {{ form_errors(formAdoption.zip) }}
                                             </div>
                                         </div>
@@ -124,7 +124,7 @@ file that was distributed with this source code.
                                         </div>
                                         <div class="col-2 mb-2">
                                             <div class="ec-select{{ has_errors(formAdoption.addr.PrefId) ? ' error' }}">
-                                                {{ form_widget(formAdoption.addr.PrefId, { 'attr': { 'disabled': 'true' }}) }}
+                                                {{ form_widget(formAdoption.addr.PrefId) }}
                                                 {{ form_errors(formAdoption.addr.PrefId) }}
                                             </div>
                                         </div>
@@ -163,7 +163,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        {{ form_widget(formAdoption.tel, { 'attr': { 'disabled': 'true' }}) }}
+                                        {{ form_widget(formAdoption.tel) }}
                                         {{ form_errors(formAdoption.tel) }}
                                     </div>
                                 </div>
@@ -174,7 +174,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        {{ form_widget(formAdoption.fax, { 'attr': { 'disabled': 'true' }}) }}
+                                        {{ form_widget(formAdoption.fax) }}
                                         {{ form_errors(formAdoption.fax) }}
                                     </div>
                                 </div>
@@ -185,7 +185,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        {{ form_widget(formAdoption.homepage_url, { 'attr': { 'disabled': 'true' }}) }}
+                                        {{ form_widget(formAdoption.homepage_url) }}
                                         {{ form_errors(formAdoption.homepage_url) }}
                                     </div>
                                 </div>
@@ -196,7 +196,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        {{ form_widget(formAdoption.pr_text, { 'attr': { 'disabled': 'true' }}) }}
+                                        {{ form_widget(formAdoption.pr_text) }}
                                         {{ form_errors(formAdoption.pr_text) }}
                                     </div>
                                 </div>
