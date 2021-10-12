@@ -29,6 +29,7 @@ use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Customize\Service\VeqtaQueryService;
 use Knp\Component\Pager\PaginatorInterface;
+use TCPDF;
 
 class VeqtaController extends AbstractController
 {
@@ -357,5 +358,36 @@ class VeqtaController extends AbstractController
             $data['hasRecord'] = false;
         }
         return new JsonResponse($data);
+    }
+
+    /**
+     * Read barcode.
+     *
+     * @Route("/exportPDF", name="export_pdf", methods={"GET"})
+     */
+    public function indexAction(){
+        $html = $this->renderView(
+            'pdf/dna_check.html.twig',
+            [
+                'title' => 'Something',
+                'name_button' => 'abc',
+            ]
+        );
+
+        $this->returnPDFResponseFromHTML($html);
+    }
+
+    public function returnPDFResponseFromHTML($html){
+        $pdf = new TCPDF('vertical', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->SetTitle(('Our Code World Title'));
+        $pdf->setFontSubsetting(true);
+        $pdf->SetFont('helvetica', '', 11, '', true);
+        //$pdf->SetMargins(20,20,40, true);
+        $pdf->AddPage();
+        
+        $filename = 'ourcodeworld_pdf_demo';
+        
+        $pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
+        $pdf->Output($filename.".pdf",'D'); // This will output the PDF as a response directly
     }
 }
