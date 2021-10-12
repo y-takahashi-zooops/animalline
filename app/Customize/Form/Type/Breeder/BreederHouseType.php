@@ -80,6 +80,33 @@ class BreederHouseType extends AbstractType
                 ],
                 'trim' => true,
             ])
+            ->add('breeder_house_pref', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('breeder_house_city', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('breeder_house_address', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                    new Assert\NotBlank()
+                ]
+            ])
             ->add('address', AddressHouseType::class)
             ->add('breeder_house_house_tel', TextType::class, [
                 'required' => true,

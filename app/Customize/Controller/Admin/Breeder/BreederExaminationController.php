@@ -23,6 +23,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederExaminationInfo;
+use Customize\Form\Type\Breeder\BreederHouseType;
+use Customize\Repository\BreederHouseRepository;
 use Eccube\Repository\CustomerRepository;
 use Customize\Service\MailService;
 
@@ -49,22 +51,30 @@ class BreederExaminationController extends AbstractController
     protected $mailService;
 
     /**
+     * @var BreederHouseRepository
+     */
+    protected $breederHouseRepository;
+
+    /**
      * BreederExaminationController constructor.
      * @param BreedersRepository $breedersRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      * @param CustomerRepository $customerRepository
      * @param MailService $mailService
+     * @param BreederHouseRepository $breederHouseRepository
      */
     public function __construct(
         BreedersRepository               $breedersRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         CustomerRepository               $customerRepository,
-        MailService                      $mailService
+        MailService                      $mailService,
+        BreederHouseRepository $breederHouseRepository
     ) {
         $this->breedersRepository = $breedersRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
         $this->customerRepository = $customerRepository;
         $this->mailService = $mailService;
+        $this->breederHouseRepository = $breederHouseRepository;
     }
 
     /**
@@ -77,7 +87,10 @@ class BreederExaminationController extends AbstractController
     {
         $breeder = $this->breedersRepository->find($request->get('id'));
         $breederExaminationInfos = $this->breederExaminationInfoRepository->findBy(['Breeder' => $breeder]);
-        if (!$breederExaminationInfos) {
+        $breederHouseDogKind = $this->breederHouseRepository->findBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
+        $breederHouseCatKind = $this->breederHouseRepository->findBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
+
+        if (!$breederExaminationInfos or !$breederHouseDogKind or !$breederHouseCatKind) {
             throw new NotFoundHttpException();
         }
         $breederExaminationInfo = $breederExaminationInfos[0];
@@ -91,11 +104,17 @@ class BreederExaminationController extends AbstractController
 
         $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo, ['disabled' => true]);
         $form->handleRequest($request);
+        $formDogKind = $this->createForm(BreederHouseType::class, $breederHouseDogKind[0], ['disabled' => true]);
+        $formDogKind->handleRequest($request);
+        $formCatKind = $this->createForm(BreederHouseType::class, $breederHouseCatKind[0], ['disabled' => true]);
+        $formCatKind->handleRequest($request);
         return [
             'form' => $form->createView(),
             'petType' => $breederExaminationInfo->getPetType() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫',
             'isEnablePetType' => $isEnablePetType,
-            'breederExaminationInfo' => $breederExaminationInfo
+            'breederExaminationInfo' => $breederExaminationInfo,
+            'formDogKind' => $formDogKind->createView(),
+            'formCatKind' => $formCatKind->createView()
         ];
     }
 
