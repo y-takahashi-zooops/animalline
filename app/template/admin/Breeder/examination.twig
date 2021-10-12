@@ -729,8 +729,8 @@ file that was distributed with this source code.
                                     </div>
                                     <div class="col-6 mb-2">
                                         <div class="ec-birth{{ has_errors(formBreeder.license_regist_date) ? ' error' }} date">
-                                            {{ form_widget(formBreeder.license_regist_date.year, { 'attr': { 'class': 'form-control' }}) }}/&nbsp;
-                                            {{ form_widget(formBreeder.license_regist_date.month) }}/&nbsp;
+                                            {{ form_widget(formBreeder.license_regist_date.year, { 'attr': { 'class': 'form-control' }}) }}&nbsp;/&nbsp;
+                                            {{ form_widget(formBreeder.license_regist_date.month) }}&nbsp;/&nbsp;
                                             {{ form_widget(formBreeder.license_regist_date.day) }}
                                             {{ form_errors(formBreeder.license_regist_date) }}
                                         </div>
@@ -745,8 +745,8 @@ file that was distributed with this source code.
                                     </div>
                                     <div class="col-6 mb-2">
                                         <div class="ec-birth{{ has_errors(formBreeder.license_expire_date) ? ' error' }} date">
-                                            {{ form_widget(formBreeder.license_expire_date.year) }}/&nbsp;
-                                            {{ form_widget(formBreeder.license_expire_date.month) }}/&nbsp;
+                                            {{ form_widget(formBreeder.license_expire_date.year) }}&nbsp;/&nbsp;
+                                            {{ form_widget(formBreeder.license_expire_date.month) }}&nbsp;/&nbsp;
                                             {{ form_widget(formBreeder.license_expire_date.day) }}
                                             {{ form_errors(formBreeder.license_expire_date) }}
                                         </div>
