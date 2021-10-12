@@ -78,7 +78,11 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\NotBlank()
+                    new Assert\NotBlank(),
+                    new Assert\Regex([
+                        'pattern' => '/^[ァ-ヶｦ-ﾟー 　]+$/u',
+                        'message' => 'form_error.kana_only',
+                    ])
                 ]
             ])
             ->add('addr', ConservationAddressType::class)

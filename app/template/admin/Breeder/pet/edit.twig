@@ -132,9 +132,11 @@ file that was distributed with this source code.
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col mb-2">
-                                        {{ form_widget(form.pet_birthday) }}
-                                        {{ form_errors(form.pet_birthday) }}     
+                                    <div class="col mb-2 date">
+                                        {{ form_widget(form.pet_birthday.year) }}&nbsp;/&nbsp;
+                                        {{ form_widget(form.pet_birthday.month) }}&nbsp;/&nbsp;
+                                        {{ form_widget(form.pet_birthday.day) }}
+                                        {{ form_errors(form.pet_birthday) }}
                                     </div>
                                 </div>
                                 <div class="row">
