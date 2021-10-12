@@ -107,7 +107,7 @@ class BreederExaminationController extends AbstractController
         $form->handleRequest($request);
         $formDogKind = $this->createForm(BreederHouseType::class, $breederHouseDogKind[0], ['disabled' => true]);
         $formCatKind = $this->createForm(BreederHouseType::class, $breederHouseCatKind[0], ['disabled' => true]);
-        $formBreeder = $this->createForm(AdminBreederType::class, $breeder);
+        $formBreeder = $this->createForm(AdminBreederType::class, $breeder, ['disabled' => true]);
 
         return [
             'form' => $form->createView(),
