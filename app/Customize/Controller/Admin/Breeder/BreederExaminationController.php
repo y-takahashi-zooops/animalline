@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederExaminationInfo;
-use Customize\Form\Type\Breeder\BreederHouseType;
+use Customize\Form\Type\Admin\BreederHouseType;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Form\Type\AdminBreederType;
 use Eccube\Repository\CustomerRepository;

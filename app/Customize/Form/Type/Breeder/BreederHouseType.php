@@ -80,9 +80,6 @@ class BreederHouseType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('breeder_house_pref', TextType::class)
-            ->add('breeder_house_city', TextType::class)
-            ->add('breeder_house_address', TextType::class)
             ->add('address', AddressHouseType::class)
             ->add('breeder_house_house_tel', TextType::class, [
                 'required' => true,
