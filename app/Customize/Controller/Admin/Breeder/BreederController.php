@@ -175,7 +175,7 @@ class BreederController extends AbstractController
         $form = $builder->getForm();
         $form->handleRequest($request);
 
-        $thumbnail_path = $request->get('thumbnail_path') ? $request->get('thumbnail_path') : $breederData->getThumbnailPath();
+        $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $breederData->setBreederPref($breederData->getPrefBreeder())

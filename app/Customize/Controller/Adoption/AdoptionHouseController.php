@@ -32,8 +32,7 @@ class AdoptionHouseController extends AbstractController
     public function __construct(
         ConservationsRepository             $conservationsRepository,
         ConservationsHousesRepository       $conservationsHouseRepository
-    )
-    {
+    ) {
         $this->conservationsRepository = $conservationsRepository;
         $this->conservationsHouseRepository = $conservationsHouseRepository;
     }

@@ -62,7 +62,6 @@ class BreederHouseController extends AbstractController
      * @param PrefRepository $prefRepository
      * @param BreederHouseRepository $breederHouseRepository
      * @param BreederPetsRepository $breederPetsRepository
-     * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      * @param CustomerRepository $customerRepository
      */
     public function __construct(
