@@ -377,286 +377,6 @@ file that was distributed with this source code.
                             <div class="row">
                                 <div class="col-6">
                                     <div class="d-inline-block">
-                                    <span class="card-title">
-                                        {{ '犬小屋情報'|trans }}
-                                    </span>
-                                    </div>
-                                </div>
-                                <div class="col-6 text-right">
-                                    <a data-toggle="collapse" href="#BreederHouseDog" aria-expanded="false"
-                                       aria-controls="BreederHouseDog">
-                                        <i class="fa fa-angle-up fa-lg"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="collapse show ec-cardCollapse" id="BreederHouseDog">
-                            <div class="card-body">
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>種別</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        犬舎
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>運営者氏名</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formDogKind.breeder_house_name) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>運営者氏名カナ</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formDogKind.breeder_house_kana) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>郵便番号</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formDogKind.breeder_house_house_zip) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>都道府県</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formDogKind.breeder_house_pref) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>市区町村</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formDogKind.breeder_house_city) }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>市区町村以下住所</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formDogKind.breeder_house_address) }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>電話番号</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formDogKind.breeder_house_house_tel) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>FAX番号</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formDogKind.breeder_house_house_fax) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>担当者名</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formDogKind.breeder_house_front_name) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>担当者TEL</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formDogKind.breeder_house_front_tel) }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="c-contentsArea__cols">
-            <div class="c-contentsArea__primaryCol">
-                <div class="c-primaryCol">
-                    <div class="card rounded border-0 mb-4">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="d-inline-block">
-                                    <span class="card-title">
-                                        {{ '猫の家の情報'|trans }}
-                                    </span>
-                                    </div>
-                                </div>
-                                <div class="col-6 text-right">
-                                    <a data-toggle="collapse" href="#BreederHouseCat" aria-expanded="false"
-                                       aria-controls="BreederHouseCat">
-                                        <i class="fa fa-angle-up fa-lg"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="collapse show ec-cardCollapse" id="BreederHouseCat">
-                            <div class="card-body">
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>種別</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        猫舎
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>運営者氏名</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formCatKind.breeder_house_name) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>運営者氏名カナ</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formCatKind.breeder_house_kana) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>郵便番号</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formCatKind.breeder_house_house_zip) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>都道府県</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formCatKind.breeder_house_pref) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>市区町村</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formCatKind.breeder_house_city) }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>市区町村以下住所</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formCatKind.breeder_house_address) }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>電話番号</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formCatKind.breeder_house_house_tel) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>FAX番号</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formCatKind.breeder_house_house_fax) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>担当者名</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formCatKind.breeder_house_front_name) }}
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>担当者TEL</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(formCatKind.breeder_house_front_tel) }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="c-contentsArea__cols">
-            <div class="c-contentsArea__primaryCol">
-                <div class="c-primaryCol">
-                    <div class="card rounded border-0 mb-4">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="d-inline-block">
                                         <span class="card-title">
                                             {{ 'ブリーダー情報'|trans }}
                                         </span>
@@ -1104,6 +824,286 @@ file that was distributed with this source code.
                                             {{ form_widget(formBreeder.license_type) }}
                                             {{ form_errors(formBreeder.license_type) }}
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="c-contentsArea__cols">
+            <div class="c-contentsArea__primaryCol">
+                <div class="c-primaryCol">
+                    <div class="card rounded border-0 mb-4">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-inline-block">
+                                    <span class="card-title">
+                                        {{ '犬小屋情報'|trans }}
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <a data-toggle="collapse" href="#BreederHouseDog" aria-expanded="false"
+                                       aria-controls="BreederHouseDog">
+                                        <i class="fa fa-angle-up fa-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse show ec-cardCollapse" id="BreederHouseDog">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>種別</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        犬舎
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>運営者氏名</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_name) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>運営者氏名カナ</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_kana) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>郵便番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_house_zip) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>都道府県</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_pref) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>市区町村</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_city) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>市区町村以下住所</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_address) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>電話番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_house_tel) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>FAX番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_house_fax) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>担当者名</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_front_name) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>担当者TEL</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_front_tel) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="c-contentsArea__cols">
+            <div class="c-contentsArea__primaryCol">
+                <div class="c-primaryCol">
+                    <div class="card rounded border-0 mb-4">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-inline-block">
+                                    <span class="card-title">
+                                        {{ '猫の家の情報'|trans }}
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <a data-toggle="collapse" href="#BreederHouseCat" aria-expanded="false"
+                                       aria-controls="BreederHouseCat">
+                                        <i class="fa fa-angle-up fa-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse show ec-cardCollapse" id="BreederHouseCat">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>種別</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        猫舎
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>運営者氏名</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_name) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>運営者氏名カナ</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_kana) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>郵便番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_house_zip) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>都道府県</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_pref) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>市区町村</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_city) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>市区町村以下住所</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_address) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>電話番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_house_tel) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>FAX番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_house_fax) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>担当者名</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_front_name) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>担当者TEL</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_front_tel) }}
                                     </div>
                                 </div>
                             </div>
