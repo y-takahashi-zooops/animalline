@@ -14,6 +14,9 @@
 namespace Customize\Controller\Admin\Adoption;
 
 use Customize\Config\AnilineConf;
+use Customize\Entity\Conservations;
+use Customize\Form\Type\Admin\ConservationHouseType;
+use Customize\Form\Type\Admin\ConservationsType;
 use Customize\Repository\ConservationsRepository;
 use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;
@@ -49,9 +52,9 @@ class AdoptionExaminationController extends AbstractController
      */
 
     public function __construct(
-        ConservationsRepository        $conservationsRepository,
-        CustomerRepository             $customerRepository,
-        MailService                    $mailService
+        ConservationsRepository $conservationsRepository,
+        CustomerRepository      $customerRepository,
+        MailService             $mailService
     ) {
         $this->conservationsRepository = $conservationsRepository;
         $this->customerRepository = $customerRepository;
@@ -64,9 +67,22 @@ class AdoptionExaminationController extends AbstractController
      * @Route("/%eccube_admin_route%/adoption/examination/{id}", name="admin_adoption_examination", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/examination.twig")
      */
-    public function Examination(Request $request)
+    public function Examination(Conservations $conservations): array
     {
-        return;
+        $formAdoption = $this->createForm(ConservationsType::class, $conservations);
+
+        $conservationsHouseDog = $conservations->getConservationHouseByPetType(AnilineConf::ANILINE_PET_KIND_DOG);
+        $formHouseDog = $this->createForm(ConservationHouseType::class, $conservationsHouseDog);
+
+        $conservationsHouseCat = $conservations->getConservationHouseByPetType(AnilineConf::ANILINE_PET_KIND_CAT);
+        $formHouseCat = $this->createForm(ConservationHouseType::class, $conservationsHouseCat);
+
+        return [
+            'formAdoption' => $formAdoption->createView(),
+            'formHouseDog' => $conservationsHouseDog->getId() ? $formHouseDog->createView() : false,
+            'formHouseCat' => $conservationsHouseCat->getId() ? $formHouseCat->createView() : false,
+            'conservation' => $conservations
+        ];
     }
 
     /**
