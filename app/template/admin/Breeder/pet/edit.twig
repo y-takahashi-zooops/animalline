@@ -21,7 +21,24 @@ file that was distributed with this source code.
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
 {% endblock stylesheet %}
 
-{% block javascript %}{% endblock javascript %}
+{% block javascript %}
+<script>
+    $("#pedigreeSelect").hide();
+    if(breeder_pets_is_pedigree_0.checked){ 
+        $("#pedigreeSelect").show();
+    }
+    $(document).ready(function() {
+        $("input[name$='breeder_pets[is_pedigree]']").click(function() {
+            var is_pedigree = $(this).val();
+            if (is_pedigree == 1) {
+                $("#pedigreeSelect").show();
+            } else if (is_pedigree == 0) {
+                $("#pedigreeSelect").hide();
+            }
+        });
+    });
+</script>
+{% endblock javascript %}
 
 {% block main %}
     {{ form_start(form) }}
@@ -70,7 +87,7 @@ file that was distributed with this source code.
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-2 mb-2">
+                                    <div class="col-4 mb-2">
                                         <select name="breeds_type" class="form-control">
                                             {% for breed in breeds %}
                                                 <option {{ breederPet.breedsType and breederPet.breedsType.id == breed.id ? 'selected' : '' }} value="{{ breed.id }}">{{ breed.breedsName }}</option>
@@ -210,6 +227,41 @@ file that was distributed with this source code.
                                     <div class="col-6 mb-2">
                                         {{ form_widget(form.is_pedigree) }}
                                         {{ form_errors(form.is_pedigree) }}
+                                    </div>
+                                </div>
+                                <div id="pedigreeSelect">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                <span>血統証団体</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-2">
+                                            {{ form_widget(form.Pedigree) }}
+                                            {{ form_errors(form.Pedigree) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                <span>血統証番号</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-2">
+                                            {{ form_widget(form.pedigree_code) }}
+                                            {{ form_errors(form.pedigree_code) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>マイクロチップID</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(form.microchip_code) }}
+                                        {{ form_errors(form.microchip_code) }}
                                     </div>
                                 </div>
                                 <div class="row">

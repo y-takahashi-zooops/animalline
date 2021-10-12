@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Customize\Entity\BreederPets;
 use Customize\Config\AnilineConf;
@@ -68,6 +69,19 @@ class BreederPetsType extends AbstractType
                     'class' => 'form-check-inline ec-radio'
                 ],
                 'expanded' => true
+            ])
+            ->add('Pedigree', EntityType::class, [
+                'class' => 'Customize\Entity\Pedigree',
+                'choice_label' => function (\Customize\Entity\Pedigree $petdigree) {
+                    return $petdigree->getPedigreeName();
+                },
+                'required' => false,
+            ])
+            ->add('pedigree_code', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('microchip_code', IntegerType::class, [
+                'required' => false,
             ])
             ->add('include_vaccine_fee', ChoiceType::class, [
                 'choices' => [

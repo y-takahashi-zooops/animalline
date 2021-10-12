@@ -34,14 +34,6 @@ class BreederPetsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // ->add('pet_kind', ChoiceType::class, [
-            //     'choices' =>
-            //     [
-            //         '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
-            //         '猫' => AnilineConf::ANILINE_PET_KIND_CAT
-            //     ],
-            //     'required' => true,
-            // ])
             ->add('breeds_type', EntityType::class, [
                 'class' => 'Customize\Entity\Breeds',
                 'choice_label' => function (\Customize\Entity\Breeds $breeds) {
@@ -74,7 +66,9 @@ class BreederPetsType extends AbstractType
                     new Assert\NotBlank(),
                 ],
             ])
-            ->add('future_wait', IntegerType::class)
+            ->add('future_wait', IntegerType::class, [
+                'required' => false,
+            ])
             //->add('dna_check_result', IntegerType::class)
             ->add('pr_comment', TextType::class, [
                 'attr' => [
@@ -110,6 +104,12 @@ class BreederPetsType extends AbstractType
                 'choice_label' => function (\Customize\Entity\Pedigree $petdigree) {
                     return $petdigree->getPedigreeName();
                 },
+                'required' => false,
+            ])
+            ->add('pedigree_code', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('microchip_code', IntegerType::class, [
                 'required' => false,
             ])
             ->add('include_vaccine_fee', ChoiceType::class, [

@@ -57,7 +57,7 @@ class BreederPets
     private $CoatColor;
 
     /**
-     * @ORM\Column(name="future_wait", type="smallint", nullable=true)
+     * @ORM\Column(name="future_wait", type="integer", nullable=true)
      */
     private $future_wait;
 
