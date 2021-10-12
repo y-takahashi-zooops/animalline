@@ -48,6 +48,17 @@ file that was distributed with this source code.
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
+                                        <span>登録者区分</span>
+                                    </div>
+                                </div>
+                                <div class="col-2 mb-2">
+                                    {{ form_widget(formAdoption.is_organization) }}
+                                    {{ form_errors(formAdoption.is_organization) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
                                         <span>保護団体名</span>
                                     </div>
                                 </div>

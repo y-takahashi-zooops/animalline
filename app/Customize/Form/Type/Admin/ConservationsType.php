@@ -30,6 +30,14 @@ class ConservationsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('is_organization', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '個人' => AnilineConf::ANILINE_ORGANIZATION_PERSONAL,
+                        '団体' => AnilineConf::ANILINE_ORGANIZATION_GROUP
+                    ],
+                'required' => true,
+            ])
             ->add('organization_name', TextType::class, [
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
@@ -59,10 +67,6 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
-                    ]),
                     new Assert\NotBlank()
                 ]
             ])
@@ -74,17 +78,13 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[ァ-ヶｦ-ﾟー]+$/u',
-                        'message' => 'form_error.kana_only',
-                    ]),
                     new Assert\NotBlank()
                 ]
             ])
             ->add('addr', ConservationAddressType::class)
             ->add('zip', TextType::class, [
                 'trim' => true,
-                'required' => false,
+                'required' => true,
                 'attr' => [
                     'maxlength' => 7,
                     'class' => 'p-postal-code',
@@ -97,7 +97,8 @@ class ConservationsType extends AbstractType
                     ]),
                     new Assert\Length([
                         'max' => 7,
-                    ])
+                    ]),
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('tel', TextType::class, [
@@ -118,6 +119,7 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('fax', TextType::class, [
+                'required' => false,
                 'trim' => true,
                 'attr' => [
                     'maxlength' => 11,

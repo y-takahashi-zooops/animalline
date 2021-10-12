@@ -47,6 +47,20 @@ file that was distributed with this source code.
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
+                                        <span>登録者区分</span>
+                                        <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-2 mb-2">
+                                    {{ form_widget(form.is_organization) }}
+                                    {{ form_errors(form.is_organization) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
                                         <span>保護団体名</span>
                                         <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
@@ -198,9 +212,6 @@ file that was distributed with this source code.
                                     <div class="col-3">
                                         <div class="d-inline-block">
                                             <span>FAX番号</span>
-                                            <span class="badge badge-primary ml-1">
-                                                {{ 'admin.common.required'|trans }}
-                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
