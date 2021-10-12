@@ -87,11 +87,10 @@ section{
 section h2{
 	font-family: 'Pacifico', cursive;
 	width: 60%;
-	margin: 0 auto 40px;
-	font-size: 1.25rem;
+	margin: 0 auto;
+	font-size: 25px;
 	font-weight:normal;
 	text-align: center;
-	background: url(../img/reg/borderBlack.png) repeat-x 0 50%;
 	background-size: 1px 1px;
 }
 
@@ -121,10 +120,11 @@ section h2 span {
 	width: 80%;
 	margin: 0 auto;
 	padding-bottom: 15px;
+	margin-bottom: 0.5rem;
 }
 
 .companyS{
-	width: 60%;
+	width: 90%;
 	margin: 0 auto;
 	padding-bottom: 30px;
 }
@@ -316,7 +316,12 @@ Width <= 768px
 ------------------*/
 @media screen and (max-width: 768px) {
 	html{
-		font-size:20px;
+		font-size:18px;
+	}
+	.btn,
+	a.btn,
+	button.btn {
+		font-size:17px;
 	}
 }
 
@@ -324,7 +329,11 @@ Width <= 768px
 Width <= 640px
 ------------------*/
 @media screen and (max-width: 640px) {
-
+	.btn,
+	a.btn,
+	button.btn {
+		font-size:14px;
+	}
 }
 
 /*------------------
