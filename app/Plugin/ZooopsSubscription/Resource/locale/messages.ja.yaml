@@ -1,0 +1,8 @@
+# 機能名称
+admin.order.subscription: 定期購入
+
+# ラベル
+admin.order.contract_date: 契約日
+admin.order.next_delivery_date: 次回配送日
+admin.order.next_delivery_date_start: 次回配送日(開始)
+admin.order.next_delivery_date_end: 次回配送日(終了)

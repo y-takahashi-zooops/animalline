@@ -185,3 +185,6 @@ services:
     Eccube\Session\Storage\Handler\SameSiteNoneCompatSessionHandler:
         arguments:
             - '@native_file_session_handler'
+
+    Customize\Service\CartService:
+        decorates: Eccube\Service\CartService
