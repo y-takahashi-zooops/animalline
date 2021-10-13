@@ -437,16 +437,16 @@ file that was distributed with this source code.
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            {{ form_label(form.license_regist_date, '登録年月日', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            登録年月日
                                             <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6 mb-2">
                                         <div class="ec-birth{{ has_errors(form.license_regist_date) ? ' error' }} date">
-                                            {{ form_widget(form.license_regist_date.year) }}
-                                            {{ form_widget(form.license_regist_date.month) }}
+                                            {{ form_widget(form.license_regist_date.year) }}&nbsp;/&nbsp;
+                                            {{ form_widget(form.license_regist_date.month) }}&nbsp;/&nbsp;
                                             {{ form_widget(form.license_regist_date.day) }}
                                             {{ form_errors(form.license_regist_date) }}
                                         </div>
@@ -455,16 +455,16 @@ file that was distributed with this source code.
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            {{ form_label(form.license_expire_date, '有効期間の末日', { 'label_attr': {'class': 'ec-label' }}) }}
+                                            有効期間の末日
                                             <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6 mb-2">
                                         <div class="ec-birth{{ has_errors(form.license_expire_date) ? ' error' }} date">
-                                            {{ form_widget(form.license_expire_date.year) }}
-                                            {{ form_widget(form.license_expire_date.month) }}
+                                            {{ form_widget(form.license_expire_date.year) }}&nbsp;/&nbsp;
+                                            {{ form_widget(form.license_expire_date.month) }}&nbsp;/&nbsp;
                                             {{ form_widget(form.license_expire_date.day) }}
                                             {{ form_errors(form.license_expire_date) }}
                                         </div>
@@ -474,9 +474,6 @@ file that was distributed with this source code.
                                     <div class="col-3">
                                         <div class="d-inline-block">
                                             {{ form_label(form.license_type, '動物取扱業の種別', { 'label_attr': {'class': 'ec-label' }}) }}
-                                            <span class="badge badge-primary ml-1">
-                                                {{ 'admin.common.required'|trans }}
-                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">

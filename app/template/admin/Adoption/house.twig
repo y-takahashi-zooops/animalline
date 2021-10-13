@@ -36,9 +36,8 @@ file that was distributed with this source code.
 {% endblock javascript %}
 
 {% block main %}
-    <form role="form" name="adoption-house" id="adoption-house" method="post"
-          action="{{ url('admin_adoption_house', params|merge({'id': conservations, 'pet_type': params.pet_type is defined ? params.pet_type : null})) }}"
-          novalidate class="h-adr">
+    <form role="form" name="adoption-house" id="adoption-house" method="post" novalidate class="h-adr"
+          action="{{ url('admin_adoption_house', params|merge({'id': conservations, 'pet_type': params.pet_type is defined ? params.pet_type : null})) }}">
         {{ form_widget(form._token) }}
         <span class="p-country-name" style="display:none;">Japan</span>
         <div class="c-contentsArea__cols">

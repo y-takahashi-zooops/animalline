@@ -269,8 +269,7 @@ class AdoptionMemberController extends AbstractController
             $entityManager->persist($conservation);
             $entityManager->flush();
             return $this->redirectToRoute('adoption_examination');
-        } elseif (!$form->isSubmitted()) {
-
+        } elseif (!$form->isSubmitted() && !$conservationsRepository->find($user)) {
             // Customer情報から初期情報をセット
             $Customer = $this->customerRepository->find($user);
             $form->get('owner_name')->setData($Customer->getname01() . "　" . $Customer->getname02());

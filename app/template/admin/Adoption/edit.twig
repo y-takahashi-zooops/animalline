@@ -21,97 +21,112 @@ file that was distributed with this source code.
 
 {% block main %}
     {{ form_start(form) }}
-        <div class="c-contentsArea__cols">
-            <div class="c-contentsArea__primaryCol">
-                <div class="c-primaryCol">
-                    <div class="card rounded border-0 mb-4">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="d-inline-block">
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <div class="card rounded border-0 mb-4">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="d-inline-block">
                                     <span class="card-title">
                                         {{ '保護団体情報'|trans }}
                                     </span>
-                                    </div>
-                                </div>
-                                <div class="col-6 text-right">
-                                    <a data-toggle="collapse" href="#basicConfig" aria-expanded="false"
-                                        aria-controls="basicConfig">
-                                        <i class="fa fa-angle-up fa-lg"></i>
-                                    </a>
                                 </div>
                             </div>
+                            <div class="col-6 text-right">
+                                <a data-toggle="collapse" href="#basicConfig" aria-expanded="false"
+                                   aria-controls="basicConfig">
+                                    <i class="fa fa-angle-up fa-lg"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div class="collapse show ec-cardCollapse" id="basicConfig">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>保護団体名</span>
-                                            <span class="badge badge-primary ml-1">
+                    </div>
+                    <div class="collapse show ec-cardCollapse" id="basicConfig">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>登録者区分</span>
+                                        <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-2 mb-2">
+                                    {{ form_widget(form.is_organization) }}
+                                    {{ form_errors(form.is_organization) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>保護団体名</span>
+                                        <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        {{ form_widget(form.organization_name) }}
-                                        {{ form_errors(form.organization_name) }}
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>取り扱いペット種別</span>
-                                            <span class="badge badge-primary ml-1">
+                                <div class="col-6 mb-2">
+                                    {{ form_widget(form.organization_name) }}
+                                    {{ form_errors(form.organization_name) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>取り扱いペット種別</span>
+                                        <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(form.handling_pet_kind) }}
-                                        {{ form_errors(form.handling_pet_kind) }}      
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block" >
-                                            <span>画像</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        <img alt="thumbnail_path" src="{{ form.thumbnail_path.vars.value }}"  style="max-width: 200px">
-                                        {{ form_widget(form.thumbnail_path) }}
+                                <div class="col-2 mb-2">
+                                    {{ form_widget(form.handling_pet_kind) }}
+                                    {{ form_errors(form.handling_pet_kind) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>画像</span>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>運営者氏名</span>
-                                            <span class="badge badge-primary ml-1">
+                                <div class="col-6 mb-2">
+                                    <img alt="thumbnail_path" src="{{ form.thumbnail_path.vars.value }}"
+                                         style="max-width: 200px">
+                                    {{ form_widget(form.thumbnail_path) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>運営者氏名</span>
+                                        <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        {{ form_widget(form.owner_name) }}
-                                        {{ form_errors(form.owner_name) }}
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>運営者氏名カナ</span>
-                                            <span class="badge badge-primary ml-1">
+                                <div class="col-6 mb-2">
+                                    {{ form_widget(form.owner_name) }}
+                                    {{ form_errors(form.owner_name) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>運営者氏名カナ</span>
+                                        <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-2">
-                                        {{ form_widget(form.owner_kana) }}
-                                        {{ form_errors(form.owner_kana) }}
                                     </div>
                                 </div>
-                                <div>
+                                <div class="col-6 mb-2">
+                                    {{ form_widget(form.owner_kana) }}
+                                    {{ form_errors(form.owner_kana) }}
+                                </div>
+                            </div>
+                            <div>
                                 <div class="h-adr">
                                     <span class="p-country-name" style="display:none;">Japan</span>
                                     <div class="row">
@@ -197,9 +212,6 @@ file that was distributed with this source code.
                                     <div class="col-3">
                                         <div class="d-inline-block">
                                             <span>FAX番号</span>
-                                            <span class="badge badge-primary ml-1">
-                                                {{ 'admin.common.required'|trans }}
-                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
@@ -261,33 +273,35 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                         </div>
-                    </div>                    
-                </div>
-            </div>
-        </div>
-        <div class="c-conversionArea">
-            <div class="c-conversionArea__container">
-                <div class="row justify-content-between align-items-center">
-                    <div class="col-6">
-                        <div class="c-conversionArea__leftBlockItem">
-                            <a class="c-baseLink" href="{{ url('admin_adoption_list') }}">
-                                <i class="fa fa-backward" aria-hidden="true"></i><span>保護団体一覧</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div id="ex-conversion-action" class="row align-items-center justify-content-end">
-                            <div class="col-auto">
-                                <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.registration'|trans }}</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="c-conversionArea">
+        <div class="c-conversionArea__container">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-6">
+                    <div class="c-conversionArea__leftBlockItem">
+                        <a class="c-baseLink" href="{{ url('admin_adoption_list') }}">
+                            <i class="fa fa-backward" aria-hidden="true"></i><span>保護団体一覧</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div id="ex-conversion-action" class="row align-items-center justify-content-end">
+                        <div class="col-auto">
+                            <button class="btn btn-ec-conversion px-5"
+                                    type="submit">{{ 'admin.common.registration'|trans }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     {{ form_end(form) }}
 {% endblock %}
 
 {% block javascript %}
-	<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 {% endblock %}
