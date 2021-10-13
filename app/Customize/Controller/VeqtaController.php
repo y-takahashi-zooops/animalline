@@ -25,7 +25,6 @@ use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -177,7 +176,7 @@ class VeqtaController extends AbstractController
     public function result(Request $request)
     {
         if (!$request->isMethod('POST')) {
-            return;
+            return [];
         }
 
         $barcode = $request->get('barcode');
@@ -224,11 +223,12 @@ class VeqtaController extends AbstractController
      * DNA検査結果登録.
      * @Route("/veqta/result_regist", name="veqta_result_regist")
      * @Template("animalline/veqta/result_regist.twig")
+     * @throws Exception
      */
     public function result_regist(Request $request, VeqtaPdfService $veqtaPdfService)
     {
         if (!$request->isMethod('POST')) {
-            return;
+            return [];
         }
 
         $barcode = $request->get('barcode');
@@ -272,9 +272,7 @@ class VeqtaController extends AbstractController
                 $entityManager->persist($DnaDetail);
             }
         }
-        $entityManager->persist($Dna);
         $entityManager->persist($Pet);
-        $entityManager->flush();
 
         $arrData = [];
         $arrData['breeder_name'] = $Pet->getBreeder()->getBreederName();
@@ -289,14 +287,22 @@ class VeqtaController extends AbstractController
         $arrData['check_kinds'] = $checkDetails;
         $veqtaPdfService->makePdf($arrData);
 
-        $response = new Response(
-            $veqtaPdfService->outputPdf(),
-            200,
-            ['content-type' => 'application/pdf']
-        );
-        $response->headers->set('Content-Disposition', 'inline; filename="'.$veqtaPdfService->getPdfFileName().'"');
-        return $response;
-//        return $this->redirectToRoute('veqta_result_regist');
+        $pdfDnaDir = 'var/pdf/dna';
+        if (!file_exists($pdfDnaDir) && !mkdir($pdfDnaDir, 0777, true)) {
+            throw new Exception('Failed to create folder.');
+        }
+        $pdfPath = $pdfDnaDir . '/VeqtaGeneticTestingReport_' . $Dna->getId() . '.pdf';
+        try {
+            $veqtaPdfService->Output($_SERVER['DOCUMENT_ROOT'] . $pdfPath, 'F');
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
+
+        $Dna->setFilePath($pdfPath);
+        $entityManager->persist($Dna);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('veqta_result_regist');
     }
 
     /**

@@ -146,16 +146,6 @@ class VeqtaPdfService extends TcpdfFpdi
     }
 
     /**
-     * PDFファイルを出力する.
-     *
-     * @return string|mixed
-     */
-    public function outputPdf()
-    {
-        return $this->Output($this->getPdfFileName(), 'S');
-    }
-
-    /**
      * PDFファイル名を取得する
      * PDFが1枚の時は注文番号をファイル名につける.
      *
