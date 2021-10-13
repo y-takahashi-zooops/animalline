@@ -20,6 +20,7 @@ use Customize\Entity\DnaCheckStatusDetail;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
+use Customize\Service\VeqtaPdfService;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -224,7 +225,7 @@ class VeqtaController extends AbstractController
      * @Route("/veqta/result_regist", name="veqta_result_regist")
      * @Template("animalline/veqta/result_regist.twig")
      */
-    public function result_regist(Request $request)
+    public function result_regist(Request $request, VeqtaPdfService $veqtaPdfService)
     {
         if (!$request->isMethod('POST')) {
             return;
@@ -271,6 +272,19 @@ class VeqtaController extends AbstractController
                 $entityManager->persist($DnaDetail);
             }
         }
+
+        $arrData = [];
+        $arrData['breeder_name'] = $Pet->getBreeder()->getBreederName();
+        $arrData['pet'] = $Pet;
+        $checkDetails = [];
+        foreach ($Dna->getCheckStatusDetails() as $item) {
+            $itemArr = [];
+            $itemArr['check_kind_name'] = $item->getCheckKinds();
+            $itemArr['check_kind_result'] = $item->getCheckResult();
+            $checkDetails[] = $itemArr;
+        }
+        $arrData['check_kinds'] = $checkDetails;
+        $veqtaPdfService->makePdf($arrData);
 
         $entityManager->persist($Dna);
         $entityManager->persist($Pet);
