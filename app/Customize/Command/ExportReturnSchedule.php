@@ -109,7 +109,7 @@ class ExportReturnSchedule extends Command
             'deliveryPostalCode', 'deliveryAddress', 'deliveryPhoneNumber', 'BBDATE', 'classification'
         ];
 
-        $dir = 'var/tmp/wms/instock_schedule/';
+        $dir = 'var/tmp/wms/return_schedule/';
         if (!file_exists($dir)) {
             mkdir($dir, 0777, 'R');
         }
