@@ -38,6 +38,9 @@ class ConservationsType extends AbstractType
                     '団体' => AnilineConf::ANILINE_ORGANIZATION_GROUP
                 ],
                 'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
             ])
             ->add('organization_name', TextType::class, [
                 'required' => true,
@@ -48,6 +51,7 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('handling_pet_kind', ChoiceType::class, [
@@ -58,7 +62,10 @@ class ConservationsType extends AbstractType
                         '猫' => AnilineConf::ANILINE_PET_KIND_CAT
                     ],
                 'required' => true,
-                'placeholder' => 'common.select'
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
             ])
             ->add('owner_name', TextType::class, [
                 'attr' => [
@@ -102,40 +109,8 @@ class ConservationsType extends AbstractType
                     ]),
                     new Assert\Length([
                         'max' => 7,
-                    ])
-                ]
-            ])
-            ->add('PrefId', TextType::class, [
-                'required' => false,
-            ])
-            ->add('pref', TextType::class, [
-                'required' => false,
-                'attr' => [
-                    'maxlength' => 10,
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => 10,
                     ]),
-                ]
-            ])
-            ->add('city', TextType::class, [
-                'required' => false,
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => 10,
-                    ]),
-                ]
-            ])
-            ->add('address', TextType::class, [
-                'required' => false,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('tel', TextType::class, [

@@ -368,6 +368,671 @@ file that was distributed with this source code.
                 </div>
             </div>
         </div>
+
+        <div class="c-contentsArea__cols">
+            <div class="c-contentsArea__primaryCol">
+                <div class="c-primaryCol">
+                    <div class="card rounded border-0 mb-4">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-inline-block">
+                                        <span class="card-title">
+                                            {{ 'ブリーダー情報'|trans }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <a data-toggle="collapse" href="#block-breeder" aria-expanded="false"
+                                        aria-controls="block-breeder">
+                                        <i class="fa fa-angle-up fa-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse show ec-cardCollapse" id="block-breeder">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.breeder_name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="ec-halfInput{{ has_errors(formBreeder.breeder_name) ? ' error' }}">
+                                            {{ form_widget(formBreeder.breeder_name, { 'attr': { 'placeholder': 'お名前' }}) }}
+                                            {{ form_errors(formBreeder.breeder_name) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.breeder_kana, 'お名前(カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="ec-halfInput{{ has_errors(formBreeder.breeder_kana) ? ' error' }}">
+                                            {{ form_widget(formBreeder.breeder_kana, { 'attr': { 'placeholder': 'お名前（カナ）' }}) }}
+                                            {{ form_errors(formBreeder.breeder_kana) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.handling_pet_kind, '取り扱いペット種別', { 'label_attr': { 'class':
+                                            'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        <div class="ec-input{{ has_errors(formBreeder.handling_pet_kind) ? ' error' }}">
+                                            {{ form_widget(formBreeder.handling_pet_kind) }}
+                                            {{ form_errors(formBreeder.handling_pet_kind) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>画像</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <img alt="thumbnail_path" src="{{ formBreeder.thumbnail_path.vars.value }}" style="max-width: 200px">
+                                        {{ form_widget(formBreeder.thumbnail_path) }}
+                                    </div>
+                                </div>
+                                <div class="h-adr">
+                                    <span class="p-country-name" style="display:none;">Japan</span>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(formBreeder.breeder_zip, '郵便番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-zipInput{{ has_errors(formBreeder.breeder_zip) ? ' error' }}">
+                                                {{ form_widget(formBreeder.breeder_zip) }}
+                                                {{ form_errors(formBreeder.breeder_zip) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(formBreeder.addr.PrefBreeder, '都道府県', { 'label_attr': { 'class':
+                                                'ec-label' }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-select{{ has_errors(formBreeder.addr.PrefBreeder) ? ' error' }}">
+                                                {{ form_widget(formBreeder.addr.PrefBreeder) }}
+                                                {{ form_errors(formBreeder.addr.PrefBreeder) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(formBreeder.addr.breeder_city, '市区町村', { 'label_attr': { 'class':
+                                                'ec-label' }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-input{{ has_errors(formBreeder.addr.breeder_city) ? ' error' }}">
+                                                {{ form_widget(formBreeder.addr.breeder_city, { 'attr': { 'placeholder':
+                                                '市区町村名(例：大阪市北区)' }}) }}
+                                                {{ form_errors(formBreeder.addr.breeder_city) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(formBreeder.addr.breeder_address, '市区町村以下住所', { 'label_attr': { 'class':
+                                                'ec-label' }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-2">
+                                            <div class="ec-input{{ has_errors(formBreeder.addr.breeder_address) ? ' error' }}">
+                                                {{ form_widget(formBreeder.addr.breeder_address, { 'attr': { 'placeholder':
+                                                '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                                {{ form_errors(formBreeder.addr.breeder_address) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.breeder_tel, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        <div class="ec-telInput{{ has_errors(formBreeder.breeder_tel) ? ' error' }}">
+                                            {{ form_widget(formBreeder.breeder_tel) }}
+                                            {{ form_errors(formBreeder.breeder_tel) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.breeder_fax, 'FAX番号', { 'label_attr': { 'class': 'ec-label' }})
+                                            }}
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        <div class="ec-telInput{{ has_errors(formBreeder.breeder_fax) ? ' error' }}">
+                                            {{ form_widget(formBreeder.breeder_fax) }}
+                                            {{ form_errors(formBreeder.breeder_fax) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.pr_text, '自己PR', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="ec-input{{ has_errors(formBreeder.pr_text) ? ' error' }}">
+                                            {{ form_widget(formBreeder.pr_text) }}
+                                            {{ form_errors(formBreeder.pr_text) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.regal_effort, '動物愛護法改正への対応', { 'label_attr': { 'class':
+                                            'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="ec-input{{ has_errors(formBreeder.regal_effort) ? ' error' }}">
+                                            {{ form_widget(formBreeder.regal_effort) }}
+                                            {{ form_errors(formBreeder.regal_effort) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="c-contentsArea__cols">
+            <div class="c-contentsArea__primaryCol">
+                <div class="c-primaryCol">
+                    <div class="card rounded border-0 mb-4">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-inline-block">
+                                        <span class="card-title">
+                                            {{ '動物取扱業登録証情報'|trans }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <a data-toggle="collapse" href="#block-breeder-cert" aria-expanded="false"
+                                        aria-controls="block-breeder-cert">
+                                        <i class="fa fa-angle-up fa-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse show ec-cardCollapse" id="block-breeder-cert">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.license_name, '運営責任者氏名', { 'label_attr': { 'class': 'ec-label'
+                                            }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="ec-halfInput{{ has_errors(formBreeder.license_name) ? ' error' }}">
+                                            {{ form_widget(formBreeder.license_name, { 'attr': { 'placeholder': '運営責任者氏名' }}) }}
+                                            {{ form_errors(formBreeder.license_name) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>画像</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <a href="{{ formBreeder.license_thumbnail_path.vars.value }}" target="_blank">
+                                            <img alt="license_thumbnail_path" src="{{ formBreeder.license_thumbnail_path.vars.value }}" style="max-width: 200px">
+                                        </a>
+                                        {{ form_widget(formBreeder.license_thumbnail_path) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.license_no, '登録証番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="ec-halfInput{{ has_errors(formBreeder.license_no) ? ' error' }}">
+                                            {{ form_widget(formBreeder.license_no, { 'attr': { 'placeholder': '登録証番号' }}) }}
+                                            {{ form_errors(formBreeder.license_no) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="h-adr">
+                                    <span class="p-country-name" style="display:none;">Japan</span>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(formBreeder.license_zip, '郵便番号', { 'label_attr': { 'class': 'ec-label'
+                                                }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-halfInput{{ has_errors(formBreeder.license_zip) ? ' error' }}">
+                                                {{ form_widget(formBreeder.license_zip, { 'attr': { 'placeholder': '登録証番号' }}) }}
+                                                {{ form_errors(formBreeder.license_zip) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                <span>都道府県</span>
+                                                {{ form_label(formBreeder.license_addr.PrefLicense, '都道府県', { 'label_attr': { 'class':
+                                                'ec-label' }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-select{{ has_errors(formBreeder.license_addr.PrefLicense) ? ' error' }}">
+                                                {{ form_widget(formBreeder.license_addr.PrefLicense) }}
+                                                {{ form_errors(formBreeder.license_addr.PrefLicense) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(formBreeder.license_addr.PrefLicense, '市区町村', { 'label_attr': { 'class':
+                                                'ec-label' }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-input{{ has_errors(formBreeder.license_addr.license_city) ? ' error' }}">
+                                                {{ form_widget(formBreeder.license_addr.license_city, { 'attr': { 'placeholder':
+                                                '市区町村名(例：大阪市北区)' }}) }}
+                                                {{ form_errors(formBreeder.license_addr.license_city) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(formBreeder.license_addr.license_address, '市区町村以下住所', { 'label_attr': {
+                                                'class': 'ec-label' }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-2">
+                                            <div class="ec-input{{ has_errors(formBreeder.license_addr.license_address) ? ' error' }}">
+                                                {{ form_widget(formBreeder.license_addr.license_address, { 'attr': { 'placeholder':
+                                                '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                                {{ form_errors(formBreeder.license_addr.license_address) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.license_house_name, '動物取扱者事業所の名称', { 'label_attr': { 'class':
+                                            'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="ec-halfInput{{ has_errors(formBreeder.license_house_name) ? ' error' }}">
+                                            {{ form_widget(formBreeder.license_house_name, { 'attr': { 'placeholder': '動物取扱者事業所の名称' }})
+                                            }}
+                                            {{ form_errors(formBreeder.license_house_name) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.license_manager_name, '動物取扱者氏名', { 'label_attr': { 'class':
+                                            'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="ec-halfInput{{ has_errors(formBreeder.license_manager_name) ? ' error' }}">
+                                            {{ form_widget(formBreeder.license_manager_name, { 'attr': { 'placeholder': '動物取扱者氏名' }})
+                                            }}
+                                            {{ form_errors(formBreeder.license_manager_name) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.license_regist_date, '登録年月日', { 'label_attr': { 'class':
+                                            'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="ec-birth{{ has_errors(formBreeder.license_regist_date) ? ' error' }} date">
+                                            {{ form_widget(formBreeder.license_regist_date.year, { 'attr': { 'class': 'form-control' }}) }}&nbsp;/&nbsp;
+                                            {{ form_widget(formBreeder.license_regist_date.month) }}&nbsp;/&nbsp;
+                                            {{ form_widget(formBreeder.license_regist_date.day) }}
+                                            {{ form_errors(formBreeder.license_regist_date) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.license_expire_date, '有効期間の末日', { 'label_attr': {'class':
+                                            'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <div class="ec-birth{{ has_errors(formBreeder.license_expire_date) ? ' error' }} date">
+                                            {{ form_widget(formBreeder.license_expire_date.year) }}&nbsp;/&nbsp;
+                                            {{ form_widget(formBreeder.license_expire_date.month) }}&nbsp;/&nbsp;
+                                            {{ form_widget(formBreeder.license_expire_date.day) }}
+                                            {{ form_errors(formBreeder.license_expire_date) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.license_type, '動物取扱業の種別', { 'label_attr': {'class': 'ec-label'
+                                            }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        <div class="ec-select{{ has_errors(formBreeder.license_type) ? ' error' }}">
+                                            {{ form_widget(formBreeder.license_type) }}
+                                            {{ form_errors(formBreeder.license_type) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="c-contentsArea__cols">
+            <div class="c-contentsArea__primaryCol">
+                <div class="c-primaryCol">
+                    <div class="card rounded border-0 mb-4">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-inline-block">
+                                    <span class="card-title">
+                                        {{ '犬舎情報'|trans }}
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <a data-toggle="collapse" href="#BreederHouseDog" aria-expanded="false"
+                                       aria-controls="BreederHouseDog">
+                                        <i class="fa fa-angle-up fa-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse show ec-cardCollapse" id="BreederHouseDog">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>運営者氏名</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_name) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>運営者氏名カナ</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_kana) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>郵便番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_house_zip) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>都道府県</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.addr.BreederHousePrefId) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>市区町村</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.addr.breeder_house_city) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>市区町村以下住所</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(formDogKind.addr.breeder_house_address) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>電話番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_house_tel) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>FAX番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_house_fax) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>担当者名</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_front_name) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>担当者TEL</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formDogKind.breeder_house_front_tel) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="c-contentsArea__cols">
+            <div class="c-contentsArea__primaryCol">
+                <div class="c-primaryCol">
+                    <div class="card rounded border-0 mb-4">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-inline-block">
+                                    <span class="card-title">
+                                        {{ '猫舎情報'|trans }}
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <a data-toggle="collapse" href="#BreederHouseCat" aria-expanded="false"
+                                       aria-controls="BreederHouseCat">
+                                        <i class="fa fa-angle-up fa-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse show ec-cardCollapse" id="BreederHouseCat">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>運営者氏名</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_name) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>運営者氏名カナ</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_kana) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>郵便番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_house_zip) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>都道府県</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.addr.BreederHousePrefId) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>市区町村</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.addr.breeder_house_city) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>市区町村以下住所</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(formCatKind.addr.breeder_house_address) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>電話番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_house_tel) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>FAX番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_house_fax) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>担当者名</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_front_name) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>担当者TEL</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formCatKind.breeder_house_front_tel) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="c-conversionArea">
             <div class="c-conversionArea__container">
                 <div class="row justify-content-between align-items-center">

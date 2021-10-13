@@ -25,6 +25,7 @@ use Customize\Service\AdoptionQueryService;
 use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;
 use Eccube\Repository\CustomerRepository;
+use Eccube\Repository\Master\PrefRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -133,14 +134,16 @@ class AdoptionController extends AbstractController
      * @Route("/%eccube_admin_route%/adoption/edit/{id}", name="admin_adoption_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/edit.twig")
      */
-    public function Edit(Request $request, Conservations $conservations)
+    public function Edit(Request $request, Conservations $conservation, PrefRepository $prefRepository)
     {
-        $form = $this->createForm(ConservationsType::class, $conservations);
+        $form = $this->createForm(ConservationsType::class, $conservation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $pref = $prefRepository->find($request->get('conservations')['addr']['PrefId']);
+            $conservation->setPref($pref->getName());
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($conservations);
+            $entityManager->persist($conservation);
             $entityManager->flush();
             return $this->redirectToRoute('admin_adoption_list');
         }
