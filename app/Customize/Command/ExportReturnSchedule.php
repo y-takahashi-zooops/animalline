@@ -120,6 +120,7 @@ class ExportReturnSchedule extends Command
 
         $query = $this->orderRepository->createQueryBuilder('o');
         $query->where('o.update_date <= :to')
+            ->andWhere('o.CustomerOrderStatus = ' . AnilineConf::ANILINE_RETURN_SCHEDULE)
             ->setParameters(['to' => $now]);
         if ($syncInfo) $query = $query->andWhere('o.update_date >= :from')
             ->setParameter('from', $syncInfo->getSyncDate());
@@ -157,21 +158,6 @@ class ExportReturnSchedule extends Command
                     $orderItem = $this->orderItemRepository->findOneBy(['Order' => $order]);
                     if ($orderItem) {
                         $returnScheduleHeader = new ReturnScheduleHeader();
-
-                        // 着荷時刻を佐川用コードに変換
-//                        $shippingDeliveryTime = $shipping->getShippingDeliveryTime();
-//                        if ($shippingDeliveryTime == "午前") {
-//                            $shippingDeliveryTimeCode = "01";
-//                        } elseif ($shippingDeliveryTime == "12:00～14:00") {
-//                            $shippingDeliveryTimeCode = "12";
-//                        } elseif ($shippingDeliveryTime == "14:00～16:00") {
-//                            $shippingDeliveryTimeCode = "14";
-//                        } elseif ($shippingDeliveryTime == "16:00～18:00") {
-//                            $shippingDeliveryTimeCode = "16";
-//                        } elseif ($shippingDeliveryTime == "18:00～21:00") {
-//                            $shippingDeliveryTimeCode = "04";
-//                        }
-
                         $returnScheduleHeader->setReturnDateSchedule($order->getUpdateDate())
                             ->setCustomerName($order->getName01() . $order->getName02())
                             ->setCustomerZip($order->getPostalCode())
@@ -249,7 +235,7 @@ class ExportReturnSchedule extends Command
                 echo 'Export succeeded.' . "\n";
             } catch (Exception $e) {
                 $wms = new WmsSyncInfo();
-                $wms->setSyncResult(3)
+                $wms->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_ERROR)
                     ->setSyncDate($now)
                     ->setSyncLog($e->getMessage());
                 echo $e->getMessage();
@@ -257,9 +243,9 @@ class ExportReturnSchedule extends Command
         } else {
             $isReturn = true;
         }
-        $wms->setSyncResult($isReturn ? 2 : 1)
+        $wms->setSyncResult($isReturn ? AnilineConf::ANILINE_WMS_RESULT_ANNOTATED : AnilineConf::ANILINE_WMS_RESULT_SUCCESS)
             ->setSyncLog($isReturn ? "alert" : null)
-            ->setSyncAction(6)
+            ->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_SCHEDULED_RETURN)
             ->setSyncDate($now);
         $em->persist($wms);
         $em->flush();
