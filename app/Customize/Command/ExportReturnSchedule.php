@@ -72,9 +72,9 @@ class ExportReturnSchedule extends Command
         EntityManagerInterface         $entityManager,
         WmsSyncInfoRepository          $wmsSyncInfoRepository,
         ReturnScheduleHeaderRepository $returnScheduleHeaderRepository,
-        ReturnScheduleRepository $returnScheduleRepository,
-        OrderRepository          $orderRepository,
-        OrderItemRepository      $orderItemRepository
+        ReturnScheduleRepository       $returnScheduleRepository,
+        OrderRepository                $orderRepository,
+        OrderItemRepository            $orderItemRepository
     )
     {
         parent::__construct();
@@ -172,15 +172,14 @@ class ExportReturnSchedule extends Command
 //                            $shippingDeliveryTimeCode = "04";
 //                        }
 
-                        $returnScheduleHeader
-                            ->setReturnDateSchedule($order->getUpdateDate())
+                        $returnScheduleHeader->setReturnDateSchedule($order->getUpdateDate())
                             ->setCustomerName($order->getName01() . $order->getName02())
                             ->setCustomerZip($order->getPostalCode())
                             ->setCustomerAddress($order->getAddr01() . $order->getAddr02())
                             ->setCustomerTel($order->getPhoneNumber())
                             ->setOrder($order);
                         $em->persist($returnScheduleHeader);
-
+                        $em->flush();
                         $returnSchedule = new ReturnSchedule();
                         $returnSchedule->setWarehouseCode($orderItem->getProductClass()->getStockCode())
                             ->setItemCode01($orderItem->getProductClass()->getCode())
@@ -194,7 +193,7 @@ class ExportReturnSchedule extends Command
                             ->setProductClass($orderItem->getProductClass());
 
                         $em->persist($returnSchedule);
-
+                        $em->flush();
                         $sorted = [];
                         $queryCsv = $this->returnScheduleRepository->createQueryBuilder('r');
                         $queryCsv->select(
@@ -238,9 +237,9 @@ class ExportReturnSchedule extends Command
                                 array_push($sorted, $recordCsv[$value]);
                             }
                             $sorted[1] = $sorted[1]->format('Y-m-d H:i:s');
-                            $sorted[2] = $sorted[2]->format('Y-m-d H:i:s');
                             array_push($result, $sorted);
                         }
+
                         foreach ($result as $item) {
                             fputcsv($csvh, $item, $d, $e);
                         }
