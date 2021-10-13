@@ -3,7 +3,6 @@
 namespace Customize\Entity;
 
 use Customize\Repository\ReturnScheduleRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\OrderItem;
 
@@ -25,7 +24,7 @@ class ReturnSchedule
 
     /**
      * @ORM\ManyToOne(targetEntity=ReturnScheduleHeader::class, inversedBy="ReturnSchedule")
-     * @ORM\JoinColumn(name="header_id", nullable=false)
+     * @ORM\JoinColumn(name="header_id", nullable=true)
      */
     private $ReturnScheduleHeader;
 
@@ -65,9 +64,9 @@ class ReturnSchedule
     private $quantity;
 
     /**
-     * @ORM\Column(name="cost_price", type="integer", nullable=false)
+     * @ORM\Column(name="standerd_price", type="integer", nullable=false)
      */
-    private $cost_price;
+    private $standerd_price;
 
     /**
      * @ORM\Column(name="selling_price", type="integer", nullable=false)
@@ -79,11 +78,6 @@ class ReturnSchedule
      * @ORM\JoinColumn(name="order_detail_id", nullable=false)
      */
     private $OrderItem;
-
-    /**
-     * @ORM\Column(name="remark_text", type="string", length=128, nullable=true)
-     */
-    private $remark_text;
 
     /**
      * @var \DateTime
@@ -200,14 +194,14 @@ class ReturnSchedule
         return $this;
     }
 
-    public function getCostPrice(): ?int
+    public function getStanderdPrice(): ?int
     {
-        return $this->cost_price;
+        return $this->standerd_price;
     }
 
-    public function setCostPrice(int $cost_price): self
+    public function setStanderdPrice(int $standerd_price): self
     {
-        $this->cost_price = $cost_price;
+        $this->standerd_price = $standerd_price;
 
         return $this;
     }
@@ -220,18 +214,6 @@ class ReturnSchedule
     public function setSellingPrice(int $selling_price): self
     {
         $this->selling_price = $selling_price;
-
-        return $this;
-    }
-
-    public function getRemarkText(): ?string
-    {
-        return $this->remark_text;
-    }
-
-    public function setRemarkText(?string $remark_text): self
-    {
-        $this->remark_text = $remark_text;
 
         return $this;
     }

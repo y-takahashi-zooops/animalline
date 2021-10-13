@@ -13,6 +13,7 @@
 
 namespace Eccube\Entity;
 
+use Customize\Entity\ReturnScheduleHeader;
 use Customize\Entity\ShippingScheduleHeader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -604,6 +605,10 @@ if (!class_exists('\Eccube\Entity\Order')) {
          */
         private $ShippingScheduleHeaders;
 
+        /* @ORM\OneToMany(targetEntity=ReturnScheduleHeader::class, mappedBy="Shipping")
+         */
+        private $ReturnScheduleHeader;
+
         /**
          * Constructor
          */
@@ -623,6 +628,7 @@ if (!class_exists('\Eccube\Entity\Order')) {
             $this->Shippings = new \Doctrine\Common\Collections\ArrayCollection();
             $this->MailHistories = new \Doctrine\Common\Collections\ArrayCollection();
             $this->ShippingScheduleHeaders = new ArrayCollection();
+            $this->ReturnScheduleHeader = new ArrayCollection();
         }
 
         /**
@@ -1825,6 +1831,14 @@ if (!class_exists('\Eccube\Entity\Order')) {
             }
 
             return $this;
+        }
+
+        /**
+         * @return Collection|ReturnScheduleHeader[]
+         */
+        public function getReturnScheduleHeader(): Collection
+        {
+            return $this->ReturnScheduleHeader;
         }
     }
 }

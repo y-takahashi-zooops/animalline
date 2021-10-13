@@ -6,7 +6,7 @@ use Customize\Repository\ReturnScheduleHeaderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Eccube\Entity\Shipping;
+use Eccube\Entity\Order;
 
 /**
  * @ORM\Table(name="ald_return_schedule_header")
@@ -25,15 +25,45 @@ class ReturnScheduleHeader
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Shipping::class, inversedBy="ReturnScheduleHeader")
-     * @ORM\JoinColumn(name="shipping_id", nullable=false)
+     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="ReturnScheduleHeader")
+     * @ORM\JoinColumn(name="order_id", nullable=false)
      */
-    private $Shipping;
+    private $Order;
 
     /**
      * @ORM\Column(name="return_date_schedule", type="date", nullable=false)
      */
     private $return_date_schedule;
+
+    /**
+     * @ORM\Column(name="return_date", type="date", nullable=true)
+     */
+    private $return_date;
+
+    /**
+     * @ORM\Column(name="shop_code", type="string", length=12, nullable=true)
+     */
+    private $shop_code;
+
+    /**
+     * @ORM\Column(name="customer_name", type="string", length=40, nullable=false)
+     */
+    private $customer_name;
+
+    /**
+     * @ORM\Column(name="customer_zip", type="string", length=8, nullable=false)
+     */
+    private $customer_zip;
+
+    /**
+     * @ORM\Column(name="customer_address", type="string", length=80, nullable=false)
+     */
+    private $customer_address;
+
+    /**
+     * @ORM\Column(name="customer_tel", type="string", length=20, nullable=false)
+     */
+    private $customer_tel;
 
     /**
      * @ORM\Column(name="wms_send_date", type="datetime", nullable=true)
@@ -74,14 +104,14 @@ class ReturnScheduleHeader
         return $this->id;
     }
 
-    public function getShipping(): ?Shipping
+    public function getOrder(): ?Order
     {
-        return $this->Shipping;
+        return $this->Order;
     }
 
-    public function setShipping(?Shipping $Shipping): self
+    public function setOrder(?Order $Order): self
     {
-        $this->Shipping = $Shipping;
+        $this->Order = $Order;
 
         return $this;
     }
@@ -156,5 +186,77 @@ class ReturnScheduleHeader
     public function getReturnSchedule(): Collection
     {
         return $this->ReturnSchedule;
+    }
+
+    public function getReturnDate(): ?\DateTimeInterface
+    {
+        return $this->return_date;
+    }
+
+    public function setReturnDate(\DateTimeInterface $return_date): self
+    {
+        $this->return_date = $return_date;
+
+        return $this;
+    }
+
+    public function getShopCode(): ?string
+    {
+        return $this->shop_code;
+    }
+
+    public function setShopCode(?string $shop_code): self
+    {
+        $this->shop_code = $shop_code;
+
+        return $this;
+    }
+
+    public function getCustomerName(): ?string
+    {
+        return $this->customer_name;
+    }
+
+    public function setCustomerName(string $customer_name): self
+    {
+        $this->customer_name = $customer_name;
+
+        return $this;
+    }
+
+    public function getCustomerZip(): ?string
+    {
+        return $this->customer_zip;
+    }
+
+    public function setCustomerZip(?string $customer_zip): self
+    {
+        $this->customer_zip = $customer_zip;
+
+        return $this;
+    }
+
+    public function getCustomerAddress(): ?string
+    {
+        return $this->customer_address;
+    }
+
+    public function setCustomerAddress(?string $customer_address): self
+    {
+        $this->customer_address = $customer_address;
+
+        return $this;
+    }
+
+    public function getCustomerTel(): ?string
+    {
+        return $this->customer_tel;
+    }
+
+    public function setCustomerTel(string $customer_tel): self
+    {
+        $this->customer_tel = $customer_tel;
+
+        return $this;
     }
 }
