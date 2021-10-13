@@ -14,8 +14,7 @@ h1,h2,h3,h4,h5,h6{font-size:100%;}
 img,abbr,acronym,fieldset{border:0;}
 
 html{
-	font: 30px 'Noto Sans JP', Arial, Verdana, 游ゴシック, YuGothic,'ヒラギノ角ゴ ProN W3', 'Hiragino Kaku Gothic ProN', メイリオ, Meiryo,sans-serif;
-	font-weight: 500;
+	font: 30px Arial,"ヒラギノ角ゴ ProN W3","Hiragino Kaku Gothic ProN","メイリオ",Meiryo,sans-serif;
 	-webkit-text-size-adjust:100%;
 	overflow-x: hidden;
 	color: #000;
@@ -52,7 +51,7 @@ a:active, a:focus,input:active, input:focus{outline:0;}
 }
 
 #mainImg {
-	margin: 1rem auto 1rem auto;
+	margin: 1rem auto 0 auto;
 	width: 80%;
 	text-align: center;
 }
@@ -119,8 +118,18 @@ section h2 span {
 .innerS{
 	width: 80%;
 	margin: 0 auto;
-	padding-bottom: 15px;
-	margin-bottom: 0.5rem;
+	padding: 1rem 1rem 1rem 1rem;
+	margin-bottom: 1.5rem;
+	background-color: rgb(238, 219, 209);
+	border-radius: 0.5rem;
+}
+.innerImg{
+	text-align: center;
+	margin-bottom: 1.5rem;
+}
+
+.titleImg{
+	text-align: center;
 }
 
 .companyS{
@@ -149,7 +158,7 @@ section h2 span {
 a.btn,
 button.btn {
 	font-size: 20px;
-	font-weight: 700;
+	font-weight: 400;
 	line-height: 1.5;
 	position: relative;
 	display: inline-block;
@@ -172,12 +181,12 @@ button.btn {
 .btn--orange,
 a.btn--orange {
 	color: #fff;
-	background-color: #eb6100;
+	background-color: #F08719;
 }
 .btn--orange:hover,
 a.btn--orange:hover {
 	color: #fff;
-	background: #f56500;
+	background: #F08719;
 }
 
 .btn--green,
