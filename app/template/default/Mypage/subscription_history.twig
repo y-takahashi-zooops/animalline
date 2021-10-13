@@ -125,13 +125,13 @@ file that was distributed with this source code.
 							</div>
 						</div>
 					</div>
-					{# <div class="ec-orderDelivery__address">
+					<div class="ec-orderDelivery__address">
 						<p>{{ CustomerAddress.name01 }}&nbsp;{{ CustomerAddress.name02 }}&nbsp;
 							({{ CustomerAddress.kana01 }}&nbsp;{{ CustomerAddress.kana02 }})</p>
 						<p>{{ '〒'|trans }}{{ CustomerAddress.postal_code }}
 							{{ CustomerAddress.Pref }}{{ CustomerAddress.addr01 }}{{ CustomerAddress.addr02 }}</p>
 						<p>{{ CustomerAddress.phone_number }}</p>
-					</div> #}
+					</div>
 					{% if SubscriptionContract.next_delivery_date %}
 					<div class="ec-definitions--soft">
 						<dt>{{ '次回配送日'|trans }}
@@ -140,15 +140,15 @@ file that was distributed with this source code.
 					</div>
 					{% endif %}
 				</div>
-				{# <div class="ec-orderPayment my-md-4">
+				<div class="ec-orderPayment my-md-4">
 					<div class="ec-rectHeading">
 						<h2>{{ 'お支払い情報'|trans }}</h2>
 					</div>
 					<p>{{ 'お支払い方法'|trans }}
 						:
-						{{ SubscriptionContract.PaymentMethod }}
+						{{ Order.PaymentMethod }}
 					</p>
-				</div> #}
+				</div>
 			</div>
 			<div class="ec-orderRole__summary">
 				<div class="ec-totalBox">
@@ -207,8 +207,8 @@ file that was distributed with this source code.
 						<div id="ec-modal-contents__change" class="text-left">
 							<ul class="subscription_cycle_block">
 								{{ form_widget(form.change_element[0]) }}
-								<div class="subscription_cycle_hidden" style="padding-left: 5%;">
-									<li class="subscription_cycle" >
+								<div class="subscription_cycle_hidden">
+									<li class="subscription_cycle pl-sm-2">
 										{{ form_widget(form.cycle_type[0]) }}
 										{{ form_row(form.month) }}
 									</li>
@@ -220,8 +220,8 @@ file that was distributed with this source code.
 							</ul>
 							<ul class="next_delivery_date_block">
 								{{ form_widget(form.change_element[1]) }}
-								<div class="next_delivery_date_hidden" style="padding-left: 5%;" hidden>
-									<li class="next_delivery_date"  >
+								<div class="next_delivery_date_hidden" style="display:none;">
+									<li class="next_delivery_date">
 										次回お届け予定日：{{ SubscriptionContract.next_delivery_date|date_day_with_weekday }}
 									</li>
 									<li class="next_delivery_date" style="border: none;">

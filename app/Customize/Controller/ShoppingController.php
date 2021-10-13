@@ -34,10 +34,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
-use Eccube\Controller\ShoppingController;
+use Eccube\Controller\ShoppingController as BaseShoppingController;
 use Customize\Service\SubscriptionProcess;
 
-class ShoppingControllerCustomizer extends ShoppingController
+class ShoppingController extends BaseShoppingController
 {
     /**
      * @var CartService
@@ -168,9 +168,10 @@ class ShoppingControllerCustomizer extends ShoppingController
                 return $this->redirectToRoute('shopping_error');
             }
 
+            $Customer = $this->getUser();
             $Cart = $this->cartService->getCart();
             $CartItems = $Cart->getCartItems();
-            $this->subscriptionProcess->order($CartItems, $Order);           
+            $this->subscriptionProcess->order($Customer, $CartItems, $Order);
 
             // カート削除
             log_info('[注文処理] カートをクリアします.', [$Order->getId()]);

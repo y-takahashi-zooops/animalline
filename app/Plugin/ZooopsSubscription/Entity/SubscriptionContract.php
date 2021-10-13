@@ -34,7 +34,14 @@ if (!class_exists('\Plugin\ZooopsSubscription\Entity\SubscriptionContract')) {
          * })
          */
         private $Customer;
-        
+
+        /**
+         * @var int
+         *
+         * @ORM\Column(name="customer_address_id", type="integer", nullable=true, options={"unsigned":true})
+         */
+        private $customer_address_id;
+
         /**
          * @var \Eccube\Entity\Product
          *
@@ -141,6 +148,30 @@ if (!class_exists('\Plugin\ZooopsSubscription\Entity\SubscriptionContract')) {
         public function getCustomer()
         {
             return $this->Customer;
+        }
+
+        /**
+         * set customer_address_id
+         *
+         * @param int $customer_address_id
+         *
+         * @return SubscriptionContract
+         */
+        public function setCustomerAddressId($customer_address_id)
+        {
+            $this->customer_address_id = $customer_address_id;
+
+            return $this;
+        }
+
+        /**
+         * get customer_address_id
+         *
+         * @return int
+         */
+        public function getCustomerAddressId()
+        {
+            return $this->customer_address_id;
         }
 
         /**
