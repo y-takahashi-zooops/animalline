@@ -45,10 +45,6 @@ class AdminBreederType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
-                    ]),
                     new Assert\NotBlank()
                 ]
             ])
@@ -61,11 +57,11 @@ class AdminBreederType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
+                    new Assert\NotBlank(),
                     new Assert\Regex([
-                        'pattern' => '/^[ァ-ヶｦ-ﾟー]+$/u',
+                        'pattern' => '/^[ァ-ヶｦ-ﾟー 　]+$/u',
                         'message' => 'form_error.kana_only',
                     ]),
-                    new Assert\NotBlank()
                 ]
             ])
             ->add('breeder_zip', TextType::class, [
@@ -208,15 +204,18 @@ class AdminBreederType extends AbstractType
                 ]
             ])
             ->add('license_regist_date', DateType::class, [
-                'required' => false,
+                'required' => true,
                 'input' => 'datetime',
                 'years' => range(date('Y'), 1990),
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
             ])
             ->add('license_expire_date', DateType::class, [
-                'required' => false,
+                'required' => true,
                 'input' => 'datetime',
                 'years' => range(2050, date('Y')),
                 'widget' => 'choice',
@@ -230,7 +229,8 @@ class AdminBreederType extends AbstractType
                     new Assert\GreaterThan([
                         'value' => date('Y-m-d'),
                         'message' => '有効期限の末日は未来日となければなりません。'
-                    ])
+                    ]),
+                    new Assert\NotBlank()
                 ],
             ])
             ->add('license_type', ChoiceType::class, [

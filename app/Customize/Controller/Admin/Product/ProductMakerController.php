@@ -17,13 +17,13 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\ProductMaker;
 use Customize\Form\Type\Admin\ProductMakerType;
 use Customize\Repository\ProductMakerRepository;
+use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Eccube\Controller\Admin\Product\ProductController as BaseProductController;
 
-class ProductMakerController extends BaseProductController
+class ProductMakerController extends AbstractController
 {
     /**
      * @var ProductMakerRepository

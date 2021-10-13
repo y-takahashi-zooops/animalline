@@ -34,10 +34,6 @@ class BreederHouseType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
-                    ]),
                     new Assert\NotBlank()
                 ]
             ])
@@ -50,7 +46,7 @@ class BreederHouseType extends AbstractType
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                     new Assert\Regex([
-                        'pattern' => '/^[ァ-ヶｦ-ﾟー]+$/u',
+                        'pattern' => '/^[ァ-ヶｦ-ﾟー 　]+$/u',
                         'message' => 'form_error.kana_only',
                     ]),
                     new Assert\NotBlank()

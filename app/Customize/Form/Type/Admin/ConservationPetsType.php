@@ -50,7 +50,7 @@ class ConservationPetsType extends AbstractType
             ->add('pet_birthday', DateType::class, [
                 'required' => true,
                 'input' => 'datetime',
-                'years' => range(1990,2050),
+                'years' => range(1990, 2050),
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
@@ -81,7 +81,7 @@ class ConservationPetsType extends AbstractType
             ->add('release_date', DateType::class, [
                 'required' => false,
                 'input' => 'datetime',
-                'years' => range(1990,2050),
+                'years' => range(1990, 2050),
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],

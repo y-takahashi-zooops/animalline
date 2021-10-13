@@ -22,14 +22,237 @@ file that was distributed with this source code.
 {% block javascript %}{% endblock javascript %}
 
 {% block main %}
-<div class="c-outsideBlock">
-    <div class="c-outsideBlock__contents">
-        審査情報を表示する
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <div class="card rounded border-0 mb-4">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="d-inline-block">
+                                    <span class="card-title">
+                                        {{ '保護団体情報'|trans }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-6 text-right">
+                                <a data-toggle="collapse" href="#basicConfig" aria-expanded="false"
+                                   aria-controls="basicConfig">
+                                    <i class="fa fa-angle-up fa-lg"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse show ec-cardCollapse" id="basicConfig">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>登録者区分</span>
+                                    </div>
+                                </div>
+                                <div class="col-2 mb-2">
+                                    {{ form_widget(formAdoption.is_organization) }}
+                                    {{ form_errors(formAdoption.is_organization) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>保護団体名</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-2">
+                                    {{ form_widget(formAdoption.organization_name) }}
+                                    {{ form_errors(formAdoption.organization_name) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>取り扱いペット種別</span>
+                                    </div>
+                                </div>
+                                <div class="col-2 mb-2">
+                                    {{ form_widget(formAdoption.handling_pet_kind) }}
+                                    {{ form_errors(formAdoption.handling_pet_kind) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>画像</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-2">
+                                    <img alt="thumbnail_path" src="{{ formAdoption.thumbnail_path.vars.value }}"
+                                         style="max-width: 200px">
+                                    {{ form_widget(formAdoption.thumbnail_path) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>運営者氏名</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-2">
+                                    {{ form_widget(formAdoption.owner_name) }}
+                                    {{ form_errors(formAdoption.owner_name) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>運営者氏名カナ</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-2">
+                                    {{ form_widget(formAdoption.owner_kana) }}
+                                    {{ form_errors(formAdoption.owner_kana) }}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="h-adr">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(formAdoption.zip, '郵便番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-zipInput{{ has_errors(formAdoption.zip) ? ' error' }}">
+                                                {{ form_widget(formAdoption.zip) }}
+                                                {{ form_errors(formAdoption.zip) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(formAdoption.addr.PrefId, '都道府県', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-select{{ has_errors(formAdoption.addr.PrefId) ? ' error' }}">
+                                                {{ form_widget(formAdoption.addr.PrefId) }}
+                                                {{ form_errors(formAdoption.addr.PrefId) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(formAdoption.addr.city, '市区町村', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mb-2">
+                                            <div class="ec-input{{ has_errors(formAdoption.addr.city) ? ' error' }}">
+                                                {{ form_widget(formAdoption.addr.city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)', 'disabled': 'true' }}) }}
+                                                {{ form_errors(formAdoption.addr.city) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="d-inline-block">
+                                                {{ form_label(formAdoption.addr.address, '市区町村以下住所', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-2">
+                                            <div class="ec-input{{ has_errors(formAdoption.addr.address) ? ' error' }}">
+                                                {{ form_widget(formAdoption.addr.address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)', 'disabled': 'true' }}) }}
+                                                {{ form_errors(formAdoption.addr.address) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>電話番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formAdoption.tel) }}
+                                        {{ form_errors(formAdoption.tel) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>FAX番号</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        {{ form_widget(formAdoption.fax) }}
+                                        {{ form_errors(formAdoption.fax) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>ホームページのURL</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(formAdoption.homepage_url) }}
+                                        {{ form_errors(formAdoption.homepage_url) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>自己PR</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(formAdoption.pr_text) }}
+                                        {{ form_errors(formAdoption.pr_text) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="c-outsideBlock__contents mb-5">
-        <button class="btn btn-ec-conversion px-5" type="submit">{{ '審査結果登録'|trans }}</button>
+    {% if (formHouseDog) %}
+        {{ include('@admin/Adoption/components/_pet_house_block.twig', { 'form': formHouseDog, 'title': '犬舎情報' }) }}
+    {% endif %}
+
+    {% if (formHouseCat) %}
+        {{ include('@admin/Adoption/components/_pet_house_block.twig', { 'form': formHouseCat, 'title': '猫舎情報' }) }}
+    {% endif %}
+
+    <div class="c-conversionArea">
+        <div class="c-conversionArea__container">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-6">
+                    <div class="c-conversionArea__leftBlockItem">
+                        <a class="c-baseLink" href="{{ url('admin_adoption_list') }}">
+                            <i class="fa fa-backward" aria-hidden="true"></i><span>保護団体一覧</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div id="ex-conversion-action" class="row align-items-center justify-content-end">
+                        <div class="col-auto">
+                            {% set disabledStatuses = [
+                                constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK'),
+                                constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG')
+                            ] %}
+                            <a {{ conservation.examinationStatus in disabledStatuses ? 'disabled' : '' }}
+                                    class="btn btn-ec-conversion px-5"
+                                    href="{{ conservation.examinationStatus in disabledStatuses ? '#' : url('admin_adoption_examination_regist', {'id': conservation.id}) }}">
+                                審査結果登録
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 {% endblock %}
-

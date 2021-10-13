@@ -1,6 +1,7 @@
 /*
 カラー定義
 */
+
 :root {
     --breeder-main-color: #549B35;
     --adoption-main-color: #F08300;
@@ -15,10 +16,12 @@
 }
 
 /*DOM*/
+
 html {
-    min-width:320px;
-    font-size: min(2.25vw,18px);
+    min-width: 320px;
+    font-size: min(2.25vw, 18px);
 }
+
 body {
     font-family: "Hiragino Sans", "ヒラギノ角ゴ Pro W3", "ヒラギノ角ゴ Pro W6", "ヒラギノ角ゴ Pro W7", "Hiragino Kaku Gothic Pro", "Noto Sans JP", "游ゴシック", helvetica, arial, sans-serif!important;
 }
@@ -28,7 +31,7 @@ footer {
     text-align: center;
 }
 
-h1,h2,h3,h4,h5,h6,p {
+h1, h2, h3, h4, h5, h6, p {
     margin: 0;
 }
 
@@ -63,7 +66,7 @@ h6 {
 }
 
 p {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
 }
 
 a {
@@ -87,7 +90,8 @@ header {
 }
 
 th, td {
-    font-size: 12px;
+    /* font-size: 12px; */
+    /* font-size: 14px; */
 }
 
 @media (max-width: 768px) {
@@ -96,10 +100,10 @@ th, td {
     }
 }
 
-
 /*共通クラス*/
 
 /* 5 Columns-START */
+
 .col-15, .col-sm-15, .col-md-15, .col-lg-15 {
     position: relative;
     min-height: 1px;
@@ -128,9 +132,10 @@ th, td {
         flex: 0 0 20%;
     }
 }
+
 /* 5 Columns-END */
 
-.max-w-1200{
+.max-w-1200 {
     max-width: 1200px;
 }
 
@@ -162,6 +167,7 @@ th, td {
 }
 
 /* 背景-START */
+
 .bg-none {
     background: none!important;
 }
@@ -178,7 +184,6 @@ th, td {
     background-color: var(--accent-color);
 }
 
-
 .bg-gray-300 {
     background-color: var(--gray-300);
 }
@@ -186,6 +191,7 @@ th, td {
 /* 背景-END */
 
 /* フォントSTART */
+
 .color-breeder {
     color: var(--breeder-main-color);
 }
@@ -215,6 +221,7 @@ th, td {
 }
 
 /* pxでの指定はしない */
+
 /* .font-size-18 {
     font-size: 18px!important;
 }
@@ -239,8 +246,7 @@ th, td {
     font-weight: 600;
 }
 
-.font-weight-500 {
-}
+.font-weight-500 {}
 
 .font-weight-400 {
     font-weight: 400;
@@ -249,10 +255,11 @@ th, td {
 .font-weight-300 {
     font-weight: 300;
 }
+
 /* フォントSTART */
 
-
 /*header*/
+
 .dummy-header {
     width: 100%;
     height: 150.44px;
@@ -274,13 +281,13 @@ th, td {
 }
 
 .main {
-    max-width:1170px;
+    max-width: 1170px;
     margin: auto;
     /* padding: 2em 4em; */
     padding: 2em 2em;
 }
 
-.header-nav .nav-link.active:hover{
+.header-nav .nav-link.active:hover {
     color: white;
 }
 
@@ -293,6 +300,7 @@ th, td {
 }
 
 /* サイドメニュー */
+
 /* .side-nav {
     border: solid 1px var(--gray-400)
 } */
@@ -302,7 +310,7 @@ th, td {
     border-top: none;
 }
 
-.side-nav-item:first-child{
+.side-nav-item:first-child {
     border: none;
 }
 
@@ -310,8 +318,8 @@ th, td {
     font-weight: 600;
 }
 
-
 /*ハンバーガーメニュー*/
+
 .headerNav {
     right: -100vw;
     top: 0;
@@ -330,6 +338,7 @@ th, td {
     cursor: pointer;
     z-index: 30;
 }
+
 .hamburger_line {
     left: 8px;
     width: 25px;
@@ -338,19 +347,22 @@ th, td {
     -webkit-transition: all .6s;
     transition: all .6s;
 }
+
 .hamburger_line_1 {
     top: 20px;
 }
+
 .hamburger_line_2 {
     top: 27px;
 }
+
 .hamburger_line_3 {
     top: 34px;
 }
 
 .hamburger_menu_btn {
     width: 90%;
-    margin:0 auto 10px;
+    margin: 0 auto 10px;
     border-radius: 5px;
 }
 
@@ -380,31 +392,31 @@ th, td {
     transform: rotate(45deg);
     top: 25px;
 }
+
 .nav-open .hamburger_line_2 {
     width: 0;
     left: 50%;
 }
+
 .nav-open .hamburger_line_3 {
     -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
     top: 25px;
 }
 
-
 .breadcrumb {
     max-width: 1200px;
     padding: 4em 4em 2em;
 }
 
-
 /*カテゴリエリア*/
 
-.search-list ul > li {
+.search-list ul>li {
     margin: 10% 0;
 }
 
-.search-list ul > li > h5 {
-    color:var(--gray-400);
+.search-list ul>li>h5 {
+    color: var(--gray-400);
     font-weight: 500;
 }
 
@@ -416,15 +428,13 @@ th, td {
     font-size: 14px;
     color: white;
     font-weight: 600;
-    border-radius: 30px;border: none;
-
+    border-radius: 30px;
+    border: none;
 }
 
 .basic-btn:hover {
     color: white;
 }
-
-
 
 .accent-btn {
     background-color: var(--accent-color);
@@ -440,7 +450,7 @@ th, td {
     position: relative;
 }
 
-.new-band:after{
+.new-band:after {
     content: "NEW";
     position: absolute;
     width: 5em;
@@ -466,7 +476,6 @@ th, td {
     content: '';
     background-color: var(--gray-400);
 }
-
 
 .input-group-lg>.custom-select, .input-group-lg>.form-control:not(textarea), .gender-form {
     height: calc(1.5em + 1rem + 12px);
@@ -512,7 +521,7 @@ th, td {
     background-color: #FFA2A2;
 }
 
-.catalog-card  img {
+.catalog-card img {
     border-radius: 7px 7px 0 0;
 }
 
@@ -528,13 +537,13 @@ th, td {
     border-radius: 7px;
 }
 
-.size-card > .card-img {
+.size-card>.card-img {
     height: 150px;
     padding-top: 25%;
 }
 
 @media (max-width: 768px) {
-    .size-card > .card-img {
+    .size-card>.card-img {
         height: 100px;
         padding-top: 25%;
     }
@@ -545,7 +554,7 @@ th, td {
     padding: 1vw;
 }
 
-.group-card > h6 {
+.group-card>h6 {
     padding: 35% 0;
 }
 
@@ -594,6 +603,7 @@ th, td {
 }
 
 /* 基本ドロップダウン */
+
 .form_dropdown {
     /* styling */
     background-color: white;
@@ -603,27 +613,16 @@ th, td {
     font: inherit;
     line-height: 1.5em;
     padding: 0.5em 3.5em 0.5em 1em;
-  
     /* reset */
-    margin: 0;      
+    margin: 0;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-appearance: none;
     -moz-appearance: none;
-    
-    background-image:
-      linear-gradient(45deg, transparent 50%, gray 50%),
-      linear-gradient(135deg, gray 50%, transparent 50%),
-      linear-gradient(to right, #ccc, #ccc);
-    background-position:
-      calc(100% - 20px) calc(1em + 2px),
-      calc(100% - 15px) calc(1em + 2px),
-      calc(100% - 2.5em) 0.5em;
-    background-size:
-      5px 5px,
-      5px 5px,
-      1px 1.5em;
+    background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%), linear-gradient(to right, #ccc, #ccc);
+    background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
+    background-size: 5px 5px, 5px 5px, 1px 1.5em;
     background-repeat: no-repeat;
 }
 
@@ -636,9 +635,8 @@ th, td {
     font: inherit;
     line-height: 1.5em;
     padding: 0.5em 3.5em 0.5em 1em;
-  
     /* reset */
-    margin: 0;      
+    margin: 0;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -648,33 +646,68 @@ th, td {
 
 .search_button {
     border: none;
-	padding: 0 40px;
-	height: 40px;
-	line-height: 1;
-	color: #fff;
-	border-radius: 5px;
-	font-size: 1em;
-	cursor: pointer;
+    padding: 0 40px;
+    height: 40px;
+    line-height: 1;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
 }
 
-.search_button:before{
+.search_button:before {
     font-style: normal;
-	font-variant: normal;
-	text-rendering: auto;
-	-webkit-font-smoothing: antialiased;
-	font-family: "FontAwesome"; 
-	font-weight: 900;
-	content: '\f002';
-	margin-right: 5px;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-family: "FontAwesome";
+    font-weight: 900;
+    content: '\f002';
+    margin-right: 5px;
 }
 
 /* DNA検査結果表示 */
-.dna-table td, 
-.dna-table th {
-  width: initial;
+
+.dna-table td, .dna-table th {
+    width: initial;
 }
 
 a[disabled], button[disabled] {
     cursor: not-allowed;
     opacity: .5;
+}
+
+/* フォントサイズ調整 */
+
+@media (max-width: 576px) {
+    h1 {
+        font-size: 3rem;
+        font-weight: 400;
+    }
+    h2 {
+        font-size: 2.5rem;
+        font-weight: 400;
+    }
+    h3 {
+        font-size: 2.2rem;
+        font-weight: 400;
+    }
+    h4 {
+        font-size: 2rem;
+        font-weight: 400;
+    }
+    h5 {
+        font-size: 1.8rem;
+        font-weight: 300;
+    }
+    h6 {
+        font-size: 1.6rem;
+        font-weight: 300;
+    }
+    .btn {
+        font-size: 1.8rem;
+    }
+    .form-control {
+        font-size: 100%;
+    }
 }

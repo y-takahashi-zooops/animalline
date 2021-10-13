@@ -1862,7 +1862,7 @@ Width <= 640px
   margin:0 0 20px;
 }
 .breeder-mv__search_btn button i {
-  top:18px;
+  top:25px;
   left:20px;
   font-size: 24px;
 }
@@ -1911,7 +1911,6 @@ Width <= 480px
 }
 .breeder-column__main_section_title_btn a {
     padding: 6px 10px 6px 10px;
-    font-size: 12px;
 }
 .breeder-footer__bnr{
   padding:0 20px 60px;
@@ -3178,7 +3177,7 @@ CONTENTS佐藤追加分
     color: #fff;
     width:100%;
     font-weight: 900;
-    font-size: 1.0rem;
+    /* font-size: 1.0rem; */
     padding: 5px 5px;
   }
   
@@ -3187,7 +3186,7 @@ CONTENTS佐藤追加分
     color: #fff;
     width:100%;
     font-weight: 900;
-    font-size: 1.0rem;
+    /* font-size: 1.0rem; */
     padding: 5px 5px;
   }
   
@@ -3198,20 +3197,20 @@ CONTENTS佐藤追加分
   .contents_col_bold {
     width:100%;
     font-weight: 900;
-    font-size: 0.9rem;
+    /* font-size: 0.9rem; */
     padding: 5px 5px;
   }
   .contents_col_normal {
     width:300%;
     font-weight: 300;
-    font-size: 0.9rem;
+    /* font-size: 0.9rem; */
     padding: 5px 5px;
   }
   .contents_col_price {
     color: rgb(145, 30, 53);
     width:100%;
     font-weight: 900;
-    font-size: 1.0rem;
+    /* font-size: 1.0rem; */
     padding: 5px 5px;
   }
   .btn_center {
@@ -3977,12 +3976,12 @@ Width <= 375px
   .heading {
     display: none;
   }
-  td {
+  .responsive-table td {
     display: block;
   }
-  td::before {
+  .responsive-table td::before {
     content: attr(data-label);
-    font-size: .875rem;
+    font-size: 1.4rem;
     color: #666;
     display: block;
     margin-bottom: 0.25rem;
@@ -3990,12 +3989,6 @@ Width <= 375px
   .id {
     background: #eee;
   }
-}
-
-h1 {
-  text-align: center;
-  font-size: 2rem;
-  font-family: 'El Messiri', sans-serif;
 }
 
 .modal {
