@@ -271,6 +271,7 @@ class VeqtaController extends AbstractController
                     ->setCheckKinds($this->dnaCheckKindsRepository->find($dnaDetailData['kind'][$i]));
                 $entityManager->persist($DnaDetail);
             }
+            $entityManager->flush();
         }
         $entityManager->persist($Pet);
 
