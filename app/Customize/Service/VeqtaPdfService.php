@@ -15,6 +15,8 @@ namespace Customize\Service;
 
 use Customize\Config\AnilineConf;
 use Eccube\Common\EccubeConfig;
+use Exception;
+use setasign\Fpdi\PdfParser\PdfParserException;
 use setasign\Fpdi\TcpdfFpdi;
 
 /**
@@ -45,7 +47,7 @@ class VeqtaPdfService extends TcpdfFpdi
     /**
      * OrderPdfService constructor.
      * @param EccubeConfig $eccubeConfig
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(EccubeConfig $eccubeConfig)
     {
@@ -54,22 +56,25 @@ class VeqtaPdfService extends TcpdfFpdi
 
         $this->widthCell = [110.3, 12, 21.7, 24.5];
 
-        // Fontの設定しておかないと文字化けを起こす
         $this->SetFont(self::FONT_SJIS);
 
-        // PDFの余白(上左右)を設定
         $this->SetMargins(15, 20);
 
-        // ヘッダーの出力を無効化
         $this->setPrintHeader(false);
 
-        // フッターの出力を無効化
         $this->setPrintFooter(true);
         $this->setFooterMargin();
         $this->setFooterFont([self::FONT_SJIS, '', 8]);
     }
 
-    public function makePdf(array $data)
+    /**
+     * Create pdf file
+     *
+     * @param array $data
+     * @return bool
+     * @throws PdfParserException
+     */
+    public function makePdf(array $data): bool
     {
         $userPath = $this->eccubeConfig->get('eccube_theme_app_dir') . '/pdf/dna_check.pdf';
         $this->setSourceFile($userPath);
@@ -99,21 +104,30 @@ class VeqtaPdfService extends TcpdfFpdi
      */
     protected function addPdfPage()
     {
-        // ページを追加
         $this->AddPage();
 
-        // テンプレートに使うテンプレートファイルのページ番号を取得
         $tplIdx = $this->importPage(1);
 
-        // テンプレートに使うテンプレートファイルのページ番号を指定
         $this->useTemplate($tplIdx, null, null, null, null, true);
     }
 
+    /**
+     * Render Breeder data
+     *
+     * @param $data
+     * @return void
+     */
     protected function renderBreederName($data)
     {
         $this->lfText(30, 117, $data, 12);
     }
 
+    /**
+     * Render Pet data
+     *
+     * @param $data
+     * @return void
+     */
     protected function renderPetData($data)
     {
         $this->lfText(80, 130, $data->getBreedsType()->getBreedsName(), 10);
@@ -145,11 +159,10 @@ class VeqtaPdfService extends TcpdfFpdi
             if (strlen($row['check_kind_name']) > 32) {
                 $this->lfText($fromX, $fromY, substr($row['check_kind_name'], 0, 32), 8);
                 $this->lfText($fromX, $fromY + 4, substr($row['check_kind_name'], 32), 8);
-                $this->lfText($fromX + 92, $fromY + 2, $CHECK_RESULTS[$row['check_kind_result']] ?? '', 8);
             } else {
                 $this->lfText($fromX, $fromY, $row['check_kind_name'], 8);
-                $this->lfText($fromX + 92, $fromY + 2, $CHECK_RESULTS[$row['check_kind_result']] ?? '', 8);
             }
+            $this->lfText($fromX + 92, $fromY + 2, $CHECK_RESULTS[$row['check_kind_result']] ?? '', 8);
             $fromY += 18;
         }
 
@@ -159,10 +172,10 @@ class VeqtaPdfService extends TcpdfFpdi
     /**
      * PDFへのテキスト書き込み
      *
-     * @param int    $x     X座標
-     * @param int    $y     Y座標
-     * @param string $text  テキスト
-     * @param int    $size  フォントサイズ
+     * @param int $x X座標
+     * @param int $y Y座標
+     * @param string $text テキスト
+     * @param int $size フォントサイズ
      * @param string $style フォントスタイル
      */
     protected function lfText($x, $y, $text, $size = 0, $style = '')
