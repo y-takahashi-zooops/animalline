@@ -5,6 +5,7 @@ namespace Customize\Entity;
 use Customize\Repository\ReturnScheduleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\OrderItem;
+use Eccube\Entity\ProductClass;
 
 /**
  * @ORM\Table(name="ald_return_schedule")
@@ -29,9 +30,10 @@ class ReturnSchedule
     private $ReturnScheduleHeader;
 
     /**
-     * @ORM\Column(name="product_class_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity=ProductClass::class, inversedBy="ReturnSchedule")
+     * @ORM\JoinColumn(name="product_class_id", nullable=false)
      */
-    private $product_class_id;
+    private $ProductClass;
 
     /**
      * @ORM\Column(name="warehouse_code", type="string", length=5, nullable=false)
@@ -110,14 +112,14 @@ class ReturnSchedule
         return $this;
     }
 
-    public function getProductClassId(): ?int
+    public function getProductClass(): ?ProductClass
     {
-        return $this->product_class_id;
+        return $this->ProductClass;
     }
 
-    public function setProductClassId(?int $product_class_id): self
+    public function setProductClass(?ProductClass $ProductClass): self
     {
-        $this->product_class_id = $product_class_id;
+        $this->ProductClass = $ProductClass;
 
         return $this;
     }
