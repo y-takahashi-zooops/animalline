@@ -203,7 +203,7 @@ class ExportReturnSchedule extends Command
                             'r.item_code_01 as productNumberCode',
                             'r.item_code_02 as colorCode',
                             'pc.jan_code as JAN_code',
-                            'r.quantity as numberOfReturnInstructions',
+                            'r.quantity_schedule as numberOfReturnInstructions',
                             'r.standerd_price as retailPrice',
                             'r.selling_price as deliveryUnitPrice',
                             'rh.customer_name as deliveryName',
@@ -236,7 +236,7 @@ class ExportReturnSchedule extends Command
                             foreach ($fieldSorted as $value) {
                                 array_push($sorted, $recordCsv[$value]);
                             }
-                            $sorted[1] = $sorted[1]->format('Y-m-d H:i:s');
+                            $sorted[1] = $sorted[1]->format('Y-m-d');
                             array_push($result, $sorted);
                         }
 
