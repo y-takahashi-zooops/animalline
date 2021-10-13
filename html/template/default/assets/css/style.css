@@ -10503,3 +10503,109 @@ Styleguide 22.1
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
+
+/* 後藤追加分 20211012 -定期購入- */
+/* 商品一覧画面 */
+.ec-shelfGrid__item .form-group {
+  display: none;
+}
+
+.ec-flexInput {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0px;
+}
+
+/* 商品詳細画面デザイン修正用 */
+.ec-productRole__order ul {
+  margin-bottom: 0;
+  padding: 0;
+}
+.ec-productRole__order li {
+  list-style: none;
+}
+
+/* 購入種別ラジオボタン */
+#order_type_0,
+#order_type_1 {
+  position:relative;	
+  top :30px;
+  right: 35px;
+  transform: scale(3.0);
+}
+
+label[for="order_type_0"],
+label[for="order_type_1"] {
+  position :relative;
+  right: 17px;
+}
+
+/* お届けサイクルラジオボタン */
+#cycle_type_0,
+#cycle_type_1 {
+  transform: scale(1.5);
+}
+
+label[for="cycle_type_0"],
+label[for="cycle_type_1"] {
+  font-weight: normal;
+  padding-left: 20px;
+}
+
+/* 間隔のラベルを消去 */
+label[for="month"],
+label[for="day"]{
+  display: none;
+}
+label[for="change_subscription_month"],
+label[for="change_subscription_day"]{
+  display: none;
+}
+
+.order_label {
+  margin-left: 50px;
+}
+
+.order_list_block {
+  padding: 10px 10px 0px;
+  border-radius: 10px 4px 2px;
+  list-style: none;
+}
+
+.order_list_block .ec-numberInput {
+  padding-left: 1.25rem;
+}
+
+.subscription_cycle_block,
+.next_delivery_date_block {
+  padding: 10px 20px 0px;
+  list-style: none;
+  margin-bottom: 0;
+}
+
+.subscription_cycle,
+.next_delivery_date {
+  border-top: 1px dashed #d2d2d2;
+  padding: 5px 0;
+}
+
+.subscription_block {
+ border-top: 1px solid #d2d2d2;
+ border-radius: 0px 0px 7px 7px;
+}
+
+.glay{
+  background-color: #f0f0f0;
+}
+
+/* 定期購入履歴画面 */
+label[for="change_subscription_change_element_0"],
+label[for="change_subscription_change_element_1"] {
+  font-size: 18px;
+}
+
+#ec-modal-contents__change li,
+#ec-modal-contents__cancel p {
+  font-size: 16px;
+}
+/* 後藤追加分 20211012 -定期購入- */
