@@ -13,20 +13,12 @@
 
 namespace Customize\Service;
 
+use Customize\Config\AnilineConf;
 use Eccube\Common\EccubeConfig;
-use Eccube\Entity\BaseInfo;
-use Eccube\Entity\OrderItem;
-use Eccube\Entity\Shipping;
-use Eccube\Repository\BaseInfoRepository;
-use Eccube\Repository\OrderPdfRepository;
-use Eccube\Repository\OrderRepository;
-use Eccube\Repository\ShippingRepository;
-use Eccube\Twig\Extension\EccubeExtension;
-use Eccube\Twig\Extension\TaxExtension;
 use setasign\Fpdi\TcpdfFpdi;
 
 /**
- * Class OrderPdfService.
+ * Class VeqtaPdfService.
  * Do export pdf function.
  */
 class VeqtaPdfService extends TcpdfFpdi
@@ -36,16 +28,6 @@ class VeqtaPdfService extends TcpdfFpdi
      */
     private $eccubeConfig;
 
-    /**
-     * @var EccubeExtension
-     */
-    private $eccubeExtension;
-
-    /**
-     * @var TaxExtension
-     */
-    private $taxExtension;
-
     /** ダウンロードするPDFファイルのデフォルト名 */
     const DEFAULT_PDF_FILE_NAME = 'dna_check.pdf';
     /** FONT ゴシック */
@@ -53,18 +35,10 @@ class VeqtaPdfService extends TcpdfFpdi
     /** FONT 明朝 */
     const FONT_SJIS = 'kozminproregular';
 
-    /** @var BaseInfo */
-    public $baseInfoRepository;
-
     /** 購入詳細情報 ラベル配列
      * @var array
      */
     private $labelCell = [];
-
-    /*** 購入詳細情報 幅サイズ配列
-     * @var array
-     */
-    private $widthCell = [];
 
     /** 最後に処理した注文番号 @var string */
     private $lastOrderId = null;
@@ -92,12 +66,6 @@ class VeqtaPdfService extends TcpdfFpdi
     /**
      * OrderPdfService constructor.
      * @param EccubeConfig $eccubeConfig
-     * @param OrderRepository $orderRepository
-     * @param ShippingRepository $shippingRepository
-     * @param TaxRuleService $taxRuleService
-     * @param BaseInfoRepository $baseInfoRepository
-     * @param EccubeExtension $eccubeExtension
-     * @param TaxExtension $taxExtension
      * @throws \Exception
      */
     public function __construct(EccubeConfig $eccubeConfig)
@@ -130,7 +98,7 @@ class VeqtaPdfService extends TcpdfFpdi
 
     public function makePdf(array $data)
     {
-        $userPath = $this->eccubeConfig->get('eccube_theme_app_dir').'/pdf/dna_check.pdf';
+        $userPath = $this->eccubeConfig->get('eccube_theme_app_dir') . '/pdf/dna_check.pdf';
         $this->setSourceFile($userPath);
 
         // PDFにページを追加する
@@ -140,9 +108,38 @@ class VeqtaPdfService extends TcpdfFpdi
 
         $this->renderPetData($data['pet']);
 
-        foreach ($data['check_kinds'] as $row) {
-            // メッセージを描画する
-            $this->renderCheckKinds($row);
+        $this->renderCheckKinds($data['check_kinds']);
+
+        return true;
+    }
+
+    /**
+     * メッセージを設定する.
+     *
+     * @param array $rows
+     * @return bool
+     */
+    protected function renderCheckKinds(array $rows): bool
+    {
+        $fromX = 36;
+        $fromY = 202;
+        // 検査結果
+        $CHECK_RESULTS = [
+            AnilineConf::DNA_CHECK_RESULT_1 => 'クリア',
+            AnilineConf::DNA_CHECK_RESULT_2 => 'キャリア',
+            AnilineConf::DNA_CHECK_RESULT_3 => 'アフェクテッド'
+        ];
+
+        foreach ($rows as $row) {
+            if (strlen($row['check_kind_name']) > 32) {
+                $this->lfText($fromX, $fromY, substr($row['check_kind_name'], 0, 32), 8);
+                $this->lfText($fromX, $fromY + 4, substr($row['check_kind_name'], 32), 8);
+                $this->lfText($fromX + 92, $fromY + 2, $CHECK_RESULTS[$row['check_kind_result']] ?? '', 8);
+            } else {
+                $this->lfText($fromX, $fromY, $row['check_kind_name'], 8);
+                $this->lfText($fromX + 92, $fromY + 2, $CHECK_RESULTS[$row['check_kind_result']] ?? '', 8);
+            }
+            $fromY += 18;
         }
 
         return true;
@@ -171,7 +168,7 @@ class VeqtaPdfService extends TcpdfFpdi
         }
         $this->downloadFileName = self::DEFAULT_PDF_FILE_NAME;
         if ($this->PageNo() == 1) {
-            $this->downloadFileName = 'nouhinsyo-No'.$this->lastOrderId.'.pdf';
+            $this->downloadFileName = 'nouhinsyo-No' . $this->lastOrderId . '.pdf';
         }
 
         return $this->downloadFileName;
@@ -234,7 +231,7 @@ class VeqtaPdfService extends TcpdfFpdi
 
         $this->Ln();
         // rtrimを行う
-        $text = preg_replace('/\s+$/us', '', $formData['note1']."\n".$formData['note2']."\n".$formData['note3']);
+        $text = preg_replace('/\s+$/us', '', $formData['note1'] . "\n" . $formData['note2'] . "\n" . $formData['note3']);
         $this->MultiCell(0, 4, $text, '', 2, 'L', 0, '');
 
         // フォント情報の復元
@@ -262,205 +259,6 @@ class VeqtaPdfService extends TcpdfFpdi
 
         // フォント情報の復元
         $this->restoreFont();
-    }
-
-    /**
-     * 購入者情報を設定する.
-     *
-     * @param Shipping $Shipping
-     */
-    protected function renderOrderData(Shipping $Shipping)
-    {
-        // 基準座標を設定する
-        $this->setBasePosition();
-
-        // フォント情報のバックアップ
-        $this->backupFont();
-
-        // =========================================
-        // 購入者情報部
-        // =========================================
-
-        $Order = $Shipping->getOrder();
-
-        // 購入者都道府県+住所1
-        // $text = $Order->getPref().$Order->getAddr01();
-        $text = $Shipping->getPref().$Shipping->getAddr01();
-        $this->lfText(27, 47, $text, 10);
-        $this->lfText(27, 51, $Shipping->getAddr02(), 10); //購入者住所2
-
-        // 購入者氏名
-        $text = $Shipping->getName01().'　'.$Shipping->getName02().'　様';
-        $this->lfText(27, 59, $text, 11);
-
-        // =========================================
-        // お買い上げ明細部
-        // =========================================
-        $this->SetFont(self::FONT_SJIS, '', 10);
-
-        //ご注文日
-        $orderDate = $Order->getCreateDate()->format('Y/m/d H:i');
-        if ($Order->getOrderDate()) {
-            $orderDate = $Order->getOrderDate()->format('Y/m/d H:i');
-        }
-
-        $this->lfText(25, 125, $orderDate, 10);
-        //注文番号
-        $this->lfText(25, 135, $Order->getOrderNo(), 10);
-
-        // 総合計金額
-        if (!$Order->isMultiple()) {
-            $this->SetFont(self::FONT_SJIS, 'B', 15);
-            $paymentTotalText = $this->eccubeExtension->getPriceFilter($Order->getPaymentTotal());
-
-            $this->setBasePosition(120, 95.5);
-            $this->Cell(5, 7, '', 0, 0, '', 0, '');
-            $this->Cell(67, 8, $paymentTotalText, 0, 2, 'R', 0, '');
-            $this->Cell(0, 45, '', 0, 2, '', 0, '');
-        }
-
-        // フォント情報の復元
-        $this->restoreFont();
-    }
-
-    /**
-     * 購入商品詳細情報を設定する.
-     *
-     * @param Shipping $Shipping
-     */
-    protected function renderOrderDetailData(Shipping $Shipping)
-    {
-        $arrOrder = [];
-        // テーブルの微調整を行うための購入商品詳細情報をarrayに変換する
-
-        // =========================================
-        // 受注詳細情報
-        // =========================================
-        $i = 0;
-        $isShowReducedTaxMess = false;
-        /* @var OrderItem $OrderItem */
-        foreach ($Shipping->getOrderItems() as $OrderItem) {
-            // class categoryの生成
-            $classCategory = '';
-            /** @var OrderItem $OrderItem */
-            if ($OrderItem->getClassCategoryName1()) {
-                $classCategory .= ' [ '.$OrderItem->getClassCategoryName1();
-                if ($OrderItem->getClassCategoryName2() == '') {
-                    $classCategory .= ' ]';
-                } else {
-                    $classCategory .= ' * '.$OrderItem->getClassCategoryName2().' ]';
-                }
-            }
-
-            // product
-            $productName = $OrderItem->getProductName();
-            if (null !== $OrderItem->getProductCode()) {
-                $productName .= ' / '.$OrderItem->getProductCode();
-            }
-            if ($classCategory) {
-                $productName .= ' / '.$classCategory;
-            }
-            if ($this->taxExtension->isReducedTaxRate($OrderItem)) {
-                $productName .= ' ※';
-                $isShowReducedTaxMess = true;
-            }
-            $arrOrder[$i][0] = $productName;
-            // 購入数量
-            $arrOrder[$i][1] = number_format($OrderItem->getQuantity());
-            // 税込金額（単価）
-            $arrOrder[$i][2] = $this->eccubeExtension->getPriceFilter($OrderItem->getPrice());
-            // 小計（商品毎）
-            $arrOrder[$i][3] = $this->eccubeExtension->getPriceFilter($OrderItem->getTotalPrice());
-
-            ++$i;
-        }
-
-        $Order = $Shipping->getOrder();
-
-        if (!$Order->isMultiple()) {
-            // =========================================
-            // 小計
-            // =========================================
-            $arrOrder[$i][0] = '';
-            $arrOrder[$i][1] = '';
-            $arrOrder[$i][2] = '';
-            $arrOrder[$i][3] = '';
-
-            ++$i;
-            $arrOrder[$i][0] = '';
-            $arrOrder[$i][1] = '';
-            $arrOrder[$i][2] = '商品合計';
-            $arrOrder[$i][3] = $this->eccubeExtension->getPriceFilter($Order->getSubtotal());
-
-            ++$i;
-            $arrOrder[$i][0] = '';
-            $arrOrder[$i][1] = '';
-            $arrOrder[$i][2] = '送料';
-            $arrOrder[$i][3] = $this->eccubeExtension->getPriceFilter($Order->getDeliveryFeeTotal());
-
-            ++$i;
-            $arrOrder[$i][0] = '';
-            $arrOrder[$i][1] = '';
-            $arrOrder[$i][2] = '手数料';
-            $arrOrder[$i][3] = $this->eccubeExtension->getPriceFilter($Order->getCharge());
-
-            ++$i;
-            $arrOrder[$i][0] = '';
-            $arrOrder[$i][1] = '';
-            $arrOrder[$i][2] = '値引き';
-            $arrOrder[$i][3] = $this->eccubeExtension->getPriceFilter($Order->getTaxableDiscount());
-
-            ++$i;
-            $arrOrder[$i][0] = '';
-            $arrOrder[$i][1] = '';
-            $arrOrder[$i][2] = '';
-            $arrOrder[$i][3] = '';
-
-            ++$i;
-            $arrOrder[$i][0] = '';
-            $arrOrder[$i][1] = '';
-            $arrOrder[$i][2] = '合計';
-            $arrOrder[$i][3] = $this->eccubeExtension->getPriceFilter($Order->getTaxableTotal());
-
-            foreach ($Order->getTaxableTotalByTaxRate() as $rate => $total) {
-                ++$i;
-                $arrOrder[$i][0] = '';
-                $arrOrder[$i][1] = '';
-                $arrOrder[$i][2] = '('.$rate.'%対象)';
-                $arrOrder[$i][3] = $this->eccubeExtension->getPriceFilter($total);
-            }
-
-            ++$i;
-            $arrOrder[$i][0] = '';
-            $arrOrder[$i][1] = '';
-            $arrOrder[$i][2] = '';
-            $arrOrder[$i][3] = '';
-
-            foreach($Order->getTaxFreeDiscountItems() as $Item) {
-                ++$i;
-                $arrOrder[$i][0] = '';
-                $arrOrder[$i][1] = '';
-                $arrOrder[$i][2] = $Item->getProductName();
-                $arrOrder[$i][3] = $this->eccubeExtension->getPriceFilter($Item->getTotalPrice());
-            }
-
-            ++$i;
-            $arrOrder[$i][0] = '';
-            $arrOrder[$i][1] = '';
-            $arrOrder[$i][2] = '請求金額';
-            $arrOrder[$i][3] = $this->eccubeExtension->getPriceFilter($Order->getPaymentTotal());
-
-            if ($isShowReducedTaxMess) {
-                ++$i;
-                $arrOrder[$i][0] = '※は軽減税率対象商品です。';
-                $arrOrder[$i][1] = '';
-                $arrOrder[$i][2] = '';
-                $arrOrder[$i][3] = '';
-            }
-        }
-
-        // PDFに設定する
-        $this->setFancyTable($this->labelCell, $arrOrder, $this->widthCell);
     }
 
     /**

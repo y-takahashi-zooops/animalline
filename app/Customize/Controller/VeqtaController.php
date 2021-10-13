@@ -282,7 +282,7 @@ class VeqtaController extends AbstractController
         $checkDetails = [];
         foreach ($Dna->getCheckStatusDetails() as $item) {
             $itemArr = [];
-            $itemArr['check_kind_name'] = $item->getCheckKinds();
+            $itemArr['check_kind_name'] = $item->getCheckKinds() ? $item->getCheckKinds()->getCheckKind() : '';
             $itemArr['check_kind_result'] = $item->getCheckResult();
             $checkDetails[] = $itemArr;
         }
