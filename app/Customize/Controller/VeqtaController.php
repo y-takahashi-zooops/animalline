@@ -25,6 +25,7 @@ use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -271,6 +272,9 @@ class VeqtaController extends AbstractController
                 $entityManager->persist($DnaDetail);
             }
         }
+        $entityManager->persist($Dna);
+        $entityManager->persist($Pet);
+        $entityManager->flush();
 
         $arrData = [];
         $arrData['breeder_name'] = $Pet->getBreeder()->getBreederName();
@@ -285,11 +289,14 @@ class VeqtaController extends AbstractController
         $arrData['check_kinds'] = $checkDetails;
         $veqtaPdfService->makePdf($arrData);
 
-        $entityManager->persist($Dna);
-        $entityManager->persist($Pet);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('veqta_result_regist');
+        $response = new Response(
+            $veqtaPdfService->outputPdf(),
+            200,
+            ['content-type' => 'application/pdf']
+        );
+        $response->headers->set('Content-Disposition', 'inline; filename="'.$veqtaPdfService->getPdfFileName().'"');
+        return $response;
+//        return $this->redirectToRoute('veqta_result_regist');
     }
 
     /**

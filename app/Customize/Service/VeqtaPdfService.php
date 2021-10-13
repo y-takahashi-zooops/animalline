@@ -100,8 +100,9 @@ class VeqtaPdfService extends TcpdfFpdi
      * @param TaxExtension $taxExtension
      * @throws \Exception
      */
-    public function __construct()
+    public function __construct(EccubeConfig $eccubeConfig)
     {
+        $this->eccubeConfig = $eccubeConfig;
         parent::__construct();
 
         // 購入詳細情報の設定を行う
@@ -201,17 +202,17 @@ class VeqtaPdfService extends TcpdfFpdi
 
     protected function renderBreederName($data)
     {
-        $this->lfText(10, 30, $data, 8);
+        $this->lfText(30, 117, $data, 12);
     }
 
     protected function renderPetData($data)
     {
-        $this->lfText(50, 100, $data->getBreedsType()->getBreedsName(), 8);
-        $this->lfText(50, 110, '不要', 8);
-        $this->lfText(50, 120, $data->getPetBirthday(), 8);
-        $this->lfText(50, 130, $data->getPetSex() == 1 ? '男の子' : '女の子', 8);
-        $this->lfText(50, 140, $data->getPedigreeCode(), 8);
-        $this->lfText(50, 150, $data->getMicrochipCode(), 8);
+        $this->lfText(80, 130, $data->getBreedsType()->getBreedsName(), 10);
+        $this->lfText(80, 140, '不要', 10);
+        $this->lfText(80, 151, $data->getPetBirthday()->format('Y年m月d日'), 10);
+        $this->lfText(80, 162, $data->getPetSex() == 1 ? '男の子' : '女の子', 10);
+        $this->lfText(80, 172, $data->getPedigreeCode(), 10);
+        $this->lfText(80, 183, $data->getMicrochipCode(), 10);
     }
 
     /**
