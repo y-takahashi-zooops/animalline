@@ -335,12 +335,12 @@ class Breeders
         return $this;
     }
 
-    public function getBreederRank()
+    public function getBreederRank() : float
     {
         return $this->breeder_rank;
     }
 
-    public function setBreederRank($breeder_rank)
+    public function setBreederRank(float $breeder_rank) : self
     {
         $this->breeder_rank = $breeder_rank;
 
