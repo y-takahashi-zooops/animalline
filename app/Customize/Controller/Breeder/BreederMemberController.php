@@ -156,8 +156,8 @@ class BreederMemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $thumbnail_path = $request->get('thumbnail_path') ? $request->get('thumbnail_path') : $breederData->getThumbnailPath();
-            $license_thumbnail_path = $request->get('license_thumbnail_path') ? $request->get('license_thumbnail_path') : $breederData->getLicenseThumbnailPath();
+            $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
+            $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
 
             $breederData->setBreederPref($breederData->getPrefBreeder())
                 ->setLicensePref($breederData->getPrefLicense())
@@ -167,8 +167,7 @@ class BreederMemberController extends AbstractController
             $entityManager->persist($breederData);
             $entityManager->flush();
             return $this->redirectToRoute($return_path);
-        } elseif (!$form->isSubmitted()) {
-
+        } elseif (!$form->isSubmitted() && !$breedersRepository->find($user)) {
             // Customer情報から初期情報をセット
             $Customer = $this->customerRepository->find($user);
             $form->get('breeder_name')->setData($Customer->getname01() . '　' . $Customer->getname02());

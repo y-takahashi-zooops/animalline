@@ -94,30 +94,30 @@ file that was distributed with this source code.
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
-                                        {{ form_label(form.pet_sex, '性別', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                                        {{ form_label(form.pet_sex, '性別', { 'label_attr': {'class': 'ec-label'}}) }}
                                         <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
                                     </div>
                                 </div>
                                 <div class="col-2 mb-2">
-                                    {{ form_widget(form.pet_sex, {'attr': { 'class': 'mb-3' }}) }}
+                                    {{ form_widget(form.pet_sex) }}
                                     {{ form_errors(form.pet_sex) }}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
-                                        {{ form_label(form.pet_birthday, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                                        誕生日
                                         <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
-                                            </span>
+                                        </span>
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-6 mb-2">
                                     <div class="ec-birth{{ has_errors(form.pet_birthday) ? ' error' }} date">
-                                        {{ form_widget(form.pet_birthday.year) }}
-                                        {{ form_widget(form.pet_birthday.month) }}
+                                        {{ form_widget(form.pet_birthday.year) }}&nbsp;/&nbsp;
+                                        {{ form_widget(form.pet_birthday.month) }}&nbsp;/&nbsp;
                                         {{ form_widget(form.pet_birthday.day) }}
                                         {{ form_errors(form.pet_birthday) }}
                                     </div>
@@ -144,79 +144,79 @@ file that was distributed with this source code.
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
-                                        {{ form_label(form.future_wait, '成犬時予想体重', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                                        {{ form_label(form.future_wait, '成犬時予想体重', { 'label_attr': {'class': 'ec-label'}}) }}
                                         <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
                                     </div>
                                 </div>
                                 <div class="col-2 mb-2">
-                                    {{ form_widget(form.future_wait, {'attr': { 'placeholder': '体重：1kg～3kg　 体高：12cm～20cm','class': 'mb-3' }}) }}
+                                    {{ form_widget(form.future_wait, {'attr': { 'placeholder': '体重：1kg～3kg　 体高：12cm～20cm'}}) }}
                                     {{ form_errors(form.future_wait) }}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
-                                        {{ form_label(form.dna_check_result, '遺伝子調査結果', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                                        {{ form_label(form.dna_check_result, '遺伝子調査結果', { 'label_attr': {'class': 'ec-label'}}) }}
                                         <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
                                     </div>
                                 </div>
                                 <div class="col-2 mb-2">
-                                    {{ form_widget(form.dna_check_result, {'attr': { 'class': 'mb-3' }}) }}
+                                    {{ form_widget(form.dna_check_result) }}
                                     {{ form_errors(form.dna_check_result) }}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
-                                        {{ form_label(form.pr_comment, 'アピールポイント', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                                        {{ form_label(form.pr_comment, 'アピールポイント', { 'label_attr': {'class': 'ec-label'}}) }}
                                     </div>
                                 </div>
                                 <div class="col-6 mb-2">
-                                    {{ form_widget(form.pr_comment, {'attr': { 'class': 'mb-3' }}) }}
+                                    {{ form_widget(form.pr_comment) }}
                                     {{ form_errors(form.pr_comment) }}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
-                                        {{ form_label(form.description, 'アピールポイント', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                                        {{ form_label(form.description, 'アピールポイント', { 'label_attr': {'class': 'ec-label'}}) }}
                                     </div>
                                 </div>
                                 <div class="col-6 mb-2">
-                                    {{ form_widget(form.description, {'attr': { 'class': 'mb-3' }}) }}
+                                    {{ form_widget(form.description) }}
                                     {{ form_errors(form.description) }}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
-                                        {{ form_label(form.delivery_time, '引き渡し時期', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                                        {{ form_label(form.delivery_time, '引き渡し時期', { 'label_attr': {'class': 'ec-label'}}) }}
                                     </div>
                                 </div>
                                 <div class="col-6 mb-2">
-                                    {{ form_widget(form.delivery_time, {'attr': { 'class': 'mb-3' }}) }}
+                                    {{ form_widget(form.delivery_time) }}
                                     {{ form_errors(form.delivery_time) }}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
-                                        {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                                        {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label'}}) }}
                                     </div>
                                 </div>
                                 <div class="col-6 mb-2">
-                                    {{ form_widget(form.delivery_way, {'attr': { 'class': 'mb-3' }}) }}
+                                    {{ form_widget(form.delivery_way) }}
                                     {{ form_errors(form.delivery_way) }}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
-                                        {{ form_label(form.price, '価格', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                                        {{ form_label(form.price, '価格', { 'label_attr': {'class': 'ec-label'}}) }}
                                     </div>
                                 </div>
                                 <div class="col-2 mb-2">
@@ -232,7 +232,7 @@ file that was distributed with this source code.
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
-                                        {{ form_label(form.release_date, '公開日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                                        {{ form_label(form.release_date, '公開日', { 'label_attr': {'class': 'ec-label'}}) }}
                                         {# <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span> #}
@@ -240,8 +240,8 @@ file that was distributed with this source code.
                                 </div>
                                 <div class="col-6">
                                     <div class="ec-birth{{ has_errors(form.release_date) ? ' error' }} date">
-                                        {{ form_widget(form.release_date.year) }}
-                                        {{ form_widget(form.release_date.month) }}
+                                        {{ form_widget(form.release_date.year) }}&nbsp;/&nbsp;
+                                        {{ form_widget(form.release_date.month) }}&nbsp;/&nbsp;
                                         {{ form_widget(form.release_date.day) }}
                                         {{ form_errors(form.release_date) }}
                                     </div>

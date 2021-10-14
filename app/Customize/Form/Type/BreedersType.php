@@ -68,7 +68,10 @@ class BreedersType extends AbstractType
                         '猫' => AnilineConf::ANILINE_PET_KIND_CAT
                     ],
                 'required' => true,
-                'placeholder' => 'common.select'
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
             ])
             ->add('breeder_zip', TextType::class, [
                 'required' => true,
@@ -204,6 +207,9 @@ class BreedersType extends AbstractType
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
             ])
             ->add('license_expire_date', DateType::class, [
                 'required' => true,
@@ -220,7 +226,8 @@ class BreedersType extends AbstractType
                     new Assert\GreaterThan([
                         'value' => date('Y-m-d'),
                         'message' => '有効期限の末日は未来の日付を入力してください。'
-                    ])
+                    ]),
+                    new Assert\NotBlank()
                 ],
             ])
             ->add('license_type', ChoiceType::class, [
