@@ -14,6 +14,7 @@
 namespace Eccube\Entity;
 
 use Customize\Entity\ProductSet;
+use Customize\Entity\ReturnSchedule;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -342,11 +343,17 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         private $ProductSet;
 
         /**
+         * @ORM\OneToMany(targetEntity=ReturnSchedule::class, mappedBy="ProductClass")
+         */
+        private $ReturnSchedule;
+
+        /**
          * Constructor
          */
         public function __construct()
         {
             $this->ProductSet = new ArrayCollection();
+            $this->ReturnSchedule = new ArrayCollection();
         }
 
         public function __clone()
@@ -868,6 +875,14 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
             }
 
             return $this;
+        }
+
+        /**
+         * @return Collection|ReturnSchedule[]
+         */
+        public function getReturnSchedule(): Collection
+        {
+            return $this->ReturnSchedule;
         }
     }
 }
