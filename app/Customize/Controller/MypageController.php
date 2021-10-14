@@ -243,7 +243,8 @@ class MypageController extends BaseMypageController
 
         /** @var Order $Order */
         $SubscriptionContract = $event->getArgument('SubscriptionContract');
-        $Order = $this->orderRepository->findOneBy(['SubscriptionContract' => $SubscriptionContract]);
+        // $Order = $this->orderRepository->findOneBy(['SubscriptionContract' => $SubscriptionContract]);
+        $Order = $SubscriptionContract->getOrder();
         $Shipping = $this->shippingRepository->findOneBy(['Order' => $Order]);
 
         if (!$SubscriptionContract) {

@@ -26,6 +26,16 @@ if (!class_exists('\Plugin\ZooopsSubscription\Entity\SubscriptionContract')) {
         private $id;
 
         /**
+         * @var \Eccube\Entity\Order
+         *
+         * @ORM\ManyToOne(targetEntity="Eccube\Entity\Order", inversedBy="SubscriptionContracts")
+         * @ORM\JoinColumns({
+         *   @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+         * })
+         */
+        private $Order;
+
+        /**
          * @var \Eccube\Entity\Customer
          *
          * @ORM\ManyToOne(targetEntity="Eccube\Entity\Customer", inversedBy="SubscriptionContracts")
@@ -124,6 +134,30 @@ if (!class_exists('\Plugin\ZooopsSubscription\Entity\SubscriptionContract')) {
         public function getId()
         {
             return $this->id;
+        }
+
+        /**
+         * Set order.
+         *
+         * @param \Eccube\Entity\Order|null $order
+         *
+         * @return SubscriptionContract
+         */
+        public function setOrder(\Eccube\Entity\Order $order = null)
+        {
+            $this->Order = $order;
+
+            return $this;
+        }
+
+        /**
+         * Get customer.
+         *
+         * @return \Eccube\Entity\Order|null
+         */
+        public function getOrder()
+        {
+            return $this->Order;
         }
 
         /**

@@ -19,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Eccube\Entity\CustomerAddress;
 
 class SubscriptionCustomerAddressType extends AbstractType
 {
@@ -27,11 +28,14 @@ class SubscriptionCustomerAddressType extends AbstractType
         // お届け先住所のみで選択肢を作成
         /** @var Customer $Customer */
         $Customer = $options['customer'];
-        $Addresses = $Customer->getCustomerAddresses()->toArray();
+        $CustomerAddress = new CustomerAddress();
+        $CustomerAddress->setFromCustomer($Customer);
+        $Addresses = array_merge([$CustomerAddress], $Customer->getCustomerAddresses()->toArray());
 
         // 定期注文のお届け先住所とマッチするものを初期選択とする
         /** @var SubscriptionContract $SubscriptionContract */
         $SubscriptionContract = $options['subscriptionContract'];
+
         $Checked = null;
         foreach ($Addresses as $Address) {
             if ($Address->getId() === $SubscriptionContract->getCustomerAddressId()) {

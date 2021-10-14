@@ -156,6 +156,7 @@ class SubscriptionProcess extends AbstractController
 
                 $SubscirptionContract = new SubscriptionContract();
                 $SubscirptionContract
+                    ->setOrder($Order)
                     ->setCustomer($Customer)
                     ->setProduct($CartItem->getProductClass()->getProduct())
                     ->setProductClass($CartItem->getProductClass())
@@ -168,7 +169,7 @@ class SubscriptionProcess extends AbstractController
                 $this->entityManager->persist($SubscirptionContract);
                 $this->entityManager->flush();
 
-                $Order->setSubscriptionContract($SubscirptionContract);
+                // $Order->setSubscriptionContract($SubscirptionContract);
 
                 $this->entityManager->persist($Order);
                 $this->entityManager->flush();
@@ -232,8 +233,9 @@ class SubscriptionProcess extends AbstractController
                         $Customer = $SubscriptionContract->getCustomer();
                         $Product = $SubscriptionContract->getProduct();
                         $ProductClass = $SubscriptionContract->getProductClass();
-                        $PrevOrder = $this->orderRepository->findOneBy(['SubscriptionContract' => $SubscriptionContract]);
-                        $PrevOrder->setSubscriptionContract(NULL);
+                        // $PrevOrder = $this->orderRepository->findOneBy(['SubscriptionContract' => $SubscriptionContract]);
+                        // $PrevOrder->setSubscriptionContract(NULL);
+                        $PrevOrder = $SubscriptionContract->getOrder();
 
                         // 新規受注としてorderテーブルに新規レコード追加
                         $Order = new Order($this->orderStatusRepository->find(OrderStatus::NEW));
@@ -263,8 +265,8 @@ class SubscriptionProcess extends AbstractController
                             ->setBirth($Customer->getBirth())
                             // その他
                             ->setOrderDate(new \DateTime()) // 注文日は処理日とする
-                            ->setPreOrderId($this->orderHelper->createPreOrderId())
-                            ->setSubscriptionContract($SubscriptionContract);
+                            ->setPreOrderId($this->orderHelper->createPreOrderId());
+                            // ->setSubscriptionContract($SubscriptionContract);
 
                         $em->persist($Order);
 
@@ -324,6 +326,9 @@ class SubscriptionProcess extends AbstractController
                             ->setPrice($ProductClass->getPrice02());
 
                         $em->persist($OrderItem);
+
+                        $SubscriptionContract->setOrder($Order);
+                        $em->persist($SubscriptionContract);
 
                         // 各要素を追加
                         $Shipping->addOrderItem($OrderItem);
