@@ -184,11 +184,16 @@ class BreederDnaCheck extends AbstractController
      */
     public function breeder_examination_kit_new(Request $request)
     {
+        $isCheckStatus = false;
         $dnaCheckSatusHeader = new DnaCheckStatusHeader();
         $builder = $this->formFactory->createBuilder(BreederKitDnaType::class, $dnaCheckSatusHeader);
         $breeder = $this->breedersRepository->find($this->getUser()->getId());
         $breederHouseCat = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $breederHouseDog = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
+        $DnaCheckStatus = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $breeder, 'site_type' => AnilineConf::SITE_CATEGORY_BREEDER]);
+        if (count($DnaCheckStatus) == 2) {
+            $isCheckStatus = true;
+        }
         $form = $builder->getForm();
         $form->handleRequest($request);
 
@@ -217,7 +222,8 @@ class BreederDnaCheck extends AbstractController
             'form' => $form->createView(),
             'breeder' => $breeder,
             'breederHouseCat' => $breederHouseCat,
-            'breederHouseDog' => $breederHouseDog
+            'breederHouseDog' => $breederHouseDog,
+            'isCheckStatus' => $isCheckStatus
         ];
     }
 }
