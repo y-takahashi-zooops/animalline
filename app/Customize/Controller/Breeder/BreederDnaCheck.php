@@ -190,8 +190,8 @@ class BreederDnaCheck extends AbstractController
         $breeder = $this->breedersRepository->find($this->getUser()->getId());
         $breederHouseCat = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $breederHouseDog = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
-        $DnaCheckStatusShipping = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $breeder, 'site_type' => AnilineConf::SITE_CATEGORY_BREEDER, 'shipping_status' => 2]);
-        $DnaCheckStatusHeaderAccept = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $breeder, 'site_type' => AnilineConf::SITE_CATEGORY_BREEDER, 'shipping_status' => 1]);
+        $DnaCheckStatusShipping = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $breeder, 'site_type' => AnilineConf::SITE_CATEGORY_BREEDER, 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_INSTRUCTING]);
+        $DnaCheckStatusHeaderAccept = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $breeder, 'site_type' => AnilineConf::SITE_CATEGORY_BREEDER, 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT]);
         $DnaCheckStatus = array_merge($DnaCheckStatusShipping, $DnaCheckStatusHeaderAccept);
         if (count($DnaCheckStatus) == 2) {
             $isCheckStatus = true;
