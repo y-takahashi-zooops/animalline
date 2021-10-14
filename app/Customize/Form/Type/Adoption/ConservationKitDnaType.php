@@ -122,9 +122,6 @@ class ConservationKitDnaType extends AbstractType
                     ]),
                     new Assert\NotBlank()
                 ],
-                'attr' => [
-                    'maxlength' => 6,
-                ],
             ]);
     }
 

@@ -128,9 +128,6 @@ class BreederKitDnaType extends AbstractType
                         'value' => 6
                     ])
                 ],
-                'attr' => [
-                    'maxlength' => 6,
-                ],
             ]);
     }
 
