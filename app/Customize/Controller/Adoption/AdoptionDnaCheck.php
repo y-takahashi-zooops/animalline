@@ -173,7 +173,9 @@ class AdoptionDnaCheck extends AbstractController
         $conservation = $this->conservationsRepository->find($this->getUser()->getId());
         $conservationHouseCat = $this->conservationsHousesRepository->findOneBy(['Conservation' => $conservation, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $conservationHouseDog = $this->conservationsHousesRepository->findOneBy(['Conservation' => $conservation, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
-        $DnaCheckStatus = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $conservation, 'site_type' => AnilineConf::SITE_CATEGORY_CONSERVATION]);
+        $DnaCheckStatusShipping = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $conservation, 'site_type' => AnilineConf::SITE_CATEGORY_CONSERVATION, 'shipping_status' => 2]);
+        $DnaCheckStatusHeaderAccept = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $conservation, 'site_type' => AnilineConf::SITE_CATEGORY_CONSERVATION, 'shipping_status' => 1]);
+        $DnaCheckStatus = array_merge($DnaCheckStatusShipping, $DnaCheckStatusHeaderAccept);
         if (count($DnaCheckStatus) == 2) {
             $isCheckStatus = true;
         }
