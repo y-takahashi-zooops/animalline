@@ -167,11 +167,16 @@ class AdoptionDnaCheck extends AbstractController
      */
     public function adoption_examination_kit_new(Request $request)
     {
+        $isCheckStatus = false;
         $dnaCheckSatusHeader = new DnaCheckStatusHeader();
         $builder = $this->formFactory->createBuilder(ConservationKitDnaType::class, $dnaCheckSatusHeader);
         $conservation = $this->conservationsRepository->find($this->getUser()->getId());
         $conservationHouseCat = $this->conservationsHousesRepository->findOneBy(['Conservation' => $conservation, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $conservationHouseDog = $this->conservationsHousesRepository->findOneBy(['Conservation' => $conservation, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
+        $DnaCheckStatus = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $conservation, 'site_type' => AnilineConf::SITE_CATEGORY_CONSERVATION]);
+        if (count($DnaCheckStatus) == 2) {
+            $isCheckStatus = true;
+        }
         $form = $builder->getForm();
         $form->handleRequest($request);
 
@@ -200,7 +205,8 @@ class AdoptionDnaCheck extends AbstractController
             'form' => $form->createView(),
             'conservation' => $conservation,
             'conservationHouseCat' => $conservationHouseCat,
-            'conservationHouseDog' => $conservationHouseDog
+            'conservationHouseDog' => $conservationHouseDog,
+            'isCheckStatus' => $isCheckStatus
         ];
     }
 
