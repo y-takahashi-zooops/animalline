@@ -26,20 +26,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ConservationKitDnaType extends AbstractType
 {
-    /**
-     * @var EccubeConfig
-     */
-    protected $eccubeConfig;
-
-    /**
-     * ContactType constructor.
-     *
-     * @param EccubeConfig $eccubeConfig
-     */
-    public function __construct(EccubeConfig $eccubeConfig)
-    {
-        $this->eccubeConfig = $eccubeConfig;
-    }
+//    /**
+//     * @var EccubeConfig
+//     */
+//    protected $eccubeConfig;
+//
+//    /**
+//     * ContactType constructor.
+//     *
+//     * @param EccubeConfig $eccubeConfig
+//     */
+//    public function __construct(EccubeConfig $eccubeConfig)
+//    {
+//        $this->eccubeConfig = $eccubeConfig;
+//    }
 
     /**
      * {@inheritdoc}
