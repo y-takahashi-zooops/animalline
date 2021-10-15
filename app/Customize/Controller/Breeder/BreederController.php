@@ -130,7 +130,7 @@ class BreederController extends AbstractController
     public function breeder_index_reg(Request $request)
     {
         return[];
-        
+
     }
 
     /**
@@ -141,7 +141,7 @@ class BreederController extends AbstractController
      */
     public function breeder_index(Request $request)
     {
-        return[];
+        return $this->render('animalline/breeder/reg_index.twig');
     }
     /*
     public function breeder_index(Request $request)
