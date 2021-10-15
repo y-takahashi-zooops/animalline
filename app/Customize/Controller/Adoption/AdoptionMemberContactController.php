@@ -198,12 +198,7 @@ class AdoptionMemberContactController extends AbstractController
         ]);
     }
 
-
-
-
-    
-
-        /**
+    /**
      * 保護団体用ユーザーページ - 取引メッセージ履歴
      *
      * @Route("/adoption/member/message/{id}/contract", name="adoption_message_contract", requirements={"id" = "\d+"})

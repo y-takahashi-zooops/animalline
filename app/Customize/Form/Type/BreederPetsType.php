@@ -99,7 +99,6 @@ class BreederPetsType extends AbstractType
                 ],
                 'expanded' => true,
             ])
-            // TODO:ペット種別(犬・猫)によってchoicesを切り替えたい。 
             ->add('Pedigree', EntityType::class, [
                 'class' => 'Customize\Entity\Pedigree',
                 'choice_label' => function (\Customize\Entity\Pedigree $petdigree) {
