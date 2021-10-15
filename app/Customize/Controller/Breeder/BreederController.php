@@ -130,6 +130,7 @@ class BreederController extends AbstractController
     public function breeder_index_reg(Request $request)
     {
         return[];
+        
     }
 
     /**
@@ -168,7 +169,7 @@ class BreederController extends AbstractController
         ]);
     }
     */
-    
+
     /**
      * @Route("/breeder/guide/dog", name="breeder_guide_dog")
      * @Template("animalline/breeder/guide/dog.twig")
