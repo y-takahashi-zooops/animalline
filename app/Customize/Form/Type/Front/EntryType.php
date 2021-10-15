@@ -62,14 +62,6 @@ class EntryType extends AbstractType
                 'required' => true,
             ])
             ->add('kana', KanaType::class, [])
-            ->add('company_name', TextType::class, [
-                'required' => false,
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                ],
-            ])
             ->add('postal_code', PostalType::class)
             ->add('address', AddressType::class)
             ->add('phone_number', PhoneNumberType::class, [
@@ -92,9 +84,6 @@ class EntryType extends AbstractType
                 ],
             ])
             ->add('sex', SexType::class, [
-                'required' => false,
-            ])
-            ->add('job', JobType::class, [
                 'required' => false,
             ]);
 

@@ -138,11 +138,13 @@
                                         </dl>`)
                                         });
             } else {
-             alert('データが存在しません。');
+                $('#sender_name').val('');
+                $('#breed_name').val('');
+                $('#check_result_kinds').html('')
+                $('#dnaTestResultRegist').attr('disabled', true);
+                alert('データが存在しません。');
              }
         }).fail(function (err) {
-            $('#sender_name').val('');
-            $('#breed_name').val('');
             $('#dnaTestResultRegist').attr('disabled', true);
             console.error(err);
         });
