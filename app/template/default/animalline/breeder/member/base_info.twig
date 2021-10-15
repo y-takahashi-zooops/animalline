@@ -51,11 +51,11 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.addr, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd class="h-adr">
                                         <span class="p-country-name" style="display:none;">Japan</span>
                                         <div class="ec-zipInput{{ has_errors(form.breeder_zip) ? ' error' }}">
-                                            <label>ハイフン（-） なしで入力してください。</label><br/>
                                             <span>{{ '〒'|trans }}</span>
                                             {{ form_widget(form.breeder_zip) }}
                                             <div class="ec-zipInputHelp">
@@ -87,9 +87,9 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.breeder_tel, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <p style="font-size:14px;color:#DE5D50;">'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd>
-                                        <label>ハイフン（-） なしで入力してください。</label>
                                         <div class="ec-telInput{{ has_errors(form.breeder_tel) ? ' error' }}">
                                             {{ form_widget(form.breeder_tel) }}
                                             {{ form_errors(form.breeder_tel) }}
@@ -99,9 +99,9 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.breeder_fax, 'FAX番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <p style="font-size:14px;color:#DE5D50;">'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd>
-                                        <label>ハイフン（-） なしで入力してください。</label>
                                         <div class="ec-telInput{{ has_errors(form.breeder_fax) ? ' error' }}">
                                             {{ form_widget(form.breeder_fax) }}
                                             {{ form_errors(form.breeder_fax) }}
@@ -212,11 +212,11 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.license_addr, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd class="h-adr">
                                         <span class="p-country-name" style="display:none;">Japan</span>
                                         <div class="ec-zipInput{{ has_errors(form.license_zip) ? ' error' }}">
-                                            <label>ハイフン（-） なしで入力してください。</label><br/>
                                             <span>{{ '〒'|trans }}</span>
                                             {{ form_widget(form.license_zip) }}
                                             <div class="ec-zipInputHelp">
