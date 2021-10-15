@@ -1,8 +1,9 @@
 <?php
 
-namespace Customize\Tests\Conservations;
+namespace Customize\Tests\Entity\Adoptions;
 
 use Customize\Entity\Conservations;
+use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
 
 class ConservationsTest extends TestCase
@@ -62,6 +63,19 @@ class ConservationsTest extends TestCase
                 $Conservation->getFax()
             ]
         );
+    }
+
+    public function testRelations(): void
+    {
+        $Conservation = new Conservations();
+
+        // breeder must have many
+        $this->assertInstanceOf(Collection::class, $Conservation->getConservationPets());
+        $this->assertInstanceOf(Collection::class, $Conservation->getConservationContactHeader());
+        $this->assertInstanceOf(Collection::class, $Conservation->getConservationsHouses());
+
+        // breeder can have one
+        $this->assertNull($Conservation->getPrefId());
     }
 
     /**
