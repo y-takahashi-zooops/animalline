@@ -5,11 +5,8 @@ namespace Customize\Tests\Breeders;
 use Customize\Entity\BreederHouse;
 use Customize\Entity\Breeders;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Eccube\Entity\Master\Pref;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use TypeError;
 
 class BreedersTest extends TestCase
@@ -36,13 +33,13 @@ class BreedersTest extends TestCase
     {
         $Breeder = new Breeders;
 
-        // breeder must have many
+        // breeder have many
         $this->assertInstanceOf(Collection::class, $Breeder->getBreederPets());
         $this->assertInstanceOf(Collection::class, $Breeder->getBreederContactHeader());
         $this->assertInstanceOf(Collection::class, $Breeder->getBreederExaminationInfos());
         $this->assertInstanceOf(Collection::class, $Breeder->getBreederHouses());
 
-        // breeder can have one
+        // breeder have one
         $this->assertNull($Breeder->getPrefBreeder());
         $this->assertNull($Breeder->getPrefLicense());
     }
