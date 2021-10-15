@@ -56,18 +56,18 @@
                                             </div>
                                             {{ form_errors(form.shipping_zip) }}
                                         </div>
-                                        <div class="ec-select{{ has_errors(form.address.PrefShipping) ? ' error' }}"
+                                        <div class="ec-select{{ has_errors(form.PrefShipping) ? ' error' }}"
                                             onmousedown="(function(e){ e.preventDefault(); })(event, this)">
-                                            {{ form_widget(form.address.PrefShipping) }}
-                                            {{ form_errors(form.address.PrefShipping) }}
+                                            {{ form_widget(form.PrefShipping) }}
+                                            {{ form_errors(form.PrefShipping) }}
                                         </div>
-                                        <div class="ec-input{{ has_errors(form.address.shipping_city) ? ' error' }}">
-                                            {{ form_widget(form.address.shipping_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-                                            {{ form_errors(form.address.shipping_city) }}
+                                        <div class="ec-input{{ has_errors(form.shipping_city) ? ' error' }}">
+                                            {{ form_widget(form.shipping_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                            {{ form_errors(form.shipping_city) }}
                                         </div>
-                                        <div class="ec-input{{ has_errors(form.address.shipping_address) ? ' error' }}">
-                                            {{ form_widget(form.address.shipping_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-                                            {{ form_errors(form.address.shipping_address) }}
+                                        <div class="ec-input{{ has_errors(form.shipping_address) ? ' error' }}">
+                                            {{ form_widget(form.shipping_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                            {{ form_errors(form.shipping_address) }}
                                         </div>
                                     </dd>
                                 </dl>
@@ -135,9 +135,9 @@
 
     $("#conservation_kit_dna_shipping_name").val(name)
     $("#conservation_kit_dna_shipping_zip").val(zip)
-    $("#conservation_kit_dna_address_PrefShipping").val(pref_id)
-    $("#conservation_kit_dna_address_shipping_city").val(city)
-    $("#conservation_kit_dna_address_shipping_address").val(addr)
+    $("#conservation_kit_dna_PrefShipping").val(pref_id)
+    $("#conservation_kit_dna_shipping_city").val(city)
+    $("#conservation_kit_dna_shipping_address").val(addr)
 });
 
     $("form[name=dna-kit-form]").submit(function (e) {

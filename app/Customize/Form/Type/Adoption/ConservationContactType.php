@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Adoption;
 
 use Customize\Config\AnilineConf;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;

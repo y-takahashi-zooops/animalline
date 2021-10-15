@@ -4,7 +4,7 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederEvaluations;
-use Customize\Form\Type\BreederEvaluationsType;
+use Customize\Form\Type\Breeder\BreederEvaluationsType;
 use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;

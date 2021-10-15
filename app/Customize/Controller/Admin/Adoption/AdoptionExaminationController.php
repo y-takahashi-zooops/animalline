@@ -15,8 +15,8 @@ namespace Customize\Controller\Admin\Adoption;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\Conservations;
-use Customize\Form\Type\Admin\ConservationHouseType;
-use Customize\Form\Type\Admin\ConservationsType;
+use Customize\Form\Type\Adoption\ConservationHouseType;
+use Customize\Form\Type\Adoption\ConservationsType;
 use Customize\Repository\ConservationsRepository;
 use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;

@@ -8,7 +8,7 @@ use Customize\Entity\ConservationPets;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\AdoptionQueryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Form\Type\ConservationPetsType;
+use Customize\Form\Type\Adoption\ConservationPetsType;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Repository\Master\PrefRepository;

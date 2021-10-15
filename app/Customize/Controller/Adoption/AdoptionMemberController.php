@@ -9,9 +9,9 @@ use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\AdoptionQueryService;
 use Carbon\Carbon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Form\Type\ConservationsType;
-use Customize\Form\Type\ConservationPetsType;
-use Customize\Form\Type\ConservationHouseType;
+use Customize\Form\Type\Adoption\ConservationsType;
+use Customize\Form\Type\Adoption\ConservationPetsType;
+use Customize\Form\Type\Adoption\ConservationHouseType;
 use Customize\Entity\Conservations;
 use Customize\Entity\ConservationContacts;
 use Customize\Entity\ConservationContactHeader;
@@ -36,7 +36,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
-use Customize\Form\Type\ConservationContactType;
+use Customize\Form\Type\Adoption\ConservationContactType;
 use DateTime;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
@@ -254,15 +254,10 @@ class AdoptionMemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $addr = $request->get('conservations')['addr'];
-            $pref = $prefRepository->find($addr['PrefId']);
             $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
 
-            $conservation->setPrefId($pref)
-                ->setPref($pref->getName())
+            $conservation->setPref($conservation->getPrefId())
                 ->setId($user->getId())
-                ->setCity($addr['city'])
-                ->setAddress($addr['address'])
                 ->setThumbnailPath($thumbnail_path);
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -284,45 +279,6 @@ class AdoptionMemberController extends AbstractController
         return [
             'conservation' => $conservation,
             'form' => $form->createView()
-        ];
-    }
-
-    /**
-     * 犬舎・猫舎情報編集画面
-     *
-     * @Route("/adoption/member/house_info/{pet_type}", name="adoption_house_info")
-     * @Template("/animalline/adoption/member/house_info.twig")
-     */
-    public function house_info(Request $request)
-    {
-        $petType = $request->get('pet_type');
-        $conservation = $this->conservationsRepository->find($this->getUser());
-        $conservationsHouse = $this->conservationsHouseRepository->findOneBy(['pet_type' => $petType, 'Conservation' => $conservation]);
-        if (!$conservationsHouse) {
-            $conservationsHouse = new ConservationsHouse();
-        }
-        $builder = $this->formFactory->createBuilder(ConservationHouseType::class, $conservationsHouse);
-        $conservation = $this->conservationsRepository->find($this->getUser());
-
-        $form = $builder->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $address = $request->get('conservation_house')['address'];
-            $conservationsHouse->setConservation($conservation)
-                ->setPetType($petType)
-                ->setConservationHousePref($conservationsHouse->getPref()->getName())
-                ->setConservationHouseCity($address['conservation_house_city'])
-                ->setConservationHouseAddress($address['conservation_house_address']);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($conservationsHouse);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('adoption_examination');
-        }
-        return [
-            'form' => $form->createView(),
-            'petType' => $petType,
-            'conservation' => $conservation,
         ];
     }
 }

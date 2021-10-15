@@ -176,11 +176,11 @@ class AdoptionDnaCheck extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $pref = $this->prefRepository->find($request->get('conservation_kit_dna')['address']['PrefShipping']);
-            $dnaCheckSatusHeader->setRegisterId($this->getUser()->getId())
+            $dnaCheckSatusHeader
+                ->setRegisterId($this->getUser()->getId())
                 ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
                 ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
-                ->setShippingPref($pref->getName());
+                ->setShippingPref($dnaCheckSatusHeader->getPrefShipping());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($dnaCheckSatusHeader);
             $entityManager->flush();

@@ -5,7 +5,7 @@ namespace Customize\Controller\Breeder;
 use Customize\Service\BreederQueryService;
 use Eccube\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Form\Type\BreedersType;
+use Customize\Form\Type\Breeder\BreedersType;
 use Customize\Entity\Breeders;
 use Customize\Repository\BreedersRepository;
 use Eccube\Repository\CustomerRepository;

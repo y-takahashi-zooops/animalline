@@ -1,10 +1,10 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Adoption;
 
 use Customize\Entity\ConservationsHouse;
 use Eccube\Common\EccubeConfig;
-use Customize\Form\Type\ConservationAddressHouseType;
+use Eccube\Form\Type\Master\PrefType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -72,7 +72,34 @@ class ConservationHouseType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('address', ConservationAddressHouseType::class)
+            ->add('pref', PrefType::class, [
+                'attr' => ['class' => 'p-region-id'],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('conservation_house_city', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                    'class' => 'p-locality',
+                    'placeholder' => 'common.address_sample_01',
+                ],
+            ])
+            ->add('conservation_house_address', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                    'class' => 'p-street-address p-extended-address',
+                    'placeholder' => 'common.address_sample_02',
+                ],
+            ])
             ->add('conservation_house_house_tel', TextType::class, [
                 'required' => true,
                 'constraints' => [

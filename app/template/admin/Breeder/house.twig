@@ -116,48 +116,48 @@ file that was distributed with this source code.
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="d-inline-block">
-                                                {{ form_label(form.addr.BreederHousePrefId, '都道府県', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                                {{ form_label(form.BreederHousePrefId, '都道府県', { 'label_attr': { 'class': 'ec-label' }}) }}
                                                 <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
                                             </div>
                                         </div>
                                         <div class="col-2 mb-2">
-                                            <div class="ec-select{{ has_errors(form.addr.BreederHousePrefId) ? ' error' }}">
-                                                {{ form_widget(form.addr.BreederHousePrefId) }}
-                                                {{ form_errors(form.addr.BreederHousePrefId) }}
+                                            <div class="ec-select{{ has_errors(form.BreederHousePrefId) ? ' error' }}">
+                                                {{ form_widget(form.BreederHousePrefId) }}
+                                                {{ form_errors(form.BreederHousePrefId) }}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="d-inline-block">
-                                                {{ form_label(form.addr.breeder_house_city, '市区町村', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                                {{ form_label(form.breeder_house_city, '市区町村', { 'label_attr': { 'class': 'ec-label' }}) }}
                                                 <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
                                             </div>
                                         </div>
                                         <div class="col-2 mb-2">
-                                            <div class="ec-input{{ has_errors(form.addr.breeder_house_city) ? ' error' }}">
-                                                {{ form_widget(form.addr.breeder_house_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-                                                {{ form_errors(form.addr.breeder_house_city) }}
+                                            <div class="ec-input{{ has_errors(form.breeder_house_city) ? ' error' }}">
+                                                {{ form_widget(form.breeder_house_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                                {{ form_errors(form.breeder_house_city) }}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="d-inline-block">
-                                                {{ form_label(form.addr.breeder_house_address, '市区町村以下住所', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                                {{ form_label(form.breeder_house_address, '市区町村以下住所', { 'label_attr': { 'class': 'ec-label' }}) }}
                                                 <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
                                             </div>
                                         </div>
                                         <div class="col-6 mb-2">
-                                            <div class="ec-input{{ has_errors(form.addr.breeder_house_address) ? ' error' }}">
-                                                {{ form_widget(form.addr.breeder_house_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-                                                {{ form_errors(form.addr.breeder_house_address) }}
+                                            <div class="ec-input{{ has_errors(form.breeder_house_address) ? ' error' }}">
+                                                {{ form_widget(form.breeder_house_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                                {{ form_errors(form.breeder_house_address) }}
                                             </div>
                                         </div>
                                     </div>

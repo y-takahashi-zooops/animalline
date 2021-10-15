@@ -1,46 +1,40 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Breeder;
 
-use Customize\Config\AnilineConf;
-use Customize\Entity\ConservationPets;
-use Eccube\Common\EccubeConfig;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Customize\Entity\BreederPets;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints as Assert;
+use Customize\Config\AnilineConf;
+use Customize\Repository\BreedersRepository;
+use Symfony\Component\Security\Core\User\User;
 
-class ConservationPetsType extends AbstractType
+class BreederPetsType extends AbstractType
 {
-    /**
-     * @var EccubeConfig
-     */
-    protected $eccubeConfig;
 
-    public function __construct(EccubeConfig $eccubeConfig)
+    /**
+     * @var BreedersRepository
+     */
+    protected $breedersRepository;
+
+    public function __construct(BreedersRepository $breedersRepository)
     {
-        $this->eccubeConfig = $eccubeConfig;
+        $this->breedersRepository = $breedersRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('pet_kind', ChoiceType::class, [
-                'choices' =>
-                [
-                    '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
-                    '猫' => AnilineConf::ANILINE_PET_KIND_CAT
-                ],
-                'required' => true,
-            ])
-            ->add('BreedsType', EntityType::class, [
+            ->add('breeds_type', EntityType::class, [
                 'class' => 'Customize\Entity\Breeds',
                 'choice_label' => function (\Customize\Entity\Breeds $breeds) {
                     return $breeds->getBreedsName();
@@ -58,8 +52,11 @@ class ConservationPetsType extends AbstractType
                 ],
                 'required' => true,
             ])
-            ->add('pet_birthday', DateType::class)
-            ->add('CoatColor', EntityType::class, [
+            ->add('pet_birthday', DateType::class, [
+                'data' => new \DateTime(),
+                'years' => range(date('Y'), 1990),
+            ])
+            ->add('coat_color', EntityType::class, [
                 'class' => 'Customize\Entity\CoatColors',
                 'choice_label' => function (\Customize\Entity\CoatColors $coatColors) {
                     return $coatColors->getCoatColorName();
@@ -69,11 +66,59 @@ class ConservationPetsType extends AbstractType
                     new Assert\NotBlank(),
                 ],
             ])
-            ->add('future_wait', IntegerType::class)
+            ->add('future_wait', IntegerType::class, [
+                'required' => false,
+            ])
             //->add('dna_check_result', IntegerType::class)
-            ->add('pr_comment', TextareaType::class)
-            ->add('description', TextareaType::class)
-            ->add('delivery_time', TextareaType::class)
+            ->add('pr_comment', TextType::class, [
+                'attr' => [
+                    'maxlength' => 64,
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 64,
+                    ]),
+                ],
+                'required' => false,
+            ])
+            ->add('description', TextType::class, [
+                'attr' => [
+                    'maxlength' => 64,
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 64,
+                    ]),
+                ],
+            ])
+            ->add('guarantee', TextareaType::class)
+            ->add('is_pedigree', ChoiceType::class, [
+                'choices'  => [
+                    'あり'   => '1',
+                    'なし' => '0',
+                ],
+                'expanded' => true,
+            ])
+            ->add('Pedigree', EntityType::class, [
+                'class' => 'Customize\Entity\Pedigree',
+                'choice_label' => function (\Customize\Entity\Pedigree $petdigree) {
+                    return $petdigree->getPedigreeName();
+                },
+                'required' => false,
+            ])
+            ->add('pedigree_code', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('microchip_code', IntegerType::class, [
+                'required' => false,
+            ])
+            ->add('include_vaccine_fee', ChoiceType::class, [
+                'choices'  => [
+                    'あり'   => '1',
+                    'なし' => '0',
+                ],
+                'expanded' => true,
+            ])
             ->add('delivery_way', TextareaType::class)
             ->add('thumbnail_path', FileType::class, [
                 'required' => false,
@@ -123,24 +168,35 @@ class ConservationPetsType extends AbstractType
                     'data-img' => 'img5'
                 ],
                 'data_class' => null
-            ]);
-            /*
-            ->add('release_status', ChoiceType::class, [
-                'choices' =>
-                [
-                    '非公開' => AnilineConf::RELEASE_STATUS_PRIVATE,
-                    '公開' => AnilineConf::RELEASE_STATUS_PUBLIC
-                ]
             ])
-            ->add('release_date', DateType::class)
             ->add('price', IntegerType::class);
-            */
+
+            $customer = $options['customer'];
+            $breeder = $this->breedersRepository->find($customer);
+            $handling_pet_kind = $breeder->getHandlingPetKind();
+            if( $handling_pet_kind == 0 ){
+                $choices = [
+                    '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
+                    '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+                ];
+            } elseif( $handling_pet_kind == 1 ){
+                $choices = ['犬' => AnilineConf::ANILINE_PET_KIND_DOG,];
+            } elseif( $handling_pet_kind == 2 ){
+                $choices = ['猫' => AnilineConf::ANILINE_PET_KIND_CAT];
+            }
+
+            $builder
+            ->add('pet_kind', ChoiceType::class, [
+                'choices' => $choices,
+                'required' => true,
+            ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => ConservationPets::class,
+            'data_class' => BreederPets::class,
             'customer' => null
         ]);
     }

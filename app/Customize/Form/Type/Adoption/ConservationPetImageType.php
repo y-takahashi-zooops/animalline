@@ -1,6 +1,6 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Adoption;
 
 use Customize\Entity\ConservationPetImage;
 use Eccube\Common\EccubeConfig;

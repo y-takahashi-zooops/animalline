@@ -23,9 +23,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederExaminationInfo;
-use Customize\Form\Type\Admin\BreederHouseType;
+use Customize\Form\Type\Breeder\BreederHouseType;
 use Customize\Repository\BreederHouseRepository;
-use Customize\Form\Type\AdminBreederType;
+use Customize\Form\Type\Admin\BreedersType;
 use Eccube\Repository\CustomerRepository;
 use Customize\Service\MailService;
 
@@ -107,7 +107,7 @@ class BreederExaminationController extends AbstractController
         $form->handleRequest($request);
         $formDogKind = $this->createForm(BreederHouseType::class, $breederHouseDogKind[0], ['disabled' => true]);
         $formCatKind = $this->createForm(BreederHouseType::class, $breederHouseCatKind[0], ['disabled' => true]);
-        $formBreeder = $this->createForm(AdminBreederType::class, $breeder, ['disabled' => true]);
+        $formBreeder = $this->createForm(BreedersType::class, $breeder, ['disabled' => true]);
 
         return [
             'form' => $form->createView(),

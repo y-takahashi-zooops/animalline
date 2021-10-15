@@ -1,17 +1,16 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Adoption;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\Conservations;
 use Eccube\Common\EccubeConfig;
+use Eccube\Form\Type\Master\PrefType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Customize\Form\Type\Adoption\ConservationAddressType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -93,7 +92,34 @@ class ConservationsType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
-            ->add('addr', ConservationAddressType::class)
+            ->add('pref_id', PrefType::class, [
+                'attr' => ['class' => 'p-region-id'],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('city', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                    'class' => 'p-locality',
+                    'placeholder' => 'common.address_sample_01',
+                ],
+            ])
+            ->add('address', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                    'class' => 'p-street-address p-extended-address',
+                    'placeholder' => 'common.address_sample_02',
+                ],
+            ])
             ->add('zip', TextType::class, [
                 'trim' => true,
                 'required' => false,
@@ -161,9 +187,6 @@ class ConservationsType extends AbstractType
                         'message' => 'http://もしくはhttps://から入力してください。',
                     ]),
                 ]
-            ])
-            ->add('examination_status', IntegerType::class, [
-                'required' => false,
             ])
             ->add('pr_text', TextareaType::class, [
                 'required' => false,

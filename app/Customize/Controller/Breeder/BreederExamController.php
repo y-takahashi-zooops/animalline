@@ -6,7 +6,7 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\Pedigree;
 use Customize\Repository\PedigreeRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Form\Type\BreederExaminationInfoType;
+use Customize\Form\Type\Breeder\BreederExaminationInfoType;
 use Customize\Entity\BreederHouse;
 use Customize\Entity\BreederExaminationInfo;
 use Customize\Repository\BreedersRepository;

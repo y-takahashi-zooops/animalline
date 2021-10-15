@@ -1,6 +1,6 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Breeder;
 
 use Customize\Entity\BreederExaminationInfo;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
