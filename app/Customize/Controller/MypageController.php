@@ -13,7 +13,7 @@
 
 namespace Customize\Controller;
 
-use Eccube\Controller\Mypage\MypageController;
+use Eccube\Controller\Mypage\MypageController as BaseMypageController;
 use Eccube\Entity\BaseInfo;
 use Eccube\Entity\Order;
 use Eccube\Entity\CustomerAddress;
@@ -42,7 +42,7 @@ use Customize\Form\Type\ChangeSubscriptionType;
 use Customize\Service\SubscriptionProcess;
 use Eccube\Repository\ShippingRepository;
 
-class MypageControllerCustomizer extends MypageController
+class MypageController extends BaseMypageController
 {
     /**
      * @var ProductRepository
@@ -243,13 +243,15 @@ class MypageControllerCustomizer extends MypageController
 
         /** @var Order $Order */
         $SubscriptionContract = $event->getArgument('SubscriptionContract');
-        $Order = $this->orderRepository->findOneBy(['SubscriptionContract' => $SubscriptionContract]);
+        // $Order = $this->orderRepository->findOneBy(['SubscriptionContract' => $SubscriptionContract]);
+        $Order = $SubscriptionContract->getOrder();
         $Shipping = $this->shippingRepository->findOneBy(['Order' => $Order]);
 
         if (!$SubscriptionContract) {
             throw new NotFoundHttpException();
         }
 
+        // 個数
         $quantity = $SubscriptionContract->getQuantity();
 
         // 小計
@@ -260,14 +262,12 @@ class MypageControllerCustomizer extends MypageController
         $taxRate = $this->taxRuleRepository->getByRule()->getTaxRate();
 
         // 手数料
-        // $charge = $this->paymentRepository->findOneBy(['id' => $SubscriptionContract->getPayment()])->getCharge();
         $charge = $this->paymentRepository->findOneBy(['id' => $Order->getPayment()])->getCharge();
         // 送料
         if ($this->BaseInfo->isOptionProductDeliveryFee()) {
             $deliveryFee = $this->productClassRepository->findOneBy(['id' => $SubscriptionContract->getProductClass()])->getDeliveryFee();
         } else {
             // TODO:deliveryFeeの取得
-            // $deliveryFee = $this->deliveryFeeRepository->findOneBy(['Delivery' => $SubscriptionContractDetail->getShipping()->getDelivery(), 'Pref' => $SubscriptionContractDetail->getShipping()->getPref()])->getFee();
             $deliveryFee = $this->deliveryFeeRepository->findOneBy(['Delivery' => $Shipping->getDelivery(), 'Pref' => $Shipping->getPref()])->getFee();
 
             if ($this->BaseInfo->getDeliveryFreeAmount()) {
@@ -286,8 +286,12 @@ class MypageControllerCustomizer extends MypageController
         $total = $subtotal + $charge + $deliveryFee;
 
         // 住所
-        // $CustomerAddressId = $SubscriptionContract->getCustomerAddressId();
-        // $CustomerAddress = $this->customerAddressRepository->find($CustomerAddressId);
+        $CustomerAddressId = $SubscriptionContract->getCustomerAddressId();
+        if( $CustomerAddressId ){
+            $CustomerAddress = $this->customerAddressRepository->find($CustomerAddressId);
+        } else {
+            $CustomerAddress = $Shipping;
+        }
 
         $form = $this->createForm(ChangeSubscriptionType::class, $SubscriptionContract);
         $form->handleRequest($request);
@@ -308,6 +312,8 @@ class MypageControllerCustomizer extends MypageController
 
         return [
             'SubscriptionContract' => $SubscriptionContract,
+            'Order' => $Order,
+            'CustomerAddress' => $CustomerAddress,
             'Product' => $SubscriptionContract->getProduct(),
             'subtotal' => $subtotal,
             'taxRate' => $taxRate,
@@ -319,7 +325,7 @@ class MypageControllerCustomizer extends MypageController
     }
 
     /**
-     * お届け先選択画面.
+     * 定期購入お届け先選択画面.
      *
      * お届け先を選択する画面を表示する
      *
@@ -362,7 +368,7 @@ class MypageControllerCustomizer extends MypageController
     }
 
     /**
-     * お届け先の新規作成または編集画面.
+     * 定期購入お届け先の新規作成または編集画面.
      *
      * 会員時は新しいお届け先を作成し, 作成したお届け先を選択状態にして注文手続き画面へ遷移する.
      * 非会員時は選択されたお届け先の編集を行う.

@@ -23,6 +23,7 @@ use Eccube\Repository\CustomerRepository;
 use Eccube\Repository\ProductRepository;
 use Eccube\Repository\ProductClassRepository;
 use Eccube\Repository\DeliveryRepository;
+use Eccube\Repository\OrderRepository;
 use Eccube\Repository\Master\OrderStatusRepository;
 use Eccube\Repository\Master\OrderItemTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,7 +33,10 @@ use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Customize\Service\SubscriptionMailService;
 use Eccube\Entity\CartItem;
+use phpDocumentor\Reflection\Types\Null_;
 use Plugin\ZooopsSubscription\Entity\SubscriptionContract;
+use Eccube\Repository\CustomerAddressRepository;
+use Eccube\Repository\ShippingRepository;
 
 class SubscriptionProcess extends AbstractController
 {
@@ -50,6 +54,11 @@ class SubscriptionProcess extends AbstractController
      * @var CustomerRepository
      */
     protected $customerRepository;
+
+    /**
+     * @var OrderRepository
+     */
+    protected $orderRepository;
 
     /**
      * @var OrderStatusRepository
@@ -81,10 +90,21 @@ class SubscriptionProcess extends AbstractController
      */
     protected $subscriptionMailService;
 
+    /**
+     * @var CustomerAddressRepository
+     */
+    protected $customerAddressRepository;
+
+    /**
+     * @var ShippingRepository
+     */
+    protected $shippingRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         SubscriptionContractRepository $subscriptionContractRepository,
         CustomerRepository $customerRepository,
+        OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,
         OrderItemTypeRepository $orderItemTypeRepository,
         ProductRepository $productRepository,
@@ -92,11 +112,14 @@ class SubscriptionProcess extends AbstractController
         DeliveryRepository $deliveryRepository,
         OrderHelper $orderHelper,
         PurchaseFlow $shoppingPurchaseFlow,
-        SubscriptionMailService $subscriptionMailService
+        SubscriptionMailService $subscriptionMailService,
+        CustomerAddressRepository $customerAddressRepository,
+        ShippingRepository $shippingRepository
     ) {
         $this->entityManager = $entityManager;
         $this->subscriptionContractRepository = $subscriptionContractRepository;
         $this->customerRepository = $customerRepository;
+        $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->productRepository = $productRepository;
@@ -105,6 +128,8 @@ class SubscriptionProcess extends AbstractController
         $this->orderHelper = $orderHelper;
         $this->purchaseFlow = $shoppingPurchaseFlow;
         $this->subscriptionMailService = $subscriptionMailService;
+        $this->customerAddressRepository = $customerAddressRepository;
+        $this->shippingRepository = $shippingRepository;
     }
 
     /**
@@ -112,10 +137,11 @@ class SubscriptionProcess extends AbstractController
      * 注文処理
      *   
      */
-    public function order( $CartItems, Order $Order ){
-        foreach ( $CartItems as $CartItem ){
+    public function order($Customer, $CartItems, $Order)
+    {
+        foreach ($CartItems as $CartItem) {
             $is_repeat = $CartItem->getIsRepeat();
-            if( $is_repeat == 1 ) {
+            if ($is_repeat == 1) {
                 $repeatSpan = $CartItem->getRepeatSpan();   // 購入スパン
                 $spanUnit = $CartItem->getSpanUnit();       // 購入スパン単位
                 $nextDeliveryDate = new \DateTime();        // 次回配送日
@@ -130,47 +156,50 @@ class SubscriptionProcess extends AbstractController
 
                 $SubscirptionContract = new SubscriptionContract();
                 $SubscirptionContract
-                    ->setCustomer($this->getUser())
+                    ->setOrder($Order)
+                    ->setCustomer($Customer)
                     ->setProduct($CartItem->getProductClass()->getProduct())
                     ->setProductClass($CartItem->getProductClass())
                     ->setquantity($CartItem->getQuantity())
                     ->setRepeatSpan($repeatSpan)
                     ->setSpanUnit($spanUnit)
-                    ->setContractDate($now)
+                    ->setContractDate(new \DateTime())
                     ->setNextDeliveryDate($nextDeliveryDate);
 
                 $this->entityManager->persist($SubscirptionContract);
                 $this->entityManager->flush();
 
-                $Order->setSubscriptionContract($SubscirptionContract);
+                // $Order->setSubscriptionContract($SubscirptionContract);
 
                 $this->entityManager->persist($Order);
                 $this->entityManager->flush();
             }
         }
     }
-    
+
     /**
      * 
      * 次回配送日10日前処理
      *   －定期注文次回配送日変更リマインドメール送信
      */
-    public function nextDeliveryDateBefore10Days(){
+    public function nextDeliveryDateBefore10Days()
+    {
 
         $target = ((new \DateTime())->modify('+ 10days'))->format('Ymd');
 
         // 全件取得
-        $subscriptionContracts = $this->subscriptionContractRepository->findAll();
+        $SubscriptionContracts = $this->subscriptionContractRepository->findAll();
 
-        if ($subscriptionContracts) {
-            foreach ($subscriptionContracts as $subscriptionContract) {
-                $nextDeliveryDate = $subscriptionContract->getNextDeliveryDate()->format('Ymd');
-                $contractDate = $subscriptionContract->getContractDate()->format('Ymd');
-
-                // 次回配送日10日前判定
-                if ($nextDeliveryDate == $target && $contractDate !== null) {
-                    $Customer = $this->customerRepository->find($subscriptionContract->getCustomer()->getId());
-                    $this->subscriptionMailService->sendSubscriotionRemindMail($Customer);
+        if ($SubscriptionContracts) {
+            foreach ($SubscriptionContracts as $SubscriptionContract) {
+                $nextDeliveryDate = $SubscriptionContract->getNextDeliveryDate();
+                if($nextDeliveryDate){
+                    // 次回配送日10日前判定
+                    $nextDeliveryDate = $nextDeliveryDate->format('Ymd');
+                    if ($nextDeliveryDate == $target ) {
+                        $Customer = $this->customerRepository->find($SubscriptionContract->getCustomer()->getId());
+                        $this->subscriptionMailService->sendSubscriotionRemindMail($Customer);
+                    }
                 }
             }
         }
@@ -191,163 +220,175 @@ class SubscriptionProcess extends AbstractController
         $target = ((new \DateTime())->modify('+ 7days'))->format('Ymd');
 
         // 全件取得
-        $subscriptionContracts = $this->subscriptionContractRepository->findAll();
+        $SubscriptionContracts = $this->subscriptionContractRepository->findAll();
 
-        if ($subscriptionContracts) {
-            foreach ($subscriptionContracts as $subscriptionContract) {
-                $nextDeliveryDate = $subscriptionContract->getNextDeliveryDate()->format('Ymd');
-                $contractDate = $subscriptionContract->getContractDate()->format('Ymd');
+        if ($SubscriptionContracts) {
+            foreach ($SubscriptionContracts as $SubscriptionContract) {
+                $nextDeliveryDate = $SubscriptionContract->getNextDeliveryDate();
+                if( $nextDeliveryDate ){
+                    $nextDeliveryDate = $nextDeliveryDate->format('Ymd');
+                    // 次回配送日7日前判定
+                    if ($nextDeliveryDate == $target) {
 
-                // 次回配送日7日前判定
-                if ($nextDeliveryDate == $target && $contractDate !== null ) {
+                        $Customer = $SubscriptionContract->getCustomer();
+                        $Product = $SubscriptionContract->getProduct();
+                        $ProductClass = $SubscriptionContract->getProductClass();
+                        // $PrevOrder = $this->orderRepository->findOneBy(['SubscriptionContract' => $SubscriptionContract]);
+                        // $PrevOrder->setSubscriptionContract(NULL);
+                        $PrevOrder = $SubscriptionContract->getOrder();
 
-                    $customerId = $subscriptionContract->getCustomer();
-                    $productId = $subscriptionContract->getProduct();
-                    $productClassId = $subscriptionContract->getProductClass();
+                        // 新規受注としてorderテーブルに新規レコード追加
+                        $Order = new Order($this->orderStatusRepository->find(OrderStatus::NEW));
+                        $Order
+                            ->setCustomer($Customer)
+                            // 前回注文情報から取得
+                            ->setPayment($PrevOrder->getPayment())
+                            ->setDeviceType($PrevOrder->getDeviceType())
+                            ->setMessage($PrevOrder->getMessage())
+                            ->setPaymentMethod($PrevOrder->getPaymentMethod())
+                            ->setNote($PrevOrder->getNote())
+                            // ユーザー情報
+                            ->setName01($Customer->getName01())
+                            ->setName02($Customer->getName02())
+                            ->setKana01($Customer->getKana01())
+                            ->setKana02($Customer->getKana02())
+                            ->setCompanyName($Customer->getCompanyName())
+                            ->setPhoneNumber($Customer->getPhoneNumber())
+                            ->setPostalCode($Customer->getPostalCode())
+                            ->setCountry($Customer->getCountry())
+                            ->setAddr01($Customer->getAddr01())
+                            ->setAddr02($Customer->getAddr02())
+                            ->setPref($Customer->getPref())
+                            ->setSex($Customer->getSex())
+                            ->setJob($Customer->getJob())
+                            ->setEmail($Customer->getEmail())
+                            ->setBirth($Customer->getBirth())
+                            // その他
+                            ->setOrderDate(new \DateTime()) // 注文日は処理日とする
+                            ->setPreOrderId($this->orderHelper->createPreOrderId());
+                            // ->setSubscriptionContract($SubscriptionContract);
 
-                    $Customer = $this->customerRepository->findOneBy(['id' => $customerId]);
-                    $Product = $this->productRepository->findOneby(['id' => $productId]);
-                    $ProductClass = $this->productClassRepository->findOneby(['id' => $productClassId]);
+                        $em->persist($Order);
 
-                    // 新規受注としてorderテーブルに新規レコード追加
-                    $OrderStatus = $this->orderStatusRepository->find(OrderStatus::NEW);
-                    $Order = new Order($OrderStatus);
+                        $saleType = $ProductClass->getSaleType();
+                        $deliverys = $this->deliveryRepository->getDeliveries($saleType);
+                        $delivery = current($deliverys);
 
-                    // orderテーブルにデータセット
-                    $Order
-                        // subscriptionContractから取得
-                        ->setCustomer($Customer)
-                        // TODO:Orderテーブルからレコードを取得し、値をコピーする
-                        // ->setPayment($subscriptionContract->getPayment())
-                        // ->setDeviceType($subscriptionContract->getDeviceType())
-                        // ->setMessage($subscriptionContract->getMessage())
-                        // ->setPaymentMethod($subscriptionContract->getPaymentMethod())
-                        // ->setNote($subscriptionContract->getNote())
-                        // ユーザー情報
-                        ->setCountry($Customer->getCountry())
-                        ->setPref($Customer->getPref())
-                        ->setSex($Customer->getSex())
-                        ->setJob($Customer->getJob())
-                        ->setName01($Customer->getName01())
-                        ->setName02($Customer->getName02())
-                        ->setKana01($Customer->getKana01())
-                        ->setKana02($Customer->getKana02())
-                        ->setCompanyName($Customer->getCompanyName())
-                        ->setEmail($Customer->getEmail())
-                        ->setPhoneNumber($Customer->getPhoneNumber())
-                        ->setPostalCode($Customer->getPostalCode())
-                        ->setAddr01($Customer->getAddr01())
-                        ->setAddr02($Customer->getAddr02())
-                        ->setBirth($Customer->getBirth())
-                        // その他
-                        ->setOrderDate(new \DateTime()) // 注文日は処理日とする
-                        ->setPreOrderId($this->orderHelper->createPreOrderId());
+                        // shippingテーブルに新規レコード追加
+                        $Shipping = new Shipping();
+                        $Shipping
+                            ->setOrder($Order)
+                            ->setDelivery($delivery)
+                            ->setShippingDeliveryName($delivery->getName())
+                            ->setShippingDate($SubscriptionContract->getNextDeliveryDate());  // 次回配送日を配送予定日にセット
 
-                    $em->persist($Order);
-                    // flushしてidを確定させる
-                    $em->flush();
-
-                    $saleType = $ProductClass->getSaleType();
-                    $deliverys = $this->deliveryRepository->getDeliveries($saleType);
-                    $delivery = current($deliverys);
-
-                    // shippingテーブルに新規レコード追加
-                    $Shipping = new Shipping();
-                    // shippingテーブルにデータセット
-                    $Shipping
-                        ->setOrder($Order)
-                        ->setName01($Customer->getName01())
-                        ->setName02($Customer->getName02())
-                        ->setKana01($Customer->getKana01())
-                        ->setKana02($Customer->getKana02())
-                        ->setCompanyName($Customer->getCompanyName())
-                        ->setPhoneNumber($Customer->getPhoneNumber())
-                        ->setPostalCode($Customer->getPostalCode())
-                        ->setPref($Customer->getPref())
-                        ->setAddr01($Customer->getAddr01())
-                        ->setAddr02($Customer->getAddr02())
-                        ->setDelivery($delivery)
-                        ->setShippingDeliveryName($delivery->getName())
-                        // 次回配送日を配送予定日にセット
-                        ->setShippingDate($subscriptionContract->getNextDeliveryDate());
-
-                    $em->persist($Shipping);
-
-                    // 商品としてorder_itemテーブルに新規レコード追加
-                    $OrderItem = new OrderItem();
-                    $OrderItemType = $this->orderItemTypeRepository->find(OrderItemType::PRODUCT);
-
-                    // order_itemテーブルにデータセット
-                    $OrderItem
-                        ->setOrder($Order)
-                        ->setProduct($Product)
-                        ->setProductClass($ProductClass)
-                        ->setShipping($Shipping)
-                        ->setQuantity($subscriptionContract->getQuantity())
-                        ->setOrderItemType($OrderItemType)
-                        // 商品データ
-                        ->setProductName($Product->getName())
-                        ->setClassName1($Product->getClassName1())
-                        ->setClassName2($Product->getClassName2())
-                        ->setProductCode($ProductClass->getCode())
-                        ->setClassCategoryName1($ProductClass->getClassCategory1())
-                        ->setClassCategoryName2($ProductClass->getClassCategory2())
-                        ->setPrice($ProductClass->getPrice02());
-
-                    $em->persist($OrderItem);
-
-                    // 各要素を追加
-                    $Shipping->addOrderItem($OrderItem);
-                    $Order->addOrderItem($OrderItem);
-                    $OrderItem->setOrder($Order);
-                    $OrderItem->setShipping($Shipping);
-                    $Order->addShipping($Shipping);
-
-                    // 明細の正規化
-                    $purchaceContext = new PurchaseContext($Order, $Customer);
-                    $flowResult = $this->purchaseFlow->validate($Order, $purchaceContext);
-
-                    // エラー処理
-                    if ($flowResult->hasWarning()) {
-                        foreach ($flowResult->getWarning() as $warning) {
-                            $this->addWarning($warning->getMessage(), 'admin');
+                        $CustomerAddressId = $SubscriptionContract->getCustomerAddressId();
+                        // CustomerAddressIDが設定されている場合は、配送情報を設定
+                        if ($CustomerAddressId) {
+                            $CustomerInfo = $this->customerAddressRepository->find($CustomerAddressId);
+                        // CustomerAdsressが設定されていない場合は、前回の配送情報をコピーする
+                        } else {
+                            $CustomerInfo = $this->shippingRepository->findOneBy(['Order' => $PrevOrder]);
                         }
-                    }
+                        $Shipping
+                            ->setName01($CustomerInfo->getName01())
+                            ->setName02($CustomerInfo->getName02())
+                            ->setKana01($CustomerInfo->getKana01())
+                            ->setKana02($CustomerInfo->getKana02())
+                            ->setCompanyName($CustomerInfo->getCompanyName())
+                            ->setPhoneNumber($CustomerInfo->getPhoneNumber())
+                            ->setPostalCode($CustomerInfo->getPostalCode())
+                            ->setPref($CustomerInfo->getPref())
+                            ->setAddr01($CustomerInfo->getAddr01())
+                            ->setAddr02($CustomerInfo->getAddr02());
 
-                    if ($flowResult->hasError()) {
-                        foreach ($flowResult->getErrors() as $error) {
-                            $this->addError($error->getMessage(), 'admin');
+                        $em->persist($Shipping);
+
+                        // 商品としてorder_itemテーブルに新規レコード追加
+                        $OrderItemType = $this->orderItemTypeRepository->find(OrderItemType::PRODUCT);
+                        $OrderItem = new OrderItem();
+
+                        // order_itemテーブルにデータセット
+                        $OrderItem
+                            ->setOrder($Order)
+                            ->setProduct($Product)
+                            ->setProductClass($ProductClass)
+                            ->setShipping($Shipping)
+                            ->setQuantity($SubscriptionContract->getQuantity())
+                            // 商品データ
+                            ->setOrderItemType($OrderItemType)
+                            ->setProductName($Product->getName())
+                            ->setClassName1($Product->getClassName1())
+                            ->setClassName2($Product->getClassName2())
+                            ->setProductCode($ProductClass->getCode())
+                            ->setClassCategoryName1($ProductClass->getClassCategory1())
+                            ->setClassCategoryName2($ProductClass->getClassCategory2())
+                            ->setPrice($ProductClass->getPrice02());
+
+                        $em->persist($OrderItem);
+
+                        $SubscriptionContract->setOrder($Order);
+                        $em->persist($SubscriptionContract);
+
+                        // 各要素を追加
+                        $Shipping->addOrderItem($OrderItem);
+                        $Order->addOrderItem($OrderItem);
+                        $OrderItem->setOrder($Order);
+                        $OrderItem->setShipping($Shipping);
+                        $Order->addShipping($Shipping);
+
+                        // 明細の正規化
+                        $purchaceContext = new PurchaseContext($Order, $Customer);
+                        $flowResult = $this->purchaseFlow->validate($Order, $purchaceContext);
+
+                        // エラー処理
+                        if ($flowResult->hasWarning()) {
+                            foreach ($flowResult->getWarning() as $warning) {
+                                $this->addWarning($warning->getMessage(), 'admin');
+                            }
                         }
+
+                        if ($flowResult->hasError()) {
+                            foreach ($flowResult->getErrors() as $error) {
+                                $this->addError($error->getMessage(), 'admin');
+                            }
+                        }
+
+                        // PurchaseFlowにて更新した内容をDBに反映
+                        $em->persist($Order);
+                        $em->persist($OrderItem);
+                        $em->persist($Shipping);
+
+                        // 定期購入テーブルにデータセット                        
+                        $repeatSpan = $SubscriptionContract->getRepeatSpan();
+                        $spanUnit = $SubscriptionContract->getSpanUnit();
+                        $prevDeliveryDate = $SubscriptionContract->getNextDeliveryDate();
+
+                        $prevDeliveryDate = new \DateTime($nextDeliveryDate);
+                        $nextDeliveryDate = new \DateTime($nextDeliveryDate);
+
+                        // 次回配送日を再生成
+                        if (!$spanUnit) {
+                            $nextDeliveryDate = $nextDeliveryDate->modify("+ ${repeatSpan}days");
+                        } else {
+                            $nextDeliveryDate = $nextDeliveryDate->modify("+ ${repeatSpan}month");
+                        }
+
+                        // 次回配送日、前回配送日をセット
+                        $SubscriptionContract
+                            ->setPrevDeliveryDate($prevDeliveryDate)
+                            ->setNextDeliveryDate($nextDeliveryDate);
+                        $em->persist($SubscriptionContract);
+                        $em->flush();
+
+                        $Order->setOrderNo($Order->getId());
+                        $em->persist($Order);
+                        $em->flush();
+                        $em->getConnection()->commit();
+
+                        // お届け日確定メールを送信する
+                        $this->subscriptionMailService->sendSubscriotionConfirmMail($Order, $Shipping, $SubscriptionContract);
                     }
-
-                    // PurchaseFlowにて更新した内容をDBに反映
-                    $em->persist($Order);
-                    $em->persist($OrderItem);
-                    $em->persist($Shipping);
-
-                    // subscriptionContractテーブルにデータセット                        
-                    $repeatSpan = $subscriptionContract->getRepeatSpan();
-                    $spanUnit = $subscriptionContract->getSpanUnit();
-                    $prevDeliveryDate = $subscriptionContract->getNextDeliveryDate();
-
-                    $prevDeliveryDate = new \DateTime($nextDeliveryDate);
-                    $nextDeliveryDate = new \DateTime($nextDeliveryDate);
-
-                    // 次回配送日を再生成
-                    if (!$spanUnit) {
-                        $nextDeliveryDate = $nextDeliveryDate->modify("+ ${repeatSpan}days");
-                    } else {
-                        $nextDeliveryDate = $nextDeliveryDate->modify("+ ${repeatSpan}month");
-                    }
-
-                    // 次回配送日、前回配送日をセット
-                    $subscriptionContract
-                        ->setPrevDeliveryDate($prevDeliveryDate)
-                        ->setNextDeliveryDate($nextDeliveryDate);
-                    $em->persist($subscriptionContract);
-
-                    // お届け日確定メールを送信する
-                    $this->subscriptionMailService->sendSubscriotionConfirmMail($Order, $Shipping, $subscriptionContract);
                 }
             }
         }

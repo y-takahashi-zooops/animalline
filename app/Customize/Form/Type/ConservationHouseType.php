@@ -92,7 +92,7 @@ class ConservationHouseType extends AbstractType
                 'trim' => true,
             ])
             ->add('conservation_house_house_fax', TextType::class, [
-                'required' => true,
+                'required' => false,
                 'constraints' => [
                     new Assert\Length([
                         'max' => 11,

@@ -38,11 +38,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Eccube\Controller\ProductController;
+use Eccube\Controller\ProductController as BaseProductController;
 use Eccube\Repository\CartItemRepository;
 use Eccube\Repository\CartRepository;
 
-class ProductControllerCustomizer extends ProductController
+class ProductController extends BaseProductController
 {
     /**
      * @var PurchaseFlow

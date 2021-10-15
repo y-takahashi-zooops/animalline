@@ -10598,10 +10598,21 @@ label[for="change_subscription_day"]{
   background-color: #f0f0f0;
 }
 
+#change_subscription_change_element_0,
+#change_subscription_change_element_1 {
+  transform: scale(1.5);
+  margin-top: 6px;
+}
+
 /* 定期購入履歴画面 */
 label[for="change_subscription_change_element_0"],
 label[for="change_subscription_change_element_1"] {
   font-size: 18px;
+  padding-left: 2rem;
+}
+label[for="change_subscription_cycle_type_0"],
+label[for="change_subscription_cycle_type_1"] {
+  padding-left: 2rem;
 }
 
 #ec-modal-contents__change li,

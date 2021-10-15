@@ -17,18 +17,16 @@ use Eccube\Entity\Customer;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\NonMemberType;
-use Eccube\Form\Validator\Email;
 use Eccube\Repository\Master\PrefRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\OrderHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Eccube\Controller\NonMemberShoppingController;
+use Eccube\Controller\NonMemberShoppingController as BaseNonMemberShoppingController;
 
-class NonMemberShoppingControllerCustomizer extends NonMemberShoppingController
+class NonMemberShoppingController extends BaseNonMemberShoppingController
 {
     /**
      * @var ValidatorInterface
