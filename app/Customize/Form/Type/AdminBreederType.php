@@ -233,19 +233,6 @@ class AdminBreederType extends AbstractType
                     new Assert\NotBlank()
                 ],
             ])
-            ->add('license_type', ChoiceType::class, [
-                'choices' =>
-                    [
-                        '販売業' => AnilineConf::ANILINE_LICENSE_SALES,
-                        '保管業' => AnilineConf::ANILINE_LICENSE_CUSTODY,
-                        '貸出業' => AnilineConf::ANILINE_LICENSE_LENDING,
-                        '訓練業' => AnilineConf::ANILINE_LICENSE_TRAINING,
-                        '展示業' => AnilineConf::ANILINE_LICENSE_EXHIBITION,
-                        'その他' => AnilineConf::ANILINE_LICENSE_OTHER
-                    ],
-                'required' => false,
-                'placeholder' => 'common.select'
-            ])
             ->add('thumbnail_path', FileType::class, [
                 'required' => false,
                 'mapped' => false,

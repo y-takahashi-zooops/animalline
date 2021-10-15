@@ -55,6 +55,7 @@
                                     <dd class="h-adr">
                                         <span class="p-country-name" style="display:none;">Japan</span>
                                         <div class="ec-zipInput{{ has_errors(form.breeder_zip) ? ' error' }}">
+                                            <label>ハイフン（-） なしで入力してください。</label><br/>
                                             <span>{{ '〒'|trans }}</span>
                                             {{ form_widget(form.breeder_zip) }}
                                             <div class="ec-zipInputHelp">
@@ -88,6 +89,7 @@
                                         {{ form_label(form.breeder_tel, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
+                                        <label>ハイフン（-） なしで入力してください。</label>
                                         <div class="ec-telInput{{ has_errors(form.breeder_tel) ? ' error' }}">
                                             {{ form_widget(form.breeder_tel) }}
                                             {{ form_errors(form.breeder_tel) }}
@@ -99,6 +101,7 @@
                                         {{ form_label(form.breeder_fax, 'FAX番号', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
+                                        <label>ハイフン（-） なしで入力してください。</label>
                                         <div class="ec-telInput{{ has_errors(form.breeder_fax) ? ' error' }}">
                                             {{ form_widget(form.breeder_fax) }}
                                             {{ form_errors(form.breeder_fax) }}
@@ -146,6 +149,9 @@
                                            style="background: #f0f0f0; border: 1px solid black;">
                                             {{ 'admin.common.file_select'|trans }}
                                         </a>
+                                        <div class="ec-input" id="breeder_img_error">
+                                            <p class="ec-errorMessage">ファイルを選択してください</p>
+                                        </div>
                                     </dd>
                                 </dl>
                             </div>
@@ -180,14 +186,16 @@
                                                  style="width: 200px; border: 1px solid #ddd;"/>
                                             {{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'thumbnail_path'  } }) }}
                                             {{ form_errors(form.license_thumbnail_path) }}
-                                            <input type="hidden" name="license_thumbnail_path"
-                                                   id="breeder_license_src_path">
+                                            <input type="hidden" name="license_thumbnail_path" id="breeder_license_src_path">
                                         </div>
                                         <a class="btn btn-ec-regular mr-2"
                                            onclick="$('#breeders_license_thumbnail_path').click()"
                                            style="background: #f0f0f0; border: 1px solid black;">
                                             {{ 'admin.common.file_select'|trans }}
                                         </a>
+                                        <div class="ec-input" id="breeder_license_img_error">
+                                            <p class="ec-errorMessage">ファイルを選択してください</p>
+                                        </div>
                                     </dd>
                                 </dl>
                                 <dl>
@@ -208,6 +216,7 @@
                                     <dd class="h-adr">
                                         <span class="p-country-name" style="display:none;">Japan</span>
                                         <div class="ec-zipInput{{ has_errors(form.license_zip) ? ' error' }}">
+                                            <label>ハイフン（-） なしで入力してください。</label><br/>
                                             <span>{{ '〒'|trans }}</span>
                                             {{ form_widget(form.license_zip) }}
                                             <div class="ec-zipInputHelp">
@@ -284,7 +293,8 @@
                                         </div>
                                     </dd>
                                 </dl>
-                                <dl>
+                                {# 20211015 動物取扱業の種別の削除 #}
+                                {# <dl>
                                     <dt>
                                         {{ form_label(form.license_type, '動物取扱業の種別', { 'label_attr': {'class': 'ec-label' }}) }}
                                     </dt>
@@ -294,7 +304,7 @@
                                             {{ form_errors(form.license_type) }}
                                         </div>
                                     </dd>
-                                </dl>
+                                </dl> #}
                             </div>
                         </div>
                         <div class="ec-registerRole__actions">
