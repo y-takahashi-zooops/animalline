@@ -12,15 +12,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ProductMakerType extends AbstractType
 {
-//    /**
-//     * @var EccubeConfig
-//     */
-//    protected $eccubeConfig;
-//
-//    public function __construct(EccubeConfig $eccubeConfig)
-//    {
-//        $this->eccubeConfig = $eccubeConfig;
-//    }
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
+
+    public function __construct(EccubeConfig $eccubeConfig)
+    {
+        $this->eccubeConfig = $eccubeConfig;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
