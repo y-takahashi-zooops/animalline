@@ -154,9 +154,15 @@ class BreederController extends AbstractController
             $direction = $request['direction'] == 'ASC' ? 'DESC' : 'ASC';
         }
 
+        $breederstatus[0] = "申請待ち";
+        $breederstatus[1] = "未審査";
+        $breederstatus[2] = "審査済（許可）";
+        $breederstatus[3] = "審査済（拒否）";
+
         return $this->render('@admin/Breeder/index.twig', [
             'breeders' => $breeders,
-            'direction' => $direction
+            'direction' => $direction,
+            'breederstatus' => $breederstatus,
         ]);
     }
 

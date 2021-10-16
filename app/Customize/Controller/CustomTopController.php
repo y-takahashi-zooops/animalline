@@ -38,6 +38,8 @@ class CustomTopController extends AbstractController
      */
     public function animalline_index()
     {
+        return $this->redirectToRoute("breeder_top");
+        
         return [];
     }
 

@@ -194,7 +194,7 @@
                                             {{ 'admin.common.file_select'|trans }}
                                         </a>
                                         <div class="ec-input" id="breeder_license_img_error">
-                                            <p class="ec-errorMessage">ファイルを選択してください</p>
+                                            <p class="ec-errorMessage">動物取扱業登録証の画像をアップロードお願いします。</p>
                                         </div>
                                     </dd>
                                 </dl>
@@ -247,7 +247,7 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.license_house_name, '動物取扱者事業所の名称', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        {{ form_label(form.license_house_name, '事業所の名称', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
                                         <div class="ec-halfInput{{ has_errors(form.license_house_name) ? ' error' }}">
