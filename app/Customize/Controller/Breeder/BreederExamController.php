@@ -85,14 +85,24 @@ class BreederExamController extends AbstractController
 
         $step = 1;
 
+        $regcheck[1] = 0;
+        $regcheck[2] = 0;
+        $regcheck[3] = 0;
+        $regcheck[4] = 0;
+        $regcheck[5] = 0;
+
         // 基本情報が登録済みであればSTEP2を表示
         if ($breeder) {
             $step = 2;
+            $regcheck[1] = 1;
 
             // 基本情報の取扱ペットに対応する犬舎・猫舎情報が登録されていればSTEP3を表示
             $handling_pet_kind = $breeder->getHandlingPetKind();
             $dog_house_info = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 1]);
             $cat_house_info = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 2]);
+
+            if($dog_house_info){$regcheck[2] = 1;}
+            if($cat_house_info){$regcheck[3] = 1;}
 
             if ($handling_pet_kind == 0 && $cat_house_info && $dog_house_info) {
                 $step = 3;
@@ -107,6 +117,8 @@ class BreederExamController extends AbstractController
             $dog_examination_info = $this->breederExaminationInfoRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 1]);
             $cat_examination_info = $this->breederExaminationInfoRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 2]);
 
+            if($dog_examination_info){$regcheck[4] = 1;}
+            if($cat_examination_info){$regcheck[5] = 1;}
             if ($handling_pet_kind == 0 && $dog_examination_info && $cat_examination_info) {
                 $step = 4;
             }
@@ -129,6 +141,7 @@ class BreederExamController extends AbstractController
             'user' => $user,
             'breeder' => $breeder,
             'step' => $step,
+            'regcheck' => $regcheck,
         ]);
     }
 

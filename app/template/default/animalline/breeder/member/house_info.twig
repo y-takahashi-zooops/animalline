@@ -24,11 +24,17 @@
                             <div class="mb-5">
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.breeder_house_name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        {% if petType == 1 %}
+                                            {{ form_label(form.breeder_house_name, 'お名前（犬舎名）', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        {% else %}
+                                            {{ form_label(form.breeder_house_name, 'お名前（猫舎名）', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        {% endif %}
+
+                                        
                                     </dt>
                                     <dd>
                                         <div class="ec-halfInput{{ has_errors(form.breeder_house_name) ? ' error' }}">
-                                            {{ form_widget(form.breeder_house_name, { 'attr': { 'placeholder': 'お名前' }}) }}
+                                            {{ form_widget(form.breeder_house_name, { 'attr': { 'placeholder': 'お名前' }}) }}                                            
                                             {{ form_errors(form.breeder_house_name) }}
                                         </div>
                                     </dd>
