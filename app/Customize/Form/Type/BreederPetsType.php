@@ -169,7 +169,18 @@ class BreederPetsType extends AbstractType
                 ],
                 'data_class' => null
             ])
-            ->add('price', IntegerType::class);
+            ->add('price', IntegerType::class)
+            ->add('pet_code', TextType::class, [
+                'required' => false,
+                'attr' => [
+                    'maxlength' => 6,
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 6,
+                    ])
+                ]
+            ]);
 
             $customer = $options['customer'];
             $breeder = $this->breedersRepository->find($customer);

@@ -191,7 +191,10 @@ class DnaController extends AbstractController
             } else {
                 $pet = $this->conservationPetsRepository->find($dna->getPetId());
             }
+            $pet->setIsActive(AnilineConf::ANILINE_IS_ACTIVE_PUBLIC)
+                ->setReleaseDate(Carbon::now());
             $em = $this->getDoctrine()->getManager();
+            $em->persist($pet);
             $em->persist($dna);
             $em->flush();
 

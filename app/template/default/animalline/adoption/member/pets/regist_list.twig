@@ -1,0 +1,33 @@
+{% set site_type = 'adoption' %}
+{% extends 'animalline/adoption/frame.twig' %}
+
+{% block main %}
+    <section id="adoption-column" class="adoption-column_dog">
+        <div class="inner">
+            <div class="card rounded border-0 mb-4 d-block">
+                <div class="card-body p-0">
+                    <table class="table table-sm dna-table text-center responsive-table">
+                        <thead>
+                        <tr class="heading">
+                            <th class="border-top-0 pt-2 pb-2">コード</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for barCode in barCodes %}
+                            <tr>
+                                <td data-label="コード">
+                                    <a href="{{ url('adoption_pets_new',{'bar_code': barCode}) }}">{{ barCode }}</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

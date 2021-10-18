@@ -150,9 +150,9 @@ class VeqtaPdfService extends TcpdfFpdi
         $fromY = 202;
         // 検査結果
         $CHECK_RESULTS = [
-            AnilineConf::DNA_CHECK_RESULT_1 => 'クリア',
-            AnilineConf::DNA_CHECK_RESULT_2 => 'キャリア',
-            AnilineConf::DNA_CHECK_RESULT_3 => 'アフェクテッド'
+            1 => 'クリア',
+            2 => 'キャリア',
+            3 => 'アフェクテッド'
         ];
 
         foreach ($rows as $row) {

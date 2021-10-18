@@ -3261,7 +3261,13 @@ CONTENTS後藤追加分
   .adoption_section_detail {
     border-bottom: 1px dotted #ddd;
   }
-  
+
+  .adoption-column_dog .adoption-column__main_section_title h3 {
+    background-image:url(../img/breeder-mv-icon-dog.png);
+  }
+  #adoption-column{
+    padding:80px 0;
+  }
   .tbl_benefits {
     width: 100%;
     border: 1px solid #948654;
