@@ -90,14 +90,35 @@ class BreederPetController extends AbstractController
      */
     public function pet_all(PaginatorInterface $paginator, Request $request)
     {
-        $pets = $this->breederPetsRepository->findAll();
+        $request = $request->query->all();
+
         $breeds = $this->breedsRepository->findAll();
+        $order = [];
+        $order['field'] = array_key_exists('field', $request) ? $request['field'] : 'create_date';
+        $order['direction'] = array_key_exists('direction', $request) ? $request['direction'] : 'DESC';
+        $criteria = [];
+        $criteria['pet_kind'] = array_key_exists('pet_kind', $request) ? $request['pet_kind'] : '';
+        $criteria['breed_type'] = array_key_exists('breed_type', $request) ? $request['breed_type'] : '';
+        $criteria['public_status'] = array_key_exists('public_status', $request) ? $request['public_status'] : '';
+
+        $results = $this->breederPetsRepository->filterBreederPetsAdmin($criteria, $order);
+
+        $breederPets = $paginator->paginate(
+            $results,
+            array_key_exists('page', $request) ? $request['page'] : 1,
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        $direction = 'ASC';
+        if (array_key_exists('direction', $request)) {
+            $direction = $request['direction'] == 'ASC' ? 'DESC' : 'ASC';
+        }
 
         return [
-            'pets' => $pets,
             'breeds' => $breeds,
+            'direction' => $direction,
+            'breederPets' => $breederPets
         ];
-        return[];
     }
 
     /**

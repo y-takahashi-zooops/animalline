@@ -112,7 +112,7 @@ class BreederPets
     private $delivery_way;
 
     /**
-     * @ORM\Column(name="price", type="integer")
+     * @ORM\Column(name="price", type="integer", nullable=true)
      */
     private $price;
 
@@ -167,7 +167,7 @@ class BreederPets
     private $Pedigree;
 
     /**
-     * @ORM\Column(name="pedigree_code", type="string", length=20)
+     * @ORM\Column(name="pedigree_code", type="string", length=20, nullable=true)
      */
     private $pedigree_code;
 
