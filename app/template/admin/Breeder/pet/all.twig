@@ -141,14 +141,14 @@ file that was distributed with this source code.
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
-                                                <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ pet.isActive }}"
-                                                    data-action="{{ url('admin_breeder_pet_change_status', {'id': pet.id}) }}">
+                                                <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ breederPet.isActive }}"
+                                                    data-action="{{ url('admin_breeder_pet_change_status', {'id': breederPet.id}) }}">
                                                         <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査結果PDFダウンロード">
-                                                
-                                                {% if pet.filePath is defined and pet.filePath %}
+
+                                                {% if breederPet.filePath is defined and breederPet.filePath %}
                                                     <a class="btn btn-ec-actionIcon"
                                                         href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': pet.id}) }}">
                                                         <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>

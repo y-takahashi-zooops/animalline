@@ -119,7 +119,6 @@ class BreederPetController extends AbstractController
             'direction' => $direction,
             'breederPets' => $breederPets
         ];
-        return[];
     }
 
     /**
