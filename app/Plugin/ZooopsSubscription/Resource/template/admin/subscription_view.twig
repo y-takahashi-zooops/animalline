@@ -1,0 +1,141 @@
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['order', 'admin_zooops_subscription'] %}
+
+{% block title %}
+	{{ 'admin.order.subscription'|trans }}
+{% endblock %}
+{% block sub_title %}
+	{{ 'admin.order.order_list'|trans }}
+{% endblock %}
+
+{% block javascript %}{% endblock javascript %}
+
+{% block main %}
+	{# 検索領域 #}
+	<div class="c-outsideBlock">
+		<form name="search_form" id="search_form" method="POST" action="">
+			{{ form_widget(searchForm._token) }}
+			{# 検索条件 #}
+			<div class="c-outsideBlock__contents mb-4">
+				<div class="row">
+					<div class="col-6">
+						<label class="col-form-label" data-tooltip="true" data-placement="top" title="{{ 'tooltip.order.multi_search_label_short'|trans }}">{{ 'admin.order.orderer_name'|trans }}<i class="fa fa-question-circle fa-lg ml-1"></i>
+						</label>
+						{{ form_widget(searchForm.customer_name) }}
+						{{ form_errors(searchForm.customer_name) }}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6">
+						<label class="col-form-label">{{ 'admin.order.next_delivery_date'|trans }}</label>
+						<div class="form-row align-items-center">
+							<div class="col">
+								{{ form_widget(searchForm.next_delivery_date_start) }}
+								{{ form_errors(searchForm.next_delivery_date_start) }}
+							</div>
+							<div class="col-auto text-center">
+								<span>{{ 'admin.common.separator__range'|trans }}</span>
+							</div>
+							<div class="col">
+								{{ form_widget(searchForm.next_delivery_date_end) }}
+								{{ form_errors(searchForm.next_delivery_date_end) }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{# 検索ボタン #}
+			<div class="c-outsideBlock__contents mb-4">
+				<div class="row">
+					<div class="col-12">
+						<button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.search'|trans }}</button>
+						{% if pagination %}
+							<span class="font-weight-bold ml-2">{{ 'admin.common.search_result'|trans({'%count%':pagination.totalItemCount}) }}</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+			<div class="c-outsideBlock__contents">
+				{{ include('@admin/search_items.twig', { 'form': searchForm }, ignore_missing = true) }}
+			</div>
+		</form>
+	</div>
+
+	{#  件数表示 #}
+	<div class="col-12 text-right">
+		<div class="d-inline-block">
+			<select class="custom-select" onchange="location = this.value;">
+				{% for pageMax in pageMaxis %}
+					<option {% if pageMax.name == page_count %} selected="" {% endif %} value="{{ path('admin_zooops_subscription_view_page', {'page_no': 1, 'page_count': pageMax.name}) }}">{{ 'admin.common.count'|trans({ '%count%': pageMax.name }) }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+
+	{# 定期購入一覧 #}
+	<div class="c-outsideBlock__contents">
+		<div class="card rounded border-0 mt-2 mb-4 d-block">
+			<div class="card-body p-0">
+				{% if pagination and pagination.totalItemCount %}
+					<table class="table table-sm">
+						<thead>
+							<tr>
+								<th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.common.id'|trans }}</th>
+								<th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.orderer_id'|trans }}</th>
+								<th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.orderer_name'|trans }}</th>
+								<th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.contract_date'|trans }}</th>
+								<th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.next_delivery_date'|trans }}</th>
+							</tr>
+						</thead>
+
+						{# DBのデータをテーブル形式で表示 #}
+						<tbody>
+							{% for subscription in pagination %}
+								<tr style="height:40px;">
+									<td class="align-middle text-center">
+										{{subscription.id}}
+									</td>
+									<td class="align-middle text-center">
+										{{subscription.Customer.id}}
+									</td>
+									<td class="align-middle text-center">
+										{% for customer in customers %}
+											{% if customer.id == subscription.Customer.id %}
+												{{customer.name01}}
+												{{customer.name02}}
+											{% endif %}
+										{% endfor %}
+									</td>
+									<td class="align-middle text-center">
+										{{subscription.contract_date|date('Y/m/d')}}
+									</td>
+									<td class="align-middle text-center">
+										{{subscription.next_delivery_date|date('Y/m/d')}}
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			{# ページネーション #}
+			<div class="row justify-content-md-center mb-4">
+				{% if pagination.totalItemCount > 0 %}
+					{% include "@admin/pager.twig" with { 'pages' : pagination.paginationData, 'routes' : 'admin_zooops_subscription_view_page' } %}
+				{% endif %}
+			</div>
+			{# 検索結果0件の場合はメッセージを表示 #}
+		{% else %}
+			<div class="card rounded border-0 mt-4">
+				<div class="card-body p-4">
+					<div class="text-center text-muted mb-4 h5">{{ 'admin.common.search_no_result'|trans }}</div>
+					<div class="text-center text-muted">{{ 'admin.common.search_try_change_condition'|trans }}</div>
+				</div>
+			</div>
+		{% endif %}
+
+	{% endblock %}

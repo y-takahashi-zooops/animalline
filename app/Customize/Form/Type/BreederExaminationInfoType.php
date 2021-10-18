@@ -148,7 +148,7 @@ class BreederExaminationInfoType extends AbstractType
                 'choices' => [
                     '毎日1回はケージから出して運動させている' => 1,
                     '毎日ではないが、ケージから出して運動させている' => 2,
-                    '飼育スペースと運動スペースを一体型として飼育しているため、ケージから出せない' => 3,
+                    'ケージから出せない' => 3,
                     'その他' => 4,
                 ],
                 'expanded' => true,

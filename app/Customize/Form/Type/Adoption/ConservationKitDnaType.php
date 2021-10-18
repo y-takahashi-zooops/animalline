@@ -117,8 +117,11 @@ class ConservationKitDnaType extends AbstractType
                     new Assert\GreaterThanOrEqual([
                         'value' => 1,
                     ]),
+                    new Assert\LessThanOrEqual([
+                        'value' => 6,
+                    ]),
                     new Assert\NotBlank()
-                ]
+                ],
             ]);
     }
 

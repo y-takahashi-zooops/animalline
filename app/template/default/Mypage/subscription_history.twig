@@ -1,0 +1,252 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set mypageno = 'subscription' %}
+
+{% set body_class = 'mypage' %}
+
+{% block javascript %}
+    <script>
+	$('.change').on('click', function(event) {
+		$('.ec-modal').show();
+		$('#ec-modal-contents__change').show();
+		$('#ec-modal-contents__cancel').hide();
+		$('#ec-modal-header').html("{{ '定期購入情報変更'|trans }}");
+		$('.ec-inlineBtn--action').html("{{ '変更'|trans }}");
+		$('.ec-inlineBtn--action').attr('name', 'change');
+
+	});
+
+	$('.cancel').on('click', function(event) {
+		$('.ec-modal').show();
+		$('#ec-modal-contents__cancel').show();
+		$('#ec-modal-contents__change').hide();
+		$('#ec-modal-header').html("{{ '定期購入停止'|trans }}");
+		$('.ec-inlineBtn--action').html("{{ '停止'|trans }}");
+		$('.ec-inlineBtn--action').attr('name', 'cancel');
+	});
+
+	$('.ec-icon, .ec-inlineBtn--cancel').on('click', function() {
+		$('.ec-modal').hide();
+	});
+
+	// お届けサイクルが選択されているときは次回お届け日は非表示
+	$('#change_subscription_change_element_0').on('click', function (e) {
+		if(document.getElementById("change_subscription_change_element_0").checked){
+			$('.subscription_cycle_hidden').show();
+			$('.next_delivery_date_hidden').hide();
+		}
+	});
+
+	// 次回お届け日が選択されているときはお届けサイクルは非表示
+	$('#change_subscription_change_element_1').on('click', function (e) {
+		if(document.getElementById("change_subscription_change_element_1").checked){
+			$('.next_delivery_date_hidden').show();
+			$('.subscription_cycle_hidden').hide();	
+		}
+	});
+	</script>
+
+{% endblock %}
+
+{% block main %}
+	<div class="ec-layoutRole__main">
+		<div class="ec-mypageRole">
+			<div class="ec-pageHeader">
+				<h1>{{ 'マイページ'|trans }}/{{ '定期購入履歴詳細'|trans }}</h1>
+			</div>
+			{% include 'Mypage/navi.twig' %}
+		</div>
+
+		<div class="ec-orderRole">
+			<div class="ec-orderRole__detail">
+				<div class="ec-orderOrder">
+					<div class="ec-definitions">
+						<dt>{{ '定期注文番号'|trans }}</dt>
+						<dd>{{ SubscriptionContract.id }}</dd>
+					</div>
+					{% if BaseInfo.option_mypage_order_status_display %}
+						<div class="ec-definitions">
+							<dt>{{ 'ご注文状況'|trans }}</dt>
+							{% if SubscriptionContract.next_delivery_date %}
+								<dd>{{'定期配送中'}}</dd>
+							{% else %}
+								<dd>{{'停止済み'}}</dd>
+							{% endif %}
+						</div>
+					{% endif %}
+					{# ご利用ポイントは置いておいて加算ポイントは欲しい気がする #}
+					{# {% if BaseInfo.isOptionPoint %}
+						<div class="ec-definitions">
+							<dt>{{ 'ご利用ポイント'|trans }}</dt>
+							<dd>{{ Order.usePoint|number_format }}
+								pt</dd>
+						</div>
+						<div class="ec-definitions">
+							<dt>{{ '加算ポイント'|trans }}</dt>
+							<dd>{{ Order.addPoint|number_format }}
+								pt</dd>
+						</div>
+					{% endif %} #}
+				</div>
+				<div class="ec-orderDelivery">
+					<div class="ec-rectHeading">
+						<h2>{{ '配送情報'|trans }}</h2>
+					</div>
+					<div class="ec-orderDelivery__title">{{ 'お届け先'|trans }}
+					<div class="ec-orderDelivery__change">
+						<a class="ec-inlineBtn" href="{{ url('mypage_subscription_shipping', { id : SubscriptionContract.id }) }}">{{ '変更'|trans }}</a>
+					</div>
+					</div>
+					<div class="ec-orderDelivery__item">
+						<div class="ec-imageGrid">
+							<div class="ec-imageGrid__img">
+								{% if Product is null %}
+									<img src="{{ asset(''|no_image_product, 'save_image') }}"/>
+								{% else %}
+									<img src="{{ asset(Product.MainListImage|no_image_product, 'save_image') }}">
+								{% endif %}
+							</div>
+							<div class="ec-imageGrid__content">
+								<p class="ec-historyRole__detailTitle">{{ Product.name }}</p>
+								<p class="ec-historyRole__detailPrice">{{ Product.Price02IncTaxMax|price }}
+									×
+									{{ SubscriptionContract.quantity }}
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="ec-orderDelivery__address">
+						<p>{{ CustomerAddress.name01 }}&nbsp;{{ CustomerAddress.name02 }}&nbsp;
+							({{ CustomerAddress.kana01 }}&nbsp;{{ CustomerAddress.kana02 }})</p>
+						<p>{{ '〒'|trans }}{{ CustomerAddress.postal_code }}
+							{{ CustomerAddress.Pref }}{{ CustomerAddress.addr01 }}{{ CustomerAddress.addr02 }}</p>
+						<p>{{ CustomerAddress.phone_number }}</p>
+					</div>
+					{% if SubscriptionContract.next_delivery_date %}
+					<div class="ec-definitions--soft">
+						<dt>{{ '次回配送日'|trans }}
+							:</dt>
+						<dd>{{ SubscriptionContract.next_delivery_date|date_day_with_weekday }}</dd>
+					</div>
+					{% endif %}
+				</div>
+				<div class="ec-orderPayment my-md-4">
+					<div class="ec-rectHeading">
+						<h2>{{ 'お支払い情報'|trans }}</h2>
+					</div>
+					<p>{{ 'お支払い方法'|trans }}
+						:
+						{{ Order.PaymentMethod }}
+					</p>
+				</div>
+			</div>
+			<div class="ec-orderRole__summary">
+				<div class="ec-totalBox">
+					<dl class="ec-totalBox__spec">
+						<dt>{{ '小計'|trans }}</dt>
+						<dd>{{ subtotal|price }}</dd>
+					</dl>
+					<dl class="ec-totalBox__spec">
+						<dt>{{ '手数料'|trans }}</dt>
+						<dd>{{ charge|price }}</dd>
+					</dl>
+					<dl class="ec-totalBox__spec">
+						<dt>{{ '送料'|trans }}</dt>
+						<dd>{{ deliveryFee|price }}</dd>
+					</dl>
+					<div class="ec-totalBox__total">{{ '合計'|trans }}<span class="ec-totalBox__price">{{ total|price }}</span>
+						<span class="ec-totalBox__taxLabel">{{ '税込'|trans }}</span>
+					</div>
+						<dl class="ec-totalBox__taxRate">
+							<dt>{{ '税率 %rate% %対象'|trans({ '%rate%': taxRate }) }}</dt>
+							<dd>{{ total|price }}</dd>
+						</dl>
+					<div class="ec-totalBox__paymentTotal">{{ '合計'|trans }}<span class="ec-totalBox__price">{{ total|price }}</span>
+						<span class="ec-totalBox__taxLabel">{{ '税込'|trans }}</span>
+					</div>
+                    <div class="ec-totalBox__btn">
+						{% if SubscriptionContract.next_delivery_date %}
+							<button type="button" class="ec-blockBtn--action change">
+								{{ '次回配送日変更'|trans }}
+							</button>
+							<button type="button" class="ec-blockBtn--cancel cancel" style="margin-bottom: 10px">
+								{{ '停止する'|trans }}
+							</button>
+						{% else %}
+							<button class="ec-blockBtn--action change" disabled>
+								{{ '次回配送日変更'|trans }}
+							</button>
+							<a type="button" class="ec-blockBtn--cancel" href="{{ url('product_detail', { id : Product.id }) }}" style="margin-bottom: 10px">
+								{{ '再開する'|trans }}
+							</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{{ form_start(form) }}
+		{{ form_widget(form._token) }}
+			<div class="ec-modal">
+				<div class="ec-modal-overlay">
+					<div class="ec-modal-wrap" style="max-width:350px">
+						<span class="ec-modal-close">
+							<span class="ec-icon"><img src="{{ asset('assets/icon/cross-dark.svg') }}" alt=""/></span>
+						</span>
+						<div id="ec-modal-header" class="text-center" style="font-weight: bold; font-size: 20px; margin-bottom:10px"></div>
+						<div id="ec-modal-contents__change" class="text-left">
+							<ul class="subscription_cycle_block">
+								{{ form_widget(form.change_element[0]) }}
+								<div class="subscription_cycle_hidden">
+									<li class="subscription_cycle pl-sm-2">
+										{{ form_widget(form.cycle_type[0]) }}
+										{{ form_row(form.month) }}
+									</li>
+									<li class="subscription_cycle pl-sm-2">
+										{{ form_widget(form.cycle_type[1]) }}
+										{{ form_row(form.day) }}
+									</li>
+								</div>
+							</ul>
+							<ul class="next_delivery_date_block">
+								{{ form_widget(form.change_element[1]) }}
+								<div class="next_delivery_date_hidden" style="display:none;">
+									<li class="next_delivery_date">
+										次回お届け予定日：{{ SubscriptionContract.next_delivery_date|date_day_with_weekday }}
+									</li>
+									<li class="next_delivery_date" style="border: none;">
+										{{ form_widget(form.next_delivery_date) }}
+									</li>
+								</div>
+							</ul>
+						</div>
+						<div id="ec-modal-contents__cancel" class="text-center">
+							<p style="font-size: 16px;">本当に停止しますか？</p>
+						</div>
+
+						<div class="ec-modal-box">
+							<div class="ec-role">
+								<span class="ec-inlineBtn--cancel">{{ 'キャンセル'|trans }}</span>
+								<button type="submit" class="ec-inlineBtn--action"></button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{{ form_end(form) }}
+
+		<div class="ec-role">
+			<a href="{{ url('mypage_subscription') }}" class="ec-inlineBtn">{{ '戻る'|trans }}</a>
+		</div>
+	</div>
+{% endblock %}

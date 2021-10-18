@@ -3223,6 +3223,16 @@ CONTENTS佐藤追加分
     width: 640px;
     padding: 10px;
   }
+  .mypage-checkmark{
+    font-size: 25px;
+    color: #b60606;
+  }
+  .mypage-center-comment{
+    padding-top: 1rem;
+    font-size: 20px;
+    text-align: center;
+    font-weight: 500;
+  }
   /*------------------
   CONTENTS佐藤追加分
   ------------------*/

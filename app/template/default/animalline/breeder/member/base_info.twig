@@ -51,6 +51,7 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.addr, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd class="h-adr">
                                         <span class="p-country-name" style="display:none;">Japan</span>
@@ -86,6 +87,7 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.breeder_tel, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <p style="font-size:14px;color:#DE5D50;">'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd>
                                         <div class="ec-telInput{{ has_errors(form.breeder_tel) ? ' error' }}">
@@ -97,6 +99,7 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.breeder_fax, 'FAX番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <p style="font-size:14px;color:#DE5D50;">'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd>
                                         <div class="ec-telInput{{ has_errors(form.breeder_fax) ? ' error' }}">
@@ -111,7 +114,7 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.pr_text) ? ' error' }}">
-                                            {{ form_widget(form.pr_text) }}
+                                            {{ form_widget(form.pr_text ,  { 'attr': { 'placeholder': 'ブリーダー様の自己紹介文をご記入ください。' }}) }}
                                             {{ form_errors(form.pr_text) }}
                                         </div>
                                     </dd>
@@ -122,7 +125,7 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.regal_effort) ? ' error' }}">
-                                            {{ form_widget(form.regal_effort) }}
+                                            {{ form_widget(form.regal_effort,  { 'attr': { 'placeholder': 'ブリーダー様にて動物愛護法に対応している内容があればご記入ください。' }}) }}
                                             {{ form_errors(form.regal_effort) }}
                                         </div>
                                     </dd>
@@ -146,6 +149,9 @@
                                            style="background: #f0f0f0; border: 1px solid black;">
                                             {{ 'admin.common.file_select'|trans }}
                                         </a>
+                                        <div class="ec-input" id="breeder_img_error">
+                                            <p class="ec-errorMessage">ブリーダー様のプロフィール写真をアップロードください。</p>
+                                        </div>
                                     </dd>
                                 </dl>
                             </div>
@@ -170,7 +176,7 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.license_thumbnail_path, '画像', { 'label_attr': {'class': 'ec-label' }}) }}
+                                        {{ form_label(form.license_thumbnail_path, '動物取扱業登録証画像', { 'label_attr': {'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
                                         <div class="media-body">
@@ -180,14 +186,16 @@
                                                  style="width: 200px; border: 1px solid #ddd;"/>
                                             {{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'thumbnail_path'  } }) }}
                                             {{ form_errors(form.license_thumbnail_path) }}
-                                            <input type="hidden" name="license_thumbnail_path"
-                                                   id="breeder_license_src_path">
+                                            <input type="hidden" name="license_thumbnail_path" id="breeder_license_src_path">
                                         </div>
                                         <a class="btn btn-ec-regular mr-2"
                                            onclick="$('#breeders_license_thumbnail_path').click()"
                                            style="background: #f0f0f0; border: 1px solid black;">
                                             {{ 'admin.common.file_select'|trans }}
                                         </a>
+                                        <div class="ec-input" id="breeder_license_img_error">
+                                            <p class="ec-errorMessage">動物取扱業登録証の画像をアップロードお願いします。</p>
+                                        </div>
                                     </dd>
                                 </dl>
                                 <dl>
@@ -204,6 +212,7 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.license_addr, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd class="h-adr">
                                         <span class="p-country-name" style="display:none;">Japan</span>
@@ -238,7 +247,7 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.license_house_name, '動物取扱者事業所の名称', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        {{ form_label(form.license_house_name, '事業所の名称', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
                                         <div class="ec-halfInput{{ has_errors(form.license_house_name) ? ' error' }}">
@@ -284,7 +293,8 @@
                                         </div>
                                     </dd>
                                 </dl>
-                                <dl>
+                                {# 20211015 動物取扱業の種別の削除 #}
+                                {# <dl>
                                     <dt>
                                         {{ form_label(form.license_type, '動物取扱業の種別', { 'label_attr': {'class': 'ec-label' }}) }}
                                     </dt>
@@ -294,7 +304,7 @@
                                             {{ form_errors(form.license_type) }}
                                         </div>
                                     </dd>
-                                </dl>
+                                </dl> #}
                             </div>
                         </div>
                         <div class="ec-registerRole__actions">
