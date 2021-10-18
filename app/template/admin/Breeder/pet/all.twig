@@ -122,35 +122,35 @@ file that was distributed with this source code.
                             {% for breederPet in breederPets %}
                                 <tr id="ex-adoption-1">
                                     <td class="align-middle"></td>
-                                    <td class="align-middle">{{ breederPet.Id }}</td>
+                                    <td class="align-middle">{{ breederPet.bp_id }}</td>
                                     <td class="align-middle">
                                         <img alt="..."
-                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (breederPet.thumbnailPath | default | length > 0 ? breederPet.thumbnailPath : '/noimage_plugin_list.png') }}"
+                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (breederPet.bp_thumbnail_path | default | length > 0 ? breederPet.bp_thumbnail_path : '/noimage_plugin_list.png') }}"
                                              style="max-width: 100px">
                                     </td>
-                                    <td class="align-middle">{{ breederPet.petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
-                                    <td class="align-middle">{{ breederPet.BreedsType.breedsName }}</td>
-                                    <td class="align-middle">{{ breederPet.createDate|date('Y/m/d H:i') }}</td>
-                                    <td class="align-middle">{{ breederPet.updateDate|date('Y/m/d H:i') }}</td>
+                                    <td class="align-middle">{{ breederPet.bp_pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
+                                    <td class="align-middle">{{ breederPet.breeds_name }}</td>
+                                    <td class="align-middle">{{ breederPet.bp_create_date|date('Y/m/d H:i') }}</td>
+                                    <td class="align-middle">{{ breederPet.bp_update_date|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
                                                 <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_breeder_pet_edit', {'id': breederPet.Id}) }}">
+                                                   href="{{ url('admin_breeder_pet_edit', {'id': breederPet.bp_id}) }}">
                                                     <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
-                                                <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ pet.isActive }}"
-                                                    data-action="{{ url('admin_breeder_pet_change_status', {'id': pet.id}) }}">
+                                                <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ breederPet.bp_is_active }}"
+                                                    data-action="{{ url('admin_breeder_pet_change_status', {'id': breederPet.bp_id}) }}">
                                                         <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査結果PDFダウンロード">
                                                 
-                                                {% if pet.filePath is defined and pet.filePath %}
+                                                {% if breederPet.dna_file_path %}
                                                     <a class="btn btn-ec-actionIcon"
-                                                        href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': pet.id}) }}">
+                                                        href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': breederPet.bp_id}) }}">
                                                         <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
                                                     </a>
                                                 {% else %}

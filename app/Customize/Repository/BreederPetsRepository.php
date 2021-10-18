@@ -117,9 +117,12 @@ class BreederPetsRepository extends ServiceEntityRepository
                     ->setParameter('dna_check_result', AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
             }
         }
-        return $qb->orderBy('bp.' . $order['field'], $order['direction'])
-            ->getQuery()
-            ->getResult();
 
+        return $qb->leftJoin('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'bp.id = dna.pet_id')
+            ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
+            ->select('bp', 'dna', 'b.breeds_name')
+            ->orderBy('bp.' . $order['field'], $order['direction'])
+            ->getQuery()
+            ->getScalarResult();
     }
 }
