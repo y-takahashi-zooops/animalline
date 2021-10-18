@@ -45,8 +45,7 @@ class BreederMemberController extends AbstractController
         CustomerRepository  $customerRepository,
         BreedersRepository  $breedersRepository,
         BreederQueryService $breederQueryService
-    )
-    {
+    ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
         $this->breederQueryService = $breederQueryService;
@@ -158,6 +157,15 @@ class BreederMemberController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
             $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
+
+            if (!$thumbnail_path || !$license_thumbnail_path) {
+                if($thumbnail_path)
+                   $breederData->setThumbnailPath($thumbnail_path);
+                elseif($license_thumbnail_path)
+                    $breederData->setLicenseThumbnailPath($license_thumbnail_path);
+                
+                return $this->redirectToRoute('breeder_baseinfo');
+            }
 
             $breederData->setBreederPref($breederData->getPrefBreeder())
                 ->setLicensePref($breederData->getPrefLicense())

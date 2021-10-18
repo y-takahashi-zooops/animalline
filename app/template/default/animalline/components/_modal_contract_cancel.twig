@@ -13,11 +13,13 @@
                     <span>お取引をキャンセルします。</span><br>
                     <span>キャンセル理由を以下から選択してください。</span><br>
                 </div>
-                <select aria-label="reason" name="reason" class="ec-select">
-                    {% for reason in reasons %}
-                        <option value="{{ reason.id }}">{{ reason.reason }}</option>
-                    {% endfor %}
-                </select>
+                <div class="ec-select">
+                    <select aria-label="reason" name="reason">
+                        {% for reason in reasons %}
+                            <option value="{{ reason.id }}">{{ reason.reason }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">いいえ</button>

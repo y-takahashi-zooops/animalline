@@ -91,7 +91,7 @@ class BreederExaminationController extends AbstractController
         $breederHouseDogKind = $this->breederHouseRepository->findBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
         $breederHouseCatKind = $this->breederHouseRepository->findBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
 
-        if (!$breederExaminationInfos or !$breederHouseDogKind or !$breederHouseCatKind) {
+        if (!$breederExaminationInfos or !($breederHouseDogKind or $breederHouseCatKind)) {
             throw new NotFoundHttpException();
         }
         $breederExaminationInfo = $breederExaminationInfos[0];
@@ -105,8 +105,17 @@ class BreederExaminationController extends AbstractController
 
         $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo, ['disabled' => true]);
         $form->handleRequest($request);
-        $formDogKind = $this->createForm(BreederHouseType::class, $breederHouseDogKind[0], ['disabled' => true]);
-        $formCatKind = $this->createForm(BreederHouseType::class, $breederHouseCatKind[0], ['disabled' => true]);
+        if ($breederHouseDogKind) {
+            $formDogKind = $this->createForm(BreederHouseType::class, $breederHouseDogKind[0], ['disabled' => true]);
+        } else {
+            $formDogKind = $this->createForm(BreederHouseType::class, null, ['disabled' => true]);
+        }
+
+        if ($breederHouseCatKind) {
+            $formCatKind = $this->createForm(BreederHouseType::class, $breederHouseCatKind[0], ['disabled' => true]);
+        } else {
+            $formCatKind = $this->createForm(BreederHouseType::class, null, ['disabled' => true]);
+        }
         $formBreeder = $this->createForm(BreedersType::class, $breeder, ['disabled' => true]);
 
         return [

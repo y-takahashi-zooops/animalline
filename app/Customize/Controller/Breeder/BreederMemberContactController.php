@@ -103,22 +103,22 @@ class BreederMemberContactController extends AbstractController
     }
 
     /**
-     * 取引メッセージ一覧
+     * ユーザー側取引メッセージ一覧
      *
      * @Route("/breeder/member/all_message", name="breeder_all_message")
-     * @Template("animalline/breeder/member/breeder_message.twig")
+     * @Template("animalline/breeder/member/all_message.twig")
      */
     public function all_message()
     {
         $listMessages = $this->breederContactHeaderRepository->findBy(['Customer' => $this->getUser()], ['last_message_date' => 'DESC']);
 
-        return $this->render('animalline/breeder/member/breeder_message.twig', [
+        return $this->render('animalline/breeder/member/all_message.twig', [
             'listMessages' => $listMessages
         ]);
     }
 
     /**
-     * 取引メッセージ画面
+     * ユーザー側取引メッセージ画面
      *
      * @Route("/breeder/member/message/{id}", name="breeder_message", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/member/message.twig")
@@ -157,7 +157,7 @@ class BreederMemberContactController extends AbstractController
 
             $breederContact = (new BreederContacts())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
-                ->setContactDescription('今回の取引非成立となりました')
+                ->setContactDescription('今回の取引は非成立となりました')
                 ->setSendDate(Carbon::now())
                 ->setBreederHeader($msgHeader);
 
@@ -209,7 +209,7 @@ class BreederMemberContactController extends AbstractController
 
         $petRate = $this->breederEvaluationsRepository->findOneBy(['Pet' => $pet]);
         if ($petRate) {
-            return $this->redirectToRoute('breeder_all_message');
+            return $this->redirectToRoute('breeder_all_breeder_message');
         }
 
         $contract = new BreederEvaluations();
@@ -291,55 +291,132 @@ class BreederMemberContactController extends AbstractController
     }
 
     /**
-     * @Route("/breeder/member/message/{contact_id}", name="breeder_mypage_messages", requirements={"contact_id" = "\d+"})
-     * @Template("animalline/breeder/member/message.twig")
+     * ブリーダー側取引メッセージ一覧
+     *
+     * @Route("/breeder/member/all_breeder_message", name="breeder_all_breeder_message")
+     * @Template("animalline/breeder/member/all_breeder_message.twig")
      */
-    public function breeder_message(Request $request)
+    public function all_breeder_message()
     {
-        $contactId = $request->get('contact_id');
-        $rootMessage = $this->breederContactsRepository
-            ->findOneBy(['id' => $contactId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
-        if (!$rootMessage) {
-            throw new HttpException\NotFoundHttpException();
-        }
+        $Breeder = $this->breedersRepository->find($this->getUser()->getId());
 
+        $listMessages = $this->breederContactHeaderRepository->findBy(['Breeder' => $Breeder], ['last_message_date' => 'DESC']);
+
+        return $this->render('animalline/breeder/member/all_breeder_message.twig', [
+            'listMessages' => $listMessages
+        ]);
+    }
+
+    /**
+     * @Route("/breeder/member/breeder_message/{id}", name="breeder_breeder_message", requirements={"id" = "\d+"})
+     * @Template("animalline/breeder/member/breeder_message.twig")
+     */
+    public function breeder_message(Request $request, BreederContactHeader $msgHeader)
+    {
+        $isScroll = false;
+        $msgHeader->setBreederNewMsg(0);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($msgHeader);
+        $entityManager->flush();
+
+        $reasonCancel = $request->get('reason');
         $replyMessage = $request->get('reply_message');
-        $isEnd = $request->get('end_negotiation');
-        if ($replyMessage || $isEnd) {
+        if ($replyMessage) {
             $breederContact = (new BreederContacts())
-                ->setCustomer($this->getUser())
-                ->setbreeder($rootMessage->getBreeder())
-                ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
-                ->setPet($rootMessage->getPet())
-                ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription($replyMessage)
-                ->setParentMessageId($rootMessage->getId())
                 ->setSendDate(Carbon::now())
-                ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
-                ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
-                ->setReason($isEnd ? $this->sendoffReasonRepository->find($request->get('reason')) : null);
+                ->setBreederHeader($msgHeader);
 
-            $rootMessage->setIsResponse(AnilineConf::RESPONSE_UNREPLIED);
-            if ($isEnd) {
-                $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
-            }
+            $msgHeader->setCustomerNewMsg(1)
+                ->setLastMessageDate(Carbon::now());
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederContact);
-            $entityManager->persist($rootMessage);
+            $entityManager->persist($msgHeader);
             $entityManager->flush();
+            $isScroll = true;
+        }
+        if ($reasonCancel) {
+            $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT)
+                ->setCustomerNewMsg(1)
+                ->setSendoffReason($reasonCancel)
+                ->setLastMessageDate(Carbon::now());
+
+            $breederContact = (new BreederContacts())
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
+                ->setContactDescription('今回の取引は非成立となりました')
+                ->setSendDate(Carbon::now())
+                ->setBreederHeader($msgHeader);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($msgHeader);
+            $entityManager->persist($breederContact);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('breeder_all_breeder_message');
         }
 
-        $childMessages = $this->breederContactsRepository
-            ->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
-        $reasons = $this->sendoffReasonRepository
-            ->findBy(['is_breeder_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
+        $user = $this->getUser();
+        $Customer = $this->customerRepository->find($user);
+        $listMsg = $this->breederContactsRepository->findBy(['BreederHeader' => $msgHeader], ['send_date' => 'ASC']);
+        $reasons = $this->sendoffReasonRepository->findBy(['is_breeder_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
 
-        return $this->render('animalline/breeder/member/message.twig', [
-            'rootMessage' => $rootMessage,
-            'childMessages' => $childMessages,
-            'reasons' => $reasons
+        return $this->render('animalline/breeder/member/breeder_message.twig', [
+            'Customer' => $Customer,
+            'pet' => $msgHeader->getPet(),
+            'breeder' => $msgHeader->getBreeder(),
+            'message' => $msgHeader,
+            'listMsg' => $listMsg,
+            'reasons' => $reasons,
+            'isScroll' => $isScroll
         ]);
+
+
+        // $contactId = $request->get('contact_id');
+        // $rootMessage = $this->breederContactsRepository
+        //     ->findOneBy(['id' => $contactId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
+        // if (!$rootMessage) {
+        //     throw new HttpException\NotFoundHttpException();
+        // }
+
+        // $replyMessage = $request->get('reply_message');
+        // $isEnd = $request->get('end_negotiation');
+        // if ($replyMessage || $isEnd) {
+        //     $breederContact = (new BreederContacts())
+        //         ->setCustomer($this->getUser())
+        //         ->setbreeder($rootMessage->getBreeder())
+        //         ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
+        //         ->setPet($rootMessage->getPet())
+        //         ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
+        //         ->setContactDescription($replyMessage)
+        //         ->setParentMessageId($rootMessage->getId())
+        //         ->setSendDate(Carbon::now())
+        //         ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
+        //         ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
+        //         ->setReason($isEnd ? $this->sendoffReasonRepository->find($request->get('reason')) : null);
+
+        //     $rootMessage->setIsResponse(AnilineConf::RESPONSE_UNREPLIED);
+        //     if ($isEnd) {
+        //         $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
+        //     }
+
+        //     $entityManager = $this->getDoctrine()->getManager();
+        //     $entityManager->persist($breederContact);
+        //     $entityManager->persist($rootMessage);
+        //     $entityManager->flush();
+        // }
+
+        // $childMessages = $this->breederContactsRepository
+        //     ->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
+        // $reasons = $this->sendoffReasonRepository
+        //     ->findBy(['is_breeder_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
+
+        // return $this->render('animalline/breeder/member/message.twig', [
+        //     'rootMessage' => $rootMessage,
+        //     'childMessages' => $childMessages,
+        //     'reasons' => $reasons
+        // ]);
     }
 
     /**
