@@ -6,31 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AdoptionsControllerTest extends WebTestCase
 {
-    public function testAdoptionReg(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/adoption/reg/not-found');
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
-    }
-
     public function testAdoptionIndex(): void
     {
         $client = static::createClient();
         $client->request('GET', '/adoption/not-found');
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
-    }
-
-    public function testAdoptionGuideDog(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/adoption/guide/dog/not-found');
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
-    }
-
-    public function testAdoptionGuideCat(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/adoption/guide/cat/not-found');
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
@@ -41,17 +20,31 @@ class AdoptionsControllerTest extends WebTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public function testAdoptionPetDetail(): void
+    public function testAdoptionFaq(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/adoption/pet/detail/invalid-pet-id');
+        $client->request('GET', '/adoption/faq/not-found');
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public function testFavoritePet(): void
+    public function testAdoptionViewhist(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/adoption/pet/detail/favorite_pet/not-found');
+        $client->request('GET', '/adoption/viewhist/not-found');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testAdoptionReadhist(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/adoption/readfirst/not-found');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testList(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/adoption/list/not-found');
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
