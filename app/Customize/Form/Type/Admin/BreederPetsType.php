@@ -38,8 +38,8 @@ class BreederPetsType extends AbstractType
             ->add('dna_check_result', ChoiceType::class, [
                 'choices' =>
                 [
-                    '結果①' => AnilineConf::DNA_CHECK_RESULT_1,
-                    '結果②' => AnilineConf::DNA_CHECK_RESULT_2
+                    '結果①' => AnilineConf::DNA_CHECK_RESULT_CHECK_OK,
+                    '結果②' => AnilineConf::DNA_CHECK_RESULT_CHECK_NG
                 ]
             ])
             ->add('pr_comment', TextareaType::class, [
