@@ -8,6 +8,7 @@ use Customize\Entity\BreederPets;
 use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
+use foo\bar;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Form\Type\BreederPetsType;
 use Customize\Entity\BreederHouse;
@@ -387,7 +388,11 @@ class BreederPetController extends AbstractController
      */
     public function pet_regist_list()
     {
-        return [];
+        $barCodes = [];
+        $DnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER, 'check_status' => AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING], ['update_date' => 'DESC']);
+        foreach ($DnaCheckStatus as $dnaCheckStatus)
+            $barCodes[] = '1' . str_pad($dnaCheckStatus->getId(), 5, '0', STR_PAD_LEFT);
+        return compact('barCodes');
     }
 
     /**

@@ -1,8 +1,8 @@
-{% set site_type = 'breeder' %}
-{% extends 'animalline/breeder/frame.twig' %}
+{% set site_type = 'adoption' %}
+{% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
-    <section id="breeder-column" class="breeder-column_dog">
+    <section id="adoption-column" class="adoption-column_dog">
         <div class="inner">
             <div class="card rounded border-0 mb-4 d-block">
                 <div class="card-body p-0">
@@ -16,7 +16,7 @@
                         {% for barCode in barCodes %}
                             <tr>
                                 <td data-label="コード">
-                                    <a href="{{ url('breeder_pets_new',{'barcode': barCode}) }}">{{ barCode }}</a>
+                                    <a href="{{ url('adoption_pets_new',{'bar_code': barCode}) }}">{{ barCode }}</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -28,7 +28,6 @@
     </section>
 {% endblock %}
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
 {% endblock %}
 {% block javascript %}{% endblock %}
-        

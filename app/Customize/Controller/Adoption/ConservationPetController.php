@@ -341,4 +341,20 @@ class ConservationPetController extends AbstractController
             ]
         );
     }
+
+    /**
+     *
+     * ペット登録一覧
+     *
+     * @Route("/adoption/member/pet_regist_list", name="adoption_pet_regist_list")
+     * @Template("animalline/adoption/member/pets/regist_list.twig")
+     */
+    public function pet_regist_list()
+    {
+        $barCodes = [];
+        $DnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION, 'check_status' => AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING], ['update_date' => 'DESC']);
+        foreach ($DnaCheckStatus as $dnaCheckStatus)
+            $barCodes[] = '1' . str_pad($dnaCheckStatus->getId(), 5, '0', STR_PAD_LEFT);
+        return compact('barCodes');
+    }
 }
