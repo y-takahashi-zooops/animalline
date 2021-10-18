@@ -127,9 +127,9 @@ final class AnilineConf
     const PUBLIC_FLAG_PRIVATE = 0;
     const PUBLIC_FLAG_RELEASE = 1;
 
-    const DNA_CHECK_RESULT_1 = 1;
-    const DNA_CHECK_RESULT_2 = 2;
-    const DNA_CHECK_RESULT_3 = 3;
+    const DNA_CHECK_RESULT_CHECKING = 0;
+    const DNA_CHECK_RESULT_CHECK_OK = 1;
+    const DNA_CHECK_RESULT_CHECK_NG = 2;
 
     const EXERCISE_STATUS_OTHER = 4;
 
