@@ -176,6 +176,16 @@ class BreederPets
      */
     private $microchip_code;
 
+    /**
+     * @ORM\Column(name="is_active", type="smallint", options={"default" = 0})
+     */
+    private $is_active = 0;
+
+    /**
+     * @ORM\Column(name="release_date", type="date", nullable=true)
+     */
+    private $release_date;
+
     public function __construct()
     {
         $this->BreederPetImages = new ArrayCollection();
@@ -596,6 +606,30 @@ class BreederPets
     public function setMicrochipCode(?string $microchip_code): self
     {
         $this->microchip_code = $microchip_code;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?int
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(int $is_active): self
+    {
+        $this->is_active = $is_active;
+
+        return $this;
+    }
+
+    public function getReleaseDate(): ?\DateTimeInterface
+    {
+        return $this->release_date;
+    }
+
+    public function setReleaseDate(?\DateTimeInterface $release_date): self
+    {
+        $this->release_date = $release_date;
 
         return $this;
     }
