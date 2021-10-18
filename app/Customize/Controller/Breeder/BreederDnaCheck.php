@@ -200,11 +200,10 @@ class BreederDnaCheck extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $pref = $this->prefRepository->find($request->get('breeder_kit_dna')['address']['PrefShipping']);
             $dnaCheckSatusHeader->setRegisterId($this->getUser()->getId())
                 ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
                 ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
-                ->setShippingPref($pref->getName());
+                ->setShippingPref($dnaCheckSatusHeader->getPrefShipping());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($dnaCheckSatusHeader);
             $entityManager->flush();

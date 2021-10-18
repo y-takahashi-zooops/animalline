@@ -14,6 +14,7 @@
 namespace Customize\Form\Type\Breeder;
 
 use Customize\Entity\DnaCheckStatusHeader;
+use Eccube\Form\Type\Master\PrefType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Form\AbstractType;
@@ -88,10 +89,39 @@ class BreederKitDnaType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('address', AddressHouseKitType::class, [
+            ->add('PrefShipping', PrefType::class, [
                 'attr' => [
-                    'readonly' => true,
-                ]])
+                    'class' => 'p-region-id',
+                    'readonly' => true
+                ],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('shipping_city', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                    'class' => 'p-locality',
+                    'placeholder' => 'common.address_sample_01',
+                    'readonly' => true
+                ],
+            ])
+            ->add('shipping_address', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                    'class' => 'p-street-address p-extended-address',
+                    'placeholder' => 'common.address_sample_02',
+                    'readonly' => true
+                ],
+            ])
             ->add('shipping_tel', TextType::class, [
                 'required' => true,
                 'constraints' => [
