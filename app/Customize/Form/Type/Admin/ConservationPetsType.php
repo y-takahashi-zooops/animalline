@@ -62,8 +62,9 @@ class ConservationPetsType extends AbstractType
             ->add('dna_check_result', ChoiceType::class, [
                 'choices' =>
                     [
-                        '結果①' => AnilineConf::DNA_CHECK_RESULT_1,
-                        '結果②' => AnilineConf::DNA_CHECK_RESULT_2
+                        '検査中' => AnilineConf::DNA_CHECK_RESULT_CHECKING,
+                        '検査合格' => AnilineConf::DNA_CHECK_RESULT_CHECK_OK,
+                        '検査NG' => AnilineConf::DNA_CHECK_RESULT_CHECK_NG
                     ],
                 'required' => true,
             ])
