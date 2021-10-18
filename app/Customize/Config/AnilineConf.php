@@ -169,4 +169,7 @@ final class AnilineConf
     const ANILINE_SHIPPING_STATUS_SHIPPED = 3;
 
     const ANILINE_RETURN_SCHEDULE = 9;
+
+    const ANILINE_IS_ACTIVE_PUBLIC = 1;
+    const ANILINE_IS_ACTIVE_PRIVATE = 0;
 }
