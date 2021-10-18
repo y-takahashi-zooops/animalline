@@ -354,7 +354,7 @@ class ConservationPetController extends AbstractController
         $barCodes = [];
         $DnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION, 'check_status' => AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING], ['update_date' => 'DESC']);
         foreach ($DnaCheckStatus as $dnaCheckStatus)
-            $barCodes[] = '1' . str_pad($dnaCheckStatus->getId(), 5, '0', STR_PAD_LEFT);
+            $barCodes[] = '2' . str_pad($dnaCheckStatus->getId(), 5, '0', STR_PAD_LEFT);
         return compact('barCodes');
     }
 }
