@@ -3,6 +3,7 @@
 namespace Customize\Form\Type\Admin;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -13,6 +14,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Customize\Entity\BreederPets;
 use Customize\Config\AnilineConf;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class BreederPetsType extends AbstractType
 {
@@ -102,6 +104,17 @@ class BreederPetsType extends AbstractType
             ])
             ->add('price', IntegerType::class, [
                 'required' => false
+            ])
+            ->add('pet_code', TextType::class, [
+                'required' => false,
+                'attr' => [
+                    'maxlength' => 6,
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 6,
+                    ])
+                ]
             ]);
     }
 
