@@ -377,4 +377,25 @@ class BreederPetController extends AbstractController
         copy($imageUrl, $subUrl . $imageName);
         return '/breeder/' . $petId . '/' . $imageName;
     }
+
+    /**
+     *
+     * ペット登録一覧
+     *
+     * @Route("/breeder/member/pet_regist_list", name="breeder_pet_regist_list")
+     * @Template("animalline/breeder/member/pets/regist_list.twig")
+     */
+    public function pet_regist_list()
+    {
+        return [];
+    }
+
+    /**
+     *
+     * @Route("/b", name="b")
+     */
+    public function b()
+    {
+        return $this->redirectToRoute('breeder_pet_regist_list');
+    }
 }
