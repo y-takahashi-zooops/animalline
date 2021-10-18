@@ -8,7 +8,6 @@ use Customize\Entity\BreederPets;
 use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
-use foo\bar;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Form\Type\BreederPetsType;
 use Customize\Entity\BreederHouse;
@@ -251,7 +250,8 @@ class BreederPetController extends AbstractController
                 ->addBreederPetImage($petImage2)
                 ->addBreederPetImage($petImage3)
                 ->addBreederPetImage($petImage4)
-                ->setThumbnailPath($img0);
+                ->setThumbnailPath($img0)
+                ->setPetCode($barcode);
 
             // update dna check status
             $Dna->setPetId($breederPet->getId())

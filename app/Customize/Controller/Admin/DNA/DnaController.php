@@ -188,11 +188,11 @@ class DnaController extends AbstractController
             $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PUBLIC);
             if ($dna->getSiteType() == AnilineConf::ANILINE_SITE_TYPE_BREEDER) {
                 $pet = $this->breederPetsRepository->find($dna->getPetId());
+                $pet->setIsActive(AnilineConf::ANILINE_IS_ACTIVE_PUBLIC)
+                    ->setReleaseDate(Carbon::now());
             } else {
                 $pet = $this->conservationPetsRepository->find($dna->getPetId());
             }
-            $pet->setIsActive(AnilineConf::ANILINE_IS_ACTIVE_PUBLIC)
-                ->setReleaseDate(Carbon::now());
             $em = $this->getDoctrine()->getManager();
             $em->persist($pet);
             $em->persist($dna);

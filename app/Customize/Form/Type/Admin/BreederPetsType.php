@@ -104,17 +104,6 @@ class BreederPetsType extends AbstractType
             ])
             ->add('price', IntegerType::class, [
                 'required' => false
-            ])
-            ->add('pet_code', TextType::class, [
-                'required' => false,
-                'attr' => [
-                    'maxlength' => 6,
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => 6,
-                    ])
-                ]
             ]);
     }
 
