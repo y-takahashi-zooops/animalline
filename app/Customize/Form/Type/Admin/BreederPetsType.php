@@ -80,7 +80,7 @@ class BreederPetsType extends AbstractType
                 },
                 'required' => false,
             ])
-            ->add('pedigree_code', IntegerType::class, [
+            ->add('pedigree_code', TextType::class, [
                 'required' => false,
             ])
             ->add('microchip_code', IntegerType::class, [
