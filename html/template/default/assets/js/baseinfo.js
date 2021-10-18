@@ -6,12 +6,27 @@ $("#confirm-yes").click(function (e) {
     document.getElementsByName('update-baseinfo-form')[0].submit();
 });
 
+
+var breederImg = document.getElementById('img_thumbnail');
+var breederImgSrc = breederImg.getAttribute('src');
+if( breederImgSrc ){
+    $('#breeder_img_error').hide();
+}
+
+var breederLicenseImg = document.getElementById('img_license_thumbnail');
+var breederLicenseImgSrc = breederLicenseImg.getAttribute('src');
+if( breederLicenseImgSrc){
+    $('#breeder_license_img_error').hide();
+}
+
 var breederImgFlg = false;
 $("body").on("change", "#breeders_thumbnail_path", function (e) {
     breederImgFlg = true;
+    $('#breeder_img_error').hide();
 });
 $("body").on("change", "#breeders_license_thumbnail_path", function (e) {
     breederImgFlg = false;
+    $('#breeder_license_img_error').hide();
 });
 $("body").on("change", ".thumbnail_path", function (e) {
     readURL(this)

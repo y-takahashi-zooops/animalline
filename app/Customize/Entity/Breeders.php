@@ -127,11 +127,6 @@ class Breeders
     private $license_manager_name;
 
     /**
-     * @ORM\Column(name="license_type", type="smallint", nullable=true)
-     */
-    private $license_type;
-
-    /**
      * @ORM\Column(name="license_regist_date", type="date", nullable=true)
      */
     private $license_regist_date;
@@ -460,17 +455,6 @@ class Breeders
         return $this;
     }
 
-    public function getLicenseType(): ?int
-    {
-        return $this->license_type;
-    }
-
-    public function setLicenseType(?int $license_type): self
-    {
-        $this->license_type = $license_type;
-
-        return $this;
-    }
 
     public function getLicenseRegistDate(): ?\DateTimeInterface
     {

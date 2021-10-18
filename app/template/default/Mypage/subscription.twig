@@ -1,0 +1,88 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set mypageno = 'subscription' %}
+
+{% set body_class = 'mypage' %}
+
+{% block main %}
+	<div class="ec-layoutRole__main">
+		<div class="ec-mypageRole">
+			<div class="ec-pageHeader">
+				<h1>{{ 'マイページ'|trans }}/{{ '定期購入管理'|trans }}</h1>
+			</div>
+			{% include 'Mypage/navi.twig' %}
+		</div>
+		<div class="ec-mypageRole">
+			{% if pagination.totalItemCount > 0 %}
+				<p class="ec-para-normal">{{ '%count%件の定期購入があります'|trans({'%count%':pagination.totalItemCount}) }}</p>
+				{% for SubscriptionContract in pagination %}
+					<div class="ec-historyRole">
+						<div class="ec-historyRole__contents">
+							<div class="ec-historyRole__header">
+								<div class="ec-historyListHeader">
+									<p class="ec-historyListHeader__date">
+										{{ '次回配送予定：%next_delivery_date%'|trans({'%next_delivery_date%':SubscriptionContract.next_delivery_date|date_day_with_weekday}) }}
+									</p>
+									<dl class="ec-definitions">
+										<dt>{{ '定期注文番号'|trans }}</dt>
+										<dd>{{ SubscriptionContract.id }}</dd>
+									</dl>
+									{% if (BaseInfo.option_mypage_order_status_display) %}
+										<dl class="ec-definitions">
+											<dt>{{ 'ご注文状況'|trans }}</dt>
+											<dd>
+												{% if SubscriptionContract.next_delivery_date %}
+													{{'定期配送中'}}
+												{% else %}
+													{{'停止済み'}}
+												{% endif %}
+											</dd>
+										</dl>
+									{% endif %}
+									<p class="ec-historyListHeader__action">
+										<a class="ec-inlineBtn" href="{{ url('mypage_subscription_history', {'id': SubscriptionContract.id}) }}">{{ '詳細を見る'|trans }}</a>
+									</p>
+								</div>
+							</div>
+						
+							{# 定期購入の情報を表示 #}
+							<div class="ec-historyRole__detail">
+								<div class="ec-imageGrid">
+									<div class="ec-imageGrid__img">
+										{% if SubscriptionContract.Product is null %}
+											<img src="{{ asset(''|no_image_product, 'save_image') }}"/>
+										{% else %}
+											<img src="{{ asset(SubscriptionContract.Product.MainListImage|no_image_product, 'save_image') }}">
+										{% endif %}
+									</div>
+									<div class="ec-imageGrid__content">
+										<p class="ec-historyRole__detailTitle">{{ SubscriptionContract.Product.name }}</p>
+										<p class="ec-historyRole__detailPrice">{{ SubscriptionContract.Product.Price02IncTaxMax|price }}
+											×
+											{{ SubscriptionContract.quantity }}
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+				<div class="ec-pagerRole">
+					{% include "pager.twig" with {'pages': pagination.paginationData} %}
+				</div>
+			{% else %}
+				<p class="ec-para-normal">{{ 'ご注文履歴はありません。'|trans }}</p>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

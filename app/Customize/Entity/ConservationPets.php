@@ -447,7 +447,7 @@ class ConservationPets
     /**
      * @return Collection|ConservationHeader[]
      */
-    public function ConservationHeader(): Collection
+    public function getConservationHeader(): Collection
     {
         return $this->ConservationHeader;
     }

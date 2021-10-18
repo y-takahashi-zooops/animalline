@@ -62,15 +62,6 @@ file that was distributed with this source code.
                         </dl>
                         <dl>
                             <dt>
-                                {{ form_label(form.company_name, '会社名', { 'label_attr': { 'class': 'ec-label'}}) }}
-                            </dt>
-                            <dd>
-                                {{ form.company_name.vars.data }}
-                                {{ form_widget(form.company_name, { type : 'hidden' }) }}
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
                                 {{ form_label(form.address, '住所', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
@@ -130,14 +121,6 @@ file that was distributed with this source code.
                             <dd>
                                 {{ form.sex.vars.data }}
                                 {{ form_widget(form.sex, { type: 'hidden'}) }}
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                {{ form_label(form.job, '職業', {'label_attr': {'class': 'ec-label'}}) }}
-                            </dt>
-                            <dd>{{ form.job.vars.data }}
-                                {{ form_widget(form.job, { type: 'hidden'}) }}
                             </dd>
                         </dl>
 

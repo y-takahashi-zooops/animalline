@@ -14,13 +14,12 @@ h1,h2,h3,h4,h5,h6{font-size:100%;}
 img,abbr,acronym,fieldset{border:0;}
 
 html{
-	font: 30px 'Noto Sans JP', Arial, Verdana, 游ゴシック, YuGothic,'ヒラギノ角ゴ ProN W3', 'Hiragino Kaku Gothic ProN', メイリオ, Meiryo,sans-serif;
-	font-weight: 500;
+	font: 20px Arial,"ヒラギノ角ゴ ProN W3","Hiragino Kaku Gothic ProN","メイリオ",Meiryo,sans-serif;
 	-webkit-text-size-adjust:100%;
 	overflow-x: hidden;
 	color: #000;
 	background: #fff;
-	max-width:1200px;
+	max-width:1024px;
     min-width:320px;
 	margin: auto;
 }
@@ -52,7 +51,7 @@ a:active, a:focus,input:active, input:focus{outline:0;}
 }
 
 #mainImg {
-	margin: 1rem auto 1rem auto;
+	margin: 1.5rem auto 1.5rem auto;
 	width: 80%;
 	text-align: center;
 }
@@ -81,17 +80,15 @@ img{
 
 section{
 	clear:both;
-	padding-top: 30px;
 }
 
 section h2{
 	font-family: 'Pacifico', cursive;
 	width: 60%;
-	margin: 0 auto 40px;
-	font-size: 1.25rem;
+	margin: 0 auto;
+	font-size: 25px;
 	font-weight:normal;
 	text-align: center;
-	background: url(../img/reg/borderBlack.png) repeat-x 0 50%;
 	background-size: 1px 1px;
 }
 
@@ -112,19 +109,46 @@ section h2 span {
 }
 
 .inner{
-	width: 94%;
 	margin: 0 auto;
 	padding-bottom: 50px;
+	margin-left: 1rem;
+	margin-right: 1rem;
 }
 
 .innerS{
-	width: 80%;
 	margin: 0 auto;
-	padding-bottom: 15px;
+	padding: 0.8rem 0.8rem 0.8rem 0.8rem;
+	margin-bottom: 1.5rem;
+	background-color: #FDF1F1;
+	border-radius: 1rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.innerS2{
+	margin: 0 auto;
+	margin-bottom: 1.5rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.innerImg{
+	text-align: center;
+	margin-bottom: 1.5rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.titleImg{
+	text-align: center;
+	margin-top: 2rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
 }
 
 .companyS{
-	width: 60%;
+	text-align: center;
+	width: 90%;
 	margin: 0 auto;
 	padding-bottom: 30px;
 }
@@ -149,7 +173,7 @@ section h2 span {
 a.btn,
 button.btn {
 	font-size: 20px;
-	font-weight: 700;
+	font-weight: 600;
 	line-height: 1.5;
 	position: relative;
 	display: inline-block;
@@ -172,12 +196,12 @@ button.btn {
 .btn--orange,
 a.btn--orange {
 	color: #fff;
-	background-color: #eb6100;
+	background-color: #ED6C00;
 }
 .btn--orange:hover,
 a.btn--orange:hover {
 	color: #fff;
-	background: #f56500;
+	background: #ED6C00;
 }
 
 .btn--green,
@@ -298,7 +322,7 @@ Width <= 1200px
 ------------------*/
 @media screen and (max-width: 1280px) {
 	html{
-		font-size:24px;
+		font-size:20px;
 	}
 }
 
@@ -307,7 +331,7 @@ Width <= 980px
 ------------------*/
 @media screen and (max-width: 980px) {
 	html{
-		font-size:24px;
+		font-size:20px;
 	}
 }
 
@@ -316,7 +340,12 @@ Width <= 768px
 ------------------*/
 @media screen and (max-width: 768px) {
 	html{
-		font-size:20px;
+		font-size:16px;
+	}
+	.btn,
+	a.btn,
+	button.btn {
+		font-size:17px;
 	}
 }
 
@@ -324,7 +353,11 @@ Width <= 768px
 Width <= 640px
 ------------------*/
 @media screen and (max-width: 640px) {
-
+	.btn,
+	a.btn,
+	button.btn {
+		font-size:14px;
+	}
 }
 
 /*------------------

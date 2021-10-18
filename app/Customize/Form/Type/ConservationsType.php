@@ -174,7 +174,8 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('thumbnail_path', FileType::class, [
-                'required' => false,
+                // 'required' => false,
+                'required' => true,
                 'mapped' => false
             ]);
     }
