@@ -106,48 +106,11 @@ file that was distributed with this source code.
                                                 </div>
                                                 <span class="ml-1 pt-2">頭</span>
                                             </div>
-                                            <div class="mr-4 input-group-append">
-                                                <span class="pt-2">7歳以上：</span>
-                                                <div>
-                                                    {{ form_widget(form.parent_pet_count_3) }}
-                                                </div>
-                                                <span class="ml-1 pt-2">頭</span>
-                                            </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>親件購入先</span>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-2 input-group-append">
-                                            <div class="mr-4 input-group-append">
-                                                <span class="pt-2">ブリーダー：</span>
-                                                <div>
-                                                    {{ form_widget(form.parent_pet_buy_place_1) }}
-                                                </div>
-                                                <span class="ml-1 pt-2">頭</span>
-                                            </div>
-                                            <div class="mr-4 input-group-append">
-                                                <span class="pt-2">ショップ：</span>
-                                                <div>
-                                                    {{ form_widget(form.parent_pet_buy_place_2) }}
-                                                </div>
-                                                <span class="ml-1 pt-2">頭</span>
-                                            </div>
-                                            <div class="mr-4 input-group-append">
-                                                <span class="pt-2">その他：</span>
-                                                <div>
-                                                    {{ form_widget(form.parent_pet_buy_place_3) }}
-                                                </div>
-                                                <span class="ml-1 pt-2">頭</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                 <div class="row mb-2">
                                     <div class="col-3">
                                         <div class="d-inline-block">
@@ -160,13 +123,7 @@ file that was distributed with this source code.
                                                 <label class="ec-label required mr-2">{{ petType }}舎運営者：</label>
                                                 <span>1名</span>
                                             </div>
-                                            <div class="row offset-md-0">
-                                                <label class="pt-2">平均労働時間：</label>
-                                                <div>
-                                                    {{ form_widget(form.owner_worktime_ave) }}
-                                                </div>
-                                                <span class="ml-1 pt-2">時間/1週間あたり</span>
-                                            </div>
+                                            
                                         </div>
                                         <div class="mb-3">
                                             <div class="row offset-md-0 mb-2">
@@ -176,13 +133,7 @@ file that was distributed with this source code.
                                                 </div>
                                                 <span class="pt-2">名</span>
                                             </div>
-                                            <div class="row offset-md-0 mb-2">
-                                                <label class="pt-2">平均労働時間：</label>
-                                                <div>
-                                                    {{ form_widget(form.family_staff_worktime_ave) }}
-                                                </div>
-                                                <span class="ml-1 pt-2">時間/1週間あたり</span>
-                                            </div>
+                                            
                                         </div>
                                         <div class="mb-3">
                                             <div class="row offset-md-0 mb-2">
@@ -192,13 +143,7 @@ file that was distributed with this source code.
                                                 </div>
                                                 <span class="pt-2">名</span>
                                             </div>
-                                            <div class="row offset-md-0 mb-2">
-                                                <label class="pt-2">平均労働時間：</label>
-                                                <div>
-                                                    {{ form_widget(form.fulltime_staff_worktime_ave) }}
-                                                </div>
-                                                <span class="ml-1 pt-2">時間/1週間あたり</span>
-                                            </div>
+                                    
                                         </div>
                                         <div class="mb-3">
                                             <div class="row offset-md-0 mb-2">
@@ -208,13 +153,6 @@ file that was distributed with this source code.
                                                 </div>
                                                 <span class="pt-2">名</span>
                                             </div>
-                                            <div class="row offset-md-0 mb-2">
-                                                <label class="pt-2">平均労働時間：</label>
-                                                <div>
-                                                    {{ form_widget(form.parttime_staff_worktime_ave) }}
-                                                </div>
-                                                <span class="ml-1 pt-2">時間/1週間あたり</span>
-                                            </div>
                                         </div>
                                         <div class="mb-3">
                                             <div class="row offset-md-0 mb-2">
@@ -223,13 +161,6 @@ file that was distributed with this source code.
                                                     {{ form_widget(form.other_staff_count) }}
                                                 </div>
                                                 <span class="pt-2">名</span>
-                                            </div>
-                                            <div class="row offset-md-0 mb-2">
-                                                <label class="pt-2">平均労働時間：</label>
-                                                <div>
-                                                    {{ form_widget(form.other_staff_worktime_ave) }}
-                                                </div>
-                                                <span class="ml-1 pt-2">時間/1週間あたり</span>
                                             </div>
                                         </div>
                                     </div>
@@ -255,50 +186,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>ショー参加経験</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        {% if(form.is_participate_show.vars.data) %}
-                                            {{ form.is_participate_show.vars.choices[form.is_participate_show.vars.data].label }}
-                                        {% else %}
-                                            <input type="text" disabled="disabled" class="form-control">
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>親{{ petType }}のケージ</span>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-2">
-                                            <div class="row offset-md-0">
-                                                <div class="ec-checkbox">
-                                                    <label>
-                                                        {{ form_widget(form.cage_size_1) }}
-                                                    </label>
-                                                    <br>
-                                                    <label>
-                                                        {{ form_widget(form.cage_size_2) }}
-                                                    </label>
-                                                    <br>
-                                                    <label>
-                                                        {{ form_widget(form.cage_size_3) }}
-                                                    </label>
-                                                    <div class="ec-input">
-                                                        {{ form_widget(form.cage_size_other) }}
-                                                        {{ form_errors(form.cage_size_other) }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
@@ -330,34 +218,6 @@ file that was distributed with this source code.
                                                     {{ form_widget(form.publish_pet_count) }}
                                                 </div>
                                                 <span class="ml-1 pt-2">頭</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>自身での繁殖経験</span>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-2">
-                                            <div class="row offset-md-0">
-                                                {{ form.breeding_experience.vars.choices[form.breeding_experience.vars.data].label }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>直接の販売経験</span>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-2">
-                                            <div class="row offset-md-0">
-                                                {{ form.selling_experience.vars.choices[form.selling_experience.vars.data].label }}
                                             </div>
                                         </div>
                                     </div>
@@ -1046,9 +906,14 @@ file that was distributed with this source code.
                     </div>
                     <div class="col-6">
                         <div id="ex-conversion-action" class="row align-items-center justify-content-end">
+                            <!--
                             <div class="col-auto">
                                 <button {{ breederExaminationInfo.inputStatus != constant('Customize\\Config\\AnilineConf::ANILINE_INPUT_STATUS_SUBMIT') ? 'disabled' : '' }}
                                     class="btn btn-ec-conversion px-5" type="button" onclick="location.href='{{path('admin_breeder_examination_regist',{'id': breederExaminationInfo.id })}}'">審査結果登録</button>
+                            </div>
+                            -->
+                            <div class="col-auto">
+                                <button class="btn btn-ec-conversion px-5" type="button" onclick="location.href='{{path('admin_breeder_examination_regist',{'id': breederExaminationInfo.id })}}'">審査結果登録</button>
                             </div>
                         </div>
                     </div>

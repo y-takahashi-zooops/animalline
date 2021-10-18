@@ -85,6 +85,7 @@
                                 <dl>
                                     <dt>
                                         キット数量
+                                        <div style="font-size:12px;color:#F00">最大6キット</div>
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.kit_unit) ? ' error' }}">
@@ -96,8 +97,11 @@
                             </div>
                         </div>
                         <div class="ec-registerRole__actions">
-                            <div class="ec-off4Grid">
-                                <div class="ec-off4Grid__cell">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a class="ec-blockBtn--cancel" href="{{ url('mypage') }}">マイページに戻る</a>
+                                </div>
+                                <div class="col-md-6">
                                     <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
                                 </div>
                             </div>
@@ -107,7 +111,11 @@
             </div>
         </div>
     </section>
-    {{ include('animalline/components/_modal_confirm.twig') }}
+    {% if isCheckStatus %}
+        {{ include('animalline/components/_modal_check_status.twig') }}
+    {% else %}
+        {{ include('animalline/components/_modal_confirm.twig') }}
+    {% endif %}
     <input type="hidden" id="issetHouseDog" value="{{ breederHouseDog ? 'true' : 'false' }}">
     <input type="hidden" id="issetHouseCat" value="{{ breederHouseCat ? 'true' : 'false' }}">
 
@@ -147,6 +155,9 @@
 
 $("#confirm-yes").click(function (e) {
     document.getElementsByName('dna-kit-form')[0].submit();
+});
+$("#confirm-back").click(function () {
+    window.history.back();
 });
 </script>
 {% endblock %}

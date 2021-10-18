@@ -24,11 +24,17 @@
                             <div class="mb-5">
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.breeder_house_name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        {% if petType == 1 %}
+                                            {{ form_label(form.breeder_house_name, 'お名前（犬舎名）', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        {% else %}
+                                            {{ form_label(form.breeder_house_name, 'お名前（猫舎名）', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        {% endif %}
+
+                                        
                                     </dt>
                                     <dd>
                                         <div class="ec-halfInput{{ has_errors(form.breeder_house_name) ? ' error' }}">
-                                            {{ form_widget(form.breeder_house_name, { 'attr': { 'placeholder': 'お名前' }}) }}
+                                            {{ form_widget(form.breeder_house_name, { 'attr': { 'placeholder': 'お名前' }}) }}                                            
                                             {{ form_errors(form.breeder_house_name) }}
                                         </div>
                                     </dd>
@@ -48,12 +54,12 @@
                                     <dt>
                                         <div>
                                             {{ form_label(form.address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            <p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
                                         </div>    
                                         <button class="btn btn-ec-regular btn-secondary mb-2" id="copy" type="button">ライセンス情報コピー</button>
                                     </dt>
                                     <dd>
                                         <div class="ec-zipInput{{ has_errors(form.breeder_house_house_zip) ? ' error' }}">
-                                            <label>ハイフン（-） なしで入力してください。</label><br/>
                                             <span>{{ '〒'|trans }}</span>
                                             {{ form_widget(form.breeder_house_house_zip) }}
                                             <input type="hidden" id="licenceZip" value={{breeder.licenseZip}}>
@@ -89,9 +95,9 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.breeder_house_house_tel, 'TEL', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <p style="font-size:14px;color:#DE5D50;">'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd>
-                                        <label>ハイフン（-） なしで入力してください。</label>
                                         <div class="ec-telInput{{ has_errors(form.breeder_house_house_tel) ? ' error' }}">
                                             {{ form_widget(form.breeder_house_house_tel) }}
                                             {{ form_errors(form.breeder_house_house_tel) }}
@@ -102,9 +108,9 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.breeder_house_house_fax, 'FAX', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <p style="font-size:14px;color:#DE5D50;">'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd>
-                                        <label>ハイフン（-） なしで入力してください。</label>
                                         <div class="ec-telInput{{ has_errors(form.breeder_house_house_fax) ? ' error' }}">
                                             {{ form_widget(form.breeder_house_house_fax) }}
                                             {{ form_errors(form.breeder_house_house_fax) }}
@@ -127,9 +133,9 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.breeder_house_front_tel, '担当者TEL', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <p style="font-size:14px;color:#DE5D50;">'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd>
-                                        <label>ハイフン（-） なしで入力してください。</label>
                                         <div class="ec-telInput{{ has_errors(form.breeder_house_front_tel) ? ' error' }}">
                                             {{ form_widget(form.breeder_house_front_tel) }}
                                             {{ form_errors(form.breeder_house_front_tel) }}
