@@ -25,6 +25,7 @@ use Customize\Form\Type\Admin\BreederPetsType;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\CoatColorsRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Customize\Repository\BreederPetsRepository;
 
 class BreederPetController extends AbstractController
 {
@@ -49,26 +50,53 @@ class BreederPetController extends AbstractController
     protected $breederQueryService;
 
     /**
+     * @var BreederPetsRepository
+     */
+    protected $breederPetsRepository;
+
+    /**
      * BreederPetController constructor.
      * @param BreedsRepository $breedsRepository
      * @param CoatColorsRepository $coatColorsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederQueryService $breederQueryService
+     * @param BreederPetsRepository $breederPetsRepository
      */
     public function __construct(
         BreedsRepository          $breedsRepository,
         CoatColorsRepository      $coatColorsRepository,
         BreederPetImageRepository $breederPetImageRepository,
-        BreederQueryService       $breederQueryService
+        BreederQueryService       $breederQueryService,
+        BreederPetsRepository       $breederPetsRepository
     ) {
         $this->breedsRepository = $breedsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->coatColorsRepository = $coatColorsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
+        $this->breederPetsRepository = $breederPetsRepository;
     }
 
     /**
-     * ペット一覧ブリーダー管理
+     * ペット情報管理
+     *
+     * @Route("/%eccube_admin_route%/breeder/pet", name="admin_breeder_pet_all")
+
+     * @Template("@admin/Breeder/pet/all.twig")
+     */
+    public function pet_all(PaginatorInterface $paginator, Request $request)
+    {
+        $pets = $this->breederPetsRepository->findAll();
+        $breeds = $this->breedsRepository->findAll();
+
+        return [
+            'pets' => $pets,
+            'breeds' => $breeds,
+        ];
+        return[];
+    }
+
+    /**
+     * ブリーダーペット一覧
      *
      * @Route("/%eccube_admin_route%/breeder/pet/list/{id}", name="admin_breeder_pet_list", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/pet/index.twig")

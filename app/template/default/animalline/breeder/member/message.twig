@@ -46,10 +46,10 @@
                     </div>
                     <div class="row mb-4 mt-4">
                         <div class="col-md-3 col-sm-4">
-                            {# <a href="{{ url('adoption_pet_detail', {'id': rootMessage.getPet.Id}) }}"　class="w-100"> #}
+                            <a href="{{ url('breeder_detail', {'breeder_id': message.getBreeder.Id}) }}"　class="w-100">
                                 <img alt="..." src="{{ breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                                 class="w-100 mb-4 mb-sm-0">
-                            {# </a> #}
+                            </a>
                         </div>
                         <div class="breeder-info col-sm-8">
                             <h3 class="font-weight-500 color-gray-500 mb-4">{{ breeder.licenseHouseName }}
@@ -118,8 +118,8 @@
 
                     {# 返信メッセージ #}
                     {% for listMessage in listMsg %}
-                        {# 保護団体からの返信 #}
-                        {% if listMessage.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER') %}
+                        {# ユーザーからの返信 #}
+                        {% if listMessage.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') %}
                             <div class="balloon">
                                 <div class="chatting">
                                     <div class="message message-right">
@@ -127,15 +127,16 @@
                                     </div>
                                 </div>
                                 {# <div class="icon">
-                                    <img src="{{ rootMessage.Conservation.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}">  
+                                    {# <img src="{{ asset('assets/img/testUser.png') }}">
                                 </div> #}
                                 <h6 class="text-right" style="padding-right:24px;">{{ listMessage.sendDate | date('Y/m/d H:i') }}</h6>
                             </div>
-                        {# ユーザーからの返信 #}
+                        {# ブリーダーからの返信 #}
                         {% else %}
                             <div class="balloon">
                                 <div class="icon">
-                                    <img src="{{ asset('assets/img/testUser.png') }}">  
+                                    {# <img src="{{ asset('assets/img/testUser.png') }}">   #}
+                                    <img alt="..." src="{{ breeder.thumbnailPath }}"/>
                                 </div>
                                 <div class="chatting">
                                     <div class="message message-left">

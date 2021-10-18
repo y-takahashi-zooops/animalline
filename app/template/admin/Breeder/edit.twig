@@ -206,6 +206,9 @@ file that was distributed with this source code.
                                         <div class="d-inline-block">
                                             {{ form_label(form.pr_text, '自己PR', { 'label_attr': { 'class': 'ec-label' }}) }}
                                         </div>
+                                        <span class="badge badge-primary ml-1">
+                                            {{ 'admin.common.required'|trans }}
+                                        </span>
                                     </div>
                                     <div class="col-6 mb-2">
                                         <div class="ec-input{{ has_errors(form.pr_text) ? ' error' }}">
@@ -218,6 +221,9 @@ file that was distributed with this source code.
                                     <div class="col-3">
                                         <div class="d-inline-block">
                                             {{ form_label(form.regal_effort, '動物愛護法改正への対応', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">

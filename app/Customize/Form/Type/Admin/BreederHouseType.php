@@ -88,6 +88,7 @@ class BreederHouseType extends AbstractType
                 'trim' => true,
             ])
             ->add('breeder_house_house_fax', TextType::class, [
+                'required' => false,
                 'constraints' => [
                     new Assert\Length([
                         'max' => 11,

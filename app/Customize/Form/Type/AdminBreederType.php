@@ -119,10 +119,18 @@ class AdminBreederType extends AbstractType
                 'trim' => true,
             ])
             ->add('pr_text', TextareaType::class, [
-                'required' => false,
+                // 'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
             ])
             ->add('regal_effort', TextareaType::class, [
-                'required' => false,
+                // 'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
             ])
             ->add('license_name', TextType::class, [
                 'required' => true,
@@ -217,7 +225,7 @@ class AdminBreederType extends AbstractType
             ->add('license_expire_date', DateType::class, [
                 'required' => true,
                 'input' => 'datetime',
-                'years' => range(2050, date('Y')),
+                'years' => range(date('Y'),2050),
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],

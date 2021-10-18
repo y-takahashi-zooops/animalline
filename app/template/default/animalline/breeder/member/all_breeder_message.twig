@@ -1,0 +1,43 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+
+{% block main %}
+    <div class="main">
+        <div class="row">
+            <div class="main-container col-12">
+                <h1>取引メッセージ一覧</h1>
+                <div class="m-3 p-3"></div>
+                {% for message in listMessages %}
+                    <div class="row border breeder-border rounded bg-white p-2 mb-3">
+                        <div class="col-12">
+                            <a href="{{ url('breeder_breeder_message', {'id': message.Id}) }}">
+                                <div class="row">
+                                    <div class="col-md-2 col-3" style="display: grid; place-items: center;">
+                                        <h6 class="p-2 rounded" style="background:#539b34; color:#fff;">
+                                            {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
+                                            {{ status[message.contractStatus] }}
+                                        </h6>
+                                    </div>
+                                    <div class="col-md-10 col-9">
+                                        <h5>{{ message.contactTitle ?? '' }}</h5>
+                                        <h5>{{ message.Customer.name01 }}{{ message.Customer.name02 }}</h5>
+                                        <h6 class="text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}
+                                            <br>
+                                            {{ message.customerNewMsg ? '未読あり' }}
+                                        </h6>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    結果が０件です。
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
