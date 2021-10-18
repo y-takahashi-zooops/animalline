@@ -194,7 +194,7 @@ class BreederPets
         return $this->pet_kind;
     }
 
-    public function setPetKind(int $pet_kind): self
+    public function setPetKind(?int $pet_kind): self
     {
         $this->pet_kind = $pet_kind;
 
@@ -206,7 +206,7 @@ class BreederPets
         return $this->BreedsType;
     }
 
-    public function setBreedsType(Breeds $breeds_type): self
+    public function setBreedsType(?Breeds $breeds_type): self
     {
         $this->BreedsType = $breeds_type;
 
@@ -218,7 +218,7 @@ class BreederPets
         return $this->pet_sex;
     }
 
-    public function setPetSex(int $pet_sex): self
+    public function setPetSex(?int $pet_sex): self
     {
         $this->pet_sex = $pet_sex;
 
@@ -230,7 +230,7 @@ class BreederPets
         return $this->pet_birthday;
     }
 
-    public function setPetBirthday(\DateTimeInterface $pet_birthday): self
+    public function setPetBirthday(?\DateTimeInterface $pet_birthday): self
     {
         $this->pet_birthday = $pet_birthday;
 
@@ -254,7 +254,7 @@ class BreederPets
         return $this->future_wait;
     }
 
-    public function setFutureWait(int $future_wait): self
+    public function setFutureWait(?int $future_wait): self
     {
         $this->future_wait = $future_wait;
 
@@ -266,7 +266,7 @@ class BreederPets
         return $this->dna_check_result;
     }
 
-    public function setDnaCheckResult(int $dna_check_result): self
+    public function setDnaCheckResult(?int $dna_check_result): self
     {
         $this->dna_check_result = $dna_check_result;
 
@@ -278,7 +278,7 @@ class BreederPets
         return $this->pr_comment;
     }
 
-    public function setPrComment(string $pr_comment): self
+    public function setPrComment(?string $pr_comment): self
     {
         $this->pr_comment = $pr_comment;
 
@@ -290,7 +290,7 @@ class BreederPets
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
@@ -302,7 +302,7 @@ class BreederPets
         return $this->is_breeding;
     }
 
-    public function setIsBreeding(int $is_breeding): self
+    public function setIsBreeding(?int $is_breeding): self
     {
         $this->is_breeding = $is_breeding;
 
@@ -314,7 +314,7 @@ class BreederPets
         return $this->is_selling;
     }
 
-    public function setIsSelling(int $is_selling): self
+    public function setIsSelling(?int $is_selling): self
     {
         $this->is_selling = $is_selling;
 
@@ -326,7 +326,7 @@ class BreederPets
         return $this->guarantee;
     }
 
-    public function setGuarantee(string $guarantee): self
+    public function setGuarantee(?string $guarantee): self
     {
         $this->guarantee = $guarantee;
 
@@ -338,7 +338,7 @@ class BreederPets
         return $this->is_pedigree;
     }
 
-    public function setIsPedigree(int $is_pedigree): self
+    public function setIsPedigree(?int $is_pedigree): self
     {
         $this->is_pedigree = $is_pedigree;
 
@@ -350,7 +350,7 @@ class BreederPets
         return $this->include_vaccine_fee;
     }
 
-    public function setIncludeVaccineFee(int $include_vaccine_fee): self
+    public function setIncludeVaccineFee(?int $include_vaccine_fee): self
     {
         $this->include_vaccine_fee = $include_vaccine_fee;
 
@@ -362,7 +362,7 @@ class BreederPets
         return $this->vaccine_detail;
     }
 
-    public function setVaccineDetail(string $vaccine_detail): self
+    public function setVaccineDetail(?string $vaccine_detail): self
     {
         $this->vaccine_detail = $vaccine_detail;
 
@@ -374,7 +374,7 @@ class BreederPets
         return $this->delivery_way;
     }
 
-    public function setDeliveryWay(string $delivery_way): self
+    public function setDeliveryWay(?string $delivery_way): self
     {
         $this->delivery_way = $delivery_way;
 
@@ -386,7 +386,7 @@ class BreederPets
         return $this->price;
     }
 
-    public function setPrice(int $price): self
+    public function setPrice(?int $price): self
     {
         $this->price = $price;
 
@@ -398,7 +398,7 @@ class BreederPets
         return $this->thumbnail_path;
     }
 
-    public function setThumbnailPath(string $thumbnail_path): self
+    public function setThumbnailPath(?string $thumbnail_path): self
     {
         $this->thumbnail_path = $thumbnail_path;
 
@@ -494,7 +494,7 @@ class BreederPets
         return $this->favorite_count;
     }
 
-    public function setFavoriteCount(int $favorite_count): self
+    public function setFavoriteCount(?int $favorite_count): self
     {
         $this->favorite_count = $favorite_count;
         return $this;
@@ -581,7 +581,7 @@ class BreederPets
         return $this->pedigree_code;
     }
 
-    public function setPedigreeCode(string $pedigree_code): self
+    public function setPedigreeCode(?string $pedigree_code): self
     {
         $this->pedigree_code = $pedigree_code;
 
