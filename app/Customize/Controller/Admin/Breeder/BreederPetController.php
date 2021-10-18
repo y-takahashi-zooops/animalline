@@ -26,6 +26,11 @@ use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\CoatColorsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\DnaCheckStatusRepository;
+use DateTime;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederPetController extends AbstractController
 {
@@ -115,6 +120,45 @@ class BreederPetController extends AbstractController
             'breederPets' => $breederPets
         ];
         return[];
+    }
+
+    /**
+     * ペット情報管理
+     *
+     * @Route("/%eccube_admin_route%/breeder/pet/{id}/change_status", name="admin_breeder_pet_change_status")
+
+     */
+    public function pet_change_status(BreederPets $pet)
+    {
+        $newStatus = !$pet->getIsActive();
+        $pet->setIsActive($newStatus);
+        if ($newStatus) $pet->setReleaseDate(new DateTime);
+        $em = $this->entityManager;
+        $em->persist($pet);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_breeder_pet_all');
+    }
+
+    /**
+     * Download PDF
+     *
+     * @Route("/%eccube_admin_route%/breeder/pet/{id}/dna/download_pdf", requirements={"id" = "\d+"}, name="admin_breeder_pet_dna_download_pdf")
+     *
+     * @return BinaryFileResponse
+     */
+    public function downloadPdf(BreederPets $pet, DnaCheckStatusRepository $dnaCheckStatusRepository): BinaryFileResponse
+    {
+        $dnaCheckStatus = $dnaCheckStatusRepository->findOneBy(['pet_id' => $pet->getId()]);
+        if (!$dnaCheckStatus || !$pdfPath = $dnaCheckStatus->getFilePath()) {
+            throw new NotFoundHttpException('PDF DNA not found!');
+        }
+        $nameArr = explode('/', $pdfPath);
+        $fileName = end($nameArr);
+        $response = new BinaryFileResponse($pdfPath);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
+
+        return $response;
     }
 
     /**

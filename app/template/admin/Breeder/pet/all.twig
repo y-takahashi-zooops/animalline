@@ -27,8 +27,17 @@ file that was distributed with this source code.
 
 {% block javascript %}
 <script>
-    $('.confirm-status-btn').on('click', function() {
-        $('#confirm-modal-status').modal('show');
+    $(function() {
+        $('.confirm-status-btn').on('click', function () {
+            const modalMsg = $(this).data('is-active') ? 'ペット情報を非公開にしますか？' : 'ペット情報を公開しますか？';
+            $('.modal-message').text(modalMsg);
+            $('#confirm-modal-status').modal('show');
+            $('#btn-change-status').data('action', $(this).data('action'));
+        });
+
+        $('#btn-change-status').on('click', function () {
+            location.href = $(this).data('action');
+        });
     });
 </script>
 {% endblock javascript %}
@@ -132,14 +141,23 @@ file that was distributed with this source code.
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
-                                                <a class="btn btn-ec-actionIcon confirm-status-btn">
-                                                    <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
+                                                <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ pet.isActive }}"
+                                                    data-action="{{ url('admin_breeder_pet_change_status', {'id': pet.id}) }}">
+                                                        <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査結果PDFダウンロード">
-                                                <a class="btn btn-ec-actionIcon">
-                                                    <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
-                                                </a>
+                                                
+                                                {% if pet.filePath is defined and pet.filePath %}
+                                                    <a class="btn btn-ec-actionIcon"
+                                                        href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': pet.id}) }}">
+                                                        <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </a>
+                                                {% else %}
+                                                    <a class="btn btn-ec-actionIcon" disabled>
+                                                        <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </a>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </td>
@@ -177,7 +195,7 @@ file that was distributed with this source code.
                     <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
                         いいえ
                     </button>
-                    <button class="btn btn-ec-conversion" type="submit">
+                    <button class="btn btn-ec-conversion" id="btn-change-status" data-action="">
                         はい
                     </button>
                 </div>

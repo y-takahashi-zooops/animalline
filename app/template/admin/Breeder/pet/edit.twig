@@ -269,6 +269,17 @@ file that was distributed with this source code.
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
+                                            <span>生体ID</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        {{ form_widget(form.pet_code) }}
+                                        {{ form_errors(form.pet_code) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
                                             <span>ワクチン代の有無</span>
                                             <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}

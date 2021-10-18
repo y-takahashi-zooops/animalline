@@ -201,11 +201,11 @@ class VeqtaController extends AbstractController
                 break;
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
                 $Dna->setCheckStatus($checkStatus);
-                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
+                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
                 break;
-            default:
+            default:// 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
-                $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
         }
 
         $savePath = $this->copyFile($request->get('file_name'));
@@ -253,11 +253,11 @@ class VeqtaController extends AbstractController
                 break;
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
                 $Dna->setCheckStatus($checkStatus);
-                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
+                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
                 break;
-            default:
+            default:// 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
-                $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
         }
 
         $entityManager = $this->getDoctrine()->getManager();

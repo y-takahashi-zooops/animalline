@@ -167,12 +167,12 @@ class BreederPets
     private $Pedigree;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(name="pedigree_code", type="string", length=20, nullable=true)
      */
     private $pedigree_code;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(name="microchip_code", type="string", length=20, nullable=true)
      */
     private $microchip_code;
 
@@ -185,6 +185,11 @@ class BreederPets
      * @ORM\Column(name="release_date", type="date", nullable=true)
      */
     private $release_date;
+
+    /**
+     * @ORM\Column(name="pet_code", type="string", length=10, nullable=true)
+     */
+    private $pet_code;
 
     public function __construct()
     {
@@ -630,6 +635,18 @@ class BreederPets
     public function setReleaseDate(?\DateTimeInterface $release_date): self
     {
         $this->release_date = $release_date;
+
+        return $this;
+    }
+
+    public function getPetCode(): ?string
+    {
+        return $this->pet_code;
+    }
+
+    public function setPetCode(?string $pet_code): self
+    {
+        $this->pet_code = $pet_code;
 
         return $this;
     }
