@@ -19,10 +19,17 @@
                                     <a href="{{ url('breeder_pets_new',{'barcode': barCode}) }}">{{ barCode }}</a>
                                 </td>
                             </tr>
+                        {% else %}
+                            <span class="mb-2">
+                                結果が０件です。
+                            </span>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div class="navigation float-right">
+                {{ knp_pagination_render(barCodes) }}
             </div>
         </div>
     </section>

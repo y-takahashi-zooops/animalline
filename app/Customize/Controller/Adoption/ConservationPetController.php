@@ -22,6 +22,7 @@ use Customize\Repository\ConservationPetImageRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -349,12 +350,17 @@ class ConservationPetController extends AbstractController
      * @Route("/adoption/member/pet_regist_list", name="adoption_pet_regist_list")
      * @Template("animalline/adoption/member/pets/regist_list.twig")
      */
-    public function pet_regist_list()
+    public function pet_regist_list(Request $request, PaginatorInterface $paginator)
     {
-        $barCodes = [];
+        $codes = [];
         $DnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION, 'check_status' => AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING], ['update_date' => 'DESC']);
         foreach ($DnaCheckStatus as $dnaCheckStatus)
-            $barCodes[] = '2' . str_pad($dnaCheckStatus->getId(), 5, '0', STR_PAD_LEFT);
+            $codes[] = '2' . str_pad($dnaCheckStatus->getId(), 5, '0', STR_PAD_LEFT);
+        $barCodes = $paginator->paginate(
+            $codes,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
         return compact('barCodes');
     }
 }
