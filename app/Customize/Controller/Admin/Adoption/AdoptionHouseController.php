@@ -13,7 +13,7 @@
 
 namespace Customize\Controller\Admin\Adoption;
 
-use Customize\Form\Type\Admin\ConservationHouseType;
+use Customize\Form\Type\Adoption\ConservationHouseType;
 use Customize\Entity\Conservations;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

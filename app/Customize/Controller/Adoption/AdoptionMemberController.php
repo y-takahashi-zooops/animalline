@@ -9,9 +9,9 @@ use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\AdoptionQueryService;
 use Carbon\Carbon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Form\Type\ConservationsType;
-use Customize\Form\Type\ConservationPetsType;
-use Customize\Form\Type\ConservationHouseType;
+use Customize\Form\Type\Adoption\ConservationsType;
+use Customize\Form\Type\Adoption\ConservationPetsType;
+use Customize\Form\Type\Adoption\ConservationHouseType;
 use Customize\Entity\Conservations;
 use Customize\Entity\ConservationContacts;
 use Customize\Entity\ConservationContactHeader;
@@ -36,7 +36,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
-use Customize\Form\Type\ConservationContactType;
+use Customize\Form\Type\Adoption\ConservationContactType;
 use DateTime;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
@@ -254,15 +254,10 @@ class AdoptionMemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $addr = $request->get('conservations')['addr'];
-            $pref = $prefRepository->find($addr['PrefId']);
             $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
 
-            $conservation->setPrefId($pref)
-                ->setPref($pref->getName())
+            $conservation->setPref($conservation->getPrefId())
                 ->setId($user->getId())
-                ->setCity($addr['city'])
-                ->setAddress($addr['address'])
                 ->setThumbnailPath($thumbnail_path);
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -275,9 +270,9 @@ class AdoptionMemberController extends AbstractController
             $form->get('owner_name')->setData($Customer->getname01() . "　" . $Customer->getname02());
             $form->get('owner_kana')->setData($Customer->getkana01() . "　" . $Customer->getkana02());
             $form->get('zip')->setData($Customer->getPostalCode());
-            $form->get('addr')->get('PrefId')->setData($Customer->getPref());
-            $form->get('addr')->get('city')->setData($Customer->getAddr01());
-            $form->get('addr')->get('address')->setData($Customer->getAddr02());
+            $form->get('PrefId')->setData($Customer->getPref());
+            $form->get('city')->setData($Customer->getAddr01());
+            $form->get('address')->setData($Customer->getAddr02());
             $form->get('tel')->setData($Customer->getPhoneNumber());
         }
 

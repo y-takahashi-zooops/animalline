@@ -15,7 +15,7 @@ namespace Customize\Form\Type\Front;
 
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Customer;
-use Customize\Form\Type\AddressType;
+use Eccube\Form\Type\AddressType;
 use Eccube\Form\Type\KanaType;
 use Eccube\Form\Type\Master\JobType;
 use Eccube\Form\Type\Master\SexType;

@@ -85,9 +85,8 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-6 mb-2">
-                                    <img alt="thumbnail_path" src="{{ formAdoption.thumbnail_path.vars.value }}"
+                                    <img alt="thumbnail_path" src="{{ formAdoption.vars.value.thumbnailPath }}"
                                          style="max-width: 200px">
-                                    {{ form_widget(formAdoption.thumbnail_path) }}
                                 </div>
                             </div>
                             <div class="row">
@@ -130,39 +129,39 @@ file that was distributed with this source code.
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="d-inline-block">
-                                                {{ form_label(formAdoption.addr.PrefId, '都道府県', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                                {{ form_label(formAdoption.PrefId, '都道府県', { 'label_attr': { 'class': 'ec-label' }}) }}
                                             </div>
                                         </div>
                                         <div class="col-2 mb-2">
-                                            <div class="ec-select{{ has_errors(formAdoption.addr.PrefId) ? ' error' }}">
-                                                {{ form_widget(formAdoption.addr.PrefId) }}
-                                                {{ form_errors(formAdoption.addr.PrefId) }}
+                                            <div class="ec-select{{ has_errors(formAdoption.PrefId) ? ' error' }}">
+                                                {{ form_widget(formAdoption.PrefId) }}
+                                                {{ form_errors(formAdoption.PrefId) }}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="d-inline-block">
-                                                {{ form_label(formAdoption.addr.city, '市区町村', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                                {{ form_label(formAdoption.city, '市区町村', { 'label_attr': { 'class': 'ec-label' }}) }}
                                             </div>
                                         </div>
                                         <div class="col-2 mb-2">
-                                            <div class="ec-input{{ has_errors(formAdoption.addr.city) ? ' error' }}">
-                                                {{ form_widget(formAdoption.addr.city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)', 'disabled': 'true' }}) }}
-                                                {{ form_errors(formAdoption.addr.city) }}
+                                            <div class="ec-input{{ has_errors(formAdoption.city) ? ' error' }}">
+                                                {{ form_widget(formAdoption.city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)', 'disabled': 'true' }}) }}
+                                                {{ form_errors(formAdoption.city) }}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="d-inline-block">
-                                                {{ form_label(formAdoption.addr.address, '市区町村以下住所', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                                {{ form_label(formAdoption.address, '市区町村以下住所', { 'label_attr': { 'class': 'ec-label' }}) }}
                                             </div>
                                         </div>
                                         <div class="col-6 mb-2">
-                                            <div class="ec-input{{ has_errors(formAdoption.addr.address) ? ' error' }}">
-                                                {{ form_widget(formAdoption.addr.address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)', 'disabled': 'true' }}) }}
-                                                {{ form_errors(formAdoption.addr.address) }}
+                                            <div class="ec-input{{ has_errors(formAdoption.address) ? ' error' }}">
+                                                {{ form_widget(formAdoption.address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)', 'disabled': 'true' }}) }}
+                                                {{ form_errors(formAdoption.address) }}
                                             </div>
                                         </div>
                                     </div>

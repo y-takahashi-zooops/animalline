@@ -93,9 +93,9 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-6 mb-2">
-                                    <img alt="thumbnail_path" src="{{ form.thumbnail_path.vars.value }}"
+                                    <img alt="thumbnail_path" src="{{ form.vars.value.thumbnailPath }}"
                                          style="max-width: 200px">
-                                    {{ form_widget(form.thumbnail_path) }}
+                                    {{ form_widget(form.thumbnail_path, { 'attr': { 'class': 'd-none' }}) }}
                                 </div>
                             </div>
                             <div class="row">
@@ -126,150 +126,148 @@ file that was distributed with this source code.
                                     {{ form_errors(form.owner_kana) }}
                                 </div>
                             </div>
-                            <div>
-                                <div class="h-adr">
-                                    <span class="p-country-name" style="display:none;">Japan</span>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <div class="d-inline-block">
-                                                {{ form_label(form.zip, '郵便番号', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                                <span class="badge badge-primary ml-1">
-                                                {{ 'admin.common.required'|trans }}
-                                            </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-2 mb-2">
-                                            <div class="ec-zipInput{{ has_errors(form.zip) ? ' error' }}">
-                                                {{ form_widget(form.zip) }}
-                                                {{ form_errors(form.zip) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <div class="d-inline-block">
-                                                {{ form_label(form.addr.PrefId, '都道府県', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                                <span class="badge badge-primary ml-1">
-                                                {{ 'admin.common.required'|trans }}
-                                            </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-2 mb-2">
-                                            <div class="ec-select{{ has_errors(form.addr.PrefId) ? ' error' }}">
-                                                {{ form_widget(form.addr.PrefId) }}
-                                                {{ form_errors(form.addr.PrefId) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <div class="d-inline-block">
-                                                {{ form_label(form.addr.city, '市区町村', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                                <span class="badge badge-primary ml-1">
-                                                {{ 'admin.common.required'|trans }}
-                                            </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-2 mb-2">
-                                            <div class="ec-input{{ has_errors(form.addr.city) ? ' error' }}">
-                                                {{ form_widget(form.addr.city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-                                                {{ form_errors(form.addr.city) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <div class="d-inline-block">
-                                                {{ form_label(form.addr.address, '市区町村以下住所', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                                <span class="badge badge-primary ml-1">
-                                                {{ 'admin.common.required'|trans }}
-                                            </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 mb-2">
-                                            <div class="ec-input{{ has_errors(form.addr.address) ? ' error' }}">
-                                                {{ form_widget(form.addr.address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-                                                {{ form_errors(form.addr.address) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="h-adr">
+                                <span class="p-country-name" style="display:none;">Japan</span>
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            <span>電話番号</span>
+                                            {{ form_label(form.zip, '郵便番号', { 'label_attr': { 'class': 'ec-label' }}) }}
                                             <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        {{ form_widget(form.tel) }}
-                                        {{ form_errors(form.tel) }}
+                                        <div class="ec-zipInput{{ has_errors(form.zip) ? ' error' }}">
+                                            {{ form_widget(form.zip) }}
+                                            {{ form_errors(form.zip) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            <span>FAX番号</span>
+                                            {{ form_label(form.PrefId, '都道府県', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        {{ form_widget(form.fax) }}
-                                        {{ form_errors(form.fax) }}
+                                        <div class="ec-select{{ has_errors(form.PrefId) ? ' error' }}">
+                                            {{ form_widget(form.PrefId) }}
+                                            {{ form_errors(form.PrefId) }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            <span>ホームページのURL</span>
+                                            {{ form_label(form.city, '市区町村', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        <div class="ec-input{{ has_errors(form.city) ? ' error' }}">
+                                            {{ form_widget(form.city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                            {{ form_errors(form.city) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(form.address, '市区町村以下住所', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        {{ form_widget(form.homepage_url) }}
-                                        {{ form_errors(form.homepage_url) }}
+                                        <div class="ec-input{{ has_errors(form.address) ? ' error' }}">
+                                            {{ form_widget(form.address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                            {{ form_errors(form.address) }}
+                                        </div>
                                     </div>
                                 </div>
-                                <!--
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>公開フラグ</span>
-                                            <span class="badge badge-primary ml-1">
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>電話番号</span>
+                                        <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(form.is_active) }}
-                                        {{ form_errors(form.is_active) }}       
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>審査ステータス</span>
-                                            <span class="badge badge-primary ml-1">
-                                                {{ 'admin.common.required'|trans }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="col-2 mb-2">
-                                        {{ form_widget(form.examination_status) }}
-                                        {{ form_errors(form.examination_status) }}     
+                                <div class="col-2 mb-2">
+                                    {{ form_widget(form.tel) }}
+                                    {{ form_errors(form.tel) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>FAX番号</span>
                                     </div>
                                 </div>
-                                -->
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="d-inline-block">
-                                            <span>自己PR</span>
-                                        </div>
+                                <div class="col-2 mb-2">
+                                    {{ form_widget(form.fax) }}
+                                    {{ form_errors(form.fax) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>ホームページのURL</span>
                                     </div>
-                                    <div class="col-6 mb-2">
-                                        {{ form_widget(form.pr_text) }}
-                                        {{ form_errors(form.pr_text) }}
+                                </div>
+                                <div class="col-6 mb-2">
+                                    {{ form_widget(form.homepage_url) }}
+                                    {{ form_errors(form.homepage_url) }}
+                                </div>
+                            </div>
+                            {#
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>公開フラグ</span>
+                                        <span class="badge badge-primary ml-1">
+                                            {{ 'admin.common.required'|trans }}
+                                        </span>
                                     </div>
+                                </div>
+                                <div class="col-2 mb-2">
+                                    {{ form_widget(form.is_active) }}
+                                    {{ form_errors(form.is_active) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>審査ステータス</span>
+                                        <span class="badge badge-primary ml-1">
+                                            {{ 'admin.common.required'|trans }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-2 mb-2">
+                                    {{ form_widget(form.examination_status) }}
+                                    {{ form_errors(form.examination_status) }}
+                                </div>
+                            </div>
+                            #}
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>自己PR</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-2">
+                                    {{ form_widget(form.pr_text) }}
+                                    {{ form_errors(form.pr_text) }}
                                 </div>
                             </div>
                         </div>

@@ -42,7 +42,7 @@
                                 <dl>
                                     <dt>
                                         <div>
-                                            {{ form_label(form.address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            {{ form_label(form.conservation_house_address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
                                         </div>    
                                         <button class="btn btn-ec-regular mb-2" id="copy" type="button" style="background: #f0f0f0; border: 1px solid black;">保護団体情報コピー</button>
                                     </dt>
@@ -64,19 +64,19 @@
                                             {{ form_errors(form.conservation_house_house_zip) }}
                                             <input type="hidden" id="Zip" value={{conservation.zip}}>
                                         </div>
-                                        <div class="ec-select{{ has_errors(form.address.pref) ? ' error' }}">
-                                            {{ form_widget(form.address.pref) }}
-                                            {{ form_errors(form.address.pref) }}
+                                        <div class="ec-select{{ has_errors(form.pref) ? ' error' }}">
+                                            {{ form_widget(form.pref) }}
+                                            {{ form_errors(form.pref) }}
                                             <input type="hidden" id="Pref" value={{conservation.PrefId.Id}}>
                                         </div>
-                                        <div class="ec-input{{ has_errors(form.address.conservation_house_city) ? ' error' }}">
-                                            {{ form_widget(form.address.conservation_house_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-                                            {{ form_errors(form.address.conservation_house_city) }}
+                                        <div class="ec-input{{ has_errors(form.conservation_house_city) ? ' error' }}">
+                                            {{ form_widget(form.conservation_house_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                            {{ form_errors(form.conservation_house_city) }}
                                             <input type="hidden" id="City" value={{conservation.city}}>
                                         </div>
-                                        <div class="ec-input{{ has_errors(form.address.conservation_house_address) ? ' error' }}">
-                                            {{ form_widget(form.address.conservation_house_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-                                            {{ form_errors(form.address.conservation_house_address) }}
+                                        <div class="ec-input{{ has_errors(form.conservation_house_address) ? ' error' }}">
+                                            {{ form_widget(form.conservation_house_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                            {{ form_errors(form.conservation_house_address) }}
                                             <input type="hidden" id="Address" value={{conservation.address}}>
                                         </div>
                                     </dd>
@@ -161,9 +161,9 @@
     document.getElementById("copy").onclick = function() {
         // ブリーダー情報をライセンス情報にコピー
         document.getElementById("conservation_house_conservation_house_house_zip").value = document.getElementById("Zip").value 
-        document.getElementById("conservation_house_address_pref").value = document.getElementById("Pref").value 
-        document.getElementById("conservation_house_address_conservation_house_city").value = document.getElementById("City").value 
-        document.getElementById("conservation_house_address_conservation_house_address").value = document.getElementById("Address").value
+        document.getElementById("conservation_house_pref").value = document.getElementById("Pref").value
+        document.getElementById("conservation_house_conservation_house_city").value = document.getElementById("City").value
+        document.getElementById("conservation_house_conservation_house_address").value = document.getElementById("Address").value
         document.getElementById("conservation_house_conservation_house_house_tel").value = document.getElementById("Tel").value 
         document.getElementById("conservation_house_conservation_house_house_fax").value = document.getElementById("Fax").value 
     };

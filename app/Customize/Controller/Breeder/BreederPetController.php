@@ -9,7 +9,7 @@ use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Form\Type\BreederPetsType;
+use Customize\Form\Type\Breeder\BreederPetsType;
 use Customize\Entity\BreederHouse;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
