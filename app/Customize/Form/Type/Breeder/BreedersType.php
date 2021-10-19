@@ -103,7 +103,7 @@ class BreedersType extends AbstractType
                 ],
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_city_len'],
-                    'class' => 'p-locality p-street-address',
+                    'class' => 'p-locality',
                     'placeholder' => 'common.address_sample_01',
                 ],
             ])
@@ -114,7 +114,7 @@ class BreedersType extends AbstractType
                 ],
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_address1_len'],
-                    'class' => 'p-extended-address',
+                    'class' => 'p-street-address p-extended-address',
                     'placeholder' => 'common.address_sample_02',
                 ],
             ])
@@ -222,7 +222,7 @@ class BreedersType extends AbstractType
                 ],
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_city_len'],
-                    'class' => 'p-locality p-street-address',
+                    'class' => 'p-locality',
                     'placeholder' => 'common.address_sample_01',
                 ],
             ])
@@ -233,7 +233,7 @@ class BreedersType extends AbstractType
                 ],
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_address1_len'],
-                    'class' => 'p-extended-address',
+                    'class' => 'p-street-address p-extended-address',
                     'placeholder' => 'common.address_sample_02',
                 ],
             ])

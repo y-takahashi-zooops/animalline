@@ -147,16 +147,16 @@ file that was distributed with this source code.
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
-                                            {{ form_label(form.prefId, '都道府県', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            {{ form_label(form.PrefId, '都道府県', { 'label_attr': { 'class': 'ec-label' }}) }}
                                             <span class="badge badge-primary ml-1">
                                                 {{ 'admin.common.required'|trans }}
                                             </span>
                                         </div>
                                     </div>
                                     <div class="col-2 mb-2">
-                                        <div class="ec-select{{ has_errors(form.prefId) ? ' error' }}">
-                                            {{ form_widget(form.prefId) }}
-                                            {{ form_errors(form.prefId) }}
+                                        <div class="ec-select{{ has_errors(form.PrefId) ? ' error' }}">
+                                            {{ form_widget(form.PrefId) }}
+                                            {{ form_errors(form.PrefId) }}
                                         </div>
                                     </div>
                                 </div>

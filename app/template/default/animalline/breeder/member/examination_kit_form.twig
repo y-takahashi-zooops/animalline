@@ -129,23 +129,23 @@
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 <script>
     if ($("#issetHouseDog").val() == 'false') {
-    $("#breeder_kit_dna_choice_address option[value='2']").remove();
+    $("#dna_check_status_header_choice_address option[value='2']").remove();
 }
     if ($("#issetHouseCat").val() == 'false') {
-    $("#breeder_kit_dna_choice_address option[value='3']").remove();
+    $("#dna_check_status_header_choice_address option[value='3']").remove();
 }
-    $(document).on('change', '#breeder_kit_dna_choice_address', function() {
+    $(document).on('change', '#dna_check_status_header_choice_address', function() {
     var name = $(this).val() == 1 ? '{{breeder.breederName}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.breederHouseName}}' : '{{breederHouseCat ? breederHouseCat.breederHouseName}}';
     var zip = $(this).val() == 1 ? '{{breeder.breederZip}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.breederHouseHouseZip}}' : '{{breederHouseCat ? breederHouseCat.breederHouseHouseZip}}';
     var pref_id = $(this).val() == 1 ? '{{breeder.PrefBreeder.Id}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.BreederHousePrefId.Id}}' : '{{breederHouseCat ? breederHouseCat.BreederHousePrefId.Id}}';
     var city = $(this).val() == 1 ? '{{breeder.breederCity}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.breederHouseCity}}' : '{{breederHouseCat ? breederHouseCat.breederHouseCity}}';
     var addr = $(this).val() == 1 ? '{{breeder.breederAddress}}' : $(this).val() == 2 ? '{{breederHouseDog ? breederHouseDog.breederHouseAddress}}' : '{{breederHouseCat ? breederHouseCat.breederHouseAddress}}';
 
-    $("#breeder_kit_dna_shipping_name").val(name)
-    $("#breeder_kit_dna_shipping_zip").val(zip)
-    $("#breeder_kit_dna_PrefShipping").val(pref_id)
-    $("#breeder_kit_dna_shipping_city").val(city)
-    $("#breeder_kit_dna_shipping_address").val(addr)
+    $("#dna_check_status_header_shipping_name").val($(this).val() ? name : '')
+    $("#dna_check_status_header_shipping_zip").val($(this).val() ? zip : '')
+    $("#dna_check_status_header_PrefShipping").val($(this).val() ? pref_id : '')
+    $("#dna_check_status_header_shipping_city").val($(this).val() ? city : '')
+    $("#dna_check_status_header_shipping_address").val($(this).val() ? addr : '')
 });
 
     $("form[name=dna-kit-form]").submit(function (e) {

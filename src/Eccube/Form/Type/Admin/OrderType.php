@@ -139,7 +139,7 @@ class OrderType extends AbstractType
                             'max' => $this->eccubeConfig['eccube_mtext_len'],
                         ]),
                     ],
-                    'attr' => ['class' => 'p-locality p-street-address'],
+                    'attr' => ['class' => 'p-locality'],
                 ],
                 'addr02_options' => [
                     'required' => false,
@@ -149,7 +149,7 @@ class OrderType extends AbstractType
                             'max' => $this->eccubeConfig['eccube_mtext_len'],
                         ]),
                     ],
-                    'attr' => ['class' => 'p-extended-address'],
+                    'attr' => ['class' => 'p-street-address p-extended-address'],
                 ],
             ])
             ->add('email', EmailType::class, [
