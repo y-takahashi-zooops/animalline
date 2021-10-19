@@ -7,38 +7,48 @@ use PHPUnit\Framework\TestCase;
 
 class BreedersServiceTest extends TestCase
 {
+    private $breedersService;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->breedersService = $this->createMock(BreederQueryService::class);
+    }
+
     public function testGetBreedsHavePet(): void
     {
-        $breedersService = $this->createMock(BreederQueryService::class);
-        $Breeds = $breedersService->getBreedsHavePet(1);
+        $Breeds = $this->breedersService->getBreedsHavePet(1);
         $this->assertNotNull($Breeds);
     }
 
     public function testSearcPetsResult(): void
     {
-        $breedersService = $this->createMock(BreederQueryService::class);
-        $Breeds = $breedersService->searchPetsResult([]);
+        $Breeds = $this->breedersService->searchPetsResult([]);
         $this->assertNotNull($Breeds);
     }
 
     public function testSearchBreedersResult(): void
     {
-        $breedersService = $this->createMock(BreederQueryService::class);
-        $Breeds = $breedersService->searchBreedersResult([], 1);
+        $Breeds = $this->breedersService->searchBreedersResult([], 1);
         $this->assertNotNull($Breeds);
+    }
+
+    public function testFindBreederFavoritePets(): void
+    {
+        $Breeds = $this->breedersService->findBreederFavoritePets(1);
+        $this->assertNotNull($Breeds);
+        $this->assertInternalType('array', $Breeds);
     }
 
     public function testCalBreederRank(): void
     {
-        $breedersService = $this->createMock(BreederQueryService::class);
-        $Breeds = $breedersService->calculateBreederRank(1);
+        $Breeds = $this->breedersService->calculateBreederRank(1);
         $this->assertNotNull($Breeds);
     }
 
     public function testFilterPetAdmin(): void
     {
-        $breedersService = $this->createMock(BreederQueryService::class);
-        $Breeds = $breedersService->filterPetAdmin([], []);
+        $Breeds = $this->breedersService->filterPetAdmin([], []);
         $this->assertNotNull($Breeds);
     }
 }
