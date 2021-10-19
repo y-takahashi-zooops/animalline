@@ -81,7 +81,9 @@ class BreederQueryService
     public function searchPetsResult($request): array
     {
         $query = $this->breederPetsRepository->createQueryBuilder('p')
-            ->join('p.Breeder', 'c');
+            ->join('p.Breeder', 'c')
+            ->where('p.is_active = :is_active')
+            ->setParameter('is_active', 1);;
 
         if ($request->get('pet_kind')) {
             $query->andWhere('p.pet_kind = :pet_kind')

@@ -4,3 +4,4 @@
 /html/upload/temp_image/
 /html/upload/save_image/
 /app/DoctrineMigrations/
+bin/.phpunit
