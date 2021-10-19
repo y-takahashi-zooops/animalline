@@ -7,31 +7,35 @@ use PHPUnit\Framework\TestCase;
 
 class AdoptionsServiceTest extends TestCase
 {
+    private $adoptionsService;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->adoptionsService = $this->createMock(AdoptionQueryService::class);
+    }
+
     public function testGetBreedsHavePet(): void
     {
-        $adoptionsService = $this->createMock(AdoptionQueryService::class);
-        $Breeds = $adoptionsService->getBreedsHavePet(1);
-        $this->assertNotNull($Breeds);
+        $Adoptions = $this->adoptionsService->getBreedsHavePet(1);
+        $this->assertNotNull($Adoptions);
     }
 
     public function testSearcPetsResult(): void
     {
-        $adoptionsService = $this->createMock(AdoptionQueryService::class);
-        $Breeds = $adoptionsService->searchPetsResult([]);
-        $this->assertNotNull($Breeds);
+        $Adoptions = $this->adoptionsService->searchPetsResult([]);
+        $this->assertNotNull($Adoptions);
     }
 
     public function testsearchAdoptionsResult(): void
     {
-        $adoptionsService = $this->createMock(AdoptionQueryService::class);
-        $Breeds = $adoptionsService->searchAdoptionsResult([], 1);
-        $this->assertNotNull($Breeds);
+        $Adoptions = $this->adoptionsService->searchAdoptionsResult([], 1);
+        $this->assertNotNull($Adoptions);
     }
 
     public function testFilterPetAdmin(): void
     {
-        $adoptionsService = $this->createMock(AdoptionQueryService::class);
-        $Breeds = $adoptionsService->filterPetAdmin([], []);
-        $this->assertNotNull($Breeds);
+        $Adoptions = $this->adoptionsService->filterPetAdmin([], []);
+        $this->assertNotNull($Adoptions);
     }
 }
