@@ -24,6 +24,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Customize\Form\Type\AddressHouseType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -53,6 +54,25 @@ class BreederKitDnaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('birth', DateType::class, [
+                'data' => new \DateTime(),
+                'years' => range(date('Y'), 1990),
+                'mapped' => false,
+            ])
+            ->add('choice_address', ChoiceType::class, [
+                'required' => true,
+                'mapped' => false,
+                'choices' =>
+                    [
+                        '基本情報' => 1,
+                        '犬舎住所' => 2,
+                        '猫舎住所' => 3,
+                    ],
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank()
+                ],
+            ])
             ->add('choice_address', ChoiceType::class, [
                 'required' => true,
                 'mapped' => false,

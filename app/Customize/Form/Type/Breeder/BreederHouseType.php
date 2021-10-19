@@ -34,34 +34,6 @@ class BreederHouseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('breeder_house_name', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                    new Assert\NotBlank()
-                ]
-            ])
-            ->add('breeder_house_kana', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[ァ-ヶｦ-ﾟー 　]+$/u',
-                        'message' => 'form_error.kana_only',
-                    ]),
-                    new Assert\NotBlank()
-                ]
-            ])
             ->add('breeder_house_house_zip', TextType::class, [
                 'required' => true,
                 'constraints' => [
