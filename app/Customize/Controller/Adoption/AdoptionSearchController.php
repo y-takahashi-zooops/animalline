@@ -5,6 +5,7 @@ namespace Customize\Controller\Adoption;
 use Customize\Config\AnilineConf;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\BreedsRepository;
+use Customize\Repository\CoatColorsRepository;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationPetImageRepository;
@@ -134,5 +135,41 @@ class AdoptionSearchController extends AbstractController
             'breeds' => $breeds,
             'regions' => $regions
         ]);
+    }
+
+    /**
+     * pet data by pet kind
+     *
+     * @Route("/pet_data_by_pet_kind", name="pet_data_by_pet_kind", methods={"GET"})
+     * @param Request $request
+     * @param BreedsRepository $breedsRepository
+     * @param CoatColorsRepository $coatColorsRepository
+     * @return JsonResponse
+     */
+    public function petDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
+    {
+        $petKind = $request->get('pet_kind');
+        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
+        $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
+        $formattedBreeds = [];
+        foreach ($breeds as $breed) {
+            $formattedBreeds[] = [
+                'id' => $breed->getId(),
+                'name' => $breed->getBreedsName()
+            ];
+        }
+        $formattedColors = [];
+        foreach ($colors as $color) {
+            $formattedColors[] = [
+                'id' => $color->getId(),
+                'name' => $color->getCoatColorName()
+            ];
+        }
+        $data = [
+            'breeds' => $formattedBreeds,
+            'colors' => $formattedColors
+        ];
+
+        return new JsonResponse($data);
     }
 }
