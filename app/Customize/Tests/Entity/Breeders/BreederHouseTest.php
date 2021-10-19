@@ -21,11 +21,11 @@ class BreederHouseTest extends TestCase
 
     public function testCreateBreederData(): void
     {
-        $breederHouseHouse = new BreederHouse();
+        $breederHouse = new BreederHouse();
         $petType = 1;
-        $breederHouseHouse->setPetType($petType);
+        $breederHouse->setPetType($petType);
 
-        $this->assertEquals($petType, $breederHouseHouse->getPetType());
+        $this->assertEquals($petType, $breederHouse->getPetType());
     }
 
     /**
@@ -37,7 +37,7 @@ class BreederHouseTest extends TestCase
     {
         $breederHouse = new BreederHouse();
 
-        // ConservationHouse can have one
+        // BreederHouse can have one
         $this->assertNull($breederHouse->getBreeder());
         $this->assertNull($breederHouse->getBreederHousePref());
     }
