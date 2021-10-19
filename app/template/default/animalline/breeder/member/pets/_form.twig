@@ -193,6 +193,27 @@
         <div class="col-md-8 form-check-inline ec-radio">
             {{ form_widget(form.include_vaccine_fee, {'attr': {'style': 'display:flex;'}}) }}
             {{ form_errors(form.include_vaccine_fee) }}
+            {{ form_label(form.pet_code, '生体ID	', { 'label_attr': {'class': 'ec-label' }}) }}
+        </div>
+        <div class="col-md-8 ec-input">
+            {{ form_widget(form.pet_code, {'attr': {'style': 'display:flex;'}}) }}
+            {{ form_errors(form.pet_code) }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        </div>
+        <div class="col-md-8 ec-input">
+            {{ form_widget(form.delivery_way, {'attr': {'rows': 5}}) }}
+            {{ form_errors(form.delivery_way) }}
+        </div>
+    </div>
+            {{ form_label(form.include_vaccine_fee, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label' }}) }}
+        </div>
+        <div class="col-md-8 form-check-inline ec-radio">
+            {{ form_widget(form.include_vaccine_fee, {'attr': {'style': 'display:flex;'}}) }}
+            {{ form_errors(form.include_vaccine_fee) }}
         </div>
     </div>
     <div class="row mb-3">
