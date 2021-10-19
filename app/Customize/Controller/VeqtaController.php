@@ -201,11 +201,11 @@ class VeqtaController extends AbstractController
                 break;
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
                 $Dna->setCheckStatus($checkStatus);
-                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
+                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
                 break;
-            default:
+            default:// 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
-                $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
         }
 
         $savePath = $this->copyFile($request->get('file_name'));
@@ -253,11 +253,11 @@ class VeqtaController extends AbstractController
                 break;
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
                 $Dna->setCheckStatus($checkStatus);
-                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_3);
+                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
                 break;
-            default:
+            default:// 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
-                $Pet->setDnaCheckResult($checkStatus == 61 ? AnilineConf::DNA_CHECK_RESULT_1 : AnilineConf::DNA_CHECK_RESULT_2); // 61: クリア, 62: キャリア.
+                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
         }
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -275,31 +275,33 @@ class VeqtaController extends AbstractController
         }
         $entityManager->persist($Pet);
 
-        $arrData = [];
-        $arrData['breeder_name'] = $Pet->getBreeder()->getBreederName();
-        $arrData['pet'] = $Pet;
-        $checkDetails = [];
-        foreach ($Dna->getCheckStatusDetails() as $item) {
-            $itemArr = [];
-            $itemArr['check_kind_name'] = $item->getCheckKinds() ? $item->getCheckKinds()->getCheckKind() : '';
-            $itemArr['check_kind_result'] = $item->getCheckResult();
-            $checkDetails[] = $itemArr;
-        }
-        $arrData['check_kinds'] = $checkDetails;
-        $veqtaPdfService->makePdf($arrData);
+        if ($siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER) {
+            $arrData = [];
+            $arrData['breeder_name'] = $Pet->getBreeder()->getBreederName();
+            $arrData['pet'] = $Pet;
+            $checkDetails = [];
+            foreach ($Dna->getCheckStatusDetails() as $item) {
+                $itemArr = [];
+                $itemArr['check_kind_name'] = $item->getCheckKinds() ? $item->getCheckKinds()->getCheckKind() : '';
+                $itemArr['check_kind_result'] = $item->getCheckResult();
+                $checkDetails[] = $itemArr;
+            }
+            $arrData['check_kinds'] = $checkDetails;
+            $veqtaPdfService->makePdf($arrData);
 
-        $pdfDnaDir = 'var/pdf/dna';
-        if (!file_exists($pdfDnaDir) && !mkdir($pdfDnaDir, 0777, true)) {
-            throw new Exception('Failed to create folder.');
-        }
-        $pdfPath = $pdfDnaDir . '/VeqtaGeneticTestingReport_' . $Dna->getId() . '.pdf';
-        try {
-            $veqtaPdfService->Output($_SERVER['DOCUMENT_ROOT'] . $pdfPath, 'F');
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage(), 500);
-        }
+            $pdfDnaDir = 'var/pdf/dna';
+            if (!file_exists($pdfDnaDir) && !mkdir($pdfDnaDir, 0777, true)) {
+                throw new Exception('Failed to create folder.');
+            }
+            $pdfPath = $pdfDnaDir . '/VeqtaGeneticTestingReport_' . $Dna->getId() . '.pdf';
+            try {
+                $veqtaPdfService->Output($_SERVER['DOCUMENT_ROOT'] . $pdfPath, 'F');
+            } catch (Exception $e) {
+                throw new Exception($e->getMessage(), 500);
+            }
 
-        $Dna->setFilePath($pdfPath);
+            $Dna->setFilePath($pdfPath);
+        }
         $entityManager->persist($Dna);
         $entityManager->flush();
 

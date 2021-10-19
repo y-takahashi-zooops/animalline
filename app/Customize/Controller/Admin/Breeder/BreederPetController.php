@@ -26,6 +26,11 @@ use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\CoatColorsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\DnaCheckStatusRepository;
+use DateTime;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederPetController extends AbstractController
 {
@@ -85,14 +90,74 @@ class BreederPetController extends AbstractController
      */
     public function pet_all(PaginatorInterface $paginator, Request $request)
     {
-        $pets = $this->breederPetsRepository->findAll();
+        $request = $request->query->all();
+
         $breeds = $this->breedsRepository->findAll();
+        $order = [];
+        $order['field'] = array_key_exists('field', $request) ? $request['field'] : 'create_date';
+        $order['direction'] = array_key_exists('direction', $request) ? $request['direction'] : 'DESC';
+        $criteria = [];
+        $criteria['pet_kind'] = array_key_exists('pet_kind', $request) ? $request['pet_kind'] : '';
+        $criteria['breed_type'] = array_key_exists('breed_type', $request) ? $request['breed_type'] : '';
+        $criteria['public_status'] = array_key_exists('public_status', $request) ? $request['public_status'] : '';
+
+        $results = $this->breederPetsRepository->filterBreederPetsAdmin($criteria, $order);
+
+        $breederPets = $paginator->paginate(
+            $results,
+            array_key_exists('page', $request) ? $request['page'] : 1,
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        $direction = 'ASC';
+        if (array_key_exists('direction', $request)) {
+            $direction = $request['direction'] == 'ASC' ? 'DESC' : 'ASC';
+        }
 
         return [
-            'pets' => $pets,
             'breeds' => $breeds,
+            'direction' => $direction,
+            'breederPets' => $breederPets
         ];
-        return[];
+    }
+
+    /**
+     * ペット情報管理
+     *
+     * @Route("/%eccube_admin_route%/breeder/pet/{id}/change_status", name="admin_breeder_pet_change_status")
+
+     */
+    public function pet_change_status(BreederPets $pet)
+    {
+        $newStatus = !$pet->getIsActive();
+        $pet->setIsActive($newStatus);
+        if ($newStatus) $pet->setReleaseDate(new DateTime);
+        $em = $this->entityManager;
+        $em->persist($pet);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_breeder_pet_all');
+    }
+
+    /**
+     * Download PDF
+     *
+     * @Route("/%eccube_admin_route%/breeder/pet/{id}/dna/download_pdf", requirements={"id" = "\d+"}, name="admin_breeder_pet_dna_download_pdf")
+     *
+     * @return BinaryFileResponse
+     */
+    public function downloadPdf(BreederPets $pet, DnaCheckStatusRepository $dnaCheckStatusRepository): BinaryFileResponse
+    {
+        $dnaCheckStatus = $dnaCheckStatusRepository->findOneBy(['pet_id' => $pet->getId()]);
+        if (!$dnaCheckStatus || !$pdfPath = $dnaCheckStatus->getFilePath()) {
+            throw new NotFoundHttpException('PDF DNA not found!');
+        }
+        $nameArr = explode('/', $pdfPath);
+        $fileName = end($nameArr);
+        $response = new BinaryFileResponse($pdfPath);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
+
+        return $response;
     }
 
     /**
