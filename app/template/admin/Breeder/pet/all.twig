@@ -27,8 +27,17 @@ file that was distributed with this source code.
 
 {% block javascript %}
 <script>
-    $('.confirm-status-btn').on('click', function() {
-        $('#confirm-modal-status').modal('show');
+    $(function() {
+        $('.confirm-status-btn').on('click', function () {
+            const modalMsg = $(this).data('is-active') ? 'ペット情報を非公開にしますか？' : 'ペット情報を公開しますか？';
+            $('.modal-message').text(modalMsg);
+            $('#confirm-modal-status').modal('show');
+            $('#btn-change-status').data('action', $(this).data('action'));
+        });
+
+        $('#btn-change-status').on('click', function () {
+            location.href = $(this).data('action');
+        });
     });
 </script>
 {% endblock javascript %}
@@ -62,12 +71,11 @@ file that was distributed with this source code.
                 <div class="row mb-2">
                     <div class="col-6">
                         <label class="col-form-label">公開状況</label>
-                        <select id="breed_type" name="breed_type" class="form-control">
-                            <option value="0">全て</option>
-                            <option value="1">公開中</option>
-                            <option value="2">未公開(DNA検査中)</option>
-                            <option value="3">未公開(DNA検査済)</option>
-                            <option value="4">未公開(DNA検査NG)</option>
+                        <select id="public_status" name="public_status" class="form-control">
+                            {% set publicStatuss = ['全て', '非公開', '公開', '未公開(DNA検査中)', '未公開(DNA検査済)', '未公開(DNA検査NG)'] %}
+                            {% for i in 0..5 %}
+                                <option value="{{ i }}" {% if params.public_status is defined and params.public_status == i %} selected {% endif %}>{{ publicStatuss[i] }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -87,68 +95,69 @@ file that was distributed with this source code.
                             <thead>
                             <tr>
                                 <th class="border-top-0 pt-2 pb-2"></th>
-                                {# <th class="border-top-0 pt-2 pb-2"><a
+                                <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'id' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'id', 'direction': direction})) }}">ID</a>
+                                            href="{{ url('admin_breeder_pet_all', params|merge({'field': 'id', 'direction': direction})) }}">ID</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2">画像</th>
                                 <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'pet_kind' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'pet_kind', 'direction': direction})) }}">種別</a>
+                                            href="{{ url('admin_breeder_pet_all', params|merge({'field': 'pet_kind', 'direction': direction})) }}">種別</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
-                                            class="{{ column == 'breed_type' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'breed_type', 'direction': direction})) }}">犬種/猫種</a>
+                                            class="{{ column == 'BreedsType' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                            href="{{ url('admin_breeder_pet_all', params|merge({'field': 'BreedsType', 'direction': direction})) }}">犬種/猫種</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'create_date', 'direction': direction})) }}">登録日</a>
+                                            href="{{ url('admin_breeder_pet_all', params|merge({'field': 'create_date', 'direction': direction})) }}">登録日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_list', params|merge({'id': id, 'field': 'update_date', 'direction': direction})) }}">更新日</a>
-                                </th> #}
-                                <th class="border-top-0 pt-2 pb-2">ID
+                                            href="{{ url('admin_breeder_pet_all', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
-                                <th class="border-top-0 pt-2 pb-2">画像</th>
-                                <th class="border-top-0 pt-2 pb-2">種別</th>
-                                <th class="border-top-0 pt-2 pb-2">犬種/猫種</th>
-                                <th class="border-top-0 pt-2 pb-2">登録日</th>
-                                <th class="border-top-0 pt-2 pb-2">更新日</th>
-                                <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for pet in pets %}
+                            {% for breederPet in breederPets %}
                                 <tr id="ex-adoption-1">
                                     <td class="align-middle"></td>
-                                    <td class="align-middle">{{ pet.Id }}</td>
+                                    <td class="align-middle">{{ breederPet.bp_id }}</td>
                                     <td class="align-middle">
                                         <img alt="..."
-                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default | length > 0 ? pet.thumbnailPath : '/noimage_plugin_list.png') }}"
+                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (breederPet.bp_thumbnail_path | default | length > 0 ? breederPet.bp_thumbnail_path : '/noimage_plugin_list.png') }}"
                                              style="max-width: 100px">
                                     </td>
-                                    <td class="align-middle">{{ pet.petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
-                                    <td class="align-middle">{{ pet.breedsType.breedsName }}</td>
-                                    <td class="align-middle">{{ pet.createDate|date('Y/m/d H:i') }}</td>
-                                    <td class="align-middle">{{ pet.updateDate|date('Y/m/d H:i') }}</td>
+                                    <td class="align-middle">{{ breederPet.bp_pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
+                                    <td class="align-middle">{{ breederPet.breeds_name }}</td>
+                                    <td class="align-middle">{{ breederPet.bp_create_date|date('Y/m/d H:i') }}</td>
+                                    <td class="align-middle">{{ breederPet.bp_update_date|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
                                                 <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_breeder_pet_edit', {'id': pet.Id}) }}">
+                                                   href="{{ url('admin_breeder_pet_edit', {'id': breederPet.bp_id}) }}">
                                                     <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
-                                                <a class="btn btn-ec-actionIcon confirm-status-btn">
-                                                    <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
+                                                <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ breederPet.bp_is_active }}"
+                                                    data-action="{{ url('admin_breeder_pet_change_status', {'id': breederPet.bp_id}) }}">
+                                                        <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査結果PDFダウンロード">
-                                                <a class="btn btn-ec-actionIcon">
-                                                    <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
-                                                </a>
+                                                
+                                                {% if breederPet.dna_file_path %}
+                                                    <a class="btn btn-ec-actionIcon"
+                                                        href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': breederPet.bp_id}) }}">
+                                                        <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </a>
+                                                {% else %}
+                                                    <a class="btn btn-ec-actionIcon" disabled>
+                                                        <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </a>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </td>
@@ -162,9 +171,9 @@ file that was distributed with this source code.
                         </table>
                     </div>
                 </div>
-                {# <div class="navigation float-right">
-                    {{ knp_pagination_render(pets) }}
-                </div> #}
+                <div class="navigation float-right">
+                    {{ knp_pagination_render(breederPets) }}
+                </div>
             </div>
         </div>
     </div>
@@ -186,7 +195,7 @@ file that was distributed with this source code.
                     <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
                         いいえ
                     </button>
-                    <button class="btn btn-ec-conversion" type="submit">
+                    <button class="btn btn-ec-conversion" id="btn-change-status" data-action="">
                         はい
                     </button>
                 </div>

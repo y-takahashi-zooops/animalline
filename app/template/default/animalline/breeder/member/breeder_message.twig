@@ -103,7 +103,6 @@
                         <h3 class="font-weight-500 color-gray-500 mb-4">{{ Customer.name01 }}{{ Customer.name02 }}</h3>
                     </div> #}
 
-
                     <div class="breeder_section_header">
                         {% if message.contactType == 1 %}
                         お問い合わせ
@@ -205,8 +204,10 @@
     <form action="{{ url('breeder_breeder_message', {'id': message.id}) }}" method="post" name="contract-cancel-form">
         {{ include('animalline/components/_modal_contract_cancel.twig') }}
     </form>
-
-
+    <form action="{{ url('breeder_breeder_message', {'id': message.id}) }}" method="post" name="contract-accept-form">
+        <input type="hidden" name="accept-contract" value="1">
+        {{ include('animalline/components/_modal_contract.twig') }}
+    </form>
     {# <div class="main">
         <div class="row">
             <div class="main-container col-12">
@@ -440,18 +441,21 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     if (document.getElementById("cancel")) {
-    document.getElementById("cancel").onclick = function () {
-        $('#modal_cancel').modal('show');
-    };
-}
+        document.getElementById("cancel").onclick = function () {
+            $('#modal_cancel').modal('show');
+        };
+    }
     if (document.getElementById("contract")) {
-    document.getElementById("contract").onclick = function () {
-        $('#modal_contract').modal('show');
-    };
-}
+        document.getElementById("contract").onclick = function () {
+            $('#modal_contract').modal('show');
+        };
+    }
 
     $("#confirm-yes-cancel").click(function (e) {
-    $("form[name='contract-cancel-form']").submit();
-});
+        $("form[name='contract-cancel-form']").submit();
+    });
+    $("#confirm-yes").click(function (e) {
+        $("form[name='contract-accept-form']").submit();
+    });
 </script>
 {% endblock %}
