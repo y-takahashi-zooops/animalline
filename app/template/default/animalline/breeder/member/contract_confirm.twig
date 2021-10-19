@@ -2,81 +2,85 @@
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
-    <div class="ec-registerRole">
-        <div class="ec-pageHeader">
-            <h1>ブリーダーを評価</h1>
-        </div>
-        <div class="ec-off1Grid">
-            <div class="ec-off1Grid__cell">
-                <form method="post" action="{{ url('breeder_contract', {'pet_id': pet_id}) }}">
-                    {{ form_widget(form._token) }}
-                    <p class="ec-para-nomal">
-                        下記の内容で送信してもよろしいでしょうか？<br/>
-                        よろしければ、一番下の「投稿する」ボタンをクリックしてください。<br/>
-                    </p>
-                    <div class="ec-borderedDefs">
-                        <dl>
-                            <dt>
-                                <label class="ec-label required">おすすめレベル</label>
-                                <span class="ec-required">必須</span>
-                            </dt>
-                            <dd>
-                                <div class="ec-radio">
-                                    {{ form.evaluation_value.vars.choices[form.evaluation_value.vars.data-1].label }}
-                                    {{ form_widget(form.evaluation_value, { 'attr': {'class': 'hidden'} }) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                <label class="ec-label required" for="review_title">題名</label>
-                                <span class="ec-required">必須</span>
-                            </dt>
-                            <dd>
-                                <div class="ec-input">
-                                    {{ form.evaluation_title.vars.data }}
-                                    {{ form_widget(form.evaluation_title, { 'attr': {'class': 'hidden'} }) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                <label class="ec-label required" for="review_comment">コメント</label>
-                                <span class="ec-required">必須</span>
-                            </dt>
-                            <dd>
-                                <div class="ec-input">
-                                    {{ form.evaluation_message.vars.data }}
-                                    {{ form_widget(form.evaluation_message, { 'attr': {'class': 'hidden'} }) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                <label class="ec-label required" for="review_comment">画像</label>
-                                <span class="ec-required"></span>
-                            </dt>
-                            <dd>
-                                <div class="ec-input">
-                                    <img src="{{ thumbnail_path }}" style="width:30%">
-                                    <input type="hidden" name="thumbnail_path" value="{{ thumbnail_path }}">
-                                </div>
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="ec-registerRole__actions">
-                        <div class="ec-off4Grid">
-                            <div class="ec-off4Grid__cell">
-                                <button class="ec-blockBtn--action" type="submit" name="mode" value="complete">投稿する
-                                </button>
-                                <button class="ec-blockBtn--cancel" type="submit" name="mode" value="back">戻る</button>
+    <section id="breeder-column">
+        <div class="inner">
+            <div class="ec-registerRole">
+                <div class="ec-pageHeader">
+                    <h1>ブリーダーを評価</h1>
+                </div>
+                <div class="ec-off1Grid">
+                    <div class="ec-off1Grid__cell">
+                        <form method="post" action="{{ url('breeder_contract', {'pet_id': pet_id}) }}">
+                            {{ form_widget(form._token) }}
+                            <p class="ec-para-nomal">
+                                下記の内容で送信してもよろしいでしょうか？<br/>
+                                よろしければ、一番下の「投稿する」ボタンをクリックしてください。<br/>
+                            </p>
+                            <div class="ec-borderedDefs">
+                                <dl>
+                                    <dt>
+                                        <label class="ec-label required">おすすめレベル</label>
+                                        <span class="ec-required">必須</span>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-radio">
+                                            {{ form.evaluation_value.vars.choices[form.evaluation_value.vars.data-1].label }}
+                                            {{ form_widget(form.evaluation_value, { 'attr': {'class': 'hidden'} }) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        <label class="ec-label required" for="review_title">題名</label>
+                                        <span class="ec-required">必須</span>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            {{ form.evaluation_title.vars.data }}
+                                            {{ form_widget(form.evaluation_title, { 'attr': {'class': 'hidden'} }) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        <label class="ec-label required" for="review_comment">コメント</label>
+                                        <span class="ec-required">必須</span>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            {{ form.evaluation_message.vars.data }}
+                                            {{ form_widget(form.evaluation_message, { 'attr': {'class': 'hidden'} }) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        <label class="ec-label required" for="review_comment">画像</label>
+                                        <span class="ec-required"></span>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <img src="{{ thumbnail_path }}" style="width:30%">
+                                            <input type="hidden" name="thumbnail_path" value="{{ thumbnail_path }}">
+                                        </div>
+                                    </dd>
+                                </dl>
                             </div>
-                        </div>
+                            <div class="ec-registerRole__actions">
+                                <div class="ec-off4Grid">
+                                    <div class="ec-off4Grid__cell">
+                                        <button class="ec-blockBtn--action" type="submit" name="mode" value="complete">投稿する
+                                        </button>
+                                        <button class="ec-blockBtn--cancel" type="submit" name="mode" value="back">戻る</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">

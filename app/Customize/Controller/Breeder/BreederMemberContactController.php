@@ -308,6 +308,8 @@ class BreederMemberContactController extends AbstractController
     }
 
     /**
+     * ブリーダー側取引メッセージ画面
+     * 
      * @Route("/breeder/member/breeder_message/{id}", name="breeder_breeder_message", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/member/breeder_message.twig")
      */
@@ -319,6 +321,7 @@ class BreederMemberContactController extends AbstractController
         $entityManager->persist($msgHeader);
         $entityManager->flush();
 
+        $isAcceptContract = $request->get('accept-contract');
         $reasonCancel = $request->get('reason');
         $replyMessage = $request->get('reply_message');
         if ($replyMessage) {
@@ -352,6 +355,21 @@ class BreederMemberContactController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($msgHeader);
             $entityManager->persist($breederContact);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('breeder_all_breeder_message');
+        }
+        if ($isAcceptContract) {
+            if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
+                $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
+                    ->setBreederCheck(1);
+            }
+            if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $msgHeader->getCustomerCheck() == 1) {
+                $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
+                    ->setBreederCheck(1);
+            }
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($msgHeader);
             $entityManager->flush();
 
             return $this->redirectToRoute('breeder_all_breeder_message');
