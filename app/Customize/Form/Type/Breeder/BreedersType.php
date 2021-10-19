@@ -1,12 +1,11 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\Breeders;
 use Eccube\Common\EccubeConfig;
-use Customize\Form\Type\BreederAddressType;
-use Customize\Form\Type\LicenseAddressType;
+use Eccube\Form\Type\Master\PrefType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -91,7 +90,34 @@ class BreedersType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('addr', BreederAddressType::class)
+            ->add('PrefBreeder', PrefType::class, [
+                'attr' => ['class' => 'p-region-id'],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('breeder_city', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                    'class' => 'p-locality',
+                    'placeholder' => 'common.address_sample_01',
+                ],
+            ])
+            ->add('breeder_address', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                    'class' => 'p-street-address p-extended-address',
+                    'placeholder' => 'common.address_sample_02',
+                ],
+            ])
             ->add('breeder_tel', TextType::class, [
                 'required' => true,
                 'constraints' => [
@@ -183,7 +209,34 @@ class BreedersType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('license_addr', LicenseAddressType::class)
+            ->add('PrefLicense', PrefType::class, [
+                'attr' => ['class' => 'p-region-id'],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('license_city', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                    'class' => 'p-locality',
+                    'placeholder' => 'common.address_sample_01',
+                ],
+            ])
+            ->add('license_address', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                    'class' => 'p-street-address p-extended-address',
+                    'placeholder' => 'common.address_sample_02',
+                ],
+            ])
             ->add('license_house_name', TextType::class, [
                 'required' => true,
                 'attr' => [

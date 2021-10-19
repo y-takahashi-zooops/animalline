@@ -2,18 +2,10 @@
 
 namespace Customize\Form\Type\Breeder;
 
-use Customize\Config\AnilineConf;
 use Customize\Entity\BreederHouse;
-use Customize\Entity\Breeders;
 use Eccube\Common\EccubeConfig;
-use Customize\Form\Type\AddressHouseType;
-use Eccube\Form\Type\PhoneNumberType;
-use Eccube\Form\Type\PostalType;
+use Eccube\Form\Type\Master\PrefType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -80,7 +72,34 @@ class BreederHouseType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('address', AddressHouseType::class)
+            ->add('BreederHousePrefId', PrefType::class, [
+                'attr' => ['class' => 'p-region-id'],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('breeder_house_city', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                    'class' => 'p-locality',
+                    'placeholder' => 'common.address_sample_01',
+                ],
+            ])
+            ->add('breeder_house_address', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                    'class' => 'p-street-address p-extended-address',
+                    'placeholder' => 'common.address_sample_02',
+                ],
+            ])
             ->add('breeder_house_house_tel', TextType::class, [
                 'required' => true,
                 'constraints' => [

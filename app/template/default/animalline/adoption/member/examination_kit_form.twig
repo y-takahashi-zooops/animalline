@@ -56,18 +56,18 @@
                                             </div>
                                             {{ form_errors(form.shipping_zip) }}
                                         </div>
-                                        <div class="ec-select{{ has_errors(form.address.PrefShipping) ? ' error' }}"
+                                        <div class="ec-select{{ has_errors(form.PrefShipping) ? ' error' }}"
                                             onmousedown="(function(e){ e.preventDefault(); })(event, this)">
-                                            {{ form_widget(form.address.PrefShipping) }}
-                                            {{ form_errors(form.address.PrefShipping) }}
+                                            {{ form_widget(form.PrefShipping) }}
+                                            {{ form_errors(form.PrefShipping) }}
                                         </div>
-                                        <div class="ec-input{{ has_errors(form.address.shipping_city) ? ' error' }}">
-                                            {{ form_widget(form.address.shipping_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-                                            {{ form_errors(form.address.shipping_city) }}
+                                        <div class="ec-input{{ has_errors(form.shipping_city) ? ' error' }}">
+                                            {{ form_widget(form.shipping_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                            {{ form_errors(form.shipping_city) }}
                                         </div>
-                                        <div class="ec-input{{ has_errors(form.address.shipping_address) ? ' error' }}">
-                                            {{ form_widget(form.address.shipping_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-                                            {{ form_errors(form.address.shipping_address) }}
+                                        <div class="ec-input{{ has_errors(form.shipping_address) ? ' error' }}">
+                                            {{ form_widget(form.shipping_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                            {{ form_errors(form.shipping_address) }}
                                         </div>
                                     </dd>
                                 </dl>
@@ -128,23 +128,23 @@
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 <script>
     if ($("#issetHouseDog").val() == 'false') {
-    $("#conservation_kit_dna_choice_address option[value='2']").remove();
+    $("#dna_check_status_header_choice_address option[value='2']").remove();
 }
     if ($("#issetHouseCat").val() == 'false') {
-    $("#conservation_kit_dna_choice_address option[value='3']").remove();
+    $("#dna_check_status_header_choice_address option[value='3']").remove();
 }
-    $(document).on('change', '#conservation_kit_dna_choice_address', function() {
+    $(document).on('change', '#dna_check_status_header_choice_address', function() {
     var name = $(this).val() == 1 ? '{{conservation.organizationName}}' : $(this).val() == 2 ? '{{conservationHouseDog ? conservationHouseDog.conservationHouseName}}' : '{{conservationHouseCat ? conservationHouseCat.conservationHouseName}}';
     var zip = $(this).val() == 1 ? '{{conservation.zip}}' : $(this).val() == 2 ? '{{conservationHouseDog ? conservationHouseDog.conservationHouseHouseZip}}' : '{{conservationHouseCat ? conservationHouseCat.conservationHouseHouseZip}}';
     var pref_id = $(this).val() == 1 ? '{{conservation.PrefId.id}}' : $(this).val() == 2 ? '{{conservationHouseDog ? conservationHouseDog.Pref.Id}}' : '{{conservationHouseCat ? conservationHouseCat.Pref.Id}}';
     var city = $(this).val() == 1 ? '{{conservation.city}}' : $(this).val() == 2 ? '{{conservationHouseDog ? conservationHouseDog.conservationHouseCity}}' : '{{conservationHouseCat ? conservationHouseCat.conservationHouseCity}}';
     var addr = $(this).val() == 1 ? '{{conservation.address}}' : $(this).val() == 2 ? '{{conservationHouseDog ? conservationHouseDog.conservationHouseAddress}}' : '{{conservationHouseCat ? conservationHouseCat.conservationHouseAddress}}';
 
-    $("#conservation_kit_dna_shipping_name").val(name)
-    $("#conservation_kit_dna_shipping_zip").val(zip)
-    $("#conservation_kit_dna_address_PrefShipping").val(pref_id)
-    $("#conservation_kit_dna_address_shipping_city").val(city)
-    $("#conservation_kit_dna_address_shipping_address").val(addr)
+    $("#dna_check_status_header_shipping_name").val($(this).val() ? name : '')
+    $("#dna_check_status_header_shipping_zip").val($(this).val() ? zip : '')
+    $("#dna_check_status_header_PrefShipping").val($(this).val() ? pref_id : '')
+    $("#dna_check_status_header_shipping_city").val($(this).val() ? city : '')
+    $("#dna_check_status_header_shipping_address").val($(this).val() ? addr : '')
 });
 
     $("form[name=dna-kit-form]").submit(function (e) {

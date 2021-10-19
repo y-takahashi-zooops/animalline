@@ -1,14 +1,11 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Breeder;
 
-use Customize\Config\AnilineConf;
 use Customize\Entity\BreederEvaluations;
-use Customize\Entity\Breeders;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

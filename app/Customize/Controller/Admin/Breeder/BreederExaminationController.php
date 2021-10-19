@@ -23,9 +23,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederExaminationInfo;
-use Customize\Form\Type\Admin\BreederHouseType;
+use Customize\Form\Type\Breeder\BreederHouseType;
 use Customize\Repository\BreederHouseRepository;
-use Customize\Form\Type\AdminBreederType;
+use Customize\Form\Type\Admin\BreedersType;
 use Eccube\Repository\CustomerRepository;
 use Customize\Service\MailService;
 
@@ -105,20 +105,18 @@ class BreederExaminationController extends AbstractController
 
         $form = $this->createForm(BreederExaminationInfoType::class, $breederExaminationInfo, ['disabled' => true]);
         $form->handleRequest($request);
-        if($breederHouseDogKind){
+        if ($breederHouseDogKind) {
             $formDogKind = $this->createForm(BreederHouseType::class, $breederHouseDogKind[0], ['disabled' => true]);
-        }
-        else{
-            $formDogKind = $this->createForm(BreederHouseType::class,null, ['disabled' => true]);
+        } else {
+            $formDogKind = $this->createForm(BreederHouseType::class, null, ['disabled' => true]);
         }
 
-        if($breederHouseCatKind){
+        if ($breederHouseCatKind) {
             $formCatKind = $this->createForm(BreederHouseType::class, $breederHouseCatKind[0], ['disabled' => true]);
-        }
-        else{
+        } else {
             $formCatKind = $this->createForm(BreederHouseType::class, null, ['disabled' => true]);
         }
-        $formBreeder = $this->createForm(AdminBreederType::class, $breeder, ['disabled' => true]);
+        $formBreeder = $this->createForm(BreedersType::class, $breeder, ['disabled' => true]);
 
         return [
             'form' => $form->createView(),

@@ -3,7 +3,7 @@
 namespace Customize\Controller\Test;
 
 use Customize\Entity\ConservationPetImage;
-use Customize\Form\Type\ConservationPetImageType;
+use Customize\Form\Type\Adoption\ConservationPetImageType;
 use Customize\Repository\ConservationPetImageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

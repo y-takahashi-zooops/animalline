@@ -1,8 +1,9 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Breeder;
 
 use Customize\Entity\BreederExaminationInfo;
+use Customize\Entity\Pedigree;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,7 +13,6 @@ use Customize\Config\AnilineConf;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -42,7 +42,7 @@ class BreederExaminationInfoType extends AbstractType
             ])
             ->add('group_organization', EntityType::class, [
                 'class' => 'Customize\Entity\Pedigree',
-                'choice_label' => function (\Customize\Entity\Pedigree $pedigree) {
+                'choice_label' => function (Pedigree $pedigree) {
                     return $pedigree->getPedigreeName();
                 },
                 'required' => false,

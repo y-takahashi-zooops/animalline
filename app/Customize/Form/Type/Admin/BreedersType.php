@@ -1,18 +1,14 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Admin;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\Breeders;
 use Eccube\Common\EccubeConfig;
-use Customize\Form\Type\BreederAddressType;
-use Customize\Form\Type\LicenseAddressType;
-use Eccube\Form\Type\RepeatedEmailType;
-use Eccube\Form\Validator\Email;
+use Eccube\Form\Type\Master\PrefType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -21,7 +17,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AdminBreederType extends AbstractType
+class BreedersType extends AbstractType
 {
     /**
      * @var EccubeConfig
@@ -82,7 +78,34 @@ class AdminBreederType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('addr', BreederAddressType::class)
+            ->add('PrefBreeder', PrefType::class, [
+                'attr' => ['class' => 'p-region-id'],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('breeder_city', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                    'class' => 'p-locality',
+                    'placeholder' => 'common.address_sample_01',
+                ],
+            ])
+            ->add('breeder_address', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                    'class' => 'p-street-address p-extended-address',
+                    'placeholder' => 'common.address_sample_02',
+                ],
+            ])
             ->add('breeder_tel', TextType::class, [
                 'required' => true,
                 'constraints' => [
@@ -141,10 +164,6 @@ class AdminBreederType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
-                    ]),
                     new Assert\NotBlank()
                 ]
             ])
@@ -178,7 +197,46 @@ class AdminBreederType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('license_addr', LicenseAddressType::class)
+            ->add('PrefLicense', PrefType::class, [
+                'attr' => ['class' => 'p-region-id'],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('license_city', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                    'class' => 'p-locality',
+                    'placeholder' => 'common.address_sample_01',
+                ],
+            ])
+            ->add('license_address', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                    'class' => 'p-street-address p-extended-address',
+                    'placeholder' => 'common.address_sample_02',
+                ],
+            ])
+            ->add('license_house_name', TextType::class, [
+                'required' => true,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                    new Assert\NotBlank()
+                ]
+            ])
             ->add('license_house_name', TextType::class, [
                 'required' => true,
                 'attr' => [
@@ -225,7 +283,7 @@ class AdminBreederType extends AbstractType
             ->add('license_expire_date', DateType::class, [
                 'required' => true,
                 'input' => 'datetime',
-                'years' => range(date('Y'),2050),
+                'years' => range(date('Y'), 2050),
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],

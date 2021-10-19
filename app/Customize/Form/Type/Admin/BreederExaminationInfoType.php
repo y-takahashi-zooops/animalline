@@ -11,9 +11,7 @@ use Customize\Config\AnilineConf;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class BreederExaminationInfoType extends AbstractType
 {

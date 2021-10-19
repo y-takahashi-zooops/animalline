@@ -4,7 +4,7 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\DnaCheckStatusHeader;
-use Customize\Form\Type\Breeder\BreederKitDnaType;
+use Customize\Form\Type\Front\DnaCheckStatusHeaderType;
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -186,7 +186,7 @@ class BreederDnaCheck extends AbstractController
     {
         $isCheckStatus = false;
         $dnaCheckSatusHeader = new DnaCheckStatusHeader();
-        $builder = $this->formFactory->createBuilder(BreederKitDnaType::class, $dnaCheckSatusHeader);
+        $builder = $this->formFactory->createBuilder(DnaCheckStatusHeaderType::class, $dnaCheckSatusHeader);
         $breeder = $this->breedersRepository->find($this->getUser()->getId());
         $breederHouseCat = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $breederHouseDog = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
@@ -200,11 +200,10 @@ class BreederDnaCheck extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $pref = $this->prefRepository->find($request->get('breeder_kit_dna')['address']['PrefShipping']);
             $dnaCheckSatusHeader->setRegisterId($this->getUser()->getId())
                 ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
                 ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
-                ->setShippingPref($pref->getName());
+                ->setShippingPref($dnaCheckSatusHeader->getPrefShipping());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($dnaCheckSatusHeader);
             $entityManager->flush();

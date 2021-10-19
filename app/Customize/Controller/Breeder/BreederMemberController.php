@@ -5,7 +5,7 @@ namespace Customize\Controller\Breeder;
 use Customize\Service\BreederQueryService;
 use Eccube\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Form\Type\BreedersType;
+use Customize\Form\Type\Breeder\BreedersType;
 use Customize\Entity\Breeders;
 use Customize\Repository\BreedersRepository;
 use Eccube\Repository\CustomerRepository;
@@ -181,9 +181,9 @@ class BreederMemberController extends AbstractController
             $form->get('breeder_name')->setData($Customer->getname01() . '　' . $Customer->getname02());
             $form->get('breeder_kana')->setData($Customer->getkana01() . '　' . $Customer->getkana02());
             $form->get('breeder_zip')->setData($Customer->getPostalCode());
-            $form->get('addr')->get('PrefBreeder')->setData($Customer->getPref());
-            $form->get('addr')->get('breeder_city')->setData($Customer->getAddr01());
-            $form->get('addr')->get('breeder_address')->setData($Customer->getAddr02());
+            $form->get('PrefBreeder')->setData($Customer->getPref());
+            $form->get('breeder_city')->setData($Customer->getAddr01());
+            $form->get('breeder_address')->setData($Customer->getAddr02());
             $form->get('breeder_tel')->setData($Customer->getPhoneNumber());
         }
 

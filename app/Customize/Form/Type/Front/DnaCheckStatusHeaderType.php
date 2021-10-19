@@ -11,10 +11,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Customize\Form\Type\Adoption;
+namespace Customize\Form\Type\Front;
 
 use Customize\Entity\DnaCheckStatusHeader;
-use Customize\Form\Type\AddressHouseKitType;
+use Eccube\Form\Type\Master\PrefType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Form\AbstractType;
@@ -24,7 +24,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ConservationKitDnaType extends AbstractType
+class DnaCheckStatusHeaderType extends AbstractType
 {
     /**
      * @var EccubeConfig
@@ -89,10 +89,39 @@ class ConservationKitDnaType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('address', AddressHouseKitType::class, [
+            ->add('PrefShipping', PrefType::class, [
                 'attr' => [
-                    'readonly' => true,
-                ]])
+                    'class' => 'p-region-id',
+                    'readonly' => true
+                ],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('shipping_city', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                    'class' => 'p-locality',
+                    'placeholder' => 'common.address_sample_01',
+                    'readonly' => true
+                ],
+            ])
+            ->add('shipping_address', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                    'class' => 'p-street-address p-extended-address',
+                    'placeholder' => 'common.address_sample_02',
+                    'readonly' => true
+                ],
+            ])
             ->add('shipping_tel', TextType::class, [
                 'required' => true,
                 'constraints' => [
@@ -117,10 +146,10 @@ class ConservationKitDnaType extends AbstractType
                     new Assert\GreaterThanOrEqual([
                         'value' => 1,
                     ]),
+                    new Assert\NotBlank(),
                     new Assert\LessThanOrEqual([
-                        'value' => 6,
-                    ]),
-                    new Assert\NotBlank()
+                        'value' => 6
+                    ])
                 ],
             ]);
     }
