@@ -34,6 +34,16 @@ class Breeders
     private $breeder_kana;
 
     /**
+     * @ORM\Column(name="breeder_house_name_dog", type="string", length=255, nullable=true)
+     */
+    private $breeder_house_name_dog;
+
+    /**
+     * @ORM\Column(name="breeder_house_name_cat", type="string", length=255, nullable=true)
+     */
+    private $breeder_house_name_cat;
+
+    /**
      * @ORM\Column(name="breeder_tel", type="string", length=11, nullable=true)
      */
     private $breeder_tel;
@@ -242,6 +252,30 @@ class Breeders
     public function setBreederKana(?string $breeder_kana): self
     {
         $this->breeder_kana = $breeder_kana;
+
+        return $this;
+    }
+    
+    public function getBreederHouseNameDog(): ?string
+    {
+        return $this->breeder_house_name_dog;
+    }
+
+    public function setBreederHouseNameDog(?string $breeder_house_name_dog): self
+    {
+        $this->breeder_house_name_dog = $breeder_house_name_dog;
+
+        return $this;
+    }
+    
+    public function getBreederHouseNameCat(): ?string
+    {
+        return $this->breeder_house_name_cat;
+    }
+
+    public function setBreederHouseNameCat(?string $breeder_house_name_cat): self
+    {
+        $this->breeder_house_name_cat = $breeder_house_name_cat;
 
         return $this;
     }
