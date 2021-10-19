@@ -20,7 +20,7 @@ class ConservationsHouseTest extends TestCase
         $this->assertInstanceOf(ConservationsHouse::class, $conservationHouse);
     }
 
-    public function testCreateBreederData(): void
+    public function testCreateConservationData(): void
     {
         $ConservationHouse = new ConservationsHouse();
         $petType = 1;
