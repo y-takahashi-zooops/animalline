@@ -3,87 +3,90 @@
 {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
 
 {% block main %}
-
-    <div class="ec-registerRole">
-        <div class="ec-pageHeader">
-            <h1>ブリーダーを評価</h1>
-        </div>
-        <div class="ec-off1Grid">
-            <div class="ec-off1Grid__cell">
-                <form method="post" action="{{ url('breeder_contract', {'pet_id': pet_id}) }}" novalidate
-                      name="contract-form">
-                    {{ form_widget(form._token) }}
-                    <p class="ec-para-nomal">
-                        お取引をしたブリーダーについて、お客様のご感想をお聞かせください。
-                    </p>
-                    <div class="ec-borderedDefs">
-                        <dl>
-                            <dt>
-                                <label class="ec-label required">おすすめレベル</label>
-                                <span class="ec-required">必須</span>
-                            </dt>
-                            <dd class="ec-radio{{ has_errors(form.evaluation_value) ? ' error' }}">
-                                {{ form_widget(form.evaluation_value) }}
-                                {{ form_errors(form.evaluation_value) }}
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                <label class="ec-label required">タイトル</label>
-                                <span class="ec-required">必須</span>
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.evaluation_title) ? ' error' }}">
-                                    {{ form_widget(form.evaluation_title) }}
-                                    {{ form_errors(form.evaluation_title) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                <label class="ec-label required">コメント</label>
-                                <span class="ec-required">必須</span>
-                            </dt>
-                            <dd>
-                                <div class="ec-input{{ has_errors(form.evaluation_message) ? ' error' }}">
-                                    {{ form_widget(form.evaluation_message) }}
-                                    {{ form_errors(form.evaluation_message) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt>
-                                <label class="ec-label" for="breeders_thumbnail_path">画像</label>
-                            </dt>
-                            <dd>
-                                <div class="media-body">
-                                    <img id="img_thumbnail"
-                                         class="img_preview mb-2 {{ not thumbnail_path ? 'hidden' }}"
-                                         src="{{ thumbnail_path }}" style="width: 200px; border: 1px solid #ddd;"/>
-                                    {{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;' } }) }}
-                                    {{ form_errors(form.thumbnail_path) }}
-                                    <input type="hidden" name="thumbnail_path" value="{{ thumbnail_path }}">
-                                </div>
-                                <a class="btn btn-ec-regular mr-2"
-                                   onclick="$('#breeder_evaluations_thumbnail_path').click()">
-                                    {{ 'admin.common.file_select'|trans }}
-                                </a>
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="ec-registerRole__actions">
-                        <div class="ec-off4Grid">
-                            <div class="ec-off4Grid__cell">
-                                <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">確認ページへ
-                                </button>
-                                <a class="ec-blockBtn--cancel" href="{{ url('breeder_message', {'id': msg_id}) }}">戻る</a>
+    <section id="breeder-column">
+        <div class="inner">
+            <div class="ec-registerRole">
+                <div class="ec-pageHeader">
+                    <h1>ブリーダーを評価</h1>
+                </div>
+                <div class="ec-off1Grid">
+                    <div class="ec-off1Grid__cell">
+                        <form method="post" action="{{ url('breeder_contract', {'pet_id': pet_id}) }}" novalidate
+                            name="contract-form">
+                            {{ form_widget(form._token) }}
+                            <p class="ec-para-nomal">
+                                お取引をしたブリーダーについて、お客様のご感想をお聞かせください。
+                            </p>
+                            <div class="ec-borderedDefs">
+                                <dl>
+                                    <dt>
+                                        <label class="ec-label required">おすすめレベル</label>
+                                        <span class="ec-required">必須</span>
+                                    </dt>
+                                    <dd class="ec-radio{{ has_errors(form.evaluation_value) ? ' error' }}">
+                                        {{ form_widget(form.evaluation_value) }}
+                                        {{ form_errors(form.evaluation_value) }}
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        <label class="ec-label required">タイトル</label>
+                                        <span class="ec-required">必須</span>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.evaluation_title) ? ' error' }}">
+                                            {{ form_widget(form.evaluation_title) }}
+                                            {{ form_errors(form.evaluation_title) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        <label class="ec-label required">コメント</label>
+                                        <span class="ec-required">必須</span>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.evaluation_message) ? ' error' }}">
+                                            {{ form_widget(form.evaluation_message) }}
+                                            {{ form_errors(form.evaluation_message) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        <label class="ec-label" for="breeders_thumbnail_path">画像</label>
+                                    </dt>
+                                    <dd>
+                                        <div class="media-body">
+                                            <img id="img_thumbnail"
+                                                class="img_preview mb-2 {{ not thumbnail_path ? 'hidden' }}"
+                                                src="{{ thumbnail_path }}" style="width: 200px; border: 1px solid #ddd;"/>
+                                            {{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;' } }) }}
+                                            {{ form_errors(form.thumbnail_path) }}
+                                            <input type="hidden" name="thumbnail_path" value="{{ thumbnail_path }}">
+                                        </div>
+                                        <a class="btn btn-ec-regular mr-2"
+                                        onclick="$('#breeder_evaluations_thumbnail_path').click()" style="background: #f0f0f0; border: 1px solid black;">
+                                            {{ 'admin.common.file_select'|trans }}
+                                        </a>
+                                    </dd>
+                                </dl>
                             </div>
-                        </div>
+                            <div class="ec-registerRole__actions">
+                                <div class="ec-off4Grid">
+                                    <div class="ec-off4Grid__cell">
+                                        <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">確認ページへ
+                                        </button>
+                                        <a class="ec-blockBtn--cancel" href="{{ url('breeder_message', {'id': msg_id}) }}">戻る</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
     <div class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" id="modal-crop" tabindex="-1"
          role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
