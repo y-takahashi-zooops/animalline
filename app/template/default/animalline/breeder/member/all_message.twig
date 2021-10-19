@@ -21,7 +21,7 @@
                                     <div class="col-md-10 col-9">
                                         <h5>{{ message.contactTitle ?? '' }}</h5>
                                         <h5>{{ message.Breeder.breederName ?? '' }}</h5>
-                                        <h6 class="text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}
+                                        <h6 class="text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }}
                                             <br>
                                             {{ message.customerNewMsg ? '未読あり' }}
                                         </h6>
