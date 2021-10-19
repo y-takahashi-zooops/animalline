@@ -92,7 +92,7 @@ class ConservationsType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
-            ->add('pref_id', PrefType::class, [
+            ->add('prefId', PrefType::class, [
                 'attr' => ['class' => 'p-region-id'],
                 'constraints' => [
                     new Assert\NotBlank()
@@ -105,7 +105,7 @@ class ConservationsType extends AbstractType
                 ],
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_city_len'],
-                    'class' => 'p-locality',
+                    'class' => 'p-locality p-street-address',
                     'placeholder' => 'common.address_sample_01',
                 ],
             ])
@@ -116,7 +116,7 @@ class ConservationsType extends AbstractType
                 ],
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_address1_len'],
-                    'class' => 'p-street-address p-extended-address',
+                    'class' => 'p-extended-address',
                     'placeholder' => 'common.address_sample_02',
                 ],
             ])

@@ -270,9 +270,9 @@ class AdoptionMemberController extends AbstractController
             $form->get('owner_name')->setData($Customer->getname01() . "　" . $Customer->getname02());
             $form->get('owner_kana')->setData($Customer->getkana01() . "　" . $Customer->getkana02());
             $form->get('zip')->setData($Customer->getPostalCode());
-            $form->get('addr')->get('PrefId')->setData($Customer->getPref());
-            $form->get('addr')->get('city')->setData($Customer->getAddr01());
-            $form->get('addr')->get('address')->setData($Customer->getAddr02());
+            $form->get('PrefId')->setData($Customer->getPref());
+            $form->get('city')->setData($Customer->getAddr01());
+            $form->get('address')->setData($Customer->getAddr02());
             $form->get('tel')->setData($Customer->getPhoneNumber());
         }
 

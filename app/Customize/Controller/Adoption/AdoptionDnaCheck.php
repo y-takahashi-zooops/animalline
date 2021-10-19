@@ -4,7 +4,7 @@ namespace Customize\Controller\Adoption;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\DnaCheckStatusHeader;
-use Customize\Form\Type\Adoption\ConservationKitDnaType;
+use Customize\Form\Type\Front\DnaCheckStatusHeaderType;
 use Customize\Service\AdoptionQueryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\DnaCheckStatus;
@@ -169,7 +169,7 @@ class AdoptionDnaCheck extends AbstractController
     {
         $isCheckStatus = false;
         $dnaCheckSatusHeader = new DnaCheckStatusHeader();
-        $builder = $this->formFactory->createBuilder(ConservationKitDnaType::class, $dnaCheckSatusHeader);
+        $builder = $this->formFactory->createBuilder(DnaCheckStatusHeaderType::class, $dnaCheckSatusHeader);
         $conservation = $this->conservationsRepository->find($this->getUser()->getId());
         $conservationHouseCat = $this->conservationsHousesRepository->findOneBy(['Conservation' => $conservation, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $conservationHouseDog = $this->conservationsHousesRepository->findOneBy(['Conservation' => $conservation, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);

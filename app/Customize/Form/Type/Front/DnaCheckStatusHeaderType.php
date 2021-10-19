@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Customize\Form\Type\Adoption;
+namespace Customize\Form\Type\Front;
 
 use Customize\Entity\DnaCheckStatusHeader;
 use Eccube\Form\Type\Master\PrefType;
@@ -24,7 +24,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ConservationKitDnaType extends AbstractType
+class DnaCheckStatusHeaderType extends AbstractType
 {
     /**
      * @var EccubeConfig
@@ -105,7 +105,7 @@ class ConservationKitDnaType extends AbstractType
                 ],
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_city_len'],
-                    'class' => 'p-locality',
+                    'class' => 'p-locality p-street-address',
                     'placeholder' => 'common.address_sample_01',
                     'readonly' => true
                 ],
@@ -117,7 +117,7 @@ class ConservationKitDnaType extends AbstractType
                 ],
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_address1_len'],
-                    'class' => 'p-street-address p-extended-address',
+                    'class' => 'p-extended-address',
                     'placeholder' => 'common.address_sample_02',
                     'readonly' => true
                 ],
@@ -146,10 +146,10 @@ class ConservationKitDnaType extends AbstractType
                     new Assert\GreaterThanOrEqual([
                         'value' => 1,
                     ]),
+                    new Assert\NotBlank(),
                     new Assert\LessThanOrEqual([
-                        'value' => 6,
-                    ]),
-                    new Assert\NotBlank()
+                        'value' => 6
+                    ])
                 ],
             ]);
     }

@@ -4,7 +4,7 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\DnaCheckStatusHeader;
-use Customize\Form\Type\Breeder\BreederKitDnaType;
+use Customize\Form\Type\Front\DnaCheckStatusHeaderType;
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -186,7 +186,7 @@ class BreederDnaCheck extends AbstractController
     {
         $isCheckStatus = false;
         $dnaCheckSatusHeader = new DnaCheckStatusHeader();
-        $builder = $this->formFactory->createBuilder(BreederKitDnaType::class, $dnaCheckSatusHeader);
+        $builder = $this->formFactory->createBuilder(DnaCheckStatusHeaderType::class, $dnaCheckSatusHeader);
         $breeder = $this->breedersRepository->find($this->getUser()->getId());
         $breederHouseCat = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $breederHouseDog = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
