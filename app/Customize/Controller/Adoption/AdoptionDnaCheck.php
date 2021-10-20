@@ -168,8 +168,8 @@ class AdoptionDnaCheck extends AbstractController
     public function adoption_examination_kit_new(Request $request)
     {
         $isCheckStatus = false;
-        $dnaCheckSatusHeader = new DnaCheckStatusHeader();
-        $builder = $this->formFactory->createBuilder(DnaCheckStatusHeaderType::class, $dnaCheckSatusHeader);
+        $dnaCheckStatusHeader = new DnaCheckStatusHeader();
+        $builder = $this->formFactory->createBuilder(DnaCheckStatusHeaderType::class, $dnaCheckStatusHeader);
         $conservation = $this->conservationsRepository->find($this->getUser()->getId());
         $conservationHouseCat = $this->conservationsHousesRepository->findOneBy(['Conservation' => $conservation, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $conservationHouseDog = $this->conservationsHousesRepository->findOneBy(['Conservation' => $conservation, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
@@ -183,19 +183,20 @@ class AdoptionDnaCheck extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $dnaCheckSatusHeader
+            $dnaCheckStatusHeader
                 ->setRegisterId($this->getUser()->getId())
                 ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
                 ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
-                ->setShippingPref($dnaCheckSatusHeader->getPrefShipping());
+                ->setShippingPref($dnaCheckStatusHeader->getPrefShipping());
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($dnaCheckSatusHeader);
+            $entityManager->persist($dnaCheckStatusHeader);
             $entityManager->flush();
 
-            $kitUnit = $dnaCheckSatusHeader->getKitUnit();
+            $kitUnit = $dnaCheckStatusHeader->getKitUnit();
             for ($i = 0; $i < $kitUnit; $i++) {
+//                dump();die;
                 $Dna = (new DnaCheckStatus)
-                    ->setDnaHeader($dnaCheckSatusHeader)
+                    ->setDnaHeader($dnaCheckStatusHeader)
                     ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
                 $entityManager->persist($Dna);
             }
