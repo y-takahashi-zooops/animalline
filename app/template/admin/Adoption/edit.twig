@@ -20,7 +20,7 @@ file that was distributed with this source code.
 {% endblock stylesheet %}
 
 {% block main %}
-    {{ form_start(form) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
     <div class="c-contentsArea__cols">
         <div class="c-contentsArea__primaryCol">
             <div class="c-primaryCol">
@@ -93,7 +93,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-6 mb-2">
-                                    <img alt="thumbnail_path" src="{{ form.vars.value.thumbnailPath }}"
+                                    <img alt="thumbnail_path" src="{{  '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (form.vars.value.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                          style="max-width: 200px">
                                     {{ form_widget(form.thumbnail_path, { 'attr': { 'class': 'd-none' }}) }}
                                 </div>
