@@ -26,6 +26,21 @@ file that was distributed with this source code.
         location.href = `?pet_type=${this.value}`;
     });
 });
+    $("#dogHouse").hide();
+    $("#catHouse").hide();
+    houseDisplay($('#breeders_handling_pet_kind').val());
+    function houseDisplay(pet_kind) {
+    if( pet_kind == 0 ){
+    $("#dogHouse").show();
+    $("#catHouse").show();
+} else if( pet_kind == 1 ){
+    $("#dogHouse").show();
+    $("#catHouse").hide();
+} else if ( pet_kind == 2 ){
+    $("#dogHouse").hide();
+    $("#catHouse").show();
+}
+};
 </script>
 {% endblock javascript %}
 
@@ -292,6 +307,35 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row" id="dogHouse">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.breeder_house_name_dog, '犬舎名', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        <div class="ec-input{{ has_errors(formBreeder.breeder_house_name_dog) ? ' error' }}">
+                                            {{ form_widget(formBreeder.breeder_house_name_dog) }}
+                                            {{ form_errors(formBreeder.DogHouseNameErrors) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="catHouse">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            {{ form_label(formBreeder.breeder_house_name_cat, '猫舎名', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-2 mb-2">
+                                        <div class="ec-input{{ has_errors(formBreeder.breeder_house_name_cat) ? ' error' }}">
+                                            {{ form_widget(formBreeder.breeder_house_name_cat) }}
+                                            {{ form_errors(formBreeder.CatHouseNameErrors) }}
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">

@@ -14,6 +14,9 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -341,7 +344,37 @@ class BreedersType extends AbstractType
             ])
             ->add('license_thumbnail_path', HiddenType::class, [
                 'required' => false
+            ])
+            ->add('breeder_house_name_dog', TextType::class, [
+                'required' => true,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                ]
+            ])
+            ->add('breeder_house_name_cat', TextType::class, [
+                'required' => true,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                ]
+            ])
+            ->add('DogHouseNameErrors', TextType::class, [
+                'mapped' => false,
+            ])
+            ->add('CatHouseNameErrors', TextType::class, [
+                'mapped' => false,
             ]);
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -349,5 +382,17 @@ class BreedersType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Breeders::class,
         ]);
+    }
+
+    public function validatePetHouseName(FormEvent $event)
+    {
+        $data = $event->getData();
+        $form = $event->getForm();
+        if (in_array($data->getHandlingPetKind(), [AnilineConf::ANILINE_PET_KIND_DOG_CAT, AnilineConf::ANILINE_PET_KIND_DOG]) && !$data->getBreederHouseNameDog()) {
+            $form['DogHouseNameErrors']->addError(new FormError('入力されていません。'));
+        }
+        if (in_array($data->getHandlingPetKind(), [AnilineConf::ANILINE_PET_KIND_DOG_CAT, AnilineConf::ANILINE_PET_KIND_CAT]) && !$data->getBreederHouseNameCat()) {
+            $form['CatHouseNameErrors']->addError(new FormError('入力されていません。'));
+        }
     }
 }
