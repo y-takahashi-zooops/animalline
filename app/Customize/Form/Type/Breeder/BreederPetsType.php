@@ -70,8 +70,7 @@ class BreederPetsType extends AbstractType
                     'ピンク' => AnilineConf::ANILINE_BAND_COLOR_PINK,
                     'オレンジ' => AnilineConf::ANILINE_BAND_COLOR_ORANGE
                 ],
-                'required' => false,
-                'placeholder' => 'common.select'
+                'required' => true
             ])
             ->add('coat_color', EntityType::class, [
                 'class' => 'Customize\Entity\CoatColors',
