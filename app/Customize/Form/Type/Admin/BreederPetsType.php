@@ -33,6 +33,18 @@ class BreederPetsType extends AbstractType
                 ]
             ])
             ->add('pet_birthday', DateType::class)
+            ->add('band_color', ChoiceType::class, [
+                'choices' =>
+                [
+                    '赤' => AnilineConf::ANILINE_BAND_COLOR_RED,
+                    '青' => AnilineConf::ANILINE_BAND_COLOR_BLUE,
+                    '緑' => AnilineConf::ANILINE_BAND_COLOR_GREEN,
+                    '黄色' => AnilineConf::ANILINE_BAND_COLOR_YELLOW,
+                    'ピンク' => AnilineConf::ANILINE_BAND_COLOR_PINK,
+                    'オレンジ' => AnilineConf::ANILINE_BAND_COLOR_ORANGE
+                ],
+                'required' => true
+            ])
             ->add('coat_color', HiddenType::class, [
                 'mapped' => false
             ])
