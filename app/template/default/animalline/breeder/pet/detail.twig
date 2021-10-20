@@ -1,5 +1,6 @@
 {% set site_type = 'breeder' %}
 {% extends 'animalline/breeder/frame.twig' %}
+{% set band_color = {1:"赤", 2:"青", 3:"緑", 4:"黄色", 5:"ピンク", 6:"オレンジ"} %}
 
 {% block main %}
     <section id="breeder-column" class="breeder-column_dog">
@@ -103,6 +104,16 @@
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
                                         {{ breederPet.petBirthday.format('Y年m月d日') ?? '' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        バンドカラー
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {{ band_color[breederPet.bandColor] ?? '' }}
                                     </div>
                                 </div>
                             </div>
