@@ -17,7 +17,7 @@
                                 {% for i in 1..6 %}
                                     <dl style="border-bottom:0px">
                                         <dt>
-                                            <span class="mr-2">子犬・子猫誕生日</span>
+                                            <span class="mr-2">子犬・子猫誕生日 {{i}}</span>
                                         </dt>
                                         <dd>
                                             <div class="ec-birth date">
@@ -29,11 +29,12 @@
                                     </dl>
                                     <dl>
                                         <dt>
-                                            <span class="mr-2">子犬・子猫出生数</span>
+                                            <span class="mr-2">子犬・子猫出生数 {{i}}</span>
                                         </dt>
                                         <dd>
                                             <div class="ec-input">
-                                                <input class="form-control petCount" id="petCount{{i}}"></input>
+                                                <input class="form-control petCount" id="petCount{{i}}" value="" onInput="textCheck(this)" maxlength="10" size="10">
+                                                {# <input type="text" id="text" name="text" value="" onInput="textCheck(this)" required maxlength="10" size="10"> #}
                                             </div>
                                         </dd>
                                     </dl>
@@ -44,9 +45,6 @@
                                         <span class="mr-2">合計掲載頭数</span>
                                     </dt>
                                     <dd>
-                                        {# <div class="ec-input">
-                                            <input class="form-control" readonly></input>
-                                        </div>             #}
                                         <div class="ec-input{{ has_errors(form.kit_unit) ? ' error' }}">
                                             {{ form_widget(form.kit_unit, { attr : {'readonly': 'true'}}) }}
                                             {{ form_errors(form.kit_unit) }}
@@ -55,15 +53,6 @@
                                 </dl>
                             </div>
                         </div>
-                            {# <div class="mb-5 d-flex">
-                                <dl>
-                                <div class="mr-4">子犬・子猫誕生日</div>
-                                <div class="mr-4 ec-input">{{ form_widget(form.birth) }}</div>
-                                <div class="mr-4">子犬・子猫出生数</div>
-                                <div class="mr-4 ec-input">
-                                    <input type="text" class="form-control"></input>
-                                </div>
-                                </dl> #}
                         <h2>検査キット送付先情報</h2>
                         <div class="ec-borderedDefs">
                             <div class="mb-5">
@@ -151,10 +140,11 @@
                         </div>
                         <div class="ec-registerRole__actions">
                             <div class="row">
-                                <div class="col-md-6">
+                                {# <div class="col-md-6">
                                     <a class="ec-blockBtn--cancel" href="{{ url('mypage') }}">マイページに戻る</a>
-                                </div>
-                                <div class="col-md-6">
+                                </div> #}
+                                {# <div class="col-md-6"> #}
+                                <div class="col-md-6 text-align-center">
                                     <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
                                 </div>
                             </div>
@@ -212,6 +202,25 @@ $("#confirm-yes").click(function (e) {
 $("#confirm-back").click(function () {
     window.history.back();
 });
+
+function textCheck($this)
+{
+  let str=$this.value;
+  // 文頭から文末まで全て0-9かチェック
+  if(!str.match(/^[0-9０-９]+$/)){
+    // そうでなければ入力文字を空白に変換
+    str="";
+  } else if(str.match(/^[０-９]+$/)){
+    str=toHanKaku(str);
+  }
+  $this.value=str;
+}
+
+function toHanKaku(str) {
+    return str.replace(/[０-９]/g, function(s){
+        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    });
+}
 
 var tagInput = $('.petCount'); 
 var tagOutput = $('#breeder_kit_dna_kit_unit');
