@@ -28,6 +28,7 @@ $("body").on("change", "#breeders_license_thumbnail_path", function (e) {
     breederImgFlg = false;
     $('#breeder_license_img_error').hide();
 });
+
 $("body").on("change", ".thumbnail_path", function (e) {
     readURL(this)
 });

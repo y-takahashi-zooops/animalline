@@ -33,16 +33,6 @@ class BreederHouse
     private $pet_type;
 
     /**
-     * @ORM\Column(name="breeder_house_name", type="string", length=255, nullable=true)
-     */
-    private $breeder_house_name;
-
-    /**
-     * @ORM\Column(name="breeder_house_kana", type="string", length=255, nullable=true)
-     */
-    private $breeder_house_kana;
-
-    /**
      * @ORM\Column(name="breeder_house_house_tel", type="string", length=11, nullable=true)
      */
     private $breeder_house_house_tel;
@@ -131,31 +121,6 @@ class BreederHouse
     public function setPetType(int $pet_type): self
     {
         $this->pet_type = $pet_type;
-
-        return $this;
-    }
-
-    public function getBreederHouseName(): ?string
-    {
-        return $this->breeder_house_name;
-    }
-
-    public function setBreederHouseName(?string $breeder_house_name): self
-    {
-        $this->breeder_house_name = $breeder_house_name;
-
-        return $this;
-    }
-
-
-    public function getBreederHouseKana(): ?string
-    {
-        return $this->breeder_house_kana;
-    }
-
-    public function setBreederHouseKana(?string $breeder_house_kana): self
-    {
-        $this->breeder_house_kana = $breeder_house_kana;
 
         return $this;
     }

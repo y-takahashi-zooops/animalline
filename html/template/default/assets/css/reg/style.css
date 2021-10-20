@@ -115,6 +115,23 @@ section h2 span {
 	margin-right: 1rem;
 }
 
+.innerSBlue{
+	margin: 0 auto;
+	padding: 0.8rem 0.8rem 0.8rem 0.8rem;
+	margin-bottom: 1.5rem;
+	background-color: #D0E1EF;
+	border-radius: 1rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.innerSBlue h2 {
+	font-size: 40px;
+	font-weight: 500;
+	width: 100%;
+	margin-bottom: 1rem;
+}
+
 .innerS{
 	margin: 0 auto;
 	padding: 0.8rem 0.8rem 0.8rem 0.8rem;
@@ -124,8 +141,22 @@ section h2 span {
 	margin-left: 1rem;
 	margin-right: 1rem;
 }
+.innerS h2 {
+	font-size: 40px;
+	font-weight: 500;
+	width: 100%;
+	margin-bottom: 1rem;
+}
 
 .innerS2{
+	margin: 0 auto;
+	margin-bottom: 1.5rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.SiteDescription{
+	font-size: 30px;
 	margin: 0 auto;
 	margin-bottom: 1.5rem;
 	margin-left: 1rem;
@@ -346,6 +377,20 @@ Width <= 768px
 	a.btn,
 	button.btn {
 		font-size:17px;
+	}
+
+	.SiteDescription{
+		font-size: 20px;
+	}
+
+	.innerSBlue h2 {
+		font-size: 20px;
+		font-weight: 700;
+	}
+
+	.innerS h2 {
+		font-size: 22px;
+		font-weight: 700;
 	}
 }
 
