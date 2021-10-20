@@ -86,20 +86,20 @@ class SubscriptionMailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = 'Mail/subscription_remind.html.twig';
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->twig->render($htmlFileName, [
-                'Customer' => $Customer,
-                'BaseInfo' => $this->BaseInfo,
-            ]);
+        // $htmlFileName = 'Mail/subscription_remind.html.twig';
+        // if (!is_null($htmlFileName)) {
+        //     $htmlBody = $this->twig->render($htmlFileName, [
+        //         'Customer' => $Customer,
+        //         'BaseInfo' => $this->BaseInfo,
+        //     ]);
 
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
+        //     $message
+        //         ->setContentType('text/plain; charset=UTF-8')
+        //         ->setBody($body, 'text/plain')
+        //         ->addPart($htmlBody, 'text/html');
+        // } else {
             $message->setBody($body);
-        }
+        // }
 
         $count = $this->mailer->send($message);
 
@@ -137,22 +137,22 @@ class SubscriptionMailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = 'Mail/subscription_confirm.html.twig';
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->twig->render($htmlFileName, [
-                'Order' => $Order,
-                'Shipping' => $Shipping,
-                'data' => $SubscriptionContract,
-                'BaseInfo' => $this->BaseInfo,
-            ]);
+        // $htmlFileName = 'Mail/subscription_confirm.html.twig';
+        // if (!is_null($htmlFileName)) {
+        //     $htmlBody = $this->twig->render($htmlFileName, [
+        //         'Order' => $Order,
+        //         'Shipping' => $Shipping,
+        //         'data' => $SubscriptionContract,
+        //         'BaseInfo' => $this->BaseInfo,
+        //     ]);
 
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
+        //     $message
+        //         ->setContentType('text/plain; charset=UTF-8')
+        //         ->setBody($body, 'text/plain')
+        //         ->addPart($htmlBody, 'text/html');
+        // } else {
             $message->setBody($body);
-        }
+        // }
 
         $count = $this->mailer->send($message);
 

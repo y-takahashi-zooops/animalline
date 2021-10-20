@@ -27,7 +27,7 @@
             {% endif %}
             {% if user.is_breeder == 1 %}
                 <div class="m-2 p-2"></div>
-                <h1>運用メニュー</h1>
+                {# <h1>運用メニュー</h1>
                 <div class="row">
                     <div class="col-lg-4 col-md-12">
                         <a href="{{url('breeder_examination_kit')}}" class="btn btn-warning btn-block mt-3" role="button">DNA検査キット請求</a>
@@ -43,7 +43,7 @@
                         <a href="{{url('breeder_all_message')}}" class="btn btn-warning btn-block mt-3" role="button">問い合わせ対応</a>
                     </div>
                     -->
-                </div>
+                </div> #}
                 <div class="m-2 p-2"></div>
                 <h1>ブリーダー様管理メニュー</h1>
                 {% if breeder %}
@@ -65,16 +65,16 @@
                 {% endif %}
                 <div class="row">
                     <div class="col-lg-4 col-md-12">
-                        <a href="{{url('breeder_all_breeder_message')}}" class="btn btn-warning btn-block mt-3" role="button">問い合わせ対応</a>
+                        <a href="{{url('breeder_examination_kit')}}" class="btn btn-warning btn-block mt-3" role="button">DNA検査キット請求</a>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <a href="{{url('breeder_examination_status')}}" class="btn btn-warning btn-block mt-3" role="button">検査状況確認</a>
                     </div>
                     <div class="col-lg-4 col-md-12">
                         <a href="{{url('breeder_pet_list')}}" class="btn btn-warning btn-block mt-3" role="button">ペット管理</a>
                     </div>
                     <div class="col-lg-4 col-md-12">
-                        <a href="{{url('breeder_examination_kit')}}" class="btn btn-warning btn-block mt-3" role="button">DNA検査キット請求</a>
-                    </div>
-                    <div class="col-lg-4 col-md-12">
-                        <a href="{{url('breeder_examination_status')}}" class="btn btn-warning btn-block mt-3" role="button">検査状況確認</a>
+                        <a href="{{url('breeder_all_breeder_message')}}" class="btn btn-warning btn-block mt-3" role="button">お問い合わせ対応</a>
                     </div>
                 </div>
             {% endif %}
