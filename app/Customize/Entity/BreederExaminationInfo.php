@@ -55,7 +55,7 @@ class BreederExaminationInfo
     private $parent_pet_count_1;
 
     /**
-     * @ORM\Column(name="parent_pet_count_2", type="string", length=255, nullable=true)
+     * @ORM\Column(name="parent_pet_count_2", type="smallint", nullable=true)
      */
     private $parent_pet_count_2;
 
@@ -233,7 +233,7 @@ class BreederExaminationInfo
         return $this->Breeder;
     }
 
-    public function setBreeder(?Breeders $Breeder): self
+    public function setBreeder(Breeders $Breeder): self
     {
         $this->Breeder = $Breeder;
 
@@ -300,12 +300,12 @@ class BreederExaminationInfo
         return $this;
     }
 
-    public function getParentPetCount2(): ?string
+    public function getParentPetCount2(): ?int
     {
         return $this->parent_pet_count_2;
     }
 
-    public function setParentPetCount2(?string $parent_pet_count_2): self
+    public function setParentPetCount2(?int $parent_pet_count_2): self
     {
         $this->parent_pet_count_2 = $parent_pet_count_2;
 
@@ -401,7 +401,7 @@ class BreederExaminationInfo
         return $this->fulltime_staff_count;
     }
 
-    public function setFulltimeStaffCount(int $fulltime_staff_count): self
+    public function setFulltimeStaffCount(?int $fulltime_staff_count): self
     {
         $this->fulltime_staff_count = $fulltime_staff_count;
 
@@ -413,7 +413,7 @@ class BreederExaminationInfo
         return $this->fulltime_staff_worktime_ave;
     }
 
-    public function setFulltimeStaffWorktimeAve(int $fulltime_staff_worktime_ave): self
+    public function setFulltimeStaffWorktimeAve(?int $fulltime_staff_worktime_ave): self
     {
         $this->fulltime_staff_worktime_ave = $fulltime_staff_worktime_ave;
 
@@ -473,7 +473,7 @@ class BreederExaminationInfo
         return $this->breeding_exp_year;
     }
 
-    public function setBreedingExpYear(int $breeding_exp_year): self
+    public function setBreedingExpYear(?int $breeding_exp_year): self
     {
         $this->breeding_exp_year = $breeding_exp_year;
 
@@ -497,7 +497,7 @@ class BreederExaminationInfo
         return $this->is_participate_show;
     }
 
-    public function setIsParticipateShow(int $is_participate_show): self
+    public function setIsParticipateShow(?int $is_participate_show): self
     {
         $this->is_participate_show = $is_participate_show;
 
@@ -509,7 +509,7 @@ class BreederExaminationInfo
         return (bool)$this->cage_size_1;
     }
 
-    public function setCageSize1(?int $cage_size_1): self
+    public function setCageSize1(int $cage_size_1): self
     {
         $this->cage_size_1 = $cage_size_1;
 
@@ -521,7 +521,7 @@ class BreederExaminationInfo
         return (bool)$this->cage_size_2;
     }
 
-    public function setCageSize2(?int $cage_size_2): self
+    public function setCageSize2(int $cage_size_2): self
     {
         $this->cage_size_2 = $cage_size_2;
 
