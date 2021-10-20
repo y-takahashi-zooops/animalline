@@ -68,7 +68,7 @@ class BreedersType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    // new Assert\NotBlank()
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('breeder_house_name_cat', TextType::class, [
@@ -80,7 +80,7 @@ class BreedersType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    // new Assert\NotBlank()
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('handling_pet_kind', ChoiceType::class, [

@@ -169,7 +169,7 @@ class BreederMemberController extends AbstractController
 
             if (!$thumbnail_path || !$license_thumbnail_path) {
                 if($thumbnail_path)
-                   $breederData->setThumbnailPath($thumbnail_path);
+                    $breederData->setThumbnailPath($thumbnail_path);
                 elseif($license_thumbnail_path)
                     $breederData->setLicenseThumbnailPath($license_thumbnail_path);
                 
