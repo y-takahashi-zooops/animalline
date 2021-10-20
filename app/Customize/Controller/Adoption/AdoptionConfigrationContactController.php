@@ -75,7 +75,6 @@ class AdoptionConfigrationContactController extends AbstractController
             ['send_date' => 'DESC']
         );
 
-        $lastReplies = [];
         $name = [];
         foreach ($rootMessages as $message) {
             $name[$message->getId()] = "{$message->getCustomer()->getName01()} {$message->getCustomer()->getName02()}";
