@@ -120,7 +120,7 @@ class AdoptionConfigrationContactController extends AbstractController
 
         if ($replyMessage) {
             $conservationContact->setConservationHeader($rootMessage)
-                ->setMessageFrom(AnilineConf::MESSAGE_FROM_CONFIGURATION)
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription($description)
                 ->setSendDate(new DateTime());
             $entityManager = $this->getDoctrine()->getManager();
@@ -154,7 +154,7 @@ class AdoptionConfigrationContactController extends AbstractController
                 ->setSendoffReason($reasonCancel);
 
             $breederContact = (new ConservationContacts())
-                ->setMessageFrom(AnilineConf::MESSAGE_FROM_CONFIGURATION)
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription('今回の取引非成立となりました')
                 ->setSendDate(Carbon::now())
                 ->setConservationHeader($rootMessage);
