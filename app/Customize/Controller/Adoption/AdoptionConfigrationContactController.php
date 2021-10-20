@@ -63,7 +63,7 @@ class AdoptionConfigrationContactController extends AbstractController
     /**
      * Page All message's adoption
      *
-     * @Route("/adoption/configration/all_message", name="get_message_adoption_configration")
+     * @Route("/adoption/member/all_adoption_message", name="get_message_adoption_configration")
      * @Template("animalline/adoption/configration/get_message.twig")
      */
     public function get_message_adoption_configration(Request $request)
