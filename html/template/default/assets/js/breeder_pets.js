@@ -31,6 +31,7 @@ $(function () {
                     $('#breeder_pets_breeds_type').append(new Option(breed.name, breed.id));
                 });
                 $('#breeder_pets_coat_color').empty();
+                $('#breeder_pets_coat_color').append(new Option('選択してください', ""));
                 colors.forEach(color => {
                     $('#breeder_pets_coat_color').append(new Option(color.name, color.id));
                 });

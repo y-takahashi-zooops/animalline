@@ -70,7 +70,8 @@ class BreederPetsType extends AbstractType
                     'ピンク' => AnilineConf::ANILINE_BAND_COLOR_PINK,
                     'オレンジ' => AnilineConf::ANILINE_BAND_COLOR_ORANGE
                 ],
-                'required' => true
+                'required' => false,
+                'placeholder' => 'common.select'
             ])
             ->add('coat_color', EntityType::class, [
                 'class' => 'Customize\Entity\CoatColors',
@@ -81,6 +82,7 @@ class BreederPetsType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
+                'placeholder' => 'common.select'
             ])
             ->add('future_wait', IntegerType::class, [
                 'required' => false,
