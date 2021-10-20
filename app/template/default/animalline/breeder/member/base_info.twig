@@ -70,7 +70,7 @@
 										<dd>
 											<div class="ec-halfInput{{ has_errors(form.breeder_house_name_dog) ? ' error' }}">
 											    {{ form_widget(form.breeder_house_name_dog, { 'attr': { 'placeholder': '犬舎名' }}) }}
-											    {{ form_errors(form.breeder_house_name_dog) }}
+												{{ form_errors(form.DogHouseNameErrors) }}
 											</div>
 										</dd>
 									</dl>
@@ -82,7 +82,7 @@
 									<dd>
 										<div class="ec-halfInput{{ has_errors(form.breeder_house_name_cat) ? ' error' }}">
 											{{ form_widget(form.breeder_house_name_cat, { 'attr': { 'placeholder': '猫舎名' }}) }}
-											{{ form_errors(form.breeder_house_name_cat) }}
+											{{ form_errors(form.CatHouseNameErrors) }}
 										</div>
 									</dd>
 								</dl>
@@ -424,9 +424,9 @@
         document.getElementById("breeders_breeder_name").value = document.getElementById("customer_name").value 
         document.getElementById("breeders_breeder_kana").value = document.getElementById("customer_kana").value 
         document.getElementById("breeders_breeder_zip").value = document.getElementById("customer_zip").value 
-        document.getElementById("breeders_addr_PrefBreeder").value = document.getElementById("customer_pref").value 
-        document.getElementById("breeders_addr_breeder_city").value = document.getElementById("customer_city").value 
-        document.getElementById("breeders_addr_breeder_address").value = document.getElementById("customer_address").value 
+        document.getElementById("breeders_PrefBreeder").value = document.getElementById("customer_pref").value
+        document.getElementById("breeders_breeder_city").value = document.getElementById("customer_city").value
+        document.getElementById("breeders_breeder_address").value = document.getElementById("customer_address").value
         document.getElementById("breeders_breeder_tel").value = document.getElementById("customer_tel").value 
     };
 

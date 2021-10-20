@@ -159,19 +159,20 @@ class BreederMemberController extends AbstractController
             $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
             $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
 
-            $handling_pet_kind = $request->get('handling_pet_kind');
+            $handling_pet_kind = $form->getData()->getHandlingPetKind();
 
-            if ($handling_pet_kind != AnilineConf::ANILINE_PET_KIND_DOG) {
+            if ($handling_pet_kind == AnilineConf::ANILINE_PET_KIND_DOG) {
                 $breederData->setBreederHouseNameCat(null);
-            } elseif($handling_pet_kind != AnilineConf::ANILINE_PET_KIND_CAT){
+            } elseif ($handling_pet_kind == AnilineConf::ANILINE_PET_KIND_CAT) {
                 $breederData->setBreederHouseNameDog(null);
             }
 
             if (!$thumbnail_path || !$license_thumbnail_path) {
-                if($thumbnail_path)
+                if ($thumbnail_path) {
                     $breederData->setThumbnailPath($thumbnail_path);
-                elseif($license_thumbnail_path)
+                } elseif ($license_thumbnail_path) {
                     $breederData->setLicenseThumbnailPath($license_thumbnail_path);
+                }
                 
                 return $this->redirectToRoute('breeder_baseinfo');
             }
