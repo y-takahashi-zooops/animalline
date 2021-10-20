@@ -27,7 +27,7 @@
                                             状態：{{ message.getContractStatus()==0 ? '交渉中' : message.getContractStatus()==1 ? '成約確認待ち' : message.getContractStatus()==2 ? '成約 ': '非成約' }}</h4>
                                         <div>
                                             <h4 class="mr-sm-5 ml-5">
-                                                返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}</h4>
+                                                返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }}</h4>
                                             <h4 class="mr-sm-5 ml-5 float-right">{{ message.getConservationNewMsg() == 1?'未読あり':'' }}</h4>
                                         </div>
                                     </div>

@@ -21,7 +21,7 @@
                                     <div class="col-md-10 col-9">
                                         <h5>{{ message.contactTitle ?? '' }}</h5>
                                         <h5>{{ message.Conservation.organizationName ?? '' }}</h5>
-                                        <h6 class="text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}
+                                        <h6 class="text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }}
                                             <br>
                                             {{ message.customerNewMsg ? '未読あり' }}
                                         </h6>
@@ -45,7 +45,7 @@
                                             {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
                                             状態：{{ status[message.contractStatus] }}
                                         </h4>
-                                        <h4 class="mr-sm-5 ml-5 text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし。' }}
+                                        <h4 class="mr-sm-5 ml-5 text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }}
                                             <br>
                                             {{ message.customerNewMsg ? '未読あり' }}
                                         </h4>

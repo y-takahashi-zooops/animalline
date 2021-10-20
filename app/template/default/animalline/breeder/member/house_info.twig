@@ -17,20 +17,21 @@
                             <h2 class="mr-4 mt-1">{{ petType==1?'犬舎情報':'猫舎情報' }}</h2>
                             <button class="btn btn-ec-regular mb-2" id="copy" type="button">ライセンス情報コピー</button>
                         </div> #}
-                        <h2>{{ petType==1?'犬舎情報':'猫舎情報' }}</h2>
-
+                        <div class="d-flex">
+                            <h2>{{ petType==1?'犬舎情報':'猫舎情報' }}</h2>
+                            <button class="btn btn-ec-regular btn-secondary ml-4 mb-2" id="copy" type="button">ライセンス情報コピー</button>
+                        </div>
                         {{ form_widget(form._token) }}
                         <div class="ec-borderedDefs">
                             <div class="mb-5">
-                                <dl>
+                                {# <dl>
                                     <dt>
                                         {% if petType == 1 %}
                                             {{ form_label(form.breeder_house_name, 'お名前（犬舎名）', { 'label_attr': { 'class': 'ec-label' }}) }}
                                         {% else %}
                                             {{ form_label(form.breeder_house_name, 'お名前（猫舎名）', { 'label_attr': { 'class': 'ec-label' }}) }}
                                         {% endif %}
-
-                                        
+                                       
                                     </dt>
                                     <dd>
                                         <div class="ec-halfInput{{ has_errors(form.breeder_house_name) ? ' error' }}">
@@ -49,14 +50,30 @@
                                             {{ form_errors(form.breeder_house_kana) }}
                                         </div>
                                     </dd>
+                                </dl> #}
+                                <dl>
+                                    <dt>
+                                        {% if petType == 1 %}
+                                            <label class="ec-label">犬舎名</label>
+                                        {% else %}
+                                            <label class="ec-label">猫舎名</label>
+                                        {% endif %}
+                                    </dt>
+                                    <dd>
+                                        {% if petType == 1 %}
+                                            {{breeder.breederHouseNameDog}}
+                                        {% else %}
+                                            {{breeder.breederHouseNameCat}}
+                                        {% endif %}
+                                    </dd>
                                 </dl>
+
                                 <dl>
                                     <dt>
                                         <div>
                                             {{ form_label(form.address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
                                             <p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
                                         </div>    
-                                        <button class="btn btn-ec-regular btn-secondary mb-2" id="copy" type="button">ライセンス情報コピー</button>
                                     </dt>
                                     <dd>
                                         <div class="ec-zipInput{{ has_errors(form.breeder_house_house_zip) ? ' error' }}">

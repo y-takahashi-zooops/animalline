@@ -60,7 +60,32 @@ class BreedersType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
+            ->add('breeder_house_name_dog', TextType::class, [
+                'required' => true,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                    // new Assert\NotBlank()
+                ]
+            ])
+            ->add('breeder_house_name_cat', TextType::class, [
+                'required' => true,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                    ]),
+                    // new Assert\NotBlank()
+                ]
+            ])
             ->add('handling_pet_kind', ChoiceType::class, [
+                'placeholder' => 'common.select',
                 'choices' =>
                     [
                         '犬・猫' => AnilineConf::ANILINE_PET_KIND_DOG_CAT,
@@ -68,7 +93,6 @@ class BreedersType extends AbstractType
                         '猫' => AnilineConf::ANILINE_PET_KIND_CAT
                     ],
                 'required' => true,
-                'placeholder' => 'common.select',
                 'constraints' => [
                     new Assert\NotBlank()
                 ]

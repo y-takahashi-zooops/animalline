@@ -81,7 +81,7 @@ file that was distributed with this source code.
                                 {% set isNotSubmit = examination.examinationResult != constant('Customize\\Config\\AnilineConf::ANILINE_INPUT_STATUS_SUBMIT') %}
                                 <textarea id="examination_result_comment" name="examination_result_comment" class="form-control" rows="15"
                                     {{ isNotSubmit ? 'disabled' : '' }}
-                                    >{{ isNotSubmit ? '審査に関する情報のお問い合わせにはお答えできません' : examination.examinationResultComment }}</textarea>
+                                    >{{ isNotSubmit ? '審査に関する情報のお問い合わせにはお答えいたしかねますのでご了承ください。' : examination.examinationResultComment }}</textarea>
                             </div>
                         </div>
                     </div>
