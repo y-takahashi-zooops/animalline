@@ -102,19 +102,19 @@ class BreederConfigrationController extends AbstractController
 
     //         $petImage0 = (new BreederPetImage())
     //             ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img0)->setSortOrder(1)
-    //             ->setBreederPetId($breederPet);
+    //             ->setBreederPet($breederPet);
     //         $petImage1 = (new BreederPetImage())
     //             ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img1)->setSortOrder(2)
-    //             ->setBreederPetId($breederPet);
+    //             ->setBreederPet($breederPet);
     //         $petImage2 = (new BreederPetImage())
     //             ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img2)->setSortOrder(3)
-    //             ->setBreederPetId($breederPet);
+    //             ->setBreederPet($breederPet);
     //         $petImage3 = (new BreederPetImage())
     //             ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img3)->setSortOrder(4)
-    //             ->setBreederPetId($breederPet);
+    //             ->setBreederPet($breederPet);
     //         $petImage4 = (new BreederPetImage())
     //             ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img4)->setSortOrder(5)
-    //             ->setBreederPetId($breederPet);
+    //             ->setBreederPet($breederPet);
     //         $breederPet
     //             ->addBreederPetImage($petImage0)
     //             ->addBreederPetImage($petImage1)

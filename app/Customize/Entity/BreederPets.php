@@ -460,7 +460,7 @@ class BreederPets
     {
         if (!$this->BreederPetImages->contains($breederPetImage)) {
             $this->BreederPetImages[] = $breederPetImage;
-            $breederPetImage->setBreederPetId($this);
+            $breederPetImage->setBreederPet($this);
         }
 
         return $this;
@@ -470,8 +470,8 @@ class BreederPets
     {
         if ($this->BreederPetImages->removeElement($breederPetImage)) {
             // set the owning side to null (unless already changed)
-            if ($breederPetImage->getBreederPetId() === $this) {
-                $breederPetImage->setBreederPetId(null);
+            if ($breederPetImage->getBreederPet() === $this) {
+                $breederPetImage->setBreederPet(null);
             }
         }
 

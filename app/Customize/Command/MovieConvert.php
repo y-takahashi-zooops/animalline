@@ -143,7 +143,7 @@ class MovieConvert extends Command
                         continue;
                     }
                     $breeder = new BreederPetImage();
-                    $breeder->setBreederPetId($breeder_pet)
+                    $breeder->setBreederPet($breeder_pet)
                         ->setImageType(AnilineConf::PET_PHOTO_TYPE_VIDEO)
                         ->setImageUri($movie->getDistPath())
                         ->setSortOrder(0);
