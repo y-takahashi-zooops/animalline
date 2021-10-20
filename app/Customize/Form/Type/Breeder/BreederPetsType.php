@@ -60,6 +60,19 @@ class BreederPetsType extends AbstractType
                 'data' => new DateTime(),
                 'years' => range(date('Y'), 1990),
             ])
+            ->add('band_color', ChoiceType::class, [
+                'choices' =>
+                [
+                    '赤' => AnilineConf::ANILINE_BAND_COLOR_RED,
+                    '青' => AnilineConf::ANILINE_BAND_COLOR_BLUE,
+                    '緑' => AnilineConf::ANILINE_BAND_COLOR_GREEN,
+                    '黄色' => AnilineConf::ANILINE_BAND_COLOR_YELLOW,
+                    'ピンク' => AnilineConf::ANILINE_BAND_COLOR_PINK,
+                    'オレンジ' => AnilineConf::ANILINE_BAND_COLOR_ORANGE
+                ],
+                'required' => false,
+                'placeholder' => 'common.select'
+            ])
             ->add('coat_color', EntityType::class, [
                 'class' => 'Customize\Entity\CoatColors',
                 'choice_label' => function (CoatColors $coatColors) {
