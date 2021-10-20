@@ -65,7 +65,7 @@ class AdoptionMemberContactController extends AbstractController
     /**
      * 取引メッセージ一覧
      *
-     * @Route("/adoption/member/all_adoption_message", name="adoption_all_message")
+     * @Route("/adoption/member/all_message", name="adoption_all_message")
      * @Template("animalline/adoption/member/adoption_message.twig")
      */
     public function all_message()
