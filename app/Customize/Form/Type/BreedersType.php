@@ -61,7 +61,7 @@ class BreedersType extends AbstractType
                 ]
             ])
             ->add('breeder_house_name_dog', TextType::class, [
-                // 'required' => true,
+                'required' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
@@ -73,7 +73,7 @@ class BreedersType extends AbstractType
                 ]
             ])
             ->add('breeder_house_name_cat', TextType::class, [
-                // 'required' => true,
+                'required' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],

@@ -1,6 +1,7 @@
-{% form_theme form 'Form/form_div_layout.twig' %}
 {% set site_type = 'breeder' %}
 {% extends 'animalline/breeder/frame.twig' %}
+
+{% form_theme form 'Form/form_div_layout.twig' %}
 
 {% block main %}
 	<section id="breeder-column" class="breeder-column_dog">
@@ -439,18 +440,18 @@
         if( pet_kind == 0 ){
             $("#dogHouse").show();
             $("#catHouse").show();
-            $("#breeders_breeder_house_name_dog").prop('disabled', false).prop('required', true);
-            $("#breeders_breeder_house_name_cat").prop('disabled', false).prop('required', true);
+            $("#breeders_breeder_house_name_dog").prop('required', true);
+            $("#breeders_breeder_house_name_cat").prop('required', true);
         } else if( pet_kind == 1 ){
             $("#dogHouse").show();
             $("#catHouse").hide();
-            $("#breeders_breeder_house_name_dog").prop('disabled', false).prop('required', true);
-            $("#breeders_breeder_house_name_cat").prop('disabled', true).prop('required', false);
+            $("#breeders_breeder_house_name_dog").prop('required', true);
+            $("#breeders_breeder_house_name_cat").prop('required', false);
         } else if ( pet_kind == 2 ){
             $("#dogHouse").hide();
             $("#catHouse").show();
-            $("#breeders_breeder_house_name_dog").prop('disabled', true).prop('required', false);
-            $("#breeders_breeder_house_name_cat").prop('disabled', false).prop('required', true);
+            $("#breeders_breeder_house_name_dog").prop('required', false);
+            $("#breeders_breeder_house_name_cat").prop('required', true);
         }
     };
 

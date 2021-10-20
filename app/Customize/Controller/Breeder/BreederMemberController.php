@@ -16,6 +16,7 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
+use Customize\Config\AnilineConf;
 
 class BreederMemberController extends AbstractController
 {
@@ -157,6 +158,14 @@ class BreederMemberController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
             $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
+
+            $handling_pet_kind = $request->get('handling_pet_kind');
+
+            if ($handling_pet_kind != AnilineConf::ANILINE_PET_KIND_DOG) {
+                $breederData->setBreederHouseNameCat(null);
+            } elseif($handling_pet_kind != AnilineConf::ANILINE_PET_KIND_CAT){
+                $breederData->setBreederHouseNameDog(null);
+            }
 
             if (!$thumbnail_path || !$license_thumbnail_path) {
                 if($thumbnail_path)
