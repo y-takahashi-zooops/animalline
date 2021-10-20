@@ -242,4 +242,37 @@ class AdoptionMemberContactController extends AbstractController
 
         return $this->redirectToRoute('adoption_message', ['id' => $rootMessage->getId()]);
     }
+
+    /**
+     * Page All message's adoption
+     *
+     * @Route("/adoption/member/all_adoption_message", name="get_message_adoption_configration")
+     * @Template("animalline/adoption/configration/get_message.twig")
+     */
+    public function get_message_adoption_configration(Request $request)
+    {
+        $rootMessages = $this->conservationContactHeaderRepository->findBy(
+            [
+                'Conservation' => $this->getUser()
+            ],
+            ['send_date' => 'DESC']
+        );
+
+        $name = [];
+        foreach ($rootMessages as $message) {
+            $name[$message->getId()] = "{$message->getCustomer()->getName01()} {$message->getCustomer()->getName02()}";
+        }
+
+        $pets = $this->conservationPetsRepository->findBy(['Conservation' => $this->getUser()], ['update_date' => 'DESC']);
+
+        return $this->render(
+            'animalline/adoption/configration/get_message.twig',
+            [
+                'rootMessages' => $rootMessages,
+                'name' => $name,
+                'conservation' => $this->getUser(),
+                'pets' => $pets,
+            ]
+        );
+    }
 }

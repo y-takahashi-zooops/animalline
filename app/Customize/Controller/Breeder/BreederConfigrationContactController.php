@@ -49,36 +49,6 @@ class BreederConfigrationContactController extends AbstractController
     }
 
     /**
-     * Page All message's breeder
-     *
-     * @Route("/breeder/configration/all_message", name="get_message_breeder_configration")
-     * @Template("animalline/breeder/configration/get_message.twig")
-     */
-    public function get_message_breeder_configration(Request $request)
-    {
-        $rootMessages = $this->breederContactHeaderRepository->findBy(
-            [
-                'Breeder' => $this->getUser()
-            ],
-            ['last_message_date' => 'DESC']
-        );
-
-        $name = [];
-        foreach ($rootMessages as $message) {
-            $name[$message->getId()] = "{$message->getCustomer()->getName01()} {$message->getCustomer()->getName02()}";
-        }
-
-        return $this->render(
-            'animalline/breeder/configration/get_message.twig',
-            [
-                'rootMessages' => $rootMessages,
-                'name' => $name,
-                'breeder' => $this->getUser(),
-            ]
-        );
-    }
-
-    /**
      * Page breeder's message
      *
      * @Route("/breeder/configration/message/{contact_id}", name="breeder_configration_messages", requirements={"contact_id" = "\d+"})
