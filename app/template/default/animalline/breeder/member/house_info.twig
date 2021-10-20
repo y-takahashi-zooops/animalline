@@ -24,33 +24,6 @@
                         {{ form_widget(form._token) }}
                         <div class="ec-borderedDefs">
                             <div class="mb-5">
-                                {# <dl>
-                                    <dt>
-                                        {% if petType == 1 %}
-                                            {{ form_label(form.breeder_house_name, 'お名前（犬舎名）', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                        {% else %}
-                                            {{ form_label(form.breeder_house_name, 'お名前（猫舎名）', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                        {% endif %}
-                                       
-                                    </dt>
-                                    <dd>
-                                        <div class="ec-halfInput{{ has_errors(form.breeder_house_name) ? ' error' }}">
-                                            {{ form_widget(form.breeder_house_name, { 'attr': { 'placeholder': 'お名前' }}) }}                                            
-                                            {{ form_errors(form.breeder_house_name) }}
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>
-                                        {{ form_label(form.breeder_house_kana, 'お名前(カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                    </dt>
-                                    <dd>
-                                        <div class="ec-halfInput{{ has_errors(form.breeder_house_kana) ? ' error' }}">
-                                            {{ form_widget(form.breeder_house_kana, { 'attr': { 'placeholder': 'お名前（カナ）' }}) }}
-                                            {{ form_errors(form.breeder_house_kana) }}
-                                        </div>
-                                    </dd>
-                                </dl> #}
                                 <dl>
                                     <dt>
                                         {% if petType == 1 %}
