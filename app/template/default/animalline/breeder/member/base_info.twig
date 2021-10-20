@@ -211,7 +211,7 @@
 											     class="img_preview mb-2 {{ breederData.licenseThumbnailPath ? '' : 'hidden' }}"
 											     src="{{ breederData.licenseThumbnailPath }}" alt="..."
 											     style="width: 200px; border: 1px solid #ddd;"/>
-											{{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'thumbnail_path'  } }) }}
+											{{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'license_thumbnail_path'  } }) }}
 											{{ form_errors(form.license_thumbnail_path) }}
 											<input type="hidden" name="license_thumbnail_path" id="breeder_license_src_path">
 										</div>
@@ -384,6 +384,19 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+	<style>
+		img#image {
+			display: block;
+			max-width: 100%;
+		}
+		.preview {
+			overflow: hidden;
+			width: 200px;
+			height: 200px;
+			margin-left: 25px;
+			border: 1px solid red;
+		}
+	</style>
 {% endblock %}
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
