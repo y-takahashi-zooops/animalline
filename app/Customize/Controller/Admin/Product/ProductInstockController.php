@@ -102,7 +102,7 @@ class ProductInstockController extends AbstractController
         if ($instocks) {
             foreach ($instocks as $instock) {
                 $suppliers = $this->supplierRepository->findOneBy(['supplier_code' => $instock->getSupplierCode()]);
-                $supplier[$instock->getSupplierCode()] = $suppliers->getSupplierName();
+                $supplier[$instock->getSupplierCode()] = $suppliers ? $suppliers->getSupplierName() : "_";
             }
         }
         $count = count($instocks);
