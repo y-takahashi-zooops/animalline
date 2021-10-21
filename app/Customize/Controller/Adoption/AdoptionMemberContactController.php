@@ -20,8 +20,7 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\Adoption\ConservationContactType;
-use Customize\Repository\ConservationContactHeaderRepository;
-use Customize\Repository\SendoffReasonRepository;
+
 use DateTime;
 
 class AdoptionMemberContactController extends AbstractController

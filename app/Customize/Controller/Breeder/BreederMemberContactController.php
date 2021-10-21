@@ -4,12 +4,7 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederEvaluations;
-<<<<<<< HEAD
-use Customize\Form\Type\Breeder\BreederEvaluationsType;
-use Customize\Repository\BreederContactHeaderRepository;
-=======
 use Customize\Form\Type\BreederEvaluationsType;
->>>>>>> b0081a51e8781a479402cdd518b0497b11f3c308
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
 use Carbon\Carbon;
