@@ -6,6 +6,7 @@ use Customize\Entity\ConservationPets;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\Validation;
 
 class ConservationPetsTest extends TestCase
 {
@@ -113,5 +114,18 @@ class ConservationPetsTest extends TestCase
         $this->assertEquals($integerVal, $ConservationsPet->getDnaCheckResult());
         $this->assertEquals($integerVal, $ConservationsPet->getPrice());
         $this->assertEquals($integerVal, $ConservationsPet->getFavoriteCount());
+    }
+
+    /**
+     * Test validate pass
+     *
+     * @return void
+     */
+    public function testValidatePass(): void
+    {
+        $ConservationsPet = new ConservationPets();
+        $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
+        $errors = $validator->validate($ConservationsPet);
+        $this->assertEquals(0, count($errors));
     }
 }
