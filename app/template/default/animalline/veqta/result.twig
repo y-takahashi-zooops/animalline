@@ -33,6 +33,16 @@
                                 </dl>
                                 <dl>
                                     <dt>
+                                        犬種・猫種
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <input type="text" class="w-100" name="pet_kind" id="pet_kind" disabled>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
                                         検査結果
                                     </dt>
                                     <dd>
@@ -40,9 +50,8 @@
                                             <select name="check_status" required>
                                                 <option value="">選択してください</option>
                                                 <option value="4">検体異常</option>
-                                                <option value="61">クリア</option>
-                                                <option value="62">キャリア</option>
-                                                <option value="7">アフェクテッド</option>
+                                                <option value="61">検査通過</option>
+                                                <option value="7">検査ＮＧ</option>
                                             </select>
                                         </div>
                                     </dd>
@@ -122,10 +131,15 @@
             data: {
                 'barcode': $('#barcode').val()
             }
-        }).done(function ({ shippingName, hasRecord }) {
+        }).done(function ({ shippingName, hasRecord , breed}) {
+            if (!hasRecord){
+                alert('データが存在しません。');
+                return;
+            } 
             $('#sender_name').val(shippingName);
+            $('#pet_kind').val(breed);
             $('#dnaTestResultRegist').attr('disabled', !hasRecord);
-            if (!hasRecord) alert('データが存在しません。');
+            
         }).fail(function (err) {
             $('#sender_name').text('');
             $('#dnaTestResultRegist').attr('disabled', true);
