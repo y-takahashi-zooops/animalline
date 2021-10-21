@@ -19,7 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Customize\Form\Type\Admin\BreederHouseType;
+use Customize\Form\Type\Breeder\BreederHouseType;
 use Customize\Repository\BreederHouseRepository;
 
 class BreederHouseController extends AbstractController

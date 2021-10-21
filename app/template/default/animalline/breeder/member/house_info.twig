@@ -24,33 +24,6 @@
                         {{ form_widget(form._token) }}
                         <div class="ec-borderedDefs">
                             <div class="mb-5">
-                                {# <dl>
-                                    <dt>
-                                        {% if petType == 1 %}
-                                            {{ form_label(form.breeder_house_name, 'お名前（犬舎名）', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                        {% else %}
-                                            {{ form_label(form.breeder_house_name, 'お名前（猫舎名）', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                        {% endif %}
-                                       
-                                    </dt>
-                                    <dd>
-                                        <div class="ec-halfInput{{ has_errors(form.breeder_house_name) ? ' error' }}">
-                                            {{ form_widget(form.breeder_house_name, { 'attr': { 'placeholder': 'お名前' }}) }}                                            
-                                            {{ form_errors(form.breeder_house_name) }}
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>
-                                        {{ form_label(form.breeder_house_kana, 'お名前(カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                    </dt>
-                                    <dd>
-                                        <div class="ec-halfInput{{ has_errors(form.breeder_house_kana) ? ' error' }}">
-                                            {{ form_widget(form.breeder_house_kana, { 'attr': { 'placeholder': 'お名前（カナ）' }}) }}
-                                            {{ form_errors(form.breeder_house_kana) }}
-                                        </div>
-                                    </dd>
-                                </dl> #}
                                 <dl>
                                     <dt>
                                         {% if petType == 1 %}
@@ -71,7 +44,7 @@
                                 <dl>
                                     <dt>
                                         <div>
-                                            {{ form_label(form.address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                            {{ form_label(form.breeder_house_address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
                                             <p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
                                         </div>    
                                     </dt>
@@ -92,19 +65,19 @@
                                             </div>
                                             {{ form_errors(form.breeder_house_house_zip) }}
                                         </div>
-                                        <div class="ec-select{{ has_errors(form.address.BreederHousePrefId) ? ' error' }}">
-                                            {{ form_widget(form.address.BreederHousePrefId) }}
-                                            {{ form_errors(form.address.BreederHousePrefId) }}
+                                        <div class="ec-select{{ has_errors(form.BreederHousePrefId) ? ' error' }}">
+                                            {{ form_widget(form.BreederHousePrefId) }}
+                                            {{ form_errors(form.BreederHousePrefId) }}
                                             <input type="hidden" id="licencePref" value={{breeder.PrefLicense.Id}}>
                                         </div>
-                                        <div class="ec-input{{ has_errors(form.address.breeder_house_city) ? ' error' }}">
-                                            {{ form_widget(form.address.breeder_house_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-                                            {{ form_errors(form.address.breeder_house_city) }}
+                                        <div class="ec-input{{ has_errors(form.breeder_house_city) ? ' error' }}">
+                                            {{ form_widget(form.breeder_house_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                            {{ form_errors(form.breeder_house_city) }}
                                             <input type="hidden" id="licenceCity" value={{breeder.licenseCity}}>
                                         </div>
-                                        <div class="ec-input{{ has_errors(form.address.breeder_house_address) ? ' error' }}">
-                                            {{ form_widget(form.address.breeder_house_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-                                            {{ form_errors(form.address.breeder_house_address) }}
+                                        <div class="ec-input{{ has_errors(form.breeder_house_address) ? ' error' }}">
+                                            {{ form_widget(form.breeder_house_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                            {{ form_errors(form.breeder_house_address) }}
                                             <input type="hidden" id="licenceAddress" value={{breeder.licenseAddress}}>
                                         </div>
                                     </dd>
@@ -190,9 +163,9 @@
     document.getElementById("copy").onclick = function() {
         // ブリーダー情報をライセンス情報にコピー
         document.getElementById("breeder_house_breeder_house_house_zip").value = document.getElementById("licenceZip").value 
-        document.getElementById("breeder_house_address_BreederHousePrefId").value = document.getElementById("licencePref").value 
-        document.getElementById("breeder_house_address_breeder_house_city").value = document.getElementById("licenceCity").value 
-        document.getElementById("breeder_house_address_breeder_house_address").value = document.getElementById("licenceAddress").value
+        document.getElementById("breeder_house_BreederHousePrefId").value = document.getElementById("licencePref").value 
+        document.getElementById("breeder_house_breeder_house_city").value = document.getElementById("licenceCity").value 
+        document.getElementById("breeder_house_breeder_house_address").value = document.getElementById("licenceAddress").value
         document.getElementById("breeder_house_breeder_house_house_tel").value = document.getElementById("licenceTel").value 
         document.getElementById("breeder_house_breeder_house_house_fax").value = document.getElementById("licenceFax").value 
     };

@@ -72,11 +72,11 @@
 								</dl>
 								<dl>
 									<dt>
-										{{ form_label(form.addr, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+										{{ form_label(form.address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+										<p style="font-size:14px;color:#DE5D50;">ハイフン（-） なしで入力してください。</p>
 									</dt>
 									<dd>
 										<div class="ec-zipInput{{ has_errors(form.zip) ? ' error' }}">
-											<label>ハイフン（-） なしで入力してください。</label><br/>
 											<span>{{ '〒'|trans }}</span>
 											{{ form_widget(form.zip) }}
 											<div class="ec-zipInputHelp">
@@ -90,26 +90,26 @@
 											</div>
 											{{ form_errors(form.zip) }}
 										</div>
-										<div class="ec-select{{ has_errors(form.addr.PrefId) ? ' error' }}">
-											{{ form_widget(form.addr.PrefId) }}
-											{{ form_errors(form.addr.PrefId) }}
+										<div class="ec-select{{ has_errors(form.PrefId) ? ' error' }}">
+											{{ form_widget(form.PrefId) }}
+											{{ form_errors(form.PrefId) }}
 										</div>
-										<div class="ec-input{{ has_errors(form.addr.city) ? ' error' }}">
-											{{ form_widget(form.addr.city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-											{{ form_errors(form.addr.city) }}
+										<div class="ec-input{{ has_errors(form.city) ? ' error' }}">
+											{{ form_widget(form.city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+											{{ form_errors(form.city) }}
 										</div>
-										<div class="ec-input{{ has_errors(form.addr.address) ? ' error' }}">
-											{{ form_widget(form.addr.address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-											{{ form_errors(form.addr.address) }}
+										<div class="ec-input{{ has_errors(form.address) ? ' error' }}">
+											{{ form_widget(form.address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+											{{ form_errors(form.address) }}
 										</div>
 									</dd>
 								</dl>
 								<dl>
 									<dt>
 										{{ form_label(form.tel, '電話番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+										<p style="font-size:14px;color:#DE5D50;">ハイフン（-） なしで入力してください。</p>
 									</dt>
 									<dd>
-										<label>ハイフン（-） なしで入力してください。</label>
 										<div class="ec-telInput{{ has_errors(form.tel) ? ' error' }}">
 											{{ form_widget(form.tel) }}
 											{{ form_errors(form.tel) }}
@@ -119,9 +119,9 @@
 								<dl>
 									<dt>
 										{{ form_label(form.fax, 'FAX番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+										<p style="font-size:14px;color:#DE5D50;">ハイフン（-） なしで入力してください。</p>
 									</dt>
 									<dd>
-										<label>ハイフン（-） なしで入力してください。</label>
 										<div class="ec-telInput{{ has_errors(form.fax) ? ' error' }}">
 											{{ form_widget(form.fax) }}
 											{{ form_errors(form.fax) }}

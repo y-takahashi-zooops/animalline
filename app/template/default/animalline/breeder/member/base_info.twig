@@ -70,7 +70,7 @@
 										<dd>
 											<div class="ec-halfInput{{ has_errors(form.breeder_house_name_dog) ? ' error' }}">
 											    {{ form_widget(form.breeder_house_name_dog, { 'attr': { 'placeholder': '犬舎名' }}) }}
-											    {{ form_errors(form.breeder_house_name_dog) }}
+												{{ form_errors(form.DogHouseNameErrors) }}
 											</div>
 										</dd>
 									</dl>
@@ -82,13 +82,13 @@
 									<dd>
 										<div class="ec-halfInput{{ has_errors(form.breeder_house_name_cat) ? ' error' }}">
 											{{ form_widget(form.breeder_house_name_cat, { 'attr': { 'placeholder': '猫舎名' }}) }}
-											{{ form_errors(form.breeder_house_name_cat) }}
+											{{ form_errors(form.CatHouseNameErrors) }}
 										</div>
 									</dd>
 								</dl>
 								<dl>
 									<dt>
-										{{ form_label(form.addr, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+										{{ form_label(form.breeder_address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
 										<p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
 									</dt>
 									<dd class="h-adr">
@@ -108,17 +108,17 @@
 											</div>
 											{{ form_errors(form.breeder_zip) }}
 										</div>
-										<div class="ec-select{{ has_errors(form.addr.PrefBreeder) ? ' error' }}">
-											{{ form_widget(form.addr.PrefBreeder) }}
-											{{ form_errors(form.addr.PrefBreeder) }}
+										<div class="ec-select{{ has_errors(form.PrefBreeder) ? ' error' }}">
+											{{ form_widget(form.PrefBreeder) }}
+											{{ form_errors(form.PrefBreeder) }}
 										</div>
-										<div class="ec-input{{ has_errors(form.addr.breeder_city) ? ' error' }}">
-											{{ form_widget(form.addr.breeder_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-											{{ form_errors(form.addr.breeder_city) }}
+										<div class="ec-input{{ has_errors(form.breeder_city) ? ' error' }}">
+											{{ form_widget(form.breeder_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+											{{ form_errors(form.breeder_city) }}
 										</div>
-										<div class="ec-input{{ has_errors(form.addr.breeder_address) ? ' error' }}">
-											{{ form_widget(form.addr.breeder_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-											{{ form_errors(form.addr.breeder_address) }}
+										<div class="ec-input{{ has_errors(form.breeder_address) ? ' error' }}">
+											{{ form_widget(form.breeder_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+											{{ form_errors(form.breeder_address) }}
 										</div>
 									</dd>
 								</dl>
@@ -224,7 +224,7 @@
 											     class="img_preview mb-2 {{ breederData.licenseThumbnailPath ? '' : 'hidden' }}"
 											     src="{{ breederData.licenseThumbnailPath }}" alt="..."
 											     style="width: 200px; border: 1px solid #ddd;"/>
-											{{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'thumbnail_path'  } }) }}
+											{{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'license_thumbnail_path'  } }) }}
 											{{ form_errors(form.license_thumbnail_path) }}
 											<input type="hidden" name="license_thumbnail_path" id="breeder_license_src_path">
 										</div>
@@ -251,7 +251,7 @@
 								</dl>
 								<dl>
 									<dt>
-										{{ form_label(form.license_addr, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
+										{{ form_label(form.license_address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
 										<p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
 									</dt>
 									<dd class="h-adr">
@@ -271,17 +271,17 @@
 											</div>
 											{{ form_errors(form.license_zip) }}
 										</div>
-										<div class="ec-select{{ has_errors(form.license_addr.PrefLicense) ? ' error' }}">
-											{{ form_widget(form.license_addr.PrefLicense) }}
-											{{ form_errors(form.license_addr.PrefLicense) }}
+										<div class="ec-select{{ has_errors(form.PrefLicense) ? ' error' }}">
+											{{ form_widget(form.PrefLicense) }}
+											{{ form_errors(form.PrefLicense) }}
 										</div>
-										<div class="ec-input{{ has_errors(form.license_addr.license_city) ? ' error' }}">
-											{{ form_widget(form.license_addr.license_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
-											{{ form_errors(form.license_addr.license_city) }}
+										<div class="ec-input{{ has_errors(form.license_city) ? ' error' }}">
+											{{ form_widget(form.license_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+											{{ form_errors(form.license_city) }}
 										</div>
-										<div class="ec-input{{ has_errors(form.license_addr.license_address) ? ' error' }}">
-											{{ form_widget(form.license_addr.license_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
-											{{ form_errors(form.license_addr.license_address) }}
+										<div class="ec-input{{ has_errors(form.license_address) ? ' error' }}">
+											{{ form_widget(form.license_address,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+											{{ form_errors(form.license_address) }}
 										</div>
 									</dd>
 								</dl>
@@ -397,6 +397,19 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+	<style>
+		img#image {
+			display: block;
+			max-width: 100%;
+		}
+		.preview {
+			overflow: hidden;
+			width: 200px;
+			height: 200px;
+			margin-left: 25px;
+			border: 1px solid red;
+		}
+	</style>
 {% endblock %}
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -411,9 +424,9 @@
         document.getElementById("breeders_breeder_name").value = document.getElementById("customer_name").value 
         document.getElementById("breeders_breeder_kana").value = document.getElementById("customer_kana").value 
         document.getElementById("breeders_breeder_zip").value = document.getElementById("customer_zip").value 
-        document.getElementById("breeders_addr_PrefBreeder").value = document.getElementById("customer_pref").value 
-        document.getElementById("breeders_addr_breeder_city").value = document.getElementById("customer_city").value 
-        document.getElementById("breeders_addr_breeder_address").value = document.getElementById("customer_address").value 
+        document.getElementById("breeders_PrefBreeder").value = document.getElementById("customer_pref").value
+        document.getElementById("breeders_breeder_city").value = document.getElementById("customer_city").value
+        document.getElementById("breeders_breeder_address").value = document.getElementById("customer_address").value
         document.getElementById("breeders_breeder_tel").value = document.getElementById("customer_tel").value 
     };
 
@@ -421,9 +434,9 @@
         // ブリーダー情報をライセンス情報にコピー
         document.getElementById("breeders_license_name").value = document.getElementById("breeders_breeder_name").value 
         document.getElementById("breeders_license_zip").value = document.getElementById("breeders_breeder_zip").value 
-        document.getElementById("breeders_license_addr_PrefLicense").value = document.getElementById("breeders_addr_PrefBreeder").value 
-        document.getElementById("breeders_license_addr_license_city").value = document.getElementById("breeders_addr_breeder_city").value 
-        document.getElementById("breeders_license_addr_license_address").value = document.getElementById("breeders_addr_breeder_address").value 
+        document.getElementById("breeders_PrefLicense").value = document.getElementById("breeders_PrefBreeder").value 
+        document.getElementById("breeders_license_city").value = document.getElementById("breeders_breeder_city").value 
+        document.getElementById("breeders_license_address").value = document.getElementById("breeders_breeder_address").value 
     };
 
     $("#dogHouse").hide();

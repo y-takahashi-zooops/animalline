@@ -5,6 +5,7 @@ namespace Customize\Form\Type\Admin;
 use Customize\Entity\StockWaste;
 use Customize\Entity\StockWasteReason;
 use Customize\Repository\StockWasteReasonRepository;
+use DateTime;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Eccube\Common\EccubeConfig;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -38,7 +39,7 @@ class StockWasteType extends AbstractType
         $builder
             ->add('waste_date', DateType::class, [
                 'format' => 'yyyy-MM-dd',
-                'data' => new \DateTime(),
+                'data' => new DateTime(),
                 'required' => true,
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--']
             ])

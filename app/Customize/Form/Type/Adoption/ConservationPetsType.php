@@ -1,8 +1,10 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Adoption;
 
 use Customize\Config\AnilineConf;
+use Customize\Entity\Breeds;
+use Customize\Entity\CoatColors;
 use Customize\Entity\ConservationPets;
 use Eccube\Common\EccubeConfig;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -12,7 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -42,7 +43,7 @@ class ConservationPetsType extends AbstractType
             ])
             ->add('BreedsType', EntityType::class, [
                 'class' => 'Customize\Entity\Breeds',
-                'choice_label' => function (\Customize\Entity\Breeds $breeds) {
+                'choice_label' => function (Breeds $breeds) {
                     return $breeds->getBreedsName();
                 },
                 'required' => true,
@@ -61,7 +62,7 @@ class ConservationPetsType extends AbstractType
             ->add('pet_birthday', DateType::class)
             ->add('CoatColor', EntityType::class, [
                 'class' => 'Customize\Entity\CoatColors',
-                'choice_label' => function (\Customize\Entity\CoatColors $coatColors) {
+                'choice_label' => function (CoatColors $coatColors) {
                     return $coatColors->getCoatColorName();
                 },
                 'required' => true,
@@ -124,17 +125,17 @@ class ConservationPetsType extends AbstractType
                 ],
                 'data_class' => null
             ]);
-            /*
-            ->add('release_status', ChoiceType::class, [
-                'choices' =>
-                [
-                    '非公開' => AnilineConf::RELEASE_STATUS_PRIVATE,
-                    '公開' => AnilineConf::RELEASE_STATUS_PUBLIC
-                ]
-            ])
-            ->add('release_date', DateType::class)
-            ->add('price', IntegerType::class);
-            */
+        /*
+        ->add('release_status', ChoiceType::class, [
+            'choices' =>
+            [
+                '非公開' => AnilineConf::RELEASE_STATUS_PRIVATE,
+                '公開' => AnilineConf::RELEASE_STATUS_PUBLIC
+            ]
+        ])
+        ->add('release_date', DateType::class)
+        ->add('price', IntegerType::class);
+        */
     }
 
     public function configureOptions(OptionsResolver $resolver)

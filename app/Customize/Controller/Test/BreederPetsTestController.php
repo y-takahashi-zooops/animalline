@@ -3,7 +3,7 @@
 namespace Customize\Controller\Test;
 
 use Customize\Entity\BreederPets;
-use Customize\Form\Type\BreederPetsType;
+use Customize\Form\Type\Breeder\BreederPetsType;
 use Customize\Repository\BreederPetsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

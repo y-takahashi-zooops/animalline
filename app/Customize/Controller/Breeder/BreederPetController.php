@@ -9,7 +9,7 @@ use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Form\Type\BreederPetsType;
+use Customize\Form\Type\Breeder\BreederPetsType;
 use Customize\Entity\BreederHouse;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
@@ -390,7 +390,16 @@ class BreederPetController extends AbstractController
     public function pet_regist_list(Request $request, PaginatorInterface $paginator)
     {
         $codes = [];
-        $DnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER, 'check_status' => AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING], ['update_date' => 'DESC']);
+        $dnaCheckStatusHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id'=>$this->getUser()->getId()]);
+        $DnaCheckStatus = $this->dnaCheckStatusRepository->createQueryBuilder('dcs')
+            ->where('dcs.DnaHeader IN(:arr)')
+            ->andWhere('dcs.site_type = :siteType')
+            ->andWhere('dcs.check_status = :checkStatus')
+            ->setParameter('siteType', AnilineConf::ANILINE_SITE_TYPE_BREEDER)
+            ->setParameter('checkStatus', AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING)
+            ->setParameter('arr', $dnaCheckStatusHeaders)
+            ->addOrderBy('dcs.update_date', 'DESC')
+            ->getQuery()->getResult();
         foreach ($DnaCheckStatus as $dnaCheckStatus)
             $codes[] = '1' . str_pad($dnaCheckStatus->getId(), 5, '0', STR_PAD_LEFT);
         $barCodes = $paginator->paginate(

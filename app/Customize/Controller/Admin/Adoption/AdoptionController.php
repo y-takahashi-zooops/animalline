@@ -20,12 +20,11 @@ use Customize\Repository\ConservationsRepository;
 use Customize\Entity\Conservations;
 use Customize\Repository\CoatColorsRepository;
 use Customize\Repository\ConservationPetImageRepository;
-use Customize\Form\Type\Admin\ConservationsType;
+use Customize\Form\Type\Adoption\ConservationsType;
 use Customize\Service\AdoptionQueryService;
 use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;
 use Eccube\Repository\CustomerRepository;
-use Eccube\Repository\Master\PrefRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -134,14 +133,13 @@ class AdoptionController extends AbstractController
      * @Route("/%eccube_admin_route%/adoption/edit/{id}", name="admin_adoption_edit", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/edit.twig")
      */
-    public function Edit(Request $request, Conservations $conservation, PrefRepository $prefRepository)
+    public function Edit(Request $request, Conservations $conservation)
     {
         $form = $this->createForm(ConservationsType::class, $conservation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $pref = $prefRepository->find($request->get('conservations')['addr']['PrefId']);
-            $conservation->setPref($pref->getName());
+            $conservation->setPref($conservation->getPrefId());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservation);
             $entityManager->flush();

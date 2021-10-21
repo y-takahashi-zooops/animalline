@@ -5,10 +5,11 @@ namespace Customize\Controller\Adoption;
 use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationPetImage;
 use Customize\Entity\ConservationPets;
+use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\AdoptionQueryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Form\Type\ConservationPetsType;
+use Customize\Form\Type\Adoption\ConservationPetsType;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Repository\Master\PrefRepository;
@@ -56,6 +57,11 @@ class ConservationPetController extends AbstractController
     protected $conservationPetImageRepository;
 
     /**
+     * @var DnaCheckStatusHeaderRepository
+     */
+    protected $dnaCheckStatusHeaderRepository;
+
+    /**
      * ConservationController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
@@ -63,13 +69,15 @@ class ConservationPetController extends AbstractController
      * @param ConservationsRepository $conservationsRepository
      * @param ConservationPetImageRepository $conservationPetImageRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
+     * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      */
     public function __construct(
-        ConservationPetsRepository          $conservationPetsRepository,
-        DnaCheckStatusRepository            $dnaCheckStatusRepository,
-        ConservationsRepository             $conservationsRepository,
-        ConservationPetImageRepository      $conservationPetImageRepository,
-        PetsFavoriteRepository              $petsFavoriteRepository
+        ConservationPetsRepository     $conservationPetsRepository,
+        DnaCheckStatusRepository       $dnaCheckStatusRepository,
+        ConservationsRepository        $conservationsRepository,
+        ConservationPetImageRepository $conservationPetImageRepository,
+        PetsFavoriteRepository         $petsFavoriteRepository,
+        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
     )
     {
         $this->conservationPetsRepository = $conservationPetsRepository;
@@ -77,6 +85,7 @@ class ConservationPetController extends AbstractController
         $this->conservationsRepository = $conservationsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
+        $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
     }
 
     /**
@@ -353,7 +362,16 @@ class ConservationPetController extends AbstractController
     public function pet_regist_list(Request $request, PaginatorInterface $paginator)
     {
         $codes = [];
-        $DnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION, 'check_status' => AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING], ['update_date' => 'DESC']);
+        $dnaCheckStatusHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id'=>$this->getUser()->getId()]);
+        $DnaCheckStatus = $this->dnaCheckStatusRepository->createQueryBuilder('dcs')
+            ->where('dcs.DnaHeader IN(:arr)')
+            ->andWhere('dcs.site_type = :siteType')
+            ->andWhere('dcs.check_status = :checkStatus')
+            ->setParameter('siteType', AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
+            ->setParameter('checkStatus', AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING)
+            ->setParameter('arr', $dnaCheckStatusHeaders)
+            ->addOrderBy('dcs.update_date', 'DESC')
+            ->getQuery()->getResult();
         foreach ($DnaCheckStatus as $dnaCheckStatus)
             $codes[] = '2' . str_pad($dnaCheckStatus->getId(), 5, '0', STR_PAD_LEFT);
         $barCodes = $paginator->paginate(

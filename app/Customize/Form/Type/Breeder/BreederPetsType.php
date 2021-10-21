@@ -1,8 +1,12 @@
 <?php
 
-namespace Customize\Form\Type;
+namespace Customize\Form\Type\Breeder;
 
 use Customize\Entity\BreederPets;
+use Customize\Entity\Breeds;
+use Customize\Entity\CoatColors;
+use Customize\Entity\Pedigree;
+use DateTime;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -36,7 +40,7 @@ class BreederPetsType extends AbstractType
         $builder
             ->add('breeds_type', EntityType::class, [
                 'class' => 'Customize\Entity\Breeds',
-                'choice_label' => function (\Customize\Entity\Breeds $breeds) {
+                'choice_label' => function (Breeds $breeds) {
                     return $breeds->getBreedsName();
                 },
                 'required' => true,
@@ -53,18 +57,32 @@ class BreederPetsType extends AbstractType
                 'required' => true,
             ])
             ->add('pet_birthday', DateType::class, [
-                'data' => new \DateTime(),
+                'data' => new DateTime(),
                 'years' => range(date('Y'), 1990),
+            ])
+            ->add('band_color', ChoiceType::class, [
+                'choices' =>
+                [
+                    '赤' => AnilineConf::ANILINE_BAND_COLOR_RED,
+                    '青' => AnilineConf::ANILINE_BAND_COLOR_BLUE,
+                    '緑' => AnilineConf::ANILINE_BAND_COLOR_GREEN,
+                    '黄色' => AnilineConf::ANILINE_BAND_COLOR_YELLOW,
+                    'ピンク' => AnilineConf::ANILINE_BAND_COLOR_PINK,
+                    'オレンジ' => AnilineConf::ANILINE_BAND_COLOR_ORANGE
+                ],
+                'required' => false,
+                'placeholder' => 'common.select'
             ])
             ->add('coat_color', EntityType::class, [
                 'class' => 'Customize\Entity\CoatColors',
-                'choice_label' => function (\Customize\Entity\CoatColors $coatColors) {
+                'choice_label' => function (CoatColors $coatColors) {
                     return $coatColors->getCoatColorName();
                 },
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
+                'placeholder' => 'common.select'
             ])
             ->add('future_wait', IntegerType::class, [
                 'required' => false,
@@ -101,7 +119,7 @@ class BreederPetsType extends AbstractType
             ])
             ->add('Pedigree', EntityType::class, [
                 'class' => 'Customize\Entity\Pedigree',
-                'choice_label' => function (\Customize\Entity\Pedigree $petdigree) {
+                'choice_label' => function (Pedigree $petdigree) {
                     return $petdigree->getPedigreeName();
                 },
                 'required' => false,
@@ -171,26 +189,25 @@ class BreederPetsType extends AbstractType
             ])
             ->add('price', IntegerType::class);
 
-            $customer = $options['customer'];
-            $breeder = $this->breedersRepository->find($customer);
-            $handling_pet_kind = $breeder->getHandlingPetKind();
-            if( $handling_pet_kind == 0 ){
-                $choices = [
+        $customer = $options['customer'];
+        $breeder = $this->breedersRepository->find($customer);
+        $handling_pet_kind = $breeder->getHandlingPetKind();
+        if ($handling_pet_kind == 0) {
+            $choices = [
                     '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
                     '猫' => AnilineConf::ANILINE_PET_KIND_CAT
                 ];
-            } elseif( $handling_pet_kind == 1 ){
-                $choices = ['犬' => AnilineConf::ANILINE_PET_KIND_DOG,];
-            } elseif( $handling_pet_kind == 2 ){
-                $choices = ['猫' => AnilineConf::ANILINE_PET_KIND_CAT];
-            }
+        } elseif ($handling_pet_kind == 1) {
+            $choices = ['犬' => AnilineConf::ANILINE_PET_KIND_DOG,];
+        } elseif ($handling_pet_kind == 2) {
+            $choices = ['猫' => AnilineConf::ANILINE_PET_KIND_CAT];
+        }
 
-            $builder
+        $builder
             ->add('pet_kind', ChoiceType::class, [
                 'choices' => $choices,
                 'required' => true,
             ]);
-
     }
 
     public function configureOptions(OptionsResolver $resolver)

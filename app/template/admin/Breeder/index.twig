@@ -88,7 +88,7 @@ file that was distributed with this source code.
                                             href="{{ url('admin_breeder_list', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
-                                            <a class="{{ column == 'examination_status' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                            class="{{ column == 'examination_status' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_breeder_list', params|merge({'field': 'examination_status', 'direction': direction})) }}">ステータス</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
