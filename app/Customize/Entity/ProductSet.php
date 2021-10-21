@@ -30,19 +30,19 @@ class ProductSet
     private $ParentProduct;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ProductClass::class)
+     * @ORM\ManyToOne(targetEntity=ProductClass::class, inversedBy="ProductSet")
      * @ORM\JoinColumn(name="parent_product_class_id", nullable=true)
      */
     private $ParentProductClass;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="ProductSet")
+     * @ORM\ManyToOne(targetEntity=Product::class)
      * @ORM\JoinColumn(name="product_id", nullable=true)
      */
     private $Product;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ProductClass::class, inversedBy="ProductSet")
+     * @ORM\ManyToOne(targetEntity=ProductClass::class)
      * @ORM\JoinColumn(name="product_class_id", nullable=true)
      */
     private $ProductClass;
@@ -107,12 +107,12 @@ class ProductSet
         return $this;
     }
 
-    public function getProductClassId(): ?ProductClass
+    public function getProductClass(): ?ProductClass
     {
         return $this->ProductClass;
     }
 
-    public function setProductClassId(ProductClass $ProductClass): self
+    public function setProductClass(ProductClass $ProductClass): self
     {
         $this->ProductClass = $ProductClass;
 

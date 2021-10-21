@@ -92,17 +92,17 @@ class ProductSetController extends AbstractController
             $item->setOrderItemType($this->orderItemTypeRepository->find(1));
             $item->setQuantity($set->getSetUnit());
             $item->setProduct($set->getProduct());
-            $item->setPrice($set->getProductClassId()->getPrice02());
-            $item->setProductClass($set->getProductClassId());
+            $item->setPrice($set->getProductClass()->getPrice02());
+            $item->setProductClass($set->getProductClass());
             $item->setProductName($set->getProduct()->getName());
-            $item->setProductCode($set->getProductClassId()->getCode());
-            if ($set->getProductClassId()->getClassCategory1()) {
+            $item->setProductCode($set->getProductClass()->getCode());
+            if ($set->getProductClass()->getClassCategory1()) {
                 $item->setClassName1('フレーバー');
-                $item->setClassCategoryName1($set->getProductClassId()->getClassCategory1()->getName());
+                $item->setClassCategoryName1($set->getProductClass()->getClassCategory1()->getName());
             }
-            if ($set->getProductClassId()->getClassCategory2()) {
+            if ($set->getProductClass()->getClassCategory2()) {
                 $item->setClassName2('サイズ');
-                $item->setClassCategoryName2($set->getProductClassId()->getClassCategory2()->getName());
+                $item->setClassCategoryName2($set->getProductClass()->getClassCategory2()->getName());
             }
             $OriginSets->add($item);
         }
@@ -136,7 +136,7 @@ class ProductSetController extends AbstractController
                                     ->setParentProduct($Product)
                                     ->setParentProductClass($ProductClass)
                                     ->setProduct($item->getProduct())
-                                    ->setProductClassId($item->getProductClass());
+                                    ->setProductClass($item->getProductClass());
                             }
                             $this->entityManager->persist($ProductSet);
                         }
