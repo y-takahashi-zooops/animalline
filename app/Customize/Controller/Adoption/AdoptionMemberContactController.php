@@ -2,31 +2,29 @@
 
 namespace Customize\Controller\Adoption;
 
-use Carbon\Carbon;
 use Customize\Config\AnilineConf;
-use Customize\Entity\ConservationContactHeader;
-use Customize\Entity\ConservationContacts;
-use Customize\Repository\ConservationContactsRepository;
-use Customize\Repository\ConservationPetsRepository;
-use Eccube\Controller\AbstractController;
+use Carbon\Carbon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Customize\Entity\ConservationContacts;
+use Customize\Entity\ConservationContactHeader;
+use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\ConservationContactHeaderRepository;
+use Customize\Repository\ConservationContactsRepository;
+use Customize\Repository\SendoffReasonRepository;
+use Customize\Repository\ConservationsRepository;
+use Eccube\Repository\CustomerRepository;
+use Eccube\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\ConservationContactType;
-use Customize\Repository\ConservationContactHeaderRepository;
-use Customize\Repository\SendoffReasonRepository;
+
 use DateTime;
 
 class AdoptionMemberContactController extends AbstractController
 {
-    /**
-     * @var ConservationPetsRepository
-     */
-    protected $conservationPetsRepository;
-
     /**
      * @var ConservationContactHeaderRepository
      */
@@ -43,27 +41,48 @@ class AdoptionMemberContactController extends AbstractController
     protected $sendoffReasonRepository;
 
     /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
+     * @var ConservationPetsRepository
+     */
+    protected $conservationPetsRepository;
+
+    /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
-     * @param ConservationPetsRepository $conservationPetsRepository
      * @param ConservationContactsRepository $conservationContactsRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
+     * @param ConservationsRepository $conservationsRepository
+     * @param ConservationPetsRepository $conservationPetsRepository
+     * @param CustomerRepository $customerRepository
      */
     public function __construct(
-        ConservationPetsRepository     $conservationPetsRepository,
-        ConservationContactsRepository $conservationContactsRepository,
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
-        SendoffReasonRepository             $sendoffReasonRepository
-    ) {
-        $this->conservationPetsRepository = $conservationPetsRepository;
-        $this->conservationContactsRepository = $conservationContactsRepository;
+        ConservationContactsRepository $conservationContactsRepository,
+        SendoffReasonRepository        $sendoffReasonRepository,
+        ConservationsRepository        $conservationsRepository,
+        ConservationPetsRepository     $conservationPetsRepository,
+        CustomerRepository             $customerRepository
+    ){
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
+        $this->conservationContactsRepository = $conservationContactsRepository;
         $this->sendoffReasonRepository = $sendoffReasonRepository;
+        $this->conservationsRepository = $conservationsRepository;
+        $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
-     * 取引メッセージ一覧
+     * ユーザー側取引メッセージ一覧
      *
      * @Route("/adoption/member/all_message", name="adoption_all_message")
      * @Template("animalline/adoption/member/adoption_message.twig")
@@ -76,54 +95,113 @@ class AdoptionMemberContactController extends AbstractController
             'listMessages' => $listMessages
         ]);
     }
+
     /**
-     * 取引メッセージ画面
+     * ユーザー側取引メッセージ画面
      *
      * @Route("/adoption/member/message/{id}", name="adoption_message", requirements={"id" = "\d+"})
      * @Template("animalline/adoption/member/message.twig")
      */
-    public function adoption_message(Request $request, ConservationContactHeader $rootMessage)
+    public function message(Request $request, ConservationContactHeader $msgHeader)
     {
         $isScroll = false;
-        if ($request->isMethod('POST')) {
-            $replyMessage = $request->get('reply_message');
-            $now = new DateTime();
+        $msgHeader->setCustomerNewMsg(0);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($msgHeader);
+        $entityManager->flush();
 
+        $reasonCancel = $request->get('reason');
+        $replyMessage = $request->get('reply_message');
+        if ($replyMessage) {
             $conservationContact = (new ConservationContacts())
-                ->setConservationHeader($rootMessage)
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
                 ->setContactDescription($replyMessage)
-                ->setSendDate($now);
+                ->setSendDate(Carbon::now())
+                ->setConservationHeader($msgHeader);
 
-            $rootMessage->setConservationNewMsg(1);
-            $rootMessage->setLastMessageDate($now);
+            $msgHeader->setConservationNewMsg(1)
+                ->setLastMessageDate(Carbon::now());
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationContact);
-            $entityManager->persist($rootMessage);
+            $entityManager->persist($msgHeader);
+            $entityManager->flush();
+            $isScroll = true;
+        }
+        if ($reasonCancel) {
+            $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT)
+                ->setConservationNewMsg(1)
+                ->setSendoffReason($reasonCancel)
+                ->setLastMessageDate(Carbon::now());
+
+            $conservationContact = (new ConservationContacts())
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
+                ->setContactDescription('今回の取引は非成立となりました')
+                ->setSendDate(Carbon::now())
+                ->setConservationHeader($msgHeader);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($msgHeader);
+            $entityManager->persist($conservationContact);
             $entityManager->flush();
 
-            $isScroll = true;
-        } else if ($rootMessage->getCustomerNewMsg()) {
-            $rootMessage->setCustomerNewMsg(0);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($rootMessage);
-            $entityManager->flush();
+            return $this->redirectToRoute('adoption_all_message');
         }
 
-        $childMessages = $this->conservationContactsRepository->findBy(['ConservationHeader' => $rootMessage], ['send_date' => 'ASC']);
-        $pet = $rootMessage->getPet();
-        $conservation = $rootMessage->getConservation();
-        $reasons = $this->sendoffReasonRepository->findBy(['is_adoption_visible' => AnilineConf::ADOPTION_VISIBLE_SHOW]);
+        $user = $this->getUser();
+        $Customer = $this->customerRepository->find($user);
+        $listMsg = $this->conservationContactsRepository->findBy(['ConservationHeader' => $msgHeader], ['send_date' => 'ASC']);
+        $reasons = $this->sendoffReasonRepository->findBy(['is_adoption_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
 
-        return compact(
-            'rootMessage',
-            'childMessages',
-            'pet',
-            'conservation',
-            'reasons',
-            'isScroll'
-        );
+        return $this->render('animalline/adoption/member/message.twig', [
+            'Customer' => $Customer,
+            'pet' => $msgHeader->getPet(),
+            'conservation' => $msgHeader->getConservation(),
+            'message' => $msgHeader,
+            'listMsg' => $listMsg,
+            'reasons' => $reasons,
+            'isScroll' => $isScroll
+        ]);
+
+        // if ($request->isMethod('POST')) {
+        //     $replyMessage = $request->get('reply_message');
+        //     $now = new DateTime();
+
+        //     $conservationContact = (new ConservationContacts())
+        //         ->setConservationHeader($rootMessage)
+        //         ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
+        //         ->setContactDescription($replyMessage)
+        //         ->setSendDate($now);
+
+        //     $rootMessage->setConservationNewMsg(1);
+        //     $rootMessage->setLastMessageDate($now);
+
+        //     $entityManager = $this->getDoctrine()->getManager();
+        //     $entityManager->persist($conservationContact);
+        //     $entityManager->persist($rootMessage);
+        //     $entityManager->flush();
+
+        //     $isScroll = true;
+        // } else if ($rootMessage->getCustomerNewMsg()) {
+        //     $rootMessage->setCustomerNewMsg(0);
+        //     $entityManager = $this->getDoctrine()->getManager();
+        //     $entityManager->persist($rootMessage);
+        //     $entityManager->flush();
+        // }
+
+        // $childMessages = $this->conservationContactsRepository->findBy(['ConservationHeader' => $rootMessage], ['send_date' => 'ASC']);
+        // $pet = $rootMessage->getPet();
+        // $conservation = $rootMessage->getConservation();
+        // $reasons = $this->sendoffReasonRepository->findBy(['is_adoption_visible' => AnilineConf::ADOPTION_VISIBLE_SHOW]);
+
+        // return compact(
+        //     'rootMessage',
+        //     'childMessages',
+        //     'pet',
+        //     'conservation',
+        //     'reasons',
+        //     'isScroll'
+        // );
     }
 
     /**

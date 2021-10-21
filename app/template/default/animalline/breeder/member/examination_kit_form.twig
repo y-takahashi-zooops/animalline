@@ -206,11 +206,12 @@ $("#confirm-back").click(function () {
 function textCheck($this)
 {
   let str=$this.value;
-  // 文頭から文末まで全て0-9かチェック
+  // 数字チェック
   if(!str.match(/^[0-9０-９]+$/)){
-    // そうでなければ入力文字を空白に変換
+    // 文字の場合は空白に変換
     str="";
   } else if(str.match(/^[０-９]+$/)){
+    // 全角数字の場合は半角数字に変換
     str=toHanKaku(str);
   }
   $this.value=str;
@@ -222,9 +223,10 @@ function toHanKaku(str) {
     });
 }
 
-var tagInput = $('.petCount'); 
-var tagOutput = $('#breeder_kit_dna_kit_unit');
-tagInput.on('change', function() {
+// 出生数の合計を合計頭数にする
+var Input = $('.petCount'); 
+var Output = $('#breeder_kit_dna_kit_unit');
+Input.on('change', function() {
     var num1 = Number($('#petCount1').val());
     var num2 = Number($('#petCount2').val());
     var num3 = Number($('#petCount3').val());
@@ -232,7 +234,7 @@ tagInput.on('change', function() {
     var num5 = Number($('#petCount5').val());
     var num6 = Number($('#petCount6').val());
     var total = num1 + num2 + num3 + num4 + num5 + num6;
-    tagOutput.val(total);
+    Output.val(total);
 });
 
 </script>

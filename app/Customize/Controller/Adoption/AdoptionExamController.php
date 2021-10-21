@@ -50,14 +50,22 @@ class AdoptionExamController extends AbstractController
 
         $step = 1;
 
+        $regcheck[1] = 0;
+        $regcheck[2] = 0;
+        $regcheck[3] = 0;
+
         // 基本情報が登録済みであればSTEP2を表示
         if ($conservation) {
             $step = 2;
+            $regcheck[1] = 1;
 
             // 基本情報の取扱ペットに対応する犬舎・猫舎情報が登録されていればSTEP3を表示
             $handling_pet_kind = $conservation->getHandlingPetKind();
             $dog_house_info = $this->conservationsHouseRepository->findOneBy(["Conservation" => $conservation, "pet_type" => 1]);
             $cat_house_info = $this->conservationsHouseRepository->findOneBy(["Conservation" => $conservation, "pet_type" => 2]);
+
+            if($dog_house_info){$regcheck[2] = 1;}
+            if($cat_house_info){$regcheck[3] = 1;}
 
             // if($handling_pet_kind == 0 && $cat_house_info && $dog_house_info){$step = 3;}
             // if($handling_pet_kind == 1 && $dog_house_info){$step = 3;}
@@ -94,6 +102,7 @@ class AdoptionExamController extends AbstractController
             'user' => $user,
             'conservation' => $conservation,
             'step' => $step,
+            'regcheck' => $regcheck,
         ]);
     }
 

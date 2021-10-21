@@ -6,11 +6,11 @@
     <div class="row">
         <div class="main-container col-12">
             <h1>保護団体登録申請</h1>
-
             <div class="row">
                 <div class="col-lg-4"></div>
                 <div class="col-lg-4 col-md-12">
                     <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{url('adoption_baseinfo')}}'"> 
+                        {% if regcheck[1] == 1 %}<i class="fas fa-check-circle mypage-checkmark"></i>{% endif %}
                         Step1 - サイト表示情報入力
                     </button>
                 </div>
@@ -23,6 +23,7 @@
                         <div class="col-lg-4"></div>
                         <div class="col-lg-4 col-md-12">
                             <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_house_info',{'pet_type': 1 })}}'"> 
+                                {% if regcheck[2] == 1 %}<i class="fas fa-check-circle mypage-checkmark"></i>{% endif %}
                                 Step2 - 犬舎情報登録
                             </button>
                         </div>
@@ -33,6 +34,7 @@
                     <div class="col-lg-4"></div>
                         <div class="col-lg-4 col-md-12">
                             <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_house_info',{'pet_type': 2 })}}'"> 
+                                {% if regcheck[3] == 1 %}<i class="fas fa-check-circle mypage-checkmark"></i>{% endif %}
                                 Step2 - 猫舎情報登録
                             </button>
                         </div>
@@ -77,7 +79,6 @@
                     </div>
                 </div>
             {% endif %}
-            
             {% if step > 4 %}
                 <div class="row">
                     <div class="col-lg-4"></div>
@@ -91,7 +92,7 @@
         </div>
     </div>
 </div>
-{{ include('animalline/components/_modal_submit_confirm.twig') }}
+{{ include('animalline/components/_modal_exam_confirm.twig') }}
 
 {% endblock %}
 {% block stylesheet %}
@@ -104,6 +105,7 @@
     step = document.getElementById('step').value
     if( step > 4){
         $('.btn-warning').attr('disabled', true);
+        $('.btn-danger').attr('disabled', true);
     }
 
     document.getElementById("submit").onclick = function() {
