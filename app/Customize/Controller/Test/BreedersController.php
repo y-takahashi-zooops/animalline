@@ -3,7 +3,7 @@
 namespace Customize\Controller\Test;
 
 use Customize\Entity\Breeders;
-use Customize\Form\Type\BreedersType;
+use Customize\Form\Type\Breeder\BreedersType;
 use Customize\Repository\BreedersRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

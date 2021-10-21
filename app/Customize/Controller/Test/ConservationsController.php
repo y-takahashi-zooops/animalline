@@ -3,7 +3,7 @@
 namespace Customize\Controller\Test;
 
 use Customize\Entity\Conservations;
-use Customize\Form\Type\ConservationsType;
+use Customize\Form\Type\Adoption\ConservationsType;
 use Customize\Repository\ConservationsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

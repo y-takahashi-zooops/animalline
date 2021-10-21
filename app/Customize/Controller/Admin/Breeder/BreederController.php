@@ -13,7 +13,7 @@
 
 namespace Customize\Controller\Admin\Breeder;
 
-use Customize\Form\Type\AdminBreederType;
+use Customize\Form\Type\Admin\BreedersType;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederPetsRepository;
@@ -176,7 +176,7 @@ class BreederController extends AbstractController
     {
         $breederData = $breedersRepository->find($request->get('id'));
 
-        $builder = $this->formFactory->createBuilder(AdminBreederType::class, $breederData);
+        $builder = $this->formFactory->createBuilder(BreedersType::class, $breederData);
 
         $form = $builder->getForm();
         $form->handleRequest($request);

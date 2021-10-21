@@ -5,7 +5,7 @@ namespace Customize\Controller\Test;
 use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationPets;
 use Customize\Entity\ConservationPetImage;
-use Customize\Form\Type\ConservationPetsType;
+use Customize\Form\Type\Adoption\ConservationPetsType;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

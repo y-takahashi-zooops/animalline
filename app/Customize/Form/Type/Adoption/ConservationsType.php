@@ -1,16 +1,16 @@
 <?php
 
-namespace Customize\Form\Type\Admin;
+namespace Customize\Form\Type\Adoption;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\Conservations;
-use Customize\Form\Type\Adoption\ConservationAddressType;
 use Eccube\Common\EccubeConfig;
+use Eccube\Form\Type\Master\PrefType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,32 +32,39 @@ class ConservationsType extends AbstractType
         $builder
             ->add('is_organization', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '個人' => AnilineConf::ANILINE_ORGANIZATION_PERSONAL,
-                        '団体' => AnilineConf::ANILINE_ORGANIZATION_GROUP
-                    ],
+                [
+                    '個人' => AnilineConf::ANILINE_ORGANIZATION_PERSONAL,
+                    '団体' => AnilineConf::ANILINE_ORGANIZATION_GROUP
+                ],
                 'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
             ])
             ->add('organization_name', TextType::class, [
+                'required' => true,
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
                 'constraints' => [
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ])
+                    ]),
+                    new Assert\NotBlank()
                 ]
             ])
             ->add('handling_pet_kind', ChoiceType::class, [
                 'choices' =>
-                [
-                    '犬・猫' => AnilineConf::ANILINE_PET_KIND_DOG_CAT,
-                    '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
-                    '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+                    [
+                        '犬・猫' => AnilineConf::ANILINE_PET_KIND_DOG_CAT,
+                        '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
+                        '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+                    ],
+                'required' => true,
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank()
                 ]
-            ])
-            ->add('thumbnail_path', HiddenType::class, [
-                'required' => false
             ])
             ->add('owner_name', TextType::class, [
                 'attr' => [
@@ -78,17 +85,44 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                    new Assert\NotBlank(),
                     new Assert\Regex([
                         'pattern' => '/^[ァ-ヶｦ-ﾟー 　]+$/u',
                         'message' => 'form_error.kana_only',
-                    ])
+                    ]),
+                    new Assert\NotBlank()
                 ]
             ])
-            ->add('addr', ConservationAddressType::class)
+            ->add('PrefId', PrefType::class, [
+                'attr' => ['class' => 'p-region-id'],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('city', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                    'class' => 'p-locality',
+                    'placeholder' => 'common.address_sample_01',
+                ],
+            ])
+            ->add('address', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                    'class' => 'p-street-address p-extended-address',
+                    'placeholder' => 'common.address_sample_02',
+                ],
+            ])
             ->add('zip', TextType::class, [
                 'trim' => true,
-                'required' => true,
+                'required' => false,
                 'attr' => [
                     'maxlength' => 7,
                     'class' => 'p-postal-code',
@@ -123,8 +157,8 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('fax', TextType::class, [
-                'required' => false,
                 'trim' => true,
+                'required' => false,
                 'attr' => [
                     'maxlength' => 11,
                     'placeholder' => 'common.phone_number_sample',
@@ -148,21 +182,10 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                ]
-            ])
-            ->add('is_active', ChoiceType::class, [
-                'choices' =>
-                [
-                    '公開' => AnilineConf::PUBLIC_FLAG_RELEASE,
-                    '非公開' => AnilineConf::PUBLIC_FLAG_PRIVATE,
-                ],
-            ])
-            ->add('examination_status', ChoiceType::class, [
-                'choices' =>
-                [
-                    '審査中' => AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK,
-                    '審査OK' => AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK,
-                    '審査NG' => AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG
+                    new Assert\Regex([
+                        'pattern' => '/^http/',
+                        'message' => 'http://もしくはhttps://から入力してください。',
+                    ]),
                 ]
             ])
             ->add('pr_text', TextareaType::class, [
@@ -171,7 +194,13 @@ class ConservationsType extends AbstractType
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
-                ]]);
+                ]
+            ])
+            ->add('thumbnail_path', FileType::class, [
+                // 'required' => false,
+                'required' => true,
+                'mapped' => false
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

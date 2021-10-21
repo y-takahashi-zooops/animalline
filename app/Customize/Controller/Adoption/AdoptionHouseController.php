@@ -3,7 +3,7 @@
 namespace Customize\Controller\Adoption;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Form\Type\ConservationHouseType;
+use Customize\Form\Type\Adoption\ConservationHouseType;
 use Customize\Entity\ConservationsHouse;
 use Customize\Repository\ConservationsRepository;
 use Customize\Repository\ConservationsHousesRepository;
@@ -57,12 +57,9 @@ class AdoptionHouseController extends AbstractController
         $form = $builder->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $address = $request->get('conservation_house')['address'];
             $conservationsHouse->setConservation($conservation)
                 ->setPetType($petType)
-                ->setConservationHousePref($conservationsHouse->getPref()->getName())
-                ->setConservationHouseCity($address['conservation_house_city'])
-                ->setConservationHouseAddress($address['conservation_house_address']);
+                ->setConservationHousePref($conservationsHouse->getPref());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationsHouse);
             $entityManager->flush();

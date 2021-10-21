@@ -172,4 +172,11 @@ final class AnilineConf
 
     const ANILINE_IS_ACTIVE_PUBLIC = 1;
     const ANILINE_IS_ACTIVE_PRIVATE = 0;
+
+    const ANILINE_BAND_COLOR_RED = 1;
+    const ANILINE_BAND_COLOR_BLUE = 2;
+    const ANILINE_BAND_COLOR_GREEN = 3;
+    const ANILINE_BAND_COLOR_YELLOW = 4;
+    const ANILINE_BAND_COLOR_PINK = 5;
+    const ANILINE_BAND_COLOR_ORANGE = 6;
 }
