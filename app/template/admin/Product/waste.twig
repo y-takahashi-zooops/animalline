@@ -62,6 +62,24 @@ file that was distributed with this source code.
                 alert('search product failed.');
             });
         });
+
+        $(document).on('change', 'select[name=year_from]', function(){
+        if (isNaN(parseInt($(this).val()))) {
+            $('select[name=month_from]').val('')
+            $('select[name=month_from]').attr('disabled', 'true')
+        } else {
+            $('select[name=month_from]').removeAttr('disabled')
+        }
+      });
+
+       $(document).on('change', 'select[name=year_to]', function(){
+        if (isNaN(parseInt($(this).val()))) {
+            $('select[name=month_to]').val('')
+            $('select[name=month_to]').attr('disabled', 'true')
+        } else {
+            $('select[name=month_to]').removeAttr('disabled')
+        }
+      });
     </script>
 {% endblock %}
 
@@ -84,7 +102,7 @@ file that was distributed with this source code.
                                                 <option value="{{ i }}" {{ params.year_from is defined and params.year_from == i ? 'selected' }}>{{ i }}</option>
                                             {% endfor %}
                                         </select><span>&nbsp;/&nbsp;</span>
-                                        <select class="form-control" name="month_from">
+                                        <select class="form-control" name="month_from" {{ params.month_from is not defined ? 'disabled' }}>
                                             <option value="">--</option>
                                             {% for i in 1..12 %}
                                                 <option value="{{ i }}" {{ params.month_from is defined and params.month_from == i ? 'selected' }}>{{ i }}</option>
@@ -101,7 +119,7 @@ file that was distributed with this source code.
                                                 <option value="{{ i }}" {{ params.year_to is defined and params.year_to == i ? 'selected' }}>{{ i }}</option>
                                             {% endfor %}
                                         </select><span>&nbsp;/&nbsp;</span>
-                                        <select class="form-control" name="month_to">
+                                        <select class="form-control" name="month_to" {{ params.month_to is not defined ? 'disabled' }}>
                                             <option value="">--</option>
                                             {% for i in 1..12 %}
                                                 <option value="{{ i }}" {{ params.month_to is defined and params.month_to == i ? 'selected' }}>{{ i }}</option>
