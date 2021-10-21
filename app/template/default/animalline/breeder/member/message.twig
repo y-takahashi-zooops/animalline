@@ -158,7 +158,7 @@
                                                 onclick="location.href='{{ url('breeder_contract', {'pet_id': message.pet.id}) }}'">
                                                 取引成約を報告する
                                             </button>
-                                            <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">
+                                            <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">
                                                 取引は成約しませんでした
                                             </button>
                                         </div>

@@ -141,10 +141,11 @@
                                         <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">返信メッセージ送信</button>
                                         ここに取引が完了した際の報告で特典が受けられることの説明を表記する
                                         <div class="d-flex">
-                                            <button type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">
+                                            <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--action mt-2 mr-2"
+                                                type="button" id="contract">
                                                 取引成約を報告する
                                             </button>
-                                            <button type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">
+                                            <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">
                                                 取引は成約しませんでした
                                             </button>
                                         </div>

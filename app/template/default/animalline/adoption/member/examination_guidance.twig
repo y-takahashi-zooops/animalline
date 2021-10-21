@@ -1,0 +1,45 @@
+{% set site_type = 'adoption' %}
+{% extends 'animalline/adoption/frame.twig' %}
+
+{% block main %}
+    <div class="ec-role">
+        <div class="ec-pageHeader">
+            <h1>ペット追加</h1>
+        </div>
+    </div>
+    <div class="ec-registerCompleteRole">
+        <div class="ec-off3Grid ec-text-ac">
+            <div class="ec-off3Grid__cell">
+                <div class="ec-reportHeading">
+                    <h2>
+                    {% if conservation.ExaminationStatus == 1 %}
+                        審査結果の通知をお待ちください。<br/>
+                    {% elseif conservation.ExaminationStatus == 0 %}
+                        審査結果の登録をお願いします。<br/>
+                    {% endif %}
+                        審査が通りましたら、ペットの追加が行えます。
+                    </h2>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="ec-off2Grid">
+                    <div class="ec-off2Grid__cell">
+                    {% if conservation.ExaminationStatus == 1 %}
+                        <a class="ec-blockBtn--cancel mb-4" href="{{ url('adoption_top') }}">
+                            TOPページへ戻る
+                        </a>
+                    {% elseif conservation.ExaminationStatus == 0 %}
+                        <a class="ec-blockBtn--cancel mb-4" href="{{ url('adoption_examination') }}">
+                            審査情報登録
+                        </a>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
+    
