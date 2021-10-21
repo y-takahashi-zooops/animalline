@@ -102,7 +102,7 @@ class Conservations
     /**
      * @ORM\Column(name="handling_pet_kind", type="smallint", options={"default" = 0})
      */
-    private $handling_pet_kind = 0;
+    private $handling_pet_kind;
 
     /**
      * @ORM\Column(name="pr_text", type="text", nullable=true)

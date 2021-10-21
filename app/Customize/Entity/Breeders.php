@@ -159,7 +159,7 @@ class Breeders
     /**
      * @ORM\Column(name="handling_pet_kind", type="smallint", options={"default" = 0})
      */
-    private $handling_pet_kind = 0;
+    private $handling_pet_kind;
 
     /**
      * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)

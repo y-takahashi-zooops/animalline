@@ -1,6 +1,7 @@
-{% form_theme form 'Form/form_div_layout.twig' %}
 {% set site_type = 'breeder' %}
 {% extends 'animalline/breeder/frame.twig' %}
+
+{% form_theme form 'Form/form_div_layout.twig' %}
 
 {% block main %}
 	<section id="breeder-column" class="breeder-column_dog">
@@ -13,6 +14,18 @@
                     <form method="post" action="#" novalidate name="update-baseinfo-form">
 						<span class="p-country-name" style="display:none;">Japan</span>
                         <h2>ブリーダー情報</h2>
+						<button class="btn btn-ec-regular btn-secondary mt-2 mb-2" id="baseInfoCopy" type="button">
+							基本情報コピー
+						</button>
+						{# ユーザー情報コピー用フィールド #}
+						<input type="hidden" id="customer_name" value="{{Customer.name01}}{{Customer.name02}}">
+						<input type="hidden" id="customer_kana" value="{{Customer.kana01}}{{Customer.kana02}}">
+						<input type="hidden" id="customer_zip" value="{{Customer.postalCode}}">
+						<input type="hidden" id="customer_pref" value="{{Customer.Pref.Id}}">
+						<input type="hidden" id="customer_city" value="{{Customer.addr01}}">
+						<input type="hidden" id="customer_address" value="{{Customer.addr02}}">
+						<input type="hidden" id="customer_tel" value="{{Customer.phoneNumber}}">
+						{# ユーザー情報コピー用フィールド #}
 						{{ form_widget(form._token) }}
 						<div class="ec-borderedDefs">
 							<div class="mb-5">
@@ -393,6 +406,17 @@
 <script src="{{ asset('assets/js/baseinfo.js') }}"></script>
 
 <script>
+    document.getElementById("baseInfoCopy").onclick = function() {
+        // ユーザー情報をブリーダー情報にコピー
+        document.getElementById("breeders_breeder_name").value = document.getElementById("customer_name").value 
+        document.getElementById("breeders_breeder_kana").value = document.getElementById("customer_kana").value 
+        document.getElementById("breeders_breeder_zip").value = document.getElementById("customer_zip").value 
+        document.getElementById("breeders_addr_PrefBreeder").value = document.getElementById("customer_pref").value 
+        document.getElementById("breeders_addr_breeder_city").value = document.getElementById("customer_city").value 
+        document.getElementById("breeders_addr_breeder_address").value = document.getElementById("customer_address").value 
+        document.getElementById("breeders_breeder_tel").value = document.getElementById("customer_tel").value 
+    };
+
     document.getElementById("copy").onclick = function() {
         // ブリーダー情報をライセンス情報にコピー
         document.getElementById("breeders_license_name").value = document.getElementById("breeders_breeder_name").value 
@@ -416,18 +440,18 @@
         if( pet_kind == 0 ){
             $("#dogHouse").show();
             $("#catHouse").show();
-            $("#breeders_breeder_house_name_dog").prop('disabled', false).prop('required', true);
-            $("#breeders_breeder_house_name_cat").prop('disabled', false).prop('required', true);
+            $("#breeders_breeder_house_name_dog").prop('required', true);
+            $("#breeders_breeder_house_name_cat").prop('required', true);
         } else if( pet_kind == 1 ){
             $("#dogHouse").show();
             $("#catHouse").hide();
-            $("#breeders_breeder_house_name_dog").prop('disabled', false).prop('required', true);
-            $("#breeders_breeder_house_name_cat").prop('disabled', true).prop('required', false);
+            $("#breeders_breeder_house_name_dog").prop('required', true);
+            $("#breeders_breeder_house_name_cat").prop('required', false);
         } else if ( pet_kind == 2 ){
             $("#dogHouse").hide();
             $("#catHouse").show();
-            $("#breeders_breeder_house_name_dog").prop('disabled', true).prop('required', false);
-            $("#breeders_breeder_house_name_cat").prop('disabled', false).prop('required', true);
+            $("#breeders_breeder_house_name_dog").prop('required', false);
+            $("#breeders_breeder_house_name_cat").prop('required', true);
         }
     };
 
