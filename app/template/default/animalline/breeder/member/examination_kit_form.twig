@@ -222,9 +222,9 @@ function toHanKaku(str) {
     });
 }
 
-var tagInput = $('.petCount'); 
-var tagOutput = $('#breeder_kit_dna_kit_unit');
-tagInput.on('change', function() {
+var Input = $('.petCount'); 
+var Output = $('#dna_check_status_header_kit_unit');
+Input.on('change', function() {
     var num1 = Number($('#petCount1').val());
     var num2 = Number($('#petCount2').val());
     var num3 = Number($('#petCount3').val());
@@ -232,7 +232,7 @@ tagInput.on('change', function() {
     var num5 = Number($('#petCount5').val());
     var num6 = Number($('#petCount6').val());
     var total = num1 + num2 + num3 + num4 + num5 + num6;
-    tagOutput.val(total);
+    Output.val(total);
 });
 
 </script>
