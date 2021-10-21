@@ -191,6 +191,11 @@ class BreederPets
      */
     private $pet_code;
 
+    /**
+     * @ORM\Column(name="band_color", type="smallint", nullable=true)
+     */
+    private $band_color;
+
     public function __construct()
     {
         $this->BreederPetImages = new ArrayCollection();
@@ -647,6 +652,18 @@ class BreederPets
     public function setPetCode(?string $pet_code): self
     {
         $this->pet_code = $pet_code;
+
+        return $this;
+    }
+
+    public function getBandColor(): ?int
+    {
+        return $this->band_color;
+    }
+
+    public function setBandColor(?int $band_color): self
+    {
+        $this->band_color = $band_color;
 
         return $this;
     }

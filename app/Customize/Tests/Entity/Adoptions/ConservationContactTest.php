@@ -6,6 +6,7 @@ use Customize\Entity\ConservationContactHeader;
 use Customize\Entity\ConservationContacts;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\Validation;
 
 class ConservationContactTest extends TestCase
 {
@@ -88,5 +89,18 @@ class ConservationContactTest extends TestCase
         $ConservationContact->setMessageFrom($integerVal);
 
         $this->assertEquals($integerVal, $ConservationContact->getMessageFrom());
+    }
+
+    /**
+     * Test validate pass
+     *
+     * @return void
+     */
+    public function testValidatePass(): void
+    {
+        $ConservationContact = new ConservationContacts();
+        $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
+        $errors = $validator->validate($ConservationContact);
+        $this->assertEquals(0, count($errors));
     }
 }

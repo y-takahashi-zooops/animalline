@@ -4,6 +4,7 @@ namespace Customize\Form\Type\Admin;
 
 use Customize\Entity\InstockScheduleHeader;
 use Customize\Repository\SupplierRepository;
+use DateTime;
 use Eccube\Common\EccubeConfig;
 use Eccube\Form\Type\Admin\OrderItemType;
 use Symfony\Component\Form\AbstractType;
@@ -53,7 +54,7 @@ class InstockScheduleHeaderType extends AbstractType
                 'years' => range(date('Y')-1, date('Y')),
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
-                'data' => new \DateTime(),
+                'data' => new DateTime(),
             ])
             ->add('supplier_code', ChoiceType::class, [
                 'placeholder' => 'common.select',
@@ -67,7 +68,7 @@ class InstockScheduleHeaderType extends AbstractType
                 'years' => range(date('Y')-1, date('Y')),
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
-                'data' => new \DateTime(),
+                'data' => new DateTime(),
             ])
             ->add('remark_text', TextareaType::class, [
                 'required' => false,

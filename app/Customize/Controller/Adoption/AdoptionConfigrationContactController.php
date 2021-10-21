@@ -1,31 +1,34 @@
 <?php
 
-namespace Customize\Controller\Breeder;
+namespace Customize\Controller\Adoption;
 
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
-use Customize\Entity\BreederContacts;
-use Customize\Repository\BreederContactHeaderRepository;
-use Customize\Repository\BreederContactsRepository;
+use Customize\Entity\ConservationContacts;
+use Customize\Repository\ConservationContactHeaderRepository;
+use Customize\Repository\ConservationContactsRepository;
+use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\SendoffReasonRepository;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
 
-class BreederConfigrationContactController extends AbstractController
+class AdoptionConfigrationContactController extends AbstractController
 {
     /**
-     * @var BreederContactsRepository
+     * @var ConservationContactsRepository
      */
-    protected $breederContactsRepository;
+    protected $conservationContactsRepository;
 
     /**
-     * @var BreederContactHeaderRepository
+     * @var ConservationContactHeaderRepository
      */
-    protected $breederContactHeaderRepository;
+    protected $conservationContactHeaderRepository;
 
     /**
      * @var SendoffReasonRepository
@@ -33,54 +36,63 @@ class BreederConfigrationContactController extends AbstractController
     protected $sendoffReasonRepository;
 
     /**
+     * @var ConservationPetsRepository
+     */
+    protected $conservationPetsRepository;
+
+    /**
      * BreederConfigrationController constructor.
-     * @param BreederContactsRepository $breederContactsRepository
-     * @param BreederContactHeaderRepository $breederContactHeaderRepository
+     * @param ConservationContactsRepository $conservationContactsRepository
+     * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
+     * @param ConservationPetsRepository     $conservationPetsRepository
      */
     public function __construct(
-        BreederContactsRepository        $breederContactsRepository,
-        BreederContactHeaderRepository   $breederContactHeaderRepository,
-        SendoffReasonRepository          $sendoffReasonRepository
-    ) {
-        $this->breederContactsRepository = $breederContactsRepository;
-        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
+        ConservationContactsRepository      $conservationContactsRepository,
+        ConservationContactHeaderRepository $conservationContactHeaderRepository,
+        SendoffReasonRepository             $sendoffReasonRepository,
+        ConservationPetsRepository     $conservationPetsRepository
+    )
+    {
+        $this->conservationContactsRepository = $conservationContactsRepository;
+        $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->sendoffReasonRepository = $sendoffReasonRepository;
+        $this->conservationPetsRepository = $conservationPetsRepository;;
     }
 
     /**
-     * Page breeder's message
+     * Page adoption's message
      *
-     * @Route("/breeder/configration/message/{contact_id}", name="breeder_configration_messages", requirements={"contact_id" = "\d+"})
-     * @Template("animalline/breeder/configration/message.twig")
+     * @Route("/adoption/configration/message/{contact_id}", name="adoption_configration_messages", requirements={"contact_id" = "\d+"})
+     * @Template("animalline/adoption/configration/message.twig")
      */
-    public function breeder_configration_message(Request $request, $contact_id)
+    public function adoption_configration_message(Request $request, $contact_id)
     {
         $isScroll = false;
         $isAcceptContract = $request->get('accept-contract');
         $reasonCancel = $request->get('reason');
         $replyMessage = $request->get('reply_message');
-        $rootMessage = $this->breederContactHeaderRepository->find($contact_id);
+        $rootMessage = $this->conservationContactHeaderRepository->find($contact_id);
         if (!$rootMessage) {
             throw new HttpException\NotFoundHttpException();
         }
-        $rootMessage->setBreederNewMsg(0);
+        $rootMessage->setConservationNewMsg(0);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($rootMessage);
         $entityManager->flush();
         $description = $request->get('reply_message');
 
-        $breederContact = new BreederContacts();
+        $conservationContact = new ConservationContacts();
 
         if ($replyMessage) {
-            $breederContact->setBreederHeader($rootMessage)
+            $conservationContact->setConservationHeader($rootMessage)
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription($description)
                 ->setSendDate(new DateTime());
             $entityManager = $this->getDoctrine()->getManager();
             $rootMessage->setCustomerNewMsg(1)
                 ->setLastMessageDate(Carbon::now());
-            $entityManager->persist($breederContact);
+            $entityManager->persist($conservationContact);
             $entityManager->persist($rootMessage);
             $entityManager->flush();
             $isScroll = true;
@@ -89,17 +101,17 @@ class BreederConfigrationContactController extends AbstractController
         if ($isAcceptContract) {
             if ($rootMessage->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
                 $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
-                    ->setBreederCheck(1);
+                    ->setConservationCheck(1);
             }
             if ($rootMessage->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $rootMessage->getCustomerCheck() == 1) {
                 $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
-                    ->setBreederCheck(1);
+                    ->setConservationCheck(1);
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($rootMessage);
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_configration_messages', ['contact_id' => $rootMessage->getId()]);
+            return $this->redirectToRoute('adoption_configration_messages', ['contact_id' => $rootMessage->getId()]);
         }
 
         if ($reasonCancel) {
@@ -107,27 +119,27 @@ class BreederConfigrationContactController extends AbstractController
                 ->setCustomerNewMsg(1)
                 ->setSendoffReason($reasonCancel);
 
-            $breederContact = (new BreederContacts())
+            $breederContact = (new ConservationContacts())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription('今回の取引非成立となりました')
                 ->setSendDate(Carbon::now())
-                ->setBreederHeader($rootMessage);
+                ->setConservationHeader($rootMessage);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($rootMessage);
             $entityManager->persist($breederContact);
             $entityManager->flush();
 
-            return $this->redirectToRoute('get_message_breeder_configration');
+            return $this->redirectToRoute('get_message_adoption_configration');
         }
 
-        $messages = $this->breederContactsRepository->findBy(
-            ['BreederHeader' => $contact_id],
+        $messages = $this->conservationContactsRepository->findBy(
+            ['ConservationHeader' => $contact_id],
             ['send_date' => 'ASC']
         );
-        $reasons = $this->sendoffReasonRepository->findBy(['is_breeder_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
+        $reasons = $this->sendoffReasonRepository->findBy(['is_adoption_visible' => AnilineConf::ADOPTION_VISIBLE_SHOW]);
 
-        return $this->render('animalline/breeder/configration/message.twig', [
+        return $this->render('animalline/adoption/configration/message.twig', [
             'rootMessage' => $rootMessage,
             'messages' => $messages,
             'reasons' => $reasons,

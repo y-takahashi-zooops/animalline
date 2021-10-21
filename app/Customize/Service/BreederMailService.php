@@ -111,21 +111,21 @@ class BreederMailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->twig->render($htmlFileName, [
-                'Breeders' => $Breeders,
-                'BaseInfo' => $this->BaseInfo,
-                'activateUrl' => $activateUrl,
-            ]);
+        // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
+        // if (!is_null($htmlFileName)) {
+        //     $htmlBody = $this->twig->render($htmlFileName, [
+        //         'Breeders' => $Breeders,
+        //         'BaseInfo' => $this->BaseInfo,
+        //         'activateUrl' => $activateUrl,
+        //     ]);
 
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
+        //     $message
+        //         ->setContentType('text/plain; charset=UTF-8')
+        //         ->setBody($body, 'text/plain')
+        //         ->addPart($htmlBody, 'text/html');
+        // } else {
             $message->setBody($body);
-        }
+        // }
 
         $event = new EventArgs(
             [
@@ -170,20 +170,20 @@ class BreederMailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->twig->render($htmlFileName, [
-                'Breeders' => $Breeders,
-                'BaseInfo' => $this->BaseInfo,
-            ]);
+        // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
+        // if (!is_null($htmlFileName)) {
+        //     $htmlBody = $this->twig->render($htmlFileName, [
+        //         'Breeders' => $Breeders,
+        //         'BaseInfo' => $this->BaseInfo,
+        //     ]);
 
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
+        //     $message
+        //         ->setContentType('text/plain; charset=UTF-8')
+        //         ->setBody($body, 'text/plain')
+        //         ->addPart($htmlBody, 'text/html');
+        // } else {
             $message->setBody($body);
-        }
+        // }
 
         $event = new EventArgs(
             [
@@ -228,20 +228,20 @@ class BreederMailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->twig->render($htmlFileName, [
-                'Breeders' => $Breeders,
-                'BaseInfo' => $this->BaseInfo,
-            ]);
+        // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
+        // if (!is_null($htmlFileName)) {
+        //     $htmlBody = $this->twig->render($htmlFileName, [
+        //         'Breeders' => $Breeders,
+        //         'BaseInfo' => $this->BaseInfo,
+        //     ]);
 
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
+        //     $message
+        //         ->setContentType('text/plain; charset=UTF-8')
+        //         ->setBody($body, 'text/plain')
+        //         ->addPart($htmlBody, 'text/html');
+        // } else {
             $message->setBody($body);
-        }
+        // }
 
         $event = new EventArgs(
             [
@@ -287,20 +287,20 @@ class BreederMailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->twig->render($htmlFileName, [
-                'data' => $formData,
-                'BaseInfo' => $this->BaseInfo,
-            ]);
+        // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
+        // if (!is_null($htmlFileName)) {
+        //     $htmlBody = $this->twig->render($htmlFileName, [
+        //         'data' => $formData,
+        //         'BaseInfo' => $this->BaseInfo,
+        //     ]);
 
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
+        //     $message
+        //         ->setContentType('text/plain; charset=UTF-8')
+        //         ->setBody($body, 'text/plain')
+        //         ->addPart($htmlBody, 'text/html');
+        // } else {
             $message->setBody($body);
-        }
+        // }
 
         $event = new EventArgs(
             [
@@ -345,19 +345,19 @@ class BreederMailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->twig->render($htmlFileName, [
-                'Order' => $Order,
-            ]);
+        // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
+        // if (!is_null($htmlFileName)) {
+        //     $htmlBody = $this->twig->render($htmlFileName, [
+        //         'Order' => $Order,
+        //     ]);
 
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
+        //     $message
+        //         ->setContentType('text/plain; charset=UTF-8')
+        //         ->setBody($body, 'text/plain')
+        //         ->addPart($htmlBody, 'text/html');
+        // } else {
             $message->setBody($body);
-        }
+        // }
 
         $event = new EventArgs(
             [
@@ -419,21 +419,21 @@ class BreederMailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->twig->render($htmlFileName, [
-                'BaseInfo' => $this->BaseInfo,
-                'Breeders' => $Breeders,
-                'activateUrl' => $activateUrl,
-            ]);
+        // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
+        // if (!is_null($htmlFileName)) {
+        //     $htmlBody = $this->twig->render($htmlFileName, [
+        //         'BaseInfo' => $this->BaseInfo,
+        //         'Breeders' => $Breeders,
+        //         'activateUrl' => $activateUrl,
+        //     ]);
 
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
+        //     $message
+        //         ->setContentType('text/plain; charset=UTF-8')
+        //         ->setBody($body, 'text/plain')
+        //         ->addPart($htmlBody, 'text/html');
+        // } else {
             $message->setBody($body);
-        }
+        // }
 
         $event = new EventArgs(
             [
@@ -522,22 +522,22 @@ class BreederMailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->twig->render($htmlFileName, [
-                'BaseInfo' => $this->BaseInfo,
-                'Breeders' => $Breeders,
-                'expire' => $this->eccubeConfig['eccube_customer_reset_expire'],
-                'reset_url' => $reset_url,
-            ]);
+        // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
+        // if (!is_null($htmlFileName)) {
+        //     $htmlBody = $this->twig->render($htmlFileName, [
+        //         'BaseInfo' => $this->BaseInfo,
+        //         'Breeders' => $Breeders,
+        //         'expire' => $this->eccubeConfig['eccube_customer_reset_expire'],
+        //         'reset_url' => $reset_url,
+        //     ]);
 
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
+        //     $message
+        //         ->setContentType('text/plain; charset=UTF-8')
+        //         ->setBody($body, 'text/plain')
+        //         ->addPart($htmlBody, 'text/html');
+        // } else {
             $message->setBody($body);
-        }
+        // }
 
         $event = new EventArgs(
             [
@@ -584,21 +584,21 @@ class BreederMailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->twig->render($htmlFileName, [
-                'BaseInfo' => $this->BaseInfo,
-                'Breeders' => $Breeders,
-                'password' => $password,
-            ]);
+        // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
+        // if (!is_null($htmlFileName)) {
+        //     $htmlBody = $this->twig->render($htmlFileName, [
+        //         'BaseInfo' => $this->BaseInfo,
+        //         'Breeders' => $Breeders,
+        //         'password' => $password,
+        //     ]);
 
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
+        //     $message
+        //         ->setContentType('text/plain; charset=UTF-8')
+        //         ->setBody($body, 'text/plain')
+        //         ->addPart($htmlBody, 'text/html');
+        // } else {
             $message->setBody($body);
-        }
+        // }
 
         $event = new EventArgs(
             [
@@ -645,17 +645,17 @@ class BreederMailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->getShippingNotifyMailBody($Shipping, $Order, $htmlFileName, true);
+        // $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
+        // if (!is_null($htmlFileName)) {
+        //     $htmlBody = $this->getShippingNotifyMailBody($Shipping, $Order, $htmlFileName, true);
 
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
+        //     $message
+        //         ->setContentType('text/plain; charset=UTF-8')
+        //         ->setBody($body, 'text/plain')
+        //         ->addPart($htmlBody, 'text/html');
+        // } else {
             $message->setBody($body);
-        }
+        // }
 
         $this->mailer->send($message);
 

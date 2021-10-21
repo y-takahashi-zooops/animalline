@@ -1,25 +1,25 @@
 <?php
 
-namespace Customize\Tests\FormType;
+namespace Customize\Tests\FormType\Admin;
 
-use Customize\Entity\ProductMaker;
-use Customize\Form\Type\Admin\ProductMakerType;
-use PHPUnit\Framework\TestCase;
+use Customize\Entity\Supplier;
+use Customize\Form\Type\Admin\SupplierType;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Validation;
 
-class AdminProductMakerTest extends TypeTestCase
+class ProductSupplierTest extends TypeTestCase
 {
     public function testSubmitValidData()
     {
         $formData = [
-            'maker_name' => 'test',
+            'supplier_name' => 'test1',
+            'supplier_code' => 'code',
         ];
 
-        $object = new ProductMaker();
+        $object = new Supplier();
 
-        $form = $this->factory->create(ProductMakerType::class, $object);
+        $form = $this->factory->create(SupplierType::class, $object);
 
         // submit the data to the form directly
         $form->submit($formData);

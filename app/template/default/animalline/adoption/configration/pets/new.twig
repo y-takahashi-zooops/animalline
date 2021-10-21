@@ -3,10 +3,10 @@
 {% block main %}
     <h1>新規ペット追加</h1>
     <br>
-    <a href="{{ path('adoption_configration') }}">
-        <img src="{{ asset('assets/img/arrow-icon.svg') }}" style="transform:rotate(-180deg);">
-        <span>一覧へ戻る</span>
-    </a>
+{#    <a href="{{ path('adoption_configration') }}">#}
+{#        <img src="{{ asset('assets/img/arrow-icon.svg') }}" style="transform:rotate(-180deg);">#}
+{#        <span>一覧へ戻る</span>#}
+{#    </a>#}
     <hr>
     {{ include('animalline/adoption/configration/pets/_form.twig') }}
 {% endblock %}

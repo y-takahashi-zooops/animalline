@@ -11,35 +11,36 @@
  * file that was distributed with this source code.
  */
 
-namespace Customize\Form\Type\Adoption;
+namespace Customize\Form\Type\Front;
 
 use Customize\Entity\DnaCheckStatusHeader;
-use Customize\Form\Type\AddressHouseKitType;
+use Eccube\Form\Type\Master\PrefType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ConservationKitDnaType extends AbstractType
+class DnaCheckStatusHeaderType extends AbstractType
 {
-//    /**
-//     * @var EccubeConfig
-//     */
-//    protected $eccubeConfig;
-//
-//    /**
-//     * ContactType constructor.
-//     *
-//     * @param EccubeConfig $eccubeConfig
-//     */
-//    public function __construct(EccubeConfig $eccubeConfig)
-//    {
-//        $this->eccubeConfig = $eccubeConfig;
-//    }
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
+
+    /**
+     * ContactType constructor.
+     *
+     * @param EccubeConfig $eccubeConfig
+     */
+    public function __construct(EccubeConfig $eccubeConfig)
+    {
+        $this->eccubeConfig = $eccubeConfig;
+    }
 
     /**
      * {@inheritdoc}
@@ -47,6 +48,25 @@ class ConservationKitDnaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('birth', DateType::class, [
+                'data' => new \DateTime(),
+                'years' => range(date('Y'), 1990),
+                'mapped' => false,
+            ])
+            ->add('choice_address', ChoiceType::class, [
+                'required' => true,
+                'mapped' => false,
+                'choices' =>
+                    [
+                        '基本情報' => 1,
+                        '犬舎住所' => 2,
+                        '猫舎住所' => 3,
+                    ],
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank()
+                ],
+            ])
             ->add('choice_address', ChoiceType::class, [
                 'required' => true,
                 'mapped' => false,
@@ -89,10 +109,39 @@ class ConservationKitDnaType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('address', AddressHouseKitType::class, [
+            ->add('PrefShipping', PrefType::class, [
                 'attr' => [
-                    'readonly' => true,
-                ]])
+                    'class' => 'p-region-id',
+                    'readonly' => true
+                ],
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('shipping_city', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                    'class' => 'p-locality',
+                    'placeholder' => 'common.address_sample_01',
+                    'readonly' => true
+                ],
+            ])
+            ->add('shipping_address', TextType::class, [
+                'constraints' => [
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\NotBlank()
+                ],
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                    'class' => 'p-street-address p-extended-address',
+                    'placeholder' => 'common.address_sample_02',
+                    'readonly' => true
+                ],
+            ])
             ->add('shipping_tel', TextType::class, [
                 'required' => true,
                 'constraints' => [
@@ -117,10 +166,10 @@ class ConservationKitDnaType extends AbstractType
                     new Assert\GreaterThanOrEqual([
                         'value' => 1,
                     ]),
+                    new Assert\NotBlank(),
                     new Assert\LessThanOrEqual([
-                        'value' => 6,
-                    ]),
-                    new Assert\NotBlank()
+                        'value' => 6
+                    ])
                 ],
             ]);
     }

@@ -2,6 +2,7 @@
 
 namespace Customize\Form\Type\Admin;
 
+use Customize\Entity\Pedigree;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,7 +15,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Customize\Entity\BreederPets;
 use Customize\Config\AnilineConf;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class BreederPetsType extends AbstractType
 {
@@ -33,6 +33,18 @@ class BreederPetsType extends AbstractType
                 ]
             ])
             ->add('pet_birthday', DateType::class)
+            ->add('band_color', ChoiceType::class, [
+                'choices' =>
+                [
+                    '赤' => AnilineConf::ANILINE_BAND_COLOR_RED,
+                    '青' => AnilineConf::ANILINE_BAND_COLOR_BLUE,
+                    '緑' => AnilineConf::ANILINE_BAND_COLOR_GREEN,
+                    '黄色' => AnilineConf::ANILINE_BAND_COLOR_YELLOW,
+                    'ピンク' => AnilineConf::ANILINE_BAND_COLOR_PINK,
+                    'オレンジ' => AnilineConf::ANILINE_BAND_COLOR_ORANGE
+                ],
+                'required' => true
+            ])
             ->add('coat_color', HiddenType::class, [
                 'mapped' => false
             ])
@@ -75,7 +87,7 @@ class BreederPetsType extends AbstractType
             ])
             ->add('Pedigree', EntityType::class, [
                 'class' => 'Customize\Entity\Pedigree',
-                'choice_label' => function (\Customize\Entity\Pedigree $petdigree) {
+                'choice_label' => function (Pedigree $petdigree) {
                     return $petdigree->getPedigreeName();
                 },
                 'required' => false,
