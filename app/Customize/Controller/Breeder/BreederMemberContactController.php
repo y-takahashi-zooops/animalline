@@ -4,8 +4,12 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederEvaluations;
+<<<<<<< HEAD
 use Customize\Form\Type\Breeder\BreederEvaluationsType;
 use Customize\Repository\BreederContactHeaderRepository;
+=======
+use Customize\Form\Type\BreederEvaluationsType;
+>>>>>>> b0081a51e8781a479402cdd518b0497b11f3c308
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
 use Carbon\Carbon;
@@ -13,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\BreederContacts;
 use Customize\Entity\BreederContactHeader;
 use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\SendoffReasonRepository;
 use Customize\Repository\BreedersRepository;
@@ -71,33 +76,32 @@ class BreederMemberContactController extends AbstractController
     /**
      * BreederController constructor.
      *
+     * @param BreederContactHeaderRepository $breederContactHeaderRepository
      * @param BreederContactsRepository $breederContactsRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
      * @param BreedersRepository $breedersRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param CustomerRepository $customerRepository
-     * @param BreederContactHeaderRepository $breederContactHeaderRepository
      * @param BreederEvaluationsRepository $breederEvaluationsRepository
      * @param BreederQueryService $breederQueryService
      */
 
     public function __construct(
+        BreederContactHeaderRepository $breederContactHeaderRepository,
         BreederContactsRepository      $breederContactsRepository,
         SendoffReasonRepository        $sendoffReasonRepository,
         BreedersRepository             $breedersRepository,
         BreederPetsRepository          $breederPetsRepository,
         CustomerRepository             $customerRepository,
-        BreederContactHeaderRepository $breederContactHeaderRepository,
         BreederEvaluationsRepository   $breederEvaluationsRepository,
         BreederQueryService            $breederQueryService
-    )
-    {
+    ){
+        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederContactsRepository = $breederContactsRepository;
         $this->sendoffReasonRepository = $sendoffReasonRepository;
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->customerRepository = $customerRepository;
-        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederEvaluationsRepository = $breederEvaluationsRepository;
         $this->breederQueryService = $breederQueryService;
     }
@@ -209,7 +213,7 @@ class BreederMemberContactController extends AbstractController
 
         $petRate = $this->breederEvaluationsRepository->findOneBy(['Pet' => $pet]);
         if ($petRate) {
-            return $this->redirectToRoute('breeder_all_breeder_message');
+            return $this->redirectToRoute('breeder_all_message');
         }
 
         $contract = new BreederEvaluations();

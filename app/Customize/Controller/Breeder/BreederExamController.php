@@ -3,7 +3,6 @@
 namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
-use Customize\Entity\Pedigree;
 use Customize\Repository\PedigreeRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Form\Type\Breeder\BreederExaminationInfoType;
@@ -30,7 +29,7 @@ class BreederExamController extends AbstractController
     protected $breedersRepository;
 
     /**
-     * @var BreederHouse
+     * @var BreederHouseRepository
      */
     protected $breederHouseRepository;
 

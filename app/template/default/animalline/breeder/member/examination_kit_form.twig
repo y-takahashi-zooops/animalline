@@ -206,11 +206,12 @@ $("#confirm-back").click(function () {
 function textCheck($this)
 {
   let str=$this.value;
-  // 文頭から文末まで全て0-9かチェック
+  // 数字チェック
   if(!str.match(/^[0-9０-９]+$/)){
-    // そうでなければ入力文字を空白に変換
+    // 文字の場合は空白に変換
     str="";
   } else if(str.match(/^[０-９]+$/)){
+    // 全角数字の場合は半角数字に変換
     str=toHanKaku(str);
   }
   $this.value=str;
