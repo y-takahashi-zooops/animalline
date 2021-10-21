@@ -6,6 +6,7 @@ use Customize\Entity\ConservationPetImage;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\Validation;
 
 class ConservationPetImageTest extends TestCase
 {
@@ -44,5 +45,18 @@ class ConservationPetImageTest extends TestCase
 
         // conservation can have one
         $this->assertNull($ConservationPetImage->getConservationPet());
+    }
+
+    /**
+     * Test validate pass
+     *
+     * @return void
+     */
+    public function testValidatePass(): void
+    {
+        $ConservationPetImage = new ConservationPetImage();
+        $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
+        $errors = $validator->validate($ConservationPetImage);
+        $this->assertEquals(0, count($errors));
     }
 }

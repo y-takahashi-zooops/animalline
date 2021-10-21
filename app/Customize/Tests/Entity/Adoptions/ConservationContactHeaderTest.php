@@ -9,6 +9,7 @@ use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Eccube\Entity\Customer;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\Validation;
 
 class ConservationContactHeaderTest extends TestCase
 {
@@ -137,5 +138,18 @@ class ConservationContactHeaderTest extends TestCase
         $this->assertEquals(0, $ConservationContactHeader->getConservationCheck());
         $this->assertEquals(1, $ConservationContactHeader->getConservationNewMsg());
         $this->assertEquals(0, $ConservationContactHeader->getCustomerNewMsg());
+    }
+
+    /**
+     * Test validate pass
+     *
+     * @return void
+     */
+    public function testValidatePass(): void
+    {
+        $ConservationContactHeader = new ConservationContactHeader();
+        $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
+        $errors = $validator->validate($ConservationContactHeader);
+        $this->assertEquals(0, count($errors));
     }
 }

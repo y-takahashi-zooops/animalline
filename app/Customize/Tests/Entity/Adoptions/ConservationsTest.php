@@ -5,6 +5,7 @@ namespace Customize\Tests\Entity\Adoptions;
 use Customize\Entity\Conservations;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\Validation;
 
 class ConservationsTest extends TestCase
 {
@@ -152,5 +153,18 @@ class ConservationsTest extends TestCase
 
         $foo = false;
         $this->assertFalse($foo);
+    }
+
+    /**
+     * Test validate pass
+     *
+     * @return void
+     */
+    public function testValidatePass(): void
+    {
+        $Conservation = new Conservations();
+        $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
+        $errors = $validator->validate($Conservation);
+        $this->assertEquals(0, count($errors));
     }
 }
