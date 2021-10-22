@@ -167,7 +167,7 @@ class VeqtaController extends AbstractController
                         $this->breederPetsRepository->find($header->getPetId()) :
                         $this->conservationPetsRepository->find($header->getPetId());
                     $petBirthday = $pet->getPetBirthday()->format('Y/m/d');
-                    $petKind = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬種別' : '猫種別';
+                    $petKind = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫';
                     $petType = $pet->getBreedsType()->getBreedsName();
                 }
             }
@@ -392,7 +392,7 @@ class VeqtaController extends AbstractController
             if (!$pet->getPetKind()) {
                 $data['pet_kind'] = '';
             } else {
-                $data['pet_kind'] = $pet->getPetKind() == 1 ? '犬種別' : '猫種別';
+                $data['pet_kind'] = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫';
             }
 
             $checkKinds = [];
