@@ -88,7 +88,7 @@ class AdoptionSearchController extends AbstractController
     public function adoption_search(PaginatorInterface $paginator, Request $request): Response
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind], ['breeds_name' => 'ASC']);
+        $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
         $adoptionResults = $this->adoptionQueryService->searchAdoptionsResult($request, $petKind);
         $adoptions = $paginator->paginate(

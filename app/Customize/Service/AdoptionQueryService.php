@@ -72,7 +72,7 @@ class AdoptionQueryService
             ->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'b.id = cp.BreedsType')
             ->where('b.pet_kind = :pet_kind and cp.BreedsType is not null')
             ->setParameter('pet_kind', $petKind)
-            ->orderBy('b.sort_order', 'ASC')
+            ->orderBy('b.breeds_name', 'ASC')
             ->getQuery()
             ->getResult();
     }
