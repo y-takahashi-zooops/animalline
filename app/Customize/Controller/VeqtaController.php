@@ -164,8 +164,8 @@ class VeqtaController extends AbstractController
                 $shippingName = $header->getShippingName();
                 if ($header->getPetId()) {
                     $pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
-                        $this->breederPetsRepository->find($header->getPetId()) :
-                        $this->conservationPetsRepository->find($header->getPetId());
+                        $this->breederPetsRepository->find($dnaCheckStatus->getPetId()) :
+                        $this->conservationPetsRepository->find($dnaCheckStatus->getPetId());
                     $petBirthday = $pet->getPetBirthday()->format('Y/m/d');
                     $petKind = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬種別' : '猫種別';
                     $petType = $pet->getBreedsType()->getBreedsName();
