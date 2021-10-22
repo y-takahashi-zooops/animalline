@@ -250,15 +250,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="img-container">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <!--  default image where we will set the src via jquery-->
+                <div class="img-container row">
+                    <div class="col-md-6 col-12 d-flex">
+                        <!--  default image where we will set the src via jquery-->
+                        <div style="flex-grow: 1">
                             <img id="image">
                         </div>
-                        <div class="col-md-4">
-                            <div class="preview"></div>
-                        </div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <div class="preview"></div>
                     </div>
                 </div>
             </div>
@@ -275,10 +275,8 @@
     <style>
         .preview {
             overflow: hidden;
-            width: 200px;
-            height: 200px;
-            margin-left: 25px;
-            border: 1px solid red;
+            width: 100% !important;
+            height: 100% !important;
         }
         .preview_box {
             border: 1px dotted;
@@ -329,6 +327,7 @@
         .form_img_inline {
             display: flex;
             flex-flow: row wrap;
+            justify-content: center;
         }
     </style>
 {% endblock %}
