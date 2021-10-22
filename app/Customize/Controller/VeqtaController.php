@@ -109,7 +109,7 @@ class VeqtaController extends AbstractController
      */
     public function pet_list(Request $request, PaginatorInterface $paginator): array
     {
-        $dnasResult = $this->veqtaQueryService->filterPetList();
+        $dnasResult = $this->veqtaQueryService->filterPetList($request->query->getInt('filter_status'));
         $dnas = $paginator->paginate(
             $dnasResult,
             $request->query->getInt('page', 1),
