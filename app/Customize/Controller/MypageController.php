@@ -267,7 +267,6 @@ class MypageController extends BaseMypageController
         if ($this->BaseInfo->isOptionProductDeliveryFee()) {
             $deliveryFee = $this->productClassRepository->findOneBy(['id' => $SubscriptionContract->getProductClass()])->getDeliveryFee();
         } else {
-            // TODO:deliveryFeeの取得
             $deliveryFee = $this->deliveryFeeRepository->findOneBy(['Delivery' => $Shipping->getDelivery(), 'Pref' => $Shipping->getPref()])->getFee();
 
             if ($this->BaseInfo->getDeliveryFreeAmount()) {
@@ -419,6 +418,4 @@ class MypageController extends BaseMypageController
         ];
     }
 
-
- 
 }
