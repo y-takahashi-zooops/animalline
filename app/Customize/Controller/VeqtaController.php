@@ -162,7 +162,7 @@ class VeqtaController extends AbstractController
             if ($dnaCheckStatus->getCheckStatus() == 3) {
                 $show = true;
                 $shippingName = $header->getShippingName();
-                if ($header->getPetId()) {
+                if ($dnaCheckStatus->getPetId()) {
                     $pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
                         $this->breederPetsRepository->find($dnaCheckStatus->getPetId()) :
                         $this->conservationPetsRepository->find($dnaCheckStatus->getPetId());
