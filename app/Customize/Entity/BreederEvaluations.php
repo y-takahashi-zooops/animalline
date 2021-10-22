@@ -3,6 +3,7 @@
 namespace Customize\Entity;
 
 use Customize\Repository\BreederEvaluationsRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -72,7 +73,7 @@ class BreederEvaluations
         return $this->Pet;
     }
 
-    public function setPet(?BreederPets $pet): self
+    public function setPet(BreederPets $pet): self
     {
         $this->Pet = $pet;
 
@@ -130,11 +131,11 @@ class BreederEvaluations
     /**
      * Set createDate.
      *
-     * @param \DateTime $createDate
+     * @param ?\DateTime $createDate
      *
-     * @return Payment
+     * @return self
      */
-    public function setCreateDate($createDate)
+    public function setCreateDate(?\DateTime $createDate): self
     {
         $this->create_date = $createDate;
 
@@ -144,11 +145,11 @@ class BreederEvaluations
     /**
      * Set updateDate.
      *
-     * @param \DateTime $updateDate
+     * @param ?\DateTime $updateDate
      *
-     * @return Payment
+     * @return self
      */
-    public function setUpdateDate($updateDate)
+    public function setUpdateDate(?\DateTime $updateDate): self
     {
         $this->update_date = $updateDate;
 
