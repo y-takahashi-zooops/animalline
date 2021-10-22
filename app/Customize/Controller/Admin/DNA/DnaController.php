@@ -108,7 +108,7 @@ class DnaController extends AbstractController
             return $this->redirectToRoute('admin_dna_examination_items', ['pet_kind' => $petType, 'pet_breeds' => $breeds]);
         }
         $dna_check_kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $breeds], ['update_date' => 'DESC', 'id' => 'DESC']);
-        $breedOptions = $this->breedsRepository->findBy(['pet_kind' => $petType]);
+        $breedOptions = $this->breedsRepository->findBy(['pet_kind' => $petType], ['breeds_name' => 'ASC']);
         $dna_check_kinds = $paginator->paginate(
             $dna_check_kinds,
             $request->query->getInt('page', 1),
@@ -130,7 +130,7 @@ class DnaController extends AbstractController
     public function breedsByPetKind(Request $request, BreedsRepository $breedsRepository)
     {
         $petKind = $request->get('pet_kind');
-        $Breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
+        $Breeds = $breedsRepository->findBy(['pet_kind' => $petKind], ['breeds_name' => 'ASC']);
         $formattedBreeds = [];
         foreach ($Breeds as $Breed) {
             $formattedBreeds[] = [

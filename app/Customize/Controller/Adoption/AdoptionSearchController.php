@@ -88,7 +88,7 @@ class AdoptionSearchController extends AbstractController
     public function adoption_search(PaginatorInterface $paginator, Request $request): Response
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind], ['breeds_name' => 'ASC']);
         $regions = $this->prefRepository->findAll();
         $adoptionResults = $this->adoptionQueryService->searchAdoptionsResult($request, $petKind);
         $adoptions = $paginator->paginate(
@@ -144,7 +144,7 @@ class AdoptionSearchController extends AbstractController
     {
         $petKind = $request->get('pet_kind');
         $breeds = $breedsRepository->findBy(['pet_kind' => $petKind], ['breeds_name' => 'ASC']);
-        $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind], ['coat_color_name' => 'ASC']);
+        $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
         $formattedBreeds = [];
         foreach ($breeds as $breed) {
             $formattedBreeds[] = [
