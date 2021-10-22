@@ -33,11 +33,31 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        犬種・猫種
+                                        誕生日
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <input class="w-100" name="pet_birthday" id="pet_birthday" disabled>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        犬・猫
                                     </dt>
                                     <dd>
                                         <div class="ec-input">
                                             <input type="text" class="w-100" name="pet_kind" id="pet_kind" disabled>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        犬種・猫種
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <input type="text" class="w-100" name="pet_type" id="pet_type" disabled>
                                         </div>
                                     </dd>
                                 </dl>
@@ -131,13 +151,15 @@
             data: {
                 'barcode': $('#barcode').val()
             }
-        }).done(function ({ shippingName, hasRecord , breed}) {
+        }).done(function ({ shippingName, hasRecord , breed, pet_birthday, pet_kind}) {
             if (!hasRecord){
                 alert('データが存在しません。');
                 return;
             } 
             $('#sender_name').val(shippingName);
-            $('#pet_kind').val(breed);
+            $('#pet_type').val(breed);
+            $('#pet_birthday').val(pet_birthday);
+            $('#pet_kind').val(pet_kind);
             $('#dnaTestResultRegist').attr('disabled', !hasRecord);
             
         }).fail(function (err) {
