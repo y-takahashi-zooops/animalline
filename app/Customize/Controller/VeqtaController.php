@@ -109,7 +109,7 @@ class VeqtaController extends AbstractController
      */
     public function pet_list(Request $request, PaginatorInterface $paginator): array
     {
-        $dnasResult = $this->veqtaQueryService->filterPetList();
+        $dnasResult = $this->veqtaQueryService->filterPetList($request->query->getInt('filter_status'));
         $dnas = $paginator->paginate(
             $dnasResult,
             $request->query->getInt('page', 1),
@@ -392,7 +392,7 @@ class VeqtaController extends AbstractController
             if (!$pet->getPetKind()) {
                 $data['pet_kind'] = '';
             } else {
-                $data['pet_kind'] = $pet->getPetKind() == 1 ? '犬種別' : '猫種別';
+                $data['pet_kind'] = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫';
             }
 
             $checkKinds = [];
