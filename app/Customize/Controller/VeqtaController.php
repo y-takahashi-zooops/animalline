@@ -148,20 +148,37 @@ class VeqtaController extends AbstractController
      */
     public function getArriveUser(Request $request): JsonResponse
     {
+        $barcode = $request->get('barcode');
         $shippingName = null;
         $show = false;
-        $dnaCheckStatus = $this->dnaCheckStatusRepository->find($request->get('id'));
+        $petBirthday = null;
+        $petKind = null;
+        $petType = null;
+        $siteType = $barcode[0];
+        $dnaId = substr($barcode, 1);
+        $dnaCheckStatus = $this->dnaCheckStatusRepository->find($dnaId);
         if ($dnaCheckStatus) {
             $header = $this->dnaCheckStatusHeaderRepository->find($dnaCheckStatus->getDnaHeader());
             if ($dnaCheckStatus->getCheckStatus() == 3) {
                 $show = true;
                 $shippingName = $header->getShippingName();
+                if ($header->getPetId()) {
+                    $pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
+                        $this->breederPetsRepository->find($header->getPetId()) :
+                        $this->conservationPetsRepository->find($header->getPetId());
+                    $petBirthday = $pet->getPetBirthday()->format('Y/m/d');
+                    $petKind = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬種別' : '猫種別';
+                    $petType = $pet->getBreedsType()->getBreedsName();
+                }
             }
         }
         $data = [
             'shipping_name' => $shippingName,
             'isDisable' => $show,
-            'dnaId' => $request->get('id')
+            'dnaId' => number_format($dnaId),
+            'petBirthday' => $petBirthday,
+            'petKind' => $petKind,
+            'petType' => $petType
         ];
         return new JsonResponse($data);
     }
