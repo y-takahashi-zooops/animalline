@@ -353,8 +353,11 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <img alt="license_thumbnail_path" src="{{ form.license_thumbnail_path.vars.value }}"
-                                            style="max-width: 200px">
+                                        <a href="{{ form.license_thumbnail_path.vars.value }}" target="_blank">
+                                            <img alt="license_thumbnail_path"
+                                                 src="{{ form.license_thumbnail_path.vars.value }}"
+                                                 style="max-width: 200px">
+                                        </a>
                                         {{ form_widget(form.license_thumbnail_path) }}
                                     </div>
                                 </div>
