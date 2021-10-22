@@ -205,11 +205,13 @@ file that was distributed with this source code.
         </div>
     </div>
 
-    {% if (formHouseDog) %}
+    {% if (formAdoption.handling_pet_kind.vars.data in [constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT'),
+          constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')] and formHouseDog) %}
         {{ include('@admin/Adoption/components/_pet_house_block.twig', { 'form': formHouseDog, 'title': '犬舎情報' }) }}
     {% endif %}
 
-    {% if (formHouseCat) %}
+    {% if (formAdoption.handling_pet_kind.vars.data in [constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT'),
+        constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')] and formHouseCat) %}
         {{ include('@admin/Adoption/components/_pet_house_block.twig', { 'form': formHouseCat, 'title': '猫舎情報' }) }}
     {% endif %}
 

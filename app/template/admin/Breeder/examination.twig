@@ -30,17 +30,17 @@ file that was distributed with this source code.
     $("#catHouse").hide();
     houseDisplay($('#breeders_handling_pet_kind').val());
     function houseDisplay(pet_kind) {
-    if( pet_kind == 0 ){
-    $("#dogHouse").show();
-    $("#catHouse").show();
-} else if( pet_kind == 1 ){
-    $("#dogHouse").show();
-    $("#catHouse").hide();
-} else if ( pet_kind == 2 ){
-    $("#dogHouse").hide();
-    $("#catHouse").show();
-}
-};
+        if( pet_kind == 0 ){
+            $("#dogHouse").show();
+            $("#catHouse").show();
+        } else if( pet_kind == 1 ){
+            $("#dogHouse").show();
+            $("#catHouse").hide();
+        } else if ( pet_kind == 2 ){
+            $("#dogHouse").hide();
+            $("#catHouse").show();
+        }
+    };
 </script>
 {% endblock javascript %}
 
