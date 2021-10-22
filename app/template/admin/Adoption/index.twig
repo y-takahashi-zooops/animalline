@@ -137,8 +137,13 @@ file that was distributed with this source code.
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                  data-placement="top" title="審査情報表示">
+                                                 {% set disabledStatuses = [
+                                                    constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK'),
+                                                    constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG')
+                                                    ] %}
                                                 <a class="btn btn-ec-actionIcon"
-                                                    href="{{ url('admin_adoption_examination', {'id': conservation.id}) }}">
+                                                    {{ conservation.examinationStatus in disabledStatuses ? 'disabled' : '' }}
+                                                    href=" {{ conservation.examinationStatus in disabledStatuses ? '#' : url('admin_adoption_examination', {'id': conservation.id}) }}">
                                                     <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
