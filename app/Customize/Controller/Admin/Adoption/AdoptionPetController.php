@@ -107,7 +107,7 @@ class AdoptionPetController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
-        $breeds = $this->breedsRepository->findAll();
+        $breeds = $this->breedsRepository->findBy([], ['breeds_name' => 'ASC']);
 
         return $this->render('@admin/Adoption/pet/index.twig', [
             'conservationId' => $request->get('id'),

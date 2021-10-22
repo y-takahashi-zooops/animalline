@@ -92,7 +92,7 @@ class BreederPetController extends AbstractController
     {
         $request = $request->query->all();
 
-        $breeds = $this->breedsRepository->findAll();
+        $breeds = $this->breedsRepository->findBy([], ['breeds_name' => 'ASC']);
         $order = [];
         $order['field'] = array_key_exists('field', $request) ? $request['field'] : 'create_date';
         $order['direction'] = array_key_exists('direction', $request) ? $request['direction'] : 'DESC';
@@ -170,7 +170,7 @@ class BreederPetController extends AbstractController
     {
         $criteria = [];
         $criteria['id'] = $request->get('id');
-        $breeds = $this->breedsRepository->findAll();
+        $breeds = $this->breedsRepository->findBy([], ['breeds_name' => 'ASC']);
 
         switch ($request->get('pet_kind')) {
             case 1:

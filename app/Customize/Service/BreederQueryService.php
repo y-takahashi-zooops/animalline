@@ -67,7 +67,7 @@ class BreederQueryService
             ->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.BreedsType')
             ->where('b.pet_kind = :pet_kind and bp.BreedsType is not null')
             ->setParameter('pet_kind', $petKind)
-            ->orderBy('b.sort_order', 'ASC')
+            ->orderBy('b.breeds_name', 'ASC')
             ->getQuery()
             ->getResult();
     }
