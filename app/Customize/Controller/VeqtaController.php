@@ -369,7 +369,15 @@ class VeqtaController extends AbstractController
             } else {
                 $pet = $this->conservationPetsRepository->find($Dna->getPetId());
             }
-            $data['breed'] = $pet->getBreedsType()->getBreedsName();
+
+            $data['breed'] = $pet->getBreedsType() ? $pet->getBreedsType()->getBreedsName() : '';
+            $data['pet_birthday'] = $pet->getPetBirthday() ? $pet->getPetBirthday()->format('Y/m/d') : '';
+            if (!$pet->getPetKind()) {
+                $data['pet_kind'] = '';
+            } else {
+                $data['pet_kind'] = $pet->getPetKind() == 1 ? '犬' : '猫';
+            }
+
             $checkKinds = [];
             foreach ($this->dnaCheckKindsRepository->findBy(
                 ['Breeds' => $pet->getBreedsType(), 'delete_flg' => 0],
