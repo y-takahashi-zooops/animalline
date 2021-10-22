@@ -375,7 +375,7 @@ class VeqtaController extends AbstractController
             if (!$pet->getPetKind()) {
                 $data['pet_kind'] = '';
             } else {
-                $data['pet_kind'] = $pet->getPetKind() == 1 ? '犬' : '猫';
+                $data['pet_kind'] = $pet->getPetKind() == 1 ? '犬種別' : '猫種別';
             }
 
             $checkKinds = [];
