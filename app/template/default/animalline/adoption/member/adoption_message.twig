@@ -2,67 +2,160 @@
 {% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
-    <div class="main">
-        <div class="row">
-            <div class="main-container col-12">
-                <h1>取引メッセージ一覧</h1>
-                <div class="m-3 p-3"></div>
-                {% for message in listMessages %}
-                    <div class="row border adoption-border rounded bg-white p-2 mb-3">
-                        <div class="col-12">
-                            <a href="{{ url('adoption_message', {'id': message.Id}) }}">
-                                <div class="row">
-                                    <div class="col-md-2 col-3" style="display: grid; place-items: center;">
-                                        <h6 class="p-2 rounded" style="background:#539b34; color:#fff;">
-                                            {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
-                                            {{ status[message.contractStatus] }}
-                                        </h6>
-                                    </div>
-                                    <div class="col-md-10 col-9">
-                                        <h5>{{ message.contactTitle ?? '' }}</h5>
-                                        <h5>{{ message.Conservation.organizationName ?? '' }}</h5>
-                                        <h6 class="text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }}
-                                            <br>
-                                            {{ message.customerNewMsg ? '未読あり' }}
-                                        </h6>
-                                    </div>
-                                </div>
+    <section id="breeder-column">
+        <div class="inner">
+            <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
+                <div class="breeder-column__main_section_title">
+                    <h2>取引メッセージ</h2>
+                </div>
+                <div class="breeder-column__main_section_body">
+                    <div class="breeder_section_header">
+                        <i class="fas fa-paw"></i>
+                        ペット情報
+                    </div>
+                    <div class="row mb-4 mt-4">
+                        <div class="col-md-3 col-sm-4">
+                            <a href="{{ url('adoption_pet_detail', {'id': message.getPet.Id}) }}"　class="w-100">
+                                <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (rootMessage.getPet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                    class="w-100 mb-4 mb-sm-0" alt="...">
+                            </a>
+                        </div>
+                        <div class="col-sm-8">
+                            <h3 class="font-weight-500 color-gray-500 mb-4">{{ pet.BreedsType.breedsName ?? '' }}</h3>
+                            <div class="d-flex mb-2">
+                                <h6>誕生日：{{ pet.petBirthday|date('Y年m月d日') }}生</h6>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <h6>色：{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h6>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <h6>性別：{{ message.getPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h6>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <h6>価格：{{ pet.price }}円</h6>
+                            </div>
+                            <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
+                                <h4 class="color-adoption">ペット詳細ページへ</h4>
                             </a>
                         </div>
                     </div>
-                    {# <div class="row">
-                        <div class="col-12">
-                            <a href="{{ url('adoption_message', {'id': message.Id}) }}">
-                                <div class="d-sm-flex justify-content-between py-3 border adoption-border rounded bg-white">
-                                    <div class="ml-5">
-                                        <h3>{{rootMessage.Conservation.getConservationHouseByPetType(rootMessage.pet.petKind).conservationHouseName
-                                        ?? '' }}</h3>
-                                        <h3>{{ message.Conservation.conservationHouseName ?? '' }}</h3>
-                                        <h3>{{ message.contactTitle ?? '' }}</h3>
-                                    </div>
-                                    <div class="d-sm-flex justify-content-between w-550">
-                                        <h4 class="mr-sm-5 ml-5">
-                                            {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
-                                            状態：{{ status[message.contractStatus] }}
-                                        </h4>
-                                        <h4 class="mr-sm-5 ml-5 text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }}
-                                            <br>
-                                            {{ message.customerNewMsg ? '未読あり' }}
-                                        </h4>
-                                    </div>
-                                </div>
-                            </a>
+
+                    {# <div class="breeder_section_header">
+                        <i class="fas fa-paw"></i>
+                        顧客情報
+                    </div>
+                    <div class="breeder-info col-12">
+                        <h3 class="font-weight-500 color-gray-500 mb-4">{{ Customer.name01 }}{{ Customer.name02 }}</h3>
+                    </div>  #}
+
+                    <div class="breeder_section_header">
+                        {% if message.contactType == 1 %}
+                        お問い合わせ
+                        {% elseif message.contactType == 2 %}
+                        見学希望
+                        {% endif %}
+                    </div>
+                    <div style="background:#fff3dd; border:#388e3c 1px solid">
+                        <div class="p-2">
+                            <div class="ml-3">
+                                <h3 class="mb-2" style="border-bottom: 1px dotted #cd8362;">{{ message.contactTitle }}</h3>
+                                <h5 class="mb-2 font-weight-400">{{ message.contactDescription|nl2br }}</h5>
+                                {% if message.contactType == 2 %}
+                                <h5 class="mb-2 font-weight-400">{{ message.bookingRequest }}</h5>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                    <div class="m-1 p-1"></div> #}
-                {% else %}
-                    結果が０件です。
-                {% endfor %}
+                    <h6 class="text-right">{{ message.sendDate | date('Y/m/d h:i')}}</h6>
+                    <div class="m-2 p-2"></div>
+
+                    {# 返信メッセージ #}
+                    {% for listMessage in listMsg %}
+                        {# 保護団体からの返信 #}
+                        {% if listMessage.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER') %}
+                            <div class="balloon">
+                                <div class="chatting">
+                                    <div class="message message-right">
+                                        {{ listMessage.contactDescription|nl2br }}
+                                    </div>
+                                </div>
+                                {# <div class="icon">
+                                    <img src="{{ rootMessage.Conservation.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}">  
+                                </div> #}
+                                <h6 class="text-right" style="padding-right:24px;">{{ listMessage.sendDate | date('Y/m/d H:i') }}</h6>
+                            </div>
+                        {# ユーザーからの返信 #}
+                        {% else %}
+                            <div class="balloon">
+                                <div class="icon">
+                                    <img src="{{ asset('assets/img/testUser.png') }}">  
+                                </div>
+                                <div class="chatting">
+                                    <div class="message message-left">
+                                        {{ listMessage.contactDescription|nl2br }}
+                                    </div>
+                                </div>
+                                <h6 class="text-right">{{ listMessage.sendDate | date('Y/m/d H:i') }}</h6>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    {# 返信欄・ボタン #}
+                    {% if message.contractStatus not in constant('Customize\\Config\\AnilineConf::CONTRACT_STATUSES_ENABLE') %}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="py-3">
+                                    <form action="{{ url('adoption_adoption_message', {'id': message.id}) }}" method="post" name="adoption-msg-form">
+                                        <textarea {{ isScroll ? 'autofocus' }} aria-label="dialog-chat" class="col-12 p-2" rows="5" name="reply_message"
+                                            placeholder="返信メッセージ"></textarea>
+                                        <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">返信メッセージ送信</button>
+                                        ここに取引が完了した際の報告で特典が受けられることの説明を表記する
+                                        <div class="d-flex">
+                                                <button {{ message.ConservationCheck ? 'disabled' }} type="button" class="ec-blockBtn--action mt-2 mr-2" id="contract">取引成約を報告して特典を受け取る
+                                                </button>
+                                            <button {{ message.ConservationCheck ? 'disabled' }} type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">
+                                                取引は成約しませんでした
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+    <form action="{{ url('adoption_adoption_message', {'id': message.id}) }}" method="post" name="contract-cancel-form">
+        {{ include('animalline/components/_modal_contract_cancel.twig') }}
+    </form>
+    <form action="{{ url('adoption_adoption_message', {'id': message.id}) }}" method="post" name="contract-accept-form">
+        <input type="hidden" name="accept-contract" value="1">
+        {{ include('animalline/components/_modal_contract.twig') }}
+    </form>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
 {% endblock %}
-{% block javascript %}{% endblock %}
+{% block javascript %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    if (document.getElementById("cancel")) {
+        document.getElementById("cancel").onclick = function () {
+            $('#modal_cancel').modal('show');
+        };
+    }
+    if (document.getElementById("contract")) {
+        document.getElementById("contract").onclick = function () {
+            $('#modal_contract').modal('show');
+        };
+    }
+
+    $("#confirm-yes-cancel").click(function (e) {
+        $("form[name='contract-cancel-form']").submit();
+    });
+    $("#confirm-yes").click(function (e) {
+        $("form[name='contract-accept-form']").submit();
+    });
+</script>
+{% endblock %}

@@ -35,7 +35,6 @@ class SubscriptionCustomerAddressType extends AbstractType
         // 定期注文のお届け先住所とマッチするものを初期選択とする
         /** @var SubscriptionContract $SubscriptionContract */
         $SubscriptionContract = $options['subscriptionContract'];
-
         $Checked = null;
         foreach ($Addresses as $Address) {
             if ($Address->getId() === $SubscriptionContract->getCustomerAddressId()) {
