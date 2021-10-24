@@ -78,8 +78,7 @@ class ConservationPetController extends AbstractController
         ConservationPetImageRepository $conservationPetImageRepository,
         PetsFavoriteRepository         $petsFavoriteRepository,
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
-    )
-    {
+    ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->conservationsRepository = $conservationsRepository;
@@ -372,8 +371,9 @@ class ConservationPetController extends AbstractController
             ->setParameter('arr', $dnaCheckStatusHeaders)
             ->addOrderBy('dcs.update_date', 'DESC')
             ->getQuery()->getResult();
-        foreach ($DnaCheckStatus as $dnaCheckStatus)
+        foreach ($DnaCheckStatus as $dnaCheckStatus) {
             $codes[] = '2' . str_pad($dnaCheckStatus->getId(), 5, '0', STR_PAD_LEFT);
+        }
         $barCodes = $paginator->paginate(
             $codes,
             $request->query->getInt('page', 1),

@@ -9,11 +9,14 @@
             type: 'POST',
             dataType: 'json',
             data: {
-                'id': $('#barcode').val().split("0").pop()
+                'barcode': $('#barcode').val()
             },
         }).done(function (data) {
             if(data.isDisable){
-                $('#name').val(data.shipping_name ?? '')
+                $('#name').val(data.shipping_name ?? '');
+                $('#pet-birthday').val(data.petBirthday ?? '');
+                $('#pet-type').val(data.petKind ?? '');
+                $('#breed').val(data.petType);
                 $('#input-hidden').val(data.dnaId);
                 $('#submit').removeAttr('disabled');
             } else {
@@ -36,7 +39,7 @@
 <section>
     <div class="inner">
         <div class="ec-pageHeader">
-            <h1>{{ '検査キット登録確認'|trans }}</h1>
+            <h1>{{ '検査キット到着確認'|trans }}</h1>
         </div>
         <div class="ec-off1Grid">
             <div class="ec-off1Grid__cell">
@@ -60,6 +63,36 @@
                                 <dd>
                                     <div class="ec-input">
                                         <input type="text" class="w-100" name="name" id="name" readonly>
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    検査対象ペットの誕生日
+                                </dt>
+                                <dd>
+                                    <div class="ec-input">
+                                        <input type="text" class="w-100" name="pet-birthday" id="pet-birthday" readonly>
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    犬・猫種別
+                                </dt>
+                                <dd>
+                                    <div class="ec-input">
+                                        <input type="text" class="w-100" name="pet-type" id="pet-type" readonly>
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    犬種・猫種
+                                </dt>
+                                <dd>
+                                    <div class="ec-input">
+                                        <input type="text" class="w-100" name="breed" id="breed" readonly>
                                     </div>
                                 </dd>
                             </dl>

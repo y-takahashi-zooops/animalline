@@ -153,7 +153,7 @@ class BreederSearchController extends AbstractController
     public function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
     {
         $petKind = $request->get('pet_kind');
-        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
+        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind], ['breeds_name' => 'ASC']);
         $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
         $formattedBreeds = [];
         foreach ($breeds as $breed) {

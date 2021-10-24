@@ -109,7 +109,7 @@ class VeqtaController extends AbstractController
      */
     public function pet_list(Request $request, PaginatorInterface $paginator): array
     {
-        $dnasResult = $this->veqtaQueryService->filterPetList();
+        $dnasResult = $this->veqtaQueryService->filterPetList($request->query->getInt('filter_status'));
         $dnas = $paginator->paginate(
             $dnasResult,
             $request->query->getInt('page', 1),
@@ -148,20 +148,37 @@ class VeqtaController extends AbstractController
      */
     public function getArriveUser(Request $request): JsonResponse
     {
+        $barcode = $request->get('barcode');
         $shippingName = null;
         $show = false;
-        $dnaCheckStatus = $this->dnaCheckStatusRepository->find($request->get('id'));
+        $petBirthday = null;
+        $petKind = null;
+        $petType = null;
+        $siteType = $barcode[0];
+        $dnaId = substr($barcode, 1);
+        $dnaCheckStatus = $this->dnaCheckStatusRepository->find($dnaId);
         if ($dnaCheckStatus) {
             $header = $this->dnaCheckStatusHeaderRepository->find($dnaCheckStatus->getDnaHeader());
             if ($dnaCheckStatus->getCheckStatus() == 3) {
                 $show = true;
                 $shippingName = $header->getShippingName();
+                if ($dnaCheckStatus->getPetId()) {
+                    $pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
+                        $this->breederPetsRepository->find($dnaCheckStatus->getPetId()) :
+                        $this->conservationPetsRepository->find($dnaCheckStatus->getPetId());
+                    $petBirthday = $pet->getPetBirthday() ? $pet->getPetBirthday()->format('Y/m/d') : null;
+                    $petKind = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫';
+                    $petType = $pet->getBreedsType()->getBreedsName();
+                }
             }
         }
         $data = [
             'shipping_name' => $shippingName,
             'isDisable' => $show,
-            'dnaId' => $request->get('id')
+            'dnaId' => number_format($dnaId),
+            'petBirthday' => $petBirthday,
+            'petKind' => $petKind,
+            'petType' => $petType
         ];
         return new JsonResponse($data);
     }
@@ -369,7 +386,15 @@ class VeqtaController extends AbstractController
             } else {
                 $pet = $this->conservationPetsRepository->find($Dna->getPetId());
             }
-            $data['breed'] = $pet->getBreedsType()->getBreedsName();
+
+            $data['breed'] = $pet->getBreedsType() ? $pet->getBreedsType()->getBreedsName() : '';
+            $data['pet_birthday'] = $pet->getPetBirthday() ? $pet->getPetBirthday()->format('Y/m/d') : '';
+            if (!$pet->getPetKind()) {
+                $data['pet_kind'] = '';
+            } else {
+                $data['pet_kind'] = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫';
+            }
+
             $checkKinds = [];
             foreach ($this->dnaCheckKindsRepository->findBy(
                 ['Breeds' => $pet->getBreedsType(), 'delete_flg' => 0],
