@@ -107,7 +107,8 @@ class AdoptionPetController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
-        $breeds = $this->breedsRepository->findBy([], ['breeds_name' => 'ASC']);
+        // $breeds = $this->breedsRepository->findBy([], ['breeds_name' => 'ASC']);
+        $breeds = $this->breedsRepository->findBy([], ['sort_order' => 'ASC']);
 
         return $this->render('@admin/Adoption/pet/index.twig', [
             'conservationId' => $request->get('id'),
@@ -139,7 +140,8 @@ class AdoptionPetController extends AbstractController
             return $this->redirectToRoute('admin_adoption_pet_list', ['id' => $conservationPet->getConservation()->getId()]);
         }
 
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()], ['breeds_name' => 'ASC']);
+        // $breeds = $this->breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()], ['breeds_name' => 'ASC']);
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()], ['sort_order' => 'ASC']);
         $colors = $this->coatColorsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()]);
         $images = $this->conservationPetImageRepository->findBy(['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
 

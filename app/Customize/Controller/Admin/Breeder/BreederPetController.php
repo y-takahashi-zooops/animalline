@@ -92,7 +92,8 @@ class BreederPetController extends AbstractController
     {
         $request = $request->query->all();
 
-        $breeds = $this->breedsRepository->findBy([], ['breeds_name' => 'ASC']);
+        // $breeds = $this->breedsRepository->findBy([], ['breeds_name' => 'ASC']);
+        $breeds = $this->breedsRepository->findBy([], ['sort_order' => 'ASC']);
         $order = [];
         $order['field'] = array_key_exists('field', $request) ? $request['field'] : 'create_date';
         $order['direction'] = array_key_exists('direction', $request) ? $request['direction'] : 'DESC';
@@ -170,7 +171,8 @@ class BreederPetController extends AbstractController
     {
         $criteria = [];
         $criteria['id'] = $request->get('id');
-        $breeds = $this->breedsRepository->findBy([], ['breeds_name' => 'ASC']);
+        // $breeds = $this->breedsRepository->findBy([], ['breeds_name' => 'ASC']);
+        $breeds = $this->breedsRepository->findBy([], ['sort_order' => 'ASC']);
 
         switch ($request->get('pet_kind')) {
             case 1:
@@ -235,7 +237,8 @@ class BreederPetController extends AbstractController
             return $this->redirectToRoute('admin_breeder_pet_list', ['id' => $breederPet->getBreeder()->getId()]);
         }
 
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $breederPet->getPetKind()], ['breeds_name' => 'ASC']);
+        // $breeds = $this->breedsRepository->findBy(['pet_kind' => $breederPet->getPetKind()], ['breeds_name' => 'ASC']);
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $breederPet->getPetKind()], ['sort_order' => 'ASC']);
         $colors = $this->coatColorsRepository->findBy(['pet_kind' => $breederPet->getPetKind()]);
         $images = $this->breederPetImageRepository->findBy(['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
 
