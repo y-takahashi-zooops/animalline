@@ -51,10 +51,9 @@ class ConservationPets
     private $pet_birthday;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customize\Entity\CoatColors", inversedBy="ConservationPets")
-     * @ORM\JoinColumn(name="coat_color", nullable=true)
+     * @ORM\Column(name="coat_color", type="string", length=20, nullable=true)
      */
-    private $CoatColor;
+    private $coat_color;
 
     /**
      * @ORM\Column(name="future_wait", type="smallint")
@@ -200,14 +199,14 @@ class ConservationPets
         return $this;
     }
 
-    public function getCoatColor(): ?CoatColors
+    public function getCoatColor(): ?string
     {
-        return $this->CoatColor;
+        return $this->coat_color;
     }
 
-    public function setCoatColor(?CoatColors $CoatColor): self
+    public function setCoatColor(?string $coat_color): self
     {
-        $this->CoatColor = $CoatColor;
+        $this->coat_color = $coat_color;
 
         return $this;
     }
