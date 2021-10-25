@@ -28,7 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdoptionPetController extends AbstractController
 {
     /**
-     * @var BreedsRepository;
+     * @var BreedsRepository
      */
     protected $breedsRepository;
 
@@ -38,7 +38,7 @@ class AdoptionPetController extends AbstractController
     protected $conservationPetImageRepository;
 
     /**
-     * @var AdoptionQueryService;
+     * @var AdoptionQueryService
      */
     protected $adoptionQueryService;
 

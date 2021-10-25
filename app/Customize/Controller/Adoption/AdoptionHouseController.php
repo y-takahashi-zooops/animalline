@@ -45,6 +45,12 @@ class AdoptionHouseController extends AbstractController
      */
     public function house_info(Request $request)
     {
+        //リダイレクト先設定
+        $return_path = $request->get('return_path');
+        if ($return_path == "") {
+            $return_path = "adoption_examination";
+        }
+
         $petType = $request->get('pet_type');
         $conservation = $this->conservationsRepository->find($this->getUser());
         $conservationsHouse = $this->conservationsHouseRepository->findOneBy(['pet_type' => $petType, 'Conservation' => $conservation]);
@@ -64,12 +70,13 @@ class AdoptionHouseController extends AbstractController
             $entityManager->persist($conservationsHouse);
             $entityManager->flush();
 
-            return $this->redirectToRoute('adoption_examination');
+            return $this->redirectToRoute($return_path);
         }
         return [
             'form' => $form->createView(),
             'petType' => $petType,
             'conservation' => $conservation,
+            'return_path' => $return_path
         ];
     }
 }

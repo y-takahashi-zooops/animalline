@@ -42,12 +42,12 @@ class AdoptionController extends AbstractController
     protected $conservationPetsRepository;
 
     /**
-     * @var BreedsRepository;
+     * @var BreedsRepository
      */
     protected $breedsRepository;
 
     /**
-     * @var AdoptionQueryService;
+     * @var AdoptionQueryService
      */
     protected $adoptionQueryService;
 

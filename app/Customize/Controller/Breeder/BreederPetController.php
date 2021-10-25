@@ -101,17 +101,17 @@ class BreederPetController extends AbstractController
     protected $breederPetImageRepository;
 
     /**
-     * @var DnaQueryService;
+     * @var DnaQueryService
      */
     protected $dnaQueryService;
 
     /**
-     * @var DnaCheckStatusRepository;
+     * @var DnaCheckStatusRepository
      */
     protected $dnaCheckStatusRepository;
 
     /**
-     * @var DnaCheckStatusHeaderRepository;
+     * @var DnaCheckStatusHeaderRepository
      */
     protected $dnaCheckStatusHeaderRepository;
 

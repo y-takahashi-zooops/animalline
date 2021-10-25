@@ -39,12 +39,12 @@ class BreederExamController extends AbstractController
     protected $breederExaminationInfoRepository;
 
     /**
-     * @var DnaQueryService;
+     * @var DnaQueryService
      */
     protected $dnaQueryService;
 
     /**
-     * @var DnaCheckStatusRepository;
+     * @var DnaCheckStatusRepository
      */
     protected $dnaCheckStatusRepository;
 

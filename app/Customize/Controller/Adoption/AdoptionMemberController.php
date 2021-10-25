@@ -241,6 +241,12 @@ class AdoptionMemberController extends AbstractController
      */
     public function base_info(Request $request, ConservationsRepository $conservationsRepository, PrefRepository $prefRepository)
     {
+        //リダイレクト先設定
+        $return_path = $request->get('return_path');
+        if ($return_path == "") {
+            $return_path = "adoption_examination";
+        }
+
         $user = $this->getUser();
 
         $conservation = $conservationsRepository->find($user);
@@ -263,7 +269,7 @@ class AdoptionMemberController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservation);
             $entityManager->flush();
-            return $this->redirectToRoute('adoption_examination');
+            return $this->redirectToRoute($return_path);
         } elseif (!$form->isSubmitted() && !$conservationsRepository->find($user)) {
             // Customer情報から初期情報をセット
             $Customer = $this->customerRepository->find($user);
@@ -278,7 +284,8 @@ class AdoptionMemberController extends AbstractController
 
         return [
             'conservation' => $conservation,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'return_path' => $return_path
         ];
     }
 }
