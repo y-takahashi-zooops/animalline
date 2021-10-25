@@ -398,12 +398,22 @@ class BreederMemberContactController extends AbstractController
      */
     public function contact(Request $request)
     {
+        $isContact = 0;
         $id = $request->get('pet_id');
         $pet = $this->breederPetsRepository->find($id);
         if (!$pet) {
             throw new HttpException\NotFoundHttpException();
         }
-
+        $petContact = $this->breederContactHeaderRepository->createQueryBuilder('ch')
+            ->where('ch.Customer = :customer')
+            ->andWhere('ch.Pet = :pet')
+            ->andWhere('ch.contract_status != :status')
+            ->setParameters(['customer' => $this->getUser(), 'pet' => $pet, 'status' => 1])
+            ->getQuery()
+            ->getResult();
+        if ($petContact) {
+            $isContact = 1;
+        }
         $contact = new BreederContactHeader();
         $builder = $this->formFactory->createBuilder(BreederContactType::class, $contact);
         $event = new EventArgs(
@@ -445,6 +455,7 @@ class BreederMemberContactController extends AbstractController
         }
 
         return [
+            'isContact' => $isContact,
             'form' => $form->createView(),
             'id' => $id
         ];

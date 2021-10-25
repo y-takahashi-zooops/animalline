@@ -26,32 +26,32 @@ use Symfony\Component\Routing\Annotation\Route;
 class DnaController extends AbstractController
 {
     /**
-     * @var DnaQueryService;
+     * @var DnaQueryService
      */
     protected $dnaQueryService;
 
     /**
-     * @var DnaCheckStatusRepository;
+     * @var DnaCheckStatusRepository
      */
     protected $dnaCheckStatusRepository;
 
     /**
-     * @var BreederPetsRepository;
+     * @var BreederPetsRepository
      */
     protected $breederPetsRepository;
 
     /**
-     * @var ConservationPetsRepository;
+     * @var ConservationPetsRepository
      */
     protected $conservationPetsRepository;
 
     /**
-     * @var DnaCheckKindsRepository;
+     * @var DnaCheckKindsRepository
      */
     protected $dnaCheckKindsRepository;
 
     /**
-     * @var BreedsRepository;
+     * @var BreedsRepository
      */
     protected $breedsRepository;
 
