@@ -220,7 +220,7 @@ class BreederPetController extends AbstractController
                 'breeder' => $breeder
             ]);
         }
-        $user = $this->getUser();
+
         $breeder = $this->breedersRepository->find($user);
         if (!$breeder) throw new NotFoundHttpException();
         $petInfoTemplate = $this->breederPetinfoTemplateRepository->findOneBy([
@@ -319,6 +319,16 @@ class BreederPetController extends AbstractController
      */
     public function breeder_pets_edit(Request $request, BreederPets $breederPet): Response
     {
+        $user = $this->getUser();
+        $breeder = $this->breedersRepository->find($user);
+        if (!$breeder) throw new NotFoundHttpException();
+        $petInfoTemplate = $this->breederPetinfoTemplateRepository->findOneBy([
+            'Breeder' => $breeder
+        ]);
+        if (!$petInfoTemplate) {
+            throw new NotFoundHttpException();
+        }
+
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
         ]);
@@ -363,7 +373,8 @@ class BreederPetController extends AbstractController
         return $this->render('animalline/breeder/member/pets/edit.twig', [
             'breeder_pet' => $breederPet,
             'pet_mages' => $petImages,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'petInfoTemplate' => $petInfoTemplate
         ]);
     }
 
