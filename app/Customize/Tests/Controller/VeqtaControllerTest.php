@@ -44,7 +44,7 @@ class VeqtaControllerTest extends WebTestCase
     public function testResultRegist(): void
     {
         $client = static::createClient();
-        $client->request('GET', '//veqta/result_regist/not-found');
+        $client->request('GET', '/veqta/result_regist/not-found');
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 }
