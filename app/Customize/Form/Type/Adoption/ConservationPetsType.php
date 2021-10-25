@@ -54,11 +54,11 @@ class ConservationPetsType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Length([
-                        'max' => 25,
+                        'max' => 20,
                     ])
                 ],
                 'attr' => [
-                    'maxlength' => 25,
+                    'maxlength' => 20,
                     'placeholder' => '毛色をご記入ください。'
                 ],
             ])
