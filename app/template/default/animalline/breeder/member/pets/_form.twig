@@ -109,7 +109,8 @@
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.band_color, 'バンドカラー', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-        <span class="ec-required">必須</span>  
+        <span class="ec-required">必須</span>
+        <p style="font-size:14px;color:#DE5D50;">遺伝病DNA検査で使用した検体識別バンドのカラーを選択してください。</p>
         </div>
         <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.band_color) }}
@@ -154,10 +155,17 @@
             {{ form_errors(form.description) }}
         </div>
     </div>
+    {# ユーザー情報コピー用フィールド #}
+        <input type="hidden" id="petInfoTemplate_guarantee" value="{{petInfoTemplate.guarantee}}">
+        <input type="hidden" id="petInfoTemplate_delivery_way" value="{{petInfoTemplate.deliveryWay}}">
+        <input type="hidden" id="petInfoTemplate_payment_method" value="{{petInfoTemplate.paymentMethod}}">
+        <input type="hidden" id="petInfoTemplate_reservation_fee" value="{{petInfoTemplate.reservationFee}}">
+    {# ユーザー情報コピー用フィールド #}
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.guarantee, '生体保障内容', { 'label_attr': {'class': 'ec-label' }}) }}
             <span class="ec-required">必須</span>  
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_guarantee">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.guarantee, {'attr': {'rows': 10, 'placeholder' : 'ブリーダー様にて設定されている生体保証内容をご記入ください。'}}) }}
@@ -207,7 +215,7 @@
     #}
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.guarantee, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label' }}) }}
+            {{ form_label(form.include_vaccine_fee, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label' }}) }}
             <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 form-check-inline ec-radio">
@@ -215,14 +223,49 @@
             {{ form_errors(form.include_vaccine_fee) }}
         </div>
     </div>
+    <div class="row mb-3" id="vaccineDetail">
+        <div class="col-md-3">
+            {{ form_label(form.vaccine_detail, 'ワクチン代情報', { 'label_attr': {'class': 'ec-label' }}) }}
+            <span class="ec-required">必須</span>  
+        </div>
+        <div class="col-md-8 ec-input">
+            {{ form_widget(form.vaccine_detail, {'attr': {'style': 'display:flex;'}}) }}
+            {{ form_errors(form.vaccine_detail) }}
+        </div>
+    </div>
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-            <span class="ec-required">必須</span>  
+            <span class="ec-required">必須</span>
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_delivery_way">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.delivery_way, {'attr': {'rows': 5, 'placeholder' : '引き渡し方法をご記入ください。'}}) }}
             {{ form_errors(form.delivery_way) }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            {{ form_label(form.payment_method, '支払方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span><br >
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_payment_method">テンプレート使用</button>
+        </div>
+        <div class="col-md-8 ec-input">
+            {{ form_widget(form.payment_method, {'attr': {'rows': 5, 'placeholder' : '支払方法をご記入ください。'}}) }}
+            {{ form_errors(form.payment_method) }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            {{ form_label(form.reservation_fee, '予約金', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span><br >
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_reservation_fee">テンプレート使用</button>
+        </div>
+        <div class="col-md-8 ec-input">
+            {{ form_widget(form.reservation_fee, {'attr': {'rows': 5, 'placeholder' : 'ブリーダーにて設定されている予約金をご記入ください。'}}) }}
+            {{ form_errors(form.reservation_fee) }}
         </div>
     </div>
 
@@ -270,7 +313,7 @@
                             <img id="image">
                         </div>
                     </div>
-                    <div class="col-md-6 col-12">
+                    <div class="col-md-6 col-12 d-flex justify-content-center align-items-center">
                         <div class="preview"></div>
                     </div>
                 </div>
@@ -288,8 +331,8 @@
     <style>
         .preview {
             overflow: hidden;
-            width: 100% !important;
-            height: 100% !important;
+            width: 200px !important;
+            height: 200px !important;
         }
         .preview_box {
             border: 1px dotted;
@@ -368,6 +411,12 @@ $("#pedigreeSelect").hide();
 if(breeder_pets_is_pedigree_0.checked){ 
     $("#pedigreeSelect").show();
 }
+
+$("#vaccineDetail").hide();
+if(breeder_pets_include_vaccine_fee_0.checked) {
+    $("#vaccineDetail").show();
+}
+
 $(document).ready(function() {
     $("input[name$='breeder_pets[is_pedigree]']").click(function() {
         var is_pedigree = $(this).val();
@@ -375,6 +424,15 @@ $(document).ready(function() {
             $("#pedigreeSelect").show();
         } else if (is_pedigree == 0) {
             $("#pedigreeSelect").hide();
+        }
+    });
+
+    $("input[name$='breeder_pets[include_vaccine_fee]']").click(function() {
+        var include_vaccine_fee = $(this).val();
+        if (include_vaccine_fee == 1) {
+            $("#vaccineDetail").show();
+        } else if (include_vaccine_fee == 0) {
+            $("#vaccineDetail").hide();
         }
     });
 });
@@ -404,6 +462,26 @@ $('#breeder_pets_pet_kind').ready( function() {
         console.error(err);
     })
 });
+
+document.getElementById("btn_get_petinfo_template_guarantee").onclick = function() {
+    // ユーザー情報をブリーダー情報にコピー
+    document.getElementById("breeder_pets_guarantee").value = document.getElementById("petInfoTemplate_guarantee").value 
+};
+
+document.getElementById("btn_get_petinfo_template_delivery_way").onclick = function() {
+    // ユーザー情報をブリーダー情報にコピー
+    document.getElementById("breeder_pets_delivery_way").value = document.getElementById("petInfoTemplate_delivery_way").value 
+};
+
+document.getElementById("btn_get_petinfo_template_payment_method").onclick = function() {
+    // ユーザー情報をブリーダー情報にコピー
+    document.getElementById("breeder_pets_payment_method").value = document.getElementById("petInfoTemplate_payment_method").value 
+};
+
+document.getElementById("btn_get_petinfo_template_reservation_fee").onclick = function() {
+    // ユーザー情報をブリーダー情報にコピー
+    document.getElementById("breeder_pets_reservation_fee").value = document.getElementById("petInfoTemplate_reservation_fee").value 
+};
 
 </script>
 {% endblock %}

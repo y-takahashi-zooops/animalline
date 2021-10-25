@@ -105,7 +105,7 @@
                                 <img id="image">
                             </div>
                         </div>
-                        <div class="col-md-6 col-12">
+                        <div class="col-md-6 col-12 d-flex justify-content-center align-items-center">
                             <div class="preview"></div>
                         </div>
                     </div>
@@ -122,6 +122,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
     <style>
+        .ec-radio input {
+            margin-bottom: 0;
+        }
         .ec-radio .form-check {
             display: flex;
             align-items: center;
@@ -139,8 +142,8 @@
 
         .preview {
             overflow: hidden;
-            width: 100% !important;
-            height: 100% !important;
+            width: 200px !important;
+            height: 200px !important;
         }
     </style>
 {% endblock %}

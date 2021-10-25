@@ -29,12 +29,12 @@ class UlogiController extends AbstractController
 {
 
     /**
-     * @var DnaCheckStatusHeaderRepository;
+     * @var DnaCheckStatusHeaderRepository
      */
     protected $dnaCheckStatusHeaderRepository;
 
     /**
-     * @var DnaCheckStatusRepository;
+     * @var DnaCheckStatusRepository
      */
     protected $dnaCheckStatusRepository;
 

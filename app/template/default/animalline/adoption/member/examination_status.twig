@@ -4,6 +4,7 @@
 {% set params = app.request.query.all %}
 
 {% block main %}
+<section id="breeder-column">
     <div class="c-contentsArea__cols">
         <div class="c-contentsArea__primaryCol">
             <div class="c-primaryCol">
@@ -87,7 +88,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="row justify-content-md-center mb-4 pb-4"></div>
+
                         <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog"
                              aria-labelledby="confirm-modal" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -122,6 +123,7 @@
             </div>
         </div>
     </div>
+</section>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">

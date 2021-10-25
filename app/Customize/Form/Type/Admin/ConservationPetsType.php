@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ConservationPetsType extends AbstractType
 {
@@ -52,8 +53,18 @@ class ConservationPetsType extends AbstractType
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
             ])
-            ->add('coat_color', HiddenType::class, [
-                'mapped' => false
+            ->add('coat_color', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length([
+                        'max' => 20,
+                    ])
+                ],
+                'attr' => [
+                    'maxlength' => 20,
+                    'placeholder' => '毛色をご記入ください。'
+                ],
             ])
             ->add('future_wait', TextType::class)
             ->add('dna_check_result', ChoiceType::class, [

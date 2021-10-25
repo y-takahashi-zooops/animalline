@@ -18,7 +18,6 @@ use Customize\Repository\BreedsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Entity\Conservations;
-use Customize\Repository\CoatColorsRepository;
 use Customize\Repository\ConservationPetImageRepository;
 use Customize\Form\Type\Adoption\ConservationsType;
 use Customize\Service\AdoptionQueryService;
@@ -43,19 +42,14 @@ class AdoptionController extends AbstractController
     protected $conservationPetsRepository;
 
     /**
-     * @var BreedsRepository;
+     * @var BreedsRepository
      */
     protected $breedsRepository;
 
     /**
-     * @var AdoptionQueryService;
+     * @var AdoptionQueryService
      */
     protected $adoptionQueryService;
-
-    /**
-     * @var CoatColorsRepository
-     */
-    protected $coatColorsRepository;
 
     /**
      * @var ConservationPetImageRepository
@@ -77,7 +71,6 @@ class AdoptionController extends AbstractController
      *
      * @param ConservationsRepository $conservationsRepository
      * @param BreedsRepository $breedsRepository
-     * @param CoatColorsRepository $coatColorsRepository
      * @param ConservationPetImageRepository $conservationPetImageRepository
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param AdoptionQueryService $adoptionQueryService
@@ -88,7 +81,6 @@ class AdoptionController extends AbstractController
     public function __construct(
         ConservationsRepository        $conservationsRepository,
         BreedsRepository               $breedsRepository,
-        CoatColorsRepository           $coatColorsRepository,
         ConservationPetImageRepository $conservationPetImageRepository,
         ConservationPetsRepository     $conservationPetsRepository,
         AdoptionQueryService           $adoptionQueryService,
@@ -97,7 +89,6 @@ class AdoptionController extends AbstractController
     ) {
         $this->conservationsRepository = $conservationsRepository;
         $this->breedsRepository = $breedsRepository;
-        $this->coatColorsRepository = $coatColorsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->adoptionQueryService = $adoptionQueryService;

@@ -133,12 +133,8 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-2 mb-2">
-                                    <select name="coat_color" class="form-control">
-                                        {% for color in colors %}
-                                            <option {{ conservationPet.CoatColor and conservationPet.CoatColor.id == color.id ? 'selected' : '' }}
-                                                    value="{{ color.id }}">{{ color.coatColorName }}</option>
-                                        {% endfor %}
-                                    </select>
+                                    {{ form_widget(form.coat_color) }}
+                                    {{ form_errors(form.coat_color) }}
                                 </div>
                             </div>
                             <div class="row">

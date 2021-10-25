@@ -179,7 +179,7 @@
                         <div class="ec-registerRole__actions">
                             <div class="ec-off4Grid">
 								<div class="ec-off4Grid__cell">
-									{# <input type="hidden" name="return_path" value="{{ return_path }}"/> #}
+									<input type="hidden" name="return_path" value="{{ return_path }}"/>
 									<button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録
 									</button>
 								</div>
@@ -207,7 +207,7 @@
 								<img id="image">
 							</div>
 						</div>
-						<div class="col-md-6 col-12">
+						<div class="col-md-6 col-12 d-flex justify-content-center align-items-center">
 							<div class="preview"></div>
 						</div>
 					</div>
@@ -233,8 +233,8 @@
 
 		.preview {
 			overflow: hidden;
-			width: 100% !important;
-			height: 100% !important;
+			width: 200px !important;
+			height: 200px !important;
 		}
 	</style>
 {% endblock %}
