@@ -204,4 +204,15 @@ class BreederMemberController extends AbstractController
             'Customer' => $user,
         ];
     }
+
+    /**
+     * テンプレート編集画面
+     *
+     * @Route("/breeder/member/template", name="breeder_template")
+     * @Template("/animalline/breeder/member/template.twig")
+     */
+    public function template(Request $request)
+    {
+        return [];
+    }
 }
