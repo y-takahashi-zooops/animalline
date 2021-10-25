@@ -68,17 +68,17 @@ class AdoptionDnaCheck extends AbstractController
     protected $customerRepository;
 
     /**
-     * @var DnaQueryService;
+     * @var DnaQueryService
      */
     protected $dnaQueryService;
 
     /**
-     * @var DnaCheckStatusRepository;
+     * @var DnaCheckStatusRepository
      */
     protected $dnaCheckStatusRepository;
 
     /**
-     * @var DnaCheckStatusHeaderRepository;
+     * @var DnaCheckStatusHeaderRepository
      */
     protected $dnaCheckStatusHeaderRepository;
 

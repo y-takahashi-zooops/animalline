@@ -15,7 +15,7 @@
                     </div>
                     <div class="row mb-4 mt-4">
                         <div class="col-md-3 col-sm-4">
-                            <a href="{{ url('breeder_pet_detail', {'id': message.getPet.Id}) }}"　class="w-100">
+                            <a target="_blank" class="w-100" href="{{ url('breeder_pet_detail', {'id': message.getPet.Id}) }}">
                                 <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (rootMessage.getPet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                     class="w-100 mb-4 mb-sm-0" alt="...">
                             </a>
@@ -34,8 +34,8 @@
                             <div class="d-flex mb-2">
                                 <h6>価格：{{ pet.price }}円</h6>
                             </div>
-                            <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
-                                <h4 class="color-breeder">ペット詳細ページへ</h4>
+                            <a target="_blank" href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
+                                <h4 class="color-breeder d-inline-block">ペット詳細ページへ</h4>
                             </a>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                     </div>
                     <div class="row mb-4 mt-4">
                         <div class="col-md-3 col-sm-4">
-                            <a href="{{ url('breeder_detail', {'breeder_id': message.getBreeder.Id}) }}"　class="w-100">
+                            <a class="w-100" target="_blank" href="{{ url('breeder_detail', {'breeder_id': message.getBreeder.Id}) }}">
                                 <img alt="..." src="{{ breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                                 class="w-100 mb-4 mb-sm-0">
                             </a>
@@ -87,8 +87,8 @@
                                 {% set ex_status = ['審査前', '審査中', '審査OK', '審査NG'] %}
                                 <h6>{{ ex_status[breeder.examinationStatus] }}</h6>
                             </div>
-                            <a href="{{ url('breeder_detail', {'breeder_id': breeder.id}) }}">
-                                <h4 class="color-breeder mt-4">ブリーダー詳細ページへ</h4>
+                            <a target="_blank" href="{{ url('breeder_detail', {'breeder_id': breeder.id}) }}">
+                                <h4 class="color-breeder mt-4 d-inline-block">ブリーダー詳細ページへ</h4>
                             </a>
                         </div>
                     </div>
@@ -153,12 +153,12 @@
                                             placeholder="返信メッセージ"></textarea>
                                         <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">返信メッセージ送信</button>
                                         ここに取引が完了した際の報告で特典が受けられることの説明を表記する
-                                        <div class="d-flex">
-                                            <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--action mt-2 mr-2"
+                                        <div class="d-flex flex-sm-column flex-md-row justify-content-between">
+                                            <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--action mt-2"
                                                 onclick="location.href='{{ url('breeder_contract', {'pet_id': message.pet.id}) }}'">
                                                 取引成約を報告する
                                             </button>
-                                            <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--cancel mt-2 ml-2" id="cancel">
+                                            <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--cancel mt-2" id="cancel">
                                                 取引は成約しませんでした
                                             </button>
                                         </div>
@@ -179,6 +179,17 @@
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <style>
+        @media (max-width: 576px) {
+            .flex-sm-column {
+                -ms-flex-direction: column !important;
+                flex-direction: column !important;
+            }
+        }
+        .d-flex>button {
+            flex: 0 0 49%;
+        }
+    </style>
 {% endblock %}
 {% block javascript %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
