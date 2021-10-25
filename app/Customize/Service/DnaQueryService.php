@@ -37,6 +37,7 @@ class DnaQueryService
     protected $dnaCheckStatusHeaderRepository;
 
     const EXCLUDES = [
+        AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED,
         AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG,
         AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT,
         AnilineConf::ANILINE_DNA_CHECK_STATUS_PUBLIC

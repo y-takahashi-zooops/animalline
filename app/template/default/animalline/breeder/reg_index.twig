@@ -13,16 +13,21 @@
 
 <body id="top">
 <div id="mainImg">
+	<img src="{{ asset('assets/img/reg/title.png') }}" alt="">
 	<img src="{{ asset('assets/img/reg/top.png') }}" alt="">
 </div>
 <!-- サイト説明 -->
-<section id="sec01">
-	<img src="{{ asset('assets/img/reg/site_description.png') }}" alt="">
+<section id="sec01" class="top_margin_xl">
 	<div class="SiteDescription">
-		3者すべてに“やさしい”ビジネスモデルを目指します。「ブリーダーの皆さま」には参加メリットを、「ペットオーナー」には安心・安全を提供します。
+		アニマルラインは3者すべてに“やさしい”ビジネスモデルを目指します。「ブリーダーの皆さま」には参加メリットを、「ペットオーナー」には安心・安全を提供します。
+	</div>
+	<div class="animalline-image">
+		<img src="{{ asset('assets/img/reg/animalline-image.png') }}" alt="">
 	</div>
 </section>
-<section id="sec01">
+
+
+<section id="sec01" class="top_margin_xl">
 	<div class="innerImg">
 		<img src="{{ asset('assets/img/reg/animalline_info_title.png') }}" alt="">
 	</div>
@@ -33,7 +38,7 @@
 		</p>
 	</div>
 </section>
-<section id="sec02">
+<section id="sec02" class="top_margin_xl">
 	<div class="innerImg">
 		<img src="{{ asset('assets/img/reg/animalline_info.png') }}" alt="">
 	</div>
@@ -41,11 +46,13 @@
 <!-- // STORY -->
 <!-- サイト説明 -->
 
-
-<section id="sec01">
+<section id="sec01"  class="top_margin_xl">
 	<img src="{{ asset('assets/img/reg/prereg_title.png') }}" alt="">
 </section>
 
+<div class="buttonReg">
+	<a href="{{url('entry')}}?ReturnPath=breeder_mypage" class="btn btn--orange">新規登録してペットを掲載する</a>
+</div>
 
 <!-- MESSAGE -->
 <section id="sec01">
@@ -55,7 +62,7 @@
 		<img src="{{ asset('assets/img/reg/breeder_merit_01.png') }}" alt="">
 	</div>
 	<div class="innerS">
-		<p>取引成立時の販売手数料は<b>業界最安値の１５％</b>となっております。ブリーダー様の負担を減らし、気軽に登録して頂き生体販売の機会を増やす事でブリーダー様を応援するマッチング・プラットフォームです。</p>
+		<p>取引成立時の販売手数料は<b class="strong-text">業界最安値の１５％</b>となっております。ブリーダー様の負担を減らし、気軽に登録して頂き生体販売の機会を増やす事でブリーダー様を応援するマッチング・プラットフォームです。</p>
 	</div>
 	<div class="innerImg">
 		<img src="{{ asset('assets/img/reg/campaign.png') }}" alt="">
@@ -64,13 +71,16 @@
 		<img src="{{ asset('assets/img/reg/breeder_merit_02.png') }}" alt="">
 	</div>
 	<div class="innerS">
-		<p>マッチング・サービスを利用したペットオーナーに商品販売等の各種サービスを提供。その売上の一部をブリーダー様に還元することで、生体販売時に得られる利益以外の長期的かつ継続的な安定収入につなげます。</p>
+		<p>マッチング・サービスを利用したペットオーナーに商品販売等の各種サービスを提供。その<b class="strong-text">売上の一部をブリーダー様に還元</b>することで、生体販売時に得られる利益以外の長期的かつ継続的な安定収入につなげます。</p>
+	</div>
+	<div class="titleImg">
+		<img src="{{ asset('assets/img/reg/merit02-image.png') }}" alt="">
 	</div>
 	<div class="titleImg">
 		<img src="{{ asset('assets/img/reg/breeder_merit_03.png') }}" alt="">
 	</div>
 	<div class="innerS">
-		<p>遺伝病発症リスクが分かる遺伝病DNA検査にて、発症リスクのない生体のみプラットフォームに掲載します。検査費用は<u><b>「アニマルラインが負担」</b></u>致しますので、ブリーダー様には負担はございません。安心してご登録ください。<br /><br />
+		<p>遺伝病発症リスクが分かる遺伝病DNA検査にて、発症リスクのない生体のみプラットフォームに掲載します。検査費用は<b class="strong-text"><u>「アニマルラインが負担」</u></b>致しますので、ブリーダー様には負担はございません。安心してご登録ください。<br /><br />
 		<h2>ブリーダー様のＤＮＡ検査費用負担０円！</h2>
 		<span>※検査結果は<b>「サイトへの掲載可否」</b>のみのお知らせとなります</span>
 		</p>
@@ -99,7 +109,7 @@
 <section id="sec02"></section>
 <!-- GALLERY -->
 <section id="sec02">
-	<div class="buttonS" style="margin-top: 1.5rem; margin-bottom: 1.5rem">
+	<div class="buttonReg" style="margin-top: 1.5rem; margin-bottom: 1.5rem">
 		<a href="{{url('entry')}}?ReturnPath=breeder_mypage" class="btn btn--orange">新規登録してペットを掲載する</a>
 	</div>
 </section>
@@ -107,17 +117,21 @@
 
 
 <!-- PROJECT -->
-<section id="sec03">
+<section id="sec03" class="top_margin_xl">
 	<div class="innerImg">
 		<img src="{{ asset('assets/img/reg/site_image.png') }}" alt="">
+	</div>
+</section>
+<section id="sec03" class="top_margin_xl">
+	<div class="innerImg">
 		<img src="{{ asset('assets/img/reg/tradenavi.png') }}" alt="">
 	</div>
 </section>
 <!-- // PROJECT -->
-<div class="buttonS">
+<div class="buttonReg">
 	<a href="{{url('entry')}}?ReturnPath=breeder_mypage" class="btn btn--orange">新規登録してペットを掲載する</a>
 </div>
-<div class="buttonS">
+<div class="buttonReg">
 	<a href="{{url('breeder_login')}}?ReturnPath=breeder_mypage" class="btn btn--green">既に登録している方(ログイン)</a>
 </div>
 <!-- COMPANY -->

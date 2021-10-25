@@ -2,7 +2,8 @@
 
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.pet_kind, 'ペット種別', { 'label_attr': {'class': 'ec-label' }}) }}      
+            {{ form_label(form.pet_kind, 'ペット種別', { 'label_attr': {'class': 'ec-label' }}) }}
+            <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.pet_kind, { 'attr': { 'onchange': 'petKindChange();' }}) }}
@@ -13,6 +14,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.breeds_type, '犬種(猫種)', { 'label_attr': {'class': 'ec-label' }}) }}
+        <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.breeds_type) }}
@@ -94,7 +96,8 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-        {{ form_label(form.pet_birthday, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        {{ form_label(form.pet_sex, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.pet_birthday.year) }}<span>&nbsp;/&nbsp;</span>
@@ -106,6 +109,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.band_color, 'バンドカラー', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.band_color) }}
@@ -115,6 +119,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.coat_color, '毛色', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.coat_color) }}
@@ -123,7 +128,7 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-        {{ form_label(form.future_wait, '成犬時予想体重（ｋｇ）', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        {{ form_label(form.future_wait, '成犬時予想体重「kg」', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
         </div>
         <div class="col-md-3 ec-input">
         {{ form_widget(form.future_wait) }}
@@ -135,31 +140,34 @@
         {{ form_label(form.pr_comment, 'アピールポイント', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
         </div>
         <div class="col-md-8 ec-input">
-            {{ form_widget(form.pr_comment, {'attr': {'rows': 5}}) }}
+            {{ form_widget(form.pr_comment, {'attr': {'rows': 5, 'placeholder' : 'アピールポイントを25文字以内でお書きください。'}}) }}
             {{ form_errors(form.pr_comment) }}
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.description, '紹介文', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-input">
-            {{ form_widget(form.description, {'attr': {'rows': 5}}) }}
+            {{ form_widget(form.description, {'attr': {'rows': 10, 'placeholder' : '紹介文をお書きください。'}}) }}
             {{ form_errors(form.description) }}
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.guarantee, '生体保障内容', { 'label_attr': {'class': 'ec-label' }}) }}
+            <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-input">
-            {{ form_widget(form.guarantee, {'attr': {'rows': 10}}) }}
+            {{ form_widget(form.guarantee, {'attr': {'rows': 10, 'placeholder' : 'ブリーダー様にて設定されている生体保証内容をご記入ください。'}}) }}
             {{ form_errors(form.guarantee) }}
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.is_pedigree, '血統書の有無', { 'label_attr': {'class': 'ec-label' }}) }}
+            {{ form_label(form.guarantee, '血統書の有無', { 'label_attr': {'class': 'ec-label'}}) }}
+            <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 form-check-inline ec-radio">
             {{ form_widget(form.is_pedigree, {'attr': {'style': 'display:flex;'}}) }}
@@ -186,6 +194,7 @@
             </div>
         </div>
     </div>
+    {#
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.microchip_code, 'マイクロチップID', { 'label_attr': {'class': 'ec-label' }}) }}
@@ -195,9 +204,11 @@
             {{ form_errors(form.microchip_code) }}
         </div>
     </div>
+    #}
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.include_vaccine_fee, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label' }}) }}
+            {{ form_label(form.guarantee, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label' }}) }}
+            <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 form-check-inline ec-radio">
             {{ form_widget(form.include_vaccine_fee, {'attr': {'style': 'display:flex;'}}) }}
@@ -207,9 +218,10 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-input">
-            {{ form_widget(form.delivery_way, {'attr': {'rows': 5}}) }}
+            {{ form_widget(form.delivery_way, {'attr': {'rows': 5, 'placeholder' : '引き渡し方法をご記入ください。'}}) }}
             {{ form_errors(form.delivery_way) }}
         </div>
     </div>
@@ -217,13 +229,14 @@
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.price, '価格（税込）', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 col-lg-4">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">￥ </span>
                 </div>
-                {{ form_widget(form.price , { 'attr': {'style' : 'height: 40px' }}) }}
+                {{ form_widget(form.price , { 'attr': {'style' : 'height: 100%' }}) }}
                 {{ form_errors(form.price) }}
                 </div>
         </div>

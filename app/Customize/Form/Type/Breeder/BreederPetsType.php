@@ -51,14 +51,15 @@ class BreederPetsType extends AbstractType
             ->add('pet_sex', ChoiceType::class, [
                 'choices' =>
                 [
-                    '男の子' => AnilineConf::ANILINE_PET_SEX_MALE,
-                    '女の子' => AnilineConf::ANILINE_PET_SEX_FEMALE
+                    '男の子(オス)' => AnilineConf::ANILINE_PET_SEX_MALE,
+                    '女の子(メス)' => AnilineConf::ANILINE_PET_SEX_FEMALE
                 ],
                 'required' => true,
             ])
             ->add('pet_birthday', DateType::class, [
                 'data' => new DateTime(),
-                'years' => range(date('Y'), 1990),
+                'years' => range(date('Y'), 2000),
+                'required' => true,
             ])
             ->add('band_color', ChoiceType::class, [
                 'choices' =>
@@ -70,7 +71,7 @@ class BreederPetsType extends AbstractType
                     'ピンク' => AnilineConf::ANILINE_BAND_COLOR_PINK,
                     'オレンジ' => AnilineConf::ANILINE_BAND_COLOR_ORANGE
                 ],
-                'required' => false,
+                'required' => true,
                 'placeholder' => 'common.select'
             ])
             ->add('coat_color', EntityType::class, [
@@ -90,25 +91,16 @@ class BreederPetsType extends AbstractType
             //->add('dna_check_result', IntegerType::class)
             ->add('pr_comment', TextType::class, [
                 'attr' => [
-                    'maxlength' => 64,
+                    'maxlength' => 25,
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => 64,
+                        'max' => 25,
                     ]),
                 ],
                 'required' => false,
             ])
-            ->add('description', TextType::class, [
-                'attr' => [
-                    'maxlength' => 64,
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => 64,
-                    ]),
-                ],
-            ])
+            ->add('description', TextareaType::class)
             ->add('guarantee', TextareaType::class)
             ->add('is_pedigree', ChoiceType::class, [
                 'choices'  => [
@@ -127,13 +119,15 @@ class BreederPetsType extends AbstractType
             ->add('pedigree_code', IntegerType::class, [
                 'required' => false,
             ])
+            /*
             ->add('microchip_code', IntegerType::class, [
                 'required' => false,
             ])
+            */
             ->add('include_vaccine_fee', ChoiceType::class, [
                 'choices'  => [
-                    'あり'   => '1',
-                    'なし' => '0',
+                    '代金に含む'   => '1',
+                    '代金に含まない' => '0',
                 ],
                 'expanded' => true,
             ])
