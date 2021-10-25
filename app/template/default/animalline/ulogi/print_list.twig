@@ -1,0 +1,77 @@
+{% extends 'animalline/ulogi/frame.twig' %}
+
+{% block main %}
+    <div class="main">
+        <div class="row">
+            <div class="main-container col-12">
+                <h1 class="mb-0">出荷待ち一覧</h1>
+                <table class="table table-sm dna-table text-center responsive-table">
+                    <thead>
+                    <tr class="heading">
+                        <th class="border-top-0 pt-2 pb-2">No.</th>
+                        <th class="border-top-0 pt-2 pb-2">送り先名</th>
+                        <th class="border-top-0 pt-2 pb-2">送り先TEL</th>
+                        <th class="border-top-0 pt-2 pb-2">キット数量</th>
+                        <th class="border-top-0 pt-2 pb-2"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for dna in dnas %}
+                        <tr>
+                            <td class="id">{{ dna.getId() }}</td>
+                            <td>{{ dna.getShippingName() }}</td>
+                            <td>{{ dna.getShippingTel() }}</td>
+                            <td>{{ dna.getKitUnit() }}</td>
+                            <td><input type="button" value="印刷" onclick="postForm({{ dna.getId() }})"></td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">結果が０件です。</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="clearfix"></div>
+                <div class="ec-registerRole__actions">
+                    <div class="ec-off4Grid">
+                        <div class="ec-off4Grid__cell">
+                            <a href="{{ url('ulogi_index') }}" class="btn btn-warning w-100 m-1">戻る</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+<script>
+    function postForm(id){
+        if(!confirm('印刷します。よろしいですか？')){return;}
+
+        $.ajax({
+            url: '{{ url('ulogi_get_printdata') }}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'header_id' : id,
+            }
+        }).done(function (data) {// 正常時
+            var value = JSON.stringify(data);
+
+            var form = document.createElement('form');
+            var request = document.createElement('input');
+            form.method = 'POST'
+            form.action = 'http://ps.animalline.jp/print_execute';
+            request.type = 'hidden';
+            request.name = 'jsondata';
+            request.value = value;
+            form.appendChild(request);
+            document.body.appendChild(form);
+            form.submit();
+
+        }).fail(function () { // エラー時
+            alert('読み込みエラー');
+        });
+    }
+</script>
+{% endblock %}

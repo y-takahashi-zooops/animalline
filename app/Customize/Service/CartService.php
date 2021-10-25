@@ -169,6 +169,4 @@ class CartService extends BaseCartService
 
         return true;
     }
-
-
 }

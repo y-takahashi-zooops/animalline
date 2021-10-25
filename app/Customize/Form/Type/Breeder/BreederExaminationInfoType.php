@@ -90,9 +90,9 @@ class BreederExaminationInfoType extends AbstractType
             ->add('fulltime_staff_count', IntegerType::class, [
                 'required' => false,
             ])
-            ->add('fulltime_staff_worktime_ave', IntegerType::class, [
-                'required' => false,
-            ])
+            // ->add('fulltime_staff_worktime_ave', IntegerType::class, [
+            //     'required' => false,
+            // ])
             ->add('parttime_staff_count', IntegerType::class, [
                 'required' => false,
             ])
@@ -112,17 +112,17 @@ class BreederExaminationInfoType extends AbstractType
                 'choices' => range(0, 11),
                 'required' => true,
             ])
-            ->add('is_participate_show', ChoiceType::class, [
-                'choices' => [
-                    'なし' => AnilineConf::NONE,
-                    'あり' => AnilineConf::CAN_BE,
-                ],
-                'attr' => [
-                    'class' => 'form-check-inline ec-radio'
-                ],
-                'expanded' => true,
-                'required' => true,
-            ])
+            // ->add('is_participate_show', ChoiceType::class, [
+            //     'choices' => [
+            //         'なし' => AnilineConf::NONE,
+            //         'あり' => AnilineConf::CAN_BE,
+            //     ],
+            //     'attr' => [
+            //         'class' => 'form-check-inline ec-radio'
+            //     ],
+            //     'expanded' => true,
+            //     'required' => true,
+            // ])
             ->add('cage_size_1', CheckboxType::class, [
                 'label' => '休憩場所としてのみ利用できる小さいサイズ(分離型)',
                 'required' => true,

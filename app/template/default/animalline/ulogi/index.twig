@@ -1,0 +1,18 @@
+{% extends 'animalline/ulogi/frame.twig' %}
+
+{% block main %}
+<div class="main">
+    <div class="row">
+        <div class="main-container col-12">
+            <h1>アニマルライン出荷管理</h1>
+
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-12 col-md-8">
+                    <a href="{{url('ulogi_print_list')}}" class="btn btn-warning w-100 m-1">検査キット同梱用紙印刷</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,24 +1,24 @@
 {% set site_type = 'breeder' %}
 {% extends 'animalline/breeder/frame.twig' %}
 
-{% set params = app.request.query.all %}
 {% set check_status = {1:'キット発送中 ', 3:'ペット登録完了・返送中', 4:'検体異常', 5: 'DNA検査中', 6:'検査通過', 7:'検査NG', 8:'検体再送付手続済', 9:'ペット情報公開済'} %}
+{% set params = app.request.query.all %}
 
 {% block main %}
     <div class="c-contentsArea__cols">
         <div class="c-contentsArea__primaryCol">
             <div class="c-primaryCol">
                 <form id="form_bulk" method="POST" action="">
-                    <input type="hidden" name="dna_id" value="">
+                    <input type="hidden" name="dna-id" value="">
                     <div class="row justify-content-between mb-2">
                         <div class="col-6"></div>
                         <div class="col-4 col-md-2 text-right">
                             {% if params.is_all is defined and params.is_all == 1 %}
-                                <a class="btn btn-warning btn-block mt-3"
-                                   href="{{ url('breeder_examination_status') }}">未完了のみ表示</a>
+                                <a href="{{ url('breeder_examination_status') }}"
+                                   class="btn btn-warning btn-block mt-3">未完了のみ表示</a>
                             {% else %}
-                                <a class="btn btn-warning btn-block mt-3"
-                                   href="{{ url('breeder_examination_status', {'is_all': 1}) }}">全件表示</a>
+                                <a href="{{ url('breeder_examination_status', {'is_all': 1}) }}"
+                                   class="btn btn-warning btn-block mt-3">全件表示</a>
                             {% endif %}
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                                     <th class="border-top-0 pt-2 pb-2">検査ステータス</th>
                                     <th class="border-top-0 pt-2 pb-2">キット出荷</th>
                                     <th class="border-top-0 pt-2 pb-2">キット返送</th>
-                                    <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3">操作</th>
+                                    {# <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3">操作</th> #}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -59,6 +59,7 @@
                                         <td class="align-middle" data-label="キット返送">
                                             {{ dna.kit_return_date is empty ? '_' : dna.kit_return_date | date('Y/m/d') }}
                                         </td>
+                                        {#
                                         <td class="align-middle pr-3" colspan="3">
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
@@ -79,6 +80,7 @@
                                                 -->
                                             </div>
                                         </td>
+                                        #}
                                     </tr>
                                 {% else %}
                                     <tr>
@@ -131,7 +133,7 @@
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
 <script>
     function change(id) {
-    $('input[name=dna_id]').val(id);
+    $('input[name=dna-id]').val(id);
     $('#confirm-modal').modal('show');
 };
     $(".btn-ec-conversion").on('click', function() {
@@ -141,5 +143,3 @@
 });
 </script>
 {% endblock %}
-
-

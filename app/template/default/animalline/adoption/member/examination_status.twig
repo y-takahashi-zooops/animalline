@@ -33,7 +33,7 @@
                                     <th class="border-top-0 pt-2 pb-2">検査ステータス</th>
                                     <th class="border-top-0 pt-2 pb-2">キット出荷</th>
                                     <th class="border-top-0 pt-2 pb-2">キット返送</th>
-                                    <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
+                                    <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -41,26 +41,33 @@
                                     <tr>
                                         <td class="align-middle id" data-label="ID">{{ dna.dna_id }}</td>
                                         <td class="align-middle">
-                                            <a target="_blank" href="{{ path('adoption_pet_detail', {'id': dna.pet_id}) }}">
-                                                <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}"
-                                                     style="max-width: 50px">
+                                            <a target="_blank"
+                                               href="{{ path('adoption_pet_detail', {'id': dna.pet_id}) }}">
+                                                <img style="max-width: 50px"
+                                                     src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ dna.thumbnail_path | default('/noimage_plugin_list.png') }}">
                                             </a>
                                         </td>
-                                        <td class="align-middle" data-label="種別">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
+                                        <td class="align-middle" data-label="種別">
+                                            {{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}
+                                        </td>
                                         <td class="align-middle" data-label="犬種/猫種">{{ dna.breeds_name }}</td>
                                         <td class="align-middle" data-label="検査ステータス">{{ check_status[dna.check_status] }}</td>
-                                        <td class="align-middle" data-label="キット出荷">{{ dna.kit_shipping_date is empty ? '_' : dna.kit_shipping_date | date('Y/m/d') }}</td>
-                                        <td class="align-middle"  data-label="キット返送">{{ dna.kit_return_date is empty ? '_' : dna.kit_return_date | date('Y/m/d') }}</td>
+                                        <td class="align-middle" data-label="キット出荷">
+                                            {{ dna.kit_shipping_date is empty ? '_' : dna.kit_shipping_date | date('Y/m/d') }}
+                                        </td>
+                                        <td class="align-middle" data-label="キット返送">
+                                            {{ dna.kit_return_date is empty ? '_' : dna.kit_return_date | date('Y/m/d') }}
+                                        </td>
                                         <td class="align-middle pr-3" colspan="3">
-                                            {# <div class="text-right"> #}
-                                                <div class="text-center">
+                                            <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
-                                                     data-placement="top" title="検査キット再送付">
+                                                     data-placement="top" title="検査キット再請求">
                                                     <a class="btn btn-ec-actionIcon" {{ dna.check_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED') ? 'onclick=change('~dna.dna_id~')' : 'disabled' }}>
                                                         <i class="fa fa-vial fa-lg text-secondary"
                                                            aria-hidden="true"></i>
                                                     </a>
                                                 </div>
+                                                <!--
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="審査結果表示">
                                                     <a href="#" class="btn btn-ec-actionIcon">
@@ -68,6 +75,7 @@
                                                            aria-hidden="true"></i>
                                                     </a>
                                                 </div>
+                                                -->
                                             </div>
                                         </td>
                                     </tr>
@@ -79,6 +87,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="row justify-content-md-center mb-4 pb-4"></div>
                         <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog"
                              aria-labelledby="confirm-modal" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -96,7 +105,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn btn-secondary" type="button" data-dismiss="modal">
-                                            {{ 'admin.common.cancel'|trans }}
+                                            {{ 'common.cancel'|trans }}
                                         </button>
                                         <button class="btn btn-ec-conversion" type="submit">
                                             はい
@@ -112,7 +121,6 @@
                 {{ knp_pagination_render(dnas) }}
             </div>
         </div>
-    </div>
     </div>
 {% endblock %}
 {% block stylesheet %}
@@ -132,5 +140,3 @@
 });
 </script>
 {% endblock %}
-
-
