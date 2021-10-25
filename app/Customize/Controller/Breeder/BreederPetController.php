@@ -223,9 +223,12 @@ class BreederPetController extends AbstractController
         $user = $this->getUser();
         $breeder = $this->breedersRepository->find($user);
         if (!$breeder) throw new NotFoundHttpException();
-        $petInfoTemplate = $this->breederPetinfoTemplateRepository->findBy([
+        $petInfoTemplate = $this->breederPetinfoTemplateRepository->findOneBy([
             'Breeder' => $breeder
         ]);
+        if (!$petInfoTemplate) {
+            throw new NotFoundHttpException();
+        }
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
@@ -293,7 +296,7 @@ class BreederPetController extends AbstractController
 
         return $this->render('animalline/breeder/member/pets/new.twig', [
             'form' => $form->createView(),
-            'petInfoTemplate' => $petInfoTemplate[0]
+            'petInfoTemplate' => $petInfoTemplate
         ]);
     }
 
