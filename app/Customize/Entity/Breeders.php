@@ -205,6 +205,11 @@ class Breeders
      */
     private $BreederHouses;
 
+    /**
+     * @ORM\OneToOne(targetEntity=BreederPetinfoTemplate::class, mappedBy="Breeder", cascade={"persist", "remove"})
+     */
+    private $breederPetinfoTemplate;
+
     public function __construct()
     {
         $this->BreederPets = new ArrayCollection();
@@ -730,5 +735,22 @@ class Breeders
     public function getUpdateDate()
     {
         return $this->update_date;
+    }
+
+    public function getBreederPetinfoTemplate(): ?BreederPetinfoTemplate
+    {
+        return $this->breederPetinfoTemplate;
+    }
+
+    public function setBreederPetinfoTemplate(BreederPetinfoTemplate $breederPetinfoTemplate): self
+    {
+        // set the owning side of the relation if necessary
+        if ($breederPetinfoTemplate->getBreeder() !== $this) {
+            $breederPetinfoTemplate->setBreeder($this);
+        }
+
+        $this->breederPetinfoTemplate = $breederPetinfoTemplate;
+
+        return $this;
     }
 }
