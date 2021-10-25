@@ -15,6 +15,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Customize\Entity\BreederPets;
 use Customize\Config\AnilineConf;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class BreederPetsType extends AbstractType
 {
@@ -46,7 +47,17 @@ class BreederPetsType extends AbstractType
                 'required' => true
             ])
             ->add('coat_color', HiddenType::class, [
-                'mapped' => false
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length([
+                        'max' => 25,
+                    ])
+                ],
+                'attr' => [
+                    'maxlength' => 25,
+                    'placeholder' => '毛色をご記入ください。'
+                ],
             ])
             ->add('future_wait', IntegerType::class)
             ->add('dna_check_result', ChoiceType::class, [

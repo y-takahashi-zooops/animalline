@@ -413,7 +413,7 @@ if(breeder_pets_is_pedigree_0.checked){
 }
 
 $("#vaccineDetail").hide();
-if(breeder_pets_include_vaccine_fee_1.checked) {
+if(breeder_pets_include_vaccine_fee_0.checked) {
     $("#vaccineDetail").show();
 }
 
@@ -429,9 +429,9 @@ $(document).ready(function() {
 
     $("input[name$='breeder_pets[include_vaccine_fee]']").click(function() {
         var include_vaccine_fee = $(this).val();
-        if (include_vaccine_fee == 0) {
+        if (include_vaccine_fee == 1) {
             $("#vaccineDetail").show();
-        } else if (include_vaccine_fee == 1) {
+        } else if (include_vaccine_fee == 0) {
             $("#vaccineDetail").hide();
         }
     });
