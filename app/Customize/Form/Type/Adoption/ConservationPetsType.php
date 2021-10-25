@@ -5,7 +5,6 @@ namespace Customize\Form\Type\Adoption;
 use Customize\Config\AnilineConf;
 use Customize\Entity\Breeds;
 use Customize\Entity\ConservationPets;
-use Eccube\Common\EccubeConfig;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -13,31 +12,22 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ConservationPetsType extends AbstractType
 {
-    /**
-     * @var EccubeConfig
-     */
-    protected $eccubeConfig;
-
-    public function __construct(EccubeConfig $eccubeConfig)
-    {
-        $this->eccubeConfig = $eccubeConfig;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('pet_kind', ChoiceType::class, [
                 'choices' =>
-                [
-                    '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
-                    '猫' => AnilineConf::ANILINE_PET_KIND_CAT
-                ],
+                    [
+                        '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
+                        '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+                    ],
                 'required' => true,
             ])
             ->add('BreedsType', EntityType::class, [
@@ -52,14 +42,14 @@ class ConservationPetsType extends AbstractType
             ])
             ->add('pet_sex', ChoiceType::class, [
                 'choices' =>
-                [
-                    '男の子' => AnilineConf::ANILINE_PET_SEX_MALE,
-                    '女の子' => AnilineConf::ANILINE_PET_SEX_FEMALE
-                ],
+                    [
+                        '男の子' => AnilineConf::ANILINE_PET_SEX_MALE,
+                        '女の子' => AnilineConf::ANILINE_PET_SEX_FEMALE
+                    ],
                 'required' => true,
             ])
             ->add('pet_birthday', DateType::class)
-            ->add('coat_color', EntityType::class, [
+            ->add('coat_color', TextType::class, [
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(),
