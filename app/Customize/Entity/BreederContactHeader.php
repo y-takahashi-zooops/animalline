@@ -138,7 +138,7 @@ class BreederContactHeader
         return $this->Customer;
     }
 
-    public function setCustomer(?Customer $customer): self
+    public function setCustomer(Customer $customer): self
     {
         $this->Customer = $customer;
 
@@ -150,7 +150,7 @@ class BreederContactHeader
         return $this->Breeder;
     }
 
-    public function setBreeder(?Breeders $breeder): self
+    public function setBreeder(Breeders $breeder): self
     {
         $this->Breeder = $breeder;
 
@@ -162,7 +162,7 @@ class BreederContactHeader
         return $this->Pet;
     }
 
-    public function setPet(?BreederPets $pet): self
+    public function setPet(BreederPets $pet): self
     {
         $this->Pet = $pet;
 
@@ -198,7 +198,7 @@ class BreederContactHeader
         return $this->contact_description;
     }
 
-    public function setContactDescription(string $contact_description): self
+    public function setContactDescription(?string $contact_description): self
     {
         $this->contact_description = $contact_description;
 
@@ -210,7 +210,7 @@ class BreederContactHeader
         return $this->booking_request;
     }
 
-    public function setBookingRequest(string $booking_request): self
+    public function setBookingRequest(?string $booking_request): self
     {
         $this->booking_request = $booking_request;
 
