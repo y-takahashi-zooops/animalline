@@ -37,7 +37,7 @@ class AdoptionSearchController extends AbstractController
     protected $conservationsHouseRepository;
 
     /**
-     * @var DnaQueryService;
+     * @var DnaQueryService
      */
     protected $dnaQueryService;
 
