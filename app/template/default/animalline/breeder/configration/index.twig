@@ -85,7 +85,7 @@
                         <div class="d-flex">
                             {% set breederHouse = pet.Breeder.getBreederHouseByPetType(pet.petKind) %}
 							<h4 class="mr-3">{{ breederHouse.breederHousePref ~ ' ' ~ breederHouse.breederHouseCity ?? '' }}</h4>
-                            <h4>{{ pet.coatColor.coatColorName ?? '' }}</h4>
+                            <h4>{{ pet.coatColor ?? '' }}</h4>
                         </div>
                         <div class="m-2"></div>
                         <h4>{{ pet.prComment }}</h4>
