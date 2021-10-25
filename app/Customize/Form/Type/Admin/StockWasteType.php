@@ -18,22 +18,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class StockWasteType extends AbstractType
 {
-    /**
-     * @var EccubeConfig
-     */
-    protected $eccubeConfig;
-
-    /**
-     * @var StockWasteReasonRepository
-     */
-    protected $stockWasteReasonRepository;
-
-    public function __construct(EccubeConfig $eccubeConfig, StockWasteReasonRepository $stockWasteReasonRepository)
-    {
-        $this->eccubeConfig = $eccubeConfig;
-        $this->stockWasteReasonRepository = $stockWasteReasonRepository;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -45,12 +29,12 @@ class StockWasteType extends AbstractType
             ])
             ->add('waste_unit', IntegerType::class, [
                 'required' => true,
-                'constraints' => [
-                    new Assert\GreaterThanOrEqual([
-                        'value' => 1,
-                    ]),
-                    new Assert\NotBlank()
-                ],
+                // 'constraints' => [
+                //     new Assert\GreaterThanOrEqual([
+                //         'value' => 1,
+                //     ]),
+                //     new Assert\NotBlank()
+                // ],
                 'attr' => [
                     'min' => 1
                 ]
@@ -65,9 +49,9 @@ class StockWasteType extends AbstractType
                     return $stockWasteReason->getWasteReason();
                 },
                 'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
+                // 'constraints' => [
+                //     new Assert\NotBlank(),
+                // ],
             ])
             ->add('comment', TextareaType::class, [
                 'required' => false,
