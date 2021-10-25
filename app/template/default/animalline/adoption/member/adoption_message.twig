@@ -26,7 +26,7 @@
                                 <h6>誕生日：{{ pet.petBirthday|date('Y年m月d日') }}生</h6>
                             </div>
                             <div class="d-flex mb-2">
-                                <h6>色：{{ pet.getCoatColor().getCoatColorName() ?? '' }}</h6>
+                                <h6>色：{{ pet.getCoatColor() ?? '' }}</h6>
                             </div>
                             <div class="d-flex mb-2">
                                 <h6>性別：{{ message.getPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h6>

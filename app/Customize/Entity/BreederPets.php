@@ -51,10 +51,9 @@ class BreederPets
     private $pet_birthday;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customize\Entity\CoatColors", inversedBy="BreederPets")
-     * @ORM\JoinColumn(name="coat_color", nullable=true)
+     * @ORM\Column(name="coat_color", type="string", length=20, nullable=true)
      */
-    private $CoatColor;
+    private $coat_color;
 
     /**
      * @ORM\Column(name="future_wait", type="integer", nullable=true)
@@ -196,6 +195,16 @@ class BreederPets
      */
     private $band_color;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $payment_method;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $reservation_fee;
+
     public function __construct()
     {
         $this->BreederPetImages = new ArrayCollection();
@@ -257,14 +266,14 @@ class BreederPets
         return $this;
     }
 
-    public function getCoatColor(): ?CoatColors
+    public function getCoatColor(): ?string
     {
-        return $this->CoatColor;
+        return $this->coat_color;
     }
 
-    public function setCoatColor(?CoatColors $CoatColor): self
+    public function setCoatColor(?string $coat_color): self
     {
-        $this->CoatColor = $CoatColor;
+        $this->coat_color = $coat_color;
 
         return $this;
     }
@@ -664,6 +673,30 @@ class BreederPets
     public function setBandColor(?int $band_color): self
     {
         $this->band_color = $band_color;
+
+        return $this;
+    }
+
+    public function getPaymentMethod(): ?string
+    {
+        return $this->payment_method;
+    }
+
+    public function setPaymentMethod(?string $payment_method): self
+    {
+        $this->payment_method = $payment_method;
+
+        return $this;
+    }
+
+    public function getReservationFee(): ?string
+    {
+        return $this->reservation_fee;
+    }
+
+    public function setReservationFee(?string $reservation_fee): self
+    {
+        $this->reservation_fee = $reservation_fee;
 
         return $this;
     }

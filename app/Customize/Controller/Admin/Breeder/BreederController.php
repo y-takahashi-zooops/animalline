@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetImageRepository;
-use Customize\Repository\CoatColorsRepository;
 use Eccube\Repository\CustomerRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Customize\Service\MailService;
@@ -41,11 +40,6 @@ class BreederController extends AbstractController
      * @var BreedsRepository
      */
     protected $breedsRepository;
-
-    /**
-     * @var CoatColorsRepository
-     */
-    protected $coatColorsRepository;
 
     /**
      * @var BreederPetImageRepository
@@ -81,7 +75,6 @@ class BreederController extends AbstractController
      * breederController constructor.
      * @param BreedersRepository $breedersRepository
      * @param BreedsRepository $breedsRepository
-     * @param CoatColorsRepository $coatColorsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederQueryService $breederQueryService
      * @param BreederPetsRepository $breederPetsRepository
@@ -92,7 +85,6 @@ class BreederController extends AbstractController
     public function __construct(
         BreedersRepository               $breedersRepository,
         BreedsRepository                 $breedsRepository,
-        CoatColorsRepository             $coatColorsRepository,
         BreederPetImageRepository        $breederPetImageRepository,
         BreederQueryService              $breederQueryService,
         BreederPetsRepository            $breederPetsRepository,
@@ -104,7 +96,6 @@ class BreederController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->breedsRepository = $breedsRepository;
         $this->breederQueryService = $breederQueryService;
-        $this->coatColorsRepository = $coatColorsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
         $this->customerRepository = $customerRepository;
