@@ -21,6 +21,7 @@ use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreederPetImageRepository;
+use Customize\Repository\BreederPetinfoTemplateRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Repository\CustomerRepository;
@@ -115,6 +116,11 @@ class BreederPetController extends AbstractController
     protected $dnaCheckStatusHeaderRepository;
 
     /**
+     * @var BreederPetinfoTemplateRepository
+     */
+    protected $breederPetinfoTemplateRepository;
+
+    /**
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
@@ -133,6 +139,7 @@ class BreederPetController extends AbstractController
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+     * @param BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository
      */
     public function __construct(
         BreederContactsRepository        $breederContactsRepository,
@@ -150,7 +157,8 @@ class BreederPetController extends AbstractController
         BreederPetImageRepository        $breederPetImageRepository,
         DnaQueryService                  $dnaQueryService,
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
-        DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository
+        DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository,
+        BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
@@ -168,6 +176,7 @@ class BreederPetController extends AbstractController
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
+        $this->breederPetinfoTemplateRepository = $breederPetinfoTemplateRepository;
     }
 
     /**
@@ -211,7 +220,12 @@ class BreederPetController extends AbstractController
                 'breeder' => $breeder
             ]);
         }
-
+        $user = $this->getUser();
+        $breeder = $this->breedersRepository->find($user);
+        if (!$breeder) throw new NotFoundHttpException();
+        $petInfoTemplate = $this->breederPetinfoTemplateRepository->findBy([
+            'Breeder' => $breeder
+        ]);
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
@@ -278,7 +292,8 @@ class BreederPetController extends AbstractController
         }
 
         return $this->render('animalline/breeder/member/pets/new.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'petInfoTemplate' => $petInfoTemplate[0]
         ]);
     }
 

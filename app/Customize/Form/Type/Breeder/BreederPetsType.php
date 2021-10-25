@@ -74,16 +74,18 @@ class BreederPetsType extends AbstractType
                 'required' => true,
                 'placeholder' => 'common.select'
             ])
-            ->add('coat_color', EntityType::class, [
-                'class' => 'Customize\Entity\CoatColors',
-                'choice_label' => function (CoatColors $coatColors) {
-                    return $coatColors->getCoatColorName();
-                },
+            ->add('coat_color', TextType::class, [
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(),
+                    new Assert\Length([
+                        'max' => 25,
+                    ])
                 ],
-                'placeholder' => 'common.select'
+                'attr' => [
+                    'maxlength' => 25,
+                    'placeholder' => '毛色をご記入ください。'
+                ],
             ])
             ->add('future_wait', IntegerType::class, [
                 'required' => false,
@@ -109,6 +111,12 @@ class BreederPetsType extends AbstractType
                 ],
                 'expanded' => true,
             ])
+            ->add('vaccine_detail', TextType::class, [
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'フリー記入',
+                ],
+            ])
             ->add('Pedigree', EntityType::class, [
                 'class' => 'Customize\Entity\Pedigree',
                 'choice_label' => function (Pedigree $petdigree) {
@@ -132,6 +140,8 @@ class BreederPetsType extends AbstractType
                 'expanded' => true,
             ])
             ->add('delivery_way', TextareaType::class)
+            ->add('payment_method', TextareaType::class)
+            ->add('reservation_fee', TextareaType::class)
             ->add('thumbnail_path', FileType::class, [
                 'required' => false,
                 'mapped' => false,
