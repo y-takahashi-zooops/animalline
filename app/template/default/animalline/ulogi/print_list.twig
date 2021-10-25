@@ -56,6 +56,8 @@
                 'header_id' : id,
             }
         }).done(function (data) {// 正常時
+            printexecute(data);
+            /*
             var value = JSON.stringify(data);
 
             var form = document.createElement('form');
@@ -68,7 +70,25 @@
             form.appendChild(request);
             document.body.appendChild(form);
             form.submit();
+            */
+        }).fail(function () { // エラー時
+            alert('読み込みエラー');
+        });
+    }
 
+    function printexecute(senddata){
+        
+        alert(JSON.stringify(senddata));
+
+        $.ajax({
+            url: 'http://ps.animalline.jp/print_execute',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'jsondata' : JSON.stringify(senddata),
+            }
+        }).done(function (data) {// 正常時
+            location.href = "{{ url('ulogi_print_confirm') }}?fileid=" + data["output"];
         }).fail(function () { // エラー時
             alert('読み込みエラー');
         });

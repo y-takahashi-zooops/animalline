@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title> ブラウザー任意指定印刷</title>
+<script type="text/javascript" src="http://ps.animalline.jp/cwebclient.min.js?version=11.2.0" charset="utf-8"></script>
+<script type="text/javascript">
+function KickPrintExecuteEx() {
+	cwebclient.CreatePrintingDataScriptUrl = "http://ps.animalline.jp/get_ccd/{{ fileid }}";
+	// 帳票名（Job ファイル名）を引数に指定します。
+	cwebclient.PrintExecuteEx("DNAKit001");
+}
+function KickChangePrintInfo() {
+	// 引数に帳票名（Job ファイル名）を指定します
+	cwebclient.ChangePrintInfo("DNAKit001");
+}
+</script>
+</head>
+<body>
+<h1>DNA検査キット送付用バーコード印刷<h1>
+<hr>
+<div style="margin: auto auto auto auto;">
+{{ print_title }}<br>
+<input type="button" value=" 印刷実行" onclick="KickPrintExecuteEx()" />
+<input type="button" value=" 印刷設定" onclick="KickChangePrintInfo()" />
+</div>
+</body>
+</html>
