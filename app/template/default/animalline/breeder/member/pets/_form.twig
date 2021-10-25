@@ -109,7 +109,8 @@
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.band_color, 'バンドカラー', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-        <span class="ec-required">必須</span>  
+        <span class="ec-required">必須</span>
+        <p style="font-size:14px;color:#DE5D50;">遺伝病DNA検査で使用した検体識別バンドのカラーを選択してください。</p>
         </div>
         <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.band_color) }}
@@ -158,6 +159,7 @@
         <div class="col-md-3">
             {{ form_label(form.guarantee, '生体保障内容', { 'label_attr': {'class': 'ec-label' }}) }}
             <span class="ec-required">必須</span>  
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.guarantee, {'attr': {'rows': 10, 'placeholder' : 'ブリーダー様にて設定されている生体保証内容をご記入ください。'}}) }}
@@ -219,6 +221,7 @@
         <div class="col-md-3">
             {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span>  
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.delivery_way, {'attr': {'rows': 5, 'placeholder' : '引き渡し方法をご記入ください。'}}) }}
