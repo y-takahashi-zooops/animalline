@@ -17,7 +17,6 @@ use Customize\Config\AnilineConf;
 use Customize\Repository\BreedsRepository;
 use Customize\Entity\ConservationPets;
 use Customize\Form\Type\Admin\ConservationPetsType;
-use Customize\Repository\CoatColorsRepository;
 use Customize\Repository\ConservationPetImageRepository;
 use Customize\Service\AdoptionQueryService;
 use Eccube\Controller\AbstractController;
@@ -34,11 +33,6 @@ class AdoptionPetController extends AbstractController
     protected $breedsRepository;
 
     /**
-     * @var CoatColorsRepository
-     */
-    protected $coatColorsRepository;
-
-    /**
      * @var ConservationPetImageRepository
      */
     protected $conservationPetImageRepository;
@@ -52,19 +46,16 @@ class AdoptionPetController extends AbstractController
      * AdoptionPetController constructor.
      *
      * @param BreedsRepository $breedsRepository
-     * @param CoatColorsRepository $coatColorsRepository
      * @param ConservationPetImageRepository $conservationPetImageRepository
      * @param AdoptionQueryService $adoptionQueryService
      */
 
     public function __construct(
         BreedsRepository               $breedsRepository,
-        CoatColorsRepository           $coatColorsRepository,
         ConservationPetImageRepository $conservationPetImageRepository,
         AdoptionQueryService           $adoptionQueryService
     ) {
         $this->breedsRepository = $breedsRepository;
-        $this->coatColorsRepository = $coatColorsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
         $this->adoptionQueryService = $adoptionQueryService;
     }
@@ -130,7 +121,6 @@ class AdoptionPetController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $conservationPet->setBreedsType($this->breedsRepository->find($request->get('breeds_type')));
-            $conservationPet->setCoatColor($this->coatColorsRepository->find($request->get('coat_color')));
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationPet);
@@ -140,14 +130,12 @@ class AdoptionPetController extends AbstractController
         }
 
         $breeds = $this->breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()], ['breeds_name' => 'ASC']);
-        $colors = $this->coatColorsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()]);
         $images = $this->conservationPetImageRepository->findBy(['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
 
         return $this->render('@admin/Adoption/pet/edit.twig', [
             'form' => $form->createView(),
             'conservationPet' => $conservationPet,
             'breeds' => $breeds,
-            'colors' => $colors,
             'images' => $images,
         ]);
     }

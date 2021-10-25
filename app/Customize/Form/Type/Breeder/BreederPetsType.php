@@ -4,7 +4,6 @@ namespace Customize\Form\Type\Breeder;
 
 use Customize\Entity\BreederPets;
 use Customize\Entity\Breeds;
-use Customize\Entity\CoatColors;
 use Customize\Entity\Pedigree;
 use DateTime;
 use Symfony\Component\Form\AbstractType;

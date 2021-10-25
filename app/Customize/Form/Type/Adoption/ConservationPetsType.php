@@ -4,7 +4,6 @@ namespace Customize\Form\Type\Adoption;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\Breeds;
-use Customize\Entity\CoatColors;
 use Customize\Entity\ConservationPets;
 use Eccube\Common\EccubeConfig;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -60,14 +59,17 @@ class ConservationPetsType extends AbstractType
                 'required' => true,
             ])
             ->add('pet_birthday', DateType::class)
-            ->add('CoatColor', EntityType::class, [
-                'class' => 'Customize\Entity\CoatColors',
-                'choice_label' => function (CoatColors $coatColors) {
-                    return $coatColors->getCoatColorName();
-                },
+            ->add('coat_color', EntityType::class, [
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(),
+                    new Assert\Length([
+                        'max' => 25,
+                    ])
+                ],
+                'attr' => [
+                    'maxlength' => 25,
+                    'placeholder' => '毛色をご記入ください。'
                 ],
             ])
             ->add('future_wait', IntegerType::class)

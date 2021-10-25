@@ -1,9 +1,0 @@
-{% set site_type = 'adoption' %}
-{% extends 'ani_frame.twig' %}
-{% block main %}
-    <h1>Create new CoatColors</h1>
-    <br>
-        <a href="{{ path('coat_colors_index') }}">< back to list</a>
-    <hr>
-    {{ include('test/coat_colors/_form.twig') }}
-{% endblock %}

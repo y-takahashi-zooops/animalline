@@ -46,7 +46,7 @@ class BreederPetsType extends AbstractType
                 ],
                 'required' => true
             ])
-            ->add('coat_color', HiddenType::class, [
+            ->add('coat_color', TextType::class, [
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(),
