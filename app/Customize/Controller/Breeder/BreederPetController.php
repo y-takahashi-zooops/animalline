@@ -8,6 +8,7 @@ use Customize\Entity\BreederPets;
 use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
+use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Form\Type\Breeder\BreederPetsType;
 use Customize\Entity\BreederHouse;
@@ -20,6 +21,7 @@ use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreederPetImageRepository;
+use Customize\Repository\BreederPetinfoTemplateRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Repository\CustomerRepository;
@@ -99,19 +101,24 @@ class BreederPetController extends AbstractController
     protected $breederPetImageRepository;
 
     /**
-     * @var DnaQueryService;
+     * @var DnaQueryService
      */
     protected $dnaQueryService;
 
     /**
-     * @var DnaCheckStatusRepository;
+     * @var DnaCheckStatusRepository
      */
     protected $dnaCheckStatusRepository;
 
     /**
-     * @var DnaCheckStatusHeaderRepository;
+     * @var DnaCheckStatusHeaderRepository
      */
     protected $dnaCheckStatusHeaderRepository;
+
+    /**
+     * @var BreederPetinfoTemplateRepository
+     */
+    protected $breederPetinfoTemplateRepository;
 
     /**
      * BreederController constructor.
@@ -126,10 +133,13 @@ class BreederPetController extends AbstractController
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      * @param CustomerRepository $customerRepository
+     * @param BreederContactHeaderRepository $breederContactHeaderRepository
+     * @param BreederEvaluationsRepository $breederEvaluationsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+     * @param BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository
      */
     public function __construct(
         BreederContactsRepository        $breederContactsRepository,
@@ -147,7 +157,8 @@ class BreederPetController extends AbstractController
         BreederPetImageRepository        $breederPetImageRepository,
         DnaQueryService                  $dnaQueryService,
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
-        DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository
+        DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository,
+        BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
@@ -165,6 +176,7 @@ class BreederPetController extends AbstractController
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
+        $this->breederPetinfoTemplateRepository = $breederPetinfoTemplateRepository;
     }
 
     /**
@@ -173,7 +185,7 @@ class BreederPetController extends AbstractController
      * @Route("/breeder/member/pet_list", name="breeder_pet_list")
      * @Template("animalline/breeder/member/pet_list.twig")
      */
-    public function breeder_pet_list(Request $request)
+    public function breeder_pet_list(): ?Response
     {
         $pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
 
@@ -209,6 +221,12 @@ class BreederPetController extends AbstractController
             ]);
         }
 
+        $breeder = $this->breedersRepository->find($user);
+        if (!$breeder) throw new NotFoundHttpException();
+        $petInfoTemplate = $this->breederPetinfoTemplateRepository->findOneBy([
+            'Breeder' => $breeder
+        ]);
+
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
@@ -216,7 +234,9 @@ class BreederPetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if($request->get('breeder_pets')['is_pedigree'] == 0 || $request->get('breeder_pets')['pedigree_code']) $breederPet->setPedigreeCode('0');
+            if ($request->get('breeder_pets')['is_pedigree'] == 0 || $request->get('breeder_pets')['pedigree_code']) {
+                $breederPet->setPedigreeCode('0');
+            }
             $entityManager = $this->getDoctrine()->getManager();
             $breeder = $this->breedersRepository->find($breederId);
             $breederPet->setBreeder($breeder);
@@ -257,7 +277,7 @@ class BreederPetController extends AbstractController
             // update dna check status
             $Dna->setPetId($breederPet->getId())
                 ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED)
-                ->setKitPetRegisterDate(new \DateTime);
+                ->setKitPetRegisterDate(new DateTime);
 
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
@@ -273,7 +293,8 @@ class BreederPetController extends AbstractController
         }
 
         return $this->render('animalline/breeder/member/pets/new.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'petInfoTemplate' => $petInfoTemplate
         ]);
     }
 
@@ -284,7 +305,7 @@ class BreederPetController extends AbstractController
      * @Route("/breeder/member/pets/new_complete", name="breeder_newpet_complete", methods={"GET","POST"})
      * @Template("animalline/breeder/member/pets/notification.twig")
      */
-    public function breeder_pets_new_complete()
+    public function breeder_pets_new_complete(): array
     {
         return [];
     }
@@ -296,6 +317,16 @@ class BreederPetController extends AbstractController
      */
     public function breeder_pets_edit(Request $request, BreederPets $breederPet): Response
     {
+        $user = $this->getUser();
+        $breeder = $this->breedersRepository->find($user);
+        if (!$breeder) throw new NotFoundHttpException();
+        $petInfoTemplate = $this->breederPetinfoTemplateRepository->findOneBy([
+            'Breeder' => $breeder
+        ]);
+        if (!$petInfoTemplate) {
+            throw new NotFoundHttpException();
+        }
+
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
         ]);
@@ -307,7 +338,9 @@ class BreederPetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if($request->get('breeder_pets')['is_pedigree'] == 0 || $request->get('breeder_pets')['pedigree_code']) $breederPet->setPedigreeCode('0');
+            if ($request->get('breeder_pets')['is_pedigree'] == 0 || $request->get('breeder_pets')['pedigree_code']) {
+                $breederPet->setPedigreeCode('0');
+            }
             $petId = $breederPet->getId();
             $img0 = $this->setImageSrc($request->get('img0'), $petId);
             $img1 = $this->setImageSrc($request->get('img1'), $petId);
@@ -338,7 +371,8 @@ class BreederPetController extends AbstractController
         return $this->render('animalline/breeder/member/pets/edit.twig', [
             'breeder_pet' => $breederPet,
             'pet_mages' => $petImages,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'petInfoTemplate' => $petInfoTemplate
         ]);
     }
 
@@ -349,7 +383,7 @@ class BreederPetController extends AbstractController
      * @param int $petId
      * @return string
      */
-    private function setImageSrc($imageUrl, $petId)
+    private function setImageSrc($imageUrl, $petId): string
     {
         if (empty($imageUrl)) {
             return '';
@@ -400,8 +434,9 @@ class BreederPetController extends AbstractController
             ->setParameter('arr', $dnaCheckStatusHeaders)
             ->addOrderBy('dcs.update_date', 'DESC')
             ->getQuery()->getResult();
-        foreach ($DnaCheckStatus as $dnaCheckStatus)
+        foreach ($DnaCheckStatus as $dnaCheckStatus) {
             $codes[] = '1' . str_pad($dnaCheckStatus->getId(), 5, '0', STR_PAD_LEFT);
+        }
         $barCodes = $paginator->paginate(
             $codes,
             $request->query->getInt('page', 1),

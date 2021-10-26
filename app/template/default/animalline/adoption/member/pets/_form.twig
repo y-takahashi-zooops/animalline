@@ -102,11 +102,11 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.CoatColor, '毛色', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
+            {{ form_label(form.coat_color, '毛色', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}      
         </div>
         <div class="col-md-5 ec-select">
-            {{ form_widget(form.CoatColor) }}
-            {{ form_errors(form.CoatColor) }}
+            {{ form_widget(form.coat_color) }}
+            {{ form_errors(form.coat_color) }}
         </div>
     </div>
     <div class="row mb-3">
@@ -224,15 +224,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="img-container">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <!--  default image where we will set the src via jquery-->
+                <div class="img-container row">
+                    <div class="col-md-6 col-12 d-flex">
+                        <!--  default image where we will set the src via jquery-->
+                        <div style="flex-grow: 1">
                             <img id="image">
                         </div>
-                        <div class="col-md-4">
-                            <div class="preview"></div>
-                        </div>
+                    </div>
+                    <div class="col-md-6 col-12 d-flex justify-content-center align-items-center">
+                        <div class="preview"></div>
                     </div>
                 </div>
             </div>
@@ -249,10 +249,8 @@
     <style>
         .preview {
             overflow: hidden;
-            width: 200px;
-            height: 200px;
-            margin-left: 25px;
-            border: 1px solid red;
+            width: 200px !important;
+            height: 200px !important;
         }
         .preview_box {
             border: 1px dotted;
@@ -303,6 +301,7 @@
         .form_img_inline {
             display: flex;
             flex-flow: row wrap;
+            justify-content: center;
         }
 
     </style>

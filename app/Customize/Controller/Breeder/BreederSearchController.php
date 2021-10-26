@@ -4,7 +4,6 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreedsRepository;
-use Customize\Repository\CoatColorsRepository;
 use Customize\Service\BreederQueryService;
 use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\SendoffReasonRepository;
@@ -150,11 +149,11 @@ class BreederSearchController extends AbstractController
      *
      * @Route("/breeder_pet_data_by_pet_kind", name="breeder_pet_data_by_pet_kind", methods={"GET"})
      */
-    public function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
+    public function breederPetDataByPetKind(Request $request, BreedsRepository $breedsRepository)
     {
         $petKind = $request->get('pet_kind');
-        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
-        $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
+        // $breeds = $breedsRepository->findBy(['pet_kind' => $petKind], ['breeds_name' => 'ASC']);
+        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind], ['sort_order' => 'ASC']);
         $formattedBreeds = [];
         foreach ($breeds as $breed) {
             $formattedBreeds[] = [
@@ -162,16 +161,9 @@ class BreederSearchController extends AbstractController
                 'name' => $breed->getBreedsName()
             ];
         }
-        $formattedColors = [];
-        foreach ($colors as $color) {
-            $formattedColors[] = [
-                'id' => $color->getId(),
-                'name' => $color->getCoatColorName()
-            ];
-        }
+
         $data = [
-            'breeds' => $formattedBreeds,
-            'colors' => $formattedColors
+            'breeds' => $formattedBreeds
         ];
 
         return new JsonResponse($data);

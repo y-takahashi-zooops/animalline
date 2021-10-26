@@ -29,7 +29,7 @@ class BreederExamController extends AbstractController
     protected $breedersRepository;
 
     /**
-     * @var BreederHouse
+     * @var BreederHouseRepository
      */
     protected $breederHouseRepository;
 
@@ -39,12 +39,12 @@ class BreederExamController extends AbstractController
     protected $breederExaminationInfoRepository;
 
     /**
-     * @var DnaQueryService;
+     * @var DnaQueryService
      */
     protected $dnaQueryService;
 
     /**
-     * @var DnaCheckStatusRepository;
+     * @var DnaCheckStatusRepository
      */
     protected $dnaCheckStatusRepository;
 

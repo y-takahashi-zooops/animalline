@@ -133,7 +133,7 @@ class ExportProduct extends Command
             $result = [];
             foreach ($records as $record) {
 
-                $supplier = $this->supplierRepository->findOneBy(['supplier_code' => $record['supplier_code']]);
+                $supplier = $this->supplierRepository->findOneBy(['id' => $record['supplier_code']]);
                 $product = $this->productRepository->find($record['id']);
 
                 $record['supplier_code'] = $supplier->getSupplierCode();

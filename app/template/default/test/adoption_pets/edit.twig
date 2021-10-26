@@ -1,9 +1,0 @@
-{% set site_type = 'adoption' %}
-{% extends 'ani_frame.twig' %}
-{% block main %}
-    <h1>Edit AdoptionPets</h1>
-    <br>
-    <a href="{{ path('adoption_pets_index') }}">< back to list</a>
-    <hr>
-    {{ include('test/adoption_pets/_form.twig', {'button_label': 'Update'}) }}
-{% endblock %}

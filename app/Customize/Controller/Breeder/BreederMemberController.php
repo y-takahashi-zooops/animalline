@@ -2,6 +2,8 @@
 
 namespace Customize\Controller\Breeder;
 
+use Customize\Entity\BreederPetinfoTemplate;
+use Customize\Form\Type\Breeder\BreederPetinfoTemplateType;
 use Customize\Service\BreederQueryService;
 use Eccube\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -155,9 +157,25 @@ class BreederMemberController extends AbstractController
         $form = $builder->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        // フォームサブミット時に、画像サムネイル情報を設定する(バリデーションは無視)
+        if ($form->isSubmitted()){
             $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
             $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
+
+            $breederData->setThumbnailPath($thumbnail_path);
+            $breederData->setLicenseThumbnailPath($license_thumbnail_path);
+            $this->entityManager->persist($breederData);
+            $this->entityManager->flush();
+
+            // どちらかが空欄の場合、強制的に基本情報入力ページにリターン
+            if ($thumbnail_path == "" || $license_thumbnail_path == "") {
+                return $this->redirectToRoute('breeder_baseinfo');
+            }
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
+            // $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
 
             $handling_pet_kind = $form->getData()->getHandlingPetKind();
 
@@ -167,34 +185,24 @@ class BreederMemberController extends AbstractController
                 $breederData->setBreederHouseNameDog(null);
             }
 
-            if (!$thumbnail_path || !$license_thumbnail_path) {
-                if ($thumbnail_path) {
-                    $breederData->setThumbnailPath($thumbnail_path);
-                } elseif ($license_thumbnail_path) {
-                    $breederData->setLicenseThumbnailPath($license_thumbnail_path);
-                }
+            // if (!$thumbnail_path || !$license_thumbnail_path) {
+            //     if ($thumbnail_path) {
+            //         $breederData->setThumbnailPath($thumbnail_path);
+            //     } elseif ($license_thumbnail_path) {
+            //         $breederData->setLicenseThumbnailPath($license_thumbnail_path);
+            //     }
                 
-                return $this->redirectToRoute('breeder_baseinfo');
-            }
+            //     return $this->redirectToRoute('breeder_baseinfo');
+            // }
 
             $breederData->setBreederPref($breederData->getPrefBreeder())
-                ->setLicensePref($breederData->getPrefLicense())
-                ->setThumbnailPath($thumbnail_path)
-                ->setLicenseThumbnailPath($license_thumbnail_path);
+                ->setLicensePref($breederData->getPrefLicense());
+                // ->setThumbnailPath($thumbnail_path)
+                // ->setLicenseThumbnailPath($license_thumbnail_path);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederData);
             $entityManager->flush();
             return $this->redirectToRoute($return_path);
-//        } elseif (!$form->isSubmitted() && !$breedersRepository->find($user)) {
-//            // Customer情報から初期情報をセット
-//            $Customer = $this->customerRepository->find($user);
-//            $form->get('breeder_name')->setData($Customer->getname01() . '　' . $Customer->getname02());
-//            $form->get('breeder_kana')->setData($Customer->getkana01() . '　' . $Customer->getkana02());
-//            $form->get('breeder_zip')->setData($Customer->getPostalCode());
-//            $form->get('PrefBreeder')->setData($Customer->getPref());
-//            $form->get('breeder_city')->setData($Customer->getAddr01());
-//            $form->get('breeder_address')->setData($Customer->getAddr02());
-//            $form->get('breeder_tel')->setData($Customer->getPhoneNumber());
         }
 
         return [
@@ -202,6 +210,37 @@ class BreederMemberController extends AbstractController
             'breederData' => $breederData,
             'form' => $form->createView(),
             'Customer' => $user,
+        ];
+    }
+
+    /**
+     * テンプレート編集画面
+     *
+     * @Route("/breeder/member/template", name="breeder_template")
+     * @Template("/animalline/breeder/member/template.twig")
+     */
+    public function template(Request $request)
+    {
+        $breeder = $this->breedersRepository->find($this->getUser());
+        if (!$breeder) {
+            return $this->redirectToRoute('breeder_mypage');
+        }
+        $breederPetinfoTemplate = $breeder->getBreederPetinfoTemplate() ?: new BreederPetinfoTemplate();
+        $builder = $this->formFactory->createBuilder(BreederPetinfoTemplateType::class, $breederPetinfoTemplate);
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $breederPetinfoTemplate->setBreeder($breeder);
+            $entityManager->persist($breederPetinfoTemplate);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('breeder_mypage');
+        }
+
+        return [
+            'form' => $form->createView()
         ];
     }
 }

@@ -98,15 +98,15 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="img-container">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <!--  default image where we will set the src via jquery-->
-                                <img id="image" alt="">
+                    <div class="img-container row">
+                        <div class="col-md-6 col-12 d-flex">
+                            <!--  default image where we will set the src via jquery-->
+                            <div style="flex-grow: 1">
+                                <img id="image">
                             </div>
-                            <div class="col-md-4">
-                                <div class="preview"></div>
-                            </div>
+                        </div>
+                        <div class="col-md-6 col-12 d-flex justify-content-center align-items-center">
+                            <div class="preview"></div>
                         </div>
                     </div>
                 </div>
@@ -122,6 +122,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
     <style>
+        .ec-radio input {
+            margin-bottom: 0;
+        }
         .ec-radio .form-check {
             display: flex;
             align-items: center;
@@ -139,10 +142,8 @@
 
         .preview {
             overflow: hidden;
-            width: 200px;
-            height: 200px;
-            margin-left: 25px;
-            border: 1px solid red;
+            width: 200px !important;
+            height: 200px !important;
         }
     </style>
 {% endblock %}

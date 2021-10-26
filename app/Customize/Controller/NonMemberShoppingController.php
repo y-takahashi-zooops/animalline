@@ -155,6 +155,4 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
             'form' => $form->createView(),
         ];
     }
-
- 
 }

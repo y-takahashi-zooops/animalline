@@ -4004,3 +4004,14 @@ Width <= 375px
 .modal {
   z-index: 20050;
 }
+
+@media (max-width: 600px ) {
+  .cropper-point.point-se {
+    width: 10px !important;
+    height: 10px !important;
+  }
+}
+
+.img-container > div {
+  height: 40vh !important;
+}

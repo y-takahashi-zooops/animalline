@@ -10,7 +10,7 @@
 			</div>
 			<div class="ec-off1Grid">
 				<div class="ec-off1Grid__cell">
-					<form method="post" action="{{ url('adoption_baseinfo') }}" novalidate class="h-adr" name="update-baseinfo-form">
+                    <form method="post" action="{{ url('adoption_baseinfo') }}" novalidate name="update-baseinfo-form">
 						<span class="p-country-name" style="display:none;">Japan</span>
 						{{ form_widget(form._token) }}
 						<div class="ec-borderedDefs">
@@ -27,7 +27,7 @@
 									</dd>
 								</dl>
 								<dl>
-									<dt>
+								    <dt>
 										{{ form_label(form.organization_name, '	保護団体名（個人の場合は氏名）', { 'label_attr': { 'class': 'ec-label' }}) }}
 									</dt>
 									<dd>
@@ -43,8 +43,8 @@
 									</dt>
 									<dd>
 										<div class="ec-select{{ has_errors(form.handling_pet_kind) ? ' error' }}">
-										{{ form_widget(form.handling_pet_kind) }}
-										{{ form_errors(form.handling_pet_kind) }}      
+											{{ form_widget(form.handling_pet_kind) }}
+											{{ form_errors(form.handling_pet_kind) }}
 										</div>
 									</dd>
 								</dl>
@@ -75,18 +75,20 @@
 										{{ form_label(form.address, '所在地', { 'label_attr': { 'class': 'ec-label' }}) }}
 										<p style="font-size:14px;color:#DE5D50;">ハイフン（-） なしで入力してください。</p>
 									</dt>
-									<dd>
+									<dd class="h-adr">
+										<span class="p-country-name" style="display:none;">Japan</span>
 										<div class="ec-zipInput{{ has_errors(form.zip) ? ' error' }}">
 											<span>{{ '〒'|trans }}</span>
 											{{ form_widget(form.zip) }}
 											<div class="ec-zipInputHelp">
-												<div class="ec-zipInputHelp__icon">
-													<div class="ec-icon"><img src="/html/template/default/assets/icon/question-white.svg" alt="">
-													</div>
-												</div>
-												<a href="https://www.post.japanpost.jp/zipcode/" target="_blank">
-													<span>郵便番号検索</span>
-												</a>
+											    <div class="ec-zipInputHelp__icon">
+											        <div class="ec-icon"><img
+											                    src="/html/template/default/assets/icon/question-white.svg"
+											                    alt="">
+											        </div>
+											    </div>
+											    <a href="https://www.post.japanpost.jp/zipcode/"
+											       target="_blank"><span>郵便番号検索</span></a>
 											</div>
 											{{ form_errors(form.zip) }}
 										</div>
@@ -152,34 +154,42 @@
 								</dl>
 								<dl>
 									<dt>
-										{{ form_label(form.thumbnail_path, '紹介ページ用画像', { 'label_attr': {'class': 'ec-label' }}) }}
+										{{ form_label(form.thumbnail_path, 'プロフィール画像', { 'label_attr': {'class': 'ec-label' }}) }}
+										<p style="font-size:14px;color:#DE5D50;">ご本人様もしくは犬舎・猫舎風景が含まれるようにお願い致します。</p>
 									</dt>
 									<dd>
 										<div class="media-body">
-											<img id="img_thumbnail" class="img_preview mb-2 {{ conservation.thumbnailPath ? '' : 'hidden' }}" src="{{ conservation.thumbnailPath }}" alt="..." style="width: 200px; border: 1px solid #ddd;"/>
+											<img id="img_thumbnail"
+											     class="img_preview mb-2 {{ conservation.thumbnailPath ? '' : 'hidden' }}" 
+											     src="{{ conservation.thumbnailPath }}" alt="..." 
+											     style="width: 200px; border: 1px solid #ddd;"/>
 											{{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;' } }) }}
 											{{ form_errors(form.thumbnail_path) }}
 											<input type="hidden" name="thumbnail_path" id="adoption_src_path">
 										</div>
-										<a class="btn btn-ec-regular mr-2" onclick="$('#conservations_thumbnail_path').click()" style="background: #f0f0f0; border: 1px solid black;">
+										<a class="btn btn-ec-regular mr-2"
+										   onclick="$('#conservations_thumbnail_path').click()"
+										   style="background: #f0f0f0; border: 1px solid black;">
 											{{ 'admin.common.file_select'|trans }}
 										</a>
 									</dd>
 								</dl>
-							</div>
-						</div>
-						<div class="ec-registerRole__actions">
-							<div class="ec-off4Grid">
+                            </div>
+                        </div>
+                        <div class="ec-registerRole__actions">
+                            <div class="ec-off4Grid">
 								<div class="ec-off4Grid__cell">
-									<button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
+									<input type="hidden" name="return_path" value="{{ return_path }}"/>
+									<button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録
+									</button>
 								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</section>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 	<div class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" id="modal-crop" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
@@ -190,16 +200,15 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<div class="img-container">
-						<div class="row">
-							<div
-								class="col-md-8">
-								<!--  default image where we will set the src via jquery-->
-								<img id="image" alt="">
+					<div class="img-container row">
+						<div class="col-md-6 col-12 d-flex">
+							<!--  default image where we will set the src via jquery-->
+							<div style="flex-grow: 1">
+								<img id="image">
 							</div>
-							<div class="col-md-4">
-								<div class="preview"></div>
-							</div>
+						</div>
+						<div class="col-md-6 col-12 d-flex justify-content-center align-items-center">
+							<div class="preview"></div>
 						</div>
 					</div>
 				</div>
@@ -211,11 +220,11 @@
 		</div>
 	</div>
 
-	{{ include('animalline/components/_modal_confirm.twig') }}
+    {{ include('animalline/components/_modal_confirm.twig') }}
 {% endblock %}
 {% block stylesheet %}
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
-	<link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
 	<style>
 		img#image {
 			display: block;
@@ -224,10 +233,8 @@
 
 		.preview {
 			overflow: hidden;
-			width: 200px;
-			height: 200px;
-			margin-left: 25px;
-			border: 1px solid red;
+			width: 200px !important;
+			height: 200px !important;
 		}
 	</style>
 {% endblock %}
