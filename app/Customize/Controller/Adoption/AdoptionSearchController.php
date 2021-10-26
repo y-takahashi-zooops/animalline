@@ -141,7 +141,9 @@ class AdoptionSearchController extends AbstractController
     public function petDataByPetKind(Request $request, BreedsRepository $breedsRepository)
     {
         $petKind = $request->get('pet_kind');
-        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind], ['breeds_name' => 'ASC']);
+        // $breeds = $breedsRepository->findBy(['pet_kind' => $petKind], ['breeds_name' => 'ASC']);
+        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind], ['sort_order' => 'ASC']);
+        $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
         $formattedBreeds = [];
         foreach ($breeds as $breed) {
             $formattedBreeds[] = [

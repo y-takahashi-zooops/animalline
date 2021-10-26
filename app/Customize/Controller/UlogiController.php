@@ -106,8 +106,25 @@ class UlogiController extends AbstractController
             $i++;
         }
         return $this->json([
-            'title' => "印刷テスト",
+            'title' => $header->getShippingName(),
             'datas' => $datas,
         ]);
     }
+
+    /**
+     * Register and receive DNA kit result
+     *
+     * @Route("/ulogi/print_confirm", name="ulogi_print_confirm")
+     * @Template("animalline/ulogi/print_confirm.twig")
+     */
+    public function print_confirm(Request $request)
+    {
+        $fileid = $request->get("fileid");
+
+        return $this->render("animalline/ulogi/print_confirm.twig", [
+            'fileid' => $fileid,
+            'print_title' => "印字テスト",
+        ]);
+    }
+
 }
