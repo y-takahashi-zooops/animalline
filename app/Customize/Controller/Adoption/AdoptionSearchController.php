@@ -5,7 +5,6 @@ namespace Customize\Controller\Adoption;
 use Customize\Config\AnilineConf;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\BreedsRepository;
-use Customize\Repository\CoatColorsRepository;
 use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationPetImageRepository;
@@ -37,7 +36,7 @@ class AdoptionSearchController extends AbstractController
     protected $conservationsHouseRepository;
 
     /**
-     * @var DnaQueryService;
+     * @var DnaQueryService
      */
     protected $dnaQueryService;
 
@@ -71,8 +70,7 @@ class AdoptionSearchController extends AbstractController
         AdoptionQueryService                $adoptionQueryService,
         BreedsRepository                    $breedsRepository,
         PrefRepository                      $prefRepository
-    )
-    {
+    ) {
         $this->conservationsRepository = $conservationsRepository;
         $this->conservationsHouseRepository = $conservationsHouseRepository;
         $this->adoptionQueryService = $adoptionQueryService;
@@ -89,7 +87,7 @@ class AdoptionSearchController extends AbstractController
     public function adoption_search(PaginatorInterface $paginator, Request $request): Response
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $petKind]);
+        $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
         $adoptionResults = $this->adoptionQueryService->searchAdoptionsResult($request, $petKind);
         $adoptions = $paginator->paginate(
@@ -138,14 +136,12 @@ class AdoptionSearchController extends AbstractController
      * @Route("/pet_data_by_pet_kind", name="pet_data_by_pet_kind", methods={"GET"})
      * @param Request $request
      * @param BreedsRepository $breedsRepository
-     * @param CoatColorsRepository $coatColorsRepository
      * @return JsonResponse
      */
-    public function petDataByPetKind(Request $request, BreedsRepository $breedsRepository, CoatColorsRepository $coatColorsRepository)
+    public function petDataByPetKind(Request $request, BreedsRepository $breedsRepository)
     {
         $petKind = $request->get('pet_kind');
-        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind]);
-        $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
+        $breeds = $breedsRepository->findBy(['pet_kind' => $petKind], ['breeds_name' => 'ASC']);
         $formattedBreeds = [];
         foreach ($breeds as $breed) {
             $formattedBreeds[] = [
@@ -154,12 +150,6 @@ class AdoptionSearchController extends AbstractController
             ];
         }
         $formattedColors = [];
-        foreach ($colors as $color) {
-            $formattedColors[] = [
-                'id' => $color->getId(),
-                'name' => $color->getCoatColorName()
-            ];
-        }
         $data = [
             'breeds' => $formattedBreeds,
             'colors' => $formattedColors

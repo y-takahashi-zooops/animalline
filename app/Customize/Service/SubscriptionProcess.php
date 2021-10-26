@@ -32,8 +32,6 @@ use Eccube\Service\OrderHelper;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Customize\Service\SubscriptionMailService;
-use Eccube\Entity\CartItem;
-use phpDocumentor\Reflection\Types\Null_;
 use Plugin\ZooopsSubscription\Entity\SubscriptionContract;
 use Eccube\Repository\CustomerAddressRepository;
 use Eccube\Repository\ShippingRepository;
@@ -182,8 +180,7 @@ class SubscriptionProcess extends AbstractController
      * 次回配送日10日前処理
      *   －定期注文次回配送日変更リマインドメール送信
      */
-    public function nextDeliveryDateBefore10Days()
-    {
+    public function nextDeliveryDateBefore10Days(){
 
         $target = ((new \DateTime())->modify('+ 10days'))->format('Ymd');
 

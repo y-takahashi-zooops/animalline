@@ -4,8 +4,9 @@
 {% block main %}
     <section id="breeder-column" class="breeder-column_dog">
         <div class="inner">
-            <div class="ec-pageHeader">
+            <div class="ec-pageHeader" style="margin-bottom:2rem;">
                 <h1>サイト掲載のための誕生子犬・子猫情報入力</h1>
+                サイトに登録する前に全頭ＤＮＡ検査を行いますので、ＤＮＡ検査キットの送付に必要な情報の入力をお願い致します。
             </div>
             <div class="ec-off1Grid">
                 <div class="ec-off1Grid__cell">
@@ -144,7 +145,7 @@
                                     <a class="ec-blockBtn--cancel" href="{{ url('mypage') }}">マイページに戻る</a>
                                 </div> #}
                                 {# <div class="col-md-6"> #}
-                                <div class="col-md-6 text-align-center">
+                                <div class="col-md-6 mx-auto">
                                     <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
                                 </div>
                             </div>
@@ -206,11 +207,12 @@ $("#confirm-back").click(function () {
 function textCheck($this)
 {
   let str=$this.value;
-  // 文頭から文末まで全て0-9かチェック
+  // 数字チェック
   if(!str.match(/^[0-9０-９]+$/)){
-    // そうでなければ入力文字を空白に変換
+    // 文字の場合は空白に変換
     str="";
   } else if(str.match(/^[０-９]+$/)){
+    // 全角数字の場合は半角数字に変換
     str=toHanKaku(str);
   }
   $this.value=str;
@@ -222,6 +224,7 @@ function toHanKaku(str) {
     });
 }
 
+// 出生数の合計を合計頭数にする
 var Input = $('.petCount'); 
 var Output = $('#dna_check_status_header_kit_unit');
 Input.on('change', function() {

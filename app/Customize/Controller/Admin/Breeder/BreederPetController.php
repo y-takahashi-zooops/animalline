@@ -23,7 +23,6 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\BreederPets;
 use Customize\Form\Type\Admin\BreederPetsType;
 use Customize\Repository\BreederPetImageRepository;
-use Customize\Repository\CoatColorsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
@@ -38,11 +37,6 @@ class BreederPetController extends AbstractController
      * @var BreedsRepository
      */
     protected $breedsRepository;
-
-    /**
-     * @var CoatColorsRepository
-     */
-    protected $coatColorsRepository;
 
     /**
      * @var BreederPetImageRepository
@@ -62,21 +56,18 @@ class BreederPetController extends AbstractController
     /**
      * BreederPetController constructor.
      * @param BreedsRepository $breedsRepository
-     * @param CoatColorsRepository $coatColorsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederQueryService $breederQueryService
      * @param BreederPetsRepository $breederPetsRepository
      */
     public function __construct(
         BreedsRepository          $breedsRepository,
-        CoatColorsRepository      $coatColorsRepository,
         BreederPetImageRepository $breederPetImageRepository,
         BreederQueryService       $breederQueryService,
         BreederPetsRepository       $breederPetsRepository
     ) {
         $this->breedsRepository = $breedsRepository;
         $this->breederQueryService = $breederQueryService;
-        $this->coatColorsRepository = $coatColorsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederPetsRepository = $breederPetsRepository;
     }
@@ -92,7 +83,7 @@ class BreederPetController extends AbstractController
     {
         $request = $request->query->all();
 
-        $breeds = $this->breedsRepository->findAll();
+        $breeds = $this->breedsRepository->findBy([], ['breeds_name' => 'ASC']);
         $order = [];
         $order['field'] = array_key_exists('field', $request) ? $request['field'] : 'create_date';
         $order['direction'] = array_key_exists('direction', $request) ? $request['direction'] : 'DESC';
@@ -170,7 +161,7 @@ class BreederPetController extends AbstractController
     {
         $criteria = [];
         $criteria['id'] = $request->get('id');
-        $breeds = $this->breedsRepository->findAll();
+        $breeds = $this->breedsRepository->findBy([], ['breeds_name' => 'ASC']);
 
         switch ($request->get('pet_kind')) {
             case 1:
@@ -226,7 +217,6 @@ class BreederPetController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $breederPet->setBreedsType($this->breedsRepository->find($request->get('breeds_type')));
-            $breederPet->setCoatColor($this->coatColorsRepository->find($request->get('coat_color')));
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederPet);
@@ -235,15 +225,13 @@ class BreederPetController extends AbstractController
             return $this->redirectToRoute('admin_breeder_pet_list', ['id' => $breederPet->getBreeder()->getId()]);
         }
 
-        $breeds = $this->breedsRepository->findBy(['pet_kind' => $breederPet->getPetKind()]);
-        $colors = $this->coatColorsRepository->findBy(['pet_kind' => $breederPet->getPetKind()]);
+        $breeds = $this->breedsRepository->findBy(['pet_kind' => $breederPet->getPetKind()], ['breeds_name' => 'ASC']);
         $images = $this->breederPetImageRepository->findBy(['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
 
         return [
             'form' => $form->createView(),
             'breederPet' => $breederPet,
             'breeds' => $breeds,
-            'colors' => $colors,
             'images' => $images
         ];
     }

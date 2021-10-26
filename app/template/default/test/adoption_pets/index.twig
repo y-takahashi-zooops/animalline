@@ -33,7 +33,7 @@
                 <td>{{ adoption_pet.breedsType.getBreedsName ?? '' }}</td>
                 <td>{{ adoption_pet.petSex }}</td>
                 <td>{{ adoption_pet.petBirthday ? adoption_pet.petBirthday|date('Y-m-d') : '' }}</td>
-                <td>{{ adoption_pet.coatColor.getCoatColorName ?? '' }}</td>
+                <td>{{ adoption_pet.coatColor ?? '' }}</td>
                 <td>{{ adoption_pet.futureWait }}</td>
                 <td>{{ adoption_pet.dnaCheckResult }}</td>
                 <td>{{ adoption_pet.prComment }}</td>

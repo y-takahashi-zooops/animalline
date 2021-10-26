@@ -14,14 +14,10 @@
 namespace Customize\Controller;
 
 use Eccube\Entity\BaseInfo;
-use Eccube\Entity\Master\ProductStatus;
 use Eccube\Entity\Product;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\AddCartType;
-use Eccube\Form\Type\Master\ProductListMaxType;
-use Eccube\Form\Type\Master\ProductListOrderByType;
-use Eccube\Form\Type\SearchProductType;
 use Eccube\Repository\BaseInfoRepository;
 use Eccube\Repository\CustomerFavoriteProductRepository;
 use Eccube\Repository\Master\ProductListMaxRepository;
@@ -29,14 +25,11 @@ use Eccube\Repository\ProductRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
-use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
-use Knp\Component\Pager\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Controller\ProductController as BaseProductController;
 use Eccube\Repository\CartItemRepository;
@@ -125,7 +118,6 @@ class ProductController extends BaseProductController
         $this->cartItemRepository = $cartItemRepository;
         $this->cartRepository = $cartRepository;
     }
-
 
     /**
      * カートに追加.

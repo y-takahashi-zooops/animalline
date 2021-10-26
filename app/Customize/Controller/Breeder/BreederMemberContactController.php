@@ -4,8 +4,6 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederEvaluations;
-use Customize\Form\Type\Breeder\BreederEvaluationsType;
-use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
 use Carbon\Carbon;
@@ -13,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\BreederContacts;
 use Customize\Entity\BreederContactHeader;
 use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\SendoffReasonRepository;
 use Customize\Repository\BreedersRepository;
@@ -24,6 +23,7 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\Breeder\BreederContactType;
+use Customize\Form\Type\Breeder\BreederEvaluationsType;
 
 class BreederMemberContactController extends AbstractController
 {
@@ -71,33 +71,32 @@ class BreederMemberContactController extends AbstractController
     /**
      * BreederController constructor.
      *
+     * @param BreederContactHeaderRepository $breederContactHeaderRepository
      * @param BreederContactsRepository $breederContactsRepository
      * @param SendoffReasonRepository $sendoffReasonRepository
      * @param BreedersRepository $breedersRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param CustomerRepository $customerRepository
-     * @param BreederContactHeaderRepository $breederContactHeaderRepository
      * @param BreederEvaluationsRepository $breederEvaluationsRepository
      * @param BreederQueryService $breederQueryService
      */
 
     public function __construct(
+        BreederContactHeaderRepository $breederContactHeaderRepository,
         BreederContactsRepository      $breederContactsRepository,
         SendoffReasonRepository        $sendoffReasonRepository,
         BreedersRepository             $breedersRepository,
         BreederPetsRepository          $breederPetsRepository,
         CustomerRepository             $customerRepository,
-        BreederContactHeaderRepository $breederContactHeaderRepository,
         BreederEvaluationsRepository   $breederEvaluationsRepository,
         BreederQueryService            $breederQueryService
-    )
-    {
+    ){
+        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederContactsRepository = $breederContactsRepository;
         $this->sendoffReasonRepository = $sendoffReasonRepository;
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->customerRepository = $customerRepository;
-        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederEvaluationsRepository = $breederEvaluationsRepository;
         $this->breederQueryService = $breederQueryService;
     }
@@ -209,7 +208,7 @@ class BreederMemberContactController extends AbstractController
 
         $petRate = $this->breederEvaluationsRepository->findOneBy(['Pet' => $pet]);
         if ($petRate) {
-            return $this->redirectToRoute('breeder_all_breeder_message');
+            return $this->redirectToRoute('breeder_all_message');
         }
 
         $contract = new BreederEvaluations();
@@ -389,52 +388,6 @@ class BreederMemberContactController extends AbstractController
             'reasons' => $reasons,
             'isScroll' => $isScroll
         ]);
-
-
-        // $contactId = $request->get('contact_id');
-        // $rootMessage = $this->breederContactsRepository
-        //     ->findOneBy(['id' => $contactId, 'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID]);
-        // if (!$rootMessage) {
-        //     throw new HttpException\NotFoundHttpException();
-        // }
-
-        // $replyMessage = $request->get('reply_message');
-        // $isEnd = $request->get('end_negotiation');
-        // if ($replyMessage || $isEnd) {
-        //     $breederContact = (new BreederContacts())
-        //         ->setCustomer($this->getUser())
-        //         ->setbreeder($rootMessage->getBreeder())
-        //         ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
-        //         ->setPet($rootMessage->getPet())
-        //         ->setContactType(AnilineConf::CONTACT_TYPE_REPLY)
-        //         ->setContactDescription($replyMessage)
-        //         ->setParentMessageId($rootMessage->getId())
-        //         ->setSendDate(Carbon::now())
-        //         ->setIsResponse(AnilineConf::RESPONSE_UNREPLIED)
-        //         ->setContractStatus(AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION)
-        //         ->setReason($isEnd ? $this->sendoffReasonRepository->find($request->get('reason')) : null);
-
-        //     $rootMessage->setIsResponse(AnilineConf::RESPONSE_UNREPLIED);
-        //     if ($isEnd) {
-        //         $rootMessage->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
-        //     }
-
-        //     $entityManager = $this->getDoctrine()->getManager();
-        //     $entityManager->persist($breederContact);
-        //     $entityManager->persist($rootMessage);
-        //     $entityManager->flush();
-        // }
-
-        // $childMessages = $this->breederContactsRepository
-        //     ->findBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'ASC']);
-        // $reasons = $this->sendoffReasonRepository
-        //     ->findBy(['is_breeder_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
-
-        // return $this->render('animalline/breeder/member/message.twig', [
-        //     'rootMessage' => $rootMessage,
-        //     'childMessages' => $childMessages,
-        //     'reasons' => $reasons
-        // ]);
     }
 
     /**
@@ -445,12 +398,22 @@ class BreederMemberContactController extends AbstractController
      */
     public function contact(Request $request)
     {
+        $isContact = 0;
         $id = $request->get('pet_id');
         $pet = $this->breederPetsRepository->find($id);
         if (!$pet) {
             throw new HttpException\NotFoundHttpException();
         }
-
+        $petContact = $this->breederContactHeaderRepository->createQueryBuilder('ch')
+            ->where('ch.Customer = :customer')
+            ->andWhere('ch.Pet = :pet')
+            ->andWhere('ch.contract_status != :status')
+            ->setParameters(['customer' => $this->getUser(), 'pet' => $pet, 'status' => 1])
+            ->getQuery()
+            ->getResult();
+        if ($petContact) {
+            $isContact = 1;
+        }
         $contact = new BreederContactHeader();
         $builder = $this->formFactory->createBuilder(BreederContactType::class, $contact);
         $event = new EventArgs(
@@ -492,13 +455,14 @@ class BreederMemberContactController extends AbstractController
         }
 
         return [
+            'isContact' => $isContact,
             'form' => $form->createView(),
             'id' => $id
         ];
     }
 
     /**
-     * Page complete
+     * お問い合わせ完了画面
      *
      * @Route("/breeder/member/contact/{pet_id}/complete", name="breeder_contact_complete", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/breeder/contact_complete.twig")

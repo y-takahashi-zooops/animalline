@@ -2,6 +2,8 @@
 
 namespace Customize\Controller\Breeder;
 
+use Customize\Entity\BreederPetinfoTemplate;
+use Customize\Form\Type\Breeder\BreederPetinfoTemplateType;
 use Customize\Service\BreederQueryService;
 use Eccube\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -202,6 +204,37 @@ class BreederMemberController extends AbstractController
             'breederData' => $breederData,
             'form' => $form->createView(),
             'Customer' => $user,
+        ];
+    }
+
+    /**
+     * テンプレート編集画面
+     *
+     * @Route("/breeder/member/template", name="breeder_template")
+     * @Template("/animalline/breeder/member/template.twig")
+     */
+    public function template(Request $request)
+    {
+        $breeder = $this->breedersRepository->find($this->getUser());
+        if (!$breeder) {
+            return $this->redirectToRoute('breeder_mypage');
+        }
+        $breederPetinfoTemplate = $breeder->getBreederPetinfoTemplate() ?: new BreederPetinfoTemplate();
+        $builder = $this->formFactory->createBuilder(BreederPetinfoTemplateType::class, $breederPetinfoTemplate);
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $breederPetinfoTemplate->setBreeder($breeder);
+            $entityManager->persist($breederPetinfoTemplate);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('breeder_mypage');
+        }
+
+        return [
+            'form' => $form->createView()
         ];
     }
 }
