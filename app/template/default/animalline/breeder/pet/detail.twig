@@ -153,10 +153,10 @@
                                         ワクチン代負担
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {% if breederPet.getIncludeVaccineFee == 0 %}
-                                            代金に含まない（{{ breederPet.getVaccineDetail() ? breederPet.getVaccineDetail() : '_' }}）
+                                        {% if breederPet.getIncludeVaccineFee == 1 %}
+                                            代金に含む（{{ breederPet.getVaccineDetail() ? breederPet.getVaccineDetail() : '_' }}）
                                         {% else %}
-                                            代金に含む
+                                            代金に含まない
                                         {% endif %}
                                     </div>
                                 </div>

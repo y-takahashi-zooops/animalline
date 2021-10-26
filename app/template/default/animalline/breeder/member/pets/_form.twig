@@ -156,10 +156,10 @@
         </div>
     </div>
     {# ユーザー情報コピー用フィールド #}
-        <input type="hidden" id="petInfoTemplate_guarantee" value="{{petInfoTemplate.guarantee}}">
-        <input type="hidden" id="petInfoTemplate_delivery_way" value="{{petInfoTemplate.deliveryWay}}">
-        <input type="hidden" id="petInfoTemplate_payment_method" value="{{petInfoTemplate.paymentMethod}}">
-        <input type="hidden" id="petInfoTemplate_reservation_fee" value="{{petInfoTemplate.reservationFee}}">
+        <input type="hidden" id="petInfoTemplate_guarantee" value="{{ petInfoTemplate.guarantee ?? '' }}">
+        <input type="hidden" id="petInfoTemplate_delivery_way" value="{{ petInfoTemplate.deliveryWay ?? '' }}">
+        <input type="hidden" id="petInfoTemplate_payment_method" value="{{ petInfoTemplate.paymentMethod ?? '' }}">
+        <input type="hidden" id="petInfoTemplate_reservation_fee" value="{{ petInfoTemplate.reservationFee ?? '' }}">
     {# ユーザー情報コピー用フィールド #}
     <div class="row mb-3">
         <div class="col-md-3">
