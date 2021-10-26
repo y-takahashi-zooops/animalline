@@ -16,7 +16,7 @@
                     <div class="row mb-4 mt-4">
                         <div class="col-md-3 col-sm-4">
                             <a target="_blank" class="w-100" href="{{ url('breeder_pet_detail', {'id': message.getPet.Id}) }}">
-                                <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (rootMessage.getPet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (message.getPet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                     class="w-100 mb-4 mb-sm-0" alt="...">
                             </a>
                         </div>

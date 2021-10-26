@@ -110,5 +110,14 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
 {% endblock %}
-{% block javascript %}{% endblock %}
+{% block javascript %}
+<script>
+    $(document ).ready(function() {
+        if ({{ isContact }}) {
+                alert("このペットについて、お問い合わせの内容が既に存在しています。");
+                window.location.href = "{{ url('adoption_pet_detail', {'id': id})}}";
+            }
+        });
+    </script>
+{% endblock %}
     

@@ -49,7 +49,7 @@ class AdoptionFavoritePetController extends AbstractController
     /**
      * favorite pet
      *
-     * @Route("/adoption/pet/detail/favorite_pet", name="favorite_pet")
+     * @Route("/adoption/pet/detail/favorite_pet", name="adoption_favorite_pet")
      * @param Request $request
      * @return JsonResponse
      */
@@ -58,8 +58,11 @@ class AdoptionFavoritePetController extends AbstractController
         $id = $request->get('id');
         $pet = $this->conservationPetsRepository->find($id);
         $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
+        $adoptionSelf = $pet->getConservation()->getId() == $this->getUser()->getId();
         $entityManager = $this->getDoctrine()->getManager();
-        if (!$favorite) {
+        if ($adoptionSelf) {
+            return new JsonResponse('not-allowed');
+        } elseif (!$favorite) {
             $petKind = $pet->getPetKind();
             $favorite_pet = new PetsFavorite();
             $favorite_pet->setCustomer($this->getUser())

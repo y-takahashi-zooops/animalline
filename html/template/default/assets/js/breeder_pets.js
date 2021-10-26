@@ -9,11 +9,10 @@ $(function () {
     $('#breeder_pets_pet_kind').trigger('change');
 
     function getDataByPetKind(petKindSelect) {
-        let breed = color = null;
+        let breed = null;
         const isEdit = !!$('#form-edit').length;
         if (isEdit) {
             breed = $('#breeder_pets_breeds_type').val();
-            color = $('#breeder_pets_coat_color').val();
         }
 
         $.ajax({
@@ -25,21 +24,15 @@ $(function () {
             }
         })
             .done(function (data) {
-                const { breeds, colors } = data;
+                const {breeds} = data;
                 $('#breeder_pets_breeds_type').empty();
+                $('#breeder_pets_breeds_type').append(new Option('選択してください', ''));
                 breeds.forEach(breed => {
                     $('#breeder_pets_breeds_type').append(new Option(breed.name, breed.id));
                 });
-                $('#breeder_pets_coat_color').empty();
-                $('#breeder_pets_coat_color').append(new Option('選択してください', ""));
-                colors.forEach(color => {
-                    $('#breeder_pets_coat_color').append(new Option(color.name, color.id));
-                });
 
-                if (isEdit) {
-                    $('#breeder_pets_breeds_type').val(breed);
-                    $('#breeder_pets_coat_color').val(color);
-                }
+                $('#breeder_pets_breeds_type').val(isEdit ? breed : '');
+
             })
             .fail(function (err) {
                 console.error(err);
