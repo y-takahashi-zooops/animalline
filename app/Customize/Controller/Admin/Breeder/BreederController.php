@@ -170,6 +170,7 @@ class BreederController extends AbstractController
         $builder = $this->formFactory->createBuilder(BreedersType::class, $breederData);
 
         $form = $builder->getForm();
+        dump($form);die;
         $form->handleRequest($request);
 
         $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
