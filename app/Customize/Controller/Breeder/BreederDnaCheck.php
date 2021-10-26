@@ -25,7 +25,6 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
-use DateTime;
 
 class BreederDnaCheck extends AbstractController
 {
@@ -124,8 +123,7 @@ class BreederDnaCheck extends AbstractController
         DnaQueryService                  $dnaQueryService,
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
         DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository
-    )
-    {
+    ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
@@ -185,8 +183,8 @@ class BreederDnaCheck extends AbstractController
     public function breeder_examination_kit_new(Request $request)
     {
         $isCheckStatus = false;
-        $dnaCheckSatusHeader = new DnaCheckStatusHeader();
-        $builder = $this->formFactory->createBuilder(DnaCheckStatusHeaderType::class, $dnaCheckSatusHeader);
+        $dnaCheckStatusHeader = new DnaCheckStatusHeader();
+        $builder = $this->formFactory->createBuilder(DnaCheckStatusHeaderType::class, $dnaCheckStatusHeader);
         $breeder = $this->breedersRepository->find($this->getUser()->getId());
         $breederHouseCat = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $breederHouseDog = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
@@ -200,18 +198,18 @@ class BreederDnaCheck extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $dnaCheckSatusHeader->setRegisterId($this->getUser()->getId())
+            $dnaCheckStatusHeader->setRegisterId($this->getUser()->getId())
                 ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
                 ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
-                ->setShippingPref($dnaCheckSatusHeader->getPrefShipping());
+                ->setShippingPref($dnaCheckStatusHeader->getPrefShipping());
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($dnaCheckSatusHeader);
+            $entityManager->persist($dnaCheckStatusHeader);
             $entityManager->flush();
 
-            $kitUnit = $dnaCheckSatusHeader->getKitUnit();
+            $kitUnit = $dnaCheckStatusHeader->getKitUnit();
             for ($i = 0; $i < $kitUnit; $i++) {
                 $Dna = (new DnaCheckStatus)
-                    ->setDnaHeader($dnaCheckSatusHeader)
+                    ->setDnaHeader($dnaCheckStatusHeader)
                     ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER);
                 $entityManager->persist($Dna);
             }
