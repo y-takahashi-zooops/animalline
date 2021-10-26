@@ -226,9 +226,10 @@ class BreederPetController extends AbstractController
         $petInfoTemplate = $this->breederPetinfoTemplateRepository->findOneBy([
             'Breeder' => $breeder
         ]);
-        if (!$petInfoTemplate) {
-            throw new NotFoundHttpException();
-        }
+
+        // if (!$petInfoTemplate) {
+        //     throw new NotFoundHttpException();
+        // }
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
