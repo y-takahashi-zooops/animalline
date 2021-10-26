@@ -23,13 +23,6 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 
 class AdoptionHouseController extends AbstractController
 {
-    /**
-     * AdoptionHouseController constructor.
-     *
-     */
-    public function __construct()
-    {
-    }
 
     /**
      * 犬舎・猫舎情報編集保護団体管理

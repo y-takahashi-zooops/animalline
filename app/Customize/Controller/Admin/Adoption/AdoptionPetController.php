@@ -99,7 +99,6 @@ class AdoptionPetController extends AbstractController
         $order['field'] = $field;
         $order['direction'] = $direction;
 
-
         $results = $this->adoptionQueryService->filterPetAdmin($criteria, $order);
         $pets = $paginator->paginate(
             $results,
