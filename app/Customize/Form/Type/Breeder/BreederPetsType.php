@@ -60,7 +60,7 @@ class BreederPetsType extends AbstractType
                 'required' => true,
             ])
             ->add('pet_birthday', DateType::class, [
-                'data' => new DateTime(),
+                // 'data' => new DateTime(),
                 'years' => range(date('Y'), 2000),
                 'required' => true,
             ])

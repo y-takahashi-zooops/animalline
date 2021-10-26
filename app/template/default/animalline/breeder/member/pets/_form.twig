@@ -473,23 +473,39 @@ $('#breeder_pets_pet_kind').ready( function() {
     })
 });
 
+// テンプレートがない場合は、各ボタンをdisableにする
+if(!document.getElementById('petInfoTemplate_guarantee') || !document.getElementById('petInfoTemplate_guarantee').value){ 
+    $("#btn_get_petinfo_template_guarantee").prop('disabled', true);
+}
+if(!document.getElementById('petInfoTemplate_delivery_way') || !document.getElementById('petInfoTemplate_delivery_way').value){ 
+    $("#btn_get_petinfo_template_delivery_way").prop('disabled', true);
+}
+if(!document.getElementById('petInfoTemplate_payment_method') || !document.getElementById('petInfoTemplate_payment_method').value){ 
+    $("#btn_get_petinfo_template_payment_method").prop('disabled', true);
+}
+if(!document.getElementById('petInfoTemplate_reservation_fee') || !document.getElementById('petInfoTemplate_reservation_fee').value){ 
+    $("#btn_get_petinfo_template_reservation_fee").prop('disabled', true);
+}
+
+
+// テンプレートコピー
 document.getElementById("btn_get_petinfo_template_guarantee").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 生体保障内容をテンプレートからコピー
     document.getElementById("breeder_pets_guarantee").value = document.getElementById("petInfoTemplate_guarantee").value 
 };
 
 document.getElementById("btn_get_petinfo_template_delivery_way").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 引き渡し方法をテンプレートからコピー
     document.getElementById("breeder_pets_delivery_way").value = document.getElementById("petInfoTemplate_delivery_way").value 
 };
 
 document.getElementById("btn_get_petinfo_template_payment_method").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 支払方法をテンプレートからコピー
     document.getElementById("breeder_pets_payment_method").value = document.getElementById("petInfoTemplate_payment_method").value 
 };
 
 document.getElementById("btn_get_petinfo_template_reservation_fee").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 予約金をテンプレートからコピー
     document.getElementById("breeder_pets_reservation_fee").value = document.getElementById("petInfoTemplate_reservation_fee").value 
 };
 
