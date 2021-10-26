@@ -156,16 +156,18 @@
         </div>
     </div>
     {# ユーザー情報コピー用フィールド #}
-        <input type="hidden" id="petInfoTemplate_guarantee" value="{{petInfoTemplate.guarantee}}">
-        <input type="hidden" id="petInfoTemplate_delivery_way" value="{{petInfoTemplate.deliveryWay}}">
-        <input type="hidden" id="petInfoTemplate_payment_method" value="{{petInfoTemplate.paymentMethod}}">
-        <input type="hidden" id="petInfoTemplate_reservation_fee" value="{{petInfoTemplate.reservationFee}}">
+        {% if petInfoTemplate %}
+            <input type="hidden" id="petInfoTemplate_guarantee" value="{{petInfoTemplate.guarantee}}">
+            <input type="hidden" id="petInfoTemplate_delivery_way" value="{{petInfoTemplate.deliveryWay}}">
+            <input type="hidden" id="petInfoTemplate_payment_method" value="{{petInfoTemplate.paymentMethod}}">
+            <input type="hidden" id="petInfoTemplate_reservation_fee" value="{{petInfoTemplate.reservationFee}}">
+        {% endif %}
     {# ユーザー情報コピー用フィールド #}
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.guarantee, '生体保障内容', { 'label_attr': {'class': 'ec-label' }}) }}
-            <span class="ec-required">必須</span>  
-            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_guarantee">テンプレート使用</button>
+            <span class="ec-required">必須</span><br >
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-2" id="btn_get_petinfo_template_guarantee">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.guarantee, {'attr': {'rows': 10, 'placeholder' : 'ブリーダー様にて設定されている生体保証内容をご記入ください。'}}) }}
@@ -236,8 +238,8 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-            <span class="ec-required">必須</span>
-            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_delivery_way">テンプレート使用</button>
+            <span class="ec-required">必須</span><br >
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-2" id="btn_get_petinfo_template_delivery_way">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.delivery_way, {'attr': {'rows': 5, 'placeholder' : '引き渡し方法をご記入ください。'}}) }}
@@ -249,7 +251,7 @@
         <div class="col-md-3">
             {{ form_label(form.payment_method, '支払方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span><br >
-            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_payment_method">テンプレート使用</button>
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-2" id="btn_get_petinfo_template_payment_method">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.payment_method, {'attr': {'rows': 5, 'placeholder' : '支払方法をご記入ください。'}}) }}
@@ -261,7 +263,7 @@
         <div class="col-md-3">
             {{ form_label(form.reservation_fee, '予約金', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span><br >
-            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_reservation_fee">テンプレート使用</button>
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-2" id="btn_get_petinfo_template_reservation_fee">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.reservation_fee, {'attr': {'rows': 5, 'placeholder' : 'ブリーダーにて設定されている予約金をご記入ください。'}}) }}
@@ -463,23 +465,39 @@ $('#breeder_pets_pet_kind').ready( function() {
     })
 });
 
+// テンプレートがない場合は、各ボタンをdisableにする
+if(!document.getElementById('petInfoTemplate_guarantee') || !document.getElementById('petInfoTemplate_guarantee').value){ 
+    $("#btn_get_petinfo_template_guarantee").prop('disabled', true);
+}
+if(!document.getElementById('petInfoTemplate_delivery_way') || !document.getElementById('petInfoTemplate_delivery_way').value){ 
+    $("#btn_get_petinfo_template_delivery_way").prop('disabled', true);
+}
+if(!document.getElementById('petInfoTemplate_payment_method') || !document.getElementById('petInfoTemplate_payment_method').value){ 
+    $("#btn_get_petinfo_template_payment_method").prop('disabled', true);
+}
+if(!document.getElementById('petInfoTemplate_reservation_fee') || !document.getElementById('petInfoTemplate_reservation_fee').value){ 
+    $("#btn_get_petinfo_template_reservation_fee").prop('disabled', true);
+}
+
+
+// テンプレートコピー
 document.getElementById("btn_get_petinfo_template_guarantee").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 生体保障内容をテンプレートからコピー
     document.getElementById("breeder_pets_guarantee").value = document.getElementById("petInfoTemplate_guarantee").value 
 };
 
 document.getElementById("btn_get_petinfo_template_delivery_way").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 引き渡し方法をテンプレートからコピー
     document.getElementById("breeder_pets_delivery_way").value = document.getElementById("petInfoTemplate_delivery_way").value 
 };
 
 document.getElementById("btn_get_petinfo_template_payment_method").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 支払方法をテンプレートからコピー
     document.getElementById("breeder_pets_payment_method").value = document.getElementById("petInfoTemplate_payment_method").value 
 };
 
 document.getElementById("btn_get_petinfo_template_reservation_fee").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 予約金をテンプレートからコピー
     document.getElementById("breeder_pets_reservation_fee").value = document.getElementById("petInfoTemplate_reservation_fee").value 
 };
 
