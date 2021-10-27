@@ -914,7 +914,7 @@ class MailService
     }
 
     /**
-     * Send adoption contract mail.
+     * Send cancel contract mail.
      *
      * @param \Eccube\Entity\Customer $Customer
      * @param array $data

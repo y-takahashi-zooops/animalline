@@ -292,7 +292,7 @@ class BreederMemberContactController extends AbstractController
                         ->setBreederHeader($item);
                         $entityManager->persist($breederContact);
 
-                        $mailService->sendBreederExaminationMailAccept($item->getCustomer(), null);
+                        $mailService->sendMailContractCancel($item->getCustomer(), []);
                     }
                 }
                 break;
@@ -328,7 +328,7 @@ class BreederMemberContactController extends AbstractController
      * @Route("/breeder/member/breeder_message/{id}", name="breeder_breeder_message", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/member/breeder_message.twig")
      */
-    public function breeder_message(Request $request, BreederContactHeader $msgHeader)
+    public function breeder_message(Request $request, BreederContactHeader $msgHeader, MailService $mailService)
     {
         $msgHeader->setBreederNewMsg(0);
         $entityManager = $this->getDoctrine()->getManager();
@@ -393,6 +393,8 @@ class BreederMemberContactController extends AbstractController
                         ->setSendDate(Carbon::now())
                         ->setBreederHeader($item);
                     $entityManager->persist($breederContact);
+
+                    $mailService->sendMailContractCancel($item->getCustomer(), []);
                 }
             }
             $entityManager = $this->getDoctrine()->getManager();
