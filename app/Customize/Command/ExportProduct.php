@@ -103,7 +103,7 @@ class ExportProduct extends Command
         $qb = $this->productClassRepository->createQueryBuilder('pc');
         $qb->select(
             'p.id',
-            'pc.jan_code as productCode',
+            'pc.code as productCode',
             'p.name',
             'pc.price02',
             '(pc.price02 * :with_tax) as price02Tax',
@@ -137,9 +137,9 @@ class ExportProduct extends Command
                 $product = $this->productRepository->find($record['id']);
 
                 $record['supplier_code'] = $supplier->getSupplierCode();
-                if (is_null($record['productCode']) || strlen($record['productCode']) < 13) {
-                    $record['itemCode'] = $product->getFreeArea();
-                    $record['jan_code'] = "";
+
+                if (strlen($record['jan_code']) == 13) {
+                    $record['productCode'] = $record['jan_code'];
                 }
                 $record['quantity_box'] = 1;
 
