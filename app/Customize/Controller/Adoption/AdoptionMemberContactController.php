@@ -290,6 +290,9 @@ class AdoptionMemberContactController extends AbstractController
                         ->setSendDate(Carbon::now())
                         ->setConservationHeader($item);
                     $entityManager->persist($conservationContact);
+
+                    $data = [];
+                    $this->mailService->sendMailContractCancel($item->getCustomer(), $data);
                 }
             }
             $entityManager = $this->getDoctrine()->getManager();
