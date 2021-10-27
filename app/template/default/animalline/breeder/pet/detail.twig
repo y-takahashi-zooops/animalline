@@ -9,7 +9,7 @@
                 <div class="breeder-column__main">
                     <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
                         <div class="breeder-column__main_section_title">
-                            <h2 class="float-left">
+                            <h2 class="float-left mb-3">
                                 {{ breederPet.breedsType.breedsName ?? '' }}
                             </h2>
                             <div class="col-md-3 col-12 float-right btn-like mb-3 {{ isFavorite ? "red-heart" : "" }}"
@@ -205,8 +205,8 @@
                             </div>
                             <div class="col-12 btn_center">
                                 <div class="row">
-                                    <div class="col-12">
-                                        <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
+                                    <div class="col-12 contents_col_normal">
+                                        <a href="javascript:checkContact('{{breederPet.Breeder.id==app.user.id|default(null)}}', '{{ isSold }}', '{{ isContacted }}');">
                                             <button class="btn basic-btn breeder-btn" style="height:65px;">
                                                 この子犬の見学希望／お問い合わせ(無料)
                                             </button>
@@ -290,7 +290,7 @@
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12">
-                                        <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
+                                        <a href="javascript:checkContact('{{breederPet.Breeder.id==app.user.id|default(null)}}', '{{ isSold }}', '{{ isContacted }}');">
                                             <button class="btn basic-btn breeder-btn" style="height:65px;">
                                                 この子犬の見学希望／お問い合わせ(無料)
                                             </button>
@@ -311,7 +311,7 @@
                                 ブリーダー紹介
                             </div>
                             <div class="m-2 p-2"></div>
-                            <div class="row ml-2">
+                            <div class="row">
                                 <div class="breeder-img col-sm-4">
                                     <img alt="..."
                                          src="{{ breederPet.Breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
@@ -426,6 +426,17 @@
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
+    function checkContact(petSelf, isSold, isContacted) {
+        if (petSelf) {
+            alert("自分のペットなので、「この子犬の見学希望／お問い合わせ(無料)」ボタンをクリックしないでください。")
+        } else if (isSold) {
+            alert("このペットが販売されました。")
+        } else if (isContacted) {
+            alert("このペットについて、お問い合わせの内容が既に存在しています。")
+        } else {
+            window.open("{{ url('breeder_contact', {'pet_id': breederPet.id}) }}")
+        }
+    }
     $(document).on("click", ".btn-like", function () {
         if ($(this).data('login')) {
             $.ajax({

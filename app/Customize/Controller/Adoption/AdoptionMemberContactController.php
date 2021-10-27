@@ -289,21 +289,12 @@ class AdoptionMemberContactController extends AbstractController
      */
     public function contact(Request $request)
     {
-        $isContact = 0;
         $id = $request->get('pet_id');
         $pet = $this->conservationPetsRepository->find($id);
         if (!$pet) {
             throw new HttpException\NotFoundHttpException();
         }
-        $petContact = $this->conservationContactHeaderRepository->findBy([
-            'Customer' => $this->getUser(),
-            'Conservation' => $pet->getConservation(),
-            'Pet' => $pet
-        ]);
-        $isAdoptionContact = $pet->getConservation()->getId() == $this->getUser()->getId();
-        if ($petContact || $isAdoptionContact) {
-            $isContact = 1;
-        }
+
         $contact = new ConservationContactHeader();
         $builder = $this->formFactory->createBuilder(ConservationContactType::class, $contact);
         $event = new EventArgs(
@@ -346,8 +337,7 @@ class AdoptionMemberContactController extends AbstractController
 
         return [
             'form' => $form->createView(),
-            'id' => $id,
-            'isContact' => $isContact
+            'id' => $id
         ];
     }
 
