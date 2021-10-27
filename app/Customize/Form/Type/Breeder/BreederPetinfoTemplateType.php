@@ -16,7 +16,7 @@ class BreederPetinfoTemplateType extends AbstractType
         $builder
             ->add('guarantee', TextareaType::class, [
                 'attr' => [
-                    'placeholder' => 'ブリーダー様にて設定されている生体保証内容をご記入ください。',
+                    'placeholder' => 'ブリーダー様にて設定されている生体保障内容をご記入ください。',
                     'rows' => 10
                 ],
                 'required' => false
@@ -26,20 +26,14 @@ class BreederPetinfoTemplateType extends AbstractType
                     'placeholder' => '引き渡し方法をご記入ください。',
                     'rows' => 10
                 ],
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank()
-                ]
+                'required' => false
             ])
             ->add('payment_method', TextareaType::class, [
                 'attr' => [
                     'placeholder' => '支払方法をご記入ください。',
                     'rows' => 10
                 ],
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank()
-                ],
+                'required' => false,
             ])
             ->add('reservation_fee', TextareaType::class, [
                 'attr' => [
