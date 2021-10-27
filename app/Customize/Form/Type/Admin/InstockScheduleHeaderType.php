@@ -5,7 +5,6 @@ namespace Customize\Form\Type\Admin;
 use Customize\Entity\InstockScheduleHeader;
 use Customize\Repository\SupplierRepository;
 use DateTime;
-use Eccube\Common\EccubeConfig;
 use Eccube\Form\Type\Admin\OrderItemType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -22,10 +21,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class InstockScheduleHeaderType extends AbstractType
 {
-    /**
-     * @var EccubeConfig
-     */
-    protected $eccubeConfig;
 
     /**
      * @var SupplierRepository
@@ -33,10 +28,8 @@ class InstockScheduleHeaderType extends AbstractType
     protected $supplierRepository;
 
     public function __construct(
-        EccubeConfig       $eccubeConfig,
         SupplierRepository $supplierRepository
     ) {
-        $this->eccubeConfig = $eccubeConfig;
         $this->supplierRepository = $supplierRepository;
     }
 
