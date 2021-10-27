@@ -92,7 +92,7 @@ class StockWaste
         return $this->ProductClass;
     }
 
-    public function setProductClass(?ProductClass $ProductClass): self
+    public function setProductClass(ProductClass $ProductClass): self
     {
         $this->ProductClass = $ProductClass;
 
@@ -152,7 +152,7 @@ class StockWaste
      *
      * @param \DateTime $createDate
      *
-     * @return Payment
+     * @return self
      */
     public function setCreateDate($createDate)
     {
@@ -166,7 +166,7 @@ class StockWaste
      *
      * @param \DateTime $updateDate
      *
-     * @return Payment
+     * @return self
      */
     public function setUpdateDate($updateDate)
     {
