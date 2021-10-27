@@ -146,7 +146,7 @@ class AdoptionQueryService
     public function searchAdoptionsResult($request, $petKind): array
     {
         $query = $this->conservationsRepository->createQueryBuilder('c')
-            ->innerJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'c.id = cp.Conservation')
+            ->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'c.id = cp.Conservation')
             ->where('c.handling_pet_kind in (:kinds)')
             ->setParameter('kinds', [
                 AnilineConf::ANILINE_PET_KIND_DOG_CAT,
