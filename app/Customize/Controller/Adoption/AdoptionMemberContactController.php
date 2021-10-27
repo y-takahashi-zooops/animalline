@@ -104,7 +104,6 @@ class AdoptionMemberContactController extends AbstractController
      */
     public function message(Request $request, ConservationContactHeader $msgHeader)
     {
-        $isScroll = false;
         $msgHeader->setCustomerNewMsg(0);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($msgHeader);
@@ -127,7 +126,8 @@ class AdoptionMemberContactController extends AbstractController
             $entityManager->persist($conservationContact);
             $entityManager->persist($msgHeader);
             $entityManager->flush();
-            $isScroll = true;
+
+            return $this->redirectToRoute('adoption_message', ['id' => $request->get('id'), 'isScroll' => true]);
         }
         if ($reasonCancel) {
             $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT)
@@ -181,15 +181,14 @@ class AdoptionMemberContactController extends AbstractController
         $listMsg = $this->conservationContactsRepository->findBy(['ConservationHeader' => $msgHeader], ['send_date' => 'ASC']);
         $reasons = $this->sendoffReasonRepository->findBy(['is_adoption_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
 
-        return $this->render('animalline/adoption/member/message.twig', [
+        return [
             'Customer' => $Customer,
             'pet' => $msgHeader->getPet(),
             'conservation' => $msgHeader->getConservation(),
             'message' => $msgHeader,
             'listMsg' => $listMsg,
-            'reasons' => $reasons,
-            'isScroll' => $isScroll
-        ]);
+            'reasons' => $reasons
+        ];
     }
 
     /**
@@ -217,7 +216,6 @@ class AdoptionMemberContactController extends AbstractController
      */
     public function adoption_message(Request $request, ConservationContactHeader $msgHeader)
     {
-        $isScroll = false;
         $msgHeader->setConservationNewMsg(0);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($msgHeader);
@@ -240,7 +238,8 @@ class AdoptionMemberContactController extends AbstractController
             $entityManager->persist($conservationContact);
             $entityManager->persist($msgHeader);
             $entityManager->flush();
-            $isScroll = true;
+
+            return $this->redirectToRoute('adoption_adoption_message', ['id' => $request->get('id'), 'isScroll' => true]);
         }
         if ($reasonCancel) {
             $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT)
@@ -294,15 +293,14 @@ class AdoptionMemberContactController extends AbstractController
         $listMsg = $this->conservationContactsRepository->findBy(['ConservationHeader' => $msgHeader], ['send_date' => 'ASC']);
         $reasons = $this->sendoffReasonRepository->findBy(['is_adoption_visible' => AnilineConf::ADOPTION_VISIBLE_SHOW]);
 
-        return $this->render('animalline/adoption/member/adoption_message.twig', [
+        return [
             'Customer' => $Customer,
             'pet' => $msgHeader->getPet(),
             'conservation' => $msgHeader->getConservation(),
             'message' => $msgHeader,
             'listMsg' => $listMsg,
-            'reasons' => $reasons,
-            'isScroll' => $isScroll
-        ]);
+            'reasons' => $reasons
+        ];
     }
 
     /**

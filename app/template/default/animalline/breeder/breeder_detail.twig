@@ -10,7 +10,7 @@
                     <h3>検索結果</h3>
                 </div> #}
                     <div class="breeder-column__main_section_body">
-                        <h2>{{ breeder.licenseHouseName }}ブリーダー</h2>
+                        <h2>{{ breeder.licenseHouseName }}</h2>
                         <div class="d-flex">
                             {{ include('animalline/components/_rating_block.twig', { 'point': breeder.breederRank() }, ignore_missing = false) }}
                         </div>

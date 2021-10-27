@@ -124,7 +124,6 @@ class BreederMemberContactController extends AbstractController
      */
     public function message(Request $request, BreederContactHeader $msgHeader)
     {
-        $isScroll = false;
         $msgHeader->setCustomerNewMsg(0);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($msgHeader);
@@ -146,7 +145,8 @@ class BreederMemberContactController extends AbstractController
             $entityManager->persist($breederContact);
             $entityManager->persist($msgHeader);
             $entityManager->flush();
-            $isScroll = true;
+
+            return $this->redirectToRoute('breeder_message', ['id' => $request->get('id'), 'isScroll' => true]);
         }
         if ($reasonCancel) {
             $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT)
@@ -173,15 +173,14 @@ class BreederMemberContactController extends AbstractController
         $listMsg = $this->breederContactsRepository->findBy(['BreederHeader' => $msgHeader], ['send_date' => 'ASC']);
         $reasons = $this->sendoffReasonRepository->findBy(['is_breeder_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
 
-        return $this->render('animalline/breeder/member/message.twig', [
+        return [
             'Customer' => $Customer,
             'pet' => $msgHeader->getPet(),
             'breeder' => $msgHeader->getBreeder(),
             'message' => $msgHeader,
             'listMsg' => $listMsg,
-            'reasons' => $reasons,
-            'isScroll' => $isScroll
-        ]);
+            'reasons' => $reasons
+        ];
     }
 
     /**
@@ -328,7 +327,6 @@ class BreederMemberContactController extends AbstractController
      */
     public function breeder_message(Request $request, BreederContactHeader $msgHeader)
     {
-        $isScroll = false;
         $msgHeader->setBreederNewMsg(0);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($msgHeader);
@@ -351,7 +349,8 @@ class BreederMemberContactController extends AbstractController
             $entityManager->persist($breederContact);
             $entityManager->persist($msgHeader);
             $entityManager->flush();
-            $isScroll = true;
+
+            return $this->redirectToRoute('breeder_breeder_message', ['id' => $request->get('id'), 'isScroll' => true]);
         }
         if ($reasonCancel) {
             $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT)
@@ -405,15 +404,14 @@ class BreederMemberContactController extends AbstractController
         $listMsg = $this->breederContactsRepository->findBy(['BreederHeader' => $msgHeader], ['send_date' => 'ASC']);
         $reasons = $this->sendoffReasonRepository->findBy(['is_breeder_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
 
-        return $this->render('animalline/breeder/member/breeder_message.twig', [
+        return [
             'Customer' => $Customer,
             'pet' => $msgHeader->getPet(),
             'breeder' => $msgHeader->getBreeder(),
             'message' => $msgHeader,
             'listMsg' => $listMsg,
-            'reasons' => $reasons,
-            'isScroll' => $isScroll
-        ]);
+            'reasons' => $reasons
+        ];
     }
 
     /**
