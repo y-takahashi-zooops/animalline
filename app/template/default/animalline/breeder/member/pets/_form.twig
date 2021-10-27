@@ -1,5 +1,5 @@
-{{ form_start(form) }}
-
+{{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+{{ form_row(form._token) }}
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.pet_kind, 'ペット種別', { 'label_attr': {'class': 'ec-label' }}) }}
@@ -130,6 +130,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.future_wait, '成犬時予想体重「kg」', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-3 ec-input">
         {{ form_widget(form.future_wait) }}
@@ -139,6 +140,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.pr_comment, 'アピールポイント', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.pr_comment, {'attr': {'rows': 5, 'placeholder' : 'アピールポイントを25文字以内でお書きください。'}}) }}
@@ -156,18 +158,17 @@
         </div>
     </div>
     {# ユーザー情報コピー用フィールド #}
-        {% if petInfoTemplate %}
-            <input type="hidden" id="petInfoTemplate_guarantee" value="{{petInfoTemplate.guarantee}}">
-            <input type="hidden" id="petInfoTemplate_delivery_way" value="{{petInfoTemplate.deliveryWay}}">
-            <input type="hidden" id="petInfoTemplate_payment_method" value="{{petInfoTemplate.paymentMethod}}">
-            <input type="hidden" id="petInfoTemplate_reservation_fee" value="{{petInfoTemplate.reservationFee}}">
-        {% endif %}
+        <input type="hidden" id="petInfoTemplate_guarantee" value="{{ petInfoTemplate.guarantee ?? '' }}">
+        <input type="hidden" id="petInfoTemplate_delivery_way" value="{{ petInfoTemplate.deliveryWay ?? '' }}">
+        <input type="hidden" id="petInfoTemplate_payment_method" value="{{ petInfoTemplate.paymentMethod ?? '' }}">
+        <input type="hidden" id="petInfoTemplate_reservation_fee" value="{{ petInfoTemplate.reservationFee ?? '' }}">
     {# ユーザー情報コピー用フィールド #}
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.guarantee, '生体保障内容', { 'label_attr': {'class': 'ec-label' }}) }}
-            <span class="ec-required">必須</span><br >
-            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-2" id="btn_get_petinfo_template_guarantee">テンプレート使用</button>
+            <span class="ec-required">必須</span>
+            <br>
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_guarantee">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.guarantee, {'attr': {'rows': 10, 'placeholder' : 'ブリーダー様にて設定されている生体保証内容をご記入ください。'}}) }}
@@ -176,10 +177,10 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.guarantee, '血統書の有無', { 'label_attr': {'class': 'ec-label'}}) }}
+            {{ form_label(form.is_pedigree, '血統書の有無', { 'label_attr': {'class': 'ec-label'}}) }}
             <span class="ec-required">必須</span>  
         </div>
-        <div class="col-md-8 form-check-inline ec-radio">
+        <div class="col-md-8 ec-radio">
             {{ form_widget(form.is_pedigree, {'attr': {'style': 'display:flex;'}}) }}
             {{ form_errors(form.is_pedigree) }}
         </div>
@@ -187,20 +188,22 @@
     <div id="pedigreeSelect">
         <div class="row mb-3">
             <div class="col-md-3">
-            {{ form_label(form.Pedigree, '血統証団体', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }} 
+            {{ form_label(form.Pedigree, '血統証団体', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                <span class="ec-required">必須</span>
             </div>
             <div class="col-md-8 ec-input ec-select">
             {{ form_widget(form.Pedigree) }}
-            {{ form_errors(form.Pedigree) }}
+            {{ form_errors(form.pedigreeErrors) }}
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-3">
             {{ form_label(form.pedigree_code, '血統証番号', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                <span class="ec-required">必須</span>
             </div>
             <div class="col-md-8 ec-input">
             {{ form_widget(form.pedigree_code) }}
-            {{ form_errors(form.pedigree_code) }}
+            {{ form_errors(form.pedigreeCodeErrors) }}
             </div>
         </div>
     </div>
@@ -217,10 +220,10 @@
     #}
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.include_vaccine_fee, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label' }}) }}
+            {{ form_label(form.is_pedigree, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label'}}) }}
             <span class="ec-required">必須</span>  
         </div>
-        <div class="col-md-8 form-check-inline ec-radio">
+        <div class="col-md-8 ec-radio">
             {{ form_widget(form.include_vaccine_fee, {'attr': {'style': 'display:flex;'}}) }}
             {{ form_errors(form.include_vaccine_fee) }}
         </div>
@@ -232,14 +235,15 @@
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.vaccine_detail, {'attr': {'style': 'display:flex;'}}) }}
-            {{ form_errors(form.vaccine_detail) }}
+            {{ form_errors(form.vaccineDetailErrors) }}
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-            <span class="ec-required">必須</span><br >
-            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-2" id="btn_get_petinfo_template_delivery_way">テンプレート使用</button>
+            <span class="ec-required">必須</span>
+            <br>
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_delivery_way">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.delivery_way, {'attr': {'rows': 5, 'placeholder' : '引き渡し方法をご記入ください。'}}) }}
@@ -250,8 +254,8 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.payment_method, '支払方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-            <span class="ec-required">必須</span><br >
-            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-2" id="btn_get_petinfo_template_payment_method">テンプレート使用</button>
+            <span class="ec-required">必須</span><br>
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_payment_method">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.payment_method, {'attr': {'rows': 5, 'placeholder' : '支払方法をご記入ください。'}}) }}
@@ -262,8 +266,8 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.reservation_fee, '予約金', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-            <span class="ec-required">必須</span><br >
-            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-2" id="btn_get_petinfo_template_reservation_fee">テンプレート使用</button>
+            <span class="ec-required">必須</span><br>
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_reservation_fee">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.reservation_fee, {'attr': {'rows': 5, 'placeholder' : 'ブリーダーにて設定されている予約金をご記入ください。'}}) }}
@@ -281,7 +285,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">￥ </span>
                 </div>
-                {{ form_widget(form.price , { 'attr': {'style' : 'height: 100%' }}) }}
+                {{ form_widget(form.price) }}
                 {{ form_errors(form.price) }}
                 </div>
         </div>
@@ -296,7 +300,7 @@
         <div class="col-md-4"></div>
     </div>
 
-{{ form_end(form) }}
+{{ form_end(form, {'render_rest': false}) }}
 
 <div class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -386,6 +390,10 @@
             display: flex;
             flex-flow: row wrap;
             justify-content: center;
+        }
+        legend {
+            float: left!important;
+            width: auto;
         }
     </style>
 {% endblock %}

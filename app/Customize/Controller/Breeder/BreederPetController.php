@@ -199,6 +199,75 @@ class BreederPetController extends AbstractController
     }
 
     /**
+     * ペット詳細
+     *
+     * @Route("/breeder/pet/detail/{id}", name="breeder_pet_detail", requirements={"id" = "\d+"})
+     * @Template("animalline/breeder/pet/detail.twig")
+     */
+    public function petDetail(Request $request)
+    {
+        $isLoggedIn = (bool)$this->getUser();
+        $id = $request->get('id');
+        $isFavorite = false;
+        $breederPet = $this->breederPetsRepository->find($id);
+        $pedigree = $breederPet->getPedigree();
+        $breederExamInfo = null;
+
+        $isPedigree = $breederPet->getIsPedigree();
+        if ($isPedigree == 1) {
+            $breeder = $this->breedersRepository->find($breederPet->getBreeder());
+            $breederExamInfo = $this->breederExaminationInfoRepository->findOneBy([
+                'Breeder' => $breeder->getId(),
+                'pet_type' => $breederPet->getPetKind(),
+                'pedigree_organization' => 3
+            ]);
+            if (!$breederExamInfo) {
+                $breederExamInfo = $this->breederExaminationInfoRepository->findOneBy([
+                    'Breeder' => $breeder->getId(),
+                    'pet_type' => $breederPet->getPetKind(),
+                    'pedigree_organization' => [
+                        1,
+                        2
+                    ]
+                ]);
+            }
+        }
+
+        $petKind = $breederPet->getPetKind();
+        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
+        if ($favorite) {
+            $isFavorite = true;
+        }
+
+        $images = $this->breederPetImageRepository->findBy(
+            [
+                'BreederPets' => $breederPet,
+                'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE
+            ]
+        );
+        $video = $this->breederPetImageRepository->findOneBy(
+            [
+                'BreederPets' => $breederPet,
+                'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
+            ]
+        );
+
+        return $this->render(
+            'animalline/breeder/pet/detail.twig',
+            [
+                'breederPet' => $breederPet,
+                'petKind' => $petKind,
+                'images' => $images,
+                'video' => $video,
+                'isFavorite' => $isFavorite,
+                'isLoggedIn' => $isLoggedIn,
+                'breederExamInfo' => $breederExamInfo,
+                'pedigree' => $pedigree
+            ]
+        );
+    }
+
+    /**
      * 新規ペット追加
      *
      * @Route("/breeder/member/pets/new/{barcode}", name="breeder_pets_new", methods={"GET","POST"}, requirements={"barcode" = "^\d{6}$"})
@@ -317,8 +386,9 @@ class BreederPetController extends AbstractController
      * ペット情報編集
      *
      * @Route("/breeder/member/pets/edit/{id}", name="breeder_pets_edit", methods={"GET","POST"})
+     * @Template("animalline/breeder/member/pets/edit.twig")
      */
-    public function breeder_pets_edit(Request $request, BreederPets $breederPet): Response
+    public function breeder_pets_edit(Request $request, BreederPets $breederPet)
     {
         $user = $this->getUser();
         $breeder = $this->breedersRepository->find($user);
@@ -370,13 +440,12 @@ class BreederPetController extends AbstractController
             ];
         }
 
-
-        return $this->render('animalline/breeder/member/pets/edit.twig', [
+        return [
             'breeder_pet' => $breederPet,
             'pet_mages' => $petImages,
             'form' => $form->createView(),
             'petInfoTemplate' => $petInfoTemplate
-        ]);
+        ];
     }
 
     /**

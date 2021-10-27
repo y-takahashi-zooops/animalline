@@ -329,20 +329,33 @@
 {% endblock %}
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="{{ asset('assets/js/favorite.js') }}"></script>
 <script>
-    function toggleNav() {
-        var body = document.body;
-        var hamburger = document.getElementById('js-hamburger');
-        var blackBg = document.getElementById('js-black-bg');
-
-        hamburger.addEventListener('click', function() {
-            body.classList.toggle('nav-open');
+$(document).on("click", ".btn-like", function () {
+    if ($(this).data('login')) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: '{{ url('adoption_favorite_pet') }}',
+            data: {
+                'id': $(this).data('id')
+            },
+            success: function (data) {
+                if (data == 'not-allowed') {
+                    alert('自分のペットなので、お気に入りの項目に入れないでください。')
+                } else if (data == 'liked') {
+                    $('#textBtnLike').text('お気に入りから削除')
+                    $('svg.heart-icon path').attr('fill', '#FF424F')
+                    $('.btn-like').addClass('red-heart')
+                } else {
+                    $('#textBtnLike').text('お気に入りに追加')
+                    $('svg.heart-icon path').attr('fill', 'none')
+                    $('.btn-like').removeClass('red-heart')
+                }
+            }
         });
-        blackBg.addEventListener('click', function() {
-            body.classList.remove('nav-open');
-        });
+    } else {
+        alert('お気に入り機能を利用するにはログインが必要です')
     }
-    toggleNav();
+})
 </script>
 {% endblock %}
