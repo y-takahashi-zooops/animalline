@@ -10,7 +10,7 @@
 			</div>
 			<div class="ec-off1Grid">
 				<div class="ec-off1Grid__cell">
-                    <form method="post" action="#" novalidate name="update-baseinfo-form">
+                    <form method="post" action="" novalidate name="update-baseinfo-form">
 						<span class="p-country-name" style="display:none;">Japan</span>
                         <h2>ブリーダー情報</h2>
 						<button class="btn btn-ec-regular btn-secondary mt-2 mb-2" id="baseInfoCopy" type="button">
@@ -26,6 +26,7 @@
 						<input type="hidden" id="customer_tel" value="{{Customer.phoneNumber}}">
 						{# ユーザー情報コピー用フィールド #}
 						{{ form_widget(form._token) }}
+						{{ form_widget(formTemplate._token) }}
 						<div class="ec-borderedDefs">
 							<div class="mb-5">
 								<dl>
@@ -344,6 +345,52 @@
 										</div>
 									</dd>
 								</dl> #}
+								<dl>
+									<dt>
+										{{ form_label(formTemplate.guarantee, '生体保障内容', { 'label_attr': {'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-birth{{ has_errors(formTemplate.guarantee) ? ' error' }}">
+											{{ form_widget(formTemplate.guarantee) }}
+											{{ form_errors(formTemplate.guarantee) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(formTemplate.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label' }}) }}
+										<span class="ec-required">必須</span>
+									</dt>
+									<dd>
+										<div class="ec-birth{{ has_errors(formTemplate.delivery_way) ? ' error' }}">
+											{{ form_widget(formTemplate.delivery_way) }}
+											{{ form_errors(formTemplate.delivery_way) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(formTemplate.payment_method, '支払方法', { 'label_attr': {'class': 'ec-label' }}) }}
+										<span class="ec-required">必須</span>
+									</dt>
+									<dd>
+										<div class="ec-birth{{ has_errors(formTemplate.payment_method) ? ' error' }}">
+											{{ form_widget(formTemplate.payment_method) }}
+											{{ form_errors(formTemplate.payment_method) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(formTemplate.reservation_fee, '予約金', { 'label_attr': {'class': 'ec-label' }}) }}
+									</dt>
+									<dd>
+										<div class="ec-birth{{ has_errors(formTemplate.reservation_fee) ? ' error' }}">
+											{{ form_widget(formTemplate.reservation_fee) }}
+											{{ form_errors(formTemplate.reservation_fee) }}
+										</div>
+									</dd>
+								</dl>
                             </div>
                         </div>
                         <div class="ec-registerRole__actions">

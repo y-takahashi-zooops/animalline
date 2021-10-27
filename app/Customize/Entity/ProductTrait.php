@@ -16,6 +16,11 @@ trait ProductTrait
     public $item_weight;
 
     /**
+    * @ORM\Column(name="maker_id", type="integer", nullable=false)
+    */
+    public $maker_id;
+
+    /**
     * Set item_weight.
     *
     * @param string $item_weight
@@ -37,5 +42,29 @@ trait ProductTrait
     public function getItemWeight()
     {
         return $this->item_weight;
+    }
+
+    /**
+    * Set maker_id.
+    *
+    * @param string $maker_id
+    *
+    * @return Product
+    */
+    public function setMakerId($maker_id)
+    {
+        $this->maker_id = $maker_id;
+
+        return $this;
+    }
+
+    /**
+    * Get maker_id.
+    *
+    * @return integer
+    */
+    public function gettMakerId()
+    {
+        return $this->maker_id;
     }
 }

@@ -83,7 +83,7 @@ class BreederPetinfoTemplate
         return $this->delivery_way;
     }
 
-    public function setDeliveryWay(string $delivery_way): self
+    public function setDeliveryWay(?string $delivery_way): self
     {
         $this->delivery_way = $delivery_way;
 
@@ -95,7 +95,7 @@ class BreederPetinfoTemplate
         return $this->payment_method;
     }
 
-    public function setPaymentMethod(string $payment_method): self
+    public function setPaymentMethod(?string $payment_method): self
     {
         $this->payment_method = $payment_method;
 
