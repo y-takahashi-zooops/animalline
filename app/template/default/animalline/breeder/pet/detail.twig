@@ -206,7 +206,7 @@
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12 contents_col_normal">
-                                        <a href="javascript:checkContact('{{breederPet.Breeder.id==app.user.id|default(null)}}', '{{ isSold }}', '{{ isContacted }}');">
+                                        <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
                                             <button class="btn basic-btn breeder-btn" style="height:65px;">
                                                 この子犬の見学希望／お問い合わせ(無料)
                                             </button>
@@ -290,7 +290,7 @@
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12">
-                                        <a href="javascript:checkContact('{{breederPet.Breeder.id==app.user.id|default(null)}}', '{{ isSold }}', '{{ isContacted }}');">
+                                        <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
                                             <button class="btn basic-btn breeder-btn" style="height:65px;">
                                                 この子犬の見学希望／お問い合わせ(無料)
                                             </button>
@@ -426,17 +426,6 @@
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-    function checkContact(petSelf, isSold, isContacted) {
-        if (petSelf) {
-            alert("自分のペットなので、「この子犬の見学希望／お問い合わせ(無料)」ボタンをクリックしないでください。")
-        } else if (isSold) {
-            alert("このペットが販売されました。")
-        } else if (isContacted) {
-            alert("このペットについて、お問い合わせの内容が既に存在しています。")
-        } else {
-            window.open("{{ url('breeder_contact', {'pet_id': breederPet.id}) }}")
-        }
-    }
     $(document).on("click", ".btn-like", function () {
         if ($(this).data('login')) {
             $.ajax({

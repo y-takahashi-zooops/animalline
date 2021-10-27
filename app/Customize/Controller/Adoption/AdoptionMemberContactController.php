@@ -371,9 +371,16 @@ class AdoptionMemberContactController extends AbstractController
             }
         }
 
+        $isSelf = $this->getUser()->getId() === $pet->getConservation()->getId();
+        $isSold = (bool)$this->conservationContactHeaderRepository->findOneBy(['Pet' => $pet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]);
+        $isContacted = $this->conservationContactHeaderRepository->checkContacted($this->getUser(), $pet);
+
         return [
             'form' => $form->createView(),
-            'id' => $id
+            'id' => $id,
+            'isSelf' => $isSelf,
+            'isSold' => $isSold,
+            'isContacted' => $isContacted
         ];
     }
 

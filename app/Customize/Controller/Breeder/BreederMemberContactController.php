@@ -473,9 +473,16 @@ class BreederMemberContactController extends AbstractController
             }
         }
 
+        $isSelf = $this->getUser()->getId() === $pet->getBreeder()->getId();
+        $isSold = (bool)$this->breederContactHeaderRepository->findOneBy(['Pet' => $pet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]);
+        $isContacted = $this->breederContactHeaderRepository->checkContacted($this->getUser(), $pet);
+
         return [
             'form' => $form->createView(),
-            'id' => $id
+            'id' => $id,
+            'isSelf' => $isSelf,
+            'isSold' => $isSold,
+            'isContacted' => $isContacted
         ];
     }
 

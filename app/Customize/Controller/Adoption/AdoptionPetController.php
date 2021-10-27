@@ -338,15 +338,6 @@ class AdoptionPetController extends AbstractController
             ]
         );
 
-        $isSold = (bool)$this->conservationContactHeaderRepository->findBy(['Pet' => $conservationPet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]);
-        $isContacted = (bool)$this->conservationContactHeaderRepository->createQueryBuilder('ch')
-            ->where('ch.Customer = :customer')
-            ->andWhere('ch.Pet = :pet')
-            ->andWhere('ch.contract_status != :status')
-            ->setParameters(['customer' => $this->getUser(), 'pet' => $conservationPet, 'status' => AnilineConf::CONTRACT_STATUS_NONCONTRACT])
-            ->getQuery()
-            ->getResult();
-
         return $this->render(
             'animalline/adoption/pet/detail.twig',
             [
@@ -354,9 +345,7 @@ class AdoptionPetController extends AbstractController
                 'images' => $images,
                 'video' => $video,
                 'isFavorite' => $isFavorite,
-                'isLoggedIn' => $isLoggedIn,
-                'isSold' => $isSold,
-                'isContacted' => $isContacted
+                'isLoggedIn' => $isLoggedIn
             ]
         );
     }

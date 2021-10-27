@@ -252,15 +252,6 @@ class BreederPetController extends AbstractController
             ]
         );
 
-        $isSold = (bool)$this->breederContactHeaderRepository->findBy(['Pet' => $breederPet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]);
-        $isContacted = (bool)$this->breederContactHeaderRepository->createQueryBuilder('ch')
-            ->where('ch.Customer = :customer')
-            ->andWhere('ch.Pet = :pet')
-            ->andWhere('ch.contract_status != :status')
-            ->setParameters(['customer' => $this->getUser(), 'pet' => $breederPet, 'status' => AnilineConf::CONTRACT_STATUS_NONCONTRACT])
-            ->getQuery()
-            ->getResult();
-
         return $this->render(
             'animalline/breeder/pet/detail.twig',
             [
@@ -271,9 +262,7 @@ class BreederPetController extends AbstractController
                 'isFavorite' => $isFavorite,
                 'isLoggedIn' => $isLoggedIn,
                 'breederExamInfo' => $breederExamInfo,
-                'pedigree' => $pedigree,
-                'isSold' => $isSold,
-                'isContacted' => $isContacted
+                'pedigree' => $pedigree
             ]
         );
     }
