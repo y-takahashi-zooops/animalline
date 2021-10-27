@@ -142,8 +142,11 @@ class BreederQueryService
     {
         $query = $this->breedersRepository->createQueryBuilder('b')
             ->innerJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.Breeder')
-            ->where('bp.pet_kind = :pet_kind')
-            ->setParameter('pet_kind', $petKind);
+            ->where('b.handling_pet_kind in (:kinds)')
+            ->setParameter('kinds', [
+                AnilineConf::ANILINE_PET_KIND_DOG_CAT,
+                $petKind
+            ]);
 
         if ($request->get('breed_type')) {
             $query->andWhere('bp.BreedsType = :breeds_type')
@@ -164,9 +167,7 @@ class BreederQueryService
                     ->getArrayResult();
                 $arr = array_column($result, 'adjacent_pref_id');
                 $query->orWhere('bh.BreederHousePrefId in (:arr)')
-                    ->setParameter('arr', $arr)
-                    ->andWhere('bp.pet_kind = :pet_kind')
-                    ->setParameter('pet_kind', $request->get('pet_kind'));
+                    ->setParameter('arr', $arr);
             }
         }
 
