@@ -135,7 +135,7 @@ class BreederController extends AbstractController
 
     /**
      * Page Breeder
-     * 
+     *
      * @Route("/breeder/", name="breeder_top")
      * @Template("animalline/breeder/reg_index.twig")
      */
@@ -223,121 +223,17 @@ class BreederController extends AbstractController
     }
 
     /**
-     * ペット詳細
-     *
-     * @Route("/breeder/pet/detail/{id}", name="breeder_pet_detail", requirements={"id" = "\d+"})
-     * @Template("animalline/breeder/pet/detail.twig")
-     */
-    public function petDetail(Request $request)
-    {
-        $isLoggedIn = (bool)$this->getUser();
-        $id = $request->get('id');
-        $isFavorite = false;
-        $breederPet = $this->breederPetsRepository->find($id);
-        $pedigree = $breederPet->getPedigree();
-        $breederExamInfo = null;
-
-        $isPedigree = $breederPet->getIsPedigree();
-        if ($isPedigree == 1) {
-            $breeder = $this->breedersRepository->find($breederPet->getBreeder());
-            $breederExamInfo = $this->breederExaminationInfoRepository->findOneBy([
-                'Breeder' => $breeder->getId(),
-                'pet_type' => $breederPet->getPetKind(),
-                'pedigree_organization' => 3
-            ]);
-            if (!$breederExamInfo) {
-                $breederExamInfo = $this->breederExaminationInfoRepository->findOneBy([
-                    'Breeder' => $breeder->getId(),
-                    'pet_type' => $breederPet->getPetKind(),
-                    'pedigree_organization' => [
-                        1,
-                        2
-                    ]
-                ]);
-            }
-        }
-
-        $petKind = $breederPet->getPetKind();
-        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
-        if ($favorite) {
-            $isFavorite = true;
-        }
-        if (!$breederPet) {
-            throw new HttpException\NotFoundHttpException();
-        }
-
-        $images = $this->breederPetImageRepository->findBy(
-            [
-                'BreederPets' => $breederPet,
-                'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE
-            ]
-        );
-        $video = $this->breederPetImageRepository->findOneBy(
-            [
-                'BreederPets' => $breederPet,
-                'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
-            ]
-        );
-
-        return $this->render(
-            'animalline/breeder/pet/detail.twig',
-            [
-                'breederPet' => $breederPet,
-                'petKind' => $petKind,
-                'images' => $images,
-                'video' => $video,
-                'isFavorite' => $isFavorite,
-                'isLoggedIn' => $isLoggedIn,
-                'breederExamInfo' => $breederExamInfo,
-                'pedigree' => $pedigree
-            ]
-        );
-    }
-
-    /**
-     * Page favorite pet
-     * 
-     * @Route("/breeder/pet/detail/favorite_pet", name="breeder_favorite_pet")
-     */
-    public function favoritePet(Request $request)
-    {
-        $id = $request->get('id');
-        $pet = $this->breederPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
-        $entityManager = $this->getDoctrine()->getManager();
-        if (!$favorite) {
-            $petKind = $pet->getPetKind();
-            $favorite_pet = new PetsFavorite();
-            $favorite_pet->setCustomer($this->getUser())
-                ->setPetId($id)
-                ->setSiteCategory(AnilineConf::SITE_CATEGORY_BREEDER)
-                ->setPetKind($petKind);
-            $entityManager->persist($favorite_pet);
-            $entityManager->flush();
-
-            $this->breederPetsRepository->incrementCount($pet);
-        } else {
-            $entityManager->remove($favorite);
-            $entityManager->flush();
-
-            $this->breederPetsRepository->decrementCount($pet);
-
-            return new JsonResponse('unliked');
-        }
-
-        return new JsonResponse('liked');
-    }
-
-    /**
      * Page Breeder detail
-     * 
+     *
      * @Route("/breeder/breeder_search/{breeder_id}", name="breeder_detail", requirements={"breeder_id" = "\d+"})
      * @Template("/animalline/breeder/breeder_detail.twig")
      */
     public function breeder_detail(Request $request, $breeder_id, PaginatorInterface $paginator)
     {
         $breeder = $this->breedersRepository->find($breeder_id);
-        if (!$breeder) throw new NotFoundHttpException();
+        if (!$breeder) {
+            throw new NotFoundHttpException();
+        }
 
         $handling_pet_kind = $breeder->getHandlingPetKind();
         $dogHouse = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 1]);

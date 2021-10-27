@@ -153,10 +153,10 @@
                                         ワクチン代負担
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {% if breederPet.getIncludeVaccineFee == 0 %}
-                                            代金に含まない（{{ breederPet.getVaccineDetail() ? breederPet.getVaccineDetail() : '_' }}）
+                                        {% if breederPet.getIncludeVaccineFee == 1 %}
+                                            代金に含む（{{ breederPet.getVaccineDetail() ? breederPet.getVaccineDetail() : '_' }}）
                                         {% else %}
-                                            代金に含む
+                                            代金に含まない
                                         {% endif %}
                                     </div>
                                 </div>
@@ -177,9 +177,9 @@
                                     <i class="fas fa-info-circle"></i>
                                     【生後56日を過ぎていない子犬の引き渡しについて】
                                 </h6>
-                                動物愛護法により、生後56日を過ぎていない子犬の引き渡しが禁止されています。</br>
-                                この子犬はまだ生後56日を過ぎていませんので、すぐに引き渡しを行う事はできません。</br>
-                                生後56日を過ぎていなくてもブリーダーの下で親犬や兄弟犬と共に飼養されている環境であれば購入検討のためにご見学することは可能です。</br>
+                                動物愛護法により、生後56日を過ぎていない子犬の引き渡しが禁止されています。<br>
+                                この子犬はまだ生後56日を過ぎていませんので、すぐに引き渡しを行う事はできません。<br>
+                                生後56日を過ぎていなくてもブリーダーの下で親犬や兄弟犬と共に飼養されている環境であれば購入検討のためにご見学することは可能です。<br>
                             </div>
                             <div class="breeder_section_header">
                                 <i class="fas fa-paw"></i>
@@ -300,10 +300,10 @@
                             </div>
                             <div class="col-12 contents_col_normal mt-4 mb-4 pl-4 pr-4"
                                  style="background:#f7f5f0; border:1px solid #dcdfe1; border-radius: 3px;">
-                                当サイトではお客様に最も信頼されるブリーダー子犬 直販サイトを目指して、</br>
-                                子犬情報およびブリーダー情報の正確性向上に努めております。</br>
-                                当サイトに掲載されている情報で誤解を招く表現、事実と異なる表現などのお気づきの点がございましたら</br>
-                                事務局へのお問い合わせフォームよりご連絡をお願いいたします。</br>
+                                当サイトではお客様に最も信頼されるブリーダー子犬 直販サイトを目指して、<br>
+                                子犬情報およびブリーダー情報の正確性向上に努めております。<br>
+                                当サイトに掲載されている情報で誤解を招く表現、事実と異なる表現などのお気づきの点がございましたら<br>
+                                事務局へのお問い合わせフォームよりご連絡をお願いいたします。<br>
                             </div>
                             <div class="m-2 p-2"></div>
                             <div class="breeder_section_header">
@@ -418,10 +418,6 @@
                 {% include 'animalline/breeder/side.twig' %}
             </div>
         </div>
-        </div>
-        </div>
-        </div>
-        </div>
     </section>
 {% endblock %}
 {% block stylesheet %}
@@ -429,20 +425,33 @@
 {% endblock %}
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="{{ asset('assets/js/breeder_favorite.js') }}"></script>
 <script>
-    function toggleNav() {
-        var body = document.body;
-        var hamburger = document.getElementById('js-hamburger');
-        var blackBg = document.getElementById('js-black-bg');
-
-        hamburger.addEventListener('click', function() {
-            body.classList.toggle('nav-open');
-        });
-        blackBg.addEventListener('click', function() {
-            body.classList.remove('nav-open');
-        });
-    }
-    toggleNav();
+    $(document).on("click", ".btn-like", function () {
+        if ($(this).data('login')) {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: '{{ url('breeder_favorite_pet') }}',
+                data: {
+                    'id': $(this).data('id')
+                },
+                success: function (data) {
+                    if (data == 'not-allowed') {
+                        alert('自分のペットなので、お気に入りの項目に入れないでください。')
+                    } else if (data == 'liked') {
+                        $('#textBtnLike').text('お気に入りから削除')
+                        $('svg.heart-icon path').attr('fill', '#FF424F')
+                        $('.btn-like').addClass('red-heart')
+                    } else {
+                        $('#textBtnLike').text('お気に入りに追加')
+                        $('svg.heart-icon path').attr('fill', 'none')
+                        $('.btn-like').removeClass('red-heart')
+                    }
+                }
+            });
+        } else {
+            alert('お気に入り機能を利用するにはログインが必要です')
+        }
+    });
 </script>
 {% endblock %}

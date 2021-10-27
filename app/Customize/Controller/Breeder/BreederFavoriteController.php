@@ -68,8 +68,11 @@ class BreederFavoriteController extends AbstractController
         $id = $request->get('id');
         $pet = $this->breederPetsRepository->find($id);
         $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
+        $breederSelf = $pet->getBreeder()->getId() == $this->getUser()->getId();
         $entityManager = $this->getDoctrine()->getManager();
-        if (!$favorite) {
+        if ($breederSelf) {
+            return new JsonResponse('not-allowed');
+        } elseif (!$favorite) {
             $petKind = $pet->getPetKind();
             $favorite_pet = new PetsFavorite();
             $favorite_pet->setCustomer($this->getUser())

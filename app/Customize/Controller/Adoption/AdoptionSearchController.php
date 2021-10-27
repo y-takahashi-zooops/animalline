@@ -143,7 +143,6 @@ class AdoptionSearchController extends AbstractController
         $petKind = $request->get('pet_kind');
         // $breeds = $breedsRepository->findBy(['pet_kind' => $petKind], ['breeds_name' => 'ASC']);
         $breeds = $breedsRepository->findBy(['pet_kind' => $petKind], ['sort_order' => 'ASC']);
-        $colors = $coatColorsRepository->findBy(['pet_kind' => $petKind]);
         $formattedBreeds = [];
         foreach ($breeds as $breed) {
             $formattedBreeds[] = [
@@ -151,10 +150,8 @@ class AdoptionSearchController extends AbstractController
                 'name' => $breed->getBreedsName()
             ];
         }
-        $formattedColors = [];
         $data = [
-            'breeds' => $formattedBreeds,
-            'colors' => $formattedColors
+            'breeds' => $formattedBreeds
         ];
 
         return new JsonResponse($data);

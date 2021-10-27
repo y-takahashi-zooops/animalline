@@ -90,7 +90,7 @@ class BreederMemberContactController extends AbstractController
         CustomerRepository             $customerRepository,
         BreederEvaluationsRepository   $breederEvaluationsRepository,
         BreederQueryService            $breederQueryService
-    ){
+    ) {
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederContactsRepository = $breederContactsRepository;
         $this->sendoffReasonRepository = $sendoffReasonRepository;
@@ -308,7 +308,7 @@ class BreederMemberContactController extends AbstractController
 
     /**
      * ブリーダー側取引メッセージ画面
-     * 
+     *
      * @Route("/breeder/member/breeder_message/{id}", name="breeder_breeder_message", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/member/breeder_message.twig")
      */
@@ -407,11 +407,11 @@ class BreederMemberContactController extends AbstractController
         $petContact = $this->breederContactHeaderRepository->createQueryBuilder('ch')
             ->where('ch.Customer = :customer')
             ->andWhere('ch.Pet = :pet')
-            ->andWhere('ch.contract_status != :status')
-            ->setParameters(['customer' => $this->getUser(), 'pet' => $pet, 'status' => 1])
+            ->setParameters(['customer' => $this->getUser(), 'pet' => $pet])
             ->getQuery()
             ->getResult();
-        if ($petContact) {
+        $isBreederContact = $pet->getBreeder()->getId() == $this->getUser()->getId();
+        if ($petContact || $isBreederContact) {
             $isContact = 1;
         }
         $contact = new BreederContactHeader();

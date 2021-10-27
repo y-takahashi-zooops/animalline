@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 
-class ConservationPetController extends AbstractController
+class AdoptionPetController extends AbstractController
 {
     /**
      * @var ConservationPetsRepository

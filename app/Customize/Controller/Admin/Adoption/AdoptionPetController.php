@@ -132,7 +132,6 @@ class AdoptionPetController extends AbstractController
 
         // $breeds = $this->breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()], ['breeds_name' => 'ASC']);
         $breeds = $this->breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()], ['sort_order' => 'ASC']);
-        $colors = $this->coatColorsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()]);
         $images = $this->conservationPetImageRepository->findBy(['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
 
         return $this->render('@admin/Adoption/pet/edit.twig', [

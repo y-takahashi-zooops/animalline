@@ -229,7 +229,6 @@ class BreederPetController extends AbstractController
 
         // $breeds = $this->breedsRepository->findBy(['pet_kind' => $breederPet->getPetKind()], ['breeds_name' => 'ASC']);
         $breeds = $this->breedsRepository->findBy(['pet_kind' => $breederPet->getPetKind()], ['sort_order' => 'ASC']);
-        // $colors = $this->coatColorsRepository->findBy(['pet_kind' => $breederPet->getPetKind()]);
         $images = $this->breederPetImageRepository->findBy(['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE]);
 
         return [
