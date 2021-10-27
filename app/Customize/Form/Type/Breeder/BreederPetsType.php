@@ -12,6 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -46,6 +49,7 @@ class BreederPetsType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
+                'placeholder' => 'common.select'
             ])
             ->add('pet_sex', ChoiceType::class, [
                 'choices' =>
@@ -56,7 +60,7 @@ class BreederPetsType extends AbstractType
                 'required' => true,
             ])
             ->add('pet_birthday', DateType::class, [
-                'data' => new DateTime(),
+                // 'data' => new DateTime(),
                 'years' => range(date('Y'), 2000),
                 'required' => true,
             ])
@@ -71,7 +75,10 @@ class BreederPetsType extends AbstractType
                     'オレンジ' => AnilineConf::ANILINE_BAND_COLOR_ORANGE
                 ],
                 'required' => true,
-                'placeholder' => 'common.select'
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('coat_color', TextType::class, [
                 'required' => true,
@@ -88,6 +95,12 @@ class BreederPetsType extends AbstractType
             ])
             ->add('future_wait', IntegerType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\GreaterThan([
+                        'value' => 0,
+                    ]),
+                ]
             ])
             //->add('dna_check_result', IntegerType::class)
             ->add('pr_comment', TextType::class, [
@@ -98,17 +111,29 @@ class BreederPetsType extends AbstractType
                     new Assert\Length([
                         'max' => 25,
                     ]),
+                    new Assert\NotBlank(),
                 ],
                 'required' => false,
             ])
-            ->add('description', TextareaType::class)
-            ->add('guarantee', TextareaType::class)
+            ->add('description', TextareaType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
+            ])
+            ->add('guarantee', TextareaType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
+            ])
             ->add('is_pedigree', ChoiceType::class, [
                 'choices'  => [
                     'あり'   => '1',
                     'なし' => '0',
                 ],
                 'expanded' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('vaccine_detail', TextType::class, [
                 'required' => false,
@@ -118,8 +143,8 @@ class BreederPetsType extends AbstractType
             ])
             ->add('Pedigree', EntityType::class, [
                 'class' => 'Customize\Entity\Pedigree',
-                'choice_label' => function (Pedigree $petdigree) {
-                    return $petdigree->getPedigreeName();
+                'choice_label' => function (Pedigree $pedigree) {
+                    return $pedigree->getPedigreeName();
                 },
                 'required' => false,
             ])
@@ -138,9 +163,21 @@ class BreederPetsType extends AbstractType
                 ],
                 'expanded' => true,
             ])
-            ->add('delivery_way', TextareaType::class)
-            ->add('payment_method', TextareaType::class)
-            ->add('reservation_fee', TextareaType::class)
+            ->add('delivery_way', TextareaType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
+            ])
+            ->add('payment_method', TextareaType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
+            ])
+            ->add('reservation_fee', TextareaType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
+            ])
             ->add('thumbnail_path', FileType::class, [
                 'required' => false,
                 'mapped' => false,
@@ -190,11 +227,27 @@ class BreederPetsType extends AbstractType
                 ],
                 'data_class' => null
             ])
-            ->add('price', IntegerType::class);
+            ->add('price', IntegerType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
+            ])
+            ->add('vaccineDetailErrors', TextType::class, [
+                'mapped' => false
+            ])
+            ->add('pedigreeErrors', TextType::class, [
+                'mapped' => false
+            ])
+            ->add('pedigreeCodeErrors', TextType::class, [
+                'mapped' => false
+            ]);
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateVaccineDetail']);
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePedigree']);
 
         $customer = $options['customer'];
         $breeder = $this->breedersRepository->find($customer);
         $handling_pet_kind = $breeder->getHandlingPetKind();
+        $choices = [];
         if ($handling_pet_kind == 0) {
             $choices = [
                     '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
@@ -219,5 +272,28 @@ class BreederPetsType extends AbstractType
             'data_class' => BreederPets::class,
             'customer' => null
         ]);
+    }
+
+    public function validateVaccineDetail(FormEvent $event)
+    {
+        $data = $event->getData();
+        $form = $event->getForm();
+        if ($data->getIncludeVaccineFee() && !$data->getVaccineDetail()) {
+            $form['vaccineDetailErrors']->addError(new FormError('入力されていません。'));
+        }
+    }
+
+    public function validatePedigree(FormEvent $event)
+    {
+        $data = $event->getData();
+        $form = $event->getForm();
+        if ($data->getIsPedigree()) {
+            if (!$data->getPedigree()) {
+                $form['pedigreeErrors']->addError(new FormError('入力されていません。'));
+            }
+            if (!$data->getPedigreeCode()) {
+                $form['pedigreeCodeErrors']->addError(new FormError('入力されていません。'));
+            }
+        }
     }
 }

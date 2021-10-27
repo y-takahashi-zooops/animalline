@@ -1,5 +1,5 @@
-{{ form_start(form) }}
-
+{{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+{{ form_row(form._token) }}
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.pet_kind, 'ペット種別', { 'label_attr': {'class': 'ec-label' }}) }}
@@ -130,6 +130,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.future_wait, '成犬時予想体重「kg」', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-3 ec-input">
         {{ form_widget(form.future_wait) }}
@@ -139,6 +140,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
         {{ form_label(form.pr_comment, 'アピールポイント', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.pr_comment, {'attr': {'rows': 5, 'placeholder' : 'アピールポイントを25文字以内でお書きください。'}}) }}
@@ -164,7 +166,8 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.guarantee, '生体保障内容', { 'label_attr': {'class': 'ec-label' }}) }}
-            <span class="ec-required">必須</span>  
+            <span class="ec-required">必須</span>
+            <br>
             <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_guarantee">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
@@ -174,10 +177,10 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.guarantee, '血統書の有無', { 'label_attr': {'class': 'ec-label'}}) }}
+            {{ form_label(form.is_pedigree, '血統書の有無', { 'label_attr': {'class': 'ec-label'}}) }}
             <span class="ec-required">必須</span>  
         </div>
-        <div class="col-md-8 form-check-inline ec-radio">
+        <div class="col-md-8 ec-radio">
             {{ form_widget(form.is_pedigree, {'attr': {'style': 'display:flex;'}}) }}
             {{ form_errors(form.is_pedigree) }}
         </div>
@@ -185,20 +188,22 @@
     <div id="pedigreeSelect">
         <div class="row mb-3">
             <div class="col-md-3">
-            {{ form_label(form.Pedigree, '血統証団体', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }} 
+            {{ form_label(form.Pedigree, '血統証団体', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                <span class="ec-required">必須</span>
             </div>
             <div class="col-md-8 ec-input ec-select">
             {{ form_widget(form.Pedigree) }}
-            {{ form_errors(form.Pedigree) }}
+            {{ form_errors(form.pedigreeErrors) }}
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-3">
             {{ form_label(form.pedigree_code, '血統証番号', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+                <span class="ec-required">必須</span>
             </div>
             <div class="col-md-8 ec-input">
             {{ form_widget(form.pedigree_code) }}
-            {{ form_errors(form.pedigree_code) }}
+            {{ form_errors(form.pedigreeCodeErrors) }}
             </div>
         </div>
     </div>
@@ -215,10 +220,10 @@
     #}
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.include_vaccine_fee, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label' }}) }}
+            {{ form_label(form.is_pedigree, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label'}}) }}
             <span class="ec-required">必須</span>  
         </div>
-        <div class="col-md-8 form-check-inline ec-radio">
+        <div class="col-md-8 ec-radio">
             {{ form_widget(form.include_vaccine_fee, {'attr': {'style': 'display:flex;'}}) }}
             {{ form_errors(form.include_vaccine_fee) }}
         </div>
@@ -230,13 +235,14 @@
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.vaccine_detail, {'attr': {'style': 'display:flex;'}}) }}
-            {{ form_errors(form.vaccine_detail) }}
+            {{ form_errors(form.vaccineDetailErrors) }}
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span>
+            <br>
             <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_delivery_way">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
@@ -248,7 +254,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.payment_method, '支払方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-            <span class="ec-required">必須</span><br >
+            <span class="ec-required">必須</span><br>
             <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_payment_method">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
@@ -260,7 +266,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.reservation_fee, '予約金', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-            <span class="ec-required">必須</span><br >
+            <span class="ec-required">必須</span><br>
             <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_reservation_fee">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
@@ -279,7 +285,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">￥ </span>
                 </div>
-                {{ form_widget(form.price , { 'attr': {'style' : 'height: 100%' }}) }}
+                {{ form_widget(form.price) }}
                 {{ form_errors(form.price) }}
                 </div>
         </div>
@@ -294,7 +300,7 @@
         <div class="col-md-4"></div>
     </div>
 
-{{ form_end(form) }}
+{{ form_end(form, {'render_rest': false}) }}
 
 <div class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -385,6 +391,10 @@
             flex-flow: row wrap;
             justify-content: center;
         }
+        legend {
+            float: left!important;
+            width: auto;
+        }
     </style>
 {% endblock %}
 
@@ -463,23 +473,39 @@ $('#breeder_pets_pet_kind').ready( function() {
     })
 });
 
+// テンプレートがない場合は、各ボタンをdisableにする
+if(!document.getElementById('petInfoTemplate_guarantee') || !document.getElementById('petInfoTemplate_guarantee').value){ 
+    $("#btn_get_petinfo_template_guarantee").prop('disabled', true);
+}
+if(!document.getElementById('petInfoTemplate_delivery_way') || !document.getElementById('petInfoTemplate_delivery_way').value){ 
+    $("#btn_get_petinfo_template_delivery_way").prop('disabled', true);
+}
+if(!document.getElementById('petInfoTemplate_payment_method') || !document.getElementById('petInfoTemplate_payment_method').value){ 
+    $("#btn_get_petinfo_template_payment_method").prop('disabled', true);
+}
+if(!document.getElementById('petInfoTemplate_reservation_fee') || !document.getElementById('petInfoTemplate_reservation_fee').value){ 
+    $("#btn_get_petinfo_template_reservation_fee").prop('disabled', true);
+}
+
+
+// テンプレートコピー
 document.getElementById("btn_get_petinfo_template_guarantee").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 生体保障内容をテンプレートからコピー
     document.getElementById("breeder_pets_guarantee").value = document.getElementById("petInfoTemplate_guarantee").value 
 };
 
 document.getElementById("btn_get_petinfo_template_delivery_way").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 引き渡し方法をテンプレートからコピー
     document.getElementById("breeder_pets_delivery_way").value = document.getElementById("petInfoTemplate_delivery_way").value 
 };
 
 document.getElementById("btn_get_petinfo_template_payment_method").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 支払方法をテンプレートからコピー
     document.getElementById("breeder_pets_payment_method").value = document.getElementById("petInfoTemplate_payment_method").value 
 };
 
 document.getElementById("btn_get_petinfo_template_reservation_fee").onclick = function() {
-    // ユーザー情報をブリーダー情報にコピー
+    // 予約金をテンプレートからコピー
     document.getElementById("breeder_pets_reservation_fee").value = document.getElementById("petInfoTemplate_reservation_fee").value 
 };
 

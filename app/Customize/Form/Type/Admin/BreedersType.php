@@ -240,22 +240,6 @@ class BreedersType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
-            ->add('license_house_name', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                    new Assert\Regex([
-                        'pattern' => '/^[^\s ]+$/u',
-                        'message' => 'form_error.not_contain_spaces',
-                    ]),
-                    new Assert\NotBlank()
-                ]
-            ])
             ->add('license_manager_name', TextType::class, [
                 'required' => true,
                 'attr' => [
@@ -374,7 +358,6 @@ class BreedersType extends AbstractType
                 'mapped' => false,
             ]);
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
