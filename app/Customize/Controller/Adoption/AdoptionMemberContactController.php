@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\Adoption\ConservationContactType;
-
+use Customize\Service\MailService;
 use DateTime;
 
 class AdoptionMemberContactController extends AbstractController
@@ -56,6 +56,11 @@ class AdoptionMemberContactController extends AbstractController
     protected $customerRepository;
 
     /**
+     * @var MailService
+     */
+    protected $mailService;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
@@ -64,6 +69,7 @@ class AdoptionMemberContactController extends AbstractController
      * @param ConservationsRepository $conservationsRepository
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param CustomerRepository $customerRepository
+     * @param MailService $mailService
      */
     public function __construct(
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
@@ -71,7 +77,8 @@ class AdoptionMemberContactController extends AbstractController
         SendoffReasonRepository        $sendoffReasonRepository,
         ConservationsRepository        $conservationsRepository,
         ConservationPetsRepository     $conservationPetsRepository,
-        CustomerRepository             $customerRepository
+        CustomerRepository             $customerRepository,
+        MailService                    $mailService
     ) {
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
@@ -79,6 +86,7 @@ class AdoptionMemberContactController extends AbstractController
         $this->conservationsRepository = $conservationsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->customerRepository = $customerRepository;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -167,6 +175,9 @@ class AdoptionMemberContactController extends AbstractController
                         ->setSendDate(Carbon::now())
                         ->setConservationHeader($item);
                     $entityManager->persist($conservationContact);
+
+                    $data = [];
+                    $this->mailService->sendAdoptionExaminationMailReject($item->getCustomer(), $data);
                 }
             }
             $entityManager = $this->getDoctrine()->getManager();
