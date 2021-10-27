@@ -110,7 +110,7 @@
         <div class="col-md-3">
         {{ form_label(form.band_color, 'バンドカラー', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
         <span class="ec-required">必須</span>
-        <p style="font-size:14px;color:#DE5D50;">遺伝病DNA検査で使用した検体識別バンドのカラーを選択してください。</p>
+        <p style="font-size:14px;color:#DE5D50;">遺伝病DNA検査で使用した<br />検体識別バンドのカラーを選択してください。</p>
         </div>
         <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.band_color) }}
@@ -177,7 +177,7 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.is_pedigree, '血統書の有無', { 'label_attr': {'class': 'ec-label'}}) }}
+            {{ form_label(form.pedigree_code, '血統書の有無', { 'label_attr': {'class': 'ec-label'}}) }}
             <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-radio">
@@ -220,7 +220,7 @@
     #}
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.is_pedigree, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label'}}) }}
+            {{ form_label(form.pedigree_code, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label'}}) }}
             <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-radio">
@@ -253,12 +253,12 @@
 
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.payment_method, '支払方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            {{ form_label(form.payment_method, 'お支払方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span><br>
             <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_payment_method">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
-            {{ form_widget(form.payment_method, {'attr': {'rows': 5, 'placeholder' : '支払方法をご記入ください。'}}) }}
+            {{ form_widget(form.payment_method, {'attr': {'rows': 5, 'placeholder' : 'お支払方法をご記入ください。'}}) }}
             {{ form_errors(form.payment_method) }}
         </div>
     </div>
@@ -270,7 +270,7 @@
             <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_reservation_fee">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
-            {{ form_widget(form.reservation_fee, {'attr': {'rows': 5, 'placeholder' : 'ブリーダーにて設定されている予約金をご記入ください。'}}) }}
+            {{ form_widget(form.reservation_fee, {'attr': {'rows': 5, 'placeholder' : 'ブリーダー様にて設定されている予約金をご記入ください。'}}) }}
             {{ form_errors(form.reservation_fee) }}
         </div>
     </div>
