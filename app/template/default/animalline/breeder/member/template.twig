@@ -12,7 +12,8 @@
                     {{ form_widget(form._token) }}
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <label class="ec-label required" for="breeder_pets_guarantee">生体保障内容</label>
+                            <label class="ec-label required"
+                                   for="breeder_petinfo_template_guarantee">生体保障内容</label>
                         </div>
                         <div class="col-md-8 ec-input">
                             {{ form_widget(form.guarantee) }}
@@ -22,7 +23,7 @@
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <label class="ec-label required" style="padding: 0.375rem 0"
-                                   for="breeder_pets_delivery_way">引き渡し方法</label>
+                                   for="breeder_petinfo_template_delivery_way">引き渡し方法</label>
                             <span class="ec-required">必須</span>
                         </div>
                         <div class="col-md-8 ec-input">
@@ -33,7 +34,7 @@
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <label class="ec-label required" style="padding: 0.375rem 0"
-                                   for="breeder_pets_delivery_way">支払方法</label>
+                                   for="breeder_petinfo_template_payment_method">支払方法</label>
                             <span class="ec-required">必須</span>
                         </div>
                         <div class="col-md-8 ec-input">
@@ -44,7 +45,7 @@
                     <div class="row mb-3">
                         <div class="col-md-3">
                             <label class="ec-label required" style="padding: 0.375rem 0"
-                                   for="breeder_pets_delivery_way">予約金</label>
+                                   for="breeder_petinfo_template_reservation_fee">予約金</label>
                         </div>
                         <div class="col-md-8 ec-input">
                             {{ form_widget(form.reservation_fee) }}

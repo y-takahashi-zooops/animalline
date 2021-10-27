@@ -162,6 +162,9 @@ class BreederPetsType extends AbstractType
                     '代金に含まない' => '0',
                 ],
                 'expanded' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('delivery_way', TextareaType::class, [
                 'constraints' => [
