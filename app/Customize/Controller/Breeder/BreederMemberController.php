@@ -153,12 +153,16 @@ class BreederMemberController extends AbstractController
             $breederData->setId($user->getId());
         }
         $builder = $this->formFactory->createBuilder(BreedersType::class, $breederData);
-
         $form = $builder->getForm();
         $form->handleRequest($request);
 
+        $breederPetinfoTemplate = $breederData->getBreederPetinfoTemplate() ?: new BreederPetinfoTemplate();
+        $builderTemplate = $this->formFactory->createBuilder(BreederPetinfoTemplateType::class, $breederPetinfoTemplate);
+        $formTemplate = $builderTemplate->getForm();
+        $formTemplate->handleRequest($request);
+
         // フォームサブミット時に、画像サムネイル情報を設定する(バリデーションは無視)
-        if ($form->isSubmitted()){
+        if ($form->isSubmitted() && $formTemplate->isValid()) {
             $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
             $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
 
@@ -173,7 +177,7 @@ class BreederMemberController extends AbstractController
             }
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $formTemplate->isSubmitted() && $formTemplate->isValid()) {
             // $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
             // $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
 
@@ -197,10 +201,12 @@ class BreederMemberController extends AbstractController
 
             $breederData->setBreederPref($breederData->getPrefBreeder())
                 ->setLicensePref($breederData->getPrefLicense());
-                // ->setThumbnailPath($thumbnail_path)
-                // ->setLicenseThumbnailPath($license_thumbnail_path);
+            // ->setThumbnailPath($thumbnail_path)
+            // ->setLicenseThumbnailPath($license_thumbnail_path);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederData);
+            $breederPetinfoTemplate->setBreeder($breederData);
+            $entityManager->persist($breederPetinfoTemplate);
             $entityManager->flush();
             return $this->redirectToRoute($return_path);
         }
@@ -209,6 +215,7 @@ class BreederMemberController extends AbstractController
             'return_path' => $return_path,
             'breederData' => $breederData,
             'form' => $form->createView(),
+            'formTemplate' => $formTemplate->createView(),
             'Customer' => $user,
         ];
     }

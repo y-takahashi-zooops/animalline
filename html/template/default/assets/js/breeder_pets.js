@@ -23,19 +23,17 @@ $(function () {
                 pet_kind: petKindSelect.value
             }
         })
-            .done(function (data) {
-                const {breeds} = data;
-                $('#breeder_pets_breeds_type').empty();
-                $('#breeder_pets_breeds_type').append(new Option('選択してください', ''));
-                breeds.forEach(breed => {
-                    $('#breeder_pets_breeds_type').append(new Option(breed.name, breed.id));
-                });
-
-                $('#breeder_pets_breeds_type').val(isEdit ? breed : '');
-
-            })
-            .fail(function (err) {
-                console.error(err);
+        .done(function (data) {
+            const {breeds} = data;
+            $('#breeder_pets_breeds_type').empty();
+            $('#breeder_pets_breeds_type').append(new Option('選択してください', ''));
+            breeds.forEach(breed => {
+                $('#breeder_pets_breeds_type').append(new Option(breed.name, breed.id));
             });
+            $("#breeder_pets_breeds_type option[value="+breed+"]").prop("selected", true)
+        })
+        .fail(function (err) {
+            console.error(err);
+        });
     }
 });
