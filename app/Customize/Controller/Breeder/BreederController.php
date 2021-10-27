@@ -141,6 +141,11 @@ class BreederController extends AbstractController
      */
     public function breeder_index(Request $request)
     {
+        return $this->render('animalline/breeder/reg_index.twig');
+    }
+    /*
+    public function breeder_index(Request $request)
+    {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
         $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
@@ -163,6 +168,7 @@ class BreederController extends AbstractController
             'favoritePets' => $favoritePets,
         ]);
     }
+    */
 
     /**
      * @Route("/breeder/guide/dog", name="breeder_guide_dog")
