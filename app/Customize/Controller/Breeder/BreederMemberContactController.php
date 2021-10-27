@@ -156,7 +156,7 @@ class BreederMemberContactController extends AbstractController
 
             $breederContact = (new BreederContacts())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
-                ->setContactDescription('今回の取引は非成立となりました')
+                ->setContactDescription('今回の取引は非成立となりました。')
                 ->setSendDate(Carbon::now())
                 ->setBreederHeader($msgHeader);
 
@@ -272,16 +272,30 @@ class BreederMemberContactController extends AbstractController
         if (!$msgHeader) {
             throw new HttpException\NotFoundHttpException();
         }
+        $entityManager = $this->getDoctrine()->getManager();
         switch ($msgHeader->getContractStatus()) {
             case AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION:
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT);
                 break;
             case AnilineConf::CONTRACT_STATUS_WAITCONTRACT:
-                $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT);
+                if ($msgHeader->getBreederCheck() == 1) {
+                    $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT);
+                    foreach ($msgHeader->getPet()->getBreederContactHeader() as $item) {
+                        if ($item->getContractStatus() != AnilineConf::CONTRACT_STATUS_CONTRACT) {
+                            $item->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
+                        }
+                        $entityManager->persist($item);
+                        $breederContact = (new BreederContacts())
+                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
+                        ->setContactDescription('今回の取引は非成立となりました。')
+                        ->setSendDate(Carbon::now())
+                        ->setBreederHeader($item);
+                        $entityManager->persist($breederContact);
+                    }
+                }
                 break;
         }
         $msgHeader->setCustomerCheck(1);
-        $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($breeder);
         $entityManager->persist($msgHeader);
         $entityManager->flush();
@@ -347,7 +361,7 @@ class BreederMemberContactController extends AbstractController
 
             $breederContact = (new BreederContacts())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
-                ->setContactDescription('今回の取引は非成立となりました')
+                ->setContactDescription('今回の取引は非成立となりました。')
                 ->setSendDate(Carbon::now())
                 ->setBreederHeader($msgHeader);
 
@@ -366,6 +380,18 @@ class BreederMemberContactController extends AbstractController
             if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $msgHeader->getCustomerCheck() == 1) {
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setBreederCheck(1);
+                foreach ($msgHeader->getPet()->getBreederContactHeader() as $item) {
+                    if ($item->getContractStatus() != AnilineConf::CONTRACT_STATUS_CONTRACT) {
+                        $item->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
+                    }
+                    $entityManager->persist($item);
+                    $breederContact = (new BreederContacts())
+                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
+                        ->setContactDescription('今回の取引は非成立となりました。')
+                        ->setSendDate(Carbon::now())
+                        ->setBreederHeader($item);
+                    $entityManager->persist($breederContact);
+                }
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($msgHeader);
