@@ -83,7 +83,6 @@ section{
 }
 
 section h2{
-	font-family: 'Pacifico', cursive;
 	width: 60%;
 	margin: 0 auto;
 	font-size: 25px;
@@ -148,6 +147,7 @@ section h2 span {
 	font-weight: 700;
 	width: 100%;
 	margin-bottom: 1rem;
+	color:crimson;
 }
 
 .innerS2{
@@ -238,8 +238,7 @@ button.btn {
 .btn--orange,
 a.btn--orange {
 	color: #fff;
-	/* background-color: #ED6C00; */
-	background-color: #F00;
+	background-color: #ED6C00;
 }
 .btn--orange:hover,
 a.btn--orange:hover {
@@ -356,6 +355,10 @@ a.btn--green:hover {
 	border: 0;
 }
 
+.top_margin_l {
+	margin-top: 2rem;
+}
+
 .top_margin_xl {
 	margin-top: 4rem;
 }
@@ -368,7 +371,7 @@ a.btn--green:hover {
 .strong-text{
 	font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
 	font-size: 25px;
-	color: #F00;
+	color: crimson;
 }
 /* RESPONSIVE 設定
 ------------------------------------------------------------*/
@@ -413,8 +416,8 @@ Width <= 768px
 	}
 
 	.innerS h2 {
-		font-size: 22px;
-		font-weight: 700;
+		font-size: 24px;
+		font-weight: 900;
 	}
 }
 

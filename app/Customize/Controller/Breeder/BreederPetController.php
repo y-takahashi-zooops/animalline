@@ -227,6 +227,9 @@ class BreederPetController extends AbstractController
             'Breeder' => $breeder
         ]);
 
+        // if (!$petInfoTemplate) {
+        //     throw new NotFoundHttpException();
+        // }
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
