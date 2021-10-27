@@ -920,9 +920,9 @@ class MailService
      * @param array $data
      * @return int
      */
-    public function sendAdoptionContractCancel(\Eccube\Entity\Customer $Customer, array $data)
+    public function sendMailContractCancel(\Eccube\Entity\Customer $Customer, array $data)
     {
-        $body = $this->twig->render('Mail/conservation_contract_cancel.twig', [
+        $body = $this->twig->render('Mail/mail_contract_cancel.twig', [
             'BaseInfo' => $this->BaseInfo,
             'data' => $data
         ]);
@@ -936,7 +936,7 @@ class MailService
             ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
-        $htmlFileName = $this->getHtmlTemplate('Mail/conservation_contract_cancel.twig');
+        $htmlFileName = $this->getHtmlTemplate('Mail/mail_contract_cancel.twig');
         if (!is_null($htmlFileName)) {
             $htmlBody = $this->twig->render($htmlFileName, [
                 'BaseInfo' => $this->BaseInfo,

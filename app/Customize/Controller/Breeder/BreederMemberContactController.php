@@ -24,6 +24,7 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Customize\Form\Type\Breeder\BreederContactType;
 use Customize\Form\Type\Breeder\BreederEvaluationsType;
+use Customize\Service\MailService;
 
 class BreederMemberContactController extends AbstractController
 {
@@ -253,7 +254,7 @@ class BreederMemberContactController extends AbstractController
      * @Route("/breeder/member/contract/complete/{pet_id}", name="breeder_contract_complete", requirements={"pet_id" = "\d+"})
      * @Template("animalline/breeder/member/contract_complete.twig")
      */
-    public function contract_complete(Request $request)
+    public function contract_complete(Request $request, MailService $mailService)
     {
         $pet = $this->breederPetsRepository->find($request->get('pet_id'));
         if (!$pet) {
@@ -290,6 +291,8 @@ class BreederMemberContactController extends AbstractController
                         ->setSendDate(Carbon::now())
                         ->setBreederHeader($item);
                         $entityManager->persist($breederContact);
+
+                        $mailService->sendBreederExaminationMailAccept($item->getCustomer(), null);
                     }
                 }
                 break;

@@ -177,7 +177,7 @@ class AdoptionMemberContactController extends AbstractController
                     $entityManager->persist($conservationContact);
 
                     $data = [];
-                    $this->mailService->sendAdoptionExaminationMailReject($item->getCustomer(), $data);
+                    $this->mailService->sendMailContractCancel($item->getCustomer(), $data);
                 }
             }
             $entityManager = $this->getDoctrine()->getManager();
