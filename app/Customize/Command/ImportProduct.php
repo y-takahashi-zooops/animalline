@@ -151,7 +151,7 @@ class ImportProduct extends Command
                 // ヘッダー行(1行目)はスキップ
                 if ($headerflag) {
                     $totalCnt++;
-
+var_dump($data);
                     // productテーブルに新規レコード追加
                     $Product = new Product();
 
@@ -162,20 +162,21 @@ class ImportProduct extends Command
                     // product_stockテーブルに新規レコード追加
                     $ProductStock = new ProductStock();
 
-                    $ProductImage = new ProductImage();
+                    //$ProductImage = new ProductImage();
 
                     $ProductStatus = $this->productStatusRepository->find(ProductStatus::DISPLAY_SHOW);
                     $SaleType = $this->saleTypeRepository->find(SaleType::SALE_TYPE_NORMAL);
                     $user = $this->memberRepository->find(1);
 
                     // 重量kg換算＋単位削除
+                    /*
                     if (strpos($data[13], 'kg') !== false) {
                         $item_weight = str_replace('kg', '', $data[13]);
                     } else {
                         $item_weight = str_replace('g', '', $data[13]);
                         $item_weight = $item_weight / 1000;
                     }
-
+                    */
                     // 金額カンマ,円マーク削除
                     $price01 = preg_replace('/\xC2\xA5/', '', str_replace(',', '', $data[7]));
                     $price02 = preg_replace('/\xC2\xA5/', '', str_replace(',', '', $data[8]));
@@ -185,38 +186,43 @@ class ImportProduct extends Command
                     $Product
                         ->setCreator($user)                                // 作成者ID
                         ->setStatus($ProductStatus)                        // 商品ステータスID：1(公開)
-                        ->setFreeArea($data[0])                             // free_areaに一旦商品コードを格納
                         ->setName($data[1])                                // 商品名
                         ->setDescriptionDetail($data[2])                   // 商品説明
                         ->setSearchWord($data[3])                          // 検索ワード
-                        ->setQuantityBox($data[12])                        // ケース入数
-                        ->setItemWeight($item_weight);                     // 重量
-
+                        //->setQuantityBox($data[12])                        // ケース入数
+                        ->setItemWeight($data[13])                      // 重量
+                        ->setMakerId($data[14]);                     // メーカーID
                     // product_classテーブルにデータセット
+                    
                     $ProductClass
+                        ->setStockCode('00001')                            // 論理棚
+                        ->setIncentiveRatio(15)                            // インセンティブ率
                         ->setSaleType($SaleType)                            // 販売種別ID：1
                         ->setCreator($user)                                 // 作成者ID
-                        ->setCode($data[5])                                 // 商品コード
-                        // ->setStock($data[6])                                // 在庫数
-                        ->setStockUnlimited(1)                              // 在庫制限
-                        ->setPrice01($price01)                              // 価格1 
-                        ->setPrice02($price02)                              // 価格2 
+                        ->setJanCode($data[5])
+                        ->setCode($data[0])                                 // 商品コード
+                        ->setStock($data[6])                                // 在庫数
+                        ->setStockUnlimited(0)                              // 在庫制限
+                        ->setPrice01(intval($data[7]))                             // 価格1 
+                        ->setPrice02(intval($data[8]))                              // 価格2 
                         ->setVisible(true)                                  // 表示フラグ 
                         ->setCurrencyCode('JPY')                            // 通貨コード
                         ->setSupplierCode($data[10])                        // 仕入先コード
-                        ->setItemCost($itemCost);                           // 仕入価格
+                        ->setItemCost(intval($data[9]));                           // 仕入価格
 
                     // product_stockテーブルにデータセット
                     $ProductStock->setProductClass($ProductClass)           // 商品クラスID
+                        ->setStock(intval($data[6]))
                         ->setCreator($user);                                // 作成者ID
-                    
+
+                        /*
                     $filePath = $data[0].".jpg";
                     $ProductImage
                         ->setProduct($Product)
                         ->setCreator($user)
                         ->setFileName($filePath)
                         ->setSortNo(1);
-
+                    */
                     // 画像をダウンロードして所定のパスに配置
                     // if (!empty($data[26])) {
 
@@ -244,7 +250,7 @@ class ImportProduct extends Command
                     $em->persist($Product);
                     $em->persist($ProductClass);
                     $em->persist($ProductStock);
-                    $em->persist($ProductImage);
+                    //$em->persist($ProductImage);
                 }
                 // 2行目以降を読み込む
                 $headerflag = true;
