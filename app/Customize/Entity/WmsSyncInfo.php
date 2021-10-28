@@ -113,7 +113,7 @@ class WmsSyncInfo
      *
      * @param \DateTime $createDate
      *
-     * @return Payment
+     * @return self
      */
     public function setCreateDate($createDate)
     {
@@ -127,7 +127,7 @@ class WmsSyncInfo
      *
      * @param \DateTime $updateDate
      *
-     * @return Payment
+     * @return self
      */
     public function setUpdateDate($updateDate)
     {

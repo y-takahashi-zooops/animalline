@@ -62,6 +62,7 @@ class ConservationContactType extends AbstractType
                 'constraints' => [
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'min' => 0
                     ]),
                 ],
                 'required' => false,

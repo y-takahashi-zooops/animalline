@@ -126,14 +126,14 @@ class BreederPetinfoTemplate
         return $this;
     }
 
-    public function setCreateDate($createDate): self
+    public function setCreateDate(?\DateTime $createDate): self
     {
         $this->create_date = $createDate;
 
         return $this;
     }
 
-    public function setUpdateDate($updateDate): self
+    public function setUpdateDate(?\DateTime $updateDate): self
     {
         $this->update_date = $updateDate;
 

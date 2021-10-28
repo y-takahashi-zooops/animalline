@@ -75,7 +75,7 @@ class StockWasteReason
      *
      * @param \DateTime $createDate
      *
-     * @return Payment
+     * @return self
      */
     public function setCreateDate($createDate)
     {
@@ -89,7 +89,7 @@ class StockWasteReason
      *
      * @param \DateTime $updateDate
      *
-     * @return Payment
+     * @return self
      */
     public function setUpdateDate($updateDate)
     {
