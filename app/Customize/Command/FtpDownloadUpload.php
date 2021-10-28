@@ -2,13 +2,6 @@
 
 namespace Customize\Command;
 
-use Carbon\Carbon;
-use Customize\Config\AnilineConf;
-use Customize\Entity\WmsSyncInfo;
-use Customize\Repository\InstockScheduleHeaderRepository;
-use Customize\Repository\InstockScheduleRepository;
-use Customize\Repository\WmsSyncInfoRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,54 +13,21 @@ class FtpDownloadUpload extends Command
     protected static $defaultName = 'eccube:customize:wms-ftp-download-upload';
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
      * @var SymfonyStyle
      */
     protected $io;
 
     /**
-     * @var WmsSyncInfoRepository
+     * FTP download upload constructor.
      */
-    protected $wmsSyncInfoRepository;
-
-    /**
-     * @var InstockScheduleHeaderRepository
-     */
-    protected $instockScheduleHeaderRepository;
-
-    /**
-     * @var instockScheduleRepository
-     */
-    protected $instockScheduleRepository;
-
-    /**
-     * ExportRelease constructor.
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param WmsSyncInfoRepository $wmsSyncInfoRepository
-     * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
-     * @param InstockScheduleRepository $instockScheduleRepository
-     */
-    public function __construct(
-        EntityManagerInterface          $entityManager,
-        WmsSyncInfoRepository           $wmsSyncInfoRepository,
-        InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
-        InstockScheduleRepository       $instockScheduleRepository
-    ) {
+    public function __construct()
+    {
         parent::__construct();
-        $this->entityManager = $entityManager;
-        $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
-        $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
-        $this->instockScheduleRepository = $instockScheduleRepository;
     }
 
     protected function configure()
     {
-        $this->setDescription('Instock schedule CSV export.');
+        $this->setDescription('FTP download upload batch.');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -80,6 +40,7 @@ class FtpDownloadUpload extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // TODO: update logic
         $this->ftpDownload();
 
         $this->ftpUpload();
@@ -87,55 +48,83 @@ class FtpDownloadUpload extends Command
         echo "Succeeded.\n";
     }
 
-    private function ftpDownload()
+    private function ftpDownload(string $localDir = 'var/tmp/wms/receive/', string $remoteDir = '/pub/example/'): bool
     {
-        // define some variables
-        $server_file = $local_file = 'readme.txt';
+        // TODO: load from .env file
+        $HOST = 'test.rebex.net';
+        $USERNAME = 'demo';
+        $PASSWORD = 'password';
 
-        // set up basic connection
-        $ftp = ftp_connect('test.rebex.net');
-
-        // login with username and password
-        $login_result = ftp_login($ftp, 'demo', 'password');
-        var_dump($login_result);
+        $ftp = ftp_connect($HOST);
+        if (!$ftp || !ftp_login($ftp, $USERNAME, $PASSWORD)) {
+            throw new Exception('access failed');
+        }
 
         // turn on passive mode
         ftp_pasv($ftp, true);
 
-        // try to download $server_file and save to $local_file
-        if (ftp_get($ftp, $local_file, $server_file, FTP_BINARY)) {
-            echo "Successfully written to $local_file\n";
-        } else {
-            echo "There was a problem\n";
+        // scan remote files
+        $finder = new \Symfony\Component\Finder\Finder();
+        $finder->files()->in("ftp://$USERNAME:$PASSWORD@$HOST" . $remoteDir);
+        if (!$finder) {
+            return true;
         }
 
-        // close the connection
-        ftp_close($ftp);
+        foreach ($finder as $file) {
+            $localPath = $localDir . $file->getFilename();
+            $remotePath = $remoteDir . $file->getFilename();
+            // download a file
+            if (ftp_get($ftp, $localPath, $remotePath, FTP_BINARY)) {
+                echo "download succeeded: from $remotePath to $localPath\n";
+            } else {
+                echo "download failed: from $remotePath to $localPath\n";
+            }
+        }
+
+        return ftp_close($ftp);
     }
 
-    private function ftpUpload()
+    private function ftpUpload(string $localDir = 'var/tmp/wms/receive/', string $remoteDir = '/'): bool
     {
-        $file = 'readme.txt';
-        $remote_file = 'readme22.txt';
+        // TODO: load from .env file
+        $HOST = 'ftp.dlptest.com';
+        $USERNAME = 'dlpuser';
+        $PASSWORD = 'rNrKYTX9g7z3RgJRmxWuGHbeu';
 
-        // set up basic connection
-        $ftp = ftp_connect('ftp.dlptest.com');
+        // scan local files
+        $fileNames = [];
+        if ($handle = opendir($localDir)) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry !== '.' && $entry !== '..') {
+                    $fileNames[] = $entry;
+                }
+            }
 
-        // login with username and password
-        $login_result = ftp_login($ftp, 'dlpuser', 'rNrKYTX9g7z3RgJRmxWuGHbeu');
-        var_dump($login_result);
+            closedir($handle);
+        }
+        if (!$fileNames) {
+            return true;
+        }
+
+        $ftp = ftp_connect($HOST);
+        if (!$ftp || !ftp_login($ftp, $USERNAME, $PASSWORD)) {
+            throw new Exception('access failed');
+        }
 
         // turn on passive mode
         ftp_pasv($ftp, true);
 
-        // upload a file
-        if (ftp_put($ftp, $remote_file, $file, FTP_ASCII)) {
-            echo "successfully uploaded $file\n";
-        } else {
-            echo "There was a problem while uploading $file\n";
+        foreach ($fileNames as $fileName) {
+            $localPath = $localDir . $fileName;
+            $remotePath = $remoteDir . $fileName;
+            // upload a file
+            if (ftp_put($ftp, $remotePath, $localPath, FTP_ASCII)) {
+                echo "upload succeeded: from $localPath to $remotePath\n";
+            } else {
+                echo "upload failed: from $localPath to $remotePath\n";
+            }
         }
 
-        // close the connection
-        ftp_close($ftp);
+        return ftp_close($ftp);
     }
 }
