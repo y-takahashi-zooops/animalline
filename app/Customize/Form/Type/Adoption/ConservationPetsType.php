@@ -30,7 +30,7 @@ class ConservationPetsType extends AbstractType
                     ],
                 'required' => true,
             ])
-            ->add('BreedsType', EntityType::class, [
+            ->add('BreedsType', ChoiceType::class, [
                 'class' => 'Customize\Entity\Breeds',
                 'choice_label' => function (Breeds $breeds) {
                     return $breeds->getBreedsName();
@@ -55,6 +55,7 @@ class ConservationPetsType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Length([
                         'max' => 20,
+                        'min' => 0,
                     ])
                 ],
                 'attr' => [
