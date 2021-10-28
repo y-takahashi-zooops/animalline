@@ -29,6 +29,11 @@ use Customize\Service\MailService;
 class BreederMemberContactController extends AbstractController
 {
     /**
+     * @var MailService
+     */
+    protected $mailService;
+
+    /**
      * @var BreederContactHeaderRepository
      */
     protected $breederContactHeaderRepository;
@@ -80,6 +85,7 @@ class BreederMemberContactController extends AbstractController
      * @param CustomerRepository $customerRepository
      * @param BreederEvaluationsRepository $breederEvaluationsRepository
      * @param BreederQueryService $breederQueryService
+     * @param MailService $mailService
      */
 
     public function __construct(
@@ -90,7 +96,8 @@ class BreederMemberContactController extends AbstractController
         BreederPetsRepository          $breederPetsRepository,
         CustomerRepository             $customerRepository,
         BreederEvaluationsRepository   $breederEvaluationsRepository,
-        BreederQueryService            $breederQueryService
+        BreederQueryService            $breederQueryService,
+        MailService                    $mailService
     ) {
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederContactsRepository = $breederContactsRepository;
@@ -100,6 +107,7 @@ class BreederMemberContactController extends AbstractController
         $this->customerRepository = $customerRepository;
         $this->breederEvaluationsRepository = $breederEvaluationsRepository;
         $this->breederQueryService = $breederQueryService;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -166,7 +174,8 @@ class BreederMemberContactController extends AbstractController
             $entityManager->persist($breederContact);
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_all_message');
+            $this->mailService->sendMailContractCancel($msgHeader->getCustomer(), []);
+            return $this->redirectToRoute('breeder_message');
         }
 
         $user = $this->getUser();
@@ -254,7 +263,7 @@ class BreederMemberContactController extends AbstractController
      * @Route("/breeder/member/contract/complete/{pet_id}", name="breeder_contract_complete", requirements={"pet_id" = "\d+"})
      * @Template("animalline/breeder/member/contract_complete.twig")
      */
-    public function contract_complete(Request $request, MailService $mailService)
+    public function contract_complete(Request $request)
     {
         $pet = $this->breederPetsRepository->find($request->get('pet_id'));
         if (!$pet) {
@@ -281,18 +290,19 @@ class BreederMemberContactController extends AbstractController
                 if ($msgHeader->getBreederCheck() == 1) {
                     $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT);
                     foreach ($msgHeader->getPet()->getBreederContactHeader() as $item) {
-                        if ($item->getContractStatus() != AnilineConf::CONTRACT_STATUS_CONTRACT) {
+                        if (!in_array($item->getContractStatus(), [AnilineConf::CONTRACT_STATUS_CONTRACT, AnilineConf::CONTRACT_STATUS_NONCONTRACT])) {
                             $item->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
-                        }
-                        $entityManager->persist($item);
-                        $breederContact = (new BreederContacts())
-                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
-                        ->setContactDescription('今回の取引は非成立となりました。')
-                        ->setSendDate(Carbon::now())
-                        ->setBreederHeader($item);
-                        $entityManager->persist($breederContact);
 
-                        $mailService->sendMailContractCancel($item->getCustomer(), []);
+                            $entityManager->persist($item);
+                            $breederContact = (new BreederContacts())
+                                ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
+                                ->setContactDescription('今回の取引は非成立となりました。')
+                                ->setSendDate(Carbon::now())
+                                ->setBreederHeader($item);
+                            $entityManager->persist($breederContact);
+
+                            $this->mailService->sendMailContractCancel($item->getCustomer(), []);
+                        }
                     }
                 }
                 break;
@@ -328,7 +338,7 @@ class BreederMemberContactController extends AbstractController
      * @Route("/breeder/member/breeder_message/{id}", name="breeder_breeder_message", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/member/breeder_message.twig")
      */
-    public function breeder_message(Request $request, BreederContactHeader $msgHeader, MailService $mailService)
+    public function breeder_message(Request $request, BreederContactHeader $msgHeader)
     {
         $msgHeader->setBreederNewMsg(0);
         $entityManager = $this->getDoctrine()->getManager();
@@ -372,7 +382,8 @@ class BreederMemberContactController extends AbstractController
             $entityManager->persist($breederContact);
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_all_breeder_message');
+            $this->mailService->sendMailContractCancel($msgHeader->getCustomer(), []);
+            return $this->redirectToRoute('breeder_all_message');
         }
         if ($isAcceptContract) {
             if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
@@ -383,18 +394,18 @@ class BreederMemberContactController extends AbstractController
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setBreederCheck(1);
                 foreach ($msgHeader->getPet()->getBreederContactHeader() as $item) {
-                    if ($item->getContractStatus() != AnilineConf::CONTRACT_STATUS_CONTRACT) {
+                    if (!in_array($item->getContractStatus(), [AnilineConf::CONTRACT_STATUS_CONTRACT, AnilineConf::CONTRACT_STATUS_NONCONTRACT])) {
                         $item->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
-                    }
-                    $entityManager->persist($item);
-                    $breederContact = (new BreederContacts())
-                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
-                        ->setContactDescription('今回の取引は非成立となりました。')
-                        ->setSendDate(Carbon::now())
-                        ->setBreederHeader($item);
-                    $entityManager->persist($breederContact);
+                        $entityManager->persist($item);
+                        $breederContact = (new BreederContacts())
+                            ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
+                            ->setContactDescription('今回の取引は非成立となりました。')
+                            ->setSendDate(Carbon::now())
+                            ->setBreederHeader($item);
+                        $entityManager->persist($breederContact);
 
-                    $mailService->sendMailContractCancel($item->getCustomer(), []);
+                        $this->mailService->sendMailContractCancel($item->getCustomer(), []);
+                    }
                 }
             }
             $entityManager = $this->getDoctrine()->getManager();

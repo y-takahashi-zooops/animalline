@@ -154,7 +154,8 @@ class AdoptionMemberContactController extends AbstractController
             $entityManager->persist($conservationContact);
             $entityManager->flush();
 
-            return $this->redirectToRoute('adoption_all_message');
+            $this->mailService->sendMailContractCancel($msgHeader->getCustomer(), []);
+            return $this->redirectToRoute('adoption_message');
         }
         if ($isAcceptContract) {
             if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
@@ -165,19 +166,18 @@ class AdoptionMemberContactController extends AbstractController
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setCustomerCheck(1);
                 foreach ($msgHeader->getPet()->getConservationContactHeader() as $item) {
-                    if ($item->getContractStatus() != AnilineConf::CONTRACT_STATUS_CONTRACT) {
+                    if (!in_array($item->getContractStatus(), [AnilineConf::CONTRACT_STATUS_CONTRACT, AnilineConf::CONTRACT_STATUS_NONCONTRACT])) {
                         $item->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
-                    }
-                    $entityManager->persist($item);
-                    $conservationContact = (new ConservationContacts())
-                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
-                        ->setContactDescription('今回の取引は非成立となりました。')
-                        ->setSendDate(Carbon::now())
-                        ->setConservationHeader($item);
-                    $entityManager->persist($conservationContact);
+                        $entityManager->persist($item);
+                        $conservationContact = (new ConservationContacts())
+                            ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
+                            ->setContactDescription('今回の取引は非成立となりました。')
+                            ->setSendDate(Carbon::now())
+                            ->setConservationHeader($item);
+                        $entityManager->persist($conservationContact);
 
-                    $data = [];
-                    $this->mailService->sendMailContractCancel($item->getCustomer(), $data);
+                        $this->mailService->sendMailContractCancel($item->getCustomer(), []);
+                    }
                 }
             }
             $entityManager = $this->getDoctrine()->getManager();
@@ -269,7 +269,8 @@ class AdoptionMemberContactController extends AbstractController
             $entityManager->persist($conservationContact);
             $entityManager->flush();
 
-            return $this->redirectToRoute('adoption_all_adoption_message');
+            $this->mailService->sendMailContractCancel($msgHeader->getCustomer(), []);
+            return $this->redirectToRoute('adoption_adoption_message');
         }
         if ($isAcceptContract) {
             if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
@@ -280,19 +281,18 @@ class AdoptionMemberContactController extends AbstractController
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setConservationCheck(1);
                 foreach ($msgHeader->getPet()->getConservationContactHeader() as $item) {
-                    if ($item->getContractStatus() != AnilineConf::CONTRACT_STATUS_CONTRACT) {
+                    if (!in_array($item->getContractStatus(), [AnilineConf::CONTRACT_STATUS_CONTRACT, AnilineConf::CONTRACT_STATUS_NONCONTRACT])) {
                         $item->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
-                    }
-                    $entityManager->persist($item);
-                    $conservationContact = (new ConservationContacts())
-                        ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
-                        ->setContactDescription('今回の取引は非成立となりました。')
-                        ->setSendDate(Carbon::now())
-                        ->setConservationHeader($item);
-                    $entityManager->persist($conservationContact);
+                        $entityManager->persist($item);
+                        $conservationContact = (new ConservationContacts())
+                            ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
+                            ->setContactDescription('今回の取引は非成立となりました。')
+                            ->setSendDate(Carbon::now())
+                            ->setConservationHeader($item);
+                        $entityManager->persist($conservationContact);
 
-                    $data = [];
-                    $this->mailService->sendMailContractCancel($item->getCustomer(), $data);
+                        $this->mailService->sendMailContractCancel($item->getCustomer(), []);
+                    }
                 }
             }
             $entityManager = $this->getDoctrine()->getManager();
