@@ -1,0 +1,39 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{# ヘッダーの切り替え #}
+{% set base_template = 'breeder_frame.twig' %}
+
+{% extends base_template %}
+
+{# ヘッダーの切り替え #}
+
+{% set body_class = 'registration_page' %}
+
+{% block main %}
+    <div class="ec-role">
+        <div class="ec-pageHeader">
+            <h1>{{ '新規会員登録'|trans }}</h1>
+        </div>
+    </div>
+    <div class="ec-registerCompleteRole">
+        <div class="ec-off3Grid ec-text-ac">
+            <div class="ec-off3Grid__cell">
+                <div class="ec-reportHeading">
+                    <h2>本会員登録は既に完了しています。</h2>
+                </div>
+                
+                <div class="ec-off4Grid">
+                    <div class="ec-off4Grid__cell"><a class="ec-blockBtn--cancel" href="{{ url('breeder_mypage') }}">マイページへ</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

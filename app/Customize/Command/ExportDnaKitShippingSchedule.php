@@ -95,9 +95,8 @@ class ExportDnaKitShippingSchedule extends Command
             'part_number_code_2', 'commission', 'handling flight_type', 'destination_classification', 'slip_output_order'
         ];
 
-        $qb = $this->dnaCheckStatusRepository->createQueryBuilder('dna');
+        $qb = $this->dnaCheckStatusHeaderRepository->createQueryBuilder('dnah');
         $qb->select(
-            'dna.id as dna_id',
             'dnah.id as dna_header_id',
             'dnah.kit_unit',
             'dnah.shipping_name',
@@ -107,23 +106,24 @@ class ExportDnaKitShippingSchedule extends Command
             'dnah.shipping_address',
             'dnah.shipping_tel'
         )
-            ->innerJoin('dna.DnaHeader', 'dnah')
-            ->where('dna.update_date <= :to')
+            ->where('dnah.update_date <= :to')
             ->andWhere('dnah.shipping_status = :shipping_status')
             ->setParameters([
                 'to' => $now,
                 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT
             ])
-            ->orderBy('dna.id', 'ASC');
+            ->orderBy('dnah.id', 'ASC');
 
+        /*
         $SyncInfo = $this->wmsSyncInfoRepository->findOneBy(
             ['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_SCHEDULED_SHIPMENT],
             ['sync_date' => 'DESC']
         );
         if ($SyncInfo) {
-            $qb = $qb->andWhere('dna.update_date >= :from')
+            $qb = $qb->andWhere('dnah.update_date >= :from')
                 ->setParameter('from', $SyncInfo->getSyncDate());
         }
+        */
 
         if (!$records = $qb->getQuery()->getArrayResult()) {
             echo "Records not found.\n";
@@ -132,42 +132,50 @@ class ExportDnaKitShippingSchedule extends Command
 
         $rows = [];
         $dnaHeaderIds = [];
+
+        $item_code = ["8790000","8790004","8790005","8790006"];
         foreach ($records as $record) {
-            $dnaNo = $this->generateZeroFillStr($record['dna_id']);
+            $dnaNo = $this->generateZeroFillStr($record['dna_header_id']);
             $nextDay = (new DateTime($now->toString() . ' +1 day'))->format('Ymd');
 
-            $record['delivery_instruction_no'] = $dnaNo;
-            $record['expected_shipping_date'] = $nextDay;
-            $record['warehouse_code'] = '00001';
-            $record['sale_category'] = 0;
-            $record['slip_type'] = 0;
-            $record['product_number_code'] = '123456789';
-            $record['size_code'] = 1;
-            $record['retail_price'] = 0;
-            $record['delivery_unit_price'] = 0;
-            $record['shipping_company_code'] = '000003';
-            $record['delivery_address'] = $record['shipping_pref'] . ' ' . $record['shipping_city'] . ' ' . $record['shipping_address'];
-            $record['delivery_destination_classification'] = '1';
-            $record['total_product_amount'] = 0;
-            $record['discount_amount'] = 0;
-            $record['sale_tax'] = 0;
-            $record['postage'] = 0;
-            $record['gross_weight'] = 1;
-            $record['number_units'] = 1;
-            $record['payment_method_classification'] = '0';
-            $record['sales_destination_classification'] = '01';
-            $record['part_number_code_2'] = '123456789';
-            $record['handling flight_type'] = '000';
-            $record['destination_classification'] = '1';
-            $record['slip_output_order'] = $dnaNo;
+            for($i=0;$i<4;$i++){
+                $record['delivery_instruction_no'] = $dnaNo;
+                $record['expected_shipping_date'] = $nextDay;
+                $record['warehouse_code'] = '00001';
+                $record['sale_category'] = 0;
+                $record['slip_type'] = 0;
+                $record['product_number_code'] = $item_code[$i];
+                $record['color_code'] = "9999";
+                $record['size_code'] = 1;
+                $record['retail_price'] = 0;
+                $record['delivery_unit_price'] = 0;
+                $record['shipping_company_code'] = '000003';
+                $record['delivery_address'] = $record['shipping_pref'] . ' ' . $record['shipping_city'] . ' ' . $record['shipping_address'];
+                $record['delivery_destination_classification'] = '1';
+                $record['total_product_amount'] = 0;
+                $record['discount_amount'] = 0;
+                $record['sale_tax'] = 0;
+                $record['postage'] = 0;
+                $record['gross_weight'] = 1;
+                $record['number_units'] = 1;
+                $record['payment_method_classification'] = '0';
+                $record['sales_destination_classification'] = '01';
+                $record['part_number_code_2'] = $item_code[$i];
+                $record['handling flight_type'] = '000';
+                $record['destination_classification'] = '1';
+                $record['slip_output_order'] = $dnaNo.$i;
+                //キット以外はキット数量に関わらず１個
+                if($i > 0) {
+                    $record['kit_unit'] = 1;
+                }
+                $row = [];
+                foreach ($cols as $col) {
+                    $row[] = $record[$col] ?? null; // null for blank field
+                }
+                $rows[] = $row;
 
-            $row = [];
-            foreach ($cols as $col) {
-                $row[] = $record[$col] ?? null; // null for blank field
+                $dnaHeaderIds[] = $record['dna_header_id'];
             }
-            $rows[] = $row;
-
-            $dnaHeaderIds[] = $record['dna_header_id'];
         }
 
         $dir = 'var/tmp/wms/shipping_schedule/';
@@ -212,7 +220,7 @@ class ExportDnaKitShippingSchedule extends Command
      * @param string $prefix
      * @return string
      */
-    private function generateZeroFillStr(int $num, int $length = 5, string $prefix = '9'): string
+    private function generateZeroFillStr(int $num, int $length = 5, string $prefix = '5'): string
     {
         return  $prefix . str_pad($num, $length, '0', STR_PAD_LEFT);
     }
