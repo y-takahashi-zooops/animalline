@@ -21,7 +21,6 @@ class ProductSetTest extends TypeTestCase
         $OrderItem = (new OrderItem())
                     ->setProductName('abc')
                     ->setProductCode('100134');
-                    
 
         $formData = [
             'ProductSet' => [

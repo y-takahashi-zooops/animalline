@@ -29,12 +29,12 @@ class StockWasteType extends AbstractType
             ])
             ->add('waste_unit', IntegerType::class, [
                 'required' => true,
-                // 'constraints' => [
-                //     new Assert\GreaterThanOrEqual([
-                //         'value' => 1,
-                //     ]),
-                //     new Assert\NotBlank()
-                // ],
+                'constraints' => [
+                    new Assert\GreaterThanOrEqual([
+                        'value' => 1,
+                    ]),
+                    new Assert\NotBlank()
+                ],
                 'attr' => [
                     'min' => 1
                 ]
@@ -49,9 +49,9 @@ class StockWasteType extends AbstractType
                     return $stockWasteReason->getWasteReason();
                 },
                 'required' => true,
-                // 'constraints' => [
-                //     new Assert\NotBlank(),
-                // ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
             ])
             ->add('comment', TextareaType::class, [
                 'required' => false,

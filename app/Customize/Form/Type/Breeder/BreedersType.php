@@ -41,7 +41,8 @@ class BreedersType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_stext_len']
                     ]),
                     new Assert\NotBlank()
                 ]
@@ -53,7 +54,8 @@ class BreedersType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_stext_len']
                     ]),
                     new Assert\Regex([
                         'pattern' => '/^[ァ-ヶｦ-ﾟー 　]+$/u',
@@ -69,7 +71,8 @@ class BreedersType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_stext_len']
                     ]),
                 ]
             ])
@@ -80,7 +83,8 @@ class BreedersType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_stext_len']
                     ]),
                 ]
             ])
@@ -105,7 +109,8 @@ class BreedersType extends AbstractType
                         'message' => 'form_error.numeric_only',
                     ]),
                     new Assert\Length([
-                        'max' => 7,
+                        'min' => 0,
+                        'max' => 7
                     ]),
                     new Assert\NotBlank()
                 ],
@@ -123,7 +128,10 @@ class BreedersType extends AbstractType
             ])
             ->add('breeder_city', TextType::class, [
                 'constraints' => [
-                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\Length([
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_city_len']
+                    ]),
                     new Assert\NotBlank()
                 ],
                 'attr' => [
@@ -134,7 +142,10 @@ class BreedersType extends AbstractType
             ])
             ->add('breeder_address', TextType::class, [
                 'constraints' => [
-                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\Length([
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_address1_len']
+                    ]),
                     new Assert\NotBlank()
                 ],
                 'attr' => [
@@ -147,7 +158,8 @@ class BreedersType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new Assert\Length([
-                        'max' => 11,
+                        'min' => 0,
+                        'max' => 11
                     ]),
                     new Assert\Type([
                         'type' => 'numeric',
@@ -165,7 +177,8 @@ class BreedersType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new Assert\Length([
-                        'max' => 11,
+                        'min' => 0,
+                        'max' => 11
                     ]),
                     new Assert\Type([
                         'type' => 'numeric',
@@ -199,7 +212,8 @@ class BreedersType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_stext_len']
                     ]),
                     new Assert\NotBlank()
                 ]
@@ -211,7 +225,8 @@ class BreedersType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_stext_len']
                     ]),
                     new Assert\NotBlank()
                 ]
@@ -224,7 +239,8 @@ class BreedersType extends AbstractType
                         'message' => 'form_error.numeric_only',
                     ]),
                     new Assert\Length([
-                        'max' => 7,
+                        'min' => 0,
+                        'max' => 7
                     ]),
                     new Assert\NotBlank()
                 ],
@@ -242,7 +258,10 @@ class BreedersType extends AbstractType
             ])
             ->add('license_city', TextType::class, [
                 'constraints' => [
-                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\Length([
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_city_len']
+                    ]),
                     new Assert\NotBlank()
                 ],
                 'attr' => [
@@ -253,7 +272,10 @@ class BreedersType extends AbstractType
             ])
             ->add('license_address', TextType::class, [
                 'constraints' => [
-                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\Length([
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_address1_len']
+                    ]),
                     new Assert\NotBlank()
                 ],
                 'attr' => [
@@ -269,7 +291,8 @@ class BreedersType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_stext_len']
                     ]),
                     new Assert\NotBlank()
                 ]
@@ -281,7 +304,8 @@ class BreedersType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'min' => 0,
+                        'max' => $this->eccubeConfig['eccube_stext_len']
                     ]),
                     new Assert\NotBlank()
                 ]
