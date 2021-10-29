@@ -339,7 +339,7 @@ class AnilineEntryController extends AbstractController
 
             // 会員登録処理を行う
             $qtyInCart = $this->entryActivate($request, $secret_key);
-            if(!$qtyInCart){
+            if($qtyInCart == -1){
                 return $this->redirectToRoute("entry_completed");
             }
             return [
@@ -365,7 +365,7 @@ class AnilineEntryController extends AbstractController
         log_info('本会員登録開始');
         $Customer = $this->customerRepository->getProvisionalCustomerBySecretKey($secret_key);
         if (is_null($Customer)) {
-            return false;
+            return -1;
             //throw new HttpException\NotFoundHttpException();
         }
 
