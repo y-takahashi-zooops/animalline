@@ -62,7 +62,7 @@ class FtpDownloadUpload extends Command
     /**
      * @throws Exception
      */
-    private function ftpDownload(string $remoteDir = 'OUT/', string $localDir = 'var/tmp/wms/receive/'): void
+    private function ftpDownload(string $remoteDir = '/OUT/', string $localDir = 'var/tmp/wms/receive/'): void
     {
         $HOST = env('FTP_HOST', 'test.rebex.net');
         $USERNAME = env('FTP_USERNAME', 'demo');
@@ -77,8 +77,7 @@ class FtpDownloadUpload extends Command
         ftp_pasv($ftp, true);
 
         // scan remote files
-        $finder = new Finder();
-        $finder->files()->depth('== 0')->in("ftp://$USERNAME:$PASSWORD@$HOST" . $remoteDir);
+        $finder = Finder::create()->files()->depth('== 0')->in("ftp://$USERNAME:$PASSWORD@$HOST" . $remoteDir);
 
         // create folder on local to save downloaded files if not exist
         if (!file_exists($localDir) && !mkdir($localDir, 0777, true)) {
@@ -103,7 +102,7 @@ class FtpDownloadUpload extends Command
     /**
      * @throws Exception
      */
-    private function ftpUpload(string $directory, string $remoteDir = 'IN/'): void
+    private function ftpUpload(string $directory, string $remoteDir = '/IN/'): void
     {
         $HOST = env('FTP_HOST', 'ftp.dlptest.com');
         $USERNAME = env('FTP_USERNAME', 'dlpuser');
@@ -138,9 +137,7 @@ class FtpDownloadUpload extends Command
             ftp_mkdir($ftp, $remoteDir);
         }
 
-        //$this->ftp_mksubdirs($ftp, $remoteDir);
-
-        // create folder on local to save downloaded files if not exist
+        // create new folder on local to save moved files from old folder
         $newLocalDir = $this->logWmsDir . $directory;
         if (!file_exists($newLocalDir) && !mkdir($newLocalDir, 0777, true)) {
             throw new Exception("Can't create directory.");
@@ -161,18 +158,5 @@ class FtpDownloadUpload extends Command
         }
 
         ftp_close($ftp);
-    }
-
-    public function ftp_mksubdirs($ftpcon, $ftpath, $ftpbasedir = '/IN')
-    {
-        @ftp_chdir($ftpcon, $ftpbasedir);
-        $parts = explode('/', $ftpath);
-        foreach ($parts as $part) {
-            if (!@ftp_chdir($ftpcon, $part)) {
-                ftp_mkdir($ftpcon, $part);
-                ftp_chdir($ftpcon, $part);
-                //ftp_chmod($ftpcon, 0777, $part);
-            }
-        }
     }
 }
