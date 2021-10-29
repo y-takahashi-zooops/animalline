@@ -40,23 +40,18 @@ class FtpDownloadUpload extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // TODO: PASS PARAMS TO THESE FUNCTIONS ON REAL FPT SERVER
         // download instock + return
-        //$downInstockFrom = '/OUT/var/log/wms/instock_schedule';
-        //$downInstockTo = 'var/tmp/wms/receive/';
-        //$this->ftpDownload($downInstockFrom, $downInstockTo);
+        //$downInstockFrom = '/OUT/'; TODO: USE THIS ON REAL FPT SERVER
         $this->ftpDownload();
 
         // upload instock + return
-        //$uploadInstockFrom = 'var/tmp/wms/instock_schedule';
-        //$uploadInstockTo = '/IN/var/log/wms/instock_schedule';
-        //$this->ftpUpload($uploadInstockFrom, $uploadInstockTo);
-        $this->ftpUpload();
+        $uploadInstockFrom = 'var/tmp/wms/instock_schedule/';
+        $this->ftpUpload($uploadInstockFrom);
 
         echo "Succeeded.\n";
     }
 
-    private function ftpDownload(string $remoteDir = '/pub/example/', string $localDir = 'var/tmp/wms/receive/'): bool
+    private function ftpDownload(string $remoteDir = '/', string $localDir = 'var/tmp/wms/receive/'): bool
     {
         // TODO: load from .env file
         $HOST = 'test.rebex.net';
@@ -73,9 +68,14 @@ class FtpDownloadUpload extends Command
 
         // scan remote files
         $finder = new \Symfony\Component\Finder\Finder();
-        $finder->files()->in("ftp://$USERNAME:$PASSWORD@$HOST" . $remoteDir);
+        $finder->files()->depth('== 0')->in("ftp://$USERNAME:$PASSWORD@$HOST" . $remoteDir);
         if (!$finder) {
             return true;
+        }
+
+        // create folder on local to save downloaded files if not exist
+        if (!file_exists($localDir) && !mkdir($localDir, 0777, true)) {
+            throw new Exception("Can't create directory.");
         }
 
         foreach ($finder as $file) {
@@ -94,7 +94,7 @@ class FtpDownloadUpload extends Command
         return ftp_close($ftp);
     }
 
-    private function ftpUpload(string $localDir = 'var/tmp/wms/receive/', string $remoteDir = '/'): bool
+    private function ftpUpload(string $localDir = 'var/tmp/wms/receive/', string $remoteDir = '/IN/'): bool
     {
         // TODO: load from .env file
         $HOST = 'ftp.dlptest.com';
@@ -124,13 +124,30 @@ class FtpDownloadUpload extends Command
         // turn on passive mode
         ftp_pasv($ftp, true);
 
+        // create folder on remote to save uploaded files if not exist
+        if (!ftp_nlist($ftp, $remoteDir)) {
+            ftp_mkdir($ftp, $remoteDir);
+        }
+
+        //$this->ftp_mksubdirs($ftp, $remoteDir);
+
+        // create folder on local to save downloaded files if not exist
+        $newLocalDir = 'var/log/wms/instock_schedule/';
+        if (!file_exists($newLocalDir) && !mkdir($newLocalDir, 0777, true)) {
+            throw new Exception("Can't create directory.");
+        }
+
         foreach ($fileNames as $fileName) {
             $localPath = $localDir . $fileName;
             $remotePath = $remoteDir . $fileName;
             // upload a file
             if (ftp_put($ftp, $remotePath, $localPath, FTP_ASCII)) {
                 // delete local file
-                unlink($localPath);
+                //unlink($localPath);
+
+                // move files
+                rename($localPath, $newLocalDir . $fileName);
+
                 echo "upload succeeded: from $localPath to $remotePath\n";
             } else {
                 echo "upload failed: from $localPath to $remotePath\n";
@@ -138,5 +155,18 @@ class FtpDownloadUpload extends Command
         }
 
         return ftp_close($ftp);
+    }
+
+    function ftp_mksubdirs($ftpcon, $ftpath, $ftpbasedir = '/IN')
+    {
+        @ftp_chdir($ftpcon, $ftpbasedir);
+        $parts = explode('/', $ftpath);
+        foreach ($parts as $part) {
+            if (!@ftp_chdir($ftpcon, $part)) {
+                ftp_mkdir($ftpcon, $part);
+                ftp_chdir($ftpcon, $part);
+                //ftp_chmod($ftpcon, 0777, $part);
+            }
+        }
     }
 }
