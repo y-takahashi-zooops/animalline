@@ -7,10 +7,14 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Finder\Finder;
 
 class FtpDownloadUpload extends Command
 {
     protected static $defaultName = 'eccube:customize:wms-ftp-download-upload';
+
+    protected $tmpWmsDir = 'var/tmp/wms/';
+    protected $logWmsDir = 'var/log/wms/';
 
     /**
      * @var SymfonyStyle
@@ -27,7 +31,7 @@ class FtpDownloadUpload extends Command
 
     protected function configure()
     {
-        $this->setDescription('FTP download upload batch.');
+        $this->setDescription('FTP download/upload wms command.');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -40,23 +44,29 @@ class FtpDownloadUpload extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // download instock + return
-        //$downInstockFrom = '/OUT/'; TODO: USE THIS ON REAL FPT SERVER
         $this->ftpDownload();
 
-        // upload instock + return
-        $uploadInstockFrom = 'var/tmp/wms/instock_schedule/';
-        $this->ftpUpload($uploadInstockFrom);
+        $productDir = 'items/';
+        $shippingDir = 'shipping_schedule/';
+        $instockDir = 'instock_schedule/';
+        $returnDir = 'return_schedule/';
 
-        echo "Succeeded.\n";
+        $this->ftpUpload($productDir);
+        $this->ftpUpload($shippingDir);
+        $this->ftpUpload($instockDir);
+        $this->ftpUpload($returnDir);
+
+        echo "Successful.\n";
     }
 
-    private function ftpDownload(string $remoteDir = '/', string $localDir = 'var/tmp/wms/receive/'): bool
+    /**
+     * @throws Exception
+     */
+    private function ftpDownload(string $remoteDir = 'OUT/', string $localDir = 'var/tmp/wms/receive/'): void
     {
-        // TODO: load from .env file
-        $HOST = 'test.rebex.net';
-        $USERNAME = 'demo';
-        $PASSWORD = 'password';
+        $HOST = env('FTP_HOST', 'test.rebex.net');
+        $USERNAME = env('FTP_USERNAME', 'demo');
+        $PASSWORD = env('FTP_PASSWORD', 'password');
 
         $ftp = ftp_connect($HOST);
         if (!$ftp || !ftp_login($ftp, $USERNAME, $PASSWORD)) {
@@ -67,11 +77,8 @@ class FtpDownloadUpload extends Command
         ftp_pasv($ftp, true);
 
         // scan remote files
-        $finder = new \Symfony\Component\Finder\Finder();
+        $finder = new Finder();
         $finder->files()->depth('== 0')->in("ftp://$USERNAME:$PASSWORD@$HOST" . $remoteDir);
-        if (!$finder) {
-            return true;
-        }
 
         // create folder on local to save downloaded files if not exist
         if (!file_exists($localDir) && !mkdir($localDir, 0777, true)) {
@@ -83,23 +90,26 @@ class FtpDownloadUpload extends Command
             $remotePath = $remoteDir . $file->getFilename();
             // download a file
             if (ftp_get($ftp, $localPath, $remotePath, FTP_BINARY)) {
-                // delete remote file
-                //ftp_delete($ftp, $remotePath); TODO: UNCOMMENT ON REAL FPT SERVER
-                echo "download succeeded: from $remotePath to $localPath\n";
+                //ftp_delete($ftp, $remotePath); // delete remote file TODO: UNCOMMENT ON REAL FTP SERVER
+                echo "download success: from $remotePath to $localPath\n";
             } else {
                 echo "download failed: from $remotePath to $localPath\n";
             }
         }
 
-        return ftp_close($ftp);
+        ftp_close($ftp);
     }
 
-    private function ftpUpload(string $localDir = 'var/tmp/wms/receive/', string $remoteDir = '/IN/'): bool
+    /**
+     * @throws Exception
+     */
+    private function ftpUpload(string $directory, string $remoteDir = 'IN/'): void
     {
-        // TODO: load from .env file
-        $HOST = 'ftp.dlptest.com';
-        $USERNAME = 'dlpuser';
-        $PASSWORD = 'rNrKYTX9g7z3RgJRmxWuGHbeu';
+        $HOST = env('FTP_HOST', 'ftp.dlptest.com');
+        $USERNAME = env('FTP_USERNAME', 'dlpuser');
+        $PASSWORD = env('FTP_PASSWORD', 'rNrKYTX9g7z3RgJRmxWuGHbeu');
+
+        $localDir = $this->tmpWmsDir . $directory;
 
         // scan local files
         $fileNames = [];
@@ -109,11 +119,10 @@ class FtpDownloadUpload extends Command
                     $fileNames[] = $entry;
                 }
             }
-
             closedir($handle);
         }
         if (!$fileNames) {
-            return true;
+            return;
         }
 
         $ftp = ftp_connect($HOST);
@@ -132,7 +141,7 @@ class FtpDownloadUpload extends Command
         //$this->ftp_mksubdirs($ftp, $remoteDir);
 
         // create folder on local to save downloaded files if not exist
-        $newLocalDir = 'var/log/wms/instock_schedule/';
+        $newLocalDir = $this->logWmsDir . $directory;
         if (!file_exists($newLocalDir) && !mkdir($newLocalDir, 0777, true)) {
             throw new Exception("Can't create directory.");
         }
@@ -144,20 +153,17 @@ class FtpDownloadUpload extends Command
             if (ftp_put($ftp, $remotePath, $localPath, FTP_ASCII)) {
                 // delete local file
                 //unlink($localPath);
-
-                // move files
-                rename($localPath, $newLocalDir . $fileName);
-
-                echo "upload succeeded: from $localPath to $remotePath\n";
+                rename($localPath, $newLocalDir . $fileName); // move files
+                echo "upload success: from $localPath to $remotePath\n";
             } else {
                 echo "upload failed: from $localPath to $remotePath\n";
             }
         }
 
-        return ftp_close($ftp);
+        ftp_close($ftp);
     }
 
-    function ftp_mksubdirs($ftpcon, $ftpath, $ftpbasedir = '/IN')
+    public function ftp_mksubdirs($ftpcon, $ftpath, $ftpbasedir = '/IN')
     {
         @ftp_chdir($ftpcon, $ftpbasedir);
         $parts = explode('/', $ftpath);
