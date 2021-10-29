@@ -9,7 +9,7 @@
                 <div class="breeder-column__main">
                     <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
                         <div class="breeder-column__main_section_title">
-                            <h2 class="float-left">
+                            <h2 class="float-left mb-3">
                                 {{ breederPet.breedsType.breedsName ?? '' }}
                             </h2>
                             <div class="col-md-3 col-12 float-right btn-like mb-3 {{ isFavorite ? "red-heart" : "" }}"
@@ -205,7 +205,7 @@
                             </div>
                             <div class="col-12 btn_center">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12 contents_col_normal">
                                         <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
                                             <button class="btn basic-btn breeder-btn" style="height:65px;">
                                                 この子犬の見学希望／お問い合わせ(無料)
@@ -311,7 +311,7 @@
                                 ブリーダー紹介
                             </div>
                             <div class="m-2 p-2"></div>
-                            <div class="row ml-2">
+                            <div class="row">
                                 <div class="breeder-img col-sm-4">
                                     <img alt="..."
                                          src="{{ breederPet.Breeder.thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"

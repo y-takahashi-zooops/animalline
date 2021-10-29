@@ -8,7 +8,7 @@
                 <div class="breeder-column__main">
                     <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
                         <div class="breeder-column__main_section_title">
-                            <h2 class="float-left">
+                            <h2 class="float-left mb-3">
                                 {{ conservationPet.BreedsType.breedsName ?? '' }}
                             </h2>
                             <div class="col-md-3 col-12 float-right btn-like mb-3 {{ isFavorite ? "red-heart" : "" }}" data-id="{{ conservationPet.id }}" data-login="{{ isLoggedIn }}">
@@ -120,9 +120,9 @@
                                         <i class="fas fa-info-circle"></i>
                                         【生後56日を過ぎていない子犬の引き渡しについて】
                                     </h6>
-                                    動物愛護法により、生後56日を過ぎていない子犬の引き渡しが禁止されています。</br>
-                                    この子犬はまだ生後56日を過ぎていませんので、すぐに引き渡しを行う事はできません。</br>
-                                    生後56日を過ぎていなくてもブリーダーの下で親犬や兄弟犬と共に飼養されている環境であれば購入検討のためにご見学することは可能です。</br>
+                                    動物愛護法により、生後56日を過ぎていない子犬の引き渡しが禁止されています。<br>
+                                    この子犬はまだ生後56日を過ぎていませんので、すぐに引き渡しを行う事はできません。<br>
+                                    生後56日を過ぎていなくてもブリーダーの下で親犬や兄弟犬と共に飼養されている環境であれば購入検討のためにご見学することは可能です。<br>
                                 </div>
                                 <div class="breeder_section_header">
                                     <i class="fas fa-paw"></i>
@@ -148,7 +148,7 @@
                                 </div>
                                 <div class="col-12 btn_center">
                                     <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-12 contents_col_normal">
                                             <a href="{{ url('adoption_contact', {'pet_id': conservationPet.id}) }}">
                                                 <button class="btn basic-btn adoption-btn" style="height: 65px;">この子犬の見学希望／お問い合わせ(無料)</button>
                                             </a>
@@ -228,7 +228,7 @@
                                 </div>
                                 <div class="col-12 btn_center">
                                     <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-12 contents_col_normal">
                                             <a href="{{ url('adoption_contact', {'pet_id': conservationPet.id}) }}">
                                                 <button class="btn basic-btn adoption-btn" style="height: 65px;">この子犬の見学希望／お問い合わせ(無料)</button>
                                             </a>
@@ -236,10 +236,10 @@
                                     </div>
                                 </div>
                                 <div class="col-12 contents_col_normal mt-4 mb-4 pl-4 pr-4" style="background:#f7f5f0; border:1px solid #dcdfe1; border-radius: 3px;">
-                                    当サイトではお客様に最も信頼されるブリーダー子犬 直販サイトを目指して、</br>
-                                    子犬情報およびブリーダー情報の正確性向上に努めております。</br>
-                                    当サイトに掲載されている情報で誤解を招く表現、事実と異なる表現などのお気づきの点がございましたら</br>
-                                    事務局へのお問い合わせフォームよりご連絡をお願いいたします。</br>
+                                    当サイトではお客様に最も信頼されるブリーダー子犬 直販サイトを目指して、<br>
+                                    子犬情報およびブリーダー情報の正確性向上に努めております。<br>
+                                    当サイトに掲載されている情報で誤解を招く表現、事実と異なる表現などのお気づきの点がございましたら<br>
+                                    事務局へのお問い合わせフォームよりご連絡をお願いいたします。<br>
                                 </div>
                                 <div class="m-2 p-2"></div>
                                 <div class="breeder_section_header">
@@ -318,11 +318,7 @@
                             {% include 'animalline/adoption/side.twig' %}
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">

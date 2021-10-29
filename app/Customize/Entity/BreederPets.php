@@ -150,12 +150,12 @@ class BreederPets
     private $PetsFavorites;
 
     /**
-     * @ORM\OneToMany(targetEntity=BreederContactHeader::class, mappedBy="pet_id")
+     * @ORM\OneToMany(targetEntity=BreederContactHeader::class, mappedBy="Pet")
      */
     private $BreederContactHeader;
 
     /**
-     * @ORM\OneToMany(targetEntity=BreederEvaluations::class, mappedBy="pet_id")
+     * @ORM\OneToMany(targetEntity=BreederEvaluations::class, mappedBy="Pet")
      */
     private $BreederEvaluations;
 

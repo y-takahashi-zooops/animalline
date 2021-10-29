@@ -444,9 +444,9 @@ class ConservationPets
     }
 
     /**
-     * @return Collection|ConservationHeader[]
+     * @return Collection|ConservationContactHeader[]
      */
-    public function ConservationHeader(): Collection
+    public function getConservationContactHeader(): Collection
     {
         return $this->ConservationHeader;
     }

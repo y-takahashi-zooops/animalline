@@ -7,21 +7,13 @@ use Customize\Entity\ConservationPetImage;
 use Customize\Entity\ConservationPets;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Customize\Repository\DnaCheckStatusRepository;
-use Customize\Service\AdoptionQueryService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Form\Type\Adoption\ConservationPetsType;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
-use Eccube\Repository\Master\PrefRepository;
 use Customize\Repository\ConservationContactHeaderRepository;
-use Customize\Repository\ConservationContactsRepository;
-use Customize\Repository\SendoffReasonRepository;
 use Customize\Repository\ConservationsRepository;
-use Customize\Repository\ConservationsHousesRepository;
 use Customize\Repository\ConservationPetImageRepository;
-
-use Customize\Service\DnaQueryService;
-use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,6 +54,11 @@ class AdoptionPetController extends AbstractController
     protected $dnaCheckStatusHeaderRepository;
 
     /**
+     * @var ConservationContactHeaderRepository
+     */
+    protected $conservationContactHeaderRepository;
+
+    /**
      * ConservationController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
@@ -77,7 +74,8 @@ class AdoptionPetController extends AbstractController
         ConservationsRepository        $conservationsRepository,
         ConservationPetImageRepository $conservationPetImageRepository,
         PetsFavoriteRepository         $petsFavoriteRepository,
-        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
+        ConservationContactHeaderRepository $conservationContactHeaderRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
@@ -85,6 +83,7 @@ class AdoptionPetController extends AbstractController
         $this->conservationPetImageRepository = $conservationPetImageRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
+        $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
     }
 
     /**

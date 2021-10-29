@@ -7,13 +7,13 @@
             <div class="breeder-mv__container">
                 <div class="breeder-mv__text">
                     <h2>テキストが入りますテキストが入りますテキストが入ります</h2>
-                    <div class="breeder-mv__text_logo"><img src="{{ asset('assets/img/breeder-mv-logo.png') }}"
+                    <div class="breeder-mv__text_logo"><img src="{{ asset('assets/img/adoption-mv-logo.png') }}"
                                                             alt="Animalline Breeder"/></div>
                     <p>キャッチコピーが入ります。</p>
                     <div class="breeder-mv__text_btn">
                         <ul>
                             {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-                                <li class="breeder-mv__text_btn_dog"><a><i>犬を探す</i></a></li>
+                                <li class="breeder-mv__text_btn_dog"><span><i>犬を探す</i></span></li>
                                 <li class="breeder-mv__text_btn_cat"><a
                                             href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>猫を探す</i></a>
                                 </li>
@@ -21,7 +21,7 @@
                                 <li class="breeder-mv__text_btn_dog"><a
                                             href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>犬を探す</i></a>
                                 </li>
-                                <li class="breeder-mv__text_btn_cat"><a><i>猫を探す</i></a></li>
+                                <li class="breeder-mv__text_btn_cat"><span><i>猫を探す</i></span></li>
                             {% endif %}
                         </ul>
                     </div>

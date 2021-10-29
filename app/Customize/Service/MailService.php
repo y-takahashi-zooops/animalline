@@ -912,4 +912,45 @@ class MailService
 
         return $this->mailer->send($message, $failures);
     }
+
+    /**
+     * Send cancel contract mail.
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @param array $data
+     * @return int
+     */
+    public function sendMailContractCancel(\Eccube\Entity\Customer $Customer, array $data)
+    {
+        $body = $this->twig->render('Mail/mail_contract_cancel.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'data' => $data
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] 審査結果通知')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        // HTMLテンプレートが存在する場合
+        $htmlFileName = $this->getHtmlTemplate('Mail/mail_contract_cancel.twig');
+        if (!is_null($htmlFileName)) {
+            $htmlBody = $this->twig->render($htmlFileName, [
+                'BaseInfo' => $this->BaseInfo,
+                'data' => $data
+            ]);
+
+            $message
+                ->setContentType('text/plain; charset=UTF-8')
+                ->setBody($body, 'text/plain')
+                ->addPart($htmlBody, 'text/html');
+        } else {
+            $message->setBody($body);
+        }
+
+        return $this->mailer->send($message, $failures);
+    }
 }

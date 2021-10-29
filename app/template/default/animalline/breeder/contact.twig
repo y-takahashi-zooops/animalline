@@ -20,9 +20,7 @@
                             <div class="ec-borderedDefs">
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.contact_type, 'コンタクト内容', { 'label_attr': { 'class': 'ec-label' }}
-                                        ) }}
-                                                                    
+                                        {{ form_label(form.contact_type, 'コンタクト内容', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.contact_type) ? ' error' }}">
@@ -33,9 +31,7 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.contact_title, 'コンタクト内容タイトル', { 'label_attr': { 'class': 'ec-label' }}
-                                        ) }}
-                                                                    
+                                        {{ form_label(form.contact_title, 'コンタクト内容タイトル', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.contact_title) ? ' error' }}">
@@ -111,13 +107,9 @@
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 {% endblock %}
 {% block javascript %}
-    <script>
-        $(document ).ready(function() {
-            if({{ isContact }} === 1 ) {
-                alert("このペットについて、お問い合わせの内容が既に存在しています。");
-                window.location.href = "{{ url('breeder_pet_detail', {'id': id})}}";
-            }
-        });
-    </script>
+<script src="{{ asset('assets/js/contact_pet.js') }}"></script>
+<script>
+    checkContact('{{ isSelf }}', '{{ isSold }}', '{{ isContacted }}', '{{ url("breeder_pet_detail", {"id": id})}}');
+</script>
 {% endblock %}
     
