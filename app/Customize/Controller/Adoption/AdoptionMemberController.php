@@ -258,9 +258,8 @@ class AdoptionMemberController extends AbstractController
         $form = $builder->getForm();
         $form->handleRequest($request);
 
+        $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
         if ($form->isSubmitted() && $form->isValid()) {
-            $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
-
             $conservation->setPref($conservation->getPrefId())
                 ->setId($user->getId())
                 ->setThumbnailPath($thumbnail_path);
@@ -284,7 +283,8 @@ class AdoptionMemberController extends AbstractController
         return [
             'conservation' => $conservation,
             'form' => $form->createView(),
-            'return_path' => $return_path
+            'return_path' => $return_path,
+            'thumbnail_path' => $thumbnail_path
         ];
     }
 }
