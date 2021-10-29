@@ -40,15 +40,23 @@ class FtpDownloadUpload extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // TODO: update logic
+        // TODO: PASS PARAMS TO THESE FUNCTIONS ON REAL FPT SERVER
+        // download instock + return
+        //$downInstockFrom = '/OUT/var/log/wms/instock_schedule';
+        //$downInstockTo = 'var/tmp/wms/receive/';
+        //$this->ftpDownload($downInstockFrom, $downInstockTo);
         $this->ftpDownload();
 
+        // upload instock + return
+        //$uploadInstockFrom = 'var/tmp/wms/instock_schedule';
+        //$uploadInstockTo = '/IN/var/log/wms/instock_schedule';
+        //$this->ftpUpload($uploadInstockFrom, $uploadInstockTo);
         $this->ftpUpload();
 
         echo "Succeeded.\n";
     }
 
-    private function ftpDownload(string $localDir = 'var/tmp/wms/receive/', string $remoteDir = '/pub/example/'): bool
+    private function ftpDownload(string $remoteDir = '/pub/example/', string $localDir = 'var/tmp/wms/receive/'): bool
     {
         // TODO: load from .env file
         $HOST = 'test.rebex.net';
@@ -75,6 +83,8 @@ class FtpDownloadUpload extends Command
             $remotePath = $remoteDir . $file->getFilename();
             // download a file
             if (ftp_get($ftp, $localPath, $remotePath, FTP_BINARY)) {
+                // delete remote file
+                //ftp_delete($ftp, $remotePath); TODO: UNCOMMENT ON REAL FPT SERVER
                 echo "download succeeded: from $remotePath to $localPath\n";
             } else {
                 echo "download failed: from $remotePath to $localPath\n";
@@ -119,6 +129,8 @@ class FtpDownloadUpload extends Command
             $remotePath = $remoteDir . $fileName;
             // upload a file
             if (ftp_put($ftp, $remotePath, $localPath, FTP_ASCII)) {
+                // delete local file
+                unlink($localPath);
                 echo "upload succeeded: from $localPath to $remotePath\n";
             } else {
                 echo "upload failed: from $localPath to $remotePath\n";
