@@ -12,11 +12,11 @@
             <div class="breeder-mv__text_btn">
               <ul>
                 {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-                    <li class="breeder-mv__text_btn_dog"><span><i>犬を探す</i></a></li>
+                  <li class="breeder-mv__text_btn_dog"><span><i>犬を探す</i></span></li>
                     <li class="breeder-mv__text_btn_cat"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>猫を探す</i></a></li>
                 {% else %}
                     <li class="breeder-mv__text_btn_dog"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>犬を探す</i></a></li>
-                    <li class="breeder-mv__text_btn_cat"><span><i>猫を探す</i></a></li>
+                  <li class="breeder-mv__text_btn_cat"><span><i>猫を探す</i></span></li>
                 {% endif %}
               </ul>
             </div>
@@ -62,7 +62,7 @@
 							{% endfor %}
                         </select>
                       </div>
-                      <label><input type="checkbox" name="adjacent" value="1" class="mr-1"　{% if params.adjacent is defined and params.adjacent == 1
+                      <label><input type="checkbox" name="adjacent" value="1" class="mr-1" {% if params.adjacent is defined and params.adjacent == 1
 							%} checked {% endif %}{% if params.adjacent is defined and params.adjacent == 1
 							%} checked {% endif %}>隣の都道府県も検索</label>
                     </div>

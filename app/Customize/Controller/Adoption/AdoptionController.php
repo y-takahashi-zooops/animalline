@@ -130,12 +130,12 @@ class AdoptionController extends AbstractController
         $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
         $newPets = $this->conservationPetsRepository->findBy(
-            ['pet_kind' => $petKind],
+            ['pet_kind' => $petKind, 'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC],
             ['release_date' => 'DESC'],
             AnilineConf::NUMBER_ITEM_TOP
         );
         $favoritePets = $this->conservationPetsRepository->findBy(
-            ['pet_kind' => $petKind],
+            ['pet_kind' => $petKind, 'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC],
             ['favorite_count' => 'DESC'],
             AnilineConf::NUMBER_ITEM_TOP
         );

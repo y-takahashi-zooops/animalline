@@ -204,7 +204,7 @@ class BreederPetController extends AbstractController
      * @Route("/breeder/pet/detail/{id}", name="breeder_pet_detail", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/pet/detail.twig")
      */
-    public function petDetail(Request $request)
+    public function petDetail(Request $request): ?Response
     {
         $isLoggedIn = (bool)$this->getUser();
         $id = $request->get('id');
@@ -291,7 +291,9 @@ class BreederPetController extends AbstractController
         }
 
         $breeder = $this->breedersRepository->find($user);
-        if (!$breeder) throw new NotFoundHttpException();
+        if (!$breeder) {
+            throw new NotFoundHttpException();
+        }
         $petInfoTemplate = $this->breederPetinfoTemplateRepository->findOneBy([
             'Breeder' => $breeder
         ]);
@@ -392,7 +394,9 @@ class BreederPetController extends AbstractController
     {
         $user = $this->getUser();
         $breeder = $this->breedersRepository->find($user);
-        if (!$breeder) throw new NotFoundHttpException();
+        if (!$breeder) {
+            throw new NotFoundHttpException();
+        }
         $petInfoTemplate = $this->breederPetinfoTemplateRepository->findOneBy([
             'Breeder' => $breeder
         ]);
@@ -455,7 +459,7 @@ class BreederPetController extends AbstractController
      * @param int $petId
      * @return string
      */
-    private function setImageSrc($imageUrl, $petId): string
+    private function setImageSrc(string $imageUrl, int $petId): string
     {
         if (empty($imageUrl)) {
             return '';
@@ -493,7 +497,7 @@ class BreederPetController extends AbstractController
      * @Route("/breeder/member/pet_regist_list", name="breeder_pet_regist_list")
      * @Template("animalline/breeder/member/pets/regist_list.twig")
      */
-    public function pet_regist_list(Request $request, PaginatorInterface $paginator)
+    public function pet_regist_list(Request $request, PaginatorInterface $paginator): array
     {
         $codes = [];
         $dnaCheckStatusHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id'=>$this->getUser()->getId()]);

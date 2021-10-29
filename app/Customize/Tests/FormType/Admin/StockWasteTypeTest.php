@@ -12,10 +12,12 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\FormExtensionInterface;
 use Symfony\Component\Form\Test\TypeTestCase;
+use Symfony\Component\Validator\Validation;
 
-class StockWasteTest extends TypeTestCase
+class StockWasteTypeTest extends TypeTestCase
 {
     public function testSubmitValidData()
     {
@@ -125,6 +127,7 @@ class StockWasteTest extends TypeTestCase
                 {
                 }
             },
+            new ValidatorExtension(Validation::createValidator())
         ];
     }
 }

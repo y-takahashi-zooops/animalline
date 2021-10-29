@@ -36,7 +36,7 @@ class BreedersTypeTest extends TypeTestCase
     {
         $mockEntityManager = $this->createMock(EntityManager::class);
         $mockEntityManager->method('getClassMetadata')
-            ->willReturn(new ClassMetadata(BreederExaminationInfoType::class));
+            ->willReturn(new ClassMetadata(BreedersType::class));
 
         $entityRepository = $this->createMock(EntityRepository::class);
         $entityRepository->method('createQueryBuilder')

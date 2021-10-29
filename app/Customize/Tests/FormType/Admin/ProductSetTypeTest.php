@@ -13,11 +13,10 @@ use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Validation;
 
-class ProductSetTest extends TypeTestCase
+class ProductSetTypeTest extends TypeTestCase
 {
     public function testSubmitValidData()
     {
-        $OrderItemType = $this->factory->create(OrderItemType::class);
         $OrderItem = (new OrderItem())
                     ->setProductName('abc')
                     ->setProductCode('100134');

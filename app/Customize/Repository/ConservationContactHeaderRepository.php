@@ -2,6 +2,7 @@
 
 namespace Customize\Repository;
 
+use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationContactHeader;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,32 +20,20 @@ class ConservationContactHeaderRepository extends ServiceEntityRepository
         parent::__construct($registry, ConservationContactHeader::class);
     }
 
-    // /**
-    //  * @return ConservationContactHeader[] Returns an array of ConservationContactHeader objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Check pet isset contact
+     * @param $user
+     * @param $pet
+     * @return bool
+     */
+    public function checkContacted($user, $pet): bool
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
+        return (bool)$this->createQueryBuilder('ch')
+            ->where('ch.Customer = :customer')
+            ->andWhere('ch.Pet = :pet')
+            ->andWhere('ch.contract_status != :status')
+            ->setParameters(['customer' => $user, 'pet' => $pet, 'status' => AnilineConf::CONTRACT_STATUS_NONCONTRACT])
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?ConservationContactHeader
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

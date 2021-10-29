@@ -28,12 +28,12 @@ class BreederPetinfoTemplate
     private $Breeder;
 
     /**
-     * @ORM\Column(name="delivery_way", type="text", nullable=false)
+     * @ORM\Column(name="delivery_way", type="text", nullable=true)
      */
     private $delivery_way;
 
     /**
-     * @ORM\Column(name="payment_method", type="text", nullable=false)
+     * @ORM\Column(name="payment_method", type="text", nullable=true)
      */
     private $payment_method;
 

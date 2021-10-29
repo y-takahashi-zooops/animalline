@@ -139,8 +139,7 @@ class AdoptionMemberController extends AbstractController
         ConservationPetImageRepository      $conservationPetImageRepository,
         DnaCheckStatusRepository            $dnaCheckStatusRepository,
         DnaQueryService                     $dnaQueryService
-    )
-    {
+    ) {
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->adoptionQueryService = $adoptionQueryService;

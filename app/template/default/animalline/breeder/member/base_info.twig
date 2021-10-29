@@ -345,6 +345,12 @@
 										</div>
 									</dd>
 								</dl> #}
+								<div class="mb-5">
+								{# <div class="d-flex" style="border-bottom:1px dotted #ccc"> #}
+								<div style="border-bottom:1px dotted #ccc; margin-top: 4rem; padding-bottom: 1rem">
+									<h2 class="mt-1">ペット情報入力用テンプレート編集</h2>
+									<p>このテンプレート項目への入力は必須ではありません。こちらで入力した内容を、ペット情報入力の際に引用できます。同じ内容を複数のペットへ入力する場合にご活用ください。</p>
+								</div>
 								<dl>
 									<dt>
 										{{ form_label(formTemplate.guarantee, '生体保障内容', { 'label_attr': {'class': 'ec-label' }}) }}
@@ -359,7 +365,6 @@
 								<dl>
 									<dt>
 										{{ form_label(formTemplate.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label' }}) }}
-										<span class="ec-required">必須</span>
 									</dt>
 									<dd>
 										<div class="ec-birth{{ has_errors(formTemplate.delivery_way) ? ' error' }}">
@@ -371,7 +376,6 @@
 								<dl>
 									<dt>
 										{{ form_label(formTemplate.payment_method, '支払方法', { 'label_attr': {'class': 'ec-label' }}) }}
-										<span class="ec-required">必須</span>
 									</dt>
 									<dd>
 										<div class="ec-birth{{ has_errors(formTemplate.payment_method) ? ' error' }}">

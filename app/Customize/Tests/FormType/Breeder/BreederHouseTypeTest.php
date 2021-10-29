@@ -3,7 +3,6 @@
 namespace Customize\Tests\FormType\Breeder;
 
 use Customize\Entity\BreederHouse;
-use Customize\Entity\Breeds;
 use Customize\Form\Type\Breeder\BreederHouseType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -11,7 +10,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Master\Pref;
-use Eccube\Form\Type\Master\PrefType;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -20,7 +18,7 @@ use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Validation;
 
-class BreederPetsTypeTest extends TypeTestCase
+class BreederHouseTypeTest extends TypeTestCase
 {
     private $entityManager;
 

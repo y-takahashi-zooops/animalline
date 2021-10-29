@@ -194,7 +194,6 @@ class AdoptionDnaCheck extends AbstractController
 
             $kitUnit = $dnaCheckStatusHeader->getKitUnit();
             for ($i = 0; $i < $kitUnit; $i++) {
-//                dump();die;
                 $Dna = (new DnaCheckStatus)
                     ->setDnaHeader($dnaCheckStatusHeader)
                     ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION);

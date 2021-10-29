@@ -288,6 +288,17 @@ class AnilineEntryController extends AbstractController
     }
 
     /**
+     * 会員登録完了画面.
+     *
+     * @Route("/entry/completed", name="entry_completed")
+     * @Template("Entry/completed.twig")
+     */
+    public function completed(Request $request)
+    {
+        return [];
+    }
+
+    /**
      * 会員のアクティベート（本会員化）を行う.
      *
      * @Route("/entry/activate/{secret_key}/{returnPath}/{qtyInCart}", name="entry_activate")
@@ -328,7 +339,9 @@ class AnilineEntryController extends AbstractController
 
             // 会員登録処理を行う
             $qtyInCart = $this->entryActivate($request, $secret_key);
-
+            if(!$qtyInCart){
+                return $this->redirectToRoute("entry_completed");
+            }
             return [
                 'qtyInCart' => $qtyInCart,
                 'returnPath' => $returnPath,
@@ -352,7 +365,8 @@ class AnilineEntryController extends AbstractController
         log_info('本会員登録開始');
         $Customer = $this->customerRepository->getProvisionalCustomerBySecretKey($secret_key);
         if (is_null($Customer)) {
-            throw new HttpException\NotFoundHttpException();
+            return false;
+            //throw new HttpException\NotFoundHttpException();
         }
 
         $CustomerStatus = $this->customerStatusRepository->find(CustomerStatus::REGULAR);
