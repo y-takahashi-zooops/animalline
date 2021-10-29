@@ -2,9 +2,7 @@
 
 namespace Customize\Tests\FormType\Admin;
 
-use Customize\Entity\BreederExaminationInfo;
 use Customize\Entity\Breeders;
-use Customize\Form\Type\Admin\BreederExaminationInfoType;
 use Customize\Form\Type\Admin\BreedersType;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -13,16 +11,12 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Master\Pref;
-use Eccube\Form\Type\Master\PrefType;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\FormExtensionInterface;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
-use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validation;
 
 class BreederTypeTest extends TypeTestCase
