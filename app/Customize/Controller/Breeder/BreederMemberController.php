@@ -152,7 +152,14 @@ class BreederMemberController extends AbstractController
             $breederData = new Breeders;
             $breederData->setId($user->getId());
         }
-        $builder = $this->formFactory->createBuilder(BreedersType::class, $breederData);
+
+        $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
+        $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
+
+        $builder = $this->formFactory->createBuilder(BreedersType::class, $breederData, array(
+            'breeder_img' => $thumbnail_path,
+            'license_img' => $license_thumbnail_path,
+        ));
         $form = $builder->getForm();
         $form->handleRequest($request);
 
@@ -160,9 +167,6 @@ class BreederMemberController extends AbstractController
         $builderTemplate = $this->formFactory->createBuilder(BreederPetinfoTemplateType::class, $breederPetinfoTemplate);
         $formTemplate = $builderTemplate->getForm();
         $formTemplate->handleRequest($request);
-
-        $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
-        $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
 
         if ($form->isSubmitted() && $form->isValid() && $formTemplate->isSubmitted() && $formTemplate->isValid()) {
             $handling_pet_kind = $form->getData()->getHandlingPetKind();

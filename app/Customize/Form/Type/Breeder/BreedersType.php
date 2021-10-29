@@ -344,6 +344,8 @@ class BreedersType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Breeders::class,
+            'breeder_img' => null,
+            'license_img' => null,
         ]);
     }
 
@@ -361,12 +363,11 @@ class BreedersType extends AbstractType
 
     public function validateThumbnail(FormEvent $event)
     {
-        $data = $event->getData();
         $form = $event->getForm();
-        if (!$data->getThumbnailPath()) {
+        if (!$event->getForm()->getConfig()->getOptions()['breeder_img']) {
             $form['ThumbnailPathErrors']->addError(new FormError('ブリーダー様のプロフィール写真をアップロードください。'));
         }
-        if (!$data->getLicenseThumbnailPath()) {
+        if (!$event->getForm()->getConfig()->getOptions()['license_img']) {
             $form['ThumbnailLicensePathErrors']->addError(new FormError('動物取扱業登録証の画像をアップロードお願いします。'));
         }
     }
