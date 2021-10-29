@@ -48,6 +48,7 @@ class ConservationsType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
+                        'min' => 0,
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                     new Assert\NotBlank()
@@ -72,6 +73,7 @@ class ConservationsType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
+                        'min' => 0,
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                     new Assert\NotBlank()
@@ -83,6 +85,7 @@ class ConservationsType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
+                        'min' => 0,
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                     new Assert\Regex([
@@ -100,7 +103,7 @@ class ConservationsType extends AbstractType
             ])
             ->add('city', TextType::class, [
                 'constraints' => [
-                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len'], 'min' => 0]),
                     new Assert\NotBlank()
                 ],
                 'attr' => [
@@ -111,7 +114,7 @@ class ConservationsType extends AbstractType
             ])
             ->add('address', TextType::class, [
                 'constraints' => [
-                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
+                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len'], 'min' => 0]),
                     new Assert\NotBlank()
                 ],
                 'attr' => [
@@ -135,6 +138,7 @@ class ConservationsType extends AbstractType
                     ]),
                     new Assert\Length([
                         'max' => 7,
+                        'min' => 0
                     ]),
                     new Assert\NotBlank()
                 ]
@@ -148,6 +152,7 @@ class ConservationsType extends AbstractType
                 'constraints' => [
                     new Assert\Length([
                         'max' => 11,
+                        'min' => 0
                     ]),
                     new Assert\Type([
                         'type' => 'numeric',
@@ -166,6 +171,7 @@ class ConservationsType extends AbstractType
                 'constraints' => [
                     new Assert\Length([
                         'max' => 11,
+                        'min' => 0
                     ]),
                     new Assert\Type([
                         'type' => 'numeric',
@@ -181,6 +187,7 @@ class ConservationsType extends AbstractType
                 'constraints' => [
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'min' => 0
                     ]),
                     new Assert\Regex([
                         'pattern' => '/^http/',
@@ -193,6 +200,7 @@ class ConservationsType extends AbstractType
                 'constraints' => [
                     new Assert\Length([
                         'max' => $this->eccubeConfig['eccube_stext_len'],
+                        'min' => 0
                     ]),
                 ]
             ])

@@ -5,6 +5,7 @@ namespace Customize\Form\Type\Adoption;
 use Customize\Config\AnilineConf;
 use Customize\Entity\Breeds;
 use Customize\Entity\ConservationPets;
+use Customize\Repository\ConservationPetsRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -30,7 +31,7 @@ class ConservationPetsType extends AbstractType
                     ],
                 'required' => true,
             ])
-            ->add('BreedsType', ChoiceType::class, [
+            ->add('BreedsType', EntityType::class, [
                 'class' => 'Customize\Entity\Breeds',
                 'choice_label' => function (Breeds $breeds) {
                     return $breeds->getBreedsName();
