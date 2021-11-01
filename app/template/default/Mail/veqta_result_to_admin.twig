@@ -1,0 +1,13 @@
+{% autoescape false %}
+※本メールは自動配信メールです。
+
+ＤＮＡ検査結果が登録されました。
+
+ブリーダー名：{{ data.name }} 様
+生体ＩＤ：{{ data.barcode }}
+犬種（猫種）：{{ data.pet_type }}
+検査結果：{{ data.result }}
+
+管理が画面から検査詳細を確認し、問題が無ければサイトへの公開処理を行ってください。
+
+{% endautoescape  %}
