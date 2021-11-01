@@ -117,7 +117,8 @@ class BreederPetController extends AbstractController
      * ペット情報管理
      *
      * @Route("/%eccube_admin_route%/breeder/pet/{id}/change_status", name="admin_breeder_pet_change_status")
-
+     * @param BreederPets $pet
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function pet_change_status(BreederPets $pet)
     {
@@ -175,7 +176,6 @@ class BreederPetController extends AbstractController
             default:
                 break;
         }
-
 
         if ($request->get('breed_type')) {
             $criteria['breed_type'] = $request->get('breed_type');

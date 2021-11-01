@@ -53,6 +53,7 @@ class BreederExaminationInfoType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
+                        'min' => 0,
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                 ]
@@ -140,6 +141,7 @@ class BreederExaminationInfoType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
+                        'min' => 0,
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                 ]
@@ -161,6 +163,7 @@ class BreederExaminationInfoType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length([
+                        'min' => 0,
                         'max' => $this->eccubeConfig['eccube_stext_len'],
                     ]),
                 ]

@@ -1,4 +1,5 @@
 {% set site_type = 'breeder' %}
+{% set params = app.request.query.all %}
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
@@ -149,7 +150,7 @@
                                 <div class="py-3">
 
                                     <form action="{{ url('breeder_message', {'id': message.id}) }}" method="post" name="breeder-msg-form">
-                                        <textarea {{ isScroll ? 'autofocus' }} aria-label="dialog-chat" class="col-12 p-2" rows="5" name="reply_message"
+                                        <textarea {{ params.isScroll is defined ? 'autofocus' }} aria-label="dialog-chat" class="col-12 p-2" rows="5" name="reply_message"
                                             placeholder="返信メッセージ"></textarea>
                                         <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">返信メッセージ送信</button>
                                         ここに取引が完了した際の報告で特典が受けられることの説明を表記する

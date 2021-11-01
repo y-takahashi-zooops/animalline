@@ -24,10 +24,10 @@ class InstockScheduleHeaderRepository extends ServiceEntityRepository
      * Search instock schedule header admin
      * @param null $orderDate
      * @param null $scheduleDate
-     * @return array|int|mixed|string
+     * @return array
      * @throws Exception
      */
-    public function search($orderDate = null, $scheduleDate = null)
+    public function search($orderDate = null, $scheduleDate = null):array
     {
         $result = $this->createQueryBuilder('i');
 

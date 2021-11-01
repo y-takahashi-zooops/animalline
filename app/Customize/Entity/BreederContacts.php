@@ -66,7 +66,7 @@ class BreederContacts
         return $this->BreederHeader;
     }
 
-    public function setBreederHeader(?BreederContactHeader $BreederHeader): self
+    public function setBreederHeader(BreederContactHeader $BreederHeader): self
     {
         $this->BreederHeader = $BreederHeader;
 

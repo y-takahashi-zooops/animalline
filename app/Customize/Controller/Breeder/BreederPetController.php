@@ -204,7 +204,7 @@ class BreederPetController extends AbstractController
      * @Route("/breeder/pet/detail/{id}", name="breeder_pet_detail", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/pet/detail.twig")
      */
-    public function petDetail(Request $request)
+    public function petDetail(Request $request): ?Response
     {
         $isLoggedIn = (bool)$this->getUser();
         $id = $request->get('id');
@@ -291,11 +291,16 @@ class BreederPetController extends AbstractController
         }
 
         $breeder = $this->breedersRepository->find($user);
-        if (!$breeder) throw new NotFoundHttpException();
+        if (!$breeder) {
+            throw new NotFoundHttpException();
+        }
         $petInfoTemplate = $this->breederPetinfoTemplateRepository->findOneBy([
             'Breeder' => $breeder
         ]);
 
+        // if (!$petInfoTemplate) {
+        //     throw new NotFoundHttpException();
+        // }
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
@@ -321,19 +326,19 @@ class BreederPetController extends AbstractController
 
             $petImage0 = (new BreederPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img0)->setSortOrder(1)
-                ->setBreederPetId($breederPet);
+                ->setBreederPet($breederPet);
             $petImage1 = (new BreederPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img1)->setSortOrder(2)
-                ->setBreederPetId($breederPet);
+                ->setBreederPet($breederPet);
             $petImage2 = (new BreederPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img2)->setSortOrder(3)
-                ->setBreederPetId($breederPet);
+                ->setBreederPet($breederPet);
             $petImage3 = (new BreederPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img3)->setSortOrder(4)
-                ->setBreederPetId($breederPet);
+                ->setBreederPet($breederPet);
             $petImage4 = (new BreederPetImage())
                 ->setImageType(AnilineConf::PET_PHOTO_TYPE_IMAGE)->setImageUri($img4)->setSortOrder(5)
-                ->setBreederPetId($breederPet);
+                ->setBreederPet($breederPet);
             $breederPet
                 ->addBreederPetImage($petImage0)
                 ->addBreederPetImage($petImage1)
@@ -389,7 +394,9 @@ class BreederPetController extends AbstractController
     {
         $user = $this->getUser();
         $breeder = $this->breedersRepository->find($user);
-        if (!$breeder) throw new NotFoundHttpException();
+        if (!$breeder) {
+            throw new NotFoundHttpException();
+        }
         $petInfoTemplate = $this->breederPetinfoTemplateRepository->findOneBy([
             'Breeder' => $breeder
         ]);
@@ -452,7 +459,7 @@ class BreederPetController extends AbstractController
      * @param int $petId
      * @return string
      */
-    private function setImageSrc($imageUrl, $petId): string
+    private function setImageSrc(string $imageUrl, int $petId): string
     {
         if (empty($imageUrl)) {
             return '';
@@ -490,7 +497,7 @@ class BreederPetController extends AbstractController
      * @Route("/breeder/member/pet_regist_list", name="breeder_pet_regist_list")
      * @Template("animalline/breeder/member/pets/regist_list.twig")
      */
-    public function pet_regist_list(Request $request, PaginatorInterface $paginator)
+    public function pet_regist_list(Request $request, PaginatorInterface $paginator): array
     {
         $codes = [];
         $dnaCheckStatusHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id'=>$this->getUser()->getId()]);

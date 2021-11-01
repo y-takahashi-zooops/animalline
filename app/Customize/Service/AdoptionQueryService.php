@@ -146,9 +146,12 @@ class AdoptionQueryService
     public function searchAdoptionsResult($request, $petKind): array
     {
         $query = $this->conservationsRepository->createQueryBuilder('c')
-            ->innerJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'c.id = cp.Conservation')
-            ->where('cp.pet_kind = :pet_kind')
-            ->setParameter('pet_kind', $petKind);
+            ->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'c.id = cp.Conservation')
+            ->where('c.handling_pet_kind in (:kinds)')
+            ->setParameter('kinds', [
+                AnilineConf::ANILINE_PET_KIND_DOG_CAT,
+                $petKind
+            ]);
 
         if ($request->get('breed_type')) {
             $query->andWhere('cp.BreedsType = :breeds_type')
@@ -170,9 +173,7 @@ class AdoptionQueryService
                     ->getArrayResult();
                 $arr = array_column($result, 'adjacent_pref_id');
                 $query->orWhere('ch.Pref in (:arr)')
-                    ->setParameter('arr', $arr)
-                    ->andWhere('cp.pet_kind = :pet_kind')
-                    ->setParameter('pet_kind', $request->get('pet_kind'));
+                    ->setParameter('arr', $arr);
             }
         }
 

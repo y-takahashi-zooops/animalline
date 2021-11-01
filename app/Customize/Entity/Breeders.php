@@ -3,6 +3,7 @@
 namespace Customize\Entity;
 
 use Customize\Repository\BreedersRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,7 +16,7 @@ use Eccube\Entity\Master\Pref;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=BreedersRepository::class)
  */
-class Breeders 
+class Breeders
 {
     /**
      * @ORM\Id
@@ -218,14 +219,6 @@ class Breeders
         $this->BreederHouses = new ArrayCollection();
     }
 
-    /**
-     * @return Collection|BreederHouses[]
-     */
-    public function getBreederHouses(): Collection
-    {
-        return $this->BreederHouses;
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -369,12 +362,12 @@ class Breeders
         return $this;
     }
 
-    public function getBreederRank()
+    public function getBreederRank(): float
     {
         return $this->breeder_rank;
     }
 
-    public function setBreederRank($breeder_rank)
+    public function setBreederRank(float $breeder_rank): self
     {
         $this->breeder_rank = $breeder_rank;
 
@@ -549,7 +542,7 @@ class Breeders
     {
         return $this->handling_pet_kind;
     }
-    
+
     public function getIsActive(): ?int
     {
         return $this->is_active;
@@ -610,14 +603,24 @@ class Breeders
         return $this;
     }
 
-    public function setCreateDate($createDate)
+    public function getCreateDate(): ?DateTime
+    {
+        return $this->create_date;
+    }
+
+    public function setCreateDate(?DateTime $createDate): self
     {
         $this->create_date = $createDate;
 
         return $this;
     }
 
-    public function setUpdateDate($updateDate)
+    public function getUpdateDate(): ?DateTime
+    {
+        return $this->update_date;
+    }
+
+    public function setUpdateDate(?DateTime $updateDate): self
     {
         $this->update_date = $updateDate;
 
@@ -714,6 +717,14 @@ class Breeders
         return $this;
     }
 
+    /**
+     * @return Collection|BreederHouses[]
+     */
+    public function getBreederHouses(): Collection
+    {
+        return $this->BreederHouses;
+    }
+
     public function getBreederHouseByPetType($petType)
     {
         $result =  new BreederHouse();
@@ -725,16 +736,6 @@ class Breeders
         }
 
         return $result;
-    }
-
-    public function getCreateDate()
-    {
-        return $this->create_date;
-    }
-
-    public function getUpdateDate()
-    {
-        return $this->update_date;
     }
 
     public function getBreederPetinfoTemplate(): ?BreederPetinfoTemplate

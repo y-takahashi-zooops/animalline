@@ -111,13 +111,9 @@
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
 {% endblock %}
 {% block javascript %}
+<script src="{{ asset('assets/js/contact_pet.js') }}"></script>
 <script>
-    $(document ).ready(function() {
-        if ({{ isContact }}) {
-                alert("このペットについて、お問い合わせの内容が既に存在しています。");
-                window.location.href = "{{ url('adoption_pet_detail', {'id': id})}}";
-            }
-        });
-    </script>
+    checkContact('{{ isSelf }}', '{{ isSold }}', '{{ isContacted }}', '{{ url("adoption_pet_detail", {"id": id})}}');
+</script>
 {% endblock %}
     

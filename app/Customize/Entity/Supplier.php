@@ -81,7 +81,7 @@ class Supplier
      *
      * @param \DateTime $createDate
      *
-     * @return Payment
+     * @return self
      */
     public function setCreateDate($createDate)
     {
@@ -95,7 +95,7 @@ class Supplier
      *
      * @param \DateTime $updateDate
      *
-     * @return Payment
+     * @return self
      */
     public function setUpdateDate($updateDate)
     {

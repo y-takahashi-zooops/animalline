@@ -8,22 +8,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Customize\Config\AnilineConf;
-use Eccube\Common\EccubeConfig;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class BreederExaminationInfoType extends AbstractType
 {
-    /**
-     * @var EccubeConfig
-     */
-    protected $eccubeConfig;
-
-    public function __construct(EccubeConfig $eccubeConfig)
-    {
-        $this->eccubeConfig = $eccubeConfig;
-    }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->setDisabled(true)

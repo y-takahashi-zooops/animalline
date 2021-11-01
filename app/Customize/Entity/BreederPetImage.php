@@ -61,12 +61,12 @@ class BreederPetImage
         return $this->id;
     }
 
-    public function getBreederPetId(): ?BreederPets
+    public function getBreederPet(): ?BreederPets
     {
         return $this->BreederPets;
     }
 
-    public function setBreederPetId(?BreederPets $breeder_pet_id): self
+    public function setBreederPet(BreederPets $breeder_pet_id): self
     {
         $this->BreederPets = $breeder_pet_id;
 
@@ -112,11 +112,11 @@ class BreederPetImage
     /**
      * Set createDate.
      *
-     * @param \DateTime $createDate
+     * @param ?\DateTime $createDate
      *
-     * @return Payment
+     * @return BreederPetImage
      */
-    public function setCreateDate($createDate)
+    public function setCreateDate(?\Datetime $createDate): self
     {
         $this->create_date = $createDate;
 
@@ -126,11 +126,11 @@ class BreederPetImage
     /**
      * Set updateDate.
      *
-     * @param \DateTime $updateDate
+     * @param ?\DateTime $updateDate
      *
-     * @return Payment
+     * @return BreederPetImage
      */
-    public function setUpdateDate($updateDate)
+    public function setUpdateDate(?\Datetime $updateDate): self
     {
         $this->update_date = $updateDate;
 

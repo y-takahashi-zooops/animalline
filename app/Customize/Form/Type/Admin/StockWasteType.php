@@ -18,22 +18,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class StockWasteType extends AbstractType
 {
-    /**
-     * @var EccubeConfig
-     */
-    protected $eccubeConfig;
-
-    /**
-     * @var StockWasteReasonRepository
-     */
-    protected $stockWasteReasonRepository;
-
-    public function __construct(EccubeConfig $eccubeConfig, StockWasteReasonRepository $stockWasteReasonRepository)
-    {
-        $this->eccubeConfig = $eccubeConfig;
-        $this->stockWasteReasonRepository = $stockWasteReasonRepository;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
