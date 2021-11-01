@@ -912,4 +912,31 @@ class MailService
 
         return $this->mailer->send($message, $failures);
     }
+
+    /**
+     * ＶＥＱＴＡ検査結果通知メール送信
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @param $data
+     * @return int
+     */
+    public function sendVeqtaResuletToAdmin($data)
+    {
+        $body = $this->twig->render('Mail/veqta_result_to_admin.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'data' => $data
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('['.$this->BaseInfo->getShopName().'] DNA検査完了通知')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$this->BaseInfo->getEmail01()])
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
+
 }

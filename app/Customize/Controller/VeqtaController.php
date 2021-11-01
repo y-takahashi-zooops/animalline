@@ -30,6 +30,7 @@ use Exception;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Customize\Service\VeqtaQueryService;
 use Knp\Component\Pager\PaginatorInterface;
+use Customize\Service\MailService;
 
 class VeqtaController extends AbstractController
 {
@@ -37,6 +38,11 @@ class VeqtaController extends AbstractController
      * @var DnaCheckStatusHeaderRepository
      */
     protected $dnaCheckStatusHeaderRepository;
+
+    /**
+     * @var MailService
+     */
+    protected $mailService;
 
     /**
      * @var BreederPetsRepository
@@ -72,6 +78,7 @@ class VeqtaController extends AbstractController
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      * @param VeqtaQueryService $veqtaQueryService
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
+     * @param MailService $mailService
      */
 
     public function __construct(
@@ -80,7 +87,8 @@ class VeqtaController extends AbstractController
         ConservationPetsRepository     $conservationPetsRepository,
         DnaCheckStatusRepository       $dnaCheckStatusRepository,
         VeqtaQueryService              $veqtaQueryService,
-        DnaCheckKindsRepository        $dnaCheckKindsRepository
+        DnaCheckKindsRepository        $dnaCheckKindsRepository,
+        MailService $mailService
     ) {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -88,6 +96,7 @@ class VeqtaController extends AbstractController
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->veqtaQueryService = $veqtaQueryService;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -215,14 +224,17 @@ class VeqtaController extends AbstractController
         switch ($checkStatus) {
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY:
                 $Dna->setCheckStatus($checkStatus);
+                $restext = "検体異常";
                 break;
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
                 $Dna->setCheckStatus($checkStatus);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
+                $restext = "検査ＮＧ";
                 break;
             default:// 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
+                $restext = "検査通過";
         }
 
         $savePath = $this->copyFile($request->get('file_name'));
@@ -232,6 +244,13 @@ class VeqtaController extends AbstractController
         $entityManager->persist($Dna);
         $entityManager->persist($Pet);
         $entityManager->flush();
+
+        $data["barcode"] = $barcode;
+        $data["name"] = $request->get("sender_name");
+        $data["pet_type"] = $request->get("pet_type");
+        $data["result"] = $restext;
+
+        $this->mailService->sendVeqtaResuletToAdmin($data);
 
         return $this->redirectToRoute('veqta_result');
     }
