@@ -341,37 +341,35 @@ class BreedersType extends AbstractType
                 ],
             ])
             ->add('thumbnail_path', FileType::class, [
-                // 'required' => false,
                 'mapped' => false,
-                'required' => true,
-                // 'constraints' => [
-                //     new Assert\NotBlank(['message' => 'ファイルを選択してください。']),
-                // ]
+                'required' => true
             ])
             ->add('license_thumbnail_path', FileType::class, [
-                // 'required' => false,
                 'mapped' => false,
-                'required' => true,
-                // 'constraints' => [
-                //     new Assert\Length([
-                //         'max' => $this->eccubeConfig['eccube_stext_len'],
-                //     ]),
-                //     new Assert\NotBlank(['message' => 'ファイルを選択してください。']),
-                // ]
+                'required' => true
             ])
             ->add('DogHouseNameErrors', TextType::class, [
                 'mapped' => false,
             ])
             ->add('CatHouseNameErrors', TextType::class, [
                 'mapped' => false,
+            ])
+            ->add('ThumbnailPathErrors', TextType::class, [
+                'mapped' => false,
+            ])
+            ->add('ThumbnailLicensePathErrors', TextType::class, [
+                'mapped' => false,
             ]);
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateThumbnail']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Breeders::class,
+            'breeder_img' => null,
+            'license_img' => null,
         ]);
     }
 
@@ -384,6 +382,17 @@ class BreedersType extends AbstractType
         }
         if (in_array($data->getHandlingPetKind(), [AnilineConf::ANILINE_PET_KIND_DOG_CAT, AnilineConf::ANILINE_PET_KIND_CAT]) && !$data->getBreederHouseNameCat()) {
             $form['CatHouseNameErrors']->addError(new FormError('入力されていません。'));
+        }
+    }
+
+    public function validateThumbnail(FormEvent $event)
+    {
+        $form = $event->getForm();
+        if (!$event->getForm()->getConfig()->getOptions()['breeder_img']) {
+            $form['ThumbnailPathErrors']->addError(new FormError('ブリーダー様のプロフィール写真をアップロードください。'));
+        }
+        if (!$event->getForm()->getConfig()->getOptions()['license_img']) {
+            $form['ThumbnailLicensePathErrors']->addError(new FormError('動物取扱業登録証の画像をアップロードお願いします。'));
         }
     }
 }

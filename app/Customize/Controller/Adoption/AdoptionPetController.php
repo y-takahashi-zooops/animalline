@@ -185,7 +185,7 @@ class AdoptionPetController extends AbstractController
      *
      * 新規ペット追加完了メッセージ
      *
-     * @Route("/breeder/adoption/pets/new_complete", name="adoption_newpet_complete", methods={"GET","POST"})
+     * @Route("/adoption/member/pets/new_complete", name="adoption_newpet_complete", methods={"GET","POST"})
      * @Template("animalline/adoption/member/pets/notification.twig")
      */
     public function adoption_pets_new_complete()

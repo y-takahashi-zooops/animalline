@@ -152,7 +152,14 @@ class BreederMemberController extends AbstractController
             $breederData = new Breeders;
             $breederData->setId($user->getId());
         }
-        $builder = $this->formFactory->createBuilder(BreedersType::class, $breederData);
+
+        $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
+        $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
+
+        $builder = $this->formFactory->createBuilder(BreedersType::class, $breederData, array(
+            'breeder_img' => $thumbnail_path,
+            'license_img' => $license_thumbnail_path,
+        ));
         $form = $builder->getForm();
         $form->handleRequest($request);
 
@@ -161,26 +168,7 @@ class BreederMemberController extends AbstractController
         $formTemplate = $builderTemplate->getForm();
         $formTemplate->handleRequest($request);
 
-        // フォームサブミット時に、画像サムネイル情報を設定する(バリデーションは無視)
-        if ($form->isSubmitted() && $formTemplate->isValid()) {
-            $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
-            $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
-
-            $breederData->setThumbnailPath($thumbnail_path);
-            $breederData->setLicenseThumbnailPath($license_thumbnail_path);
-            $this->entityManager->persist($breederData);
-            $this->entityManager->flush();
-
-            // どちらかが空欄の場合、強制的に基本情報入力ページにリターン
-            if ($thumbnail_path == "" || $license_thumbnail_path == "") {
-                return $this->redirectToRoute('breeder_baseinfo');
-            }
-        }
-
         if ($form->isSubmitted() && $form->isValid() && $formTemplate->isSubmitted() && $formTemplate->isValid()) {
-            // $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
-            // $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
-
             $handling_pet_kind = $form->getData()->getHandlingPetKind();
 
             if ($handling_pet_kind == AnilineConf::ANILINE_PET_KIND_DOG) {
@@ -189,20 +177,10 @@ class BreederMemberController extends AbstractController
                 $breederData->setBreederHouseNameDog(null);
             }
 
-            // if (!$thumbnail_path || !$license_thumbnail_path) {
-            //     if ($thumbnail_path) {
-            //         $breederData->setThumbnailPath($thumbnail_path);
-            //     } elseif ($license_thumbnail_path) {
-            //         $breederData->setLicenseThumbnailPath($license_thumbnail_path);
-            //     }
-                
-            //     return $this->redirectToRoute('breeder_baseinfo');
-            // }
-
             $breederData->setBreederPref($breederData->getPrefBreeder())
-                ->setLicensePref($breederData->getPrefLicense());
-            // ->setThumbnailPath($thumbnail_path)
-            // ->setLicenseThumbnailPath($license_thumbnail_path);
+                ->setLicensePref($breederData->getPrefLicense())
+                ->setThumbnailPath($thumbnail_path)
+                ->setLicenseThumbnailPath($license_thumbnail_path);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederData);
             $breederPetinfoTemplate->setBreeder($breederData);
@@ -217,6 +195,8 @@ class BreederMemberController extends AbstractController
             'form' => $form->createView(),
             'formTemplate' => $formTemplate->createView(),
             'Customer' => $user,
+            'thumbnail_path' => $thumbnail_path,
+            'license_thumbnail_path' => $license_thumbnail_path
         ];
     }
 

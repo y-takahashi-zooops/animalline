@@ -160,12 +160,12 @@
 									<dd>
 										<div class="media-body">
 											<img id="img_thumbnail"
-											     class="img_preview mb-2 {{ conservation.thumbnailPath ? '' : 'hidden' }}" 
-											     src="{{ conservation.thumbnailPath }}" alt="..." 
+											     class="img_preview mb-2 {{ not thumbnail_path ? 'hidden' }}"
+											     src="{{ thumbnail_path }}" alt="..."
 											     style="width: 200px; border: 1px solid #ddd;"/>
 											{{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;' } }) }}
 											{{ form_errors(form.thumbnail_path) }}
-											<input type="hidden" name="thumbnail_path" id="adoption_src_path">
+											<input type="hidden" name="thumbnail_path" id="adoption_src_path" value="{{ thumbnail_path }}">
 										</div>
 										<a class="btn btn-ec-regular mr-2"
 										   onclick="$('#conservations_thumbnail_path').click()"
