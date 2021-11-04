@@ -1,0 +1,497 @@
+{% set site_type = 'common' %}
+{% extends 'ani_frame.twig' %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/dna/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/dna/page.css') }}">
+{% endblock %}
+
+{% block main %}
+   <div class="page-inner page-inner_dna">
+    
+    <section id="page-mv__dna" class="page-mv">
+      <div class="inner">
+        <h2><img src="{{ asset('assets/img/dna/dna-mv-title.png') }}" alt="遺伝子検査"/></h2>
+      </div>
+    </section>
+    
+    <section id="dna-content01">
+      <div class="dna-content01__title"><h3>ペットと人の絆に安心・安全を!</h3></div>
+      <div class="dna-content01__body">
+        <p><span>アニマルライン最大の特長</span>は、<br>
+        <strong>登録する子犬・子猫すべての生体に対して遺伝病DNA検査を実施</strong>し、<br>
+        <strong>ペットオーナーが安心して購入・譲受できる環境を整えること</strong>です。</p>
+      </div>
+    </section>
+    
+    <section id="dna-content02">
+      <!--div class="inner"-->
+        <div class="dna-content02__body">
+          <article class="mh">
+            <figure><img src="{{ asset('assets/img/dna/dna-icon01.png') }}" alt="遺伝子検査とは"/></figure>
+            <h2>遺伝子検査とは</h2>
+            <h3>遺伝子検査とは、<br>
+            DNAの変異（突然変異）を<br>
+            検出する検査のことを言います。</h3>
+            <p>遺伝子検査を行うことで、遺伝子の変異によって発症する<br>
+            遺伝性疾患のリスク判定が出来ます。<br>
+            親から受け継いだ変異遺伝子を検査し、<br>
+            将来発症する遺伝性の病気リスクを判定します。</p>
+          </article>
+          <article class="mh">
+            <figure><img src="{{ asset('assets/img/dna/dna-icon02.png') }}" alt="遺伝子病とは"/></figure>
+            <h2>遺伝病とは</h2>
+            <h3>遺伝病とは、<br>
+            遺伝子が変異することで発症する<br>
+            病気のことです。</h3>
+            <p>染色体や遺伝子の変異によって発症する病気です。<br>
+            親がもつ染色体や遺伝子の変異が子に伝わる（遺伝する）場合と、<br>
+            親自身には全く変異がないにもかかわらず、突然変異によって、<br>
+            子の身体の細胞、精子、卵子の遺伝子・染色体に変異が生じ<br>
+            病気になる場合があります。</p>
+          </article>
+        </div>
+      <!--/div-->
+    </section>
+    
+    <section id="dna-content03">
+      <div class="inner">
+        <div class="dna-content03__title">
+          <h2>なぜ遺伝子検査を行なうのか</h2>
+          <p>遺伝子検査を行う意義として大きく以下の3点が挙げられます。</p>
+        </div>
+        <div class="dna-content03__body">
+          <article>
+            <div class="wrap" style="margin: 0 auto 0 auto">
+            <h3>治療や生活環境の指針を示す</h3>
+            <p>例として下記のようなケースが挙げられます。</p>
+            <ul>
+              <li><i class="bi bi-check"></i>治療に使う薬によっては<br />副作用が強く出る可能性がある</li>
+              <li><i class="bi bi-check"></i>手術具の止血が難しいため、<br />輸血が必要になる</li>
+              <li><i class="bi bi-check"></i>適切な給餌や検査を知れる</li>
+            </ul>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+            <h3>発症リスクを知る</h3>
+            <p>遺伝病の発症リスクを知ることができ、<br />遺伝性疾患に対する備えができます。<br />事前にその病気のリスクを知ることで、<br />定期検診を行うとともに、早期発見につながり、<br />重症化の予防につながります。</p>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+            <h3>変異遺伝子を次世代に残さない</h3>
+            <p>遺伝情報は両親から半分ずつ子に伝達します。<br />次世代を繁殖する前に両親の遺伝子検査を<br />行うことは、遺伝性疾患を将来の世代に<br />増加させないために重要な意義があります。</p>
+            </div>
+          </article>
+        </div>
+        <div class="comment"><p>アニマルラインでは、遺伝子の検査結果によってペットの掲載可否を判定しています。</p></div>
+      </div>
+    </section>
+    
+    <section id="dna-content04">
+      <div class="inner">
+        <div class="dna-content04__title">
+          <h2>お願いする検査の流れ</h2>
+          <p>アニマルラインの実施するDNA検査は、<br>
+            子犬・子猫の口腔内粘膜を検査キットで取って送るだけです。</p>
+        </div>
+        <div class="dna-content04__body">
+          <article>
+            <div class="wrap">
+              <div class="flow-title mh">
+                <h3>生体情報を登録する</h3>
+              </div>
+              <div class="flow-body">
+                <figure><img src="{{ asset('assets/img/dna/dna-flow-img01.png') }}" alt="生体情報を登録する"/></figure>
+                <h4>スマホから</h4>
+                <p>検体登録シートの<strong>QRコードを読み取り</strong>、掲載したい生体の情報を<br />登録してください。</p>
+                <h4>PCから</h4>
+                <p>Webサイト<br /><a href="https://animalline.jp/b" target="_blank">https://animalline.jp/b</a><br />にアクセス。<br>
+                  マイページより<strong>検体登録番号を入力</strong>し、掲載したい生体情報の登録をしてください。</p>
+              </div>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+              <div class="flow-title mh">
+                <h3>登録生体の<br>
+                バーコードシールを<br>
+                貼り付ける</h3>
+              </div>
+              <div class="flow-body">
+                <figure><img src="{{ asset('assets/img/dna/dna-flow-img02.png') }}" alt="登録生体のバーコードシールを貼り付ける"/></figure>
+                <p><span>❶</span>で登録を済ませたバーコードシールを、<br /><strong>検体を入れる容器</strong>に貼付してください。</p>
+              </div>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+              <div class="flow-title mh">
+                <h3>検体識別バンドを<br>
+                  装着する</h3>
+              </div>
+              <div class="flow-body">
+                <figure><img src="{{ asset('assets/img/dna/dna-flow-img03.png') }}" alt="検体識別バンドを装着する"/></figure>
+                <p>検体登録シートの<strong>生体番号シール</strong>を、<br />同封の<strong>「検体識別バンド」に貼り</strong>、<br />生体の<strong>脚または首に装着</strong>してください。<br>
+                <small>※点線部分で後ろに織り込んでください。<br />※必要に応じて「検体識別バンド」を<br />カットして頂いても構いません。</small></p>
+              </div>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+              <div class="flow-title mh">
+                <h3>DNA検体(細胞)を<br>
+                  採取する</h3>
+              </div>
+              <div class="flow-body">
+                <figure><img src="{{ asset('assets/img/dna/dna-flow-img04.png') }}" alt="DNA検体(細胞)を採取する"/></figure>
+                <p>容器を開け、中に入っている綿棒の先で<strong>生体の頬の内側を20回以上こすり</strong>、<br />細胞を採取してください。<br>
+                  <strong>必ず1生体につき1つの綿棒</strong>を<br />お使いください。</p>
+                <div class="memo">
+                  <div class="memo-body">
+                    <p>再検査にならないように<br>
+                    ご注意ください。</p>
+                    <p><a href="#dna-content05"><i class="bi bi-chevron-right"></i> 注意事項について</a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+              <div class="flow-title mh">
+                <h3>綿棒を<br>
+                  元の容器に戻す</h3>
+              </div>
+              <div class="flow-body">
+                <figure><img src="{{ asset('assets/img/dna/dna-flow-img05.png') }}" alt="綿棒を元の容器に戻す"/></figure>
+                <p>採取した綿棒を元の容器に戻し、<br /><strong>フタをしっかりと閉めて</strong>ください。<br>
+                ※綿棒の先が人間の手等に触れないよう<br />ご注意ください。<strong>採取した検体と容器が<br />同じ生体のものかもう一度ご確認ください。</strong></p>
+                <div class="memo">
+                  <div class="memo-body">
+                    <p>検体の保管に<br>
+                    ご注意ください。</p>
+                    <p><a href="#dna-content05"><i class="bi bi-chevron-right"></i> 注意事項について</a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+              <div class="flow-title mh">
+                <h3>検体を<br>
+                  速やかに返送する</h3>
+              </div>
+              <div class="flow-body">
+                <figure><img src="{{ asset('assets/img/dna/dna-flow-img06.png') }}" alt="検体を速やかに返送する"/></figure>
+                <p>検体認識シールを貼った容器を同封の<br /><strong>返信用封筒</strong>に入れ、ご投函ください。<br>
+                  ※1枚の返信用封筒で容器6本まで同時に発送可能です。</p>
+              </div>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+              <div class="flow-title mh">
+                <h3>掲載可否をお知らせ<br>
+                  マッチングサイトに掲載</h3>
+              </div>
+              <div class="flow-body">
+                <figure><img src="{{ asset('assets/img/dna/dna-flow-img07.png') }}" alt="掲載可否をお知らせ／マッチングサイトに掲載"/></figure>
+                <p><strong>マイページに掲載可否</strong>を通知致します。<strong>「掲載可」</strong>の生体が<strong>マッチングサイトに掲載</strong>されます。<br>
+                ※結果通知までに<strong>2週間ほど</strong>お時間をいただきます。<br>
+                ※検査項目ごとの結果は開示しておりません。ご了承ください。</p>
+              </div>
+            </div>
+          </article>
+          <div class="note">
+            <h3>検体登録シートは1生体に<br>
+            つき1枚となります。<br>
+            必ず1頭ずつ、登録と採取を<br>
+            行なってください。</h3>
+            <div class="note-box">
+              <h4>詳しいお問い合わせはこちら</h4>
+              <p>アニマルライン事務局</p>
+              <div class="note-tel"><a href="tel:0353162125" class="tel-link"><img src="{{ asset('assets/img/dna/tel.png') }}" alt="お電話03-5316-2125"/></a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="dna-content05">
+      <div class="inner">
+        <div class="dna-content05__title">
+          <h2>採取における注意事項</h2>
+        </div>
+        <div class="dna-content05__body">
+          <article>
+            <div class="wrap">
+              <h3>DNA不足を防ぐための採取ポイント</h3>
+              <ul>
+                <li><i class="bi bi-check"></i>キットを口の中の頬や唇に裏側に20回ほど上下前後に動かしてください。</li>
+                <li><i class="bi bi-check"></i>キットを回転しながら強く十分にこすりつけてください。</li>
+              </ul>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+              <h3>夾雑物混入を防ぐための採取ポイント</h3>
+              <ul>
+                <li><i class="bi bi-check"></i>母親のDNAの混入を防ぐため、離乳後の検査をお願いいたします。</li>
+                <li><i class="bi bi-check"></i>他の個体の、口やおしりをなめてしまわないよう、採取前は他の個体として離してください。</li>
+                <li><i class="bi bi-check"></i>食前に水を飲ませてから採取してください。</li>
+              </ul>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+              <h3>検体の取り扱いについて</h3>
+              <ul>
+                <li><i class="bi bi-check"></i>DNA損傷の可能性があるため、水漏れ、直射日光、高温多湿を避けてください。</li>
+                <li><i class="bi bi-check"></i>口腔粘膜採取後、速やかにご返送ください。</li>
+              </ul>
+              <div class="ex">
+                <figure><img src="{{ asset('assets/img/dna/dna-flow-img09.gif') }}" alt="検体登録シート"/></figure>
+                <div class="ex-text">
+                  <h4>同封の「検体登録シート」も<br>
+                  併せてご確認ください。</h4>
+                  <p>記載されているSTEP1〜3に<br>
+                  従って、検体登録と採取を<br>
+                  お願いいたします。</p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    
+    <section id="dna-content06">
+      <div class="inner">
+        <div class="dna-content06__title">
+          <h2>遺伝のイメージ</h2>
+        </div>
+        <div class="dna-content06__body">
+          <article class="dna-content06__body_article01">
+            <div class="dna-content06__body_article_title">
+              <h3>常染色体優性（顕性）遺伝</h3>
+            </div>
+            <div class="dna-content06__body_article_body">
+              <p>遺伝子の変異が1つ（ヘテロ）でも発症する遺伝病です。<br>
+            2つ（ホモ）変異が揃うとヘテロより重篤化、高発症率、早期発症する傾向があります。例として、猫の多発性嚢胞腎症（PDK）、猫の肥大型心筋症（HCM）、スコティッシュフォールドの骨軟骨異形成（OCD）、犬のフォンヴィレブランド病のtype1（vWD type1）などが挙げられます。優性、劣性という呼び方は、遺伝子自体の優劣を指すものではありません。</p>
+              <dl>
+                <dt>ノーマル（クリア）</dt>
+                <dd>野生型のみ検出される（変異が検出されない）場合です。<br>
+                  その遺伝子変異が原因となる疾患の発症リスクは低く、またその遺伝子変異による疾患は後代に遺伝しません。</dd>
+              </dl>
+              <dl>
+                <dt>ヘテロ接合（アフェクテッド）</dt>
+                <dd>野生型と変異型の両方が検出される場合です。<br>
+ただし、常染色体優性遺伝のため、その遺伝子変異が原因となる疾患の発症リスクは高いです。繁殖においてヘテロ接合（アフェクテッド）は繁殖から外すか、ノーマル（クリア）としか交配しません。ただし、ノーマル（クリア）の個体と掛け合わせた場合でも、対象となる疾患の発症リスクが高い子が生 まれる可能性があることに留意しなければなりません。ヘテロ接合（アフェクテッド）同士の交配は一般 に禁忌とされています。</dd>
+              </dl>
+              <dl>
+                <dt>ホモ接合（アフェクテッド）</dt>
+                <dd>変異型のみ検出される場合です。<br>
+その遺伝子変異が原因となる疾患の発症リスクが高いです。ノーマル（クリア）の個体と掛け合わせた場合でも、全ての子が対象となる疾患の発症リスクが高くなるため、ホモ接合（アフェクテッド）は繁殖から外します。</dd>
+              </dl>
+            </div>
+            <div class="dna-content06__body_article_image">
+              <div class="dna-content06__body_article_image_text">
+                <p>遺伝子は父親と母親からそれぞれ受け継いだものがペアになっています。<br>
+                  右図のように片側に変異を持つ場合はヘテロ接合となり、優性遺伝の場合は片側だけでもアフェクテッドとなります。</p>
+                <figure><img src="{{ asset('assets/img/dna/dna-img01.png') }}" alt="変異ヘテロ接合"/></figure>
+              </div>
+              <figure><img src="{{ asset('assets/img/dna/dna-img03.png') }}" alt="常染色体優性（顕性）遺伝"/></figure>
+            </div>
+          </article>
+          <article class="dna-content06__body_article02">
+            <div class="dna-content06__body_article_title">
+              <h3>常染色体劣性（潜性）遺伝</h3>
+            </div>
+            <div class="dna-content06__body_article_body">
+              <p>遺伝子の変異が1つ（ヘテロ）の場合は遺伝病を発症しませんが、2つ（ホモ）の変異が揃うと発症するものを劣性遺伝病といいます。犬猫には劣性遺伝病が多いですが、変異を1つ持ったヘテロは発症しないために蔓延する可能性があります。優性、劣性という呼び方は、遺伝子自体の優劣を指すものではありません。</p>
+              <dl>
+                <dt>ノーマル（クリア）</dt>
+                <dd>野生型のみ検出される（変異が検出されない）場合です。<br>
+                その遺伝子変異が原因となる疾患の発症リスクは低いです。<br>
+                またその遺伝子変異による疾患は後代に遺伝しません。</dd>
+              </dl>
+              <dl>
+                <dt>キャリア</dt>
+                <dd>野生型と変異型の両方が検出される場合です。<br>
+                その遺伝子変異が原因となる疾患の発症リスクは低いです。<br>
+                ただし、他のキャリア、もしくはアフェクテッドの個体と掛け合わせると、対象となる疾患の発症リスクが高い子が生まれる可能性があるため、配慮が必要です。</dd>
+              </dl>
+              <dl>
+                <dt>アフェクテッド</dt>
+                <dd>変異型のみ検出される場合です。その遺伝子変異が原因となる疾患の発症リスクは高いです。 アフェクテッドは繁殖から外します。</dd>
+              </dl>
+            </div>
+            <div class="dna-content06__body_article_image">
+              <div class="dna-content06__body_article_image_text">
+                <p>遺伝子は父親と母親からそれぞれ受け継いだものがペアになっています。<br>
+                  右図のように片側に変異を持つ場合はヘテロ接合となり、劣勢遺伝の場合はキャリアと表記します。</p>
+                <figure><img src="{{ asset('assets/img/dna/dna-img02.png') }}" alt="変異キャリア"/></figure>
+              </div>
+              <figure><img src="{{ asset('assets/img/dna/dna-img04.png') }}" alt="常染色体劣性（潜性）遺伝"/></figure>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    
+    <section id="dna-content07">
+      <!--div class="inner"-->
+        <div class="dna-content07__title">
+          <h2>代表的な検査項目</h2>
+        </div>
+        <div class="dna-content07__body">
+          <article>
+            <h3>犬</h3>
+            <div class="list">
+              <p>PRA 進行性網膜萎縮症<span>分類：眼</span></p>
+              <table>
+                <tr>
+                  <th>疾患概要</th>
+                  <td>視細胞である桿体細胞や錐体細胞に変性が起き、その後網膜全体に変性が起き失明する疾患です。<br>
+                  進行性に見えにくくなり、最終的に失明する遺伝性の網膜疾患です。<br><br>
+                  【prcd、CORD1、rcd3の違い】<br>
+                  個々の疾患は、網膜の光受容体である視細胞の桿体（Rod）または錐体（Cone）のどちらの細胞が最初に罹患するかで異なります。<br>
+                  また罹患細胞の異常（Dysplasia:異形成　Degeneration:変性　Dystrophy:形成異常）によっても異なります。</td>
+                </tr>
+                  <th>発症年齢</th>
+                  <td>cord1-PRAの早発性は6カ月齢までに盲目になるが、そうでない個体の発症時期は幅広く平均5歳です。prcd-PRAの発症時期は5～8歳です。</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>GM1 ガングリオシドーシス<span>分類：神経</span></p>
+              <table>
+                <tr>
+                  <th>疾患概要</th>
+                  <td>β-ガラクトシダーゼ活性の遺伝的な異常により、脳をはじめ全身の臓器に酵素基質のGM1-ガングリオシドやアシアロGM1-ガングリオシドなどが蓄積し発症する先天性代謝異常疾患です。<br>
+                    症状として生後5～6ヶ月で歩行困難、四肢の筋緊張で1歳ほどで死亡すると言われています。</td>
+                </tr>
+                  <th>発症年齢</th>
+                  <td>生後5，6カ月齢で発症し、1～1.5歳で死亡</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>DM 変性性脊髄症<span>分類：神経</span></p>
+              <table>
+                <tr>
+                  <th>疾患概要</th>
+                  <td>最初に四肢が動かなくなり、最終的には呼吸麻痺で死亡する神経疾患の一つです。<br>
+                  原因としてはスーパーオキシドジムスターゼ1(SOD1)というタンパク質の変異遺伝子とされています。<br>
+                  発症年齢は一般的に10歳以上とされています。</td>
+                </tr>
+                  <th>発症年齢</th>
+                  <td>1～2歳で発症、急速に悪化し2歳半までに死亡</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>vWD フォンヴィレブランド病<span>分類：血液</span></p>
+              <table>
+                <tr>
+                  <th>疾患概要</th>
+                  <td>止血に必要なフォンヴィレブランド因子の量的な低下または欠損、質的な異常により止血異常を起こす疾患です。Type1は因子低下で軽い症状、Type2は質的異常、Type3は因子欠損で、Type2とType3は重症化して死亡することがあります。<br>
+                    死産、新生児の死亡、断尾・断耳などで出血延長、採血後の皮下出血が起こります。</td>
+                </tr>
+                  <th>発症年齢</th>
+                  <td>重度のタイプ２と３は３～６カ月齢で発症、タイプ１のドーベルマンの平均診断年齢は4歳</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>TNS 遺伝性好中球減少症<span>分類：血液</span></p>
+              <table>
+                <tr>
+                  <th>疾患概要</th>
+                  <td>好中球が骨髄に捕捉されるために血中の好中球が減少するために感染症にかかりやすく、生後間もない時期に死亡することが多い疾患です。<br>
+                    発症した子犬は同腹犬よりも小さく、高熱、下痢、歩行困難などが、早ければ生後2週間から遅くとも7ヶ月齢までに見られます。</td>
+                </tr>
+                  <th>発症年齢</th>
+                  <td>6週齢から発現し、多くは4，5カ月齢で死亡</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>HUU 高尿酸尿症</p>
+              <table>
+                <tr>
+                  <th>疾患概要</th>
+                  <td>尿酸再吸収の機能が低下することで、尿中に多量の尿酸を排出する疾患です。<br>
+                    高濃度の尿酸により膀胱内で結石ができ、結石により排尿時の疼痛、排尿困難により尿閉塞を引き起こす可能性があります。</td>
+                </tr>
+                  <th>発症年齢</th>
+                  <td>成犬になってから平均4～6歳齢</td>
+                </tr>
+              </table>
+            </div>
+          </article>
+          <article>
+            <h3>猫</h3>
+            <div class="list">
+              <p>PKD 多発性嚢胞腎<span>分類：泌尿器</span></p>
+              <table>
+                <tr>
+                  <th>疾患概要</th>
+                  <td>腎臓に嚢胞ができる疾患です。進行していくと腎機能が低下していきます。多くが４歳以上の猫で発症します。原因としてはポリシスチン1産生障害がみられます。</td>
+                </tr>
+                  <th>発症年齢</th>
+                  <td>4歳以上から平均７歳齢</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>PK-Def ピルビン酸キナーゼ欠損症<span>分類：神経</span></p>
+              <table>
+                <tr>
+                  <th>疾患概要</th>
+                  <td>赤血球のピルビン酸キナーゼを欠くことにより、赤血球寿命が短縮し、生後2～3ヶ月の頃に貧血を発症します。病状が進行すると元気・食欲が低下する疾患です。</td>
+                </tr>
+                  <th>発症年齢</th>
+                  <td>貧血は2，3カ月から始まるが、臨床症状は５,6カ月～3歳以前</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>OCD 骨軟骨異形成<span>分類：骨格系</span></p>
+              <table>
+                <tr>
+                  <th>疾患概要</th>
+                  <td>前足や後ろ足の足首に骨瘤ができ、脚を引きずって歩くようになったり、あまり運動しなくなったりします。</td>
+                </tr>
+                  <th>発症年齢</th>
+                  <td>X線検査による骨異形成はホモ変異で7週齢、ヘテロ変異で6カ月齢から診断可能</td>
+                </tr>
+              </table>
+            </div>
+          </article>
+        </div>
+      <!--/div-->
+    </section>
+
+    <section id="dna-content08">
+      <!--div class="inner"-->
+        <div class="dna-content08__title">
+          <h2>検査機関について</h2>
+          <p>株式会社VEQTA<br>
+            <a href="https://www.veqta.jp/" target="_blank">https://www.veqta.jp/</a></p>
+          <p>〒541-0041<br>
+          大阪府大阪市中央区北浜1丁目9番10号<br>
+          北浜宗田ビル 201号</p>
+          <figure><a href="https://www.veqta.jp/" target="_blank"><img src="{{ asset('assets/img/dna/veqta.png') }}" alt="株式会社VEQTA"/></a></figure>
+        </div>
+      <!--/div-->
+    </section>
+
+    </div>
+{% endblock %}
+{% block javascript %}{% endblock %}
+
+    

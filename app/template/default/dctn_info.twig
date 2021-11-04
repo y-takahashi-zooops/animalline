@@ -1,0 +1,138 @@
+{% set site_type = 'common' %}
+{% extends 'ani_frame.twig' %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/dna/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/dna/page.css') }}">
+{% endblock %}
+
+{% block main %}
+    <div class="page-inner">
+    
+    <section id="page-mv__trainer" class="page-mv">
+      <div class="inner">
+        <div class="wrap">
+          <h2><img src="{{ asset('assets/img/trainer/logo.gif') }}" alt="ペットの家庭教師"/></h2>
+          <p>オンラインしつけトレーニング</p>
+        </div>
+      </div>
+    </section>
+    
+    <section id="trainer-content01">
+      <p><img src="{{ asset('assets/img/trainer/trainer-copy01.png') }}" alt="パピーのしつけは、はじめが大切!"/></p>
+    </section>
+    
+    <section id="trainer-content02">
+      <div class="inner">
+        <div class="wrap">
+        <h3><img src="{{ asset('assets/img/trainer/trainer-title01.png') }}" alt="ペットの家庭教師とは？"/></h3>
+        <p>犬のトイレの失敗や吠え癖、噛み癖などの問題は家の中の環境が原因で起きているケースが多々あります。<br>
+  人と同様、犬にも性格・個体差・感情があり、その子の個性、学習スピードに合わせたトレーニングで問題にアプローチすることが大切です。</p>
+        <p>「ペットの家庭教師」オンラインしつけトレーニングは、生活環境や個性を確認のうえ、オンラインで子犬のお悩みを解決するプライベートしつけトレーニングをご提供します。</p>
+        </div>
+      </div>
+    </section>
+    
+    <section id="trainer-content03">
+      <div class="trainer-content03__title">
+        <h3><img src="{{ asset('assets/img/trainer/trainer-title02.png') }}" alt="子犬の個性・住環境に合わせたプライベート・レッスン"/></h3>
+      </div>
+      <div class="trainer-content03__body">
+        <h4>オンラインしつけトレーニング</h4>
+        <p>集団行動では分かりにくい子犬の個性把握やご自宅の住環境に合わせたトレーニングが重要です。<br>
+          特定のしつけでお悩みの飼い主様におすすめです。<br>
+          <img src="{{ asset('assets/img/trainer/line.png') }}" style="width: 50px" />や<img src="{{ asset('assets/img/trainer/zoom.png') }}" style="width: 50px" />を用いて、ご自宅でお気軽にしつけ相談が可能です。</p>
+        <div class="price">
+          <p>1時間<strong>6,000円</strong><small>(税込)</small></p>
+        </div>
+        <div class="btn btn-dog"><a href="https://user.dc-trainers.net/owregistration" target="_blank"><span>お申し込みはこちら<i class="bi bi-chevron-right"></i></span></a></div>
+      </div>
+    </section>
+    
+    <section id="trainer-content04">
+      <div class="trainer-content04__title">
+        <h3><img src="{{ asset('assets/img/trainer/trainer-title03.png') }}" alt="子犬期からの早期レッスン。“社会化期”からのしつけレッスン"/></h3>
+      </div>
+      <div class="trainer-content04__body">
+        <p>生後3ヶ月過ぎまでの「社会化期」がしつけ適齢期と言われており、<br>
+          子犬が「社会化期」にしつけを受けずに育つと<br>
+          青年期以降（生後4ヶ月半以降）問題行動が出やすくなり、<br>
+          抑制・矯正が難しくなります。</p>
+        <div class="image">
+          <figure><img src="{{ asset('assets/img/trainer/trainer-img01.jpeg') }}" alt="しつけは「社会期」が重要"/></figure>
+        </div>
+        <p>子犬には一日も早い「しつけトレーニング」が必要です。<br>
+          社会化期は好奇心旺盛ですが、生後3ヶ月を過ぎると警戒心が顔をのぞき始め、<br>
+          4ヶ月を過ぎると好奇心よりも警戒心・不安感が強くなり、吠えや噛みつきに発展します。<br>
+          子犬が「しつけトレーニング」を受けずに「社会化期」を過ぎると、<br>
+          その後の問題抑制、しつけ矯正が難しくなります。</p>
+        <h4><span>社会化期をどう過ごすかによって、その子の性格は決まります。</span></h4>
+        <div class="btn btn-dog"><a href="https://user.dc-trainers.net/owregistration" target="_blank"><span>お申し込みはこちら<i class="bi bi-chevron-right"></i></span></a></div>
+      </div>
+    </section>
+    
+    <section id="trainer-content05">
+      <div class="trainer-content05__title">
+        <h3><img src="{{ asset('assets/img/trainer/trainer-title04.png') }}" alt="成約特典あり。オンラインしつけセミナー"/></h3>
+        <p><span>アニマルラインでマッチング</span><br>
+        <span>ご成約されたオーナー様がご参加いただけます</span></p>
+      </div>
+      <div class="trainer-content05__body">
+        <div class="seminar">
+          <dl>
+            <dt>セミナー内容</dt>
+            <dd><i class="bi bi-check-circle"></i>社会化期とは</dd>
+            <dd><i class="bi bi-check-circle"></i>トイレを教えるときのポイント</dd>
+            <dd><i class="bi bi-check-circle"></i>噛んできたときの対処法</dd>
+            <dd><i class="bi bi-check-circle"></i>お散歩に連れて行くタイミング</dd>
+          </dl>
+          <p>など</p>
+        </div>
+        <h4>オンラインしつけセミナーでは、<br>
+          子犬を飼う際の基本をレクチャーいたします</h4>
+      </div>
+    </section>
+    
+    <section id="trainer-content06">
+      <div class="inner">
+        <div class="trainer-content06__title">
+          <h3>開催日時</h3>
+          <table>
+            <tr>
+              <th>第1回</th>
+              <td>11.20(sat) 13:00〜</td>
+            </tr>
+            <tr>
+              <th>第2回</th>
+              <td>12.8(wed) 11:00〜</td>
+            </tr>
+            <tr>
+              <th>第3回</th>
+              <td>12.25(sat) 13:00〜</td>
+            </tr>
+          </table>
+          <p>定期的に開催いたしますので、ご都合のいい日にご参加ください。</p>
+        </div>
+      </div>
+    </section>
+    
+    <section id="trainer-content07">
+      <div class="inner">
+        <div class="trainer-content07__title">
+          <h3><img src="{{ asset('assets/img/trainer/trainer-title05.png') }}" alt="ペットの家庭教師自宅出張型しつけトレーニング"/></h3>
+        </div>
+        <div class="trainer-content07__body">
+          <p>ご自宅にうかがい、生活環境や個性を確認のうえ、<br>
+            プライベート・しつけトレーニングをご提供できる<br>
+            <strong>ご自宅出張型「訪問トレーニング」</strong>も実施しております。</p>
+          <p><small>※関東地域限定</small></p>
+          <div class="btn btn-dog"><a href="https://dc-trainers.net/" target="_blank"><span>詳しくはこちら<i class="bi bi-chevron-right"></i></span></a></div>
+        </div>
+      </div>
+    </section>
+      
+    </div>
+{% endblock %}
+{% block javascript %}{% endblock %}
+
+    

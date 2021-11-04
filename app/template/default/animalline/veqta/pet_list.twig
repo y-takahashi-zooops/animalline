@@ -22,6 +22,7 @@
                     <thead>
                     <tr class="heading">
                         <th class="border-top-0 pt-2 pb-2">No.</th>
+                        <th class="border-top-0 pt-2 pb-2">送付者名</th>
                         <th class="border-top-0 pt-2 pb-2">犬・猫種別</th>
                         <th class="border-top-0 pt-2 pb-2">犬種・猫種</th>
                         <th class="border-top-0 pt-2 pb-2">生年月日</th>
@@ -34,6 +35,7 @@
                         <tr>
                             <td class="id"
                                 data-label="No">{{ (dna.site_type == constant('Customize\\Config\\AnilineConf::SITE_CATEGORY_BREEDER') ? '1' : '2') ~ "%05d"|format(dna.dna_id) }}</td>
+                            <td data-label="送付者名">{{ dna.shipping_name }}</td>
                             <td data-label="犬・猫種別">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
                             <td data-label="犬種・猫種">{{ dna.breeds_name ?: '_' }}</td>
                             <td data-label="生年月日">{{ dna.pet_birthday ? dna.pet_birthday | date('Y/m/d') : '_' }}</td>

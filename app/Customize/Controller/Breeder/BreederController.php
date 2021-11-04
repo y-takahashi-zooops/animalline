@@ -123,20 +123,22 @@ class BreederController extends AbstractController
         $this->mailService = $mailService;
     }
 
-    /**
-     * @Route("/breeder/reg", name="breeder_reg")
-     * @Template("animalline/breeder/reg_index.twig")
-     */
-    public function breeder_index_reg(Request $request)
-    {
-        return[];
-
-    }
 
     /**
      * Page Breeder
      *
      * @Route("/breeder/", name="breeder_top")
+     * @Template("animalline/breeder/reg_index.twig")
+     */
+    public function breeder_index_reg(Request $request)
+    {
+        return[];
+    }
+
+    /**
+     * Page Breeder
+     *
+     * @Route("/breeder_tmp/", name="breeder_top_tmp")
      * @Template("animalline/breeder/index.twig")
      */
     public function breeder_index(Request $request)

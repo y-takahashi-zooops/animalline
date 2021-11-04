@@ -38,7 +38,7 @@ class CustomTopController extends AbstractController
      */
     public function animalline_index()
     {
-        //return $this->redirectToRoute("breeder_top");
+        return $this->redirectToRoute("breeder_top");
         
         return [];
     }
@@ -87,6 +87,25 @@ class CustomTopController extends AbstractController
         return [];
     }
 
+    /**
+     * ＤＮＡ検査の説明
+     * 
+     * @Route("/dnainfo", name="ani_dna_info")
+     * @Template("dnainfo.twig")
+     */
+    public function dna_detail(){
+        return [];
+    }
+
+    /**
+     * ＤＣＴＮの説明
+     * 
+     * @Route("/dctn", name="ani_dctn_info")
+     * @Template("dctn_info.twig")
+     */
+    public function dctn_info(){
+        return [];
+    }
 
     /**
      * @Route("/contact", name="ani_contact")

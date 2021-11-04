@@ -53,21 +53,23 @@ class VeqtaQueryService
         $queryConservation = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'dna.pet_id = cp.id')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
+            ->leftJoin('Customize\Entity\DnaCheckStatusHeader', 'dnah', 'WITH', 'dna.DnaHeader = dnah.id')
             ->where('dna.check_status IN (:status)')
             ->andWhere('dna.site_type = :site_type')
             ->setParameter('site_type', AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
             ->setParameter('status', $filter_status ?: $status)
-            ->select('dna.id as dna_id, dna.site_type, b.pet_kind, b.breeds_name, cp.pet_birthday, dna.check_status, dna.kit_pet_register_date, dna.update_date');
+            ->select('dna.id as dna_id, dna.site_type, b.pet_kind, b.breeds_name, cp.pet_birthday, dna.check_status, dna.kit_pet_register_date, dna.update_date, dnah.shipping_name');
         $resultConservation = $queryConservation->getQuery()->getArrayResult();
 
         $queryBreeder = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'dna.pet_id = bp.id')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
+            ->leftJoin('Customize\Entity\DnaCheckStatusHeader', 'dnah', 'WITH', 'dna.DnaHeader = dnah.id')
             ->where('dna.check_status IN (:status)')
             ->andWhere('dna.site_type = :site_type')
             ->setParameter('site_type', AnilineConf::ANILINE_SITE_TYPE_BREEDER)
             ->setParameter('status', $filter_status ?: $status)
-            ->select('dna.id as dna_id, dna.site_type, b.pet_kind, b.breeds_name, bp.pet_birthday, dna.check_status, dna.kit_pet_register_date, dna.update_date');
+            ->select('dna.id as dna_id, dna.site_type, b.pet_kind, b.breeds_name, bp.pet_birthday, dna.check_status, dna.kit_pet_register_date, dna.update_date, dnah.shipping_name');
         $resultBreeder = $queryBreeder->getQuery()->getArrayResult();
 
         $totalResult = array_merge($resultBreeder, $resultConservation);

@@ -923,6 +923,11 @@ class MailService
     public function sendMailContractCancel(\Eccube\Entity\Customer $Customer, array $data)
     {
         $body = $this->twig->render('Mail/mail_contract_cancel.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'data' => $data
+        ]);
+
+        $message = (new \Swift_Message())
             ->setSubject('[' . $this->BaseInfo->getShopName() . '] 審査結果通知')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
@@ -949,7 +954,8 @@ class MailService
         return $this->mailer->send($message, $failures);
     }
 
-    * ＶＥＱＴＡ検査結果通知メール送信
+    /**
+     * ＶＥＱＴＡ検査結果通知メール送信
      *
      * @param \Eccube\Entity\Customer $Customer
      * @param $data
