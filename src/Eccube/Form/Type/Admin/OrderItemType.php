@@ -200,7 +200,10 @@ class OrderItemType extends AbstractType
                     $TaxRule = $this->taxRuleRepository->getByRule();
                 }
 
-                $OrderItem['tax_rate'] = $TaxRule->getTaxRate();
+                //後で元に戻す。
+                //$OrderItem['tax_rate'] = $TaxRule->getTaxRate();
+                $OrderItem['tax_rate'] = 0;
+                //後で元に戻す。
                 $event->setData($OrderItem);
             }
         });

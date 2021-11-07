@@ -20,6 +20,7 @@ use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\InstockScheduleRepository;
 use Customize\Entity\InstockSchedule;
 use Customize\Repository\SupplierRepository;
+use Customize\Command\ExportInstockSchedule;
 use Eccube\Controller\AbstractController;
 use Eccube\Form\Type\Admin\SearchProductType;
 use Exception;
@@ -31,6 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Entity\OrderItem;
 use Eccube\Repository\Master\OrderItemTypeRepository;
+use Eccube\Repository\ProductStockRepository;
 
 class ProductInstockController extends AbstractController
 {
@@ -55,23 +57,39 @@ class ProductInstockController extends AbstractController
     protected $orderItemTypeRepository;
 
     /**
+     * @var ExportInstockSchedule
+     */
+    protected $exportInstockSchedule;
+
+    /**
+     * @var ProductStockRepository
+     */
+    protected $productStockRepository;
+
+    /**
      * ProductInstockController constructor.
      *
      * @param SupplierRepository $supplierRepository
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      * @param InstockScheduleRepository $instockScheduleRepository
      * @param OrderItemTypeRepository $orderItemTypeRepository
+     * @param ExportInstockSchedule $exportInstockSchedule
+     * @param ProductStockRepository $productStockRepository
      */
     public function __construct(
         SupplierRepository              $supplierRepository,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
-        OrderItemTypeRepository         $orderItemTypeRepository
+        OrderItemTypeRepository         $orderItemTypeRepository,
+        ExportInstockSchedule           $exportInstockSchedule,
+        ProductStockRepository          $productStockRepository
     ) {
         $this->supplierRepository = $supplierRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
         $this->instockScheduleRepository = $instockScheduleRepository;
         $this->orderItemTypeRepository = $orderItemTypeRepository;
+        $this->exportInstockSchedule = $exportInstockSchedule;
+        $this->productStockRepository = $productStockRepository;
     }
 
     /**
@@ -117,6 +135,19 @@ class ProductInstockController extends AbstractController
             'supplier' => $supplier,
             'count' => $count
         ];
+    }
+
+    /**
+     * WMSに入荷情報を送信する
+     *
+     * @Route("/%eccube_admin_route%/product/sendwms", name="admin_product_instock_send_wms")
+     * 
+     */
+    public function instock_send_wms()
+    {
+        $this->exportInstockSchedule->exportInstock();
+
+        return $this->redirectToRoute('admin_product_instock_list');
     }
 
     /**
@@ -168,6 +199,7 @@ class ProductInstockController extends AbstractController
                 $item->setId($schedule->getId());
                 $item->setOrderItemType($this->orderItemTypeRepository->find(1));
                 $item->setQuantity($schedule->getArrivalQuantitySchedule());
+                $item->setTaxRate($schedule->getArrivalQuantity());
                 $item->setPrice($schedule->getProductClass()->getItemCost());
                 $item->setProduct($schedule->getProductClass()->getProduct());
                 $item->setProductClass($schedule->getProductClass());
@@ -214,6 +246,11 @@ class ProductInstockController extends AbstractController
                     log_info('受注登録開始', [$TargetInstock->getId()]);
                     if ($form->isValid()) {
                         $TargetInstock->setInstockSchedule(); // clear temp orderitem data
+                        if(!$id){
+                            $TargetInstock->setIsSendWms(0);
+                            $TargetInstock->setIsCommit(0);
+                        }
+
                         $this->entityManager->persist($TargetInstock);
                         $this->entityManager->flush();
 
@@ -224,24 +261,39 @@ class ProductInstockController extends AbstractController
                         }
                         foreach ($items as $key => $item) {
                             array_push($idScheduleReq, $item['id']);
+
+                            $pc = $item->getProductClass();
+
                             if ($item['id']) {
                                 $InstockSchedule = $this->instockScheduleRepository->find($item['id']);
-                                $InstockSchedule->setJanCode($item->getProductCode())
+                                $InstockSchedule->setJanCode($pc->getJanCode())
+                                    ->setItemCode01($item->getProductCode())
                                     ->setPurchasePrice($subTotalPrices[$key])
                                     ->setArrivalQuantitySchedule($item->getQuantity())
-                                    ->setProductClass($item->getProductClass());
+                                    ->setArrivalQuantity($item->getTaxRate())
+                                    ->setProductClass($pc);
                             } else {
                                 $InstockSchedule = (new InstockSchedule())
                                     ->setInstockHeader($TargetInstock)
-                                    ->setWarehouseCode('00001')
-                                    ->setItemCode01('')
-                                    ->setItemCode02('')
-                                    ->setJanCode($item->getProductCode())
+                                    ->setWarehouseCode($pc->getStockCode())
+                                    ->setItemCode01($item->getProductCode())
+                                    ->setItemCode02('9999')
+                                    ->setJanCode($pc->getJanCode())
                                     ->setPurchasePrice($subTotalPrices[$key])
                                     ->setArrivalQuantitySchedule($item->getQuantity())
-                                    ->setProductClass($item->getProductClass());
+                                    ->setArrivalQuantity($item->getTaxRate())
+                                    ->setProductClass($pc);
                             }
                             $this->entityManager->persist($InstockSchedule);
+
+                            if($TargetInstock->getIsCommit() == 1){
+                                $ProductStock = $this->productStockRepository->findOneBy(['ProductClass' => $pc]);
+                                $ProductStock->setStock($ProductStock->getStock() + $InstockSchedule->getArrivalQuantity());
+
+                                $pc->setStock($ProductStock->getStock());
+                                $this->entityManager->persist($ProductStock);
+                                $this->entityManager->persist($pc);
+                            }
                         }
                         foreach ($idScheduleDb as $item) {
                             if (!in_array($item, $idScheduleReq)) {

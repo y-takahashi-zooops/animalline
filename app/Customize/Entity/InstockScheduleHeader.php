@@ -50,6 +50,16 @@ class InstockScheduleHeader
     private $remark_text;
 
     /**
+     * @ORM\Column(name="is_send_wms", type="smallint", nullable=false, options={"default" = 0})
+     */
+    private $is_send_wms;
+
+    /**
+     * @ORM\Column(name="is_commit", type="smallint", nullable=false, options={"default" = 0})
+     */
+    private $is_commit;
+
+    /**
      * @ORM\Column(name="is_cancel", type="smallint", nullable=false, options={"default" = 0})
      */
     private $is_cancel = 0;
@@ -180,6 +190,30 @@ class InstockScheduleHeader
     public function setIsCancel(int $is_cancel): self
     {
         $this->is_cancel = $is_cancel;
+
+        return $this;
+    }
+
+    public function getIsSendWms(): ?int
+    {
+        return $this->is_send_wms;
+    }
+
+    public function setIsSendWms(int $is_send_wms): self
+    {
+        $this->is_send_wms = $is_send_wms;
+
+        return $this;
+    }
+
+    public function getIsCommit(): ?int
+    {
+        return $this->is_commit;
+    }
+
+    public function setIsCommit(int $is_commit): self
+    {
+        $this->is_commit = $is_commit;
 
         return $this;
     }

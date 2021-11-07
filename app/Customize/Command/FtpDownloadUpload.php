@@ -21,6 +21,8 @@ class FtpDownloadUpload extends Command
      */
     protected $io;
 
+    protected $ftp;
+
     /**
      * FTP download upload constructor.
      */
@@ -44,59 +46,74 @@ class FtpDownloadUpload extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $HOST = env('FTP_HOST', 'test.rebex.net');
+        $USERNAME = env('FTP_USERNAME', 'demo');
+        $PASSWORD = env('FTP_PASSWORD', 'password');
+
+        $download_dir_remote = "/OUT/";
+        $download_dir_local = 'var/tmp/wms/receive/';
+
+        $this->ftp = ftp_ssl_connect($HOST);
+        if (!$this->ftp) {
+            throw new Exception('サーバ（'.$HOST.'）が見つかりませんでした。');
+        }
+
+        if (!ftp_login($this->ftp, $USERNAME, $PASSWORD)) {
+            throw new Exception('ログインに失敗しました。');
+        }
+
+        // turn on passive mode
+        if(!ftp_pasv($this->ftp, true)){
+            throw new Exception('PASVモードに設定できませんでした');
+        }
+        if(!ftp_set_option($this->ftp, FTP_USEPASVADDRESS, true)){
+            throw new Exception('PASVモードオプションが設定できませんでした');
+        }
+
         $this->ftpDownload();
 
-        $productDir = 'items/';
-        $shippingDir = 'shipping_schedule/';
-        $instockDir = 'instock_schedule/';
-        $returnDir = 'return_schedule/';
-
-        $this->ftpUpload($productDir);
-        $this->ftpUpload($shippingDir);
-        $this->ftpUpload($instockDir);
-        $this->ftpUpload($returnDir);
-
+        $upload_dirs = ['items/','shipping_schedule/','instock_schedule/','return_schedule/'];
+        foreach ($upload_dirs as $upload_dir) {
+            $this->ftpUpload($upload_dir);
+        }
+        ftp_close($this->ftp);
         echo "Successful.\n";
     }
 
     /**
      * @throws Exception
      */
-    private function ftpDownload(string $remoteDir = '/OUT/', string $localDir = 'var/tmp/wms/receive/'): void
+    private function ftpDownload(): void
     {
-        $HOST = env('FTP_HOST', 'test.rebex.net');
-        $USERNAME = env('FTP_USERNAME', 'demo');
-        $PASSWORD = env('FTP_PASSWORD', 'password');
+        $download_dir_remote = "/OUT/";
+        $download_dir_local = 'var/tmp/wms/receive/';
 
-        $ftp = ftp_connect($HOST);
-        if (!$ftp || !ftp_login($ftp, $USERNAME, $PASSWORD)) {
-            throw new Exception('access failed');
+        //ファイル取得
+        if(!ftp_chdir($this->ftp, $download_dir_remote)) {
+            throw new Exception('/OUTディレクトリに移動できません。');
         }
-
-        // turn on passive mode
-        ftp_pasv($ftp, true);
-
-        // scan remote files
-        $finder = Finder::create()->files()->depth('== 0')->in("ftp://$USERNAME:$PASSWORD@$HOST" . $remoteDir);
 
         // create folder on local to save downloaded files if not exist
-        if (!file_exists($localDir) && !mkdir($localDir, 0777, true)) {
-            throw new Exception("Can't create directory.");
+        if (!file_exists($download_dir_local) && !mkdir($download_dir_local, 0777, true)) {
+            throw new Exception("ダウンロードフォルダが作成できません。");
         }
 
-        foreach ($finder as $file) {
-            $localPath = $localDir . $file->getFilename();
-            $remotePath = $remoteDir . $file->getFilename();
+        $nlist = ftp_nlist($this->ftp, ".");
+        if ($nlist === false) {
+            throw new Exception('ファイル一覧が取得できません。');
+        }
+
+        foreach ($nlist as $file) {
+            $localPath = $download_dir_local . $file;
+            $remotePath = $download_dir_remote . $file;
             // download a file
-            if (ftp_get($ftp, $localPath, $remotePath, FTP_BINARY)) {
-                //ftp_delete($ftp, $remotePath); // delete remote file TODO: UNCOMMENT ON REAL FTP SERVER
+            if (ftp_get($this->ftp, $localPath, $remotePath, FTP_BINARY)) {
+                ftp_delete($this->ftp, $remotePath);
                 echo "download success: from $remotePath to $localPath\n";
             } else {
                 echo "download failed: from $remotePath to $localPath\n";
             }
         }
-
-        ftp_close($ftp);
     }
 
     /**
@@ -104,11 +121,12 @@ class FtpDownloadUpload extends Command
      */
     private function ftpUpload(string $directory, string $remoteDir = '/IN/'): void
     {
-        $HOST = env('FTP_HOST', 'ftp.dlptest.com');
-        $USERNAME = env('FTP_USERNAME', 'dlpuser');
-        $PASSWORD = env('FTP_PASSWORD', 'rNrKYTX9g7z3RgJRmxWuGHbeu');
-
         $localDir = $this->tmpWmsDir . $directory;
+
+         // create new folder on local to save moved files from old folder
+         if (!file_exists($localDir) && !mkdir($localDir, 0777, true)) {
+             throw new Exception("Can't create directory.");
+         }
 
         // scan local files
         $fileNames = [];
@@ -124,17 +142,8 @@ class FtpDownloadUpload extends Command
             return;
         }
 
-        $ftp = ftp_connect($HOST);
-        if (!$ftp || !ftp_login($ftp, $USERNAME, $PASSWORD)) {
-            throw new Exception('access failed');
-        }
-
-        // turn on passive mode
-        ftp_pasv($ftp, true);
-
-        // create folder on remote to save uploaded files if not exist
-        if (!ftp_nlist($ftp, $remoteDir)) {
-            ftp_mkdir($ftp, $remoteDir);
+        if(!ftp_chdir($this->ftp, $remoteDir)) {
+            throw new Exception('/INディレクトリに移動できません。');
         }
 
         // create new folder on local to save moved files from old folder
@@ -147,7 +156,7 @@ class FtpDownloadUpload extends Command
             $localPath = $localDir . $fileName;
             $remotePath = $remoteDir . $fileName;
             // upload a file
-            if (ftp_put($ftp, $remotePath, $localPath, FTP_ASCII)) {
+            if (ftp_put($this->ftp, $remotePath, $localPath, FTP_ASCII)) {
                 // delete local file
                 //unlink($localPath);
                 rename($localPath, $newLocalDir . $fileName); // move files
@@ -156,7 +165,5 @@ class FtpDownloadUpload extends Command
                 echo "upload failed: from $localPath to $remotePath\n";
             }
         }
-
-        ftp_close($ftp);
     }
 }

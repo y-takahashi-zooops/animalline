@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class InstockScheduleHeaderType extends AbstractType
 {
@@ -47,7 +48,7 @@ class InstockScheduleHeaderType extends AbstractType
                 'years' => range(date('Y')-1, date('Y')),
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
-                'data' => new DateTime(),
+                //'data' => new DateTime(),
             ])
             ->add('supplier_code', ChoiceType::class, [
                 'placeholder' => 'common.select',
@@ -61,10 +62,18 @@ class InstockScheduleHeaderType extends AbstractType
                 'years' => range(date('Y')-1, date('Y')),
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
-                'data' => new DateTime(),
+                //'data' => new DateTime(),
             ])
             ->add('remark_text', TextareaType::class, [
                 'required' => false,
+            ])
+            ->add('is_commit', ChoiceType::class, [
+                'choices' => [
+                    '在庫に実績を反映しない' => 0,
+                    '在庫に実績を反映する' => 1,
+                ],
+                'expanded' => false,
+                'required' => true,
             ])
             ->add('InstockSchedule', CollectionType::class, [
                 'entry_type' => OrderItemType::class,

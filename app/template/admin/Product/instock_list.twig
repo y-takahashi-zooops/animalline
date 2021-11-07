@@ -78,7 +78,12 @@ file that was distributed with this source code.
             $('#instock_list_arrival_date_schedule_day').removeAttr('disabled')
         }
       });
-       
+
+    function confirmSendWMS(){
+        if(confirm('入荷データを送信しますか？')){
+            location.href="{{url('admin_product_instock_send_wms')}}";
+        }
+    }
 </script>
 {% endblock %}
 
@@ -193,7 +198,9 @@ file that was distributed with this source code.
                                     <th class="border-top-0 pt-2 pb-2">発注日</th>
                                     <th class="border-top-0 pt-2 pb-2">入荷予定日</th>
                                     <th class="border-top-0 pt-2 pb-2">入荷日</th>
-                                    <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
+                                    <th class="border-top-0 pt-2 pb-2">WMS送信</th>
+                                    <th class="border-top-0 pt-2 pb-2">在庫反映</th>
+                                    <th class="border-top-0 pt-2 pb-2 pr-3" colspan="2"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -205,7 +212,9 @@ file that was distributed with this source code.
                                         <td class="align-middle">{{ instock.orderDate | date('Y/m/d') }}</td>
                                         <td class="align-middle">{{ instock.arrivalDateSchedule | date('Y/m/d') }}</td>
                                         <td class="align-middle">{{ instock.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
-                                        <td class="align-middle pr-3" colspan="3">
+                                        <td class="align-middle">{{ instock.isSendWms == 0 ? '未' : '済' }}</td>
+                                        <td class="align-middle">{{ instock.isCommit == 0 ? '未' : '済' }}</td>
+                                        <td class="align-middle pr-3" colspan="2">
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                      data-placement="top" title="編集">
@@ -232,6 +241,8 @@ file that was distributed with this source code.
                     </div>
                 </form>
             </div>
+            <button class="btn btn-ec-conversion px-5" type="button" onClick="confirmSendWMS()">入荷予定をWMSに送信</button>
+
             <div class="navigation float-right">
                 {{ knp_pagination_render(instocks) }}
             </div>

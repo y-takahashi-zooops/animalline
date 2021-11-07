@@ -73,8 +73,8 @@ class ImportInstockSchedule extends Command
 
     protected function configure()
     {
-        $this->addArgument('fileName', InputArgument::REQUIRED, 'The fileName to import.')
-            ->setDescription('Import csv instock schedule.');
+        //$this->addArgument('fileName', InputArgument::REQUIRED, 'The fileName to import.')
+        //    ->setDescription('Import csv instock schedule.');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -95,50 +95,73 @@ class ImportInstockSchedule extends Command
         $em->getConfiguration()->setSQLLogger(null);
         $em->getConnection()->beginTransaction();
 
-        $csvpath = "var/tmp/wms/receive/" . $input->getArgument('fileName');
-
-        // ファイルが指定されていれば続行
-        if (!$csvpath) {
-            throw new Exception('Error: File path is required');
+        // ファイル一覧取得
+        $localDir = "var/tmp/wms/receive/";
+        $fileNames = [];
+        if ($handle = opendir($localDir)) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry !== '.' && $entry !== '..') {
+                    if(preg_match("/^NKOJIS_/", $entry)){
+                        $fileNames[] = $entry;
+                    }
+                }
+            }
+            closedir($handle);
         }
-
-        $fp = fopen($csvpath, 'r');
-        if ($fp === FALSE) {
-            //エラー
-            throw new Exception('Error: Failed to open file');
+        if (!$fileNames) {
+            return;
         }
+        
+        // ファイル一覧取得ここまで
+        foreach ($fileNames as $fileName) {
+            $csvpath = $localDir . $fileName;
 
-        log_info('商品CSV取込開始');
-
-        // CSVファイルの登録処理
-        while (($data = fgetcsv($fp)) !== FALSE) {
-            $headerId = $data[0];
-            $instockId = $data[5];
-            $Header = $this->instockScheduleHeaderRepository->find($headerId);
-
-            if (!$Header) {
-                continue;
-            }
-            $Header->setArrivalDate($data[11] ? new DateTime($data[11]) : NULL);
-            $em->persist($Header);
-            $Instock = $this->instockScheduleRepository->findOneBy(['id' => $instockId, 'InstockHeader' => $headerId]);
-            if ($Instock) {
-                $Instock->setItemCode01($data[8])
-                    ->setArrivalQuantity($data[12] ? $data[12] : NULL);
-                $ProductStock = $this->productStockRepository->findOneBy(['ProductClass' => $Instock->getProductClass()]);
-                $ProductStock->setStock($ProductStock->getStock() + $Instock->getArrivalQuantity());
-                $em->persist($Instock);
-                $em->persist($ProductStock);
+            // ファイルが指定されていれば続行
+            if (!$csvpath) {
+                throw new Exception('Error: File path is required');
             }
 
-            // 端数分を更新
-            try {
-                $em->flush();
-                $em->getConnection()->commit();
-            } catch (Exception $e) {
-                $em->getConnection()->rollback();
-                throw $e;
+            $fp = fopen($csvpath, 'r');
+            if ($fp === FALSE) {
+                //エラー
+                throw new Exception('Error: Failed to open file');
             }
+
+            log_info('商品CSV取込開始');
+
+            // CSVファイルの登録処理
+            while (($data = fgetcsv($fp)) !== FALSE) {
+                $headerId = $data[0];   //ヘッダのID
+                $instockId = $data[8];  //アイテムコード
+                $Header = $this->instockScheduleHeaderRepository->find($headerId);
+
+                if (!$Header) {
+                    log_info('ID ['.$data[0].'] が見つかりません');
+                    continue;
+                }
+
+                $Header->setArrivalDate(DateTime::createFromFormat("Ymd",$data[11]));
+                $em->persist($Header);
+                $Instock = $this->instockScheduleRepository->findOneBy(['InstockHeader' => $Header, 'item_code_01' => $instockId]);
+                if ($Instock) {
+                    $Instock->setArrivalQuantity($data[12] ? $data[12] : NULL);
+                    //$ProductStock = $this->productStockRepository->findOneBy(['ProductClass' => $Instock->getProductClass()]);
+                    //$ProductStock->setStock($ProductStock->getStock() + $Instock->getArrivalQuantity());
+                    $em->persist($Instock);
+                    //$em->persist($ProductStock);
+                }
+
+                // 端数分を更新
+                try {
+                    $em->flush();
+                    $em->getConnection()->commit();
+                } catch (Exception $e) {
+                    $em->getConnection()->rollback();
+                    throw $e;
+                }
+            }
+            $logWmsDir = 'var/log/wms/';
+            rename($csvpath, $logWmsDir . $fileName); // move files
         }
 
         log_info('商品CSV取込完了');

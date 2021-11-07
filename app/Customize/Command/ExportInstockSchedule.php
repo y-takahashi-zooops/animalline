@@ -80,9 +80,13 @@ class ExportInstockSchedule extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->exportInstock();
+    }
+
+    public function exportInstock(){
         $now = Carbon::now();
         $fields = [
-            'invoiceNumber', 'invoiceDate', 'supplierCode', 'supplierName', 'boxNumber',
+            'invoiceNumber', 'invoiceDate', 'supplierCode', 'boxNumber',
             'lineNumber', 'warehouseCode', 'stockDate', 'productNumberCode', 'colorCode',
             'sizeCode', 'jANCode', 'FOB', 'quantity', 'caseQuantity', 'BBDATE', 'remarks'
         ];
@@ -93,31 +97,37 @@ class ExportInstockSchedule extends Command
             's.supplier_code as supplierCode',
             's.supplier_name as supplierName',
             'isd.warehouse_code as warehouseCode',
+            'ihd.order_date as orderDate',
             'ihd.arrival_date_schedule as stockDate',
-            'isd.jan_code as productNumberCode',
+            'isd.item_code_01 as productNumberCode',
             'isd.jan_code as jANCode',
             'isd.arrival_quantity_schedule as quantity',
             'isd.arrival_quantity_schedule as caseQuantity'
         )
             ->innerJoin('isd.InstockHeader', 'ihd')
             ->leftJoin('Customize\Entity\Supplier', 's', 'WITH', 'ihd.supplier_code = s.supplier_code')
-            ->where('isd.update_date <= :to')
-            ->setParameters(['to' => $now])
+            //->where('isd.update_date <= :to')
+            ->where('ihd.is_send_wms = 0')
+            //->setParameters(['to' => $now])
             ->orderBy('isd.update_date', 'DESC');
         $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_INSTOCK_SCHEDULE], ['sync_date' => 'DESC']);
+        /*
         if ($syncInfo) {
             $qb = $qb->andWhere('isd.update_date >= :from')
                 ->setParameter('from', $syncInfo->getSyncDate());
         }
+        */
         $records = $qb->getQuery()->getArrayResult();
 
         if (!$records) {
-            echo "No record instock export csv.\n";
+            log_info("No record instock export csv.\n");
             return;
         }
         $result = [];
         foreach ($records as $record) {
-            $record['invoiceDate'] = null;
+            $header = $this->instockScheduleHeaderRepository->find($record["invoiceNumber"]);
+
+            $record['invoiceDate'] = $record['orderDate']->format('Ymd');;
             $record['boxNumber'] = null;
             $record['lineNumber'] = null;
             $record['colorCode'] = 9999;
@@ -125,13 +135,16 @@ class ExportInstockSchedule extends Command
             $record['FOB'] = null;
             $record['BBDATE'] = null;
             $record['remarks'] = null;
-            $record['stockDate'] = $record['stockDate']->format('Y-m-d');
+            $record['stockDate'] = $record['stockDate']->format('Ymd');
 
             $sorted = [];
             foreach ($fields as $value) {
                 $sorted[] = $record[$value];
             }
             $result[] = $sorted;
+
+            $header->setIsSendWms(true);
+            $this->entityManager->persist($header);
         }
 
         $dir = 'var/tmp/wms/instock_schedule/';
@@ -153,6 +166,7 @@ class ExportInstockSchedule extends Command
         $em->persist($wms);
         $em->flush();
 
-        echo "Export succeeded.\n";
+        log_info("Export succeeded.\n");
+
     }
 }
