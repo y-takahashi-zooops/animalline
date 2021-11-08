@@ -140,17 +140,19 @@ class ImportInstockSchedule extends Command
                     continue;
                 }
 
-                $Header->setArrivalDate(DateTime::createFromFormat("Ymd",$data[11]));
-                $em->persist($Header);
-                $Instock = $this->instockScheduleRepository->findOneBy(['InstockHeader' => $Header, 'item_code_01' => $instockId]);
-                if ($Instock) {
-                    $Instock->setArrivalQuantity($data[12] ? $data[12] : NULL);
-                    //$ProductStock = $this->productStockRepository->findOneBy(['ProductClass' => $Instock->getProductClass()]);
-                    //$ProductStock->setStock($ProductStock->getStock() + $Instock->getArrivalQuantity());
-                    $em->persist($Instock);
-                    //$em->persist($ProductStock);
+                if($data[11] != "") {
+                    $Header->setArrivalDate(DateTime::createFromFormat("Ymd",$data[11]));
+                    $em->persist($Header);
+                
+                    $Instock = $this->instockScheduleRepository->findOneBy(['InstockHeader' => $Header, 'item_code_01' => $instockId]);
+                    if ($Instock) {
+                        $Instock->setArrivalQuantity($data[12] ? $data[12] : NULL);
+                        //$ProductStock = $this->productStockRepository->findOneBy(['ProductClass' => $Instock->getProductClass()]);
+                        //$ProductStock->setStock($ProductStock->getStock() + $Instock->getArrivalQuantity());
+                        $em->persist($Instock);
+                        //$em->persist($ProductStock);
+                    }
                 }
-
                 // 端数分を更新
                 try {
                     $em->flush();
