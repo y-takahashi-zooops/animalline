@@ -184,7 +184,7 @@ class ImportShippingSchedule extends Command
             }
 
             $logWmsDir = 'var/log/wms/';
-            //rename($csvpath, $logWmsDir . $fileName); // move files
+            rename($csvpath, $logWmsDir . $fileName); // move files
         }
 
         // 端数分を更新
