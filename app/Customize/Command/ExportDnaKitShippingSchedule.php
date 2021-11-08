@@ -8,6 +8,8 @@ use Customize\Entity\WmsSyncInfo;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Repository\WmsSyncInfoRepository;
+use Eccube\Repository\ProductClassRepository;
+use Eccube\Repository\ProductStockRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -46,24 +48,41 @@ class ExportDnaKitShippingSchedule extends Command
     protected $dnaCheckStatusRepository;
 
     /**
+     * @var ProductClassRepository
+     */
+    protected $productClassRepository;
+
+    /**
+     * @var ProductStockRepository
+     */
+    protected $productStockRepository;
+
+
+    /**
      * Export DNA kit shipping schedule constructor.
      *
      * @param EntityManagerInterface $entityManager
      * @param WmsSyncInfoRepository $wmsSyncInfoRepository
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
+     * @param ProductClassRepository $productClassRepository
+     * @param ProductStockRepository $productStockRepository
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         WmsSyncInfoRepository $wmsSyncInfoRepository,
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
-        DnaCheckStatusRepository $dnaCheckStatusRepository
+        DnaCheckStatusRepository $dnaCheckStatusRepository,
+        ProductClassRepository $productClassRepository,
+        ProductStockRepository $productStockRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
+        $this->productClassRepository = $productClassRepository;
+        $this->productStockRepository = $productStockRepository;
     }
 
     protected function configure()
@@ -130,6 +149,14 @@ class ExportDnaKitShippingSchedule extends Command
             return;
         }
 
+        $em = $this->entityManager;
+        // 自動コミットをやめ、トランザクションを開始
+        $em->getConnection()->setAutoCommit(false);
+
+        // sql loggerを無効にする.
+        $em->getConfiguration()->setSQLLogger(null);
+        $em->getConnection()->beginTransaction();
+
         $rows = [];
         $dnaHeaderIds = [];
 
@@ -168,6 +195,18 @@ class ExportDnaKitShippingSchedule extends Command
                 if($i > 0) {
                     $record['kit_unit'] = 1;
                 }
+
+                //在庫チェック
+                $pc = $this->productClassRepository->findOneBy(['code' => $item_code[$i]]);
+                $ps = $this->productStockRepository->findOneBy(['ProductClass' => $pc]);
+                if($ps->getStock() < $record['kit_unit']){
+                    throw new Exception("出荷に必要な在庫が不足しています。");
+                }
+                $ps->setStock($ps->getStock() - $record['kit_unit']);
+                $pc->setStock($ps->getStock());
+                $em->persist($ps);
+                $em->persist($pc);
+
                 $row = [];
                 foreach ($cols as $col) {
                     $row[] = $record[$col] ?? null; // null for blank field
@@ -193,8 +232,6 @@ class ExportDnaKitShippingSchedule extends Command
         }
         fclose($csvFile);
 
-        $em = $this->entityManager;
-
         // reduce query duplicate records
         $uniqIds = array_unique($dnaHeaderIds);
         foreach ($uniqIds as $id) {
@@ -208,7 +245,15 @@ class ExportDnaKitShippingSchedule extends Command
             ->setSyncDate($now)
             ->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
         $em->persist($Wms);
-        $em->flush();
+
+        // 端数分を更新
+        try {
+            $em->flush();
+            $em->getConnection()->commit();
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+            throw $e;
+        }
 
         echo "Export succeeded.\n";
     }

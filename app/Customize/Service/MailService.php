@@ -979,4 +979,29 @@ class MailService
 
         return $this->mailer->send($message, $failures);
     }
+
+    /**
+     * ＶＥＱＴＡ検査結果通知メール送信
+     *
+     * @param $data
+     * @return int
+     */
+    public function sendDnaKitSendComplete($email, $data)
+    {
+        $body = $this->twig->render('Mail/dna_kit_send_complete.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'data' => $data
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('['.$this->BaseInfo->getShopName().'] DNA検査キット発送完了通知')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$email])
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
 }

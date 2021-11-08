@@ -4,6 +4,7 @@ namespace Customize\Command;
 
 use Customize\Repository\ShippingScheduleHeaderRepository;
 use Customize\Repository\ShippingScheduleRepository;
+use Customize\Repository\DnaCheckStatusHeaderRepository;
 use DateTime;
 use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,7 +14,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Eccube\Repository\MemberRepository;
+use Eccube\Repository\CustomerRepository;
 use Symfony\Component\Console\Input\InputArgument;
+use Customize\Config\AnilineConf;
+use Customize\Service\MailService;
 
 class ImportShippingSchedule extends Command
 {
@@ -45,28 +49,51 @@ class ImportShippingSchedule extends Command
     protected $shippingScheduleRepository;
 
     /**
+     * @var DnaCheckStatusHeaderRepository
+     */
+    protected $dnaCheckStatusHeaderRepository;
+
+    /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
+     * @var MailService
+     */
+    protected $mailService;
+
+    /**
      * Import shipping schedule constructor.
      *
      * @param EntityManagerInterface $entityManager
      * @param ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository
      * @param ShippingScheduleRepository $shippingScheduleRepository
-     *
+     * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+     * @param CustomerRepository $customerRepository
+     * @param MailService $mailService
      */
     public function __construct(
         EntityManagerInterface           $entityManager,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
-        ShippingScheduleRepository       $shippingScheduleRepository
+        ShippingScheduleRepository       $shippingScheduleRepository,
+        DnaCheckStatusHeaderRepository       $dnaCheckStatusHeaderRepository,
+        CustomerRepository       $customerRepository,
+        MailService       $mailService
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->shippingScheduleHeaderRepository = $shippingScheduleHeaderRepository;
         $this->shippingScheduleRepository = $shippingScheduleRepository;
+        $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
+        $this->customerRepository = $customerRepository;
+        $this->mailService = $mailService;
     }
 
     protected function configure()
     {
-        $this->addArgument('fileName', InputArgument::REQUIRED, 'The fileName to import.')
-            ->setDescription('Import csv shipping schedule.');
+        //$this->addArgument('fileName', InputArgument::REQUIRED, 'The fileName to import.')
+        //    ->setDescription('Import csv shipping schedule.');
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
@@ -91,10 +118,27 @@ class ImportShippingSchedule extends Command
         $em->getConfiguration()->setSQLLogger(null);
         $em->getConnection()->beginTransaction();
 
-        $csvpath = "var/tmp/wms/receive/" . $input->getArgument('fileName');
+        // ファイル一覧取得
+        $localDir = "var/tmp/wms/receive/";
+        $fileNames = [];
+        if ($handle = opendir($localDir)) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry !== '.' && $entry !== '..') {
+                    if(preg_match("/^SHUJIS_/", $entry)){
+                        $fileNames[] = $entry;
+                    }
+                }
+            }
+            closedir($handle);
+        }
+        if (!$fileNames) {
+            return;
+        }
 
-        // ファイルが指定されていれば続行
-        if ($csvpath) {
+        // ファイル一覧取得ここまで
+        foreach ($fileNames as $fileName) {
+            $csvpath = "var/tmp/wms/receive/" . $fileName;
+
             $fp = fopen($csvpath, 'r');
             if ($fp === false) {
                 //エラー
@@ -105,25 +149,42 @@ class ImportShippingSchedule extends Command
 
             // CSVファイルの登録処理
             while (($data = fgetcsv($fp)) !== false) {
-                // ヘッダー行(1行目)はスキップ
-                $dateShipping = new DateTime($data[2]);
-                $shippingHeader = $this->shippingScheduleHeaderRepository->find($data[0]);
-                if (!$shippingHeader) {
-                    continue;
-                }
-                $shippingHeader->setShippingDate($dateShipping)
-                    ->setWmsShipNo($data[4]);
-                $em->persist($shippingHeader);
 
-                try {
-                    $em->flush();
-                    $em->getConnection()->commit();
-                    // $em->clear();
-                } catch (Exception $e) {
-                    $em->getConnection()->rollback();
-                    throw $e;
+                if(substr($data[1],0,1) == "5"){
+                    //キット実績
+                    $id = intval(substr($data[1],1));
+
+                    $header = $this->dnaCheckStatusHeaderRepository->find($id);
+                    $customer = $this->customerRepository->find($header->getRegisterId());
+
+                    $header->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_SHIPPED);
+                    $em->persist($header);
+
+                    $data = ["name" => $header->getShippingName()];
+                    $this->mailService->sendDnaKitSendComplete($customer->getEmail(),$data);
+                }
+                else{
+                    $dateShipping = new DateTime($data[2]);
+                    $shippingHeader = $this->shippingScheduleHeaderRepository->find($data[0]);
+                    if (!$shippingHeader) {
+                        continue;
+                    }
+                    $shippingHeader->setShippingDate($dateShipping)
+                        ->setWmsShipNo($data[4]);
+                    $em->persist($shippingHeader);
                 }
             }
+            try {
+                $em->flush();
+                $em->getConnection()->commit();
+                // $em->clear();
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                throw $e;
+            }
+
+            $logWmsDir = 'var/log/wms/';
+            //rename($csvpath, $logWmsDir . $fileName); // move files
         }
 
         // 端数分を更新
