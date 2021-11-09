@@ -200,6 +200,7 @@ file that was distributed with this source code.
                                     <th class="border-top-0 pt-2 pb-2">入荷日</th>
                                     <th class="border-top-0 pt-2 pb-2">WMS送信</th>
                                     <th class="border-top-0 pt-2 pb-2">在庫反映</th>
+                                    <th class="border-top-0 pt-2 pb-2">注文商品</th>
                                     <th class="border-top-0 pt-2 pb-2 pr-3" colspan="2"></th>
                                 </tr>
                                 </thead>
@@ -214,6 +215,7 @@ file that was distributed with this source code.
                                         <td class="align-middle">{{ instock.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
                                         <td class="align-middle">{{ instock.isSendWms == 0 ? '未' : '済' }}</td>
                                         <td class="align-middle">{{ instock.isCommit == 0 ? '未' : '済' }}</td>
+                                        <td class="align-middle"></td>
                                         <td class="align-middle pr-3" colspan="2">
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"

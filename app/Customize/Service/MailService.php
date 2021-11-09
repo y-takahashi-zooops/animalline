@@ -972,6 +972,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] DNA検査完了通知')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$this->BaseInfo->getEmail01()])
+            ->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -997,6 +998,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] DNA検査キット発送完了通知')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$email])
+            ->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
