@@ -215,7 +215,7 @@ file that was distributed with this source code.
                                         <td class="align-middle">{{ instock.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
                                         <td class="align-middle">{{ instock.isSendWms == 0 ? '未' : '済' }}</td>
                                         <td class="align-middle">{{ instock.isCommit == 0 ? '未' : '済' }}</td>
-                                        <td class="align-middle"></td>
+                                        <td class="align-middle">{{ instock.remarkText }}</td>
                                         <td class="align-middle pr-3" colspan="2">
                                             <div class="text-right">
                                                 <div class="px-1 d-inline-block text-center" data-tooltip="true"
