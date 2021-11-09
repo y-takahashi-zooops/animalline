@@ -14,6 +14,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Customize\Service\ProductStockService;
 
 class ExportInstockSchedule extends Command
 {
@@ -45,24 +46,32 @@ class ExportInstockSchedule extends Command
     protected $instockScheduleRepository;
 
     /**
+     * @var ProductStockService
+     */
+    protected $productStockService;
+
+    /**
      * ExportRelease constructor.
      *
      * @param EntityManagerInterface $entityManager
      * @param WmsSyncInfoRepository $wmsSyncInfoRepository
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      * @param InstockScheduleRepository $instockScheduleRepository
+     * @param ProductStockService $productStockService
      */
     public function __construct(
         EntityManagerInterface          $entityManager,
         WmsSyncInfoRepository           $wmsSyncInfoRepository,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
-        InstockScheduleRepository       $instockScheduleRepository
+        InstockScheduleRepository       $instockScheduleRepository,
+        ProductStockService       $productStockService
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
         $this->instockScheduleRepository = $instockScheduleRepository;
+        $this->productStockService = $productStockService;
     }
 
     protected function configure()

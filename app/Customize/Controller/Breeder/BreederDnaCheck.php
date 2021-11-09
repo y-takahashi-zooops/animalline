@@ -196,12 +196,19 @@ class BreederDnaCheck extends AbstractController
         }
         $form = $builder->getForm();
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $dnaCheckStatusHeader->setRegisterId($this->getUser()->getId())
                 ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
                 ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
                 ->setShippingPref($dnaCheckStatusHeader->getPrefShipping());
+
+                $shippingdate = new \DateTime();
+                if(date("h") >= 14){
+                    $shippingdate->modify('+1 days');
+                }
+                $dnaCheckStatusHeader->setKitShippingDate($shippingdate);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($dnaCheckStatusHeader);
             $entityManager->flush();

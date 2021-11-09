@@ -18,6 +18,7 @@ use Eccube\Repository\CustomerRepository;
 use Symfony\Component\Console\Input\InputArgument;
 use Customize\Config\AnilineConf;
 use Customize\Service\MailService;
+use Customize\Service\ProductStockService;
 
 class ImportShippingSchedule extends Command
 {
@@ -64,6 +65,11 @@ class ImportShippingSchedule extends Command
     protected $mailService;
 
     /**
+     * @var ProductStockService
+     */
+    protected $productStockService;
+
+    /**
      * Import shipping schedule constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -72,6 +78,7 @@ class ImportShippingSchedule extends Command
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      * @param CustomerRepository $customerRepository
      * @param MailService $mailService
+     * @param ProductStockService $productStockService
      */
     public function __construct(
         EntityManagerInterface           $entityManager,
@@ -79,7 +86,8 @@ class ImportShippingSchedule extends Command
         ShippingScheduleRepository       $shippingScheduleRepository,
         DnaCheckStatusHeaderRepository       $dnaCheckStatusHeaderRepository,
         CustomerRepository       $customerRepository,
-        MailService       $mailService
+        MailService       $mailService,
+        ProductStockService       $productStockService
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -88,6 +96,7 @@ class ImportShippingSchedule extends Command
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->customerRepository = $customerRepository;
         $this->mailService = $mailService;
+        $this->productStockService = $productStockService;
     }
 
     protected function configure()
@@ -158,6 +167,8 @@ class ImportShippingSchedule extends Command
                     $customer = $this->customerRepository->find($header->getRegisterId());
 
                     $header->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_SHIPPED);
+                    $header->setKitShippingOperationDate(new \DateTime());
+
                     $em->persist($header);
 
                     $data = ["name" => $header->getShippingName()];

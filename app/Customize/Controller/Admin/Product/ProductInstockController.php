@@ -33,6 +33,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Entity\OrderItem;
 use Eccube\Repository\Master\OrderItemTypeRepository;
 use Eccube\Repository\ProductStockRepository;
+use Customize\Service\ProductStockService;
 
 class ProductInstockController extends AbstractController
 {
@@ -67,6 +68,12 @@ class ProductInstockController extends AbstractController
     protected $productStockRepository;
 
     /**
+     * @var ProductStockService
+     */
+    protected $productStockService;
+
+
+    /**
      * ProductInstockController constructor.
      *
      * @param SupplierRepository $supplierRepository
@@ -75,6 +82,7 @@ class ProductInstockController extends AbstractController
      * @param OrderItemTypeRepository $orderItemTypeRepository
      * @param ExportInstockSchedule $exportInstockSchedule
      * @param ProductStockRepository $productStockRepository
+     * @param ProductStockService $productStockService
      */
     public function __construct(
         SupplierRepository              $supplierRepository,
@@ -82,7 +90,8 @@ class ProductInstockController extends AbstractController
         InstockScheduleRepository       $instockScheduleRepository,
         OrderItemTypeRepository         $orderItemTypeRepository,
         ExportInstockSchedule           $exportInstockSchedule,
-        ProductStockRepository          $productStockRepository
+        ProductStockRepository          $productStockRepository,
+        ProductStockService          $productStockService
     ) {
         $this->supplierRepository = $supplierRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
@@ -90,6 +99,7 @@ class ProductInstockController extends AbstractController
         $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->exportInstockSchedule = $exportInstockSchedule;
         $this->productStockRepository = $productStockRepository;
+        $this->productStockService = $productStockService;
     }
 
     /**
@@ -286,13 +296,9 @@ class ProductInstockController extends AbstractController
                             }
                             $this->entityManager->persist($InstockSchedule);
 
+                            //在庫反映
                             if($TargetInstock->getIsCommit() == 1){
-                                $ProductStock = $this->productStockRepository->findOneBy(['ProductClass' => $pc]);
-                                $ProductStock->setStock($ProductStock->getStock() + $InstockSchedule->getArrivalQuantity());
-
-                                $pc->setStock($ProductStock->getStock());
-                                $this->entityManager->persist($ProductStock);
-                                $this->entityManager->persist($pc);
+                                $this->productStockService->calculateStock($this->entityManager,$pc,$InstockSchedule->getArrivalQuantity());
                             }
                         }
                         foreach ($idScheduleDb as $item) {

@@ -17,6 +17,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Customize\Service\ProductStockService;
 
 class ExportDnaKitShippingSchedule extends Command
 {
@@ -57,6 +58,10 @@ class ExportDnaKitShippingSchedule extends Command
      */
     protected $productStockRepository;
 
+    /**
+     * @var ProductStockService
+     */
+    protected $productStockService;
 
     /**
      * Export DNA kit shipping schedule constructor.
@@ -67,6 +72,7 @@ class ExportDnaKitShippingSchedule extends Command
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      * @param ProductClassRepository $productClassRepository
      * @param ProductStockRepository $productStockRepository
+     * @param ProductStockService $productStockService
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -74,7 +80,8 @@ class ExportDnaKitShippingSchedule extends Command
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
         DnaCheckStatusRepository $dnaCheckStatusRepository,
         ProductClassRepository $productClassRepository,
-        ProductStockRepository $productStockRepository
+        ProductStockRepository $productStockRepository,
+        ProductStockService $productStockService
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -83,6 +90,7 @@ class ExportDnaKitShippingSchedule extends Command
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->productClassRepository = $productClassRepository;
         $this->productStockRepository = $productStockRepository;
+        $this->productStockService = $productStockService;
     }
 
     protected function configure()
@@ -198,14 +206,11 @@ class ExportDnaKitShippingSchedule extends Command
 
                 //在庫チェック
                 $pc = $this->productClassRepository->findOneBy(['code' => $item_code[$i]]);
-                $ps = $this->productStockRepository->findOneBy(['ProductClass' => $pc]);
-                if($ps->getStock() < $record['kit_unit']){
+                if($pc->getStock() < $record['kit_unit']){
                     throw new Exception("出荷に必要な在庫が不足しています。");
                 }
-                $ps->setStock($ps->getStock() - $record['kit_unit']);
-                $pc->setStock($ps->getStock());
-                $em->persist($ps);
-                $em->persist($pc);
+
+                $this->productStockService->calculateStock($em, $pc, -$record['kit_unit']);
 
                 $row = [];
                 foreach ($cols as $col) {
