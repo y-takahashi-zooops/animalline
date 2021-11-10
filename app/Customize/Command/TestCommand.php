@@ -94,10 +94,13 @@ class TestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        print intval(date("h"));
+        /*
         $em = $this->entityManager;
         $pc = $this->productClassRepository->find(13);
         
         //$this->productStockService->calculateStock($em,$pc,1);
         $this->productStockService->setStock($em,$pc,20);
+        /*
     }
 }
