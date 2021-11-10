@@ -1,5 +1,6 @@
 {% set site_type = 'common' %}
-{% extends 'ani_frame.twig' %}
+{% set base_template = 'breeder_frame.twig' %}
+{% extends base_template %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/dna/common.css') }}">

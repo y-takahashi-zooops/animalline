@@ -177,6 +177,17 @@ class BreederDnaCheck extends AbstractController
      *
      * 検査キット請求
      *
+     * @Route("/breeder/member/dna_kit/info", name="breeder_examination_kit_info", methods={"GET","POST"})
+     * @Template("animalline/breeder/member/examination_kit_info.twig")
+     */
+    public function breeder_examination_kit_info(Request $request)
+    {
+        return[];
+    }
+    /**
+     *
+     * 検査キット請求
+     *
      * @Route("/breeder/member/dna_kit/new", name="breeder_examination_kit_new", methods={"GET","POST"})
      * @Template("animalline/breeder/member/examination_kit_form.twig")
      */
@@ -206,7 +217,7 @@ class BreederDnaCheck extends AbstractController
                 date_default_timezone_set('Asia/Tokyo');
                 $shippingdate = new \DateTime();
                 //if(date("h") >= 5){
-                    $shippingdate->modify('+1 days');
+                    //$shippingdate->modify('+1 days');
                 //}
                 $dnaCheckStatusHeader->setKitShippingDate($shippingdate);
 

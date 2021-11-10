@@ -1,0 +1,23 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+{% set params = app.request.query.all %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-lg-8 col-md-12" style="margin: 5rem auto 5rem auto;">
+            <img src="{{ asset('assets/img/reg/pet_regist_info02.png') }}" alt="ペットの家庭教師"/>
+
+            <div class="col-12">
+                <a href="{{url('breeder_examination_kit_new')}}" style="padding: 1rem 0.5rem;margin-top:1rem" class="btn btn-warning btn-block" role="button">STEP 1：DNA検査キット請求はこちら</a>
+            </div>
+        </div>
+        
+    </div>
+{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
