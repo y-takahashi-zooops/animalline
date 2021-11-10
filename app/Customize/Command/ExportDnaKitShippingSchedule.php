@@ -176,7 +176,7 @@ class ExportDnaKitShippingSchedule extends Command
             $record['shipping_zip'] = substr($record['shipping_zip'],0,3) . "-" . substr($record['shipping_zip'],3);
             for($i=0;$i<4;$i++){
                 $record['delivery_instruction_no'] = $dnaNo;
-                $record['expected_shipping_date'] = $nextDay;
+                $record['expected_shipping_date'] = date("Ymd");
                 $record['warehouse_code'] = '00001';
                 $record['sale_category'] = 0;
                 $record['slip_type'] = 0;
