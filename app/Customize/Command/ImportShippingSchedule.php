@@ -140,6 +140,7 @@ class ImportShippingSchedule extends Command
             }
             closedir($handle);
         }
+var_dump($fileNames);
         if (!$fileNames) {
             return;
         }
