@@ -203,6 +203,7 @@ class BreederDnaCheck extends AbstractController
                 ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
                 ->setShippingPref($dnaCheckStatusHeader->getPrefShipping());
 
+                date_default_timezone_set('Asia/Tokyo');
                 $shippingdate = new \DateTime();
                 if(date("h") >= 14){
                     $shippingdate->modify('+1 days');
