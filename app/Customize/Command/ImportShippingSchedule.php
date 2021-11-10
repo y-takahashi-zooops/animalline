@@ -162,7 +162,7 @@ class ImportShippingSchedule extends Command
                 if(substr($data[1],0,1) == "5"){
                     //キット実績
                     $id = intval(substr($data[1],1));
-
+var_dump($id);
                     $header = $this->dnaCheckStatusHeaderRepository->find($id);
                     $customer = $this->customerRepository->find($header->getRegisterId());
 
