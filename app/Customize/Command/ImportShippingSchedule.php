@@ -160,10 +160,10 @@ var_dump($fileNames);
             // CSVファイルの登録処理
             while (($data = fgetcsv($fp)) !== false) {
 
-                if(substr($data[1],0,1) == "5"){
+                if(substr($data[0],0,1) == "5"){
                     //キット実績
-                    $id = intval(substr($data[1],1));
-var_dump($id);
+                    $id = intval(substr($data[0],1));
+
                     $header = $this->dnaCheckStatusHeaderRepository->find($id);
                     $customer = $this->customerRepository->find($header->getRegisterId());
 
@@ -176,7 +176,7 @@ var_dump($id);
                     $this->mailService->sendDnaKitSendComplete($customer->getEmail(),$data);
                 }
                 else{
-                    $dateShipping = new DateTime($data[2]);
+                    $dateShipping = new DateTime($data[1]);
                     $shippingHeader = $this->shippingScheduleHeaderRepository->find($data[0]);
                     if (!$shippingHeader) {
                         continue;
