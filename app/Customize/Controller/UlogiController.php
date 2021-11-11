@@ -100,7 +100,8 @@ class UlogiController extends AbstractController
         $i=1;
         foreach($dnas as $dna){
             $datas[$i] = [
-                'barcode' =>  $dna->getSiteType().sprintf('%05d',$dna->getId())
+                'barcode' =>  $dna->getSiteType().sprintf('%05d',$dna->getId()),
+                'setno' => sprintf('%06d',$header->getId())
             ];
 
             $i++;
@@ -127,6 +128,7 @@ class UlogiController extends AbstractController
             'address01' => $header->getShippingPref().$header->getShippingCity(),
             'address02' => $header->getShippingAddress(),
             'name' => $header->getShippingName(),
+            'setno' => sprintf('%06d',$header->getId())
         ]);
     }
 
