@@ -28,7 +28,7 @@
             {% if user.is_breeder == 1 %}
                 <div class="m-2 p-2"></div>
                 <h1>ブリーダー様管理メニュー</h1>
-                 <div class="row">
+                <div class="row">
                     <div class="col-lg-4 col-md-12 text-center">
                         <a href="{{url('breeder_examination_kit')}}" class="btn btn-success btn-block mt-3" role="button">DNA検査キット請求</a>
                         <span style="color: red;">生体掲載をご希望の方はこちら</span>
@@ -43,8 +43,8 @@
                         <a href="{{url('breeder_all_breeder_message')}}" class="btn btn-warning btn-block mt-3" role="button">お問い合わせ対応</a>
                     </div>
                 </div>
-               {% if breeder %}
-                   <div class="m-2 p-2"></div>
+                {% if breeder %}
+                    <div class="m-2 p-2"></div>
                     <h1>登録情報編集</h1>
                     <div class="row">
                         <div class="col-lg-4 col-md-12">
