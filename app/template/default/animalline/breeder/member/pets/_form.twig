@@ -3,25 +3,23 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.pet_kind, 'ペット種別', { 'label_attr': {'class': 'ec-label' }}) }}
-            <span class="ec-required">必須</span>  
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
-        {{ form_widget(form.pet_kind, { 'attr': { 'onchange': 'petKindChange();' }}) }}
-        {{ form_errors(form.pet_kind) }}
+            {{ form_widget(form.pet_kind, { 'attr': { 'onchange': 'petKindChange();' }}) }}
+            {{ form_errors(form.pet_kind) }}
         </div>
     </div>
-
     <div class="row mb-3">
         <div class="col-md-3">
-        {{ form_label(form.breeds_type, '犬種(猫種)', { 'label_attr': {'class': 'ec-label' }}) }}
-        <span class="ec-required">必須</span>  
+            {{ form_label(form.breeds_type, '犬種(猫種)', { 'label_attr': {'class': 'ec-label' }}) }}
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
-        {{ form_widget(form.breeds_type) }}
-        {{ form_errors(form.breeds_type) }}
+            {{ form_widget(form.breeds_type) }}
+            {{ form_errors(form.breeds_type) }}
         </div>
     </div>
-
     <div class="row">
         <div class="col-md-3">
             {{ form_label(form.thumbnail_path, 'ペット画像', { 'label_attr': {'class': 'ec-label' }}) }}
@@ -87,58 +85,58 @@
 
     <div class="row mb-3">
         <div class="col-md-3">
-        {{ form_label(form.pet_sex, '性別', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            {{ form_label(form.pet_sex, '性別', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
         </div>
         <div class="col-md-8 ec-input ec-select">
-        {{ form_widget(form.pet_sex) }}
-        {{ form_errors(form.pet_sex) }}
+            {{ form_widget(form.pet_sex) }}
+            {{ form_errors(form.pet_sex) }}
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-        {{ form_label(form.pet_sex, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-        <span class="ec-required">必須</span>  
+            {{ form_label(form.pet_birthday, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
-        {{ form_widget(form.pet_birthday.year) }}<span>&nbsp;/&nbsp;</span>
-        {{ form_widget(form.pet_birthday.month) }}<span>&nbsp;/&nbsp;</span>
-        {{ form_widget(form.pet_birthday.day) }}
-        {{ form_errors(form.pet_birthday) }}
+            {{ form_widget(form.pet_birthday.year) }}<span>&nbsp;/&nbsp;</span>
+            {{ form_widget(form.pet_birthday.month) }}<span>&nbsp;/&nbsp;</span>
+            {{ form_widget(form.pet_birthday.day) }}
+            {{ form_errors(form.pet_birthday) }}
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-        {{ form_label(form.band_color, 'バンドカラー', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-        <span class="ec-required">必須</span>
-        <p style="font-size:14px;color:#DE5D50;">
-            遺伝病DNA検査で使用した<br />
-            検体識別バンドのカラーを選択してください。<br />
-            キット同封の"検体採取方法のご案内"の③をご確認ください。
-        </p>
+            {{ form_label(form.band_color, 'バンドカラー', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>
+            <p style="font-size:14px;color:#DE5D50;">
+                遺伝病DNA検査で使用した<br />
+                検体識別バンドのカラーを選択してください。<br />
+                キット同封の"検体採取方法のご案内"の③をご確認ください。
+            </p>
         </div>
         <div class="col-md-8 ec-input ec-select">
-        {{ form_widget(form.band_color) }}
-        {{ form_errors(form.band_color) }}
+            {{ form_widget(form.band_color) }}
+            {{ form_errors(form.band_color) }}
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-        {{ form_label(form.coat_color, '毛色', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-        <span class="ec-required">必須</span>  
+            {{ form_label(form.coat_color, '毛色', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-input ec-select">
-        {{ form_widget(form.coat_color) }}
-        {{ form_errors(form.coat_color) }}
+            {{ form_widget(form.coat_color) }}
+            {{ form_errors(form.coat_color) }}
         </div>
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-        {{ form_label(form.future_wait, '成犬時予想体重「kg」', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            {{ form_label(form.future_wait, '成犬時予想体重「kg」', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span>
         </div>
         <div class="col-md-3 ec-input">
-        {{ form_widget(form.future_wait) }}
-        {{ form_errors(form.future_wait) }}
+            {{ form_widget(form.future_wait) }}
+            {{ form_errors(form.future_wait) }}
         </div>
     </div>
     <div class="row mb-3">
@@ -303,7 +301,6 @@
         </div>
         <div class="col-md-4"></div>
     </div>
-
 {{ form_end(form, {'render_rest': false}) }}
 
 <div class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">

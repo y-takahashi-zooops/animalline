@@ -47,7 +47,7 @@
                     </div>
                     <div class="breeder-info col-12">
                         <h3 class="font-weight-500 color-gray-500 mb-4">{{ Customer.name01 }}{{ Customer.name02 }}</h3>
-                    </div>  #}
+                    </div> #}
 
                     <div class="breeder_section_header">
                         {% if message.contactType == 1 %}
@@ -112,8 +112,7 @@
                                         <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">返信メッセージ送信</button>
                                         ここに取引が完了した際の報告で特典が受けられることの説明を表記する
                                         <div class="d-flex flex-sm-column flex-md-row justify-content-between">
-                                                <button {{ message.ConservationCheck ? 'disabled' }} type="button" class="ec-blockBtn--action mt-2" id="contract">取引成約を報告して特典を受け取る
-                                                </button>
+                                            <button {{ message.ConservationCheck ? 'disabled' }} type="button" class="ec-blockBtn--action mt-2" id="contract">取引成約を報告して特典を受け取る</button>
                                             <button {{ message.ConservationCheck ? 'disabled' }} type="button" class="ec-blockBtn--cancel mt-2" id="cancel">
                                                 取引は成約しませんでした
                                             </button>

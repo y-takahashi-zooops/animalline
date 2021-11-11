@@ -6,9 +6,6 @@
         <div class="inner">
             <div>
                 <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
-                    {# <div class="breeder-column__main_section_title">
-                    <h3>検索結果</h3>
-                </div> #}
                     <div class="breeder-column__main_section_body">
                         <h2>{{ breeder.licenseHouseName }}</h2>
                         <div class="d-flex">
@@ -200,23 +197,6 @@
                                     </div>
                                 </div>
                             </div>
-                            {# <div class="col-12 breeder_section_detail">
-                                <div class="row">
-                                    <div class="col-12 col-md-4 contents_col_bold">
-                                        取扱業種別
-                                    </div>
-                                    <div class="col-12 col-md-8 contents_col_normal">
-                                        {% if breeder.licenseType == 1 %}販売業
-                                        {% elseif breeder.licenseType == 2 %}保管業
-                                        {% elseif breeder.licenseType == 3 %}貸出業
-                                        {% elseif breeder.licenseType == 4 %}訓練業
-                                        {% elseif breeder.licenseType == 5 %}展示業
-                                        {% elseif breeder.licenseType == 6 %}その他
-                                        {% else %}
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div> #}
                             <div class="col-12 breeder_section_detail">
                                 <div class="row">
                                     <div class="col-12 col-md-4 contents_col_bold">
@@ -277,7 +257,6 @@
                                     <figure>
                                         <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                              class="card-img-top" alt="Pet-image">
-                                        　
                                     </figure>
                                     <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
                                     <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>

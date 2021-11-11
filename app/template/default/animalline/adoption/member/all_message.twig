@@ -30,31 +30,6 @@
                             </a>
                         </div>
                     </div>
-                    {# <div class="row">
-                        <div class="col-12">
-                            <a href="{{ url('adoption_message', {'id': message.Id}) }}">
-                                <div class="d-sm-flex justify-content-between py-3 border adoption-border rounded bg-white">
-                                    <div class="ml-5">
-                                        <h3>{{rootMessage.Conservation.getConservationHouseByPetType(rootMessage.pet.petKind).conservationHouseName
-                                        ?? '' }}</h3>
-                                        <h3>{{ message.Conservation.conservationHouseName ?? '' }}</h3>
-                                        <h3>{{ message.contactTitle ?? '' }}</h3>
-                                    </div>
-                                    <div class="d-sm-flex justify-content-between w-550">
-                                        <h4 class="mr-sm-5 ml-5">
-                                            {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
-                                            状態：{{ status[message.contractStatus] }}
-                                        </h4>
-                                        <h4 class="mr-sm-5 ml-5 text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }}
-                                            <br>
-                                            {{ message.customerNewMsg ? '未読あり' }}
-                                        </h4>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="m-1 p-1"></div> #}
                 {% else %}
                     結果が０件です。
                 {% endfor %}
