@@ -169,7 +169,7 @@
             lastItem = imageArr.pop();
             $(`#${ lastItem.class }`).show();
             $(`#${ lastItem.class }`).parent().find(".img_preview").attr('src', '');
-            $(`#${ lastItem.class }`).parent().find(".img_preview").addClass('d-none')
+            $(`#${ lastItem.class }`).parent().find(".img_preview").addClass('d-none');
             $(`#${ lastItem.class }`).parent().parent().find("button").hide();
              $(`input.${ lastItem.class }`).val('');
             if (lastItem.class !== inputFileIds.pop()) {

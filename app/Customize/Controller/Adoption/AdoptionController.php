@@ -119,9 +119,20 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * adoption index
+     * Page Adoption
      *
      * @Route("/adoption/", name="adoption_top")
+     * @Template("animalline/adoption/reg_index_tmp.twig")
+     */
+    public function breeder_index_reg(Request $request)
+    {
+        return[];
+    }
+
+    /**
+     * adoption index
+     *
+     * @Route("/adoption_tmp/", name="adoption_top_tmp")
      * @Template("animalline/adoption/index.twig")
      */
     public function adoption_index(Request $request)

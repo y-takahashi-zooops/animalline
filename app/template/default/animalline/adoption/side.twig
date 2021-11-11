@@ -12,13 +12,20 @@
                 </a>
             </li>
             <li class="breeder-column__side_bnr_guide">
-                <a href="{{ url('breeder_guide_dog') }}">お迎えガイド</a>
+            {% if petKind %}
+                {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+                    <a href="{{ url('breeder_guide_dog') }}">お迎えガイド</a>
+                {% else %}
+                    <a href="{{ url('breeder_guide_cat') }}">お迎えガイド</a>
+                {% endif %}
+            {% endif %}
             </li>
             <li class="breeder-column__side_bnr_learning">
             <a href="https://dc-trainers.net/">ペットの家庭教師</a>
             </li>
         </ul>
     </div>
+    {# TODO：犬と猫を分ける #}
     <div class="breeder-column__side_links">
         <div class="breeder-column__side_links_title"><h3 style="color: #fff">カテゴリーから探す</h3></div>
         <ul>

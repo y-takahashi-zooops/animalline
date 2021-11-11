@@ -8,7 +8,7 @@
         <div class="breeder-mv__container">
           <div class="breeder-mv__text">
             <h2>テキストが入りますテキストが入りますテキストが入ります</h2>
-            <div class="breeder-mv__text_logo"><img src="{{ asset('assets/img/adoption-mv-logo.png') }}" alt="Animalline Breeder"/></div>
+            <div class="breeder-mv__text_logo"><img src="{{ asset('assets/img/adoption-mv-logo.png') }}" alt="Animalline Adoption"/></div>
             <p>キャッチコピーが入ります。</p>
             <div class="breeder-mv__text_btn">
               <ul>
@@ -109,7 +109,10 @@
                         <figure><img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}" alt="{{ pet.getBreedsType().getBreedsName() ?? '' }}"/></figure>
                         <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
                         <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
-                        <div class="type"><span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>茶色</span></div>
+                        <div class="type">
+                          <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span>
+                          <span>{{ pet.coatColor}}</span>
+                        </div>
                         <div class="publish">掲載日：2021年09月15日</div>
                         <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
                         <p>{{ pet.prComment|nl2br }}</p>
