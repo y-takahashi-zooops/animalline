@@ -110,7 +110,11 @@
         <div class="col-md-3">
         {{ form_label(form.band_color, 'バンドカラー', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
         <span class="ec-required">必須</span>
-        <p style="font-size:14px;color:#DE5D50;">遺伝病DNA検査で使用した<br />検体識別バンドのカラーを選択してください。</p>
+        <p style="font-size:14px;color:#DE5D50;">
+            遺伝病DNA検査で使用した<br />
+            検体識別バンドのカラーを選択してください。<br />
+            キット同封の"検体採取方法のご案内"の③をご確認ください。
+        </p>
         </div>
         <div class="col-md-8 ec-input ec-select">
         {{ form_widget(form.band_color) }}
@@ -171,7 +175,7 @@
             <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1" id="btn_get_petinfo_template_guarantee">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
-            {{ form_widget(form.guarantee, {'attr': {'rows': 10, 'placeholder' : 'ブリーダー様にて設定されている生体保証内容をご記入ください。'}}) }}
+            {{ form_widget(form.guarantee, {'attr': {'rows': 10, 'placeholder' : 'ブリーダー様にて設定されている生体保障内容をご記入ください。'}}) }}
             {{ form_errors(form.guarantee) }}
         </div>
     </div>

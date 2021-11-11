@@ -1960,27 +1960,99 @@ GUIDE
 }
 
 #guide-nav{
-  background-color:#0068b7;
+  background-color:#fff;
+  padding:60px 0;
+}
+.guide-nav_row{
+  display:flex;
+  justify-content:space-between;
+  background-color:#f4f1e8;
+  padding:40px 20px;
+  border-radius:20px;
+  position:relative;
+}
+#guide-nav h2 {
+  position: absolute;
+  display: inline-block;
+  top:0;
+  left:0;
+  margin: 1rem 0 1rem -10px;
+  padding: 1rem 3rem;
+  color: #fff;
+  border-radius: 0 100vh 100vh 0;
+  background: #0068b7;
+  -webkit-box-shadow: 3px 3px 5px rgba(0, 0, 0, .2);
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, .2);
+}
+#guide-nav h2:before {
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 0;
+  height: 0;
+  content: '';
+  border-top: 10px solid #004274;
+  border-left: 10px solid transparent;
+}
+.guide-nav_content{
+  width:33.33%;
+  border-right:solid #dcc2a7 1px;
+}
+.guide-nav_content:last-child{
+  border-right:none;
+}
+.guide-nav_content h3{
+  text-align:center;
+  position:relative;
+  font-size:30px;
+  margin:0 0 30px;
+  color:#6a3906;
+  font-weight: 700;
+}
+.guide-nav_content h3 span{
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: solid #ef5350 3px;
+  background-color:#fff;
+  color: #ef5350;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 31px;
+  margin:0 0 10px;
 }
 #guide-nav ul{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  margin:0;
+  padding:0 40px;
 }
 #guide-nav ul li{
-  width:20%;
+  font-size:18px;
+  line-height:1.6;
+  margin:0 0 10px;
+  padding:0 0 10px;
+}
+#guide-nav ul.child{
+  margin:0 0 0 2em;
+  padding:0;
+}
+#guide-nav ul.child li{
+  font-size:16px;
 }
 #guide-nav ul li a{
-  color:#fff;
-  font-size:16px;
+  color:#000;
   font-weight:500;
-  line-height:80px;
   display:block;
+  position:relative;
+  padding:0 0 0 1.5em;
 }
 #guide-nav ul li a:hover{
-  background-color:#ffab00;
+  color:#ef5350;
+}
+#guide-nav ul li a i{
+  position:absolute;
+  top:0;
+  left:0;
+  color:#ef5350;
 }
 
 #guide-content01{

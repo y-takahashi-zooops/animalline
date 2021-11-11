@@ -16,13 +16,47 @@
     
     <section id="guide-nav">
       <div class="inner">
-        <ul>
-          <li><a href="#guide-content01">子犬の選び方</a></li>
-          <li><a href="#guide-content02">子犬を迎える前に</a></li>
-          <li><a href="#guide-content03">飼い主に必要な条件</a></li>
-          <li><a href="#guide-content04">犬のことを知ろう</a></li>
-          <li><a href="#guide-content05">犬を迎える準備</a></li>
-        </ul>
+        <div class="guide-nav_row">
+          <h2>目次</h2>
+          <div class="guide-nav_content">
+            <h3><span>1</span><br>
+              子犬の選び方</h3>
+            <ul>
+              <li><a href="#guide-content01"><i class="bi bi-arrow-right-circle"></i>自分に（または家族に）合うワンちゃんを探す</a></li>
+              <li><a href="#guide-content01_2"><i class="bi bi-arrow-right-circle"></i>中～大型犬を飼うメリット・注意点</a></li>
+            </ul>
+          </div>
+          <div class="guide-nav_content">
+            <h3><span>2</span><br>
+              子犬を迎える前に</h3>
+            <ul>
+              <li><a href="#guide-content02"><i class="bi bi-arrow-right-circle"></i>飼い主としての心得</a></li>
+              <li><a href="#guide-content04"><i class="bi bi-arrow-right-circle"></i>犬のことを知ろう!</a></li>
+              <ul class="child">
+                <li><a href="#guide-content04"><i class="bi bi-chevron-right"></i>犬と人の年齢の比較</a></li>
+                <li><a href="#guide-content04_2"><i class="bi bi-chevron-right"></i>子犬の成長期(ライフステージ)</a></li>
+                <li><a href="#guide-content04_3"><i class="bi bi-chevron-right"></i>犬の健康を保つ5つの基礎</a></li>
+              </ul>
+              <li><a href="#guide-content05"><i class="bi bi-arrow-right-circle"></i>準備</a></li>
+              <ul class="child">
+                <li><a href="#guide-content05"><i class="bi bi-chevron-right"></i>環境の見直し</a></li>
+                <li><a href="#guide-content05_2"><i class="bi bi-chevron-right"></i>必要なグッズをそろえる</a></li>
+                <li><a href="#guide-content05_3"><i class="bi bi-chevron-right"></i>あると便利なもの</a></li>
+                <li><a href="#guide-content05_4"><i class="bi bi-chevron-right"></i>もしもの時を考える</a></li>
+              </ul>
+            </ul>
+          </div>
+          <div class="guide-nav_content">
+            <h3><span>3</span><br>子犬のしつけ</h3>
+            <ul>
+              <li><a href=""><i class="bi bi-arrow-right-circle"></i>パピーのしつけは、はじめが大切!</a></li>
+              <li><a href=""><i class="bi bi-arrow-right-circle"></i>オンラインしつけトレーニング</a></li>
+              <li><a href=""><i class="bi bi-arrow-right-circle"></i>出張しつけトレーニング<br>
+                (関東地域限定)
+              <small>※エリア順次拡大</small></a></li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
     
@@ -101,16 +135,22 @@
               <dd><i class="bi bi-chevron-right"></i>シェットランドシープドッグ</dd>
             </dl>
           </div>
-          <div class="content-box__merit">
-            <h3>中～大型犬を飼うメリット・ デメリット</h3>
+          <div class="content-box__merit" id="guide-content01_2">
+            <h3>大型犬を飼うメリット・飼う上での注意点</h3>
             <div class="content-box__merit_body">
               <article>
                 <h4>メリット</h4>
-                <p>賢い犬種が多い。体力があるので、一緒に運動ができる穏やかな性格で社交的のため飼いやすく、お年寄りや赤ちゃんがいるご家庭でもうまく馴染むことができる。多頭飼いに向いているので、たくさんの犬に囲まれて暮らしたいという方におすすめ。</p>
+                <p><span>①</span>穏やかな性格で社交的な犬種が多いため、初心者でも飼いやすく、お年寄りや赤ちゃんがいるご家庭でもうまく馴染むことができます</p>
+                <p><span>②</span>運動量があるため、スポーツを一緒に楽しむことができます</p>
+                <p><span>③</span>賢く知能が高い</p>
+                <p><span>④</span>多頭飼いに向いている犬種が多く、たくさんの犬に囲まれて暮らしたいという方におすすめ</p>
               </article>
               <article>
-                <h4>デメリット</h4>
-                <p>きちんとしつけをする必要がある。運動量が多いので毎日の散歩は必須。小型犬よりもコストがかかる (食費、病院費、トリミング代など)</p>
+                <h4>飼う上での注意点</h4>
+                <p><span>①</span>運動量が多いため、毎日の散歩が必須になります（1時間以上を1日2回に加え、ドッグランや庭での運動をプラスすることが望ましい）</p>
+                <p><span>②</span>しつけに関して勉強をする覚悟があること。<br>
+小型犬であればお散歩でのリードの引っ張りなどもある程度の力で制御することができますが、大型犬はそうはいきません。ケガなどのトラブルにならないよう、子犬の頃からの“しつけ”が重要になってきます。</p>
+                <p><span>③</span>小型犬に比べるとコストがかかります（食費、病院費、トリミング代など）</p>
               </article>
             </div>
           </div>
@@ -124,23 +164,33 @@
           <div class="content-box__num"><img src="{{ asset('assets/img/guide/guide-num02.png') }}" width="132" height="132" alt="2"/></div>
           <div class="content-box__title">
             <h2>子犬を迎える前に</h2>
-            <p>犬を飼うということ、それは<strong>新しい命を迎える</strong>ことになります。<br>
-              <strong>10〜15年</strong>生きるその命にあなたは<strong>最後まで責任が持てますか？</strong></p>
+            <h3>飼い主として必要な心得</h3>
+            <p><strong>飼い主への「10の願い」</strong>を描いた、作者不明の短編詩です。<br>
+原文は英語なので、翻訳によって違いはありますが、犬を飼っている人の多くに知れ渡っています。<br>
+家族の一員になるその命に、最後まで幸せにする覚悟を持てますか？<br>
+<strong>その子の幸せは、私たち人間に委ねられていること</strong>を忘れないでください。</p>
           </div>
           <div class="content-box__body">
             <div class="content-box__body_tag"><h3>犬の十戒</h3></div>
             <div class="content-box__body_list">
               <ul>
-                <li><i class="bi bi-check"></i>私は10年くらいしか生きられません。だからできるだけ私と一緒にいてください。</li>
-                <li><i class="bi bi-check"></i>私と気長に付き合ってください。</li>
-                <li><i class="bi bi-check"></i>私を信じてください。あなたが私を信じてくれることがなによりの幸せです。</li>
-                <li><i class="bi bi-check"></i>あなたには、仕事や学校があるし友達もいます。でも、私にはあなたしかいません。</li>
-                <li><i class="bi bi-check"></i>私にたくさん話しかけてください。人の言葉は話せなくても、ちゃんと分かっています。</li>
-                <li><i class="bi bi-check"></i>私に心があることを忘れないでください。</li>
-                <li><i class="bi bi-check"></i>私をたたかないで。本気になったら私の方が強いことを忘れないでください。</li>
-                <li><i class="bi bi-check"></i>言うことを聞かないときは、理由があります。</li>
-                <li><i class="bi bi-check"></i>私が年を取っても、仲良くしてください。</li>
-                <li><i class="bi bi-check"></i>旅立ちの時には、私のそばにいてください。</li>
+                <li><span>1.</span>私の一生は10年から15年くらいしかありません。<br>
+                  あなたと離れることが1番つらいことなのです。できるだけ私と一緒にしてください。</li>
+                <li><span>2.</span>あなたが何を求めているかを理解するまで時間がかかるかもしれませんが、気長に付き合ってください。</li>
+                <li><span>3.</span>私のことを信じてください。あなたが信じてくれることがなによりの幸せなのです。</li>
+                <li><span>4.</span>長い間叱ったり、閉じ込めたりしないでください。<br>
+                  あなたには仕事や学校、楽しみもあると思います。でも、私にはあなたしかいません。</li>
+                <li><span>5.</span>たくさん話しかけてください。言葉は話せなくても、ちゃんと気持ちは届いています。</li>
+                <li><span>6.</span>私にも心があります。あなたどんな風に接してくれたかを私は絶対に忘れません。</li>
+                <li><span>7.</span>私を叩いたりしないでください。本気になったら私の方が強いけれど、私は本気を出していません。<br>
+                  私を叩く前に思い出してください。私の歯で、あなたを傷つけることができるけれど、私はあなたを噛まないようにしています。</li>
+                <li><span>8.</span>私が言うことを聞かないときには、理由があります。<br>
+                  怒ったりする前に、ご飯に問題がないか、年を取ってきたからじゃないか、と原因を考えてみてください。</li>
+                <li><span>9.</span>年を取っても、どうかお世話をしてください。私も、あなたと同じように年を取ります。</li>
+                <li><span>10.</span>最後の旅立ちの時には、そばにいて私を見守ってください。<br>
+                「見ているのはつらいから」とか「私のいないところで逝かせてあげて」なんて言わないでください。<br>
+                あなたがそばにいてくれるだけで、安らかに逝くことができます。<br>
+                そして忘れないでください、私はあなたを一番愛しています。</li>
               </ul>
             </div>
           </div>
@@ -159,76 +209,57 @@
               <ul>
                 <li>
                   <div class="content-box__body_list_num"><span>1</span></div>
-                  <h3>住宅がペットを飼える<br>
-                    状況にあること</h3>
-                  <p>ペットと安心して暮らすためには、ペットを飼える住宅に住んでいることが絶対条件です。<br>
-                  また「ペット飼育可 」の集合住宅であっても決められたルールを守り、その集合住宅はもとより、周辺の住宅や環境への配慮を心がけなければなりません。</p>
+                  <h3>家族全員の同意があること</h3>
+                  <p>ワンちゃんを迎える際には、家族全員が合意していることが必須です。<br>
+                  10年以上は一緒に暮らしていくことになりますが、その間には生活環境が変わることがあるかもしれません。<br>
+                  引越し、自分またはご家族の病気、家族構成など様々な変化が起こることも考えられます。<br>
+                  何が起きたとしても、ワンちゃんへの対応は家族全員で考えてあげてください。<br>
+                  また、一人暮らしの方や高齢の方が飼う場合、飼えなくなった際はどうするか決めておくことをおすすめします。<br>
+                  病気や不慮の事故など、さまざまな事情で飼えなくなってしまう事があるかもしれません。<br>
+                  万が一を考え、自分に何かあった際は代わりに飼ってくれる人がいるかどうかを考えておくことも重要です。</p>
                 </li>
                 <li>
                   <div class="content-box__body_list_num"><span>2</span></div>
-                  <h3>ペットを迎えることに<br>
-                    家族全員の同意があること</h3>
-                    <p>ペットを家族に迎えるにあたっては、その家族全員が合意していることが大切で。十数年の命を持つ犬や猫を飼う際には特に重要です。<br>
-                    どのような家庭でも、10年以上の歴史を重ねていくうちには、家族構成や生活環境の変化が起こる可能性があります。そのような中であっても、家族全員が動物と暮らすことに同意しているのであれば、家族に迎え入れた動物もその一員であることが前提となった対応がなされていくでしょう。</p>
+                  <h3>犬アレルギーの有無</h3>
+                    <p>自身またはご家族の中に犬アレルギーのある方はいらっしゃいませんか？<br>
+お迎え後にアレルギーが発覚してしまった際、最悪の場合には手放せざるを得ないという事態になりかねません。<br>
+未然に防ぐ為、事前のアレルギー検査をおすすめします。</p>
                 </li>
                 <li>
                   <div class="content-box__body_list_num"><span>3</span></div>
-                  <h3>動物アレルギーの<br>
-                    心配がないこと</h3>
-                    <p>家族内にアレルギー体質の方がいる場合には、事前に専門病院で動物アレルギーについても検査をしてもらいましょう。もし動物アレルギー発症の可能性がある場合には、どのような対策を講じるか、飼う、飼わないも含めて家族内で十分話し合いをしましょう。</p>
+                  <h3>ペットを飼える住宅環境かどうか</h3>
+                    <p>「ペット可」の物件に住んでいることは必須条件となります。<br>
+いくら可愛い子と出会ったとしても、安心して飼える環境になるまでは我慢が必要です。こっそり飼うのは契約違反になり、トラブルの原因となります。ワンちゃんを不幸にしない為にも、周辺の環境を今一度確認してみてください。</p>
                 </li>
                 <li>
                   <div class="content-box__body_list_num"><span>4</span></div>
-                  <h3>そのペットの寿命まで終生<br>
-                    飼養飼育する覚悟があること</h3>
-                    <p>犬も猫も、適正に飼育すれば10年以上生きることができる動物です。動物を迎え入れた家庭は、そのペットの命を、寿命をまっとうするまで預かることになります。10年以上にわたって給餌、給水、快適な生活環境、健康管理を続けなければなりません。<br>
-                      ペットを飼いたいと思ったら、このことも十分考えてください。</p>
+                  <h3>最期（寿命）まで飼育する覚悟があること</h3>
+                    <p>迎えたその日から、食餌や水を与え、トイレの掃除、散歩、健康管理、しつけ、定期的なトリミング（犬種による）などのお世話を続けることになります。<br>
+お世話をする時間と体力があるかどうか、きちんと考えてみてください。<br>
+また、ワンちゃんは10年以上生きることができる動物です。<br>
+高齢になれば人間と同じように介護が必要になるかもしれませんので、心構えが必要になります。</p>
                 </li>
                 <li>
                   <div class="content-box__body_list_num"><span>5</span></div>
-                  <h3>世話をする体力があり、<br>
-                    その時間を割けること</h3>
-                  <p>ペットを家族に迎えれば、飼い主は当然その動物のために時間を割かなければなりません。食餌や水を適切に与え、トイレの掃除、快適な生活空間の維持、犬の場合は散歩、種類によってはブラッシングなどの手入れなど、これらをこなせる時間と体力がなければなりません。<br>
-                  子供の希望で飼い始める家庭もよくありますが、数か月後には世話は親の担当になってしまった、などもまれなことではありません。<br>
-                  これらのことを十分に念頭に置いて、動物種、成長した時の大きさなどを、飼うか飼わないかを含めて、検討してください。</p>
+                  <h3>経済的に余裕があること</h3>
+                  <p>食餌代や生活用品、病院代、トリミング代など、様々な費用がかかります。<br>
+動物病院での医療費に関しては、ペット保険に加入しておくことで負担額が減ることはありますが、ケガや病気によっては高額になる事もあります。<br>
+自分たちの生活で精一杯の場合には、ワンちゃんが適切な生活を送ることができませんので、余裕ができるまで飼うことはおすすめできません。</p>
                 </li>
                 <li>
                   <div class="content-box__body_list_num"><span>6</span></div>
-                  <h3>高齢になったペットの<br>
-                    介護をする心構えがあること</h3>
-                    <p>適切に飼育すれば、ペットも長生きします。しかしそれに伴ってペットも老衰や認知症になるケースが増えていきます。動物を家族に迎え入れる以上、高齢になった動物の介護をする心構えも必要です。</p>
-                </li>
-                <li>
-                  <div class="content-box__body_list_num"><span>7</span></div>
-                  <h3>経済的負担を<br>
-                    考慮すること</h3>
-                    <p>ペットは生きています。食餌代ばかりでなく、生活用品、ワクチン代など、人と同じようにいろいろな費用がかかります。特に医療費は、病気やけがによっては思わぬ高額になる場合もあります。<br>
-                    民間社会によるペット保険はありますが、公的な保険制度はありません。動物を家族に迎えれば経済的に負担がかかる、ということも承知しておく必要があります。</p>
-                </li>
-                <li>
-                  <div class="content-box__body_list_num"><span>8</span></div>
-                  <h3>必要なしつけと周囲への<br>
-                    配慮ができること</h3>
-                    <p>ペットと家庭内で楽しく暮らすには、ペットにある程度のルールを覚えてもらう必要があります。<br>
-                    最近では、悪いこと飼い主にとって不都合なこと をしたら「罰を与えて叱る」しつけではなく、家族として楽しく暮らすためのルールを「誘導して覚えてもらう」タイプのしつけが主流になってきています。しつけをするのも動物との絆を深め、楽しみの一つとすることができます。<br>
-                    と同時に、飼い主もペットを飼ううえでのマナーを十分に心得、家庭外、近隣社会に対して迷惑をかけないように配慮することが必要です。</p>
-                </li>
-                <li>
-                  <div class="content-box__body_list_num"><span>9</span></div>
-                  <h3>引越しや転勤の際にも<br>
-                    継続飼育する覚悟があること</h3>
-                    <p>家族構成や、生活環境の変化、また、仕事の都合などで転居する必要が生じる場合があります。
-                    しかし、ペットを家族として迎え入れているのであれば 、転居先にペット飼育可の住宅を探すなど、ペットの終生飼養を心がけなければなりません。<br>
-                    これらのことを十分に念頭に置いて、動物種、成長した時の大きさなどを、飼うか飼わないかを含めて、検討してください。</p>
-                </li>
-                <li>
-                  <div class="content-box__body_list_num"><span>10</span></div>
-                  <h3>飼えなくなった場合の<br>
-                    受け皿を考えておくこと</h3>
-                    <p>これまで、①から⑨までペットを飼ううえでの心構えを考えてきましたが、それでも不慮の事故など、さまざまな事情で飼えなくなってしまうケースが出てくることがあるかもしれません。<br>
-                      万が一に際に、代わりに飼ってくれる人を見つけておくことも重要です。</p>
+                  <h3>しつけの必要性を理解していること</h3>
+                    <p>しつけは犬のためでもあり、人と仲良く生活していくために必要な『マナー』です。<br>
+「これはあなたの物だけど人の物は取ってはいけないよ」「トイレはここ」「お留守番のときはこういう時間を過ごしてね」などの一般的な生活のルールは人が教えてあげないと、犬は何が良くて何が悪いのかが分かりません。ルールを守ってもらうための“しつけ”を教える事で、犬が怒られてしまった、または行動を制限されるなどの不自由なことが少なくなります。<br>
+ルールを身につけるからこそ自由にできることが増えていきます。</p>
                 </li>
               </ul>
+              <div class="content-box__body_list_ex">
+                <p>しつけ+αで、<strong>「一緒に車に乗ってお出かけしたい」「ショッピングモールに連れて行きたい」「テラス席で食事がしたい」</strong>などの、一般的な生活レベルのしつけだけではできないような要望があるのであれば、<strong>“トレーニング”をする必要があります。</strong><br>
+犬のできることが増えれば、人間とできることの幅がどんどん広がっていきます。<br>
+それは、いい犬だからできる訳ではなく<strong>「きちんとしつけをされている犬だから」</strong>なのです。<br>
+<strong>最低でも「おすわり」「ふせ」「まて」「おいで」の指示が聞けるワンちゃんを育てていくことが重要</strong>になります。</p>
+              </div>
             </div>
           </div>
         </div>
@@ -338,7 +369,7 @@
                 </div>
               </div>
             </article>
-            <article>
+            <article id="guide-content04_2">
               <h3>子犬の成長期（ライフステージ）</h3>
               <div class="content-box__body_list">
                 <ul>
@@ -346,30 +377,24 @@
                     <figure><img src="{{ asset('assets/img/guide/guide-content03-ex01.png') }}" width="268" height="196" alt="新生児期"/></figure>
                     <h4>新生児期<br>
                       出生～生後2週齢</h4>
-                    <p>まだ目が見えず、耳が聞こえない<br>
-                      母犬に完全に依存した状態</p>
+                    <p>まだ目が見えず、耳が聞こえない</p>
                   </li>
                   <li>
                     <figure><img src="{{ asset('assets/img/guide/guide-content03-ex02.png') }}" width="268" height="196" alt="移行期"/></figure>
                     <h4>移行期<br>
                       生後2〜3週齢齢</h4>
                     <p>目が見えるようになり、耳が聞こえるようになる<br>
-                    （外界の刺激に気づき反応するようになる）<br>
-                    乳歯が生え始める<br>
-                    兄弟同士の遊びも開始<br>
-                    母犬に完全に依存した状態</p>
+                    （外界の刺激に気づき反応するようになる）</p>
                   </li>
                   <li>
                     <figure><img src="{{ asset('assets/img/guide/guide-content03-ex03.png') }}" width="268" height="196" alt="社会化期"/></figure>
                     <h4>社会化期<br>
                     生後4〜13 週齢<br>
                     （1ヵ月～3ヶ月）</h4>
-                    <p>コミュニケーション力を養い、<br>
-                    様々な刺激に慣れる時期<br>
-                    （外に連れ出すならこれくらいの時期）<br>
+                    <p><strong>性格の基礎をつくる大切な時期</strong><br>
                     脳が急激に発達<br>
-                    不安よりも好奇心が旺盛<br>
-                    人に会わせたり色んな音を聞かせる</p>
+                    不安が少なく好奇心旺盛<br>
+                    コミュニケーション力を養い、様々な刺激に慣れやすい</p>
                   </li>
                   <li>
                     <figure><img src="{{ asset('assets/img/guide/guide-content03-ex04.png') }}" width="268" height="196" alt="若齢期"/></figure>
@@ -404,7 +429,7 @@
                 </ul>
               </div>
             </article>
-            <article>
+            <article id="guide-content04_3">
               <h3>犬の健康を保つ5つの基礎</h3>
               <div class="content-box__body_icon"><span><img src="{{ asset('assets/img/guide/guide-content04-icon01.png') }}" width="150" height="150" alt="食事"/></span></div>
               <div class="content-box__body_text_center">
@@ -861,7 +886,7 @@
                   </div>
               </div>
             </div>
-            <div class="content-box__body_container">
+            <div class="content-box__body_container" id="guide-content05_2">
               <div class="content-box__body_container_num"><img src="{{ asset('assets/img/guide/guide-content05-num02.png') }}" width="78" height="78" alt="2"/></div>
               <div class="content-box__body_container_title">
                 <h3>必要なグッズをそろえる</h3>
@@ -930,7 +955,7 @@
                 </article>
               </div>
             </div>
-            <div class="content-box__body_container">
+            <div class="content-box__body_container" id="guide-content05_3">
               <div class="content-box__body_container_num"><img src="{{ asset('assets/img/guide/guide-content05-num03.png') }}" width="78" height="78" alt="3"/></div>
               <div class="content-box__body_container_title">
                 <h3>あると便利なもの</h3>
@@ -960,7 +985,7 @@
                 </ul>
               </div>
             </div>
-            <div class="content-box__body_container">
+            <div class="content-box__body_container" id="guide-content05_4">
               <div class="content-box__body_container_num"><img src="{{ asset('assets/img/guide/guide-content05-num04.png') }}" width="78" height="78" alt="4"/></div>
               <div class="content-box__body_container_title">
                 <h3>もしもの時を考える</h3>
