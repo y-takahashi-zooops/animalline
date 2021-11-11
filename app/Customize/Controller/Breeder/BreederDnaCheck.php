@@ -217,7 +217,7 @@ class BreederDnaCheck extends AbstractController
                 date_default_timezone_set('Asia/Tokyo');
                 $shippingdate = new \DateTime();
                 //if(date("h") >= 5){
-                    //$shippingdate->modify('+1 days');
+                    $shippingdate->modify('+1 days');
                 //}
                 $dnaCheckStatusHeader->setKitShippingDate($shippingdate);
 
