@@ -28,7 +28,7 @@
                                     {{ pet.price|number_format(0) }}
                                     円（税込）                                  
                                 </div>
-                                <a class="btn w-100 btn-warning text-align-center my-1" href={{ path('adoption_pets_edit', {'id': pet.id} )  }}>
+                                <a href="{{ path('adoption_pets_edit', {'id': pet.id} )  }}" class="btn w-100 btn-warning text-align-center my-1">
                                     編集                                        
                                 </a>
                             </li>

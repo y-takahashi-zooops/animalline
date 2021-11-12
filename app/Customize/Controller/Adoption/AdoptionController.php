@@ -142,11 +142,11 @@ class AdoptionController extends AbstractController
         $regions = $this->prefRepository->findAll();
         $newPets = $this->conservationPetsRepository->findBy(
             ['pet_kind' => $petKind, 'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC],
-            ['release_date' => 'DESC'],
+            ['update_date' => 'DESC'],
             AnilineConf::NUMBER_ITEM_TOP
         );
         $favoritePets = $this->conservationPetsRepository->findBy(
-            ['pet_kind' => $petKind, 'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC],
+            ['pet_kind' => $petKind],
             ['favorite_count' => 'DESC'],
             AnilineConf::NUMBER_ITEM_TOP
         );
@@ -161,79 +161,45 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * 保護団体用ユーザーページ
+     * @Route("/adoption/guide/dog", name="adoption_guide_dog")
+     * @Template("animalline/adoption/guide/dog.twig")
+     */
+    public function adoption_guide_dog()
+    {
+        return [];
+    }
+
+    /**
+     * @Route("/adoption/guide/cat", name="adoption_guide_cat")
+     * @Template("animalline/adoption/guide/cat.twig")
+     */
+    public function adoption_guide_cat()
+    {
+        return [];
+    }
+
+    /**
+     * 保護団体マイページ
      *
      * @Route("/adoption/member/", name="adoption_mypage")
      * @Template("animalline/adoption/member/index.twig")
      */
     public function adoption_mypage(Request $request)
     {
-        $customerId = $this->getUser()->getId();
-        $rootMessages = $this->conservationContactsRepository
-            ->findBy(
-                [
-                    'Customer' => $customerId,
-                    'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
-                    'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
-                ]
-            );
-
-        $lastReplies = [];
-        foreach ($rootMessages as $rootMessage) {
-            $lastReply = $this->conservationContactsRepository
-                ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
-            $lastReplies[$rootMessage->getId()] = $lastReply;
-        }
-
-        return $this->render('animalline/adoption/member/index.twig', [
-            'rootMessages' => $rootMessages,
-            'lastReplies' => $lastReplies
-        ]);
-    }
-
-    /**
-     * よくある質問.
-     *
-     * @Route("/adoption/faq", name="adoption_faq")
-     * @Template("animalline/adoption/faq.twig")
-     */
-    public function faq(Request $request)
-    {
-        return;
-    }
-
-    /**
-     * サイト説明。初めての方へ.
-     *
-     * @Route("/adoption/readfirst", name="adoption_readfirst")
-     * @Template("animalline/adoption/readfirst.twig")
-     */
-    public function readfirst(Request $request)
-    {
-        return;
-    }
-
-    /**
-     * 最近見た子犬.
-     *
-     * @Route("/adoption/viewhist", name="adoption_viewhist")
-     * @Template("animalline/adoption/viewhist.twig")
-     */
-    public function viewhist(Request $request)
-    {
-        return;
+        return [];
     }
 
     /**
      * 保護団体詳細
-     * 
+     *
      * @Route("/adoption/adoption_search/{adoption_id}", name="adoption_detail", requirements={"adoption_id" = "\d+"})
      * @Template("/animalline/adoption/adoption_detail.twig")
      */
     public function adoption_detail(Request $request, $adoption_id, PaginatorInterface $paginator)
     {
         $conservation = $this->conservationsRepository->find($adoption_id);
-        if (!$conservation) throw new NotFoundHttpException();
+        if (!$conservation) {
+        }
 
         $handling_pet_kind = $conservation->getHandlingPetKind();
         $dogHouse = $this->conservationsHousesRepository->findOneBy(["Conservation" => $conservation, "pet_type" => 1]);
@@ -255,17 +221,6 @@ class AdoptionController extends AbstractController
             'catHouse',
             'pets'
         );
-    }
-
-    /**
-     * 保護団体リスト.
-     *
-     * @Route("/adoption/list", name="adoption_list")
-     * @Template("animalline/adoption/list.twig")
-     */
-    public function list(Request $request)
-    {
-        return;
     }
 
     /**

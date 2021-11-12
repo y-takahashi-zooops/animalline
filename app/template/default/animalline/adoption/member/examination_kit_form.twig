@@ -9,6 +9,7 @@
             </div>
             <div class="ec-off1Grid">
                 <div class="ec-off1Grid__cell">
+                    <h4 style="margin: 1rem 0 2rem 0">サイトに登録する前に全頭ＤＮＡ検査を行いますので、ＤＮＡ検査キットの送付に必要な情報の入力をお願い致します。</h4>
                     <form method="post" action="" novalidate name="dna-kit-form">
                         {{ form_widget(form._token) }}
                         <h2>子犬・子猫情報</h2>
@@ -43,6 +44,7 @@
                                 <dl>
                                     <dt>
                                         <span class="mr-2">合計掲載頭数</span>
+                                        <div style="font-size:12px;color:#F00">一度に請求できるキットは６頭分（６個）です。７個以上の検査キットが必要な場合、マイページのDNA検査キット請求から再度DNA検査キット請求をお願い致します。</div>
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.kit_unit) ? ' error' }}">

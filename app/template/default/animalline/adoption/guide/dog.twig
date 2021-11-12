@@ -1,0 +1,1042 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+
+{% block main %}
+  
+  <main role="main">
+    
+    <section id="guide-mv">
+      <div class="guide-mv__title">
+        <h2><img src="{{ asset('assets/img/guide/guide-mv-dog.png') }}" width="346" height="346" alt="お迎えガイド(犬の場合)"/></h2>
+      </div>
+      <div class="guide-mv__link">
+        <a href="{{url('breeder_guide_cat')}}"><img src="{{ asset('assets/img/guide/guide-mv-link-cat.png') }}" width="123" height="123" alt="猫の場合はこちら"/></a>
+      </div>
+    </section>
+    
+    <section id="guide-nav">
+      <div class="inner">
+        <div class="guide-nav_row">
+          <h2>目次</h2>
+          <div class="guide-nav_content">
+            <h3><span>1</span><br>
+              子犬の選び方</h3>
+            <ul>
+              <li><a href="#guide-content01"><i class="bi bi-arrow-right-circle"></i>自分に（または家族に）合うワンちゃんを探す</a></li>
+              <li><a href="#guide-content01_2"><i class="bi bi-arrow-right-circle"></i>中～大型犬を飼うメリット・注意点</a></li>
+            </ul>
+          </div>
+          <div class="guide-nav_content">
+            <h3><span>2</span><br>
+              子犬を迎える前に</h3>
+            <ul>
+              <li><a href="#guide-content02"><i class="bi bi-arrow-right-circle"></i>飼い主としての心得</a></li>
+              <li><a href="#guide-content04"><i class="bi bi-arrow-right-circle"></i>犬のことを知ろう!</a></li>
+              <ul class="child">
+                <li><a href="#guide-content04"><i class="bi bi-chevron-right"></i>犬と人の年齢の比較</a></li>
+                <li><a href="#guide-content04_2"><i class="bi bi-chevron-right"></i>子犬の成長期(ライフステージ)</a></li>
+                <li><a href="#guide-content04_3"><i class="bi bi-chevron-right"></i>犬の健康を保つ5つの基礎</a></li>
+              </ul>
+              <li><a href="#guide-content05"><i class="bi bi-arrow-right-circle"></i>準備</a></li>
+              <ul class="child">
+                <li><a href="#guide-content05"><i class="bi bi-chevron-right"></i>環境の見直し</a></li>
+                <li><a href="#guide-content05_2"><i class="bi bi-chevron-right"></i>必要なグッズをそろえる</a></li>
+                <li><a href="#guide-content05_3"><i class="bi bi-chevron-right"></i>あると便利なもの</a></li>
+                <li><a href="#guide-content05_4"><i class="bi bi-chevron-right"></i>もしもの時を考える</a></li>
+              </ul>
+            </ul>
+          </div>
+          <div class="guide-nav_content">
+            <h3><span>3</span><br>子犬のしつけ</h3>
+            <ul>
+              <li><a href=""><i class="bi bi-arrow-right-circle"></i>パピーのしつけは、はじめが大切!</a></li>
+              <li><a href=""><i class="bi bi-arrow-right-circle"></i>オンラインしつけトレーニング</a></li>
+              <li><a href=""><i class="bi bi-arrow-right-circle"></i>出張しつけトレーニング<br>
+                (関東地域限定)
+              <small>※エリア順次拡大</small></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="guide-content01">
+      <div class="inner">
+        <div class="content-box">
+          <div class="content-box__num"><img src="{{ asset('assets/img/guide/guide-num01.png') }}" width="132" height="132" alt="1"/></div>
+          <div class="content-box__title">
+            <h2>子犬の選び方</h2>
+            <p>〜自分に（または家族に）合うワンちゃんを探す〜</p>
+          </div>
+          <div class="content-box__body">
+            <dl>
+              <dt>初心者におすすめ</dt>
+              <dd><i class="bi bi-chevron-right"></i>トイプードル</dd>
+              <dd><i class="bi bi-chevron-right"></i>チワワ</dd>
+              <dd><i class="bi bi-chevron-right"></i>ミニチュアダックスフンド</dd>
+              <dd><i class="bi bi-chevron-right"></i>ポメラニアン</dd>
+              <dd><i class="bi bi-chevron-right"></i>ヨークシャーテリア</dd>
+              <dd><i class="bi bi-chevron-right"></i>シーズー</dd>
+              <dd><i class="bi bi-chevron-right"></i>マルチーズ</dd>
+              <dd><i class="bi bi-chevron-right"></i>パピヨン</dd>
+              <dd><i class="bi bi-chevron-right"></i>フレンチブルドッグ</dd>
+              <dd><i class="bi bi-chevron-right"></i>パグ</dd>
+            </dl>
+            <dl>
+              <dt>室内飼いにおすすめ</dt>
+              <dd><i class="bi bi-chevron-right"></i>トイプードル</dd>
+              <dd><i class="bi bi-chevron-right"></i>チワワ</dd>
+              <dd><i class="bi bi-chevron-right"></i>ミニチュアダックスフンド</dd>
+              <dd><i class="bi bi-chevron-right"></i>ポメラニアン</dd>
+              <dd><i class="bi bi-chevron-right"></i>ヨークシャーテリア</dd>
+              <dd><i class="bi bi-chevron-right"></i>シーズー</dd>
+              <dd><i class="bi bi-chevron-right"></i>マルチーズ</dd>
+              <dd><i class="bi bi-chevron-right"></i>パピヨン</dd>
+              <dd><i class="bi bi-chevron-right"></i>フレンチブルドッグ</dd>
+              <dd><i class="bi bi-chevron-right"></i>パグ</dd>
+            </dl>
+            <dl>
+              <dt>お手入れがラク</dt>
+              <dd><i class="bi bi-chevron-right"></i>チワワ</dd>
+              <dd><i class="bi bi-chevron-right"></i>ヨークシャーテリア</dd>
+              <dd><i class="bi bi-chevron-right"></i>シーズー</dd>
+              <dd><i class="bi bi-chevron-right"></i>ペキニーズ</dd>
+              <dd><i class="bi bi-chevron-right"></i>マルチーズ</dd>
+              <dd><i class="bi bi-chevron-right"></i>ポメラニアン</dd>
+              <dd><i class="bi bi-chevron-right"></i>ミニチュアダックスフンド</dd>
+              <dd><i class="bi bi-chevron-right"></i>フレンチブルドッグ</dd>
+            </dl>
+            <dl>
+              <dt>運動量が少なめ</dt>
+              <dd><i class="bi bi-chevron-right"></i>チワワ</dd>
+              <dd><i class="bi bi-chevron-right"></i>ヨークシャーテリア</dd>
+              <dd><i class="bi bi-chevron-right"></i>シーズー</dd>
+              <dd><i class="bi bi-chevron-right"></i>ペキニーズ</dd>
+              <dd><i class="bi bi-chevron-right"></i>マルチーズ</dd>
+              <dd><i class="bi bi-chevron-right"></i>ポメラニアン</dd>
+              <dd><i class="bi bi-chevron-right"></i>ミニチュアダックスフンド</dd>
+              <dd><i class="bi bi-chevron-right"></i>フレンチブルドッグ</dd>
+            </dl>
+            <dl>
+              <dt>温厚で大人しい</dt>
+              <dd><i class="bi bi-chevron-right"></i>シーズー</dd>
+              <dd><i class="bi bi-chevron-right"></i>トイプードル</dd>
+              <dd><i class="bi bi-chevron-right"></i>パグ</dd>
+              <dd><i class="bi bi-chevron-right"></i>フレンチブルドッグ</dd>
+              <dd><i class="bi bi-chevron-right"></i>ゴールデンレトリバー</dd>
+              <dd><i class="bi bi-chevron-right"></i>ラブラドールレトリバー</dd>
+            </dl>
+            <dl>
+              <dt>アクティブで運動が好き!</dt>
+              <dd><i class="bi bi-chevron-right"></i>ジャックラッセルテリア</dd>
+              <dd><i class="bi bi-chevron-right"></i>コーギー</dd>
+              <dd><i class="bi bi-chevron-right"></i>柴犬</dd>
+              <dd><i class="bi bi-chevron-right"></i>ボーダーコリー</dd>
+              <dd><i class="bi bi-chevron-right"></i>シェットランドシープドッグ</dd>
+            </dl>
+          </div>
+          <div class="content-box__merit" id="guide-content01_2">
+            <h3>大型犬を飼うメリット・飼う上での注意点</h3>
+            <div class="content-box__merit_body">
+              <article>
+                <h4>メリット</h4>
+                <p><span>①</span>穏やかな性格で社交的な犬種が多いため、初心者でも飼いやすく、お年寄りや赤ちゃんがいるご家庭でもうまく馴染むことができます</p>
+                <p><span>②</span>運動量があるため、スポーツを一緒に楽しむことができます</p>
+                <p><span>③</span>賢く知能が高い</p>
+                <p><span>④</span>多頭飼いに向いている犬種が多く、たくさんの犬に囲まれて暮らしたいという方におすすめ</p>
+              </article>
+              <article>
+                <h4>飼う上での注意点</h4>
+                <p><span>①</span>運動量が多いため、毎日の散歩が必須になります（1時間以上を1日2回に加え、ドッグランや庭での運動をプラスすることが望ましい）</p>
+                <p><span>②</span>しつけに関して勉強をする覚悟があること。<br>
+小型犬であればお散歩でのリードの引っ張りなどもある程度の力で制御することができますが、大型犬はそうはいきません。ケガなどのトラブルにならないよう、子犬の頃からの“しつけ”が重要になってきます。</p>
+                <p><span>③</span>小型犬に比べるとコストがかかります（食費、病院費、トリミング代など）</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="guide-content02">
+      <div class="inner">
+        <div class="content-box">
+          <div class="content-box__num"><img src="{{ asset('assets/img/guide/guide-num02.png') }}" width="132" height="132" alt="2"/></div>
+          <div class="content-box__title">
+            <h2>子犬を迎える前に</h2>
+            <h3>飼い主として必要な心得</h3>
+            <p><strong>飼い主への「10の願い」</strong>を描いた、作者不明の短編詩です。<br>
+原文は英語なので、翻訳によって違いはありますが、犬を飼っている人の多くに知れ渡っています。<br>
+家族の一員になるその命に、最後まで幸せにする覚悟を持てますか？<br>
+<strong>その子の幸せは、私たち人間に委ねられていること</strong>を忘れないでください。</p>
+          </div>
+          <div class="content-box__body">
+            <div class="content-box__body_tag"><h3>犬の十戒</h3></div>
+            <div class="content-box__body_list">
+              <ul>
+                <li><span>1.</span>私の一生は10年から15年くらいしかありません。<br>
+                  あなたと離れることが1番つらいことなのです。できるだけ私と一緒にしてください。</li>
+                <li><span>2.</span>あなたが何を求めているかを理解するまで時間がかかるかもしれませんが、気長に付き合ってください。</li>
+                <li><span>3.</span>私のことを信じてください。あなたが信じてくれることがなによりの幸せなのです。</li>
+                <li><span>4.</span>長い間叱ったり、閉じ込めたりしないでください。<br>
+                  あなたには仕事や学校、楽しみもあると思います。でも、私にはあなたしかいません。</li>
+                <li><span>5.</span>たくさん話しかけてください。言葉は話せなくても、ちゃんと気持ちは届いています。</li>
+                <li><span>6.</span>私にも心があります。あなたどんな風に接してくれたかを私は絶対に忘れません。</li>
+                <li><span>7.</span>私を叩いたりしないでください。本気になったら私の方が強いけれど、私は本気を出していません。<br>
+                  私を叩く前に思い出してください。私の歯で、あなたを傷つけることができるけれど、私はあなたを噛まないようにしています。</li>
+                <li><span>8.</span>私が言うことを聞かないときには、理由があります。<br>
+                  怒ったりする前に、ご飯に問題がないか、年を取ってきたからじゃないか、と原因を考えてみてください。</li>
+                <li><span>9.</span>年を取っても、どうかお世話をしてください。私も、あなたと同じように年を取ります。</li>
+                <li><span>10.</span>最後の旅立ちの時には、そばにいて私を見守ってください。<br>
+                「見ているのはつらいから」とか「私のいないところで逝かせてあげて」なんて言わないでください。<br>
+                あなたがそばにいてくれるだけで、安らかに逝くことができます。<br>
+                そして忘れないでください、私はあなたを一番愛しています。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="guide-content03">
+      <div class="inner">
+        <div class="content-box">
+          <div class="content-box__title">
+            <h2>飼い主に必要な条件</h2>
+          </div>
+          <div class="content-box__body">
+            <div class="content-box__body_list">
+              <ul>
+                <li>
+                  <div class="content-box__body_list_num"><span>1</span></div>
+                  <h3>家族全員の同意があること</h3>
+                  <p>ワンちゃんを迎える際には、家族全員が合意していることが必須です。<br>
+                  10年以上は一緒に暮らしていくことになりますが、その間には生活環境が変わることがあるかもしれません。<br>
+                  引越し、自分またはご家族の病気、家族構成など様々な変化が起こることも考えられます。<br>
+                  何が起きたとしても、ワンちゃんへの対応は家族全員で考えてあげてください。<br>
+                  また、一人暮らしの方や高齢の方が飼う場合、飼えなくなった際はどうするか決めておくことをおすすめします。<br>
+                  病気や不慮の事故など、さまざまな事情で飼えなくなってしまう事があるかもしれません。<br>
+                  万が一を考え、自分に何かあった際は代わりに飼ってくれる人がいるかどうかを考えておくことも重要です。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>2</span></div>
+                  <h3>犬アレルギーの有無</h3>
+                    <p>自身またはご家族の中に犬アレルギーのある方はいらっしゃいませんか？<br>
+お迎え後にアレルギーが発覚してしまった際、最悪の場合には手放せざるを得ないという事態になりかねません。<br>
+未然に防ぐ為、事前のアレルギー検査をおすすめします。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>3</span></div>
+                  <h3>ペットを飼える住宅環境かどうか</h3>
+                    <p>「ペット可」の物件に住んでいることは必須条件となります。<br>
+いくら可愛い子と出会ったとしても、安心して飼える環境になるまでは我慢が必要です。こっそり飼うのは契約違反になり、トラブルの原因となります。ワンちゃんを不幸にしない為にも、周辺の環境を今一度確認してみてください。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>4</span></div>
+                  <h3>最期（寿命）まで飼育する覚悟があること</h3>
+                    <p>迎えたその日から、食餌や水を与え、トイレの掃除、散歩、健康管理、しつけ、定期的なトリミング（犬種による）などのお世話を続けることになります。<br>
+お世話をする時間と体力があるかどうか、きちんと考えてみてください。<br>
+また、ワンちゃんは10年以上生きることができる動物です。<br>
+高齢になれば人間と同じように介護が必要になるかもしれませんので、心構えが必要になります。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>5</span></div>
+                  <h3>経済的に余裕があること</h3>
+                  <p>食餌代や生活用品、病院代、トリミング代など、様々な費用がかかります。<br>
+動物病院での医療費に関しては、ペット保険に加入しておくことで負担額が減ることはありますが、ケガや病気によっては高額になる事もあります。<br>
+自分たちの生活で精一杯の場合には、ワンちゃんが適切な生活を送ることができませんので、余裕ができるまで飼うことはおすすめできません。</p>
+                </li>
+                <li>
+                  <div class="content-box__body_list_num"><span>6</span></div>
+                  <h3>しつけの必要性を理解していること</h3>
+                    <p>しつけは犬のためでもあり、人と仲良く生活していくために必要な『マナー』です。<br>
+「これはあなたの物だけど人の物は取ってはいけないよ」「トイレはここ」「お留守番のときはこういう時間を過ごしてね」などの一般的な生活のルールは人が教えてあげないと、犬は何が良くて何が悪いのかが分かりません。ルールを守ってもらうための“しつけ”を教える事で、犬が怒られてしまった、または行動を制限されるなどの不自由なことが少なくなります。<br>
+ルールを身につけるからこそ自由にできることが増えていきます。</p>
+                </li>
+              </ul>
+              <div class="content-box__body_list_ex">
+                <p>しつけ+αで、<strong>「一緒に車に乗ってお出かけしたい」「ショッピングモールに連れて行きたい」「テラス席で食事がしたい」</strong>などの、一般的な生活レベルのしつけだけではできないような要望があるのであれば、<strong>“トレーニング”をする必要があります。</strong><br>
+犬のできることが増えれば、人間とできることの幅がどんどん広がっていきます。<br>
+それは、いい犬だからできる訳ではなく<strong>「きちんとしつけをされている犬だから」</strong>なのです。<br>
+<strong>最低でも「おすわり」「ふせ」「まて」「おいで」の指示が聞けるワンちゃんを育てていくことが重要</strong>になります。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="guide-content04">
+      <div class="inner">
+        <div class="content-box">
+          <div class="content-box__title">
+            <h2>犬のことを知ろう</h2>
+          </div>
+          <div class="content-box__body">
+            <article>
+              <h3>犬と人の年齢の比較</h3>
+              <div class="content-box__body_row">
+                <div class="content-box__body_text">
+                  <p>小型犬は生後1 年半で人間の20歳となり、<br>
+                  その後は1年で4歳増えていきます。<br>
+                  大型犬は生後2 年で人間の20歳となり、<br>
+                  その後は1年で7歳増えていく計算になります。<br>
+                  成犬期の途中までは小型犬の方が成長が早いのに対し、<br>
+                  成犬期以降の老化は大型犬の方が早いのです。<br>
+                  平均寿命は<strong>「小型犬15歳前後 」「 大型犬13歳前後 」</strong><br>
+                  といわれています。</p>
+                </div>
+                <div class="content-box__body_table">
+                  <table>
+                    <tr>
+                      <th></th>
+                      <th>犬の年齢</th>
+                      <th>人間の年齢【小型犬】</th>
+                      <th>人間の年齢【大型犬】</th>
+                    </tr>
+                    <tr>
+                      <th rowspan="4">子犬期</th>
+                      <td>1ヶ月</td>
+                      <td>1歳</td>
+                      <td>1歳</td>
+                    </tr>
+                    <tr>
+                      <td>3ヶ月</td>
+                      <td>5歳</td>
+                      <td>2歳</td>
+                    </tr>
+                    <tr>
+                      <td>6ヶ月</td>
+                      <td>9歳</td>
+                      <td>6歳</td>
+                    </tr>
+                    <tr>
+                      <td>1歳</td>
+                      <td>15歳</td>
+                      <td>12歳</td>
+                    </tr>
+                    <tr>
+                      <th rowspan="5">成長期</th>
+                      <td>2歳</td>
+                      <td>24歳</td>
+                      <td>19歳</td>
+                    </tr>
+                    <tr>
+                      <td>3歳</td>
+                      <td>28歳</td>
+                      <td>26歳</td>
+                    </tr>
+                    <tr>
+                      <td>4歳</td>
+                      <td>32歳</td>
+                      <td>33歳</td>
+                    </tr>
+                    <tr>
+                      <td>5歳</td>
+                      <td>36歳</td>
+                      <td>40歳</td>
+                    </tr>
+                    <tr>
+                      <td>6歳</td>
+                      <td>40歳</td>
+                      <td>47歳</td>
+                    </tr>
+                    <tr>
+                      <th rowspan="2">中高年期</th>
+                      <td>7歳</td>
+                      <td>44歳</td>
+                      <td>54歳</td>
+                    </tr>
+                    <tr>
+                      <td>10歳</td>
+                      <td>56歳</td>
+                      <td>75歳</td>
+                    </tr>
+                    <tr>
+                      <th rowspan="2">高齢期</th>
+                      <td>12歳</td>
+                      <td>64歳</td>
+                      <td>89歳</td>
+                    </tr>
+                    <tr>
+                      <td>15歳</td>
+                      <td>76歳</td>
+                      <td>110歳</td>
+                    </tr>
+                  </table>
+                  <p>※上記はあくまで目安です。<br>
+                  犬種や飼育環境によって個体差があります。</p>
+                </div>
+              </div>
+            </article>
+            <article id="guide-content04_2">
+              <h3>子犬の成長期（ライフステージ）</h3>
+              <div class="content-box__body_list">
+                <ul>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content03-ex01.png') }}" width="268" height="196" alt="新生児期"/></figure>
+                    <h4>新生児期<br>
+                      出生～生後2週齢</h4>
+                    <p>まだ目が見えず、耳が聞こえない</p>
+                  </li>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content03-ex02.png') }}" width="268" height="196" alt="移行期"/></figure>
+                    <h4>移行期<br>
+                      生後2〜3週齢齢</h4>
+                    <p>目が見えるようになり、耳が聞こえるようになる<br>
+                    （外界の刺激に気づき反応するようになる）</p>
+                  </li>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content03-ex03.png') }}" width="268" height="196" alt="社会化期"/></figure>
+                    <h4>社会化期<br>
+                    生後4〜13 週齢<br>
+                    （1ヵ月～3ヶ月）</h4>
+                    <p><strong>性格の基礎をつくる大切な時期</strong><br>
+                    脳が急激に発達<br>
+                    不安が少なく好奇心旺盛<br>
+                    コミュニケーション力を養い、様々な刺激に慣れやすい</p>
+                  </li>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content03-ex04.png') }}" width="268" height="196" alt="若齢期"/></figure>
+                    <h4>若齢期<br>
+                    13週～6ヵ月齢<br>
+                    （3ヵ月～6ヵ月）<br>
+                    出生～生後2週齢</h4>
+                    <p>運動能力が発達<br>
+                    歯の生え変わり（乳歯から大人の歯へ）<br>
+                    脳が発達し警戒心が芽生えてくる＝社会化期で<br>
+                    性格の基礎が若齢期で犬の性格が<br>
+                    完成すると言われている<br>
+                    社会化期の経験を引き続き慣らし、<br>
+                    性格を構築される重要な時期</p>
+                  </li>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content03-ex05.png') }}" width="268" height="196" alt="青年期"/></figure>
+                    <h4>青年期<br>
+                    6ヵ月～1歳半くらい</h4>
+                    <p>力も強くなり、頭で考えて理解が<br>
+                    できるようになってくる<br>
+                    フード1日2回にしてもいい頃<br>
+                    オスはマーキング、メスはヒート（生理）が始まる</p>
+                  </li>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content03-ex06.png') }}" width="268" height="196" alt="成犬期"/></figure>
+                    <h4>成犬期<br>
+                    1歳半～7歳くらい</h4>
+                    <p>身体的にも成長が落ち着く、<br>
+                    精神的に落ち着く</p>
+                  </li>
+                </ul>
+              </div>
+            </article>
+            <article id="guide-content04_3">
+              <h3>犬の健康を保つ5つの基礎</h3>
+              <div class="content-box__body_icon"><span><img src="{{ asset('assets/img/guide/guide-content04-icon01.png') }}" width="150" height="150" alt="食事"/></span></div>
+              <div class="content-box__body_text_center">
+              <p><strong>犬には1日2回生後半年頃までは1日3回ご飯を与えます。</strong><br>
+              その他にオヤツを与えることはありますが、基本的にはドッグフードが主な食べ物です。<br>
+              人間の食べ物の中には、犬に害のあるものがありますし、栄養が偏ってしまうこともあります。<br>
+              また、人間の食べ物はカロリーが高いので肥満の原因にもなります。<br>
+              犬の健康を守るため、犬が欲しがったとしても、人間の食べ物は与えないようにしましょう。</p>
+              </div>
+              <div class="content-box__body_corner">
+                <div class="content-box__body_corner_food">
+                  <h4>犬に害のある食べ物</h4>
+                  <ul>
+                    <li>
+                      <figure>
+                        <img src="{{ asset('assets/img/guide/guide-content04-food01.png') }}" width="181" height="134" alt="チョコレート"/>
+                        <figcaption>チョコレート</figcaption>
+                      </figure>
+                    </li>
+                    <li>
+                      <figure>
+                        <img src="{{ asset('assets/img/guide/guide-content04-food02.png') }}" width="181" height="134" alt="ネギ類"/>
+                        <figcaption>ネギ類<br>
+                          (たまねぎ・ねぎ・ニラなど)</figcaption>
+                      </figure>
+                    </li>
+                    <li>
+                      <figure>
+                        <img src="{{ asset('assets/img/guide/guide-content04-food03.png') }}" width="181" height="134" alt="レーズンやぶどう"/>
+                        <figcaption>レーズンやぶどう</figcaption>
+                      </figure>
+                    </li>
+                    <li>
+                      <figure>
+                        <img src="{{ asset('assets/img/guide/guide-content04-food04.png') }}" width="181" height="134" alt="コーヒー"/>
+                        <figcaption>コーヒー</figcaption>
+                      </figure>
+                    </li>
+                    <li>
+                      <figure>
+                        <img src="{{ asset('assets/img/guide/guide-content04-food05.png') }}" width="181" height="134" alt="アルコール類"/>
+                        <figcaption>アルコール類</figcaption>
+                      </figure>
+                    </li>
+                    <li>
+                      <figure>
+                        <img src="{{ asset('assets/img/guide/guide-content04-food06.png') }}" width="181" height="134" alt="火の通った骨など"/>
+                        <figcaption>火の通った骨など</figcaption>
+                      </figure>
+                    </li>
+                  </ul>
+                  <div class="content-box__body_corner_food_notice">
+                    <p><strong>小さな犬はこれらの食べ物を少し食べただけでも、ひどい嘔吐や下痢をする</strong>ことがあるので、<br>
+                    十分注意してください 。もし愛犬の食欲がなかったり食べ方がいつもと違う時は、<br>
+                    体に異変がある可能性があるので、食べている間も観察しましょう。</p>
+                  </div>
+                </div>
+                <div class="content-box__body_corner_fat">
+                  <h4>肥満は寿命を縮めます</h4>
+                  <div class="content-box__body_corner_fat_article">
+                    <figure><img src="{{ asset('assets/img/guide/guide-content04-img01.png') }}" width="374" height="315" alt="肥満は寿命を縮めます"/></figure>
+                    <p><strong>犬が病気に陥りやすい大きな原因は肥満です。</strong><br>
+                    肥満は、関節や臓器に負担がかかるだけでなく、犬の寿命を縮めるという研究結果も出ています。<br>
+                    しかし、犬の肥満を予防することはとても簡単です。<br>
+                    なぜなら、犬がどれだけ食べるのかは、人間が管理することができるからです。<br>
+                    犬に適切な質と量の食べ物さえ与えていれば、肥満になることはありません。<br>
+                    定期的に体重を量りボディコンディションスコアを見ながら、自分の犬の適正体重を維持するようにしましょう。</p>
+                  </div>
+                </div>
+                <div class="content-box__body_corner_fat2">
+                  <h4><span>愛犬が太ってきたら…</span></h4>
+                  <div class="content-box__body_corner_fat2_list">
+                    <ul>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-icon03.png') }}" width="216" height="210" alt="フードの量を減らす"/></figure>
+                        <h5>フードの量を減らす</h5>
+                        <p>毎日与えているフードの量を<br>
+                          少し減らしましょう。</p>
+                      </li>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-icon04.png') }}" width="216" height="210" alt="フードの質を見直す"/></figure>
+                        <h5>フードの質を見直す</h5>
+                        <p>フードの袋の後ろには成分表記があります。<br>
+                        量を減らしたくない場合は、<br>
+                        現在与えているフードの成分よりも<br>
+                        タンパク質や脂質が低いものを選び、<br>
+                        運動量を増やしましょう。</p>
+                      </li>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-icon05.png') }}" width="216" height="210" alt="運動量を増やす"/></figure>
+                        <h5>運動量を増やす</h5>
+                        <p>フードの量や質を変えたくない場合は、<br>
+                          運動量を増やしましょう。</p>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="content-box__body_corner_fat2_article">
+                    <h4>ボディ・コンディション・スコア(BCS)</h4>
+                    <ul>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-fat01.png') }}" width="326" height="194" alt="BCS1"/></figure>
+                        <small>BCS1</small>
+                        <h5>痩せ</h5>
+                        <p>肋骨、腰椎、骨盤が外から容易に見える。触っても脂肪がわからない。腰のくびれを腹部の吊り上がりが顕著。</p>
+                      </li>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-fat02.png') }}" width="326" height="194" alt="BCS2"/></figure>
+                        <small>BCS2</small>
+                        <h5>やや痩せ</h5>
+                        <p>肋骨が容易に触る。上から見て腰のくびれは顕著で、腹部の吊り上がりも明瞭。</p>
+                      </li>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-fat03.png') }}" width="326" height="194" alt="BCS3"/></figure>
+                        <small>BCS3</small>
+                        <h5>理想的</h5>
+                        <p>過剰な脂肪の沈着なしに、肋骨が触れる。上から見て肋骨の後ろに腰のくびれが見られる。横から見て腹部の吊り上がりが見られる。</p>
+                      </li>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-fat04.png') }}" width="326" height="194" alt="BCS4"/></figure>
+                        <small>BCS4</small>
+                        <h5>やや肥満</h5>
+                        <p>志望の沈着はやや多いが、肋骨は触れる。上から見て腰のくびれは見られるが、顕著ではない。腹部の吊り上がりはやや見られる。</p>
+                      </li>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-fat05.png') }}" width="326" height="194" alt="BCS5"/></figure>
+                        <small>BCS5</small>
+                        <h5>肥満</h5>
+                        <p>厚い脂肪におおわれて肋骨が容易に触れない。腰椎や尾根部にも脂肪が沈着。腰のくびれはないが、ほとんど見られない。腹部の吊り上がりは見られないが、むしろ垂れ下がっている。</p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </article>
+            <article>
+              <div class="content-box__body_icon"><span><img src="{{ asset('assets/img/guide/guide-content04-icon06.png') }}" width="150" height="150" alt="睡眠"/></span></div>
+              <div class="content-box__body_text_center">
+              <p><strong>この場所は快適で安心できる場所だと思うと、よく眠るようになります。</strong><br>
+              逆に、快適ではなく安心することができないと思うと、睡眠時間は減少しストレスは増加します。<br>
+              そのため、犬が生活する場所では、快適に過ごせる空間作りを心がけましょう。<br>
+              例えば、リビングには犬用のベッドを置き、クレート内にはマットを引きます。<br>
+              夏には室内温度が上がりすぎないように配慮してあげてください。</p>
+              </div>
+              <div class="content-box__body_corner">
+                <div class="content-box__body_corner_sleep">
+                  <h4>クレートもしくはゲージ内で<br>
+                    大人しく過ごせるようにする</h4>
+                  <p>日々の生活の中でクレートなどを使用するかどうかは、ご家庭によって異なるかと思いますが、<br>
+                  クレートの中で、ある一定の時間を過ごすことに犬を慣れさせておけば、<br>
+                  いざという時に犬の安全を確保するための有効な手段として使えます。<br>
+                  また、犬はクレート内が快適で安心できる場所だと分かると、自ら中に入り、寝るようになります。<br>
+                  <strong>クレートの使用用途には以下のようなものがあります。</strong></p>
+                  <div class="content-box__body_corner_sleep_list">
+                    <ul>
+                      <li><i class="bi bi-check"></i>就寝時</li>
+                      <li><i class="bi bi-check"></i>留守番の時</li>
+                      <li><i class="bi bi-check"></i>車や電車などの移動時</li>
+                      <li><i class="bi bi-check"></i>災害避難時</li>
+                      <li><i class="bi bi-check"></i>犬が苦手な人が来客する時など</li>
+                    </ul>
+                  </div>
+                  <p>クレートトレーニングにおいて重要なことは、<br>
+                  犬が<strong>「クレート内は自分だけの心地いい場所である」</strong>と思ってもらうことです。<br>
+                  その為には、クレートに入れるときはオヤツや犬の好きなオモチャをハウスに入れるなど工夫をしながら、<br>
+                  クレート内で過ごす習慣をつけましょう。</p>
+                  <figure><img src="{{ asset('assets/img/guide/guide-content04-img02.png') }}" width="1010" height="360" alt="クレートトレーニング"/></figure>
+                  <p>しっかりとしつけをされた犬であれば、室内でフリーにしても<br>
+                  イタズラや排泄の失敗をすることなくお留守番ができますが、子犬の場合はそれができません。<br>
+                  また、子犬のイタズラ癖や、トイレの失敗癖を覚えてしまうと、その癖を改善するのは非常に困難です。<br>
+                  その為、3時間 クレート内でお留守番ができる時間 以上のお留守番をさせなければいけない場合は、<br>
+                  子犬がイタズラができず、専用の排泄スペースがある空間である<strong>「子犬のお部屋」</strong>を作り、その中でお留守番させましょう。<br>
+                  そして、成長に合わせ、徐々に室内フリーでもお留守番ができるようになります。</p>
+                  <div class="content-box__body_corner_sleep_list2">
+                    <ul>
+                      <li><i class="bi bi-check"></i>子犬がペットシーツで遊ぶ場合は、専用のトレーを使用する</li>
+                      <li><i class="bi bi-check"></i>オモチャは子犬が破壊できないもの、誤飲の恐れがない大きさのものを選ぶ</li>
+                    </ul>
+                  </div>
+                  <div class="content-box__body_corner_sleep_list3">
+                    <h5><span>上手にお留守番させるには…</span></h5>
+                    <ul>
+                      <li>最初は 30分～1時間から始め、徐々に時間を長くし、また定期的にお留守番させる時間をつくり、家に人がいないことに慣れさせましょう。</li>
+                      <li>イタズラができそうなものゴミ箱、テーブルの上の食べ物スリッパなどは片付けておきましょう。</li>
+                      <li>お留守番の前には、しっかりと散歩させ、疲れさせておきましょう。</li>
+                      <li>犬用の知育玩具などを使い、犬が退屈しない工夫をしましょう。</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </article>
+            <article>
+              <div class="content-box__body_icon"><span><img src="{{ asset('assets/img/guide/guide-content04-icon08.png') }}" width="150" height="150" alt="トイレ"/></span></div>
+              <div class="content-box__body_text_center">
+              <p><strong>子犬を迎えてから多くの方が悩まされるのは、トイレの問題かと思います。</strong><br>
+              ブリーダーさんの元ではきちんとできていたとしても、環境が変わると失敗する可能性がでてきます。<br>
+              失敗を繰り返させないことが大切です。覚えるまでは根気強く教えてあげましょう。</p>
+              </div>
+              <div class="content-box__body_corner">
+                <div class="content-box__body_corner_toilet">
+                  <h4>トイレのタイミング</h4>
+                  <div class="content-box__body_corner_toilet_list">
+                    <ul>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-icon10.png') }}" width="131" height="111" alt="朝起きた時"/>
+                          <figcaption>朝起きた時</figcaption>
+                        </figure>
+                      </li>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-icon11.png') }}" width="131" height="111" alt="食事のあと"/>
+                          <figcaption>食事のあと</figcaption>
+                        </figure>
+                      </li>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-icon12.png') }}" width="131" height="111" alt="運動または遊んだ(興奮した)あと"/>
+                          <figcaption>運動または<br>
+                            遊んだ(興奮した)あと</figcaption>
+                        </figure>
+                      </li>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-icon13.png') }}" width="131" height="111" alt="床のニオイを嗅ぎ始めた時"/>
+                          <figcaption>床のニオイを<br>
+                            嗅ぎ始めた時</figcaption>
+                        </figure>
+                      </li>
+                    </ul>
+                    <p><strong>上記はタイミングの目安です。</strong><br>
+                      基本的に子犬は23時間に1回トイレをすることを頭に入れておきましょう。</p>
+                  </div>
+                  <div class="content-box__body_corner_toilet_list2">
+                    <h5><span>トイレを教えるときのポイント…</span></h5>
+                    <ul>
+                      <li><strong>タイミングを見計らってトイレに連れて行きます。</strong><br>
+                      場所を覚えてもらう為、上記にあるトイレのタイミングにしてほしい所に誘導しましょう。<br>
+                      まずは抱っこでも構いません。<br>
+                      ペットシーツの上、トイレトレーの上など、してほしい場所まで連れて行ってあげてください。</li>
+                      <li><strong>においを嗅がせてあげます。</strong><br>
+                      犬はニオイを嗅ぐことでここはトイレをする場所だということが分かります。<br>
+                      そして犬がニオイを嗅いでいる間、今はトイレの時間だよということを伝えるためにコマンド<br>
+                      (＝合図)を出します。「ワンツー ワンツー」「ちっち 」など言い方は様々ですが、<br>
+                      繰り返し言い続け印象付けることで、そのコマンドを聞くとトイレをしたくなるようになります。<br>
+                      出先などで、「今のうちにオシッコをさせたいな」「このあと行くところでオシッコされると困る」<br>
+                      という時にはとても助かりますよね。<br>
+                      ※犬がニオイ嗅ぎをやめてトイレをし始めたら、コマンドを言うのをやめましょう</li>
+                      <li><strong>成功したらたくさん褒めてあげます。</strong><br>
+                      ちょっとしたご褒美をあげるのもOK<br>
+                      ※糞は放置せず、すぐに処理しましょう。（食糞防止）</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </article>
+            <article>
+              <div class="content-box__body_icon"><span><img src="{{ asset('assets/img/guide/guide-content04-icon14.png') }}" width="150" height="150" alt="運動"/></span></div>
+              <div class="content-box__body_text_center">
+              <p><strong>運動が不十分になった時に起こる悪い影響は数多くありますが、一番困るのは問題行動を起こすことです。</strong><br>
+              「よく吠える」「家具をかじる」「子供を追いかける」など、ドッグトレーナーが飼い主から相談を受ける様々な問題行動は、<br>
+                運動不足によるストレスが原因である可能性があります。<br>
+              犬にため、そして飼い主のためにも運動する時間は毎日しっかりと取ってあげましょう。</p>
+                <div class="content-box__body_text_center_merit">
+                  <h4>お散歩(運動)によるメリット</h4>
+                  <figure><img src="{{ asset('assets/img/guide/guide-content04-img05.png') }}" width="651" height="380" alt="肥満防止・ストレス解消・脳の活性化・よく眠れる"/></figure>
+                </div>
+              </div>
+              <div class="content-box__body_corner">
+                <div class="content-box__body_corner_sports">
+                  <div class="content-box__body_corner_sports_list">
+                    <h5><span>お散歩中の注意点</span></h5>
+                    <ul>
+                      <li>犬のフンは必ず持ち帰りましょう。</li>
+                      <li>犬の中には、散歩の途中でマーキング オシッコを色々なところにする行動をする子がいます。<br>
+                      毎回している場合、これは癖になっているので治すのに時間がかかりますが、<br>
+                      マーキングは他人の家の敷地内であったり、歩道にしないようにお気をつけながら歩いてください。</li>
+                      <li>もし、犬がしてはいけない場所でオシッコやフンをしてしまった場合は、<br>
+                        水などをかけるなどをして対処してください。</li>
+                      <li>歩道のないところで車、バイク、自転車などが近づいてきたら、犬を自分に近づけ、<br>
+                      端によって通り過ぎるまで待ってください。<br>
+                      リードを緩く持ったままでは、犬が急に動いた際に事故に遭う可能性があります。</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </article>
+            <article>
+              <div class="content-box__body_icon"><span><img src="{{ asset('assets/img/guide/guide-content04-icon15.png') }}" width="150" height="150" alt="トリミング・グルーミング"/></span>
+              <h4>トリミング・グルーミング</h4></div>
+              <div class="content-box__body_text_center_row">
+                <div class="content-box__body_text_center_desc">
+                  <dl>
+                    <dt>トリミング</dt>
+                    <dd>毛のカットをおこなうこと</dd>
+                  </dl>
+                  <dl>
+                    <dt>グルーミング</dt>
+                    <dd>爪切りや耳掃除など、犬のお手入れ全般</dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="content-box__body_corner">
+                <div class="content-box__body_corner_trimming">
+                  <h4>トリミングの必要性</h4>
+                  <div class="content-box__body_corner_trimming_list">
+                    <ul>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-icon17.png') }}" width="190" height="146" alt="体の清潔を保つ"/></figure>
+                        <h5>体の清潔を保つ</h5>
+                        <p>人間のように毎日する必要はありませんが、犬だって日々の汚れは蓄積されています。<br>
+                          洗いすぎはよくないですが、定期的なケアが必要になってきます。</p>
+                      </li>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-icon18.png') }}" width="190" height="146" alt="身体の触られることに慣らす"/></figure>
+                        <h5>身体の触られることに慣らす</h5>
+                        <p>子犬の頃から慣らす必要がありますが、普段から定期的なお手入れをしておくことで、犬もだんだんと触られることへの抵抗感が少なくなっていきます。<br>
+                        トリミングサロンに連れて行くのであれば慣れていた方が犬の負担も少ないですし、動物病院では診察しやすいというメリットがあります。</p>
+                      </li>
+                      <li>
+                        <figure><img src="{{ asset('assets/img/guide/guide-content04-icon19.png') }}" width="190" height="146" alt="健康チェック"/></figure>
+                        <h5>健康チェック</h5>
+                        <p>定期的にトリミングやグルーミングを行うことで、体調の変化に気づきやすくなります。<br>
+                          いつもより毛が抜ける、肌荒れしている、傷がある、などの小さな変化をいち早く発見することができます 。</p>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="content-box__body_corner_trimming_list2">
+                    <div class="content-box__body_corner_trimming_list2_text">
+                      <h5><span>愛犬のグルーミングに挑戦してみよう!</span></h5>
+                      <ul>
+                        <li>シャンプー</li>
+                        <li>ドライ</li>
+                        <li>爪切り</li>
+                        <li>足裏カット</li>
+                        <li>耳掃除</li>
+                      </ul>
+                    </div>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content04-img07.png') }}" width="227" height="211" alt="グルーミング"/></figure>
+                  </div>
+                  <div class="content-box__body_corner_trimming_list3">
+                      <h5><span>犬の気持ちを理解する</span></h5>
+                      <p>犬たちは自分の気持ちを言葉で伝える代わりに、体の動きで表現します。<br>
+                        犬が何を求めているか、どういう気持ちでいるか、耳の代わりに目を向けてあげてください。</p>
+                    <figure>
+                      <figcaption>犬の行動チャート(犬語)</figcaption>
+                      <img src="{{ asset('assets/img/guide/guide-content04-img08.gif') }}" width="227" height="211" alt="犬の行動チャート(犬語)"/>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="guide-content05">
+      <div class="inner">
+        <div class="content-box">
+          <div class="content-box__title">
+            <h2>準  備</h2>
+          </div>
+          <div class="content-box__body">
+            <div class="content-box__body_container">
+              <div class="content-box__body_container_num"><img src="{{ asset('assets/img/guide/guide-content05-num01.png') }}" width="78" height="78" alt="1"/></div>
+              <div class="content-box__body_container_title">
+                <h3>環境の見直し</h3>
+                <p>犬にとって危険なものがないかをチェック<br>
+                  子犬が安心して過ごせる環境を作ってあげましょう。</p>
+              </div>
+              <div class="content-box__body_container_article">
+                <article>
+                  <h4>家の中</h4>
+                  <div class="content-box__body_container_article_row">
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img01.jpg') }}" width="321" height="214" alt="玄関"/></figure>
+                    <div class="content-box__body_container_article_text">
+                      <h5><span>玄関</span></h5>
+                      <p>犬が直接外に出られないような脱走防止策はありますか？<br>
+                        家の目の前が道路の場合、玄関から外に出てしまい事故に遭って…</p>
+                    </div>
+                  </div>
+                  <div class="content-box__body_container_article_row">
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img02.jpg') }}" width="321" height="214" alt="高さのあるソファやベッド、階段"/></figure>
+                    <div class="content-box__body_container_article_text">
+                      <h5><span>高さのあるソファやベッド、階段</span></h5>
+                      <p>乗り降りを繰り返すと足腰の負担となり、少しずつダメージが増えていってしまいます。<br>
+                      特に小型犬では膝蓋骨脱臼パテラ になってしまったり、<br>
+                      高さがあれば骨折してしまうことがあります。<br>
+                      ダックスフンドやコーギーのように短足で胴長の子体高が低い子は、<br>
+                      腰の負担が特に大きいので注意してください。</p>
+                    </div>
+                  </div>
+                  <div class="content-box__body_container_article_row">
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img03.jpg') }}" width="321" height="214" alt="滑りやすい床"/></figure>
+                    <div class="content-box__body_container_article_text">
+                      <h5><span>滑りやすい床</span></h5>
+                      <p>フローリングなどの滑りやすいツルツルとした床は、転んでケガをする恐れがあり、<br>
+                      犬にとっては歩きにくいので足腰に負担がかかってしまいます。<br>
+                      ワンちゃんが行動する範囲だけでも、滑らないシートやマットを敷いてあげましょう。</p>
+                    </div>
+                  </div>
+                </article>
+                <article>
+                  <h4>キッチン</h4>
+                  <div class="content-box__body_container_article_row">
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img04.jpg') }}" width="321" height="214" alt="キッチン"/></figure>
+                    <div class="content-box__body_container_article_text">
+                      <p>ゴミ袋を漁る能性があり、興味が強い子だと簡単にゴミ袋を破ってしまいます。<br>
+                      イタズラをされないよう、蓋付きのごみ箱に入れておくなどの対策が必要です。<br>
+                      人間の食べ物は犬にとって危険なものがあるので、きちんと見直しましょう。</p>
+                    </div>
+                  </div>
+                </article>
+                <article>
+                  <h4>リビング</h4>
+                  <div class="content-box__body_container_article_row">
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img05.jpg') }}" width="321" height="214" alt="コードやコンセント"/></figure>
+                    <div class="content-box__body_container_article_text">
+                      <ul>
+                        <li><i class="bi bi-check"></i>食事中、床にこぼれた物</li>
+                        <li><i class="bi bi-check"></i>人間と同じご飯を与えてはいけません</li>
+                      </ul>
+                      <h5><span>コードやコンセント</span></h5>
+                      <p>出しっぱなしや補強されていないコンセントは、犬の脚がコードにひっかかる可能性があり、かじってしまった場合には感電してしまう恐れもあります。</p>
+                    </div>
+                  </div>
+                  <div class="content-box__body_container_article_row">
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img06.jpg') }}" width="321" height="214" alt="観葉植物や花"/></figure>
+                    <div class="content-box__body_container_article_text">
+                      <h5><span>観葉植物や花</span></h5>
+                      <p>犬が中毒を起こす植物には、観葉植物や花などを含め多くの種類があります。<br>
+                      中毒症状は植物によって異なり、軽度の皮膚症状や消化器症状が現れるものもあれば、<br>
+                      神経症状や心臓、呼吸器の症状など重症になる例もみられます。<br>
+                      症状の軽度は、植物の種類や量によります。<br>
+                      犬は身の回りに植物があると、興味がわいたときや退屈したときなどに、<br>
+                      噛んだり口に入れて食べてしまったりすることがあります。</p>
+                      <p><strong>散歩の際にも、屋外では植物に殺虫剤や除草剤がかかっていることもあるので、注意が必要です。</strong></p>
+                      <p>万が一、口にしてしまった際はすぐに動物病院に行きましょう。
+                      この時、慌てず「 どんな植物をどのくらい食べたか」を覚えておき、
+                      獣医師に伝えられるようにしましょう。</p>
+                    </div>
+                  </div>
+                </article>
+                <article>
+                  <h4>ベランダや庭</h4>
+                  <div class="content-box__body_container_article_row">
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img07.jpg') }}" width="321" height="214" alt="ベランダや庭"/></figure>
+                    <div class="content-box__body_container_article_text">
+                      <ul>
+                        <li><i class="bi bi-check"></i>家の中と同じく、植物や花には注意が必要です。</li>
+                      </ul>
+                      <h5><span>逃走のキケンがないか</span></h5>
+                      <p>犬は小さな隙間もすり抜けることができます。<br>
+                      お庭の場合、木や植物で見えないようなところは特に注意し確認してみましょう。<br>
+                      ベランダの場合は、柵の幅が大きいと落下の危険性が伴いますので、<br>
+                      板でふさぐなどの対策が必要になります。</p>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="content-box__body_container" id="guide-content05_2">
+              <div class="content-box__body_container_num"><img src="{{ asset('assets/img/guide/guide-content05-num02.png') }}" width="78" height="78" alt="2"/></div>
+              <div class="content-box__body_container_title">
+                <h3>必要なグッズをそろえる</h3>
+              </div>
+              <div class="content-box__body_container_article">
+                <article>
+                  <h4>サークル</h4>
+                  <div class="content-box__body_container_article_row">
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img08.jpg') }}" width="321" height="214" alt="サークル"/></figure>
+                    <div class="content-box__body_container_article_text">
+                      <p><strong>Uターンができ、楽にフセもできるくらいの大きさのものを用意しましょう。</strong><br>
+                      ベッドとトイレが近すぎると、犬のきれい好きな習性的に寝る場所に近いところでは<br>
+                      トイレをしたくないことが多く、お部屋であまりしなくなってしまうことがあるので、<br>
+                      ベッドとトイレは少し離せるくらいの大きさにすることをおすすめします。<br>
+                      なるべく人が通らないスペースにお部屋を設置してあげましょう。</p>
+                      <p><strong>扉の横や、ソファの近くの場合は人がよく行き来するのであまり落ち着けません。
+                        人の通りが少ない部屋の隅などがオススメです。</strong></p>
+                    </div>
+                  </div>
+                </article>
+                <article>
+                  <h4>トイレ</h4>
+                  <div class="content-box__body_container_article_row">
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img09.jpg') }}" width="321" height="214" alt="トイレ"/></figure>
+                    <div class="content-box__body_container_article_text">
+                      <ul>
+                        <li><i class="bi bi-check"></i>基本的にはペットシーツのみでトイレは可能</li>
+                        <li><i class="bi bi-check"></i>シーツを噛みちぎってしまう場合は、トイレトレーを使用する</li>
+                        <li><i class="bi bi-check"></i>サイズが小さいと体がはみ出でしまいトイレの失敗につながるため、大きめサイズをチョイスしましょう。</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="content-box__body_container_article_row_image">
+                    <ul>
+                      <li>
+                        <figure>
+                          <figcaption>ベッド</figcaption>
+                          <img src="{{ asset('assets/img/guide/guide-content05-img10.jpg') }}" width="321" height="214" alt="ベッド"/>
+                        </figure>
+                      </li>
+                      <li>
+                        <figure>
+                          <figcaption>クレート</figcaption>
+                          <img src="{{ asset('assets/img/guide/guide-content05-img11.jpg') }}" width="321" height="214" alt="クレート"/>
+                        </figure>
+                      </li>
+                      <li>
+                        <figure>
+                          <figcaption>フード</figcaption>
+                          <img src="{{ asset('assets/img/guide/guide-content05-img12.jpg') }}" width="321" height="214" alt="フード"/>
+                        </figure>
+                      </li>
+                    </ul>
+                  </div>
+                </article>
+                <article>
+                  <h4>お散歩グッズ</h4>
+                  <div class="content-box__body_container_article_row_image2">
+                    <h5>リード・ハーネス・散歩バッグ・うんち袋・水入れ</h5>
+                    <ul>
+                      <li><img src="{{ asset('assets/img/guide/guide-content05-img13.jpg') }}" width="321" height="214" alt="リード・ハーネス"/></li>
+                      <li><img src="{{ asset('assets/img/guide/guide-content05-img14.jpg') }}" width="321" height="214" alt="散歩バッグ・うんち袋"/></li>
+                      <li><img src="{{ asset('assets/img/guide/guide-content05-img15.jpg') }}" width="321" height="214" alt="水入れ"/></li>
+                    </ul>
+                  </div>
+                </article>
+              </div>
+            </div>
+            <div class="content-box__body_container" id="guide-content05_3">
+              <div class="content-box__body_container_num"><img src="{{ asset('assets/img/guide/guide-content05-num03.png') }}" width="78" height="78" alt="3"/></div>
+              <div class="content-box__body_container_title">
+                <h3>あると便利なもの</h3>
+              </div>
+              <div class="content-box__body_container_goods">
+                <ul>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img16.png') }}" width="321" height="214" alt="コング"/>
+                      <figcaption>コング</figcaption>
+                    </figure>
+                  </li>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img17.png') }}" width="321" height="214" alt="グルーミング用品(スリッカー・コーム・歯ブラシ)"/>
+                      <figcaption>グルーミング用品<small>(スリッカー・コーム・歯ブラシ)</small></figcaption>
+                    </figure>
+                  </li>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img18.png') }}" width="321" height="214" alt="爪切り"/>
+                      <figcaption>爪切り</figcaption>
+                    </figure>
+                  </li>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-img19.png') }}" width="321" height="214" alt="犬用の食器"/>
+                      <figcaption>犬用の食器</figcaption>
+                    </figure>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="content-box__body_container" id="guide-content05_4">
+              <div class="content-box__body_container_num"><img src="{{ asset('assets/img/guide/guide-content05-num04.png') }}" width="78" height="78" alt="4"/></div>
+              <div class="content-box__body_container_title">
+                <h3>もしもの時を考える</h3>
+              </div>
+              <div class="content-box__body_container_memo">
+                <ul>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-icon02.png') }}" width="321" height="214" alt="病院"/>
+                      <figcaption>病院</figcaption>
+                    </figure>
+                  </li>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-icon03.png') }}" width="321" height="214" alt="預かってくれるところがあるか"/>
+                      <figcaption>預かってくれる<br>
+                        ところがあるか</figcaption>
+                    </figure>
+                  </li>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-icon04.png') }}" width="321" height="214" alt="災害時"/>
+                      <figcaption>災害時</figcaption>
+                    </figure>
+                  </li>
+                  <li>
+                    <figure><img src="{{ asset('assets/img/guide/guide-content05-icon05.png') }}" width="321" height="214" alt="逃げてしまった行方不明"/>
+                      <figcaption>逃げてしまった<br>
+                        行方不明</figcaption>
+                    </figure>
+                  </li>
+                </ul>
+                <div class="content-box__body_container_memo_c">
+                  <figure><img src="{{ asset('assets/img/guide/guide-content05-icon06.png') }}" width="321" height="214" alt="マイクロチップ"/></figure>
+                  <p><strong>マイクロチップを検討してみるのもアリ!</strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <div class="pagetop"><a href="#wrapper"><i class="bi bi-arrow-bar-up"></i></a></div>
+      
+  </main>
+{% endblock %}
+
+{% block javascript %}
+<script>  
+  document.title = "Animalline｜お迎えガイド(犬編)";
+</script>
+{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+{% endblock %}

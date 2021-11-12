@@ -185,41 +185,18 @@ class BreederController extends AbstractController
     }
 
     /**
-     * ブリーダー用ユーザーページ
+     * ブリーダーマイページ
      *
      * @Route("/breeder/member/", name="breeder_mypage")
      * @Template("animalline/breeder/member/index.twig")
      */
     public function breeder_mypage(Request $request)
     {
-        // $rootMessages = $this->breederContactsRepository
-        //     ->findBy(
-        //         [
-        //             'Customer' => $this->getUser(),
-        //             'parent_message_id' => AnilineConf::ROOT_MESSAGE_ID,
-        //             'contract_status' => AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION
-        //         ]
-        //     );
-
-        // $lastReplies = [];
-        // foreach ($rootMessages as $rootMessage) {
-        //     $lastReply = $this->breederContactsRepository
-        //         ->findOneBy(['parent_message_id' => $rootMessage->getId()], ['send_date' => 'DESC']);
-        //     $lastReplies[$rootMessage->getId()] = $lastReply;
-        // }
-
-        // $pets = $this->breederQueryService->findBreederFavoritePets($this->getUser()->getId());
-
-        // return $this->render('animalline/breeder/member/index.twig', [
-        //     'rootMessages' => $rootMessages,
-        //     'lastReplies' => $lastReplies,
-        //     'pets' => $pets,
-        //     'user' => $this->getUser(),
-        // ]);
+        return [];
     }
 
     /**
-     * Page Breeder detail
+     * ブリーダー詳細
      *
      * @Route("/breeder/breeder_search/{breeder_id}", name="breeder_detail", requirements={"breeder_id" = "\d+"})
      * @Template("/animalline/breeder/breeder_detail.twig")

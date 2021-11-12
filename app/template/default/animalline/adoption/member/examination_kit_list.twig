@@ -16,11 +16,11 @@
                                     <a class="btn btn-warning btn-block mt-3"
                                         href="{{ url('adoption_examination_kit_new') }}">検査キット請求</a>
                                     {% if params.is_all is defined and params.is_all == 1 %}
-                                    <a class="btn btn-warning btn-block mt-3"
-                                        href="{{ url('adoption_examination_kit') }}">未完了のみ表示</a>
+                                        <a class="btn btn-warning btn-block mt-3"
+                                            href="{{ url('adoption_examination_kit') }}">未完了のみ表示</a>
                                     {% else %}
-                                    <a class="btn btn-warning btn-block mt-3"
-                                        href="{{ url('adoption_examination_kit', {'is_all': 1}) }}">全件表示</a>
+                                        <a class="btn btn-warning btn-block mt-3"
+                                            href="{{ url('adoption_examination_kit', {'is_all': 1}) }}">全件表示</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -79,5 +79,3 @@
 });
 </script>
 {% endblock %}
-
-
