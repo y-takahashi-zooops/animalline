@@ -139,7 +139,7 @@ PAGE - 遺伝子検査
   padding:40px 20px 30px;
   text-align:center;
   position:relative;
-  display:flex;
+  /* display:flex; */
   align-items:center;
 }
 #dna-content03 .dna-content03__body article:before{
@@ -174,7 +174,7 @@ PAGE - 遺伝子検査
   text-align:left;
 }
 #dna-content03 .dna-content03__body article ul{
-  margin:20px 0 0;
+  margin:20px 20px 10px;
   padding:20px 20px 10px;
   background-color:#fff;
   border-radius:10px;
@@ -438,7 +438,8 @@ PAGE - 遺伝子検査
 }
 #dna-content05 .dna-content05__body article ul li{
   position:relative;
-  padding:0 0 0 20px;
+  /* padding:0 0 0 20px; */
+  padding:0;
   margin:0 0 10px;
 }
 #dna-content05 .dna-content05__body article ul li i{
@@ -657,6 +658,14 @@ PAGE - 遺伝子検査
 }
 #dna-content08 figure{
   padding:40px 0 0;
+}
+
+.list-desc {
+  list-style-type: disc;
+  list-style-position: inside;
+}
+.list-desc::marker {
+  margin: 0;
 }
 
 /*------------------
