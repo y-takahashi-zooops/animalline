@@ -2,81 +2,28 @@
 
 namespace Customize\Controller\Adoption;
 
-use Customize\Config\AnilineConf;
-use Customize\Entity\ConservationPetImage;
-use Customize\Entity\ConservationPets;
-use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\AdoptionQueryService;
-use Carbon\Carbon;
+use Eccube\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Form\Type\Adoption\ConservationsType;
-use Customize\Form\Type\Adoption\ConservationPetsType;
-use Customize\Form\Type\Adoption\ConservationHouseType;
 use Customize\Entity\Conservations;
-use Customize\Entity\ConservationContacts;
-use Customize\Entity\ConservationContactHeader;
-use Customize\Entity\ConservationsHouse;
-use Customize\Repository\ConservationPetsRepository;
-use Customize\Repository\PetsFavoriteRepository;
-use Eccube\Repository\Master\PrefRepository;
-use Customize\Repository\ConservationContactHeaderRepository;
-use Customize\Repository\ConservationContactsRepository;
-use Customize\Repository\SendoffReasonRepository;
 use Customize\Repository\ConservationsRepository;
-use Customize\Repository\ConservationsHousesRepository;
-use Customize\Repository\ConservationPetImageRepository;
-
-use Customize\Service\DnaQueryService;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
-use Customize\Form\Type\Adoption\ConservationContactType;
-use DateTime;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
+use Customize\Config\AnilineConf;
 
 class AdoptionMemberController extends AbstractController
 {
     /**
-     * @var DnaQueryService
+     * @var CustomerRepository
      */
-    protected $dnaQueryService;
-
-    /**
-     * @var DnaCheckStatusRepository
-     */
-    protected $dnaCheckStatusRepository;
-
-    /**
-     * @var ConservationContactHeaderRepository
-     */
-    protected $conservationContactHeaderRepository;
-
-    /**
-     * @var ConservationContactsRepository
-     */
-    protected $conservationContactsRepository;
-
-    /**
-     * @var AdoptionQueryService
-     */
-    protected $adoptionQueryService;
-
-    /**
-     * @var PetsFavoriteRepository
-     */
-    protected $petsFavoriteRepository;
-
-    /**
-     * @var SendoffReasonRepository
-     */
-    protected $sendoffReasonRepository;
+    protected $customerRepository;
 
     /**
      * @var ConservationsRepository
@@ -84,75 +31,25 @@ class AdoptionMemberController extends AbstractController
     protected $conservationsRepository;
 
     /**
-     * @var ConservationsHousesRepository
+     * @var AdoptionQueryService
      */
-    protected $conservationsHouseRepository;
-
-    /**
-     * @var PrefRepository
-     */
-    protected $prefRepository;
-
-    /**
-     * @var ConservationPetsRepository
-     */
-    protected $conservationPetsRepository;
-
-    /**
-     * @var CustomerRepository
-     */
-    protected $customerRepository;
-
-    /**
-     * @var ConservationPetImageRepository
-     */
-    protected $conservationPetImageRepository;
+    protected $adoptionQueryService;
 
     /**
      * ConservationController constructor.
      *
-     * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
-     * @param ConservationContactsRepository $conservationContactsRepository
-     * @param AdoptionQueryService $adoptionQueryService
-     * @param PetsFavoriteRepository $petsFavoriteRepository
-     * @param SendoffReasonRepository $sendoffReasonRepository
-     * @param ConservationsRepository $conservationsRepository
-     * @param PrefRepository $prefRepository
-     * @param ConservationsHousesRepository $conservationsHouseRepository
-     * @param ConservationPetsRepository $conservationPetsRepository
      * @param CustomerRepository $customerRepository
-     * @param ConservationPetImageRepository $conservationPetImageRepository
-     * @param DnaCheckStatusRepository $dnaCheckStatusRepository
-     * @param DnaQueryService $dnaQueryService
+     * @param ConservationsRepository $conservationsRepository
+     * @param AdoptionQueryService $adoptionQueryService
      */
     public function __construct(
-        ConservationContactHeaderRepository $conservationContactHeaderRepository,
-        ConservationContactsRepository      $conservationContactsRepository,
-        AdoptionQueryService                $adoptionQueryService,
-        PetsFavoriteRepository              $petsFavoriteRepository,
-        SendoffReasonRepository             $sendoffReasonRepository,
-        ConservationsRepository             $conservationsRepository,
-        PrefRepository                      $prefRepository,
-        ConservationsHousesRepository       $conservationsHouseRepository,
-        ConservationPetsRepository          $conservationPetsRepository,
-        CustomerRepository                  $customerRepository,
-        ConservationPetImageRepository      $conservationPetImageRepository,
-        DnaCheckStatusRepository            $dnaCheckStatusRepository,
-        DnaQueryService                     $dnaQueryService
+        CustomerRepository  $customerRepository,
+        ConservationsRepository  $conservationsRepository,
+        AdoptionQueryService  $adoptionQueryService
     ) {
-        $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
-        $this->conservationContactsRepository = $conservationContactsRepository;
-        $this->adoptionQueryService = $adoptionQueryService;
-        $this->petsFavoriteRepository = $petsFavoriteRepository;
-        $this->sendoffReasonRepository = $sendoffReasonRepository;
-        $this->conservationsRepository = $conservationsRepository;
-        $this->prefRepository = $prefRepository;
-        $this->conservationsHouseRepository = $conservationsHouseRepository;
-        $this->conservationPetsRepository = $conservationPetsRepository;
         $this->customerRepository = $customerRepository;
-        $this->conservationPetImageRepository = $conservationPetImageRepository;
-        $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
-        $this->dnaQueryService = $dnaQueryService;
+        $this->conservationsRepository = $conservationsRepository;
+        $this->adoptionQueryService = $adoptionQueryService;
     }
 
     /**
@@ -238,7 +135,7 @@ class AdoptionMemberController extends AbstractController
      * @Route("/adoption/member/baseinfo", name="adoption_baseinfo")
      * @Template("/animalline/adoption/member/base_info.twig")
      */
-    public function base_info(Request $request, ConservationsRepository $conservationsRepository, PrefRepository $prefRepository)
+    public function base_info(Request $request, ConservationsRepository $conservationsRepository)
     {
         //リダイレクト先設定
         $return_path = $request->get('return_path');
@@ -253,12 +150,14 @@ class AdoptionMemberController extends AbstractController
             $conservation = new Conservations;
             $conservation->setId($user->getId());
         }
+
+        $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
+
         $builder = $this->formFactory->createBuilder(ConservationsType::class, $conservation);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
 
-        $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
         if ($form->isSubmitted() && $form->isValid()) {
             $conservation->setPref($conservation->getPrefId())
                 ->setId($user->getId())
@@ -268,22 +167,23 @@ class AdoptionMemberController extends AbstractController
             $entityManager->persist($conservation);
             $entityManager->flush();
             return $this->redirectToRoute($return_path);
-        } elseif (!$form->isSubmitted() && !$conservationsRepository->find($user)) {
-            // Customer情報から初期情報をセット
-            $Customer = $this->customerRepository->find($user);
-            $form->get('owner_name')->setData($Customer->getname01() . "　" . $Customer->getname02());
-            $form->get('owner_kana')->setData($Customer->getkana01() . "　" . $Customer->getkana02());
-            $form->get('zip')->setData($Customer->getPostalCode());
-            $form->get('PrefId')->setData($Customer->getPref());
-            $form->get('city')->setData($Customer->getAddr01());
-            $form->get('address')->setData($Customer->getAddr02());
-            $form->get('tel')->setData($Customer->getPhoneNumber());
+        // } elseif (!$form->isSubmitted() && !$conservationsRepository->find($user)) {
+        //     // Customer情報から初期情報をセット
+        //     $Customer = $this->customerRepository->find($user);
+        //     $form->get('owner_name')->setData($Customer->getname01() . "　" . $Customer->getname02());
+        //     $form->get('owner_kana')->setData($Customer->getkana01() . "　" . $Customer->getkana02());
+        //     $form->get('zip')->setData($Customer->getPostalCode());
+        //     $form->get('PrefId')->setData($Customer->getPref());
+        //     $form->get('city')->setData($Customer->getAddr01());
+        //     $form->get('address')->setData($Customer->getAddr02());
+        //     $form->get('tel')->setData($Customer->getPhoneNumber());
         }
 
         return [
+            'return_path' => $return_path,
             'conservation' => $conservation,
             'form' => $form->createView(),
-            'return_path' => $return_path,
+            'Customer' => $user,
             'thumbnail_path' => $thumbnail_path
         ];
     }

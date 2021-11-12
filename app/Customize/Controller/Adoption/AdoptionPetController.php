@@ -87,11 +87,73 @@ class AdoptionPetController extends AbstractController
     }
 
     /**
+     * 取扱ペット一覧TOP
+     *
+     * @Route("/adoption/member/pet_list", name="adoption_pet_list")
+     * @Template("animalline/adoption/member/pet_list.twig")
+     */
+    public function adoption_pet_list()
+    {
+        $pets = $this->conservationPetsRepository->findBy(['Conservation' => $this->getUser()], ['update_date' => 'DESC']);
+
+        return $this->render(
+            'animalline/adoption/member/pet_list.twig',
+            [
+                'conservation' => $this->getUser(),
+                'pets' => $pets,
+            ]
+        );
+    }
+
+    /**
+     * ペット詳細
+     *
+     * @Route("/adoption/pet/detail/{id}", name="adoption_pet_detail", requirements={"id" = "\d+"})
+     * @Template("animalline/adoption/pet/detail.twig")
+     */
+    public function petDetail(Request $request)
+    {
+        $isLoggedIn = (bool)$this->getUser();
+        $id = $request->get('id');
+        $isFavorite = false;
+        $conservationPet = $this->conservationPetsRepository->find($id);
+        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
+        if ($favorite) {
+            $isFavorite = true;
+        }
+        if (!$conservationPet) {
+            throw new HttpException\NotFoundHttpException();
+        }
+
+        $images = $this->conservationPetImageRepository->findBy(
+            [
+                'ConservationPet' => $conservationPet,
+                'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE
+            ]
+        );
+        $video = $this->conservationPetImageRepository->findOneBy(
+            [
+                'ConservationPet' => $conservationPet,
+                'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
+            ]
+        );
+
+        return $this->render(
+            'animalline/adoption/pet/detail.twig',
+            [
+                'conservationPet' => $conservationPet,
+                'images' => $images,
+                'video' => $video,
+                'isFavorite' => $isFavorite,
+                'isLoggedIn' => $isLoggedIn
+            ]
+        );
+    }
+
+    /**
      * 新規ペット追加
      *
      * @Route("/adoption/member/pets/new/{bar_code}", name="adoption_pets_new", methods={"GET","POST"}, requirements={"bar_code" = "^\d{6}$"})
-     * @param Request $request
-     * @return Response
      */
     public function adoption_pets_new(Request $request): Response
     {
@@ -248,26 +310,6 @@ class AdoptionPetController extends AbstractController
     }
 
     /**
-     * 取扱ペット一覧TOP
-     *
-     * @Route("/adoption/member/pet_list", name="adoption_pet_list")
-     * @Template("animalline/adoption/member/pet_list.twig")
-     */
-    public function adoption_pet_list(Request $request)
-    {
-        $pets = $this->conservationPetsRepository->findBy(['Conservation' => $this->getUser()], ['update_date' => 'DESC']);
-
-        return $this->render(
-            'animalline/adoption/member/pet_list.twig',
-            [
-                'conservation' => $this->getUser(),
-                'pets' => $pets,
-            ]
-        );
-    }
-
-
-    /**
      * Copy image and retrieve new url of the copy
      *
      * @param string $imageUrl
@@ -303,51 +345,6 @@ class AdoptionPetController extends AbstractController
 
         copy($imageUrl, $subUrl . $imageName);
         return '/adoption/' . $petId . '/' . $imageName;
-    }
-
-    /**
-     * ペット詳細
-     *
-     * @Route("/adoption/pet/detail/{id}", name="adoption_pet_detail", requirements={"id" = "\d+"})
-     * @Template("animalline/adoption/pet/detail.twig")
-     */
-    public function petDetail(Request $request)
-    {
-        $isLoggedIn = (bool)$this->getUser();
-        $id = $request->get('id');
-        $isFavorite = false;
-        $conservationPet = $this->conservationPetsRepository->find($id);
-        $favorite = $this->petsFavoriteRepository->findOneBy(['Customer' => $this->getUser(), 'pet_id' => $id]);
-        if ($favorite) {
-            $isFavorite = true;
-        }
-        if (!$conservationPet) {
-            throw new HttpException\NotFoundHttpException();
-        }
-
-        $images = $this->conservationPetImageRepository->findBy(
-            [
-                'ConservationPet' => $conservationPet,
-                'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE
-            ]
-        );
-        $video = $this->conservationPetImageRepository->findOneBy(
-            [
-                'ConservationPet' => $conservationPet,
-                'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
-            ]
-        );
-
-        return $this->render(
-            'animalline/adoption/pet/detail.twig',
-            [
-                'conservationPet' => $conservationPet,
-                'images' => $images,
-                'video' => $video,
-                'isFavorite' => $isFavorite,
-                'isLoggedIn' => $isLoggedIn
-            ]
-        );
     }
 
     /**

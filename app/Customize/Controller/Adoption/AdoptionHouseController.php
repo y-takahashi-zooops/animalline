@@ -68,15 +68,16 @@ class AdoptionHouseController extends AbstractController
                 ->setConservationHousePref($conservationsHouse->getPref());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservationsHouse);
+
             $entityManager->flush();
 
             return $this->redirectToRoute($return_path);
         }
         return [
+            'return_path' => $return_path,
             'form' => $form->createView(),
             'petType' => $petType,
             'conservation' => $conservation,
-            'return_path' => $return_path
         ];
     }
 }

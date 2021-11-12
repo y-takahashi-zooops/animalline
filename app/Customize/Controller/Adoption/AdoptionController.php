@@ -3,33 +3,39 @@
 namespace Customize\Controller\Adoption;
 
 use Customize\Config\AnilineConf;
-use Customize\Entity\PetsFavorite;
-use Customize\Repository\BreedsRepository;
+use Customize\Service\AdoptionQueryService;
 use Customize\Repository\ConservationContactsRepository;
-use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationPetImageRepository;
+use Eccube\Repository\Master\PrefRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Customize\Entity\PetsFavorite;
 use Customize\Repository\ConservationsRepository;
 use Customize\Repository\ConservationsHousesRepository;
+use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Controller\AbstractController;
-use Eccube\Repository\Master\PrefRepository;
+use Eccube\Event\EccubeEvents;
 use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Customize\Service\AdoptionQueryService;
+use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use DateTime;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\ContactType;
-use Eccube\Event\EccubeEvents;
 use Eccube\Service\MailService;
 
 class AdoptionController extends AbstractController
 {
+    /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+    /**
+     * @var ConservationsHousesRepository
+     */
+    protected $conservationsHousesRepository;
+
     /**
      * @var ConservationPetsRepository
      */
@@ -56,24 +62,10 @@ class AdoptionController extends AbstractController
     protected $petsFavoriteRepository;
 
     /**
-     * @var BreedsRepository
-     */
-    protected $breedsRepository;
-
-    /**
      * @var PrefRepository
      */
     protected $prefRepository;
 
-    /**
-     * @var ConservationsRepository
-     */
-    protected $conservationsRepository;
-
-    /**
-     * @var ConservationsHousesRepository
-     */
-    protected $conservationsHousesRepository;
 
     /**
      * @var MailService
@@ -88,7 +80,6 @@ class AdoptionController extends AbstractController
      * @param ConservationContactsRepository $conservationContactsRepository
      * @param AdoptionQueryService $adoptionQueryService
      * @param PetsFavoriteRepository $petsFavoriteRepository
-     * @param BreedsRepository $breedsRepository
      * @param PrefRepository $prefRepository
      * @param ConservationsRepository $conservationsRepository
      * @param ConservationsHousesRepository $conservationsHousesRepository
@@ -100,7 +91,6 @@ class AdoptionController extends AbstractController
         ConservationContactsRepository $conservationContactsRepository,
         AdoptionQueryService           $adoptionQueryService,
         PetsFavoriteRepository         $petsFavoriteRepository,
-        BreedsRepository               $breedsRepository,
         PrefRepository                 $prefRepository,
         ConservationsRepository        $conservationsRepository,
         ConservationsHousesRepository  $conservationsHousesRepository,
@@ -111,12 +101,12 @@ class AdoptionController extends AbstractController
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
-        $this->breedsRepository = $breedsRepository;
         $this->prefRepository = $prefRepository;
         $this->conservationsRepository = $conservationsRepository;
         $this->conservationsHousesRepository = $conservationsHousesRepository;
         $this->mailService = $mailService;
     }
+
 
     /**
      * Page Adoption
@@ -146,7 +136,7 @@ class AdoptionController extends AbstractController
             AnilineConf::NUMBER_ITEM_TOP
         );
         $favoritePets = $this->conservationPetsRepository->findBy(
-            ['pet_kind' => $petKind],
+            ['pet_kind' => $petKind, 'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC],
             ['favorite_count' => 'DESC'],
             AnilineConf::NUMBER_ITEM_TOP
         );
@@ -199,6 +189,7 @@ class AdoptionController extends AbstractController
     {
         $conservation = $this->conservationsRepository->find($adoption_id);
         if (!$conservation) {
+            throw new NotFoundHttpException();
         }
 
         $handling_pet_kind = $conservation->getHandlingPetKind();
@@ -266,7 +257,7 @@ class AdoptionController extends AbstractController
     {
         return;
     }
-
+    
     /**
      * 問い合わせ.
      *
@@ -275,7 +266,6 @@ class AdoptionController extends AbstractController
      */
     public function ani_contact(Request $request)
     {
-       
         $builder = $this->formFactory->createBuilder(ContactType::class);
 
         if ($this->isGranted('ROLE_USER')) {

@@ -79,32 +79,6 @@ class AdoptionSearchController extends AbstractController
     }
 
     /**
-     * 保護団体検索
-     *
-     * @Route("/adoption/adoption_search", name="adoption_search")
-     * @Template("/animalline/adoption/adoption_search.twig")
-     */
-    public function adoption_search(PaginatorInterface $paginator, Request $request): Response
-    {
-        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
-        $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
-        $regions = $this->prefRepository->findAll();
-        $adoptionResults = $this->adoptionQueryService->searchAdoptionsResult($request, $petKind);
-        $adoptions = $paginator->paginate(
-            $adoptionResults,
-            $request->query->getInt('page', 1),
-            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
-        );
-
-        return $this->render('animalline/adoption/adoption_search.twig', [
-            'adoptions' => $adoptions,
-            'petKind' => $petKind,
-            'breeds' => $breeds,
-            'regions' => $regions
-        ]);
-    }
-
-    /**
      * ペット検索結果.
      *
      * @Route("/adoption/pet/search/result", name="adoption_pet_search_result")
@@ -131,6 +105,32 @@ class AdoptionSearchController extends AbstractController
     }
 
     /**
+     * 保護団体検索
+     *
+     * @Route("/adoption/adoption_search", name="adoption_search")
+     * @Template("/animalline/adoption/adoption_search.twig")
+     */
+    public function adoption_search(PaginatorInterface $paginator, Request $request): Response
+    {
+        $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
+        $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
+        $regions = $this->prefRepository->findAll();
+        $adoptionResults = $this->adoptionQueryService->searchAdoptionsResult($request, $petKind);
+        $adoptions = $paginator->paginate(
+            $adoptionResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return $this->render('animalline/adoption/adoption_search.twig', [
+            'adoptions' => $adoptions,
+            'petKind' => $petKind,
+            'breeds' => $breeds,
+            'regions' => $regions
+        ]);
+    }
+
+    /**
      * pet data by pet kind
      *
      * @Route("/pet_data_by_pet_kind", name="pet_data_by_pet_kind", methods={"GET"})
@@ -150,6 +150,7 @@ class AdoptionSearchController extends AbstractController
                 'name' => $breed->getBreedsName()
             ];
         }
+
         $data = [
             'breeds' => $formattedBreeds
         ];

@@ -3,21 +3,15 @@
 namespace Customize\Controller\Adoption;
 
 use Customize\Config\AnilineConf;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
-use Customize\Repository\BreedsRepository;
-use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationPetsRepository;
-use Customize\Repository\ConservationPetImageRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Controller\AbstractController;
-use Eccube\Repository\Master\PrefRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Customize\Service\AdoptionQueryService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdoptionFavoritePetController extends AbstractController
