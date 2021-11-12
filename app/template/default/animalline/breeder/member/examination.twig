@@ -117,7 +117,15 @@
     };
     
     $("#confirm-yes").click(function (e) {
-        window.location.href = "{{url('breeder_examination_submit')}}"
+        if(agree.checked){ 
+            window.location.href = "{{url('breeder_examination_submit')}}"
+        } else {
+            $("#errorMsg").show();
+        }
     });
+
+    $('#modal').on('hidden.bs.modal', function () {
+        $("#errorMsg").hide();
+    })
 </script>
 {% endblock %}
