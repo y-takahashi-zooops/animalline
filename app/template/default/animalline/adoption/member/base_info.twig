@@ -61,28 +61,28 @@
 										</div>
 									</dd>
 								</dl>
-								{# <dl id="dogHouse">
+								<dl id="dogHouse">
 									<dt>
-										{{ form_label(form.breeder_house_name_dog, '犬舎名', { 'label_attr': { 'class': 'ec-label' }}) }}
+										{{ form_label(form.conservation_house_name_dog, '犬舎名', { 'label_attr': { 'class': 'ec-label' }}) }}
 									</dt>
 									<dd>
-										<div class="ec-halfInput{{ has_errors(form.breeder_house_name_dog) ? ' error' }}">
-											{{ form_widget(form.breeder_house_name_dog, { 'attr': { 'placeholder': '犬舎名' }}) }}
+										<div class="ec-halfInput{{ has_errors(form.conservation_house_name_dog) ? ' error' }}">
+											{{ form_widget(form.conservation_house_name_dog, { 'attr': { 'placeholder': '犬舎名' }}) }}
 											{{ form_errors(form.DogHouseNameErrors) }}
 										</div>
 									</dd>
 								</dl>
 								<dl id="catHouse">
 									<dt>
-										{{ form_label(form.breeder_house_name_cat, '猫舎名', { 'label_attr': { 'class': 'ec-label' }}) }}
+										{{ form_label(form.conservation_house_name_cat, '猫舎名', { 'label_attr': { 'class': 'ec-label' }}) }}
 									</dt>
 									<dd>
-										<div class="ec-halfInput{{ has_errors(form.breeder_house_name_cat) ? ' error' }}">
-											{{ form_widget(form.breeder_house_name_cat, { 'attr': { 'placeholder': '猫舎名' }}) }}
+										<div class="ec-halfInput{{ has_errors(form.conservation_house_name_cat) ? ' error' }}">
+											{{ form_widget(form.conservation_house_name_cat, { 'attr': { 'placeholder': '猫舎名' }}) }}
 											{{ form_errors(form.CatHouseNameErrors) }}
 										</div>
 									</dd>
-								</dl> #}
+								</dl>
 								<dl>
 									<dt>
 										{{ form_label(form.owner_name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
@@ -295,9 +295,9 @@
     $("#dogHouse").hide();
     $("#catHouse").hide();
 
-    houseDisplay(breeders_handling_pet_kind.value);
+    houseDisplay(conservations_handling_pet_kind.value);
 
-    $('#breeders_handling_pet_kind').on('change', function () {
+    $('#conservations_handling_pet_kind').on('change', function () {
         var handling_pet_kind = $(this).val();
         houseDisplay(handling_pet_kind);
     });

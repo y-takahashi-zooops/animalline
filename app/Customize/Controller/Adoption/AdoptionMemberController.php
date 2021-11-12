@@ -159,6 +159,13 @@ class AdoptionMemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $handling_pet_kind = $form->getData()->getHandlingPetKind();
+
+            if ($handling_pet_kind == AnilineConf::ANILINE_PET_KIND_DOG) {
+                $conservation->setConservationHouseNameCat(null);
+            } elseif ($handling_pet_kind == AnilineConf::ANILINE_PET_KIND_CAT) {
+                $conservation->setConservationHouseNameDog(null);
+            }
             $conservation->setPref($conservation->getPrefId())
                 ->setId($user->getId())
                 ->setThumbnailPath($thumbnail_path);
@@ -167,16 +174,6 @@ class AdoptionMemberController extends AbstractController
             $entityManager->persist($conservation);
             $entityManager->flush();
             return $this->redirectToRoute($return_path);
-        // } elseif (!$form->isSubmitted() && !$conservationsRepository->find($user)) {
-        //     // Customer情報から初期情報をセット
-        //     $Customer = $this->customerRepository->find($user);
-        //     $form->get('owner_name')->setData($Customer->getname01() . "　" . $Customer->getname02());
-        //     $form->get('owner_kana')->setData($Customer->getkana01() . "　" . $Customer->getkana02());
-        //     $form->get('zip')->setData($Customer->getPostalCode());
-        //     $form->get('PrefId')->setData($Customer->getPref());
-        //     $form->get('city')->setData($Customer->getAddr01());
-        //     $form->get('address')->setData($Customer->getAddr02());
-        //     $form->get('tel')->setData($Customer->getPhoneNumber());
         }
 
         return [
