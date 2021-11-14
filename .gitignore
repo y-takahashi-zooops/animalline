@@ -1,4 +1,6 @@
 .env
+.htaccess
+.htpasswd
 /var/
 /vendor/
 /html/upload/temp_image/
