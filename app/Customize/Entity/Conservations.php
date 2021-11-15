@@ -143,6 +143,16 @@ class Conservations
      */
     private $ConservationsHouses;
 
+    /**
+     * @ORM\Column(name="conservation_house_name_dog", type="string", length=255, nullable=true)
+     */
+    private $conservation_house_name_dog;
+
+    /**
+     * @ORM\Column(name="conservation_house_name_cat", type="string", length=255, nullable=true)
+     */
+    private $conservation_house_name_cat;
+
     public function __construct()
     {
         $this->ConservationPets = new ArrayCollection();
@@ -437,6 +447,31 @@ class Conservations
     public function setUpdateDate($updateDate)
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+
+    public function getConservationHouseNameDog(): ?string
+    {
+        return $this->conservation_house_name_dog;
+    }
+
+    public function setConservationHouseNameDog(?string $conservation_house_name_dog): self
+    {
+        $this->conservation_house_name_dog = $conservation_house_name_dog;
+
+        return $this;
+    }
+
+    public function getConservationHouseNameCat(): ?string
+    {
+        return $this->conservation_house_name_cat;
+    }
+
+    public function setConservationHouseNameCat(?string $conservation_house_name_cat): self
+    {
+        $this->conservation_house_name_cat = $conservation_house_name_cat;
 
         return $this;
     }

@@ -22,7 +22,6 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
-use DateTime;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AdoptionDnaCheck extends AbstractController
