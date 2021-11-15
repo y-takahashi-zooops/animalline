@@ -60,8 +60,11 @@ file that was distributed with this source code.
                         <label class="col-form-label">サイト種別</label>
                         <select id="site_kind" name="site_kind" class="form-control">
                             <option value="">選択してください</option>
-                            <option value="1">ブリーダー</option>
-                            <option value="2">保護団体</option>
+                            {% set siteKinds = ['ブリーダー', '保護団体'] %}
+                            {% for i in 1..2 %}
+                            <option value="{{ i }}" {% if params.site_kind is defined and params.site_kind == i %} selected {% endif %}>{{ siteKinds[i - 1]
+                                }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -101,7 +104,7 @@ file that was distributed with this source code.
                 <div class="row mb-2">
                     <div class="col-6">
                         <label class="col-form-label">ブリーダー名/保護団体名</label>
-                        <input type="text" class="form-control" name="holder_name"></input>
+                        <input type="text" class="form-control" name="holder_name" value="{{ params.holder_name | default('') }}"></input>
                     </div>
                 </div>
             </div>
