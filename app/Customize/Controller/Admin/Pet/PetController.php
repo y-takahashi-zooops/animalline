@@ -25,6 +25,7 @@ use Customize\Form\Type\Admin\BreederPetsType;
 use Customize\Repository\BreederPetImageRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 use DateTime;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -54,22 +55,30 @@ class PetController extends AbstractController
     protected $breederPetsRepository;
 
     /**
+     * @var ConservationPetsRepository
+     */
+    protected $conservationPetsRepository;
+
+    /**
      * PetController constructor.
      * @param BreedsRepository $breedsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederQueryService $breederQueryService
      * @param BreederPetsRepository $breederPetsRepository
+     * @param ConservationPetsRepository $conservationPetsRepository
      */
     public function __construct(
         BreedsRepository          $breedsRepository,
         BreederPetImageRepository $breederPetImageRepository,
         BreederQueryService       $breederQueryService,
-        BreederPetsRepository       $breederPetsRepository
+        BreederPetsRepository       $breederPetsRepository,
+        ConservationPetsRepository $conservationPetsRepository
     ) {
         $this->breedsRepository = $breedsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederPetsRepository = $breederPetsRepository;
+        $this->conservationPetsRepository = $conservationPetsRepository;
     }
 
     /**
@@ -92,11 +101,24 @@ class PetController extends AbstractController
         $criteria['pet_kind'] = array_key_exists('pet_kind', $request) ? $request['pet_kind'] : '';
         $criteria['breed_type'] = array_key_exists('breed_type', $request) ? $request['breed_type'] : '';
         $criteria['public_status'] = array_key_exists('public_status', $request) ? $request['public_status'] : '';
+        $criteria['holder_name'] = array_key_exists('holder_name', $request) ? $request['holder_name'] : '';
 
-        $results = $this->breederPetsRepository->filterBreederPetsAdmin($criteria, $order);
+        $siteKind = $request['site_kind'] ?? '';
+        $breederPets = [];
+        $conservationPets = [];
+        if ($siteKind == AnilineConf::ANILINE_SITE_TYPE_ADOPTION) {
+            $conservationPets = $this->conservationPetsRepository->filterConservationPetsAdmin($criteria, $order);
+        } elseif ($siteKind == AnilineConf::ANILINE_SITE_TYPE_BREEDER) {
+            $breederPets = $this->breederPetsRepository->filterBreederPetsAdmin($criteria, $order);
+        }
 
         $breederPets = $paginator->paginate(
-            $results,
+            $breederPets,
+            array_key_exists('page', $request) ? $request['page'] : 1,
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+        $conservationPets = $paginator->paginate(
+            $conservationPets,
             array_key_exists('page', $request) ? $request['page'] : 1,
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
@@ -109,7 +131,8 @@ class PetController extends AbstractController
         return [
             'breeds' => $breeds,
             'direction' => $direction,
-            'breederPets' => $breederPets
+            'breederPets' => $breederPets,
+            'conservationPets' => $conservationPets,
         ];
     }
 }

@@ -74,6 +74,7 @@ class BreederPetsRepository extends ServiceEntityRepository
     /**
      * Search breederPets
      *
+     * @param array $criteria
      * @param array $order
      * @return array
      */
@@ -128,6 +129,11 @@ class BreederPetsRepository extends ServiceEntityRepository
             $end_datetime = $criteria['update_date'] . ' 23:59:59';
             $qb
                 ->andWhere("bp.update_date >= '$begin_datetime' and bp.update_date <= '$end_datetime'");
+        }
+        if (!empty($criteria['holder_name']) && StringUtil::isNotBlank($criteria['holder_name'])) {
+            $qb->join('bp.Breeder', 'br')
+                ->andWhere('br.breeder_name LIKE :breeder_name')
+                ->setParameter('breeder_name', '%' . $criteria['holder_name'] . '%');
         }
 
         return $qb->leftJoin('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'bp.id = dna.pet_id')
