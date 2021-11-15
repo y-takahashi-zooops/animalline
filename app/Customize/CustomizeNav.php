@@ -31,9 +31,19 @@ class CustomizeNav implements EccubeNav
 						'name' => 'ブリーダー一覧',
 						'url' => 'admin_breeder_list',
 					],
-					'breeders_pet_list' => [
+					// 'breeders_pet_list' => [
+					// 	'name' => 'ペット情報管理',
+					// 	'url' => 'admin_breeder_pet_all',
+					// ],
+				],
+			],
+			'pets' => [
+				'name' => 'ペット管理',
+				'icon' => 'fa-cube',
+				'children' => [
+					'pet_list' => [
 						'name' => 'ペット情報管理',
-						'url' => 'admin_breeder_pet_all',
+						'url' => 'admin_pet_all',
 					],
 				],
 			],

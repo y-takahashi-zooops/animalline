@@ -72,6 +72,7 @@ class BreederPetController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
     }
 
+    // 廃止予定
     /**
      * ペット情報管理
      *
