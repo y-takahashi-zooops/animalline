@@ -15,7 +15,7 @@ file that was distributed with this source code.
 
 {% set column = params.field is defined ? params.field : 'create_date' %}
 {% set ordering = params.direction is defined ? params.direction : 'DESC' %}
-{% set arr =['交渉中','成約済み','成約確認待ち'] %}
+{% set arr =['交渉中','成約確認待ち','成約済み'] %}
 
 {% block title %}{{ 'ペット情報管理'|trans }}{% endblock %}
 {% block sub_title %}{{ 'ペット管理'|trans }}{% endblock %}
