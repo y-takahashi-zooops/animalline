@@ -15,6 +15,7 @@ file that was distributed with this source code.
 
 {% set column = params.field is defined ? params.field : 'create_date' %}
 {% set ordering = params.direction is defined ? params.direction : 'DESC' %}
+{% set arr =['交渉中','成約済み','成約確認待ち'] %}
 
 {% block title %}{{ 'ペット情報管理'|trans }}{% endblock %}
 {% block sub_title %}{{ 'ペット管理'|trans }}{% endblock %}
@@ -140,6 +141,7 @@ file that was distributed with this source code.
                                             class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_pet_all', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
+                                <th class="border-top-0 pt-2 pb-2">成約状況</th>
                                 {# <th class="border-top-0 pt-2 pb-2">成約状況</th> #}
                             </tr>
                             </thead>
@@ -158,6 +160,7 @@ file that was distributed with this source code.
                                 <td class="align-middle">{{ breederPet.breeds_name }}</td>
                                 <td class="align-middle">{{ breederPet.bp_create_date|date('Y/m/d H:i') }}</td>
                                 <td class="align-middle">{{ breederPet.bp_update_date|date('Y/m/d H:i') }}</td>
+                                <td class="align-middle">{{ breederPet.contract_status is null ? '' : arr[breederPet.contract_status]}}</td>
                                 {# <td class="align-middle">{{ breederPet. }}</td> #}
                                 <td class="align-middle pr-3" colspan="3">
                                     <div class="text-right">
@@ -203,6 +206,7 @@ file that was distributed with this source code.
                                     <td class="align-middle">{{ conservationPet.breeds_name }}</td>
                                     <td class="align-middle">{{ conservationPet.cp_create_date|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ conservationPet.cp_update_date|date('Y/m/d H:i') }}</td>
+                                    <td class="align-middle">{{ conservationPet.contract_status is null ? '' : arr[conservationPet.contract_status] }}</td>
                                     {# <td class="align-middle">{{ conservationPet. }}</td> #}
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
@@ -241,6 +245,7 @@ file that was distributed with this source code.
                 </div>
                 <div class="navigation float-right">
                     {{ knp_pagination_render(breederPets) }}
+                    {{ knp_pagination_render(conservationPets) }}
                 </div>
             </div>
         </div>
