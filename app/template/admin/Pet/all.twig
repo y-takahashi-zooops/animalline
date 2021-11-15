@@ -15,6 +15,7 @@ file that was distributed with this source code.
 
 {% set column = params.field is defined ? params.field : 'create_date' %}
 {% set ordering = params.direction is defined ? params.direction : 'DESC' %}
+{% set arr =['交渉中','成約確認待ち','成約済み', ''] %}
 
 {% block title %}{{ 'ペット情報管理'|trans }}{% endblock %}
 {% block sub_title %}{{ 'ペット管理'|trans }}{% endblock %}
@@ -38,6 +39,14 @@ file that was distributed with this source code.
         $('#btn-change-status').on('click', function () {
             location.href = $(this).data('action');
         });
+
+        $('#search_form').on('submit', function(){
+            const siteKind = $('#site_kind').val();
+            if (!siteKind) {
+                alert('サイト種別を選択してください');
+                return false;
+            }
+        });
     });
 </script>
 {% endblock javascript %}
@@ -51,8 +60,11 @@ file that was distributed with this source code.
                         <label class="col-form-label">サイト種別</label>
                         <select id="site_kind" name="site_kind" class="form-control">
                             <option value="">選択してください</option>
-                            <option value="1">ブリーダー</option>
-                            <option value="2">保護団体</option>
+                            {% set siteKinds = ['ブリーダー', '保護団体'] %}
+                            {% for i in 1..2 %}
+                            <option value="{{ i }}" {% if params.site_kind is defined and params.site_kind == i %} selected {% endif %}>{{ siteKinds[i - 1]
+                                }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -89,12 +101,10 @@ file that was distributed with this source code.
                         </select>
                     </div>
                 </div>
-                {# TODO:Typeから取得 #}
                 <div class="row mb-2">
                     <div class="col-6">
-                        {# TODO:保護団体が選択されている場合は、「保護団体名」、ブリーダーが選択されている場合は「ブリーダー名」 #}
                         <label class="col-form-label">ブリーダー名/保護団体名</label>
-                        <input type="text" class="form-control"></input>
+                        <input type="text" class="form-control" name="holder_name" value="{{ params.holder_name | default('') }}"></input>
                     </div>
                 </div>
             </div>
@@ -134,43 +144,92 @@ file that was distributed with this source code.
                                             class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_pet_all', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
+                                <th class="border-top-0 pt-2 pb-2">成約状況</th>
                                 {# <th class="border-top-0 pt-2 pb-2">成約状況</th> #}
                             </tr>
                             </thead>
                             <tbody>
                             {% for breederPet in breederPets %}
+                            <tr id="ex-adoption-1">
+                                <td class="align-middle"></td>
+                                <td class="align-middle">{{ breederPet.bp_id }}</td>
+                                <td class="align-middle">
+                                    <img alt="..."
+                                        src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (breederPet.bp_thumbnail_path | default | length > 0 ? breederPet.bp_thumbnail_path : '/noimage_plugin_list.png') }}"
+                                        style="max-width: 100px">
+                                </td>
+                                <td class="align-middle">{{ breederPet.bp_pet_kind ==
+                                    constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
+                                <td class="align-middle">{{ breederPet.breeds_name }}</td>
+                                <td class="align-middle">{{ breederPet.bp_create_date|date('Y/m/d H:i') }}</td>
+                                <td class="align-middle">{{ breederPet.bp_update_date|date('Y/m/d H:i') }}</td>
+                                <td class="align-middle">{{ breederPet.contract_status is null ? '' : arr[breederPet.contract_status]}}</td>
+                                {# <td class="align-middle">{{ breederPet. }}</td> #}
+                                <td class="align-middle pr-3" colspan="3">
+                                    <div class="text-right">
+                                        <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
+                                            <a class="btn btn-ec-actionIcon" href="{{ url('admin_breeder_pet_edit', {'id': breederPet.bp_id}) }}">
+                                                <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                        <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
+                                            <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ breederPet.bp_is_active }}"
+                                                data-action="{{ url('admin_breeder_pet_change_status', {'id': breederPet.bp_id}) }}">
+                                                <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                        <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査結果PDFダウンロード">
+                            
+                                            {% if breederPet.dna_file_path %}
+                                            <a class="btn btn-ec-actionIcon"
+                                                href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': breederPet.bp_id}) }}">
+                                                <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                            {% else %}
+                                            <a class="btn btn-ec-actionIcon" disabled>
+                                                <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                            {% for conservationPet in conservationPets %}
                                 <tr id="ex-adoption-1">
                                     <td class="align-middle"></td>
-                                    <td class="align-middle">{{ breederPet.bp_id }}</td>
+                                    <td class="align-middle">{{ conservationPet.cp_id }}</td>
                                     <td class="align-middle">
                                         <img alt="..."
-                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (breederPet.bp_thumbnail_path | default | length > 0 ? breederPet.bp_thumbnail_path : '/noimage_plugin_list.png') }}"
+                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (conservationPet.cp_thumbnail_path | default | length > 0 ? conservationPet.cp_thumbnail_path : '/noimage_plugin_list.png') }}"
                                              style="max-width: 100px">
                                     </td>
-                                    <td class="align-middle">{{ breederPet.bp_pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
-                                    <td class="align-middle">{{ breederPet.breeds_name }}</td>
-                                    <td class="align-middle">{{ breederPet.bp_create_date|date('Y/m/d H:i') }}</td>
-                                    <td class="align-middle">{{ breederPet.bp_update_date|date('Y/m/d H:i') }}</td>
-                                    {# <td class="align-middle">{{ breederPet. }}</td> #}
+                                    <td class="align-middle">{{ conservationPet.cp_pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
+                                    <td class="align-middle">{{ conservationPet.breeds_name }}</td>
+                                    <td class="align-middle">{{ conservationPet.cp_create_date|date('Y/m/d H:i') }}</td>
+                                    <td class="align-middle">{{ conservationPet.cp_update_date|date('Y/m/d H:i') }}</td>
+                                    <td class="align-middle">{{ conservationPet.contract_status is null ? '' : arr[conservationPet.contract_status] }}</td>
+                                    {# <td class="align-middle">{{ conservationPet. }}</td> #}
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
                                                 <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_breeder_pet_edit', {'id': breederPet.bp_id}) }}">
+                                                   href="{{ url('admin_breeder_pet_edit', {'id': conservationPet.cp_id}) }}">
                                                     <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
-                                                <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ breederPet.bp_is_active }}"
-                                                    data-action="{{ url('admin_breeder_pet_change_status', {'id': breederPet.bp_id}) }}">
+                                                <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ conservationPet.cp_release_status }}"
+                                                    data-action="{{ url('admin_breeder_pet_change_status', {'id': conservationPet.cp_id}) }}">
                                                         <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査結果PDFダウンロード">
                                                 
-                                                {% if breederPet.dna_file_path %}
+                                                {% if conservationPet.dna_file_path %}
                                                     <a class="btn btn-ec-actionIcon"
-                                                        href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': breederPet.bp_id}) }}">
+                                                        href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': conservationPet.cp_id}) }}">
                                                         <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
                                                     </a>
                                                 {% else %}
@@ -182,10 +241,6 @@ file that was distributed with this source code.
                                         </div>
                                     </td>
                                 </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="8">結果が０件です。</td>
-                                </tr>
                             {% endfor %}
                             </tbody>
                         </table>
@@ -193,6 +248,7 @@ file that was distributed with this source code.
                 </div>
                 <div class="navigation float-right">
                     {{ knp_pagination_render(breederPets) }}
+                    {{ knp_pagination_render(conservationPets) }}
                 </div>
             </div>
         </div>
