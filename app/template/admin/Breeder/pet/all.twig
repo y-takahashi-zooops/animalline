@@ -22,12 +22,12 @@ file that was distributed with this source code.
 {# {% form_theme searchForm '@admin/Form/bootstrap_4_layout.html.twig' %} #}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
 {% endblock stylesheet %}
 
 {% block javascript %}
 <script>
-    $(function() {
+    $(function () {
         $('.confirm-status-btn').on('click', function () {
             const modalMsg = $(this).data('is-active') ? 'ペット情報を非公開にしますか？' : 'ペット情報を公開しますか？';
             $('.modal-message').text(modalMsg);
@@ -43,164 +43,186 @@ file that was distributed with this source code.
 {% endblock javascript %}
 
 {% block main %}
-    <div class="c-outsideBlock">
-        <form id='search_form' method="get" action="#">
-            <div class="c-outsideBlock__contents">
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <label class="col-form-label">種別</label>
-                        <select id="pet_kind" name="pet_kind" class="form-control">
-                            {% set kindNames = ['全て', '犬', '猫'] %}
-                            {% for i in 0..2 %}
-                                <option value="{{ i }}" {% if params.pet_kind is defined and params.pet_kind == i %} selected {% endif %}>{{ kindNames[i] }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <label class="col-form-label">犬種/猫種</label>
-                        <select id="breed_type" name="breed_type" class="form-control">
-                            <option value="0">全て</option>
-                            {% for breed in breeds %}
-                                <option value="{{ breed.Id }}" {% if params.breed_type is defined and params.breed_type == breed.Id %} selected {% endif %}>{{ breed.breedsName }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <label class="col-form-label">公開状況</label>
-                        <select id="public_status" name="public_status" class="form-control">
-                            {% set publicStatuss = ['全て', '非公開', '公開', '未公開(DNA検査中)', '未公開(DNA検査済)', '未公開(DNA検査NG)'] %}
-                            {% for i in 0..5 %}
-                                <option value="{{ i }}" {% if params.public_status is defined and params.public_status == i %} selected {% endif %}>{{ publicStatuss[i] }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+<div class="c-outsideBlock">
+    <form id='search_form' method="get" action="#">
+        <div class="c-outsideBlock__contents">
+            <div class="row mb-2">
+                <div class="col-6">
+                    <label class="col-form-label">種別</label>
+                    <select id="pet_kind" name="pet_kind" class="form-control">
+                        {% set kindNames = ['全て', '犬', '猫'] %}
+                        {% for i in 0..2 %}
+                        <option value="{{ i }}" {% if params.pet_kind is defined and params.pet_kind==i %} selected {%
+                            endif %}>{{ kindNames[i] }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
+            <div class="row mb-2">
+                <div class="col-6">
+                    <label class="col-form-label">犬種/猫種</label>
+                    <select id="breed_type" name="breed_type" class="form-control">
+                        <option value="0">全て</option>
+                        {% for breed in breeds %}
+                        <option value="{{ breed.Id }}" {% if params.breed_type is defined and
+                            params.breed_type==breed.Id %} selected {% endif %}>{{ breed.breedsName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-6">
+                    <label class="col-form-label">公開状況</label>
+                    <select id="public_status" name="public_status" class="form-control">
+                        {% set publicStatuss = ['全て', '非公開', '公開', '未公開(DNA検査中)', '未公開(DNA検査済)', '未公開(DNA検査NG)'] %}
+                        {% for i in 0..5 %}
+                        <option value="{{ i }}" {% if params.public_status is defined and params.public_status==i %}
+                            selected {% endif %}>{{ publicStatuss[i] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-6">
+                    <label class="col-form-label">登録日</label>
+                    <input type="date" id="create_date" name="create_date" class="form-control"
+                        value="{{ params.create_date is defined ? params.create_date : '' }}" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-6">
+                    <label class="col-form-label">更新日</label>
+                    <input type="date" id="update_date" name="update_date" class="form-control"
+                        value="{{ params.update_date is defined ? params.update_date : '' }}" />
+                </div>
+            </div>
+        </div>
 
-            <div class="c-outsideBlock__contents mb-5">
-                <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.search'|trans }}</button>
-            </div>
-        </form>
-    </div>
-    <div class="c-contentsArea__cols">
-        <div class="c-contentsArea__primaryCol">
-            <div class="c-primaryCol">
-                <div class="card rounded border-0 mb-4 d-block">
-                    <div class="card-body p-0">
-                        <table class="table table-sm">
-                            <thead>
+        <div class="c-outsideBlock__contents mb-5">
+            <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.search'|trans }}</button>
+        </div>
+    </form>
+</div>
+<div class="c-contentsArea__cols">
+    <div class="c-contentsArea__primaryCol">
+        <div class="c-primaryCol">
+            <div class="card rounded border-0 mb-4 d-block">
+                <div class="card-body p-0">
+                    <table class="table table-sm">
+                        <thead>
                             <tr>
                                 <th class="border-top-0 pt-2 pb-2"></th>
                                 <th class="border-top-0 pt-2 pb-2"><a
-                                            class="{{ column == 'id' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_all', params|merge({'field': 'id', 'direction': direction})) }}">ID</a>
+                                        class="{{ column == 'id' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href="{{ url('admin_breeder_pet_all', params|merge({'field': 'id', 'direction': direction})) }}">ID</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2">画像</th>
                                 <th class="border-top-0 pt-2 pb-2"><a
-                                            class="{{ column == 'pet_kind' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_all', params|merge({'field': 'pet_kind', 'direction': direction})) }}">種別</a>
+                                        class="{{ column == 'pet_kind' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href="{{ url('admin_breeder_pet_all', params|merge({'field': 'pet_kind', 'direction': direction})) }}">種別</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
-                                            class="{{ column == 'BreedsType' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_all', params|merge({'field': 'BreedsType', 'direction': direction})) }}">犬種/猫種</a>
+                                        class="{{ column == 'BreedsType' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href="{{ url('admin_breeder_pet_all', params|merge({'field': 'BreedsType', 'direction': direction})) }}">犬種/猫種</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
-                                            class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_all', params|merge({'field': 'create_date', 'direction': direction})) }}">登録日</a>
+                                        class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href="{{ url('admin_breeder_pet_all', params|merge({'field': 'create_date', 'direction': direction})) }}">登録日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2"><a
-                                            class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
-                                            href="{{ url('admin_breeder_pet_all', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
+                                        class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href="{{ url('admin_breeder_pet_all', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
                             </tr>
-                            </thead>
-                            <tbody>
+                        </thead>
+                        <tbody>
                             {% for breederPet in breederPets %}
-                                <tr id="ex-adoption-1">
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle">{{ breederPet.bp_id }}</td>
-                                    <td class="align-middle">
-                                        <img alt="..."
-                                             src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (breederPet.bp_thumbnail_path | default | length > 0 ? breederPet.bp_thumbnail_path : '/noimage_plugin_list.png') }}"
-                                             style="max-width: 100px">
-                                    </td>
-                                    <td class="align-middle">{{ breederPet.bp_pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
-                                    <td class="align-middle">{{ breederPet.breeds_name }}</td>
-                                    <td class="align-middle">{{ breederPet.bp_create_date|date('Y/m/d H:i') }}</td>
-                                    <td class="align-middle">{{ breederPet.bp_update_date|date('Y/m/d H:i') }}</td>
-                                    <td class="align-middle pr-3" colspan="3">
-                                        <div class="text-right">
-                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
-                                                <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_breeder_pet_edit', {'id': breederPet.bp_id}) }}">
-                                                    <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
-                                                </a>
-                                            </div>
-                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
-                                                <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ breederPet.bp_is_active }}"
-                                                    data-action="{{ url('admin_breeder_pet_change_status', {'id': breederPet.bp_id}) }}">
-                                                        <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
-                                                </a>
-                                            </div>
-                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査結果PDFダウンロード">
-                                                
-                                                {% if breederPet.dna_file_path %}
-                                                    <a class="btn btn-ec-actionIcon"
-                                                        href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': breederPet.bp_id}) }}">
-                                                        <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
-                                                    </a>
-                                                {% else %}
-                                                    <a class="btn btn-ec-actionIcon" disabled>
-                                                        <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
-                                                    </a>
-                                                {% endif %}
-                                            </div>
+                            <tr id="ex-adoption-1">
+                                <td class="align-middle"></td>
+                                <td class="align-middle">{{ breederPet.bp_id }}</td>
+                                <td class="align-middle">
+                                    <img alt="..."
+                                        src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (breederPet.bp_thumbnail_path | default | length > 0 ? breederPet.bp_thumbnail_path : '/noimage_plugin_list.png') }}"
+                                        style="max-width: 100px">
+                                </td>
+                                <td class="align-middle">{{ breederPet.bp_pet_kind ==
+                                    constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
+                                <td class="align-middle">{{ breederPet.breeds_name }}</td>
+                                <td class="align-middle">{{ breederPet.bp_create_date|date('Y/m/d H:i') }}</td>
+                                <td class="align-middle">{{ breederPet.bp_update_date|date('Y/m/d H:i') }}</td>
+                                <td class="align-middle pr-3" colspan="3">
+                                    <div class="text-right">
+                                        <div class="px-1 d-inline-block text-center" data-tooltip="true"
+                                            data-placement="top" title="ペット情報編集">
+                                            <a class="btn btn-ec-actionIcon"
+                                                href="{{ url('admin_breeder_pet_edit', {'id': breederPet.bp_id}) }}">
+                                                <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
                                         </div>
-                                    </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="8">結果が０件です。</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="navigation float-right">
-                    {{ knp_pagination_render(breederPets) }}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="confirm-modal-status" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title font-weight-bold">
-                        確認ダイアログ
-                    </h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body text-left">
-                    <p class="text-left modal-message">ペット情報を公開しますか？</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
-                        いいえ
-                    </button>
-                    <button class="btn btn-ec-conversion" id="btn-change-status" data-action="">
-                        はい
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+                                        <div class="px-1 d-inline-block text-center" data-tooltip="true"
+                                            data-placement="top" title="公開ステータス変更">
+                                            <a class="btn btn-ec-actionIcon confirm-status-btn"
+                                                data-is-active="{{ breederPet.bp_is_active }}"
+                                                data-action="{{ url('admin_breeder_pet_change_status', {'id': breederPet.bp_id}) }}">
+                                                <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                        <div class="px-1 d-inline-block text-center" data-tooltip="true"
+                                            data-placement="top" title="検査結果PDFダウンロード">
 
+                                            {% if breederPet.dna_file_path %}
+                                            <a class="btn btn-ec-actionIcon"
+                                                href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': breederPet.bp_id}) }}">
+                                                <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                            {% else %}
+                                            <a class="btn btn-ec-actionIcon" disabled>
+                                                <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="8">結果が０件です。</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="navigation float-right">
+                {{ knp_pagination_render(breederPets) }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirm-modal-status" tabindex="-1" role="dialog" aria-labelledby="confirm-modal"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold">
+                    確認ダイアログ
+                </h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <p class="text-left modal-message">ペット情報を公開しますか？</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+                    いいえ
+                </button>
+                <button class="btn btn-ec-conversion" id="btn-change-status" data-action="">
+                    はい
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

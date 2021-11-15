@@ -224,6 +224,16 @@ class DnaController extends AbstractController
             $criteria['check_status'] = $request->get('check_status');
         }
 
+        if ($request->get('kit_regist_date')) {
+            $criteria['kit_regist_date'] = $request->get('kit_regist_date');
+        }
+        if ($request->get('kit_return_date')) {
+            $criteria['kit_return_date'] = $request->get('kit_return_date');
+        }
+        if ($request->get('check_return_date')) {
+            $criteria['check_return_date'] = $request->get('check_return_date');
+        }
+
         $results = $this->dnaQueryService->filterDnaAdmin($criteria);
         $dnas = $paginator->paginate(
             $results,
