@@ -117,6 +117,18 @@ class BreederPetsRepository extends ServiceEntityRepository
                     ->setParameter('dna_check_result', AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
             }
         }
+        if (!empty($criteria['create_date']) && StringUtil::isNotBlank($criteria['create_date'])) {
+            $begin_datetime = $criteria['create_date'] . ' 00:00:00';
+            $end_datetime = $criteria['create_date'] . ' 23:59:59';
+            $qb
+                ->andWhere("bp.create_date >= '$begin_datetime' and bp.create_date <= '$end_datetime'");
+        }
+        if (!empty($criteria['update_date']) && StringUtil::isNotBlank($criteria['update_date'])) {
+            $begin_datetime = $criteria['update_date'] . ' 00:00:00';
+            $end_datetime = $criteria['update_date'] . ' 23:59:59';
+            $qb
+                ->andWhere("bp.update_date >= '$begin_datetime' and bp.update_date <= '$end_datetime'");
+        }
 
         return $qb->leftJoin('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'bp.id = dna.pet_id')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')

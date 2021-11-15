@@ -92,6 +92,8 @@ class BreederPetController extends AbstractController
         $criteria['pet_kind'] = array_key_exists('pet_kind', $request) ? $request['pet_kind'] : '';
         $criteria['breed_type'] = array_key_exists('breed_type', $request) ? $request['breed_type'] : '';
         $criteria['public_status'] = array_key_exists('public_status', $request) ? $request['public_status'] : '';
+        $criteria['create_date'] = array_key_exists('create_date', $request) ? $request['create_date'] : '';
+        $criteria['update_date'] = array_key_exists('update_date', $request) ? $request['update_date'] : '';
 
         $results = $this->breederPetsRepository->filterBreederPetsAdmin($criteria, $order);
 
