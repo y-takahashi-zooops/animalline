@@ -13,9 +13,14 @@
 
 namespace Customize\Controller\Admin\Pet;
 
+use Customize\Repository\BreederContactHeaderRepository;
+use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\BreedsRepository;
+use Customize\Repository\ConservationContactHeaderRepository;
+use Customize\Repository\ConservationContactsRepository;
 use Customize\Service\BreederQueryService;
 use Eccube\Controller\AbstractController;
+use Eccube\Repository\CustomerRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -60,25 +65,65 @@ class PetController extends AbstractController
     protected $conservationPetsRepository;
 
     /**
+     * @var ConservationContactHeaderRepository
+     */
+    protected $conservationContactHeaderRepository;
+
+    /**
+     * @var BreederContactHeaderRepository
+     */
+    protected $breederContactHeaderRepository;
+
+    /**
+     * @var BreederContactsRepository
+     */
+    protected $breederContactsRepository;
+
+    /**
+     * @var ConservationContactsRepository
+     */
+    protected $conservationContactsRepository;
+
+    /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
      * PetController constructor.
      * @param BreedsRepository $breedsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederQueryService $breederQueryService
      * @param BreederPetsRepository $breederPetsRepository
      * @param ConservationPetsRepository $conservationPetsRepository
+     * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
+     * @param BreederContactHeaderRepository $breederContactHeaderRepository
+     * @param CustomerRepository $customerRepository
+     * @param BreederContactsRepository $breederContactsRepository
+     * @param ConservationContactsRepository $conservationContactsRepository
      */
     public function __construct(
         BreedsRepository          $breedsRepository,
         BreederPetImageRepository $breederPetImageRepository,
         BreederQueryService       $breederQueryService,
         BreederPetsRepository       $breederPetsRepository,
-        ConservationPetsRepository $conservationPetsRepository
+        ConservationPetsRepository $conservationPetsRepository,
+        ConservationContactHeaderRepository $conservationContactHeaderRepository,
+        BreederContactHeaderRepository $breederContactHeaderRepository,
+        CustomerRepository $customerRepository,
+        BreederContactsRepository $breederContactsRepository,
+        ConservationContactsRepository $conservationContactsRepository
     ) {
         $this->breedsRepository = $breedsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
+        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
+        $this->customerRepository = $customerRepository;
+        $this->breederContactsRepository = $breederContactsRepository;
+        $this->conservationContactsRepository = $conservationContactsRepository;
     }
 
     /**
@@ -143,7 +188,7 @@ class PetController extends AbstractController
 
      * @Template("@admin/Pet/all_message.twig")
      */
-    public function all_message()
+    public function all_message(Request $request)
     {
         return[];
     }
@@ -151,12 +196,35 @@ class PetController extends AbstractController
     /**
      * お問い合わせ内容確認
      *
-     * @Route("/%eccube_admin_route%/pet/message/{id}", name="admin_pet_message")
+     * @Route("/%eccube_admin_route%/pet/message/{id}/{site_kind}", name="admin_pet_message")
 
      * @Template("@admin/Pet/message.twig")
      */
-    public function message()
+    public function message(Request $request)
     {
-        return[];
+        $breeder = null;
+        $conservation = null;
+        $breederContacts = null;
+        $conservationContacts = null;
+        $contactId = $request->get('id');
+        if($request->get('site_kind') == AnilineConf::SITE_CATEGORY_BREEDER) {
+            $contact = $this->breederContactHeaderRepository->find($contactId);
+            $breeder = $this->customerRepository->find($contact->getBreeder());
+            $breederContacts = $this->breederContactsRepository->findBy(['BreederHeader' => $contact]);
+        } else {
+            $contact = $this->conservationContactHeaderRepository->find($contactId);
+            $conservation = $this->customerRepository->find($contact->getConservation());
+            $conservationContacts = $this->conservationContactsRepository->findBy(['ConservationHeader' => $contact]);
+        }
+        $customer = $this->customerRepository->find($contact->getCustomer());
+
+        return compact([
+            'contact',
+            'breeder',
+            'conservation',
+            'customer',
+            'breederContacts',
+            'conservationContacts',
+        ]);
     }
 }

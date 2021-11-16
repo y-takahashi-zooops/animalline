@@ -38,7 +38,7 @@ file that was distributed with this source code.
                     <div class="col-6">
                         <div class="d-inline-block">
                             <span class="card-title">
-                                問い合わせタイトル
+                                {{ contact.contactTitle }}
                             </span>
                         </div>
                     </div>
@@ -59,7 +59,7 @@ file that was distributed with this source code.
                             </div>
                         </div>
                         <div class="col-9 mb-2">
-                            <span>テスト太郎</span>
+                            <span>{{ contact.Customer }}</span>
                         </div>
                     </div>
                     <div class="row">
@@ -69,7 +69,7 @@ file that was distributed with this source code.
                             </div>
                         </div>
                         <div class="col-9 mb-2">
-                            <span>2021/11/11 11:00</span>
+                            <span>{{ contact.sendDate|date('Y/m/d H:i') }}</span>
                         </div>
                     </div>
                     <div class="row">
@@ -79,108 +79,85 @@ file that was distributed with this source code.
                             </div>
                         </div>
                         <div class="col-9 mb-2">
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
-                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                           {{ contact.contactDescription }}
                         </div>
                     </div>
                 </div>
             </div>    
         </div>
-        <div class="card rounded border-0 mb-4">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-3">
-                        <div class="d-inline-block">
-                            <label class="ec-label required" for="breeders_breeder_name">送信者</label>
+        {% for breederContact in breederContacts %}
+            <div class="card rounded border-0 mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="d-inline-block">
+                                <label class="ec-label required" for="breeders_breeder_name">送信者</label>
+                            </div>
+                        </div>
+                        <div class="col-9 mb-2">
+                            <span> {{ breederContact.messageFrom == 1 ? contact.Customer : breeder.Name01~' '~breeder.Name02 }} </span>
                         </div>
                     </div>
-                    <div class="col-9 mb-2">
-                        <span>保護団体名</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-3">
-                        <div class="d-inline-block">
-                            <label class="ec-label required" for="breeders_breeder_kana">送信日時</label>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="d-inline-block">
+                                <label class="ec-label required" for="breeders_breeder_kana">送信日時</label>
+                            </div>
+                        </div>
+                        <div class="col-9 mb-2">
+                            <span>{{ breederContact.sendDate|date('Y/m/d H:i') }}</span>
                         </div>
                     </div>
-                    <div class="col-9 mb-2">
-                        <span>2021/11/11 12:00</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-3">
-                        <div class="d-inline-block">
-                            <label class="ec-label required" for="breeders_handling_pet_kind">本文</label>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="d-inline-block">
+                                <label class="ec-label required" for="breeders_handling_pet_kind">本文</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-9 mb-2">
-                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
-                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
-                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
-                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
-                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
-                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
-                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
-                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
-                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
-                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
+                        <div class="col-9 mb-2">
+                            {{ breederContact.contactDescription }}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card rounded border-0 mb-4">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-3">
-                        <div class="d-inline-block">
-                            <label class="ec-label required" for="breeders_breeder_name">送信者</label>
+        {% endfor %}
+
+        {% for conservationContact in conservationContacts %}
+            <div class="card rounded border-0 mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="d-inline-block">
+                                <label class="ec-label required" for="breeders_breeder_name">送信者</label>
+                            </div>
+                        </div>
+                        <div class="col-9 mb-2">
+                            <span> {{ conservationContact.messageFrom == 1 ? contact.Customer : conservation.Name01~' '~conservation.Name02 }} </span>
                         </div>
                     </div>
-                    <div class="col-9 mb-2">
-                        <span>テスト太郎</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-3">
-                        <div class="d-inline-block">
-                            <label class="ec-label required" for="breeders_breeder_kana">送信日時</label>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="d-inline-block">
+                                <label class="ec-label required" for="breeders_breeder_kana">送信日時</label>
+                            </div>
+                        </div>
+                        <div class="col-9 mb-2">
+                            <span>{{ conservationContact.sendDate|date('Y/m/d H:i') }}</span>
                         </div>
                     </div>
-                    <div class="col-9 mb-2">
-                        <span>2021/11/11 13:00</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-3">
-                        <div class="d-inline-block">
-                            <label class="ec-label required" for="breeders_handling_pet_kind">本文</label>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="d-inline-block">
+                                <label class="ec-label required" for="breeders_handling_pet_kind">本文</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-9 mb-2">
-                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
-                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
-                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
-                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
-                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
-                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
-                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
-                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
+                        <div class="col-9 mb-2">
+                            {{ conservationContact.contactDescription }}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
-
