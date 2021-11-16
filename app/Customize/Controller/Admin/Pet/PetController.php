@@ -102,6 +102,12 @@ class PetController extends AbstractController
         $criteria['breed_type'] = array_key_exists('breed_type', $request) ? $request['breed_type'] : '';
         $criteria['public_status'] = array_key_exists('public_status', $request) ? $request['public_status'] : '';
         $criteria['holder_name'] = array_key_exists('holder_name', $request) ? $request['holder_name'] : '';
+        if (array_key_exists('create_date', $request)) {
+            $criteria['create_date'] = $request['create_date'];
+        }
+        if (array_key_exists('update_date', $request)) {
+            $criteria['update_date'] = $request['update_date'];
+        }
 
         $siteKind = $request['site_kind'] ?? '';
         $breederPets = [];
