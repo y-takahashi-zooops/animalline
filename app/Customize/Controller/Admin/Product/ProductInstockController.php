@@ -334,13 +334,13 @@ class ProductInstockController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/%eccube_admin_route%/product/instock/search/", name="admin_instock_search_product")
-     * @Route("/%eccube_admin_route%/product/instock/search/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_instock_search_product_page")
-     * @Template("@admin/Order/search_product.twig")
-     */
-    public function searchProduct(Request $request, $page_no = null, Paginator $paginator)
-    {
+    // /**
+    //  * @Route("/%eccube_admin_route%/product/instock/search/", name="admin_instock_search_product")
+    //  * @Route("/%eccube_admin_route%/product/instock/search/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_instock_search_product_page")
+    //  * @Template("@admin/Order/search_product.twig")
+    //  */
+    // public function searchProduct(Request $request, $page_no = null, Paginator $paginator)
+    // {
 
-    }
+    // }
 }
