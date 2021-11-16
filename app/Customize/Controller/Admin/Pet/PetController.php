@@ -22,9 +22,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederPets;
 use Customize\Form\Type\Admin\BreederPetsType;
+use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\ConservationContactHeaderRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 use DateTime;
@@ -60,25 +62,41 @@ class PetController extends AbstractController
     protected $conservationPetsRepository;
 
     /**
+     * @var BreederContactHeaderRepository
+     */
+    protected $breederContactHeaderRepository;
+
+    /**
+     * @var ConservationContactHeaderRepository
+     */
+    protected $conservationContactHeaderRepository;
+
+    /**
      * PetController constructor.
      * @param BreedsRepository $breedsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederQueryService $breederQueryService
      * @param BreederPetsRepository $breederPetsRepository
      * @param ConservationPetsRepository $conservationPetsRepository
+     * @param BreederContactHeaderRepository $breederContactHeaderRepository
+     * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      */
     public function __construct(
         BreedsRepository          $breedsRepository,
         BreederPetImageRepository $breederPetImageRepository,
         BreederQueryService       $breederQueryService,
         BreederPetsRepository       $breederPetsRepository,
-        ConservationPetsRepository $conservationPetsRepository
+        ConservationPetsRepository $conservationPetsRepository,
+        BreederContactHeaderRepository $breederContactHeaderRepository,
+        ConservationContactHeaderRepository $conservationContactHeaderRepository
     ) {
         $this->breedsRepository = $breedsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
+        $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
     }
 
     /**
@@ -139,13 +157,37 @@ class PetController extends AbstractController
     /**
      * ペット毎お問い合わせ一覧
      *
-     * @Route("/%eccube_admin_route%/pet/all_message/{pet_id}", name="admin_pet_all_message")
+     * @Route("/%eccube_admin_route%/pet/all_message/{pet_id}/{site_kind}", name="admin_pet_all_message")
 
      * @Template("@admin/Pet/all_message.twig")
      */
-    public function all_message()
+    public function all_message(PaginatorInterface $paginator, Request $request)
     {
-        return[];
+        $site_kind = $request->get('site_kind');
+        $pet_id = $request->get('pet_id');
+
+        if ($site_kind == 1) {
+            $contacts = $this->breederContactHeaderRepository->findBy([
+                'Pet' => $pet_id
+            ]);
+        }
+        if ($site_kind == 2) {
+            $contacts = $this->conservationPetsRepository->findBy([
+                'id' => $request->get('pet_id')
+            ]);
+        }
+
+        $request = $request->query->all();
+        $contacts = $paginator->paginate(
+            $contacts,
+            array_key_exists('page', $request) ? $request['page'] : 1,
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return[
+            'contacts' => $contacts,
+            'site_kind' => $site_kind
+        ];
     }
 
     /**
