@@ -107,6 +107,42 @@ file that was distributed with this source code.
                         <input type="text" class="form-control" name="holder_name" value="{{ params.holder_name | default('') }}"></input>
                     </div>
                 </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <div>
+                            <label class="col-form-label">登録日</label>
+                        </div>
+                        <div class="form__from-to">
+                            <div>
+                                <input type="date" name="create_date_start" class="form-control"
+                                    value="{{ params.create_date_start is defined ? params.create_date_start : '' }}" />
+                            </div>
+                            <div>~</div>
+                            <div>
+                                <input type="date" name="create_date_end" class="form-control"
+                                    value="{{ params.create_date_end is defined ? params.create_date_end : '' }}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <div>
+                            <label class="col-form-label">更新日</label>
+                        </div>
+                        <div class="form__from-to">
+                            <div class="">
+                                <input type="date" name="update_date_start" class="form-control"
+                                    value="{{ params.update_date_start is defined ? params.update_date_start : '' }}" />
+                            </div>
+                            <div>~</div>
+                            <div class="">
+                                <input type="date" name="update_date_end" class="form-control"
+                                    value="{{ params.update_date_end is defined ? params.update_date_end : '' }}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="c-outsideBlock__contents mb-5">
@@ -167,7 +203,7 @@ file that was distributed with this source code.
                                     <div class="text-right">
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">
                                             <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_pet_all_message', {'pet_id': breederPet.bp_id}) }}">
+                                                   href="{{ url('admin_pet_all_message', {'pet_id': breederPet.bp_id, 'site_kind': params.site_kind}) }}">
                                                 <i class="far fa-envelope fa-lg text-secondary" aria-hidden="true"></i>
                                             </a>
                                         </div>
@@ -217,7 +253,7 @@ file that was distributed with this source code.
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">
                                                 <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_pet_all_message', {'pet_id': conservationPet.cp_id}) }}">
+                                                   href="{{ url('admin_pet_all_message', {'pet_id': conservationPet.cp_id, 'site_kind': params.site_kind }) }}">
                                                     <i class="far fa-envelope fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>

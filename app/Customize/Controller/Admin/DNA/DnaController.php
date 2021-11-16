@@ -224,14 +224,23 @@ class DnaController extends AbstractController
             $criteria['check_status'] = $request->get('check_status');
         }
 
-        if ($request->get('kit_regist_date')) {
-            $criteria['kit_regist_date'] = $request->get('kit_regist_date');
+        if ($request->get('kit_regist_date_from')) {
+            $criteria['kit_regist_date_from'] = $request->get('kit_regist_date_from');
         }
-        if ($request->get('kit_return_date')) {
-            $criteria['kit_return_date'] = $request->get('kit_return_date');
+        if ($request->get('kit_regist_date_to')) {
+            $criteria['kit_regist_date_to'] = $request->get('kit_regist_date_to');
         }
-        if ($request->get('check_return_date')) {
-            $criteria['check_return_date'] = $request->get('check_return_date');
+        if ($request->get('kit_return_date_from')) {
+            $criteria['kit_return_date_from'] = $request->get('kit_return_date_from');
+        }
+        if ($request->get('kit_return_date_to')) {
+            $criteria['kit_return_date_to'] = $request->get('kit_return_date_to');
+        }
+        if ($request->get('check_return_date_from')) {
+            $criteria['check_return_date_from'] = $request->get('check_return_date_from');
+        }
+        if ($request->get('check_return_date_to')) {
+            $criteria['check_return_date_to'] = $request->get('check_return_date_to');
         }
 
         $results = $this->dnaQueryService->filterDnaAdmin($criteria);

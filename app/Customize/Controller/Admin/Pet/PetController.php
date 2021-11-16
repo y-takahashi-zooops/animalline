@@ -13,9 +13,14 @@
 
 namespace Customize\Controller\Admin\Pet;
 
+use Customize\Repository\BreederContactHeaderRepository;
+use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\BreedsRepository;
+use Customize\Repository\ConservationContactHeaderRepository;
+use Customize\Repository\ConservationContactsRepository;
 use Customize\Service\BreederQueryService;
 use Eccube\Controller\AbstractController;
+use Eccube\Repository\CustomerRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -60,25 +65,65 @@ class PetController extends AbstractController
     protected $conservationPetsRepository;
 
     /**
+     * @var ConservationContactHeaderRepository
+     */
+    protected $conservationContactHeaderRepository;
+
+    /**
+     * @var BreederContactHeaderRepository
+     */
+    protected $breederContactHeaderRepository;
+
+    /**
+     * @var BreederContactsRepository
+     */
+    protected $breederContactsRepository;
+
+    /**
+     * @var ConservationContactsRepository
+     */
+    protected $conservationContactsRepository;
+
+    /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
      * PetController constructor.
      * @param BreedsRepository $breedsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
      * @param BreederQueryService $breederQueryService
      * @param BreederPetsRepository $breederPetsRepository
      * @param ConservationPetsRepository $conservationPetsRepository
+     * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
+     * @param BreederContactHeaderRepository $breederContactHeaderRepository
+     * @param CustomerRepository $customerRepository
+     * @param BreederContactsRepository $breederContactsRepository
+     * @param ConservationContactsRepository $conservationContactsRepository
      */
     public function __construct(
         BreedsRepository          $breedsRepository,
         BreederPetImageRepository $breederPetImageRepository,
         BreederQueryService       $breederQueryService,
         BreederPetsRepository       $breederPetsRepository,
-        ConservationPetsRepository $conservationPetsRepository
+        ConservationPetsRepository $conservationPetsRepository,
+        ConservationContactHeaderRepository $conservationContactHeaderRepository,
+        BreederContactHeaderRepository $breederContactHeaderRepository,
+        CustomerRepository $customerRepository,
+        BreederContactsRepository $breederContactsRepository,
+        ConservationContactsRepository $conservationContactsRepository
     ) {
         $this->breedsRepository = $breedsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
+        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
+        $this->customerRepository = $customerRepository;
+        $this->breederContactsRepository = $breederContactsRepository;
+        $this->conservationContactsRepository = $conservationContactsRepository;
     }
 
     /**
@@ -102,6 +147,18 @@ class PetController extends AbstractController
         $criteria['breed_type'] = array_key_exists('breed_type', $request) ? $request['breed_type'] : '';
         $criteria['public_status'] = array_key_exists('public_status', $request) ? $request['public_status'] : '';
         $criteria['holder_name'] = array_key_exists('holder_name', $request) ? $request['holder_name'] : '';
+        if (array_key_exists('create_date_start', $request)) {
+            $criteria['create_date_start'] = $request['create_date_start'];
+        }
+        if (array_key_exists('create_date_end', $request)) {
+            $criteria['create_date_end'] = $request['create_date_end'];
+        }
+        if (array_key_exists('update_date_start', $request)) {
+            $criteria['update_date_start'] = $request['update_date_start'];
+        }
+        if (array_key_exists('update_date_end', $request)) {
+            $criteria['update_date_end'] = $request['update_date_end'];
+        }
 
         $siteKind = $request['site_kind'] ?? '';
         $breederPets = [];
@@ -139,24 +196,79 @@ class PetController extends AbstractController
     /**
      * ペット毎お問い合わせ一覧
      *
-     * @Route("/%eccube_admin_route%/pet/all_message/{pet_id}", name="admin_pet_all_message")
+     * @Route("/%eccube_admin_route%/pet/all_message/{pet_id}/{site_kind}", name="admin_pet_all_message")
 
      * @Template("@admin/Pet/all_message.twig")
      */
-    public function all_message()
+    public function all_message(PaginatorInterface $paginator, Request $request)
     {
-        return[];
+        $site_kind = $request->get('site_kind');
+        $pet_id = $request->get('pet_id');
+
+        if ($site_kind == AnilineConf::ANILINE_SITE_TYPE_BREEDER) {
+            $records = $this->breederContactHeaderRepository->findBy([
+                'Pet' => $pet_id
+            ]);
+        } else {
+            $records = $this->conservationContactHeaderRepository->findBy([
+                'Pet' => $pet_id
+            ]);
+        }
+
+        $request = $request->query->all();
+        $contacts = $paginator->paginate(
+            $records,
+            array_key_exists('page', $request) ? $request['page'] : 1,
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return[
+            'contacts' => $contacts,
+            'site_kind' => $site_kind
+        ];
     }
 
     /**
      * お問い合わせ内容確認
      *
-     * @Route("/%eccube_admin_route%/pet/message/{id}", name="admin_pet_message")
+     * @Route("/%eccube_admin_route%/pet/message/{id}/{site_kind}", name="admin_pet_message")
 
      * @Template("@admin/Pet/message.twig")
      */
-    public function message()
+    public function message(PaginatorInterface $paginator, Request $request)
     {
-        return[];
+        $breeder = null;
+        $conservation = null;
+        $breederContacts = [];
+        $conservationContacts = [];
+        $contactId = $request->get('id');
+        if($request->get('site_kind') == AnilineConf::SITE_CATEGORY_BREEDER) {
+            $contact = $this->breederContactHeaderRepository->find($contactId);
+            $breeder = $this->customerRepository->find($contact->getBreeder());
+            $breederContacts = $this->breederContactsRepository->findBy(['BreederHeader' => $contact]);
+        } else {
+            $contact = $this->conservationContactHeaderRepository->find($contactId);
+            $conservation = $this->customerRepository->find($contact->getConservation());
+            $conservationContacts = $this->conservationContactsRepository->findBy(['ConservationHeader' => $contact]);
+        }
+        $customer = $this->customerRepository->find($contact->getCustomer());
+        $breederContacts = $paginator->paginate(
+            $breederContacts,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+        $conservationContacts = $paginator->paginate(
+            $conservationContacts,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+        return compact([
+            'contact',
+            'breeder',
+            'conservation',
+            'customer',
+            'breederContacts',
+            'conservationContacts',
+        ]);
     }
 }

@@ -49,7 +49,7 @@ file that was distributed with this source code.
                     </div>
                     <div class="row mb-2">
                         <div class="col-6">
-                            <label class="col-form-label">キット出荷</label>
+                            <label class="col-form-label">検査状況</label>
                             <select class="ec-select form-control" name="check_status">
                                 <option value="">選択してください</option>
                                 {% set check_status = {1:'キット発送中 ', 3:'ペット登録完了・返送中', 4:'検体異常', 5: 'DNA検査中', 6:'検査通過',
@@ -64,23 +64,56 @@ file that was distributed with this source code.
                     </div>
                     <div class="row mb-2">
                         <div class="col-6">
-                            <label class="col-form-label">キット出荷</label>
-                            <input type="date" id="kit_regist_date" name="kit_regist_date" class="form-control"
-                                value="{{ params.kit_regist_date is defined ? params.kit_regist_date : '' }}" />
+                            <div>
+                                <label class="col-form-label">キット出荷</label>
+                            </div>
+                            <div class="form__from-to">
+                                <div>
+                                    <input type="date" id="kit_regist_date_from" name="kit_regist_date_from" class="form-control"
+                                    value="{{ params.kit_regist_date_from is defined ? params.kit_regist_date_from : '' }}" />
+                                </div>
+                                <div>~</div>
+                                <div>
+                                    <input type="date" id="kit_regist_date_to" name="kit_regist_date_to" class="form-control"
+                                        value="{{ params.kit_regist_date_to is defined ? params.kit_regist_date_to : '' }}" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-6">
-                            <label class="col-form-label">キット返送</label>
-                            <input type="date" id="kit_return_date" name="kit_return_date" class="form-control"
-                                value="{{ params.kit_return_date is defined ? params.kit_return_date : '' }}" />
+                            <div>
+                                <label class="col-form-label">キット返送</label>
+                            </div>
+                            <div class="form__from-to">
+                                <div>
+                                    <input type="date" id="kit_return_date_from" name="kit_return_date_from" class="form-control"
+                                        value="{{ params.kit_return_date_from is defined ? params.kit_return_date_from : '' }}" />
+                                </div>
+                                <div>~</div>
+                                <div>
+                                    <input type="date" id="kit_return_date_to" name="kit_return_date_to" class="form-control"
+                                        value="{{ params.kit_return_date_to is defined ? params.kit_return_date_to : '' }}" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-6">
-                            <label class="col-form-label">結果受信</label>
-                            <input type="date" id="check_return_date" name="check_return_date" class="form-control"
-                                value="{{ params.check_return_date is defined ? params.check_return_date : '' }}" />
+                            <div>
+                                <label class="col-form-label">結果受信</label>
+                            </div>
+                            <div class="form__from-to">
+                                <div>
+                                    <input type="date" id="check_return_date_from" name="check_return_date_from" class="form-control"
+                                        value="{{ params.check_return_date_from is defined ? params.check_return_date_from : '' }}" />
+                                </div>
+                                <div>~</div>
+                                <div>
+                                    <input type="date" id="check_return_date_to" name="check_return_date_to" class="form-control"
+                                        value="{{ params.check_return_date_to is defined ? params.check_return_date_to : '' }}" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

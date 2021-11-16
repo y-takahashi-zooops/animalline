@@ -15,6 +15,7 @@ file that was distributed with this source code.
 
 {% set column = params.field is defined ? params.field : 'create_date' %}
 {% set ordering = params.direction is defined ? params.direction : 'DESC' %}
+{% set contractStatus = {0: '交渉中 ', 1: '成約確認待ち', 2: '成約', 3: '非成約'} %}
 
 {% block title %}{{ '問い合わせ一覧'|trans }}{% endblock %}
 {% block sub_title %}{{ 'ペット管理'|trans }}{% endblock %}
@@ -46,60 +47,35 @@ file that was distributed with this source code.
                             </tr>
                             </thead>
                             <tbody>
+                            {% for contact in contacts %}
                                 <tr id="ex-adoption-1">
                                     <td class="align-middle"></td>
-                                    <td class="align-middle">テスト太郎</td>
-                                    <td class="align-middle">お問い合わせタイトル</td>
-                                    <td class="align-middle">2021/11/15 11:00</td>
-                                    <td class="align-middle">交渉中</td>
+                                    <td class="align-middle">{{ contact.Customer }}</td>
+                                    <td class="align-middle">{{ contact.contactTitle }}</td>
+                                    <td class="align-middle">{{ contact.lastMessageDate|date('Y/m/d H:i') }}</td>
+                                    <td class="align-middle">{{ contractStatus[contact.contractStatus] }}</td>
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ内容確認">
                                                 <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_pet_message', {'id': 1}) }}">
+                                                   href="{{ url('admin_pet_message', {'id': contact.id, 'site_kind': site_kind}) }}">
                                                     <i class="far fa-envelope-open fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr id="ex-adoption-2">
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle">テスト次郎</td>
-                                    <td class="align-middle">お問い合わせタイトル</td>
-                                    <td class="align-middle">2021/11/15 12:00</td>
-                                    <td class="align-middle">非成約</td>
-                                    <td class="align-middle pr-3" colspan="3">
-                                        <div class="text-right">
-                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ内容確認">
-                                                <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_pet_message', {'id': 2}) }}">
-                                                    <i class="far fa-envelope-open fa-lg text-secondary" aria-hidden="true"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5">結果が０件です。</td>
                                 </tr>
-                                <tr id="ex-adoption-3">
-                                    <td class="align-middle"></td>
-                                    <td class="align-middle">テスト三郎</td>
-                                    <td class="align-middle">お問い合わせタイトル</td>
-                                    <td class="align-middle">2021/11/15 13:00</td>
-                                    <td class="align-middle">交渉中</td>
-                                    <td class="align-middle pr-3" colspan="3">
-                                        <div class="text-right">
-                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ内容確認">
-                                                <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_pet_message', {'id': 3}) }}">
-                                                    <i class="far fa-envelope-open fa-lg text-secondary" aria-hidden="true"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="navigation float-right">
+                    {{ knp_pagination_render(contacts) }}
                 </div>
             </div>
         </div>

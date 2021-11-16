@@ -136,6 +136,26 @@ class ConservationPetsRepository extends ServiceEntityRepository
                 ->andWhere('cn.organization_name LIKE :organization_name')
                 ->setParameter('organization_name', '%' . $criteria['holder_name'] . '%');
         }
+        if (!empty($criteria['create_date_start']) && StringUtil::isNotBlank($criteria['create_date_start'])) {
+            $begin_datetime = $criteria['create_date_start'] . ' 00:00:00';
+            $qb
+                ->andWhere("cp.create_date >= '$begin_datetime'");
+        }
+        if (!empty($criteria['create_date_end']) && StringUtil::isNotBlank($criteria['create_date_end'])) {
+            $end_datetime = $criteria['create_date_end'] . ' 23:59:59';
+            $qb
+                ->andWhere("cp.create_date <= '$end_datetime'");
+        }
+        if (!empty($criteria['update_date_start']) && StringUtil::isNotBlank($criteria['update_date_start'])) {
+            $begin_datetime = $criteria['update_date_start'] . ' 00:00:00';
+            $qb
+                ->andWhere("cp.update_date >= '$begin_datetime'");
+        }
+        if (!empty($criteria['update_date_end']) && StringUtil::isNotBlank($criteria['update_date_end'])) {
+            $end_datetime = $criteria['update_date_end'] . ' 23:59:59';
+            $qb
+                ->andWhere("cp.update_date <= '$end_datetime'");
+        }
 
         return $qb->leftJoin('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'cp.id = dna.pet_id')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
