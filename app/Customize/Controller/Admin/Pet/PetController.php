@@ -178,7 +178,7 @@ class PetController extends AbstractController
             ]);
         }
         if ($site_kind == 2) {
-            $contacts = $this->conservationPetsRepository->findBy([
+            $contacts = $this->conservationContactHeaderRepository->findBy([
                 'id' => $request->get('pet_id')
             ]);
         }

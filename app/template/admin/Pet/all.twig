@@ -217,7 +217,7 @@ file that was distributed with this source code.
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">
                                                 <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_pet_all_message', {'pet_id': conservationPet.cp_id}) }}">
+                                                   href="{{ url('admin_pet_all_message', {'pet_id': conservationPet.cp_id, 'site_kind': params.site_kind }) }}">
                                                     <i class="far fa-envelope fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
