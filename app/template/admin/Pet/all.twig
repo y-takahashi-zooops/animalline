@@ -107,20 +107,6 @@ file that was distributed with this source code.
                         <input type="text" class="form-control" name="holder_name" value="{{ params.holder_name | default('') }}"></input>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <label class="col-form-label">登録日</label>
-                        <input type="date" id="create_date" name="create_date" class="form-control"
-                            value="{{ params.create_date is defined ? params.create_date : '' }}" />
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <label class="col-form-label">更新日</label>
-                        <input type="date" id="update_date" name="update_date" class="form-control"
-                            value="{{ params.update_date is defined ? params.update_date : '' }}" />
-                    </div>
-                </div>
             </div>
 
             <div class="c-outsideBlock__contents mb-5">
@@ -181,7 +167,7 @@ file that was distributed with this source code.
                                     <div class="text-right">
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">
                                             <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_pet_all_message', {'pet_id': breederPet.bp_id}) }}">
+                                                   href="{{ url('admin_pet_all_message', {'pet_id': breederPet.bp_id, 'site_kind': params.site_kind}) }}">
                                                 <i class="far fa-envelope fa-lg text-secondary" aria-hidden="true"></i>
                                             </a>
                                         </div>
