@@ -52,6 +52,29 @@ class ConservationsRepository extends ServiceEntityRepository
             }
         }
 
+        $fromTime = ' 00:00:00';
+        $toTime = ' 23:59:59';
+        if (isset($request['create_date_from']) && !empty($request['create_date_from'])) {
+            $fromDatetime = $request['create_date_from'] . $fromTime;
+            $qb
+                ->andWhere("c.create_date >= '$fromDatetime'");
+        }
+        if (isset($request['create_date_to']) && !empty($request['create_date_to'])) {
+            $toDatetime = $request['create_date_to'] . $toTime;
+            $qb
+                ->andWhere("c.create_date <= '$toDatetime'");
+        }
+        if (isset($request['update_date_from']) && !empty($request['update_date_from'])) {
+            $fromDatetime = $request['update_date_from'] . $fromTime;
+            $qb
+                ->andWhere("c.update_date >= '$fromDatetime'");
+        }
+        if (isset($request['update_date_to']) && !empty($request['update_date_to'])) {
+            $toDatetime = $request['update_date_to'] . $toTime;
+            $qb
+                ->andWhere("c.update_date <= '$toDatetime'");
+        }
+
         $orderField = $request['field'] ?? 'create_date';
         $direction = $request['direction'] ?? 'DESC';
         return $qb->orderBy('c.' . $orderField, $direction)

@@ -77,9 +77,14 @@ class DnaQueryService
         $customerName = $criteria['customer_name'] ?? '';
         $petKind = $criteria['pet_kind'] ?? '';
         $checkStatus = $criteria['check_status'] ?? '';
-        $kitRegistDate = $criteria['kit_regist_date'] ?? '';
-        $kitReturnDate = $criteria['kit_return_date'] ?? '';
-        $checkReturnDate = $criteria['check_return_date'] ?? '';
+        $kitRegistDateFrom = $criteria['kit_regist_date_from'] ?? '';
+        $kitRegistDateTo = $criteria['kit_regist_date_to'] ?? '';
+        $kitReturnDateFrom = $criteria['kit_return_date_from'] ?? '';
+        $kitReturnDateTo = $criteria['kit_return_date_to'] ?? '';
+        $checkReturnDateFrom = $criteria['check_return_date_from'] ?? '';
+        $checkReturnDateTo = $criteria['check_return_date_to'] ?? '';
+        $fromTime = ' 00:00:00';
+        $toTime = ' 23:59:59';
 
         $queryConservation = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->innerJoin('dna.DnaHeader', 'dnah')
@@ -101,24 +106,37 @@ class DnaQueryService
             $queryConservation->andWhere('dna.check_status = :check_status')
                 ->setParameter(':check_status', $checkStatus);
         }
-        if (!empty($kitRegistDate)) {
-            $begin_datetime = $kitRegistDate . ' 00:00:00';
-            $end_datetime = $kitRegistDate . ' 23:59:59';
+        if (!empty($kitRegistDateFrom)) {
+            $fromDatetime = $kitRegistDateFrom . $fromTime;
             $queryConservation
-                ->andWhere("dnah.kit_shipping_date >= '$begin_datetime' and dnah.kit_shipping_date <= '$end_datetime'");
+                ->andWhere("dnah.kit_shipping_date >= '$fromDatetime'");
         }
-        if (!empty($kitReturnDate)) {
-            $begin_datetime = $kitReturnDate . ' 00:00:00';
-            $end_datetime = $kitReturnDate . ' 23:59:59';
+        if (!empty($kitRegistDateTo)) {
+            $toDatetime = $kitRegistDateTo . $toTime;
             $queryConservation
-                ->andWhere("dna.kit_return_date >= '$begin_datetime' and dna.kit_return_date <= '$end_datetime'");
+                ->andWhere("dnah.kit_shipping_date <= '$toDatetime'");
         }
-        if (!empty($checkReturnDate)) {
-            $begin_datetime = $checkReturnDate . ' 00:00:00';
-            $end_datetime = $checkReturnDate . ' 23:59:59';
+        if (!empty($kitReturnDateFrom)) {
+            $fromDatetime = $kitReturnDateFrom . $fromTime;
             $queryConservation
-                ->andWhere("dna.check_return_date >= '$begin_datetime' and dna.check_return_date <= '$end_datetime'");
+                ->andWhere("dna.kit_return_date >= '$fromDatetime'");
         }
+        if (!empty($kitReturnDateTo)) {
+            $toDatetime = $kitReturnDateTo . $toTime;
+            $queryConservation
+                ->andWhere("dna.kit_return_date <= '$toDatetime'");
+        }
+        if (!empty($checkReturnDateFrom)) {
+            $fromDatetime = $checkReturnDateFrom . $fromTime;
+            $queryConservation
+                ->andWhere("dna.check_return_date >= '$fromDatetime'");
+        }
+        if (!empty($checkReturnDateTo)) {
+            $toDatetime = $checkReturnDateTo . $toTime;
+            $queryConservation
+                ->andWhere("dna.check_return_date <= '$toDatetime'");
+        }
+
         $resultConservation = $queryConservation->getQuery()->getArrayResult();
 
         $queryBreeder = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
@@ -141,24 +159,37 @@ class DnaQueryService
             $queryBreeder->andWhere('dna.check_status = :check_status')
                 ->setParameter(':check_status', $checkStatus);
         }
-        if (!empty($kitRegistDate)) {
-            $begin_datetime = $kitRegistDate . ' 00:00:00';
-            $end_datetime = $kitRegistDate . ' 23:59:59';
+        if (!empty($kitRegistDateFrom)) {
+            $fromDatetime = $kitRegistDateFrom . $fromTime;
             $queryBreeder
-                ->andWhere("dnah.kit_shipping_date >= '$begin_datetime' and dnah.kit_shipping_date <= '$end_datetime'");
+                ->andWhere("dnah.kit_shipping_date >= '$fromDatetime'");
         }
-        if (!empty($kitReturnDate)) {
-            $begin_datetime = $kitReturnDate . ' 00:00:00';
-            $end_datetime = $kitReturnDate . ' 23:59:59';
+        if (!empty($kitRegistDateTo)) {
+            $toDatetime = $kitRegistDateTo . $toTime;
             $queryBreeder
-                ->andWhere("dna.kit_return_date >= '$begin_datetime' and dna.kit_return_date <= '$end_datetime'");
+                ->andWhere("dnah.kit_shipping_date <= '$toDatetime'");
         }
-        if (!empty($checkReturnDate)) {
-            $begin_datetime = $checkReturnDate . ' 00:00:00';
-            $end_datetime = $checkReturnDate . ' 23:59:59';
+        if (!empty($kitReturnDateFrom)) {
+            $fromDatetime = $kitReturnDateFrom . $fromTime;
             $queryBreeder
-                ->andWhere("dna.check_return_date >= '$begin_datetime' and dna.check_return_date <= '$end_datetime'");
+                ->andWhere("dna.kit_return_date >= '$fromDatetime'");
         }
+        if (!empty($kitReturnDateTo)) {
+            $toDatetime = $kitReturnDateTo . $toTime;
+            $queryBreeder
+                ->andWhere("dna.kit_return_date <= '$toDatetime'");
+        }
+        if (!empty($checkReturnDateFrom)) {
+            $fromDatetime = $checkReturnDateFrom . $fromTime;
+            $queryBreeder
+                ->andWhere("dna.check_return_date >= '$fromDatetime'");
+        }
+        if (!empty($checkReturnDateTo)) {
+            $toDatetime = $checkReturnDateTo . $toTime;
+            $queryBreeder
+                ->andWhere("dna.check_return_date <= '$toDatetime'");
+        }
+
         $resultBreeder = $queryBreeder->getQuery()->getArrayResult();
 
         $totalResult = array_merge($resultBreeder, $resultConservation);

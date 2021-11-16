@@ -129,12 +129,18 @@ class BreederController extends AbstractController
             }
         }
 
-        if (array_key_exists('create_date', $request)) {
-            $criteria['create_date'] = $request['create_date'];
+        if (array_key_exists('create_date_from', $request)) {
+            $criteria['create_date_from'] = $request['create_date_from'];
+        }
+        if (array_key_exists('create_date_to', $request)) {
+            $criteria['create_date_to'] = $request['create_date_to'];
         }
 
-        if (array_key_exists('update_date', $request)) {
-            $criteria['update_date'] = $request['update_date'];
+        if (array_key_exists('update_date_from', $request)) {
+            $criteria['update_date_from'] = $request['update_date_from'];
+        }
+        if (array_key_exists('update_date_to', $request)) {
+            $criteria['update_date_to'] = $request['update_date_to'];
         }
 
         $order = [];

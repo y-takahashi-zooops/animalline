@@ -63,24 +63,48 @@ file that was distributed with this source code.
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-6">
-                            <label class="col-form-label">キット出荷</label>
-                            <input type="date" id="kit_regist_date" name="kit_regist_date" class="form-control"
-                                value="{{ params.kit_regist_date is defined ? params.kit_regist_date : '' }}" />
+                        <div class="col-6 form__from-to">
+                            <div>
+                                <label class="col-form-label">キット出荷</label>
+                                <input type="date" id="kit_regist_date_from" name="kit_regist_date_from" class="form-control"
+                                    value="{{ params.kit_regist_date_from is defined ? params.kit_regist_date_from : '' }}" />
+                            </div>
+                            <div>~</div>
+                            <div>
+                                <label class="col-form-label">キット出荷</label>
+                                <input type="date" id="kit_regist_date_to" name="kit_regist_date_to" class="form-control"
+                                    value="{{ params.kit_regist_date_to is defined ? params.kit_regist_date_to : '' }}" />
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-6">
-                            <label class="col-form-label">キット返送</label>
-                            <input type="date" id="kit_return_date" name="kit_return_date" class="form-control"
-                                value="{{ params.kit_return_date is defined ? params.kit_return_date : '' }}" />
+                        <div class="col-6 form__from-to">
+                            <div>
+                                <label class="col-form-label">キット返送</label>
+                                <input type="date" id="kit_return_date_from" name="kit_return_date_from" class="form-control"
+                                    value="{{ params.kit_return_date_from is defined ? params.kit_return_date_from : '' }}" />
+                            </div>
+                            <div>~</div>
+                            <div>
+                                <label class="col-form-label">キット返送</label>
+                                <input type="date" id="kit_return_date_to" name="kit_return_date_to" class="form-control"
+                                    value="{{ params.kit_return_date_to is defined ? params.kit_return_date_to : '' }}" />
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-6">
-                            <label class="col-form-label">結果受信</label>
-                            <input type="date" id="check_return_date" name="check_return_date" class="form-control"
-                                value="{{ params.check_return_date is defined ? params.check_return_date : '' }}" />
+                        <div class="col-6 form__from-to">
+                            <div>
+                                <label class="col-form-label">結果受信</label>
+                                <input type="date" id="check_return_date_from" name="check_return_date_from" class="form-control"
+                                    value="{{ params.check_return_date_from is defined ? params.check_return_date_from : '' }}" />
+                            </div>
+                            <div>~</div>
+                            <div>
+                                <label class="col-form-label">結果受信</label>
+                                <input type="date" id="check_return_date_to" name="check_return_date_to" class="form-control"
+                                    value="{{ params.check_return_date_to is defined ? params.check_return_date_to : '' }}" />
+                            </div>
                         </div>
                     </div>
                 </div>
