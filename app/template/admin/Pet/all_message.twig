@@ -15,7 +15,7 @@ file that was distributed with this source code.
 
 {% set column = params.field is defined ? params.field : 'create_date' %}
 {% set ordering = params.direction is defined ? params.direction : 'DESC' %}
-{% set contractStatus = {0: '交渉中 ', 1: '成約確認待ち', 2: '成約', 3: '非成約'} %}
+{% set contractStatus = {0: '交渉中 ', 1: '成約確認待ち', 2: '成約', 3: ''} %}
 
 {% block title %}{{ '問い合わせ一覧'|trans }}{% endblock %}
 {% block sub_title %}{{ 'ペット管理'|trans }}{% endblock %}
