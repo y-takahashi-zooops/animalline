@@ -39,9 +39,10 @@ a[disabled], button[disabled] {
 }
 
 .form__from-to div:nth-child(2) {
-    padding-top: 38px;
     padding-left: 10px;
     padding-right: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .form__from-to div:last-child {

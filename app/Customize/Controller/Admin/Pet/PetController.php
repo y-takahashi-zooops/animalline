@@ -205,20 +205,19 @@ class PetController extends AbstractController
         $site_kind = $request->get('site_kind');
         $pet_id = $request->get('pet_id');
 
-        if ($site_kind == 1) {
-            $contacts = $this->breederContactHeaderRepository->findBy([
+        if ($site_kind == AnilineConf::ANILINE_SITE_TYPE_BREEDER) {
+            $records = $this->breederContactHeaderRepository->findBy([
                 'Pet' => $pet_id
             ]);
-        }
-        if ($site_kind == 2) {
-            $contacts = $this->conservationContactHeaderRepository->findBy([
-                'id' => $request->get('pet_id')
+        } else {
+            $records = $this->conservationContactHeaderRepository->findBy([
+                'Pet' => $pet_id
             ]);
         }
 
         $request = $request->query->all();
         $contacts = $paginator->paginate(
-            $contacts,
+            $records,
             array_key_exists('page', $request) ? $request['page'] : 1,
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
@@ -255,12 +254,12 @@ class PetController extends AbstractController
         $customer = $this->customerRepository->find($contact->getCustomer());
         $breederContacts = $paginator->paginate(
             $breederContacts,
-            array_key_exists('page', $request) ? $request['page'] : 1,
+            $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
         $conservationContacts = $paginator->paginate(
             $conservationContacts,
-            array_key_exists('page', $request) ? $request['page'] : 1,
+            $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
         return compact([
