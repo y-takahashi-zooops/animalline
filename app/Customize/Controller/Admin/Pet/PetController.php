@@ -206,19 +206,19 @@ class PetController extends AbstractController
         $pet_id = $request->get('pet_id');
 
         if ($site_kind == 1) {
-            $contacts = $this->breederContactHeaderRepository->findBy([
+            $records = $this->breederContactHeaderRepository->findBy([
                 'Pet' => $pet_id
             ]);
         }
         if ($site_kind == 2) {
-            $contacts = $this->conservationContactHeaderRepository->findBy([
+            $records = $this->conservationContactHeaderRepository->findBy([
                 'id' => $request->get('pet_id')
             ]);
         }
 
         $request = $request->query->all();
         $contacts = $paginator->paginate(
-            $contacts,
+            $records,
             array_key_exists('page', $request) ? $request['page'] : 1,
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
