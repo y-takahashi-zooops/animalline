@@ -95,7 +95,7 @@ file that was distributed with this source code.
                             </div>
                         </div>
                         <div class="col-9 mb-2">
-                            <span> {{ breederContact.messageFrom == 1 ? contact.Customer : breeder.Name01~' '~breeder.Name02 }} </span>
+                            <span> {{ breederContact.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') ? contact.Customer : breeder.Name01~' '~breeder.Name02 }} </span>
                         </div>
                     </div>
                     <div class="row">
@@ -158,6 +158,10 @@ file that was distributed with this source code.
                 </div>
             </div>
         {% endfor %}
+    </div>
+    <div class="navigation float-right">
+        {{ knp_pagination_render(breederContacts) }}
+        {{ knp_pagination_render(conservationContacts) }}
     </div>
 </div>
 {% endblock %}
