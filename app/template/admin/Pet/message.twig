@@ -1,0 +1,186 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['pets', 'pet_list'] %}
+{% set params = app.request.query.all %}
+
+{% set column = params.field is defined ? params.field : 'create_date' %}
+{% set ordering = params.direction is defined ? params.direction : 'DESC' %}
+
+{% block title %}{{ '問い合わせ確認'|trans }}{% endblock %}
+{% block sub_title %}{{ 'ペット管理'|trans }}{% endblock %}
+
+{# {% form_theme searchForm '@admin/Form/bootstrap_4_layout.html.twig' %} #}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+{% endblock stylesheet %}
+
+{% block javascript %}
+{% endblock javascript %}
+
+{% block main %}
+<div class="c-contentsArea__cols">
+<div class="c-contentsArea__primaryCol">
+    <div class="c-primaryCol">
+        <div class="card rounded border-0 mb-4">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="d-inline-block">
+                            <span class="card-title">
+                                問い合わせタイトル
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-6 text-right">
+                        <a data-toggle="collapse" href="#basicConfig" aria-expanded="false"
+                           aria-controls="basicConfig">
+                            <i class="fa fa-angle-up fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="collapse show ec-cardCollapse" id="basicConfig">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="d-inline-block">
+                                <label class="ec-label required" for="breeders_breeder_name">お名前</label>
+                            </div>
+                        </div>
+                        <div class="col-9 mb-2">
+                            <span>テスト太郎</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="d-inline-block">
+                                <label class="ec-label required" for="breeders_breeder_kana">送信日時</label>
+                            </div>
+                        </div>
+                        <div class="col-9 mb-2">
+                            <span>2021/11/11 11:00</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="d-inline-block">
+                                <label class="ec-label required" for="breeders_handling_pet_kind">本文</label>
+                            </div>
+                        </div>
+                        <div class="col-9 mb-2">
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                            問い合わせ内容。問い合わせ内容。問い合わせ内容。問い合わせ内容。<br>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+        </div>
+        <div class="card rounded border-0 mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="d-inline-block">
+                            <label class="ec-label required" for="breeders_breeder_name">送信者</label>
+                        </div>
+                    </div>
+                    <div class="col-9 mb-2">
+                        <span>保護団体名</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="d-inline-block">
+                            <label class="ec-label required" for="breeders_breeder_kana">送信日時</label>
+                        </div>
+                    </div>
+                    <div class="col-9 mb-2">
+                        <span>2021/11/11 12:00</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="d-inline-block">
+                            <label class="ec-label required" for="breeders_handling_pet_kind">本文</label>
+                        </div>
+                    </div>
+                    <div class="col-9 mb-2">
+                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
+                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
+                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
+                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
+                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
+                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
+                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
+                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
+                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
+                        保護団体からの返信です保護団体からの返信です保護団体からの返信です保護団体からの返信です<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card rounded border-0 mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="d-inline-block">
+                            <label class="ec-label required" for="breeders_breeder_name">送信者</label>
+                        </div>
+                    </div>
+                    <div class="col-9 mb-2">
+                        <span>テスト太郎</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="d-inline-block">
+                            <label class="ec-label required" for="breeders_breeder_kana">送信日時</label>
+                        </div>
+                    </div>
+                    <div class="col-9 mb-2">
+                        <span>2021/11/11 13:00</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="d-inline-block">
+                            <label class="ec-label required" for="breeders_handling_pet_kind">本文</label>
+                        </div>
+                    </div>
+                    <div class="col-9 mb-2">
+                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
+                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
+                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
+                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
+                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
+                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
+                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
+                        ユーザーからの返信ですユーザーからの返信ですユーザーからの返信です<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

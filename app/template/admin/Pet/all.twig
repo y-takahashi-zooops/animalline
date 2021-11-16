@@ -145,7 +145,6 @@ file that was distributed with this source code.
                                             href="{{ url('admin_pet_all', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2">成約状況</th>
-                                {# <th class="border-top-0 pt-2 pb-2">成約状況</th> #}
                             </tr>
                             </thead>
                             <tbody>
@@ -164,9 +163,14 @@ file that was distributed with this source code.
                                 <td class="align-middle">{{ breederPet.bp_create_date|date('Y/m/d H:i') }}</td>
                                 <td class="align-middle">{{ breederPet.bp_update_date|date('Y/m/d H:i') }}</td>
                                 <td class="align-middle">{{ breederPet.contract_status is null ? '' : arr[breederPet.contract_status]}}</td>
-                                {# <td class="align-middle">{{ breederPet. }}</td> #}
                                 <td class="align-middle pr-3" colspan="3">
                                     <div class="text-right">
+                                        <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">
+                                            <a class="btn btn-ec-actionIcon"
+                                                   href="{{ url('admin_pet_all_message', {'pet_id': breederPet.bp_id}) }}">
+                                                <i class="far fa-envelope fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
                                             <a class="btn btn-ec-actionIcon" href="{{ url('admin_breeder_pet_edit', {'id': breederPet.bp_id}) }}">
                                                 <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
@@ -179,7 +183,6 @@ file that was distributed with this source code.
                                             </a>
                                         </div>
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査結果PDFダウンロード">
-                            
                                             {% if breederPet.dna_file_path %}
                                             <a class="btn btn-ec-actionIcon"
                                                 href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': breederPet.bp_id}) }}">
@@ -210,9 +213,14 @@ file that was distributed with this source code.
                                     <td class="align-middle">{{ conservationPet.cp_create_date|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ conservationPet.cp_update_date|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ conservationPet.contract_status is null ? '' : arr[conservationPet.contract_status] }}</td>
-                                    {# <td class="align-middle">{{ conservationPet. }}</td> #}
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
+                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">
+                                                <a class="btn btn-ec-actionIcon"
+                                                   href="{{ url('admin_pet_all_message', {'pet_id': conservationPet.cp_id}) }}">
+                                                    <i class="far fa-envelope fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
                                                 <a class="btn btn-ec-actionIcon"
                                                    href="{{ url('admin_breeder_pet_edit', {'id': conservationPet.cp_id}) }}">

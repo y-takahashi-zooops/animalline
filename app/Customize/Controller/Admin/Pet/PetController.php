@@ -135,4 +135,28 @@ class PetController extends AbstractController
             'conservationPets' => $conservationPets,
         ];
     }
+
+    /**
+     * ペット毎お問い合わせ一覧
+     *
+     * @Route("/%eccube_admin_route%/pet/all_message/{pet_id}", name="admin_pet_all_message")
+
+     * @Template("@admin/Pet/all_message.twig")
+     */
+    public function all_message()
+    {
+        return[];
+    }
+
+    /**
+     * お問い合わせ内容確認
+     *
+     * @Route("/%eccube_admin_route%/pet/message/{id}", name="admin_pet_message")
+
+     * @Template("@admin/Pet/message.twig")
+     */
+    public function message()
+    {
+        return[];
+    }
 }

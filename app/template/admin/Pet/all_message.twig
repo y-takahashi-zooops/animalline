@@ -1,0 +1,108 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['pets', 'pet_list'] %}
+{% set params = app.request.query.all %}
+
+{% set column = params.field is defined ? params.field : 'create_date' %}
+{% set ordering = params.direction is defined ? params.direction : 'DESC' %}
+
+{% block title %}{{ '問い合わせ一覧'|trans }}{% endblock %}
+{% block sub_title %}{{ 'ペット管理'|trans }}{% endblock %}
+
+{# {% form_theme searchForm '@admin/Form/bootstrap_4_layout.html.twig' %} #}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+{% endblock stylesheet %}
+
+{% block javascript %}
+{% endblock javascript %}
+
+{% block main %}
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <div class="card rounded border-0 mb-4 d-block">
+                    <div class="card-body p-0">
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th class="border-top-0 pt-2 pb-2"></th>
+                                <th class="border-top-0 pt-2 pb-2">顧客名</th>
+                                <th class="border-top-0 pt-2 pb-2">コンタクト内容タイトル</th>
+                                <th class="border-top-0 pt-2 pb-2">最終返信日時</th>
+                                <th class="border-top-0 pt-2 pb-2">成約状況</th>
+                                <th class="border-top-0 pt-2 pb-2"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="ex-adoption-1">
+                                    <td class="align-middle"></td>
+                                    <td class="align-middle">テスト太郎</td>
+                                    <td class="align-middle">お問い合わせタイトル</td>
+                                    <td class="align-middle">2021/11/15 11:00</td>
+                                    <td class="align-middle">交渉中</td>
+                                    <td class="align-middle pr-3" colspan="3">
+                                        <div class="text-right">
+                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ内容確認">
+                                                <a class="btn btn-ec-actionIcon"
+                                                   href="{{ url('admin_pet_message', {'id': 1}) }}">
+                                                    <i class="far fa-envelope-open fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr id="ex-adoption-2">
+                                    <td class="align-middle"></td>
+                                    <td class="align-middle">テスト次郎</td>
+                                    <td class="align-middle">お問い合わせタイトル</td>
+                                    <td class="align-middle">2021/11/15 12:00</td>
+                                    <td class="align-middle">非成約</td>
+                                    <td class="align-middle pr-3" colspan="3">
+                                        <div class="text-right">
+                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ内容確認">
+                                                <a class="btn btn-ec-actionIcon"
+                                                   href="{{ url('admin_pet_message', {'id': 2}) }}">
+                                                    <i class="far fa-envelope-open fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr id="ex-adoption-3">
+                                    <td class="align-middle"></td>
+                                    <td class="align-middle">テスト三郎</td>
+                                    <td class="align-middle">お問い合わせタイトル</td>
+                                    <td class="align-middle">2021/11/15 13:00</td>
+                                    <td class="align-middle">交渉中</td>
+                                    <td class="align-middle pr-3" colspan="3">
+                                        <div class="text-right">
+                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ内容確認">
+                                                <a class="btn btn-ec-actionIcon"
+                                                   href="{{ url('admin_pet_message', {'id': 3}) }}">
+                                                    <i class="far fa-envelope-open fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
