@@ -58,8 +58,8 @@ class BreedersRepository extends ServiceEntityRepository
             $qb
                 ->andWhere("b.update_date >= '$fromDatetime'");
         }
-        if (isset($criteria['update_date_from']) && StringUtil::isNotBlank($criteria['update_date_from'])) {
-            $toDatetime = $criteria['update_date_from'] . $toDatetime;
+        if (isset($criteria['update_date_to']) && StringUtil::isNotBlank($criteria['update_date_to'])) {
+            $toDatetime = $criteria['update_date_to'] . $toTime;
             $qb
                 ->andWhere("b.update_date <= '$toDatetime'");
         }
