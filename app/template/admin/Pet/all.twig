@@ -108,17 +108,33 @@ file that was distributed with this source code.
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-6">
-                        <label class="col-form-label">登録日</label>
-                        <input type="date" id="create_date" name="create_date" class="form-control"
-                            value="{{ params.create_date is defined ? params.create_date : '' }}" />
+                    <div class="col-6 form__from-to">
+                        <div>
+                            <label class="col-form-label">登録日</label>
+                            <input type="date" name="create_date_start" class="form-control"
+                                value="{{ params.create_date_start is defined ? params.create_date_start : '' }}" />
+                        </div>
+                        <div>~</div>
+                        <div>
+                            <label class="col-form-label">登録日</label>
+                            <input type="date" name="create_date_end" class="form-control"
+                                value="{{ params.create_date_end is defined ? params.create_date_end : '' }}" />
+                        </div>
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-6">
-                        <label class="col-form-label">更新日</label>
-                        <input type="date" id="update_date" name="update_date" class="form-control"
-                            value="{{ params.update_date is defined ? params.update_date : '' }}" />
+                    <div class="col-6 form__from-to">
+                        <div class="">
+                            <label class="col-form-label">更新日</label>
+                            <input type="date" name="update_date_start" class="form-control"
+                                value="{{ params.update_date_start is defined ? params.update_date_start : '' }}" />
+                        </div>
+                        <div>~</div>
+                        <div class="">
+                            <label class="col-form-label">更新日</label>
+                            <input type="date" name="update_date_end" class="form-control"
+                                value="{{ params.update_date_end is defined ? params.update_date_end : '' }}" />
+                        </div>
                     </div>
                 </div>
             </div>
