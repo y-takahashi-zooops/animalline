@@ -254,12 +254,12 @@ class PetController extends AbstractController
         $customer = $this->customerRepository->find($contact->getCustomer());
         $breederContacts = $paginator->paginate(
             $breederContacts,
-            array_key_exists('page', $request) ? $request['page'] : 1,
+            $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
         $conservationContacts = $paginator->paginate(
             $conservationContacts,
-            array_key_exists('page', $request) ? $request['page'] : 1,
+            $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
         return compact([
