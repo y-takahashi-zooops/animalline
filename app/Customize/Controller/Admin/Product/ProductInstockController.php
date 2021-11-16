@@ -34,6 +34,7 @@ use Eccube\Entity\OrderItem;
 use Eccube\Repository\Master\OrderItemTypeRepository;
 use Eccube\Repository\ProductStockRepository;
 use Customize\Service\ProductStockService;
+use Knp\Component\Pager\Paginator;
 
 class ProductInstockController extends AbstractController
 {
@@ -201,7 +202,7 @@ class ProductInstockController extends AbstractController
             if (!$TargetInstock) {
                 throw new NotFoundHttpException();
             }
-            // 編集前の受注情報を保持
+            // 編集前の在庫情報を保持
             $OriginItems = new ArrayCollection();
             foreach ($TargetInstock->getInstockSchedule() as $schedule) {
                 $count++;
@@ -331,5 +332,15 @@ class ProductInstockController extends AbstractController
             'subtotalPrices' => $subTotalPrices,
             'count' => $count
         ];
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/product/instock/search/", name="admin_instock_search_product")
+     * @Route("/%eccube_admin_route%/product/instock/search/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_instock_search_product_page")
+     * @Template("@admin/Order/search_product.twig")
+     */
+    public function searchProduct(Request $request, $page_no = null, Paginator $paginator)
+    {
+
     }
 }
