@@ -56,7 +56,7 @@ file that was distributed with this source code.
         <form id='search_form' method="get" action="#">
             <div class="c-outsideBlock__contents">
                 <div class="row mb-2">
-                    <div class="col-6">
+                    <div class="col">
                         <label class="col-form-label">サイト種別</label>
                         <select id="site_kind" name="site_kind" class="form-control">
                             <option value="">選択してください</option>
@@ -67,9 +67,13 @@ file that was distributed with this source code.
                             {% endfor %}
                         </select>
                     </div>
+                    <div class="col">
+                        <label class="col-form-label">ブリーダー名/保護団体名</label>
+                        <input type="text" class="form-control" name="holder_name" value="{{ params.holder_name | default('') }}"></input>
+                    </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-6">
+                    <div class="col">
                         <label class="col-form-label">種別</label>
                         <select id="pet_kind" name="pet_kind" class="form-control">
                             {% set kindNames = ['全て', '犬', '猫'] %}
@@ -78,9 +82,7 @@ file that was distributed with this source code.
                             {% endfor %}
                         </select>
                     </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">
+                    <div class="col">
                         <label class="col-form-label">犬種/猫種</label>
                         <select id="breed_type" name="breed_type" class="form-control">
                             <option value="0">全て</option>
@@ -88,6 +90,34 @@ file that was distributed with this source code.
                                 <option value="{{ breed.Id }}" {% if params.breed_type is defined and params.breed_type == breed.Id %} selected {% endif %}>{{ breed.breedsName }}</option>
                             {% endfor %}
                         </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col">
+                        <label class="col-form-label">登録日</label>
+                        <div class="form-row align-items-center">
+                            <div class="col">
+                                <input type="date" name="create_date_start" class="form-control"
+                                    value="{{ params.create_date_start is defined ? params.create_date_start : '' }}" />                        </div>
+                            <div class="col-auto text-center">〜</div>
+                            <div class="col">
+                                <input type="date" name="create_date_end" class="form-control"
+                                    value="{{ params.create_date_end is defined ? params.create_date_end : '' }}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">更新日</label>
+                        <div class="form-row align-items-center">
+                            <div class="col">
+                                <input type="date" name="update_date_start" class="form-control"
+                                    value="{{ params.update_date_start is defined ? params.update_date_start : '' }}" />                     </div>
+                            <div class="col-auto text-center">〜</div>
+                            <div class="col">
+                                <input type="date" name="update_date_end" class="form-control"
+                                    value="{{ params.update_date_end is defined ? params.update_date_end : '' }}" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -99,48 +129,6 @@ file that was distributed with this source code.
                                 <option value="{{ i }}" {% if params.public_status is defined and params.public_status == i %} selected {% endif %}>{{ publicStatuss[i] }}</option>
                             {% endfor %}
                         </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <label class="col-form-label">ブリーダー名/保護団体名</label>
-                        <input type="text" class="form-control" name="holder_name" value="{{ params.holder_name | default('') }}"></input>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <div>
-                            <label class="col-form-label">登録日</label>
-                        </div>
-                        <div class="form__from-to">
-                            <div>
-                                <input type="date" name="create_date_start" class="form-control"
-                                    value="{{ params.create_date_start is defined ? params.create_date_start : '' }}" />
-                            </div>
-                            <div>~</div>
-                            <div>
-                                <input type="date" name="create_date_end" class="form-control"
-                                    value="{{ params.create_date_end is defined ? params.create_date_end : '' }}" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <div>
-                            <label class="col-form-label">更新日</label>
-                        </div>
-                        <div class="form__from-to">
-                            <div class="">
-                                <input type="date" name="update_date_start" class="form-control"
-                                    value="{{ params.update_date_start is defined ? params.update_date_start : '' }}" />
-                            </div>
-                            <div>~</div>
-                            <div class="">
-                                <input type="date" name="update_date_end" class="form-control"
-                                    value="{{ params.update_date_end is defined ? params.update_date_end : '' }}" />
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -181,6 +169,7 @@ file that was distributed with this source code.
                                             href="{{ url('admin_pet_all', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2">成約状況</th>
+                                <th class="border-top-0 pt-2 pb-2"></th>
                             </tr>
                             </thead>
                             <tbody>

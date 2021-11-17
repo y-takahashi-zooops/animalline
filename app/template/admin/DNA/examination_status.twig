@@ -25,18 +25,32 @@ file that was distributed with this source code.
     <form id='search_form' method="get" action="">
         <div class="c-outsideBlock__contents">
             <div class="row justify-content-start">
-                <div class="col-6">
+                <div class="col">
                     <div class="row mb-2">
-                        <div class="col-6">
+                        <div class="col">
                             <label class="col-form-label" data-tooltip="true" data-placement="top"
                                 title="情報を入力して一覧の絞り込み検索ができます。">ブリーダーの名称・保護団体の名称
                                 <i class="fa fa-question-circle fa-lg ml-1"></i></label>
                             <input type="text" name="customer_name" class="form-control"
                                 value="{{ params.customer_name is defined ? params.customer_name }}" />
                         </div>
+                        <div class="col">
+                            <label class="col-form-label">キット出荷</label>
+                            <div class="form-row align-items-center">
+                                <div class="col">
+                                    <input type="date" id="kit_regist_date_from" name="kit_regist_date_from" class="form-control"
+                                        value="{{ params.kit_regist_date_from is defined ? params.kit_regist_date_from : '' }}" />
+                                </div>
+                                <div class="col-auto text-center">〜</div>
+                                <div class="col">
+                                    <input type="date" id="kit_regist_date_to" name="kit_regist_date_to" class="form-control"
+                                        value="{{ params.kit_regist_date_to is defined ? params.kit_regist_date_to : '' }}" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-6">
+                        <div class="col">
                             <label class="col-form-label">種別</label>
                             <select id="pet_kind" name="pet_kind" class="form-control">
                                 {% set kindNames = ['全て', '犬', '猫'] %}
@@ -46,9 +60,23 @@ file that was distributed with this source code.
                                 {% endfor %}
                             </select>
                         </div>
+                        <div class="col">
+                            <label class="col-form-label">キット返送</label>
+                            <div class="form-row align-items-center">
+                                <div class="col">
+                                    <input type="date" id="kit_return_date_from" name="kit_return_date_from" class="form-control"
+                                        value="{{ params.kit_return_date_from is defined ? params.kit_return_date_from : '' }}" />
+                                </div>
+                                <div class="col-auto text-center">〜</div>
+                                <div class="col">
+                                    <input type="date" id="kit_return_date_to" name="kit_return_date_to" class="form-control"
+                                        value="{{ params.kit_return_date_to is defined ? params.kit_return_date_to : '' }}" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-6">
+                        <div class="col">
                             <label class="col-form-label">検査状況</label>
                             <select class="ec-select form-control" name="check_status">
                                 <option value="">選択してください</option>
@@ -61,55 +89,15 @@ file that was distributed with this source code.
                                 {% endfor %}
                             </select>
                         </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <div>
-                                <label class="col-form-label">キット出荷</label>
-                            </div>
-                            <div class="form__from-to">
-                                <div>
-                                    <input type="date" id="kit_regist_date_from" name="kit_regist_date_from" class="form-control"
-                                    value="{{ params.kit_regist_date_from is defined ? params.kit_regist_date_from : '' }}" />
-                                </div>
-                                <div>~</div>
-                                <div>
-                                    <input type="date" id="kit_regist_date_to" name="kit_regist_date_to" class="form-control"
-                                        value="{{ params.kit_regist_date_to is defined ? params.kit_regist_date_to : '' }}" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <div>
-                                <label class="col-form-label">キット返送</label>
-                            </div>
-                            <div class="form__from-to">
-                                <div>
-                                    <input type="date" id="kit_return_date_from" name="kit_return_date_from" class="form-control"
-                                        value="{{ params.kit_return_date_from is defined ? params.kit_return_date_from : '' }}" />
-                                </div>
-                                <div>~</div>
-                                <div>
-                                    <input type="date" id="kit_return_date_to" name="kit_return_date_to" class="form-control"
-                                        value="{{ params.kit_return_date_to is defined ? params.kit_return_date_to : '' }}" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <div>
-                                <label class="col-form-label">結果受信</label>
-                            </div>
-                            <div class="form__from-to">
-                                <div>
+                        <div class="col">
+                            <label class="col-form-label">結果受信</label>
+                            <div class="form-row align-items-center">
+                                <div class="col">
                                     <input type="date" id="check_return_date_from" name="check_return_date_from" class="form-control"
                                         value="{{ params.check_return_date_from is defined ? params.check_return_date_from : '' }}" />
                                 </div>
-                                <div>~</div>
-                                <div>
+                                <div class="col-auto text-center">〜</div>
+                                <div class="col">
                                     <input type="date" id="check_return_date_to" name="check_return_date_to" class="form-control"
                                         value="{{ params.check_return_date_to is defined ? params.check_return_date_to : '' }}" />
                                 </div>

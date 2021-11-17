@@ -34,15 +34,29 @@ file that was distributed with this source code.
     <form id='search_form' method="get" action="{{ url('admin_breeder_list') }}">
         <div class="c-outsideBlock__contents">
             <div class="row mb-2">
-                <div class="col-6">
+                <div class="col">
                     <label class="col-form-label" data-tooltip="true" data-placement="top"
                         title="情報を入力して一覧の絞り込み検索ができます。">ブリーダー名<i class="fa fa-question-circle fa-lg ml-1"></i></label>
                     <input type="text" id="breeder_name" name="breeder_name" class="form-control"
                         value="{{ params.breeder_name is defined ? params.breeder_name : '' }}" />
                 </div>
+                <div class="col">
+                    <label class="col-form-label">登録日</label>
+                    <div class="form-row align-items-center">
+                        <div class="col">
+                            <input type="date" id="create_date_from" name="create_date_from" class="form-control"
+                                value="{{ params.create_date_from is defined ? params.create_date_from : '' }}" />
+                        </div>
+                        <div class="col-auto text-center">〜</div>
+                        <div class="col">
+                            <input type="date" id="create_date_to" name="create_date_to" class="form-control"
+                                value="{{ params.create_date_to is defined ? params.create_date_to : '' }}" />
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row mb-2">
-                <div class="col-6">
+                <div class="col">
                     <label class="col-form-label">審査状態</label>
                     <select id="examination_status" name="examination_status" class="form-control">
                         {% set statusNames = ['全て', '審査済み', '未審査'] %}
@@ -52,38 +66,16 @@ file that was distributed with this source code.
                         {% endfor %}
                     </select>
                 </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-6">
-                    <div>
-                        <label class="col-form-label">登録日</label>
-                    </div>
-                    <div class="form__from-to">
-                        <div>
-                            <input type="date" id="create_date_from" name="create_date_from" class="form-control"
-                                value="{{ params.create_date_from is defined ? params.create_date_from : '' }}" />
-                        </div>
-                        <div>~</div>
-                        <div>
-                            <input type="date" id="create_date_to" name="create_date_to" class="form-control"
-                                value="{{ params.create_date_to is defined ? params.create_date_to : '' }}" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-6">
-                    <div>
-                        <label class="col-form-label">更新日</label>
-                    </div>
-                    <div class="form__from-to">
-                        <div>
+                <div class="col">
+                    <label class="col-form-label">更新日</label>
+                    <div class="form-row align-items-center">
+                        <div class="col">
                             <input type="date" id="update_date_from" name="update_date_from" class="form-control"
                                 value="{{ params.update_date_from is defined ? params.update_date_from : '' }}" />
                         </div>
-                        <div>~</div>
-                        <div>
-                            <input type="date" id="update_date_to" name="update_date_to" class="form-control"
+                        <div class="col-auto text-center">〜</div>
+                        <div class="col">
+                           <input type="date" id="update_date_to" name="update_date_to" class="form-control"
                                 value="{{ params.update_date_to is defined ? params.update_date_to : '' }}" />
                         </div>
                     </div>
