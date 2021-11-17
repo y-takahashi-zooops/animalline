@@ -243,7 +243,7 @@ class AnilineEntryController extends AbstractController
 
                     } else {
                         // 仮会員設定が無効な場合は、会員登録を完了させる.
-                        $qtyInCart = $this->entryActivate($request, $Customer->getSecretKey());
+                        $qtyInCart = $this->entryActivate($request, $Customer->getSecretKey(),$prefix);
 
                         // URLを変更するため完了画面にリダイレクト
                         return $this->redirectToRoute('entry_activate', [
@@ -338,7 +338,7 @@ class AnilineEntryController extends AbstractController
         } elseif ($request->getMethod() === 'GET' && count($errors) === 0) {
 
             // 会員登録処理を行う
-            $qtyInCart = $this->entryActivate($request, $secret_key);
+            $qtyInCart = $this->entryActivate($request, $secret_key,$prefix);
             if($qtyInCart == -1){
                 return $this->redirectToRoute("entry_completed");
             }
@@ -360,7 +360,7 @@ class AnilineEntryController extends AbstractController
      * @param $secret_key
      * @return \Eccube\Entity\Cart|mixed
      */
-    private function entryActivate(Request $request, $secret_key)
+    private function entryActivate(Request $request, $secret_key,$prefix)
     {
         log_info('本会員登録開始');
         $Customer = $this->customerRepository->getProvisionalCustomerBySecretKey($secret_key);
@@ -385,7 +385,7 @@ class AnilineEntryController extends AbstractController
         $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_ACTIVATE_COMPLETE, $event);
 
         // メール送信
-        $this->mailService->sendCustomerCompleteMail($Customer);
+        $this->mailService->sendCustomerCompleteMail($Customer,$prefix);
 
         // Assign session carts into customer carts
         $Carts = $this->cartService->getCarts();

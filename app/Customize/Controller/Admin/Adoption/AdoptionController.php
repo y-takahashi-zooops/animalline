@@ -112,9 +112,15 @@ class AdoptionController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
+        $adoptionstatus[0] = "申請待ち";
+        $adoptionstatus[1] = "未審査";
+        $adoptionstatus[2] = "審査済（許可）";
+        $adoptionstatus[3] = "審査済（拒否）";
+
         return $this->render('@admin/Adoption/index.twig', [
             'conservations' => $conservations,
             'direction' => !isset($request['direction']) || $request['direction'] === 'DESC' ? 'ASC' : 'DESC',
+            'adoptionstatus' => $adoptionstatus,
         ]);
     }
 

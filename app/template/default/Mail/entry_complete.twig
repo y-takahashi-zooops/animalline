@@ -21,8 +21,14 @@
 
 アニマルラインの会員登録が完了いたしました。
 
+{% if prefix == "breeder" %}
 ↓↓↓　引き続きこちらのリンクよりブリーダー情報を登録してください。
-https://regist.animalline.jp/breeder/member/examination
+{{ url("breeder_examination") }}
+{% endif %}
+{% if prefix == "adoption" %}
+↓↓↓　引き続きこちらのリンクより保護団体情報を登録してください。
+{{ url("adoption_examination") }}
+{% endif %}
 
 今後ともどうぞ{{ BaseInfo.shop_name }}をよろしくお願い申し上げます。
 {% endautoescape %}
