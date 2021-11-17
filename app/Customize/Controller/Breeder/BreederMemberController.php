@@ -16,10 +16,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Customize\Config\AnilineConf;
-use Eccube\Form\Type\Front\PasswordResetType;
+use Customize\Form\Type\Front\ResetPasswordType;
 
 class BreederMemberController extends AbstractController
 {
@@ -235,20 +236,31 @@ class BreederMemberController extends AbstractController
     /**
      * パスワードリセット.
      *
-     * @Route("/breeder/member/set_password", name="password_chenge")
+     * @Route("/breeder/member/set_password", name="password_change")
      * @Template("/animalline/breeder/member/password_change.twig")
      */
-    public function password_chenge(Request $request)
+    public function password_change(Request $request, UserPasswordEncoderInterface $encoder)
     {
         $builder = $this->formFactory
-            ->createNamedBuilder('', PasswordResetType::class);
+            ->createBuilder(ResetPasswordType::class);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
-        $error = null;
+        $entityManager = $this->getDoctrine()->getManager();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            $userEntity = $this->customerRepository->find($user);
+            $password = $form->get('password')->getData();
+
+            $pass = $encoder->encodePassword($user, $password);
+            $userEntity->setPassword($pass);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('breeder_mypage');
+        }
 
         return [
-            'error' => $error,
             'form' => $form->createView(),
         ];
     }
