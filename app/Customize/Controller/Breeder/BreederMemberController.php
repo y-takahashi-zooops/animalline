@@ -4,6 +4,7 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Entity\BreederPetinfoTemplate;
 use Customize\Form\Type\Breeder\BreederPetinfoTemplateType;
+use Customize\Form\Type\ResetPasswordType;
 use Customize\Service\BreederQueryService;
 use Eccube\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -241,7 +242,7 @@ class BreederMemberController extends AbstractController
     public function password_chenge(Request $request)
     {
         $builder = $this->formFactory
-            ->createNamedBuilder('', PasswordResetType::class);
+            ->createNamedBuilder('', ResetPasswordType::class);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
