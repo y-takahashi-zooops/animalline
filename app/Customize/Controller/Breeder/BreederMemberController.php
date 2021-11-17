@@ -4,7 +4,6 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Entity\BreederPetinfoTemplate;
 use Customize\Form\Type\Breeder\BreederPetinfoTemplateType;
-use Customize\Form\Type\ResetPasswordType;
 use Customize\Service\BreederQueryService;
 use Eccube\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -21,6 +20,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Customize\Config\AnilineConf;
+use Customize\Form\Type\Front\ResetPasswordType;
 
 class BreederMemberController extends AbstractController
 {
