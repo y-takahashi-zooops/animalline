@@ -259,10 +259,8 @@ class BreederMemberController extends AbstractController
 
             return $this->redirectToRoute('breeder_mypage');
         }
-        $error = null;
 
         return [
-            'error' => $error,
             'form' => $form->createView(),
         ];
     }
