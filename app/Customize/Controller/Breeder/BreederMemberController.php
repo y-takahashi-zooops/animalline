@@ -21,7 +21,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Customize\Config\AnilineConf;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Eccube\Form\Type\Front\PasswordResetType;
 
 class BreederMemberController extends AbstractController
@@ -42,28 +41,20 @@ class BreederMemberController extends AbstractController
     protected $breederQueryService;
 
     /**
-     * @var EncoderFactoryInterface
-     */
-    protected $encoderFactory;
-
-    /**
      * BreederController constructor.
      *
      * @param CustomerRepository $customerRepository
      * @param BreedersRepository $breedersRepository
      * @param BreederQueryService $breederQueryService
-     * @param EncoderFactoryInterface $encoderFactory
      */
     public function __construct(
         CustomerRepository  $customerRepository,
         BreedersRepository  $breedersRepository,
-        BreederQueryService $breederQueryService,
-        EncoderFactoryInterface $encoderFactory
+        BreederQueryService $breederQueryService
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
         $this->breederQueryService = $breederQueryService;
-        $this->encoderFactory = $encoderFactory;
     }
 
     /**
@@ -254,17 +245,10 @@ class BreederMemberController extends AbstractController
         $builder = $this->formFactory
             ->createBuilder(ResetPasswordType::class);
 
-        $event = new EventArgs(
-            [
-                'builder' => $builder,
-            ],
-            $request
-        );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ADMIM_CHANGE_PASSWORD_INITIALIZE, $event);
-
         $form = $builder->getForm();
         $form->handleRequest($request);
         $entityManager = $this->getDoctrine()->getManager();
+
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             $userEntity = $this->customerRepository->find($user);
