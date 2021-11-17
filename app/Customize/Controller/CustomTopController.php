@@ -90,7 +90,7 @@ class CustomTopController extends AbstractController
     /**
      * ＤＮＡ検査の説明
      * 
-     * @Route("/dnainfo", name="ani_dna_info")
+     * @Route("/dna", name="ani_dna_info")
      * @Template("dnainfo.twig")
      */
     public function dna_detail(){
