@@ -287,11 +287,11 @@ class ProductInstockController extends AbstractController
                             array_push($idScheduleDb, $scheduleHeader->getId());
                         }
                         foreach ($items as $key => $item) {
-                            array_push($idScheduleReq, $item['id']);
+                            array_push($idScheduleReq, $item->getId());
 
                             $pc = $item->getProductClass();
 
-                            if ($item['id']) {
+                            if ($item->getId()) {
                                 $InstockSchedule = $this->instockScheduleRepository->find($item['id']);
                                 $InstockSchedule->setJanCode($pc->getJanCode())
                                     ->setItemCode01($item->getProductCode())
@@ -303,7 +303,8 @@ class ProductInstockController extends AbstractController
                                 $InstockSchedule = (new InstockSchedule())
                                     ->setInstockHeader($TargetInstock)
                                     ->setWarehouseCode($pc->getStockCode())
-                                    ->setItemCode01($item->getProductCode())
+                                    // ->setItemCode01($item->getProductCode())
+                                    ->setItemCode01('ZcZ')
                                     ->setItemCode02('9999')
                                     ->setJanCode($pc->getJanCode())
                                     ->setPurchasePrice($subTotalPrices[$key])
