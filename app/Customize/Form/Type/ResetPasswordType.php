@@ -13,6 +13,7 @@
 
 namespace Customize\Form\Type;
 
+use App\Form\Model\ChangePassword;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Customer;
 use Eccube\Form\Type\RepeatedPasswordType;
@@ -26,22 +27,38 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 
 class ResetPasswordType extends AbstractType
 {
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
+
+    /**
+     * ChangePasswordType constructor.
+     *
+     * @param EccubeConfig $eccubeConfig
+     */
+    public function __construct(EccubeConfig $eccubeConfig)
+    {
+        $this->eccubeConfig = $eccubeConfig;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('oldPassword', PasswordType::class, [
-                'mapped' => false,
                 'constraints' => [
                     new Assert\Length([
                         'min' => 8,
                         'max' => 32
                     ]),
-                    new Assert\NotBlank()
+                    new Assert\NotBlank(),
+                    new UserPassword(),
                 ]
             ])
             ->add('password', RepeatedPasswordType::class, [
@@ -56,13 +73,6 @@ class ResetPasswordType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ]);
-
-//        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
-//            $form = $event->getForm();
-//            if ($form['re_password']['first']->getData() == $form['login_email']->getData()) {
-//                $form['re_password']['first']->addError(new FormError(trans('common.password_eq_email')));
-//            }
-//        });
     }
 
     /**
@@ -75,8 +85,5 @@ class ResetPasswordType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-//            'data_class' =>Customer::class,
-        ]);
     }
 }

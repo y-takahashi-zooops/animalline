@@ -21,6 +21,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Customize\Config\AnilineConf;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Eccube\Form\Type\Front\PasswordResetType;
 
 class BreederMemberController extends AbstractController
@@ -41,20 +42,28 @@ class BreederMemberController extends AbstractController
     protected $breederQueryService;
 
     /**
+     * @var EncoderFactoryInterface
+     */
+    protected $encoderFactory;
+
+    /**
      * BreederController constructor.
      *
      * @param CustomerRepository $customerRepository
      * @param BreedersRepository $breedersRepository
      * @param BreederQueryService $breederQueryService
+     * @param EncoderFactoryInterface $encoderFactory
      */
     public function __construct(
         CustomerRepository  $customerRepository,
         BreedersRepository  $breedersRepository,
-        BreederQueryService $breederQueryService
+        BreederQueryService $breederQueryService,
+        EncoderFactoryInterface $encoderFactory
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
         $this->breederQueryService = $breederQueryService;
+        $this->encoderFactory = $encoderFactory;
     }
 
     /**
@@ -242,25 +251,35 @@ class BreederMemberController extends AbstractController
      */
     public function password_chenge(Request $request, UserPasswordEncoderInterface $encoder)
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $builder = $this->formFactory
+            ->createBuilder(ResetPasswordType::class);
 
-        $user = $this->getUser();
-        $userEntity = $this->customerRepository->find($user);
-        $form = $this->createForm(ResetPasswordType::class, $userEntity);
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ADMIM_CHANGE_PASSWORD_INITIALIZE, $event);
+
+        $form = $builder->getForm();
         $form->handleRequest($request);
-
+        $entityManager = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
-            $changePassword = $request->request->get('change_password');
-            $password = $changePassword['password']['first'];
-                $pass = $encoder->encodePassword($user, $password);
-                $userEntity->setPassword($pass);
-                $entityManager->flush();
+            $user = $this->getUser();
+            $userEntity = $this->customerRepository->find($user);
+            $password = $form->get('password')->getData();
+
+            $pass = $encoder->encodePassword($user, $password);
+            $userEntity->setPassword($pass);
+            $entityManager->flush();
 
             return $this->redirectToRoute('breeder_mypage');
         }
+        $error = null;
 
         return [
-//            'error' => $error,
+            'error' => $error,
             'form' => $form->createView(),
         ];
     }
