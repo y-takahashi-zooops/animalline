@@ -24,49 +24,37 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ResetPasswordType extends AbstractType
 {
     /**
-     * @var EccubeConfig
-     */
-    protected $eccubeConfig;
-
-    /**
-     * EntryType constructor.
-     *
-     * @param EccubeConfig $eccubeConfig
-     */
-    public function __construct(EccubeConfig $eccubeConfig)
-    {
-        $this->eccubeConfig = $eccubeConfig;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('password', PasswordType::class, [
-                'required' => true,
+        $builder->add('oldPassword', PasswordType::class, [
+                'mapped' => false,
                 'constraints' => [
                     new Assert\Length([
                         'min' => 8,
+                        'max' => 32
                     ]),
                     new Assert\NotBlank()
-                ],
+                ]
             ])
-            ->add('re_password', RepeatedPasswordType::class, [
+            ->add('password', RepeatedPasswordType::class, [
                 'type' => PasswordType::class,
-                'options' => ['attr' => ['class' => 'password']],
+                'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
                 'constraints' => [
                     new Assert\Length([
                         'min' => 8,
+                        'max' => 32
                     ]),
                     new Assert\NotBlank()
-                ],
+                ]
             ]);
 
 //        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
@@ -82,6 +70,13 @@ class ResetPasswordType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'forgot_reset';
+        return 'change_password';
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+//            'data_class' =>Customer::class,
+        ]);
     }
 }
