@@ -223,28 +223,28 @@ class ProductInstockController extends AbstractController
                 $count++;
                 $item = new InstockSchedule;
                 // $item->setId($schedule->getId());
-                // $item->setOrderItemType($this->orderItemTypeRepository->find(1));
-                // $item->setQuantity($schedule->getArrivalQuantitySchedule());
-                // $item->setTaxRate($schedule->getArrivalQuantity());
-                // $item->setPrice($schedule->getProductClass()->getItemCost());
+                $item->setOrderItemType($this->orderItemTypeRepository->find(1));
+                $item->setQuantity($schedule->getArrivalQuantitySchedule());
+                $item->setTaxRate($schedule->getArrivalQuantity());
+                $item->setPrice($schedule->getProductClass()->getItemCost());
                 // $item->setProduct($schedule->getProductClass()->getProduct());
                 $item->setProductClass($schedule->getProductClass());
-                // $item->setProductName($schedule->getProductClass()->getProduct()->getName());
+                $item->setProductName($schedule->getProductClass()->getProduct()->getName());
                 // $item->setProductCode($schedule->getProductClass()->getCode());
-                // if ($schedule->getProductClass()->getClassCategory1()) {
-                //     $item->setClassName1('フレーバー');
-                //     $item->setClassCategoryName1($schedule->getProductClass()->getClassCategory1()->getName());
-                // }
-                // if ($schedule->getProductClass()->getClassCategory2()) {
-                //     $item->setClassName2('サイズ');
-                //     $item->setClassCategoryName2($schedule->getProductClass()->getClassCategory2()->getName());
-                // }
+                if ($schedule->getProductClass()->getClassCategory1()) {
+                    // $item->setClassName1('フレーバー');
+                    // $item->setClassCategoryName1($schedule->getProductClass()->getClassCategory1()->getName());
+                }
+                if ($schedule->getProductClass()->getClassCategory2()) {
+                    // $item->setClassName2('サイズ');
+                    // $item->setClassCategoryName2($schedule->getProductClass()->getClassCategory2()->getName());
+                }
                 $OriginItems->add($item);
             }
             $TargetInstock->setInstockSchedule();
             foreach ($OriginItems as $key => $item) {
                 $TargetInstock->addInstockSchedule($item);
-                // $subTotalPrices[$key] = $item->getPrice() * $item->getQuantity();
+                $subTotalPrices[$key] = $item->getPrice() * $item->getQuantity();
             }
             $totalPrice = array_sum($subTotalPrices);
         } else {
