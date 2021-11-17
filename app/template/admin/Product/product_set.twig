@@ -29,7 +29,7 @@ file that was distributed with this source code.
             var list = $('#searchProductModalList');
             list.children().remove();
             $.ajax({
-                url: "{{ url('admin_instock_search_product') }}",
+                url: "{{ url('admin_order_search_product') }}",
                     type: 'POST',
                     dataType: 'html',
                     data: {
