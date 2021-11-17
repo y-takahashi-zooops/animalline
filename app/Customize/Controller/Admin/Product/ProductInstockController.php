@@ -35,6 +35,9 @@ use Eccube\Repository\Master\OrderItemTypeRepository;
 use Eccube\Repository\ProductStockRepository;
 use Customize\Service\ProductStockService;
 use Knp\Component\Pager\Paginator;
+use Eccube\Repository\CategoryRepository;
+use Eccube\Repository\ProductRepository;
+use Eccube\Form\Type\AddCartType;
 
 class ProductInstockController extends AbstractController
 {
@@ -73,6 +76,15 @@ class ProductInstockController extends AbstractController
      */
     protected $productStockService;
 
+    /**
+     * @var ProductRepository
+     */
+    protected $productRepository;
+
+    /**
+     * @var CategoryRepository
+     */
+    protected $categoryRepository;
 
     /**
      * ProductInstockController constructor.
@@ -92,7 +104,9 @@ class ProductInstockController extends AbstractController
         OrderItemTypeRepository         $orderItemTypeRepository,
         ExportInstockSchedule           $exportInstockSchedule,
         ProductStockRepository          $productStockRepository,
-        ProductStockService          $productStockService
+        ProductStockService          $productStockService,
+        ProductRepository $productRepository,
+        CategoryRepository $categoryRepository
     ) {
         $this->supplierRepository = $supplierRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
@@ -101,6 +115,8 @@ class ProductInstockController extends AbstractController
         $this->exportInstockSchedule = $exportInstockSchedule;
         $this->productStockRepository = $productStockRepository;
         $this->productStockService = $productStockService;
+        $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -334,13 +350,76 @@ class ProductInstockController extends AbstractController
         ];
     }
 
-    // /**
-    //  * @Route("/%eccube_admin_route%/product/instock/search/", name="admin_instock_search_product")
-    //  * @Route("/%eccube_admin_route%/product/instock/search/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_instock_search_product_page")
-    //  * @Template("@admin/Order/search_product.twig")
-    //  */
-    // public function searchProduct(Request $request, $page_no = null, Paginator $paginator)
-    // {
+    /**
+     * @Route("/%eccube_admin_route%/instock/search/product", name="admin_instock_search_product")
+     * @Route("/%eccube_admin_route%/instock/search/product/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_instock_search_product_page")
+     * @Template("@admin/Product/search_product.twig")
+     */
+    public function searchProduct(Request $request, $page_no = null, Paginator $paginator)
+    {
+        if ($request->isXmlHttpRequest() && $this->isTokenValid()) {
+            log_debug('search product start.');
+            $page_count = $this->eccubeConfig['eccube_default_page_count'];
+            $session = $this->session;
 
-    // }
+            if ('POST' === $request->getMethod()) {
+                $page_no = 1;
+
+                $searchData = [
+                    'id' => $request->get('id'),
+                ];
+
+                if ($categoryId = $request->get('category_id')) {
+                    $Category = $this->categoryRepository->find($categoryId);
+                    $searchData['category_id'] = $Category;
+                }
+
+                $session->set('eccube.admin.instock.product.search', $searchData);
+                $session->set('eccube.admin.instock.product.search.page_no', $page_no);
+            } else {
+                $searchData = (array) $session->get('eccube.admin.instock.product.search');
+                if (is_null($page_no)) {
+                    $page_no = intval($session->get('eccube.admin.instock.product.search.page_no'));
+                } else {
+                    $session->set('eccube.admin.instock.product.search.page_no', $page_no);
+                }
+            }
+
+            $qb = $this->productRepository
+                ->getQueryBuilderBySearchDataForAdmin($searchData);
+
+            /** @var \Knp\Component\Pager\Pagination\SlidingPagination $pagination */
+            $pagination = $paginator->paginate(
+                $qb,
+                $page_no,
+                $page_count,
+                ['wrap-queries' => true]
+            );
+
+            /** @var $Products \Eccube\Entity\Product[] */
+            $Products = $pagination->getItems();
+
+            if (empty($Products)) {
+                log_debug('search product not found.');
+            }
+
+            $forms = [];
+            foreach ($Products as $Product) {
+                /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
+                $builder = $this->formFactory->createNamedBuilder('', AddCartType::class, null, [
+                    'product' => $this->productRepository->findWithSortedClassCategories($Product->getId()),
+                ]);
+                $addCartForm = $builder->getForm();
+                $forms[$Product->getId()] = $addCartForm->createView();
+            }
+
+            return [
+                'forms' => $forms,
+                'Products' => $Products,
+                'pagination' => $pagination,
+                'is_instock' => $request->get('is_instock') ?? 0,
+                'reIndex' => $request->get('reIndex') ?? 0,
+            ];
+        }
+    }
 }

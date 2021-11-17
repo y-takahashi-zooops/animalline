@@ -19,6 +19,7 @@ use Eccube\Event\EventArgs;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Customize\Config\AnilineConf;
+use Eccube\Form\Type\Front\PasswordResetType;
 
 class BreederMemberController extends AbstractController
 {
@@ -228,6 +229,27 @@ class BreederMemberController extends AbstractController
 
         return [
             'form' => $form->createView()
+        ];
+    }
+
+    /**
+     * パスワードリセット.
+     *
+     * @Route("/breeder/member/set_password", name="password_chenge")
+     * @Template("/animalline/breeder/member/password_change.twig")
+     */
+    public function password_chenge(Request $request)
+    {
+        $builder = $this->formFactory
+            ->createNamedBuilder('', PasswordResetType::class);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+        $error = null;
+
+        return [
+            'error' => $error,
+            'form' => $form->createView(),
         ];
     }
 }
