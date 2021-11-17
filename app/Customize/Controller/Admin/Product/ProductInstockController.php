@@ -263,7 +263,6 @@ class ProductInstockController extends AbstractController
         if ($form->isSubmitted() && $form['InstockSchedule']->isValid()) {
             $subTotalPrices = [];
             $items = $form['InstockSchedule']->getData();
-            // dump($items);die();
             foreach ($items as $key => $item) {
                 $subTotalPrices[$key] = $item->getPrice() * $item->getQuantity();
             }
@@ -272,8 +271,8 @@ class ProductInstockController extends AbstractController
                 case 'register':
                     log_info('受注登録開始', [$TargetInstock->getId()]);
                     if ($form->isValid()) {
-                        $TargetInstock->setInstockSchedule(); // clear temp orderitem data
-                        if(!$id){
+                        $TargetInstock->setInstockSchedule();
+                        if (!$id) {
                             $TargetInstock->setIsSendWms(0);
                             $TargetInstock->setIsCommit(0);
                         }
@@ -315,8 +314,8 @@ class ProductInstockController extends AbstractController
                             $this->entityManager->persist($InstockSchedule);
 
                             //在庫反映
-                            if($TargetInstock->getIsCommit() == 1){
-                                $this->productStockService->calculateStock($this->entityManager,$pc,$InstockSchedule->getArrivalQuantity());
+                            if ($TargetInstock->getIsCommit() == 1) {
+                                $this->productStockService->calculateStock($this->entityManager, $pc, $InstockSchedule->getArrivalQuantity());
                             }
                         }
                         foreach ($idScheduleDb as $item) {
