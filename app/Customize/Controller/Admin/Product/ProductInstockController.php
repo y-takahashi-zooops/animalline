@@ -196,7 +196,6 @@ class ProductInstockController extends AbstractController
         $totalPrice = 0;
         $subTotalPrices = [];
         $count = 0;
-
         if ($id) {
             $TargetInstock = $this->instockScheduleHeaderRepository->find($id);
             if (!$TargetInstock) {
@@ -206,30 +205,30 @@ class ProductInstockController extends AbstractController
             $OriginItems = new ArrayCollection();
             foreach ($TargetInstock->getInstockSchedule() as $schedule) {
                 $count++;
-                $item = new OrderItem;
-                $item->setId($schedule->getId());
-                $item->setOrderItemType($this->orderItemTypeRepository->find(1));
-                $item->setQuantity($schedule->getArrivalQuantitySchedule());
-                $item->setTaxRate($schedule->getArrivalQuantity());
-                $item->setPrice($schedule->getProductClass()->getItemCost());
-                $item->setProduct($schedule->getProductClass()->getProduct());
+                $item = new InstockSchedule;
+                // $item->setId($schedule->getId());
+                // $item->setOrderItemType($this->orderItemTypeRepository->find(1));
+                // $item->setQuantity($schedule->getArrivalQuantitySchedule());
+                // $item->setTaxRate($schedule->getArrivalQuantity());
+                // $item->setPrice($schedule->getProductClass()->getItemCost());
+                // $item->setProduct($schedule->getProductClass()->getProduct());
                 $item->setProductClass($schedule->getProductClass());
-                $item->setProductName($schedule->getProductClass()->getProduct()->getName());
-                $item->setProductCode($schedule->getProductClass()->getCode());
-                if ($schedule->getProductClass()->getClassCategory1()) {
-                    $item->setClassName1('フレーバー');
-                    $item->setClassCategoryName1($schedule->getProductClass()->getClassCategory1()->getName());
-                }
-                if ($schedule->getProductClass()->getClassCategory2()) {
-                    $item->setClassName2('サイズ');
-                    $item->setClassCategoryName2($schedule->getProductClass()->getClassCategory2()->getName());
-                }
+                // $item->setProductName($schedule->getProductClass()->getProduct()->getName());
+                // $item->setProductCode($schedule->getProductClass()->getCode());
+                // if ($schedule->getProductClass()->getClassCategory1()) {
+                //     $item->setClassName1('フレーバー');
+                //     $item->setClassCategoryName1($schedule->getProductClass()->getClassCategory1()->getName());
+                // }
+                // if ($schedule->getProductClass()->getClassCategory2()) {
+                //     $item->setClassName2('サイズ');
+                //     $item->setClassCategoryName2($schedule->getProductClass()->getClassCategory2()->getName());
+                // }
                 $OriginItems->add($item);
             }
             $TargetInstock->setInstockSchedule();
             foreach ($OriginItems as $key => $item) {
                 $TargetInstock->addInstockSchedule($item);
-                $subTotalPrices[$key] = $item->getPrice() * $item->getQuantity();
+                // $subTotalPrices[$key] = $item->getPrice() * $item->getQuantity();
             }
             $totalPrice = array_sum($subTotalPrices);
         } else {
@@ -248,6 +247,7 @@ class ProductInstockController extends AbstractController
         if ($form->isSubmitted() && $form['InstockSchedule']->isValid()) {
             $subTotalPrices = [];
             $items = $form['InstockSchedule']->getData();
+            // dump($items);die();
             foreach ($items as $key => $item) {
                 $subTotalPrices[$key] = $item->getPrice() * $item->getQuantity();
             }

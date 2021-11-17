@@ -251,7 +251,7 @@ file that was distributed with this source code.
                                                         {% if instockSchedule.isProduct %}
                                                             <a href="{{ url('admin_product_product_edit', {id: instockSchedule.ProductClass.Product.id}) }}"
                                                                target="_blank">
-                                                                {{ instockSchedule.product_name }}
+                                                                {# {{ instockSchedule.product_name }} #}
                                                             </a>
                                                         {% else %}
                                                             {{ instockSchedule.product_name }}
@@ -262,8 +262,8 @@ file that was distributed with this source code.
                                                     {% endif %}
                                                 </p>
                                                 <span>
-                                            {{ instockSchedule.product_code }}
-                                                    {% if instockSchedule.class_category_name1 is not empty %}
+                                            {# {{ instockSchedule.product_code }} #}
+                                                    {# {% if instockSchedule.class_category_name1 is not empty %}
                                                         / (
                                                         {{ instockSchedule.class_name1 }}：
                                                         {{ instockSchedule.class_category_name1 }}
@@ -273,7 +273,7 @@ file that was distributed with this source code.
                                                             {{ instockSchedule.class_category_name2 }}
                                                         {% endif %}
                                                         )
-                                                    {% endif %}
+                                                    {% endif %} #}
                                         </span>
                                                 {{ form_errors(instockScheduleForm.product_name) }}
                                             </td>
@@ -350,7 +350,7 @@ file that was distributed with this source code.
                                                                             </button>
                                                                         </div>
                                                                         <div class="modal-body text-left">
-                                                                            <p class="text-left">{{ 'admin.order.delete_item__confirm_message'|trans({ '%name%' : instockSchedule.product_name }) }}</p>
+                                                                            {# <p class="text-left">{{ 'admin.order.delete_item__confirm_message'|trans({ '%name%' : instockSchedule.product_name }) }}</p> #}
                                                                         </div>
                                                                         <div class="modal-footer">
                                                                             <button class="btn btn-ec-sub" type="button"

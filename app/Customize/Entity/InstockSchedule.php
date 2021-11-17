@@ -5,6 +5,7 @@ namespace Customize\Entity;
 use Customize\Repository\InstockScheduleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\ProductClass;
+use Eccube\Entity\Master\OrderItemType;
 
 /**
  * @ORM\Table(name="ald_instock_schedule")
@@ -223,4 +224,217 @@ class InstockSchedule
 
         return $this;
     }
+
+    /**
+     * @var string
+     *
+     */
+    private $product_name;
+
+    /**
+     * @var string
+     *
+     */
+    private $price = 0;
+
+    /**
+     * @var string
+     *
+     */
+    private $quantity = 0;
+
+    /**
+     * @var string
+     *
+     */
+    private $tax_rate = 0;
+
+    /**
+     * @var \Eccube\Entity\Master\OrderItemType
+     *
+     */
+    private $OrderItemType;
+
+    /**
+     * @var \Eccube\Entity\Master\TaxType
+     *
+     */
+    private $TaxType;
+
+    /**
+     * Set productName.
+     *
+     * @param string $productName
+     *
+     * @return OrderItem
+     */
+    public function setProductName($productName)
+    {
+        $this->product_name = $productName;
+
+        return $this;
+    }
+
+    /**
+     * Get productName.
+     *
+     * @return string
+     */
+    public function getProductName()
+    {
+        return $this->product_name;
+    }
+
+    /**
+     * Set price.
+     *
+     * @param string $price
+     *
+     * @return OrderItem
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price.
+     *
+     * @return string
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set quantity.
+     *
+     * @param string $quantity
+     *
+     * @return OrderItem
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * Get quantity.
+     *
+     * @return string
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * Set taxRate.
+     *
+     * @param string $taxRate
+     *
+     * @return OrderItem
+     */
+    public function setTaxRate($taxRate)
+    {
+        $this->tax_rate = $taxRate;
+
+        return $this;
+    }
+
+    /**
+     * Get taxRate.
+     *
+     * @return string
+     */
+    public function getTaxRate()
+    {
+        return $this->tax_rate;
+    }
+
+    /**
+     * Set orderItemType
+     *
+     * @param \Eccube\Entity\Master\OrderItemType $orderItemType
+     *
+     * @return OrderItem
+     */
+    public function setOrderItemType(\Eccube\Entity\Master\OrderItemType $orderItemType = null)
+    {
+        $this->OrderItemType = $orderItemType;
+
+        return $this;
+    }
+
+    /**
+     * Get orderItemType
+     *
+     * @return \Eccube\Entity\Master\OrderItemType
+     */
+    public function getOrderItemType()
+    {
+        return $this->OrderItemType;
+    }
+
+    /**
+     * Set taxType
+     *
+     * @param \Eccube\Entity\Master\TaxType $taxType
+     *
+     * @return OrderItem
+     */
+    public function setTaxType(\Eccube\Entity\Master\TaxType $taxType = null)
+    {
+        $this->TaxType = $taxType;
+
+        return $this;
+    }
+
+    /**
+     * Get taxType
+     *
+     * @return \Eccube\Entity\Master\TaxType
+     */
+    public function getTaxType()
+    {
+        return $this->TaxType;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getOrderItemTypeId()
+    {
+        if (is_object($this->getOrderItemType())) {
+            return $this->getOrderItemType()->getId();
+        }
+
+        return null;
+    }
+
+    /**
+     * 商品明細かどうか.
+     *
+     * @return boolean 商品明細の場合 true
+     */
+    public function isProduct()
+    {
+        return $this->getOrderItemTypeId() === OrderItemType::PRODUCT;
+    }
+
+    /**
+     * ポイント明細かどうか.
+     *
+     * @return boolean ポイント明細の場合 true
+     */
+    public function isPoint()
+    {
+        return $this->getOrderItemTypeId() === OrderItemType::POINT;
+    }
+
 }
