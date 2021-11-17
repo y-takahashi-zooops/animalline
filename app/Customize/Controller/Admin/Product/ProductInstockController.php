@@ -30,8 +30,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Eccube\Entity\OrderItem;
-use Eccube\Repository\Master\OrderItemTypeRepository;
 use Eccube\Repository\ProductStockRepository;
 use Customize\Service\ProductStockService;
 use Knp\Component\Pager\Paginator;
@@ -55,11 +53,6 @@ class ProductInstockController extends AbstractController
      * @var InstockScheduleRepository
      */
     protected $instockScheduleRepository;
-
-    /**
-     * @var OrderItemTypeRepository
-     */
-    protected $orderItemTypeRepository;
 
     /**
      * @var ExportInstockSchedule
@@ -92,7 +85,6 @@ class ProductInstockController extends AbstractController
      * @param SupplierRepository $supplierRepository
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      * @param InstockScheduleRepository $instockScheduleRepository
-     * @param OrderItemTypeRepository $orderItemTypeRepository
      * @param ExportInstockSchedule $exportInstockSchedule
      * @param ProductStockRepository $productStockRepository
      * @param ProductStockService $productStockService
@@ -101,7 +93,6 @@ class ProductInstockController extends AbstractController
         SupplierRepository              $supplierRepository,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
-        OrderItemTypeRepository         $orderItemTypeRepository,
         ExportInstockSchedule           $exportInstockSchedule,
         ProductStockRepository          $productStockRepository,
         ProductStockService          $productStockService,
@@ -111,7 +102,6 @@ class ProductInstockController extends AbstractController
         $this->supplierRepository = $supplierRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
         $this->instockScheduleRepository = $instockScheduleRepository;
-        $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->exportInstockSchedule = $exportInstockSchedule;
         $this->productStockRepository = $productStockRepository;
         $this->productStockService = $productStockService;
@@ -223,7 +213,6 @@ class ProductInstockController extends AbstractController
                 $count++;
                 $item = new InstockSchedule;
                 // $item->setId($schedule->getId());
-                $item->setOrderItemType($this->orderItemTypeRepository->find(1));
                 $item->setQuantity($schedule->getArrivalQuantitySchedule());
                 $item->setTaxRate($schedule->getArrivalQuantity());
                 $item->setPrice($schedule->getProductClass()->getItemCost());
@@ -260,6 +249,7 @@ class ProductInstockController extends AbstractController
         );
         $form = $builder->getForm();
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form['InstockSchedule']->isValid()) {
             $subTotalPrices = [];
             $items = $form['InstockSchedule']->getData();

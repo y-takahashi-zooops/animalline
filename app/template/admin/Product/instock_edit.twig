@@ -82,9 +82,6 @@ file that was distributed with this source code.
             }
             $('#form1').submit();
         });
-        $('input[id$=_tax_rate]').on('blur', function () {
-            $('#form1').submit();
-        });
     });
 </script>
 {% endblock %}
@@ -250,35 +247,25 @@ file that was distributed with this source code.
                                             <td class="align-middle pl-3">
                                                 <p class="mb-0 font-weight-bold">
                                                     {# 商品とポイント値引きは名前変更できない #}
-                                                    {% if (instockSchedule.isProduct or instockSchedule.isPoint) %}
-                                                        {% if instockSchedule.isProduct %}
-                                                            <a href="{{ url('admin_product_product_edit', {id: instockSchedule.ProductClass.Product.id}) }}"
-                                                               target="_blank">
-                                                                {# {{ instockSchedule.product_name }} #}
-                                                            </a>
-                                                        {% else %}
-                                                            {{ instockSchedule.product_name }}
-                                                        {% endif %}
-                                                        {{ form_widget(instockScheduleForm.product_name, { 'type': 'hidden' }) }}
-                                                    {% else %}
-                                                        {{ form_widget(instockScheduleForm.product_name) }}
-                                                    {% endif %}
+                                                    <a href="{{ url('admin_product_product_edit', {id: instockSchedule.ProductClass.Product.id}) }}"
+                                                        target="_blank">
+                                                        {{ instockSchedule.productName }}
+                                                    </a>
+                                                    {{ form_widget(instockScheduleForm.product_name, { 'type': 'hidden' }) }}
+                                                    {{ form_errors(instockScheduleForm.product_name) }}
                                                 </p>
                                                 <span>
-                                            {# {{ instockSchedule.product_code }} #}
-                                                    {# {% if instockSchedule.class_category_name1 is not empty %}
-                                                        / (
-                                                        {{ instockSchedule.class_name1 }}：
-                                                        {{ instockSchedule.class_category_name1 }}
-                                                        {% if instockSchedule.class_category_name2 is not empty %}
-                                                            /
-                                                            {{ instockSchedule.class_name2 }}：
-                                                            {{ instockSchedule.class_category_name2 }}
+                                                {{ instockSchedule.productClass.code }}
+                                                        {% if instockSchedule.productClass.classCategory1 is not empty %}
+                                                            / (
+                                                            {{ instockSchedule.productClass.classCategory1.name }}
+                                                            {% if instockSchedule.productClass.classCategory2 is not empty %}
+                                                                /
+                                                                {{ instockSchedule.productClass.classCategory2.name }}
+                                                            {% endif %}
+                                                            )
                                                         {% endif %}
-                                                        )
-                                                    {% endif %} #}
-                                        </span>
-                                                {{ form_errors(instockScheduleForm.product_name) }}
+                                            </span>
                                             </td>
                                             <!-- 金額 -->
                                             <td class="align-middle">
@@ -313,19 +300,6 @@ file that was distributed with this source code.
                                             </td>
                                             <td class="align-middle text-right pr-3">
                                                 <div class="row justify-content-end">
-                                                    {# 複数配送の場合は商品を削除できない #}
-                                                    {% if (not instockSchedule.isProduct) %}
-                                                        <div class="col-auto text-center">
-                                                            <div class="d-inline-block mr-3" data-tooltip="true"
-                                                                 data-placement="top"
-                                                                 title="{{ 'admin.common.delete'|trans }}">
-                                                                <a class="btn btn-ec-actionIcon disabled">
-                                                                    <i class="fa fa-close fa-lg text-secondary"
-                                                                       aria-hidden="true"></i>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    {% else %}
                                                         <div class="col-auto text-center">
                                                             <div class="d-inline-block mr-3" data-tooltip="true"
                                                                  data-placement="top"
@@ -365,7 +339,6 @@ file that was distributed with this source code.
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    {% endif %}
                                                 </div>
                                             </td>
                                         </tr>
@@ -410,7 +383,4 @@ file that was distributed with this source code.
             </div>
         </div>
     </form>
-
 {% endblock %}
-
-
