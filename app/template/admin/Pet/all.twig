@@ -215,7 +215,7 @@ file that was distributed with this source code.
                                 <td class="align-middle">{{ breederPet.bp_create_date|date('Y/m/d H:i') }}</td>
                                 <td class="align-middle">{{ breederPet.bp_update_date|date('Y/m/d H:i') }}</td>
                                 <td class="align-middle">{{ breederPet.contract_status is null ? '' : arr[breederPet.contract_status]}}</td>
-                                <td class="align-middle">{{ breederPet.bp_is_active ==0 ? '非公開' : '公開' }}</td>
+                                <td class="align-middle">{{ breederPet.bp_is_active == 0 ? '非公開' : '公開' }}</td>
                                 <td class="align-middle pr-3" colspan="3">
                                     <div class="text-right">
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">

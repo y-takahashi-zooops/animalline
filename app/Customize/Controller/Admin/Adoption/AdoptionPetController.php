@@ -156,14 +156,9 @@ class AdoptionPetController extends AbstractController
      */
     public function pet_change_status(ConservationPets $pet)
     {
-        $status = $pet->getReleaseStatus();
-        if ($status == AnilineConf::RELEASE_STATUS_PRIVATE) {
-            $pet->setReleaseStatus(AnilineConf::RELEASE_STATUS_PUBLIC);
-        }
-        if ($status == AnilineConf::RELEASE_STATUS_PUBLIC) {
-            $pet->setReleaseStatus(AnilineConf::RELEASE_STATUS_PRIVATE);
-        }
-        if ($status == AnilineConf::RELEASE_STATUS_PRIVATE) $pet->setReleaseDate(new DateTime());
+        $newStatus = !$pet->getReleaseStatus();
+        $pet->setReleaseStatus($newStatus);
+        if ($newStatus) $pet->setReleaseDate(new DateTime);
         $em = $this->entityManager;
         $em->persist($pet);
         $em->flush();
