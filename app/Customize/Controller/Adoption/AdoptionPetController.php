@@ -153,7 +153,7 @@ class AdoptionPetController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/adoption/member/pets/new", name="adoption_pets_new", methods={"GET","POST"}})
+     * @Route("/adoption/member/pets/new", name="adoption_pets_new", methods={"GET","POST"})
      */
     public function adoption_pets_new(Request $request): Response
     {
