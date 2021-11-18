@@ -227,7 +227,7 @@ class BreederPetController extends AbstractController
             $entityManager->persist($breederPet);
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin_breeder_pet_list', ['id' => $breederPet->getBreeder()->getId()]);
+            return $this->redirect($request->get('url'));
         }
 
         // $breeds = $this->breedsRepository->findBy(['pet_kind' => $breederPet->getPetKind()], ['breeds_name' => 'ASC']);

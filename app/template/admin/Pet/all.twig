@@ -36,10 +36,6 @@ file that was distributed with this source code.
             $('#btn-change-status').data('action', $(this).data('action'));
         });
 
-        $('#btn-change-status').on('click', function () {
-            location.href = $(this).data('action');
-        });
-
         $('#search_form').on('submit', function(){
             const siteKind = $('#site_kind').val();
             if (!siteKind) {
@@ -47,6 +43,23 @@ file that was distributed with this source code.
                 return false;
             }
         });
+
+        $('#btn-change-status').on('click', function(e){
+            e.preventDefault();
+            $.ajax({
+                method: 'get',
+                url: $(this).data('action'),
+                data: {
+                }
+            }).done(function (data) {
+                location.reload();
+            });
+
+        })
+    });
+
+    $( "#edit" ).click(function() {
+        localStorage.url = window.location.href;
     });
 </script>
 {% endblock javascript %}
@@ -172,6 +185,7 @@ file that was distributed with this source code.
                                             class="{{ column == 'BreedsType' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_pet_all', params|merge({'field': 'BreedsType', 'direction': direction})) }}">犬種/猫種</a>
                                 </th>
+                                <th class="border-top-0 pt-2 pb-2">ブリーダー名／保護団体名</th>
                                 <th class="border-top-0 pt-2 pb-2"><a
                                             class="{{ column == 'create_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_pet_all', params|merge({'field': 'create_date', 'direction': direction})) }}">登録日</a>
@@ -181,6 +195,7 @@ file that was distributed with this source code.
                                             href="{{ url('admin_pet_all', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2">成約状況</th>
+                                <th class="border-top-0 pt-2 pb-2">公開状況</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -196,9 +211,11 @@ file that was distributed with this source code.
                                 <td class="align-middle">{{ breederPet.bp_pet_kind ==
                                     constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
                                 <td class="align-middle">{{ breederPet.breeds_name }}</td>
+                                <td class="align-middle">{{ breederPet.breeder_name }}</td>
                                 <td class="align-middle">{{ breederPet.bp_create_date|date('Y/m/d H:i') }}</td>
                                 <td class="align-middle">{{ breederPet.bp_update_date|date('Y/m/d H:i') }}</td>
                                 <td class="align-middle">{{ breederPet.contract_status is null ? '' : arr[breederPet.contract_status]}}</td>
+                                <td class="align-middle">{{ breederPet.bp_is_active == 0 ? '非公開' : '公開' }}</td>
                                 <td class="align-middle pr-3" colspan="3">
                                     <div class="text-right">
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">
@@ -208,7 +225,7 @@ file that was distributed with this source code.
                                             </a>
                                         </div>
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
-                                            <a class="btn btn-ec-actionIcon" href="{{ url('admin_breeder_pet_edit', {'id': breederPet.bp_id}) }}">
+                                            <a class="btn btn-ec-actionIcon" id="edit" href="{{ url('admin_breeder_pet_edit', {'id': breederPet.bp_id}) }}">
                                                 <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
                                             </a>
                                         </div>
@@ -246,9 +263,11 @@ file that was distributed with this source code.
                                     </td>
                                     <td class="align-middle">{{ conservationPet.cp_pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
                                     <td class="align-middle">{{ conservationPet.breeds_name }}</td>
+                                    <td class="align-middle">{{ conservationPet.owner_name }}</td>
                                     <td class="align-middle">{{ conservationPet.cp_create_date|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ conservationPet.cp_update_date|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ conservationPet.contract_status is null ? '' : arr[conservationPet.contract_status] }}</td>
+                                    <td class="align-middle">{{ conservationPet.cp_release_status == 0 ? '非公開' : '公開' }}</td>
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">
@@ -258,14 +277,14 @@ file that was distributed with this source code.
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
-                                                <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_breeder_pet_edit', {'id': conservationPet.cp_id}) }}">
+                                                <a class="btn btn-ec-actionIcon" id="edit"
+                                                   href="{{ url('admin_adoption_pet_edit', {'id': conservationPet.cp_id}) }}">
                                                     <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
                                                 <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ conservationPet.cp_release_status }}"
-                                                    data-action="{{ url('admin_breeder_pet_change_status', {'id': conservationPet.cp_id}) }}">
+                                                    data-action="{{ url('admin_adoption_pet_change_status', {'id': conservationPet.cp_id}) }}">
                                                         <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
@@ -273,7 +292,7 @@ file that was distributed with this source code.
                                                 
                                                 {% if conservationPet.dna_file_path %}
                                                     <a class="btn btn-ec-actionIcon"
-                                                        href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': conservationPet.cp_id}) }}">
+                                                        href="{{ url('admin_adoption_pet_dna_download_pdf', {'id': conservationPet.cp_id}) }}">
                                                         <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
                                                     </a>
                                                 {% else %}
@@ -315,7 +334,7 @@ file that was distributed with this source code.
                     <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
                         いいえ
                     </button>
-                    <button class="btn btn-ec-conversion" id="btn-change-status" data-action="">
+                    <button class="btn btn-ec-conversion release_status" id="btn-change-status" data-action="">
                         はい
                     </button>
                 </div>
