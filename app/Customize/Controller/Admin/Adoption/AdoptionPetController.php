@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdoptionPetController extends AbstractController
 {
@@ -153,7 +154,7 @@ class AdoptionPetController extends AbstractController
      * @param ConservationPets $pet
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function pet_change_status(ConservationPets $pet)
+    public function pet_change_status(Request $request, ConservationPets $pet)
     {
         $newStatus = !$pet->getReleaseStatus();
         $pet->setReleaseStatus($newStatus);
@@ -162,11 +163,8 @@ class AdoptionPetController extends AbstractController
         $em->persist($pet);
         $em->flush();
 
-        return $this->redirectToRoute(
-            'admin_pet_all',
-            [
-                'site_kind' => AnilineConf:: ANILINE_SITE_TYPE_ADOPTION
-            ]);
+        return new JsonResponse([
+        ]);
     }
 
     /**
