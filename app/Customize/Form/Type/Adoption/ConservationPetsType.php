@@ -64,12 +64,37 @@ class ConservationPetsType extends AbstractType
                     'placeholder' => '毛色をご記入ください。'
                 ],
             ])
-            ->add('future_wait', IntegerType::class)
+            ->add('future_wait', IntegerType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+            ])
             //->add('dna_check_result', IntegerType::class)
-            ->add('pr_comment', TextareaType::class)
-            ->add('description', TextareaType::class)
-            ->add('delivery_time', TextareaType::class)
-            ->add('delivery_way', TextareaType::class)
+            ->add('pr_comment', TextareaType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+            ])
+            ->add('description', TextareaType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+            ])
+            ->add('delivery_time', TextareaType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+            ])
+            ->add('delivery_way', TextareaType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+            ])
             ->add('thumbnail_path', FileType::class, [
                 'required' => false,
                 'mapped' => false,
