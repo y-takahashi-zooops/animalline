@@ -219,7 +219,7 @@ class AdoptionPetController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('adoption_newpet_complete');
+            return $this->redirectToRoute('adoption_pet_list');
         }
 
         return $this->render('animalline/adoption/member/pets/new.twig', [

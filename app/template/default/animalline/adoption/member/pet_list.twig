@@ -27,10 +27,6 @@
                                     {{ pet.petBirthday|date('Y年m月d日') }}
                                     生                                  
                                 </div>
-                                <div class="price">
-                                    {{ pet.price|number_format(0) }}
-                                    円（税込）                                  
-                                </div>
                                 <a href="{{ path('adoption_pets_edit', {'id': pet.id} )  }}" class="btn w-100 btn-warning text-align-center my-1">
                                     編集                                        
                                 </a>
