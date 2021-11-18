@@ -117,7 +117,7 @@ file that was distributed with this source code.
                 <div class="row mb-2">
                     <div class="col-6">
                         <label class="col-form-label">ブリーダー名/保護団体名</label>
-                        <input type="text" class="form-control" name="holder_name" id="holder_name" value="{{ params.holder_name | default('') }}"></input>
+                        <input type="text" class="form-control" name="holder_name" value="{{ params.holder_name | default('') }}"></input>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -127,12 +127,12 @@ file that was distributed with this source code.
                         </div>
                         <div class="form__from-to">
                             <div>
-                                <input type="date" name="create_date_start" class="form-control" id="create_date_start"
+                                <input type="date" name="create_date_start" class="form-control"
                                     value="{{ params.create_date_start is defined ? params.create_date_start : '' }}" />
                             </div>
                             <div>~</div>
                             <div>
-                                <input type="date" name="create_date_end" class="form-control" id="create_date_end"
+                                <input type="date" name="create_date_end" class="form-control"
                                     value="{{ params.create_date_end is defined ? params.create_date_end : '' }}" />
                             </div>
                         </div>
@@ -145,12 +145,12 @@ file that was distributed with this source code.
                         </div>
                         <div class="form__from-to">
                             <div class="">
-                                <input type="date" name="update_date_start" class="form-control" id="update_date_start"
+                                <input type="date" name="update_date_start" class="form-control"
                                     value="{{ params.update_date_start is defined ? params.update_date_start : '' }}" />
                             </div>
                             <div>~</div>
                             <div class="">
-                                <input type="date" name="update_date_end" class="form-control" id="update_date_end"
+                                <input type="date" name="update_date_end" class="form-control"
                                     value="{{ params.update_date_end is defined ? params.update_date_end : '' }}" />
                             </div>
                         </div>
