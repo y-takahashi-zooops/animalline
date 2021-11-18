@@ -15,13 +15,11 @@ namespace Eccube\Form\Type\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Common\EccubeConfig;
-use Eccube\Entity\BaseInfo;
 use Eccube\Entity\Master\TaxType;
 use Customize\Entity\InstockSchedule;
 use Eccube\Entity\ProductClass;
 use Eccube\Form\DataTransformer;
 use Eccube\Form\Type\PriceType;
-use Eccube\Repository\BaseInfoRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -34,7 +32,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class InstockScheduleType extends AbstractType
 {
@@ -49,35 +46,19 @@ class InstockScheduleType extends AbstractType
     protected $eccubeConfig;
 
     /**
-     * @var BaseInfo
-     */
-    protected $BaseInfo;
-
-    /**
-     * @var ValidatorInterface
-     */
-    protected $validator;
-
-    /**
      * InstockScheduleType constructor.
      *
      * @param EntityManagerInterface $entityManager
      * @param EccubeConfig $eccubeConfig
-     * @param BaseInfoRepository $baseInfoRepository
-     * @param ValidatorInterface $validator
      *
      * @throws \Exception
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        EccubeConfig $eccubeConfig,
-        BaseInfoRepository $baseInfoRepository,
-        ValidatorInterface $validator
+        EccubeConfig $eccubeConfig
     ) {
         $this->entityManager = $entityManager;
         $this->eccubeConfig = $eccubeConfig;
-        $this->BaseInfo = $baseInfoRepository->get();
-        $this->validator = $validator;
     }
 
     /**
@@ -145,14 +126,6 @@ class InstockScheduleType extends AbstractType
         $resolver->setDefaults([
             'data_class' => InstockSchedule::class,
         ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'order_item';
     }
 
     /**
