@@ -5,7 +5,6 @@ namespace Customize\Entity;
 use Customize\Repository\InstockScheduleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\ProductClass;
-use Eccube\Entity\Master\OrderItemType;
 
 /**
  * @ORM\Table(name="ald_instock_schedule")
@@ -232,28 +231,22 @@ class InstockSchedule
     private $product_name;
 
     /**
-     * @var string
+     * @var int
      *
      */
     private $price = 0;
 
     /**
-     * @var string
+     * @var int
      *
      */
     private $quantity = 0;
 
     /**
-     * @var string
+     * @var int
      *
      */
     private $tax_rate = 0;
-
-    /**
-     * @var \Eccube\Entity\Master\OrderItemType
-     *
-     */
-    private $OrderItemType;
 
     /**
      * @var \Eccube\Entity\Master\TaxType
@@ -266,7 +259,7 @@ class InstockSchedule
      *
      * @param string $productName
      *
-     * @return OrderItem
+     * @return InstockSchedule
      */
     public function setProductName($productName)
     {
@@ -290,7 +283,7 @@ class InstockSchedule
      *
      * @param string $price
      *
-     * @return OrderItem
+     * @return InstockSchedule
      */
     public function setPrice($price)
     {
@@ -314,7 +307,7 @@ class InstockSchedule
      *
      * @param string $quantity
      *
-     * @return OrderItem
+     * @return InstockSchedule
      */
     public function setQuantity($quantity)
     {
@@ -338,7 +331,7 @@ class InstockSchedule
      *
      * @param string $taxRate
      *
-     * @return OrderItem
+     * @return InstockSchedule
      */
     public function setTaxRate($taxRate)
     {
@@ -358,35 +351,11 @@ class InstockSchedule
     }
 
     /**
-     * Set orderItemType
-     *
-     * @param \Eccube\Entity\Master\OrderItemType $orderItemType
-     *
-     * @return OrderItem
-     */
-    public function setOrderItemType(\Eccube\Entity\Master\OrderItemType $orderItemType = null)
-    {
-        $this->OrderItemType = $orderItemType;
-
-        return $this;
-    }
-
-    /**
-     * Get orderItemType
-     *
-     * @return \Eccube\Entity\Master\OrderItemType
-     */
-    public function getOrderItemType()
-    {
-        return $this->OrderItemType;
-    }
-
-    /**
      * Set taxType
      *
      * @param \Eccube\Entity\Master\TaxType $taxType
      *
-     * @return OrderItem
+     * @return InstockSchedule
      */
     public function setTaxType(\Eccube\Entity\Master\TaxType $taxType = null)
     {
@@ -404,37 +373,4 @@ class InstockSchedule
     {
         return $this->TaxType;
     }
-
-    /**
-     * @return integer
-     */
-    public function getOrderItemTypeId()
-    {
-        if (is_object($this->getOrderItemType())) {
-            return $this->getOrderItemType()->getId();
-        }
-
-        return null;
-    }
-
-    /**
-     * 商品明細かどうか.
-     *
-     * @return boolean 商品明細の場合 true
-     */
-    public function isProduct()
-    {
-        return $this->getOrderItemTypeId() === OrderItemType::PRODUCT;
-    }
-
-    /**
-     * ポイント明細かどうか.
-     *
-     * @return boolean ポイント明細の場合 true
-     */
-    public function isPoint()
-    {
-        return $this->getOrderItemTypeId() === OrderItemType::POINT;
-    }
-
 }
