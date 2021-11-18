@@ -18,12 +18,18 @@ use Customize\Repository\BreedsRepository;
 use Customize\Entity\ConservationPets;
 use Customize\Form\Type\Admin\ConservationPetsType;
 use Customize\Repository\ConservationPetImageRepository;
+use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\AdoptionQueryService;
+use DateTime;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdoptionPetController extends AbstractController
 {
@@ -126,7 +132,7 @@ class AdoptionPetController extends AbstractController
             $entityManager->persist($conservationPet);
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin_adoption_pet_list', ['id' => $conservationPet->getConservation()->getId()]);
+            return $this->redirect($request->get('url'));
         }
 
         // $breeds = $this->breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()], ['breeds_name' => 'ASC']);
@@ -140,4 +146,46 @@ class AdoptionPetController extends AbstractController
             'images' => $images,
         ]);
     }
+
+    /**
+     * ペット情報管理
+     *
+     * @Route("/%eccube_admin_route%/adoption/pet/{id}/change_status", name="admin_adoption_pet_change_status")
+     * @param ConservationPets $pet
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function pet_change_status(ConservationPets $pet)
+    {
+        $newStatus = !$pet->getReleaseStatus();
+        $pet->setReleaseStatus($newStatus);
+        if ($newStatus) $pet->setReleaseDate(new DateTime);
+        $em = $this->entityManager;
+        $em->persist($pet);
+        $em->flush();
+
+        return new JsonResponse([
+        ]);
+    }
+
+    /**
+     * Download PDF
+     *
+     * @Route("/%eccube_admin_route%/adoption/pet/{id}/dna/download_pdf", requirements={"id" = "\d+"}, name="admin_adoption_pet_dna_download_pdf")
+     *
+     * @return BinaryFileResponse
+     */
+    public function downloadPdf(ConservationPets $pet, DnaCheckStatusRepository $dnaCheckStatusRepository): BinaryFileResponse
+    {
+        $dnaCheckStatus = $dnaCheckStatusRepository->findOneBy(['pet_id' => $pet->getId()]);
+        if (!$dnaCheckStatus || !$pdfPath = $dnaCheckStatus->getFilePath()) {
+            throw new NotFoundHttpException('PDF DNA not found!');
+        }
+        $nameArr = explode('/', $pdfPath);
+        $fileName = end($nameArr);
+        $response = new BinaryFileResponse($pdfPath);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
+
+        return $response;
+    }
+
 }

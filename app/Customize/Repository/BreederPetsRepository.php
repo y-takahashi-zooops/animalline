@@ -159,7 +159,8 @@ class BreederPetsRepository extends ServiceEntityRepository
         return $qb->leftJoin('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'bp.id = dna.pet_id')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
             ->leftJoin('Customize\Entity\BreederContactHeader', 'bch', 'WITH', 'bch.Pet = bp.id')
-            ->select('bp', 'dna', 'b.breeds_name', 'bch.contract_status')
+            ->leftJoin('Customize\Entity\Breeders', 'bd', 'WITH', 'bd.id = bp.Breeder')
+            ->select('bp', 'dna', 'b.breeds_name', 'bch.contract_status, bd.breeder_name')
             ->orderBy('bp.' . $order['field'], $order['direction'])
             ->getQuery()
             ->getScalarResult();
