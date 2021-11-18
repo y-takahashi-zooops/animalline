@@ -19,6 +19,7 @@ use Customize\Entity\ConservationPets;
 use Customize\Form\Type\Admin\ConservationPetsType;
 use Customize\Repository\ConservationPetImageRepository;
 use Customize\Service\AdoptionQueryService;
+use DateTime;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -139,5 +140,27 @@ class AdoptionPetController extends AbstractController
             'breeds' => $breeds,
             'images' => $images,
         ]);
+    }
+
+    /**
+     * ペット情報管理
+     *
+     * @Route("/%eccube_admin_route%/adoption/pet/{id}/change_status", name="admin_adoption_pet_change_status")
+     * @param ConservationPets $pet
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function pet_change_status(ConservationPets $pet)
+    {
+        $newStatus = !$pet->getReleaseStatus();
+        $pet->setReleaseStatus($newStatus);
+        if ($newStatus) $pet->setReleaseDate(new DateTime());
+        $em = $this->entityManager;
+        $em->persist($pet);
+        $em->flush();
+
+        return $this->redirectToRoute(
+            'admin_pet_all',
+            ['site_kind' => AnilineConf:: ANILINE_SITE_TYPE_ADOPTION]
+        );
     }
 }
