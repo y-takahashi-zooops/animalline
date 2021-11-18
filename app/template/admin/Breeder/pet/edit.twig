@@ -37,6 +37,9 @@ file that was distributed with this source code.
             }
         });
     });
+        $("#edit-submit").click(function() {
+            $("#path-get-all").val(localStorage.url);
+        });
 </script>
 {% endblock javascript %}
 
@@ -318,6 +321,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" id="path-get-all" name="url">
                                 {# <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
@@ -356,7 +360,7 @@ file that was distributed with this source code.
                                 </select>  
                             </div> #}
                             <div class="col-auto">
-                                <button class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.registration'|trans }}</button>
+                                <button id="edit-submit" class="btn btn-ec-conversion px-5" type="submit">{{ 'admin.common.registration'|trans }}</button>
                             </div>
                         </div>
                     </div>
