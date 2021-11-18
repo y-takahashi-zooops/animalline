@@ -160,7 +160,7 @@ class MailService
      *
      * @param $Customer 会員情報
      */
-    public function sendCustomerCompleteMail(\Eccube\Entity\Customer $Customer)
+    public function sendCustomerCompleteMail(\Eccube\Entity\Customer $Customer,$prefix)
     {
         log_info('会員登録完了メール送信開始');
 
@@ -169,6 +169,7 @@ class MailService
         $body = $this->twig->render($MailTemplate->getFileName(), [
             'Customer' => $Customer,
             'BaseInfo' => $this->BaseInfo,
+            "prefix" => $prefix,
         ]);
 
         $message = (new \Swift_Message())
@@ -185,6 +186,7 @@ class MailService
             $htmlBody = $this->twig->render($htmlFileName, [
                 'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
+                "prefix" => $prefix,
             ]);
 
             $message

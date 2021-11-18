@@ -118,6 +118,10 @@ file that was distributed with this source code.
                                             class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_adoption_list', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
+                                <th class="border-top-0 pt-2 pb-2"><a
+                                        class="{{ column == 'examination_status' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href="{{ url('admin_breeder_list', params|merge({'field': 'examination_status', 'direction': direction})) }}">ステータス</a>
+                                </th>
                                 <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
                             </tr>
                             </thead>
@@ -136,6 +140,9 @@ file that was distributed with this source code.
                                     <td class="align-middle">{{ conservation.organizationName }}</td>
                                     <td class="align-middle">{{ conservation.createDate|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ conservation.updateDate|date('Y/m/d H:i') }}</td>
+                                    <td class="align-middle">
+                                        {{ adoptionstatus[conservation.ExaminationStatus] }}
+                                    </td>
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true"
