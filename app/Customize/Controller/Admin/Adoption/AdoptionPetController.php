@@ -132,7 +132,7 @@ class AdoptionPetController extends AbstractController
             $entityManager->persist($conservationPet);
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin_adoption_pet_list', ['id' => $conservationPet->getConservation()->getId()]);
+            return $this->redirect($request->get('url'));
         }
 
         // $breeds = $this->breedsRepository->findBy(['pet_kind' => $conservationPet->getPetKind()], ['breeds_name' => 'ASC']);
