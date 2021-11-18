@@ -255,17 +255,20 @@ file that was distributed with this source code.
                                                     {{ form_errors(instockScheduleForm.product_name) }}
                                                 </p>
                                                 <span>
-                                                {{ instockSchedule.productClass.code }}
-                                                        {% if instockSchedule.productClass.classCategory1 is not empty %}
-                                                            / (
+                                                    {{ instockSchedule.productClass.code }}
+                                                    {% if instockSchedule.productClass.classCategory1 is not empty %}
+                                                        / (
+                                                            {{ instockSchedule.productClass.classCategory1.className.name }} : 
                                                             {{ instockSchedule.productClass.classCategory1.name }}
+
                                                             {% if instockSchedule.productClass.classCategory2 is not empty %}
                                                                 /
+                                                                {{ instockSchedule.productClass.classCategory2.className.name }} :
                                                                 {{ instockSchedule.productClass.classCategory2.name }}
                                                             {% endif %}
-                                                            )
-                                                        {% endif %}
-                                            </span>
+                                                        )
+                                                    {% endif %}
+                                                </span>
                                             </td>
                                             <!-- 金額 -->
                                             <td class="align-middle">
@@ -327,7 +330,7 @@ file that was distributed with this source code.
                                                                             </button>
                                                                         </div>
                                                                         <div class="modal-body text-left">
-                                                                            {# <p class="text-left">{{ 'admin.order.delete_item__confirm_message'|trans({ '%name%' : instockSchedule.product_name }) }}</p> #}
+                                                                            <p class="text-left">{{ 'admin.order.delete_item__confirm_message'|trans({ '%name%' : instockSchedule.productName }) }}</p>
                                                                         </div>
                                                                         <div class="modal-footer">
                                                                             <button class="btn btn-ec-sub" type="button"

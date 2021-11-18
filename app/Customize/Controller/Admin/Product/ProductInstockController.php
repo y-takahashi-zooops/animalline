@@ -202,6 +202,7 @@ class ProductInstockController extends AbstractController
         $totalPrice = 0;
         $subTotalPrices = [];
         $count = 0;
+
         if ($id) {
             $TargetInstock = $this->instockScheduleHeaderRepository->find($id);
             if (!$TargetInstock) {
@@ -212,22 +213,11 @@ class ProductInstockController extends AbstractController
             foreach ($TargetInstock->getInstockSchedule() as $schedule) {
                 $count++;
                 $item = new InstockSchedule;
-                // $item->setId($schedule->getId());
                 $item->setQuantity($schedule->getArrivalQuantitySchedule());
                 $item->setTaxRate($schedule->getArrivalQuantity());
                 $item->setPrice($schedule->getProductClass()->getItemCost());
-                // $item->setProduct($schedule->getProductClass()->getProduct());
                 $item->setProductClass($schedule->getProductClass());
                 $item->setProductName($schedule->getProductClass()->getProduct()->getName());
-                // $item->setProductCode($schedule->getProductClass()->getCode());
-                if ($schedule->getProductClass()->getClassCategory1()) {
-                    // $item->setClassName1('フレーバー');
-                    // $item->setClassCategoryName1($schedule->getProductClass()->getClassCategory1()->getName());
-                }
-                if ($schedule->getProductClass()->getClassCategory2()) {
-                    // $item->setClassName2('サイズ');
-                    // $item->setClassCategoryName2($schedule->getProductClass()->getClassCategory2()->getName());
-                }
                 $OriginItems->add($item);
             }
             $TargetInstock->setInstockSchedule();
@@ -240,6 +230,7 @@ class ProductInstockController extends AbstractController
             // 空のエンティティを作成.
             $TargetInstock = new InstockScheduleHeader();
         }
+
         $builder = $this->formFactory->createBuilder(
             InstockScheduleHeaderType::class,
             $TargetInstock,
@@ -257,74 +248,70 @@ class ProductInstockController extends AbstractController
                 $subTotalPrices[$key] = $item->getPrice() * $item->getQuantity();
             }
             $totalPrice = array_sum($subTotalPrices);
-            switch ($request->get('mode')) {
-                case 'register':
-                    log_info('受注登録開始', [$TargetInstock->getId()]);
-                    if ($form->isValid()) {
-                        $TargetInstock->setInstockSchedule();
-                        if (!$id) {
-                            $TargetInstock->setIsSendWms(0);
-                            $TargetInstock->setIsCommit(0);
-                        }
 
-                        $this->entityManager->persist($TargetInstock);
-                        $this->entityManager->flush();
-
-                        $idScheduleDb = [];
-                        $idScheduleReq = [];
-                        foreach ($this->instockScheduleRepository->findBy(['InstockHeader' => $TargetInstock]) as $scheduleHeader) {
-                            array_push($idScheduleDb, $scheduleHeader->getId());
-                        }
-                        foreach ($items as $key => $item) {
-                            array_push($idScheduleReq, $item->getId());
-
-                            $pc = $item->getProductClass();
-
-                            if ($item->getId()) {
-                                $InstockSchedule = $this->instockScheduleRepository->find($item['id']);
-                                $InstockSchedule->setJanCode($pc->getJanCode())
-                                    ->setItemCode01($item->getProductCode())
-                                    ->setPurchasePrice($subTotalPrices[$key])
-                                    ->setArrivalQuantitySchedule($item->getQuantity())
-                                    ->setArrivalQuantity($item->getTaxRate())
-                                    ->setProductClass($pc);
-                            } else {
-                                $InstockSchedule = (new InstockSchedule())
-                                    ->setInstockHeader($TargetInstock)
-                                    ->setWarehouseCode($pc->getStockCode())
-                                    // ->setItemCode01($item->getProductCode())
-                                    ->setItemCode01('ZcZ')
-                                    ->setItemCode02('9999')
-                                    ->setJanCode($pc->getJanCode())
-                                    ->setPurchasePrice($subTotalPrices[$key])
-                                    ->setArrivalQuantitySchedule($item->getQuantity())
-                                    ->setArrivalQuantity($item->getTaxRate())
-                                    ->setProductClass($pc);
-                            }
-                            $this->entityManager->persist($InstockSchedule);
-
-                            //在庫反映
-                            if ($TargetInstock->getIsCommit() == 1) {
-                                $this->productStockService->calculateStock($this->entityManager, $pc, $InstockSchedule->getArrivalQuantity());
-                            }
-                        }
-                        foreach ($idScheduleDb as $item) {
-                            if (!in_array($item, $idScheduleReq)) {
-                                $scheduleDel = $this->instockScheduleRepository->find($item);
-                                $this->entityManager->remove($scheduleDel);
-                            }
-                        }
-                        $this->entityManager->flush();
-
-                        $this->addSuccess('admin.common.save_complete', 'admin');
-                        log_info('受注登録完了', [$TargetInstock->getId()]);
-                        return $this->redirectToRoute($id ? 'admin_product_instock_list' : 'admin_product_instock_registration_new');
+            if ($request->get('mode') === 'register') {
+                log_info('受注登録開始', [$TargetInstock->getId()]);
+                if ($form->isValid()) {
+                    $TargetInstock->setInstockSchedule();
+                    if (!$id) {
+                        $TargetInstock->setIsSendWms(0);
+                        $TargetInstock->setIsCommit(0);
                     }
-                    break;
-                default:
-                    break;
+                    $this->entityManager->persist($TargetInstock);
+                    $this->entityManager->flush();
+
+                    $idScheduleDb = [];
+                    $idScheduleReq = [];
+                    foreach ($this->instockScheduleRepository->findBy(['InstockHeader' => $TargetInstock]) as $scheduleHeader) {
+                        array_push($idScheduleDb, $scheduleHeader->getId());
+                    }
+                    foreach ($items as $key => $item) {
+                        array_push($idScheduleReq, $item->getId());
+
+                        $pc = $item->getProductClass();
+
+                        if ($item->getId()) {
+                            $InstockSchedule = $this->instockScheduleRepository->find($item['id']);
+                            $InstockSchedule->setJanCode($pc->getJanCode())
+                                ->setItemCode01($item->getProductCode())
+                                ->setPurchasePrice($subTotalPrices[$key])
+                                ->setArrivalQuantitySchedule($item->getQuantity())
+                                ->setArrivalQuantity($item->getTaxRate())
+                                ->setProductClass($pc);
+                        } else {
+                            $ITEM_CODE_02 = '9999';
+                            $InstockSchedule = (new InstockSchedule)
+                                ->setInstockHeader($TargetInstock)
+                                ->setWarehouseCode($pc->getStockCode())
+                                ->setItemCode01($pc->getCode())
+                                ->setItemCode02($ITEM_CODE_02)
+                                ->setJanCode($pc->getJanCode())
+                                ->setPurchasePrice($subTotalPrices[$key])
+                                ->setArrivalQuantitySchedule($item->getQuantity())
+                                ->setArrivalQuantity($item->getTaxRate())
+                                ->setProductClass($pc);
+                        }
+                        $this->entityManager->persist($InstockSchedule);
+
+                        //在庫反映
+                        if ($TargetInstock->getIsCommit() == 1) {
+                            $this->productStockService->calculateStock($this->entityManager, $pc, $InstockSchedule->getArrivalQuantity());
+                        }
+                    }
+                    foreach ($idScheduleDb as $item) {
+                        if (in_array($item, $idScheduleReq)) continue;
+                        $scheduleDel = $this->instockScheduleRepository->find($item);
+                        $this->entityManager->remove($scheduleDel);
+                    }
+                    $this->entityManager->flush();
+
+                    $this->addSuccess('admin.common.save_complete', 'admin');
+                    log_info('受注登録完了', [$TargetInstock->getId()]);
+                    return $this->redirectToRoute($id ? 'admin_product_instock_list' : 'admin_product_instock_registration_new');
+                }
             }
         }
+
         // 商品検索フォーム
         $builder = $this->formFactory->createBuilder(SearchProductType::class);
         $searchProductModalForm = $builder->getForm();
@@ -332,8 +319,6 @@ class ProductInstockController extends AbstractController
         return [
             'form' => $form->createView(),
             'searchProductModalForm' => $searchProductModalForm->createView(),
-            'Order' => $TargetInstock,
-            'id' => $id,
             'totalPrice' => $totalPrice,
             'subtotalPrices' => $subTotalPrices,
             'count' => $count
