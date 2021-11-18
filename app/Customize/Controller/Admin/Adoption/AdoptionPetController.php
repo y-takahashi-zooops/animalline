@@ -154,11 +154,16 @@ class AdoptionPetController extends AbstractController
      * @param ConservationPets $pet
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function pet_change_status(Request $request, ConservationPets $pet)
+    public function pet_change_status(ConservationPets $pet)
     {
-        $newStatus = !$pet->getReleaseStatus();
-        $pet->setReleaseStatus($newStatus);
-        if ($newStatus) $pet->setReleaseDate(new DateTime());
+        $status = $pet->getReleaseStatus();
+        if ($status == AnilineConf::RELEASE_STATUS_PRIVATE) {
+            $pet->setReleaseStatus(AnilineConf::RELEASE_STATUS_PUBLIC);
+        }
+        if ($status == AnilineConf::RELEASE_STATUS_PUBLIC) {
+            $pet->setReleaseStatus(AnilineConf::RELEASE_STATUS_PRIVATE);
+        }
+        if ($status == AnilineConf::RELEASE_STATUS_PRIVATE) $pet->setReleaseDate(new DateTime());
         $em = $this->entityManager;
         $em->persist($pet);
         $em->flush();
