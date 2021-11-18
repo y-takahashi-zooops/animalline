@@ -259,7 +259,7 @@ file that was distributed with this source code.
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
                                                 <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_breeder_pet_edit', {'id': conservationPet.cp_id}) }}">
+                                                   href="{{ url('admin_adoption_pet_edit', {'id': conservationPet.cp_id}) }}">
                                                     <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
@@ -273,7 +273,7 @@ file that was distributed with this source code.
                                                 
                                                 {% if conservationPet.dna_file_path %}
                                                     <a class="btn btn-ec-actionIcon"
-                                                        href="{{ url('admin_breeder_pet_dna_download_pdf', {'id': conservationPet.cp_id}) }}">
+                                                        href="{{ url('admin_adoption_pet_dna_download_pdf', {'id': conservationPet.cp_id}) }}">
                                                         <i class="fa fa-files-o fa-lg text-secondary" aria-hidden="true"></i>
                                                     </a>
                                                 {% else %}
