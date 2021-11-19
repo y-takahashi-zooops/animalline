@@ -250,9 +250,7 @@ class AdoptionQueryService
                 ->getQuery()
                 ->getResult();
         }
-        if(!empty($criteria['featured_pets'])) {
-            $qb->orderBy('p.favorite_count', 'DESC');
-        }
+
         return $qb->orderBy('p.' . $order['field'], $order['direction'])
             ->getQuery()
             ->getResult();
