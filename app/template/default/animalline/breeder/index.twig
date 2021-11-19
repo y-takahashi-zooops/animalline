@@ -1,5 +1,4 @@
 {% set site_type = 'breeder' %}
-{% set params = app.request.query.all %}
 
 {% extends 'animalline/breeder/frame.twig' %}
 
@@ -90,7 +89,7 @@
             <div class="breeder-column__main_section_title">
               <h3>新着のペット</h3>
               <div class="breeder-column__main_section_title_btn">
-                <a href="{{ url('breeder_pet_search_result', {'pet_kind': params.pet_kind ?? constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'), 'pet_new': 1}) }}"><i class="bi bi-list"></i>一覧へ</a>
+                <a href="{{ url('breeder_pet_search_result', {'pet_kind': petKind, 'pet_new': 1}) }}"><i class="bi bi-list"></i>一覧へ</a>
               </div>
             </div>
               <div class="breeder-column__main_section_body">
@@ -129,7 +128,7 @@
               <div class="breeder-column__main_section_title">
                 <h3>注目のペット</h3>
                 <div class="breeder-column__main_section_title_btn">
-                  <a href="{{ url('breeder_pet_search_result', {'pet_kind': params.pet_kind ?? constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'), 'featured_pet': 1}) }}"><i class="bi bi-list"></i>一覧へ</a>
+                  <a href="{{ url('breeder_pet_search_result', {'pet_kind': petKind, 'featured_pet': 1}) }}"><i class="bi bi-list"></i>一覧へ</a>
                 </div>
               </div>
               <div class="breeder-column__main_section_body">

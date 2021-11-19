@@ -29,8 +29,8 @@
     <div class="breeder-column__side_links">
         <div class="breeder-column__side_links_title"><h3 style="color: #fff">カテゴリーから探す</h3></div>
         <ul>
-            <li><a href="{{ url('breeder_pet_search_result', {'pet_kind': params.pet_kind ?? constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'), 'pet_new': 1}) }}"><i class="bi bi-caret-right-fill"></i>新着のペット</a></li>
-            <li><a href="{{ url('breeder_pet_search_result', {'pet_kind': params.pet_kind ?? constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'), 'featured_pet': 1}) }}"><i class="bi bi-caret-right-fill"></i>注目のペット</a></li>
+            <li><a href="{{ url('breeder_pet_search_result', {'pet_kind': petKind, 'pet_new': 1}) }}"><i class="bi bi-caret-right-fill"></i>新着のペット</a></li>
+            <li><a href="{{ url('breeder_pet_search_result', {'pet_kind': petKind, 'featured_pet': 1}) }}"><i class="bi bi-caret-right-fill"></i>注目のペット</a></li>
             <li class="parent" style="color: #fff"><i class="bi bi-caret-right-fill"></i>人気の犬種
                 <ul>
                 <li><a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'), 'breed_type' : 9}) }}"><i class="bi bi-chevron-right"></i>トイプードル</a></li>
