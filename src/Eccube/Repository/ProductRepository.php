@@ -130,10 +130,15 @@ class ProductRepository extends AbstractRepository
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getQueryBuilderBySearchData($searchData)
+    public function getQueryBuilderBySearchData($searchData, $loggedUser = false)
     {
         $qb = $this->createQueryBuilder('p')
             ->andWhere('p.Status = 1');
+
+        // restrict products display for user
+        if (!$loggedUser) {
+            $qb-> andWhere('p.is_check_auth = 0');
+        }
 
         // category
         $categoryJoin = false;

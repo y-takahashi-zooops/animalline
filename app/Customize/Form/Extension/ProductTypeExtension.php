@@ -15,6 +15,7 @@ namespace Customize\Form\Extension;
 
 use Eccube\Form\Type\Admin\ProductType;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -25,19 +26,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductTypeExtension extends AbstractTypeExtension
 {
 
-     /**
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder            
-        ->add('item_weight', NumberType::class, [
-            'required' => false,
-            'constraints' => [
-                new Assert\NotBlank(),
-                new Assert\Range(['min' =>  0.1, 'max' => 999.99]),
-            ],
-        ]);
+        $builder
+            ->add('item_weight', NumberType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Range(['min' =>  0.1, 'max' => 999.99]),
+                ],
+            ])
+            ->add('is_check_auth', CheckboxType::class, [
+                'required' => false,
+                'label' => false
+            ]);
     }
 
     /**
