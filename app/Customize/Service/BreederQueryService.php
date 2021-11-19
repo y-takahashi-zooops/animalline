@@ -141,7 +141,7 @@ class BreederQueryService
             $query->orderBy('p.favorite_count', 'DESC');
         }
 
-        return $query->addOrderBy('p.update_date', 'DESC')
+        return $query->addOrderBy('p.release_date', 'DESC')
             ->getQuery()
             ->getResult();
     }
