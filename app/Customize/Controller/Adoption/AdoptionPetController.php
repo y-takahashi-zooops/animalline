@@ -124,7 +124,7 @@ class AdoptionPetController extends AbstractController
         if (!$conservationPet) {
             throw new HttpException\NotFoundHttpException();
         }
-
+        $petKind = $conservationPet->getPetKind();
         $images = $this->conservationPetImageRepository->findBy(
             [
                 'ConservationPet' => $conservationPet,
@@ -145,7 +145,8 @@ class AdoptionPetController extends AbstractController
                 'images' => $images,
                 'video' => $video,
                 'isFavorite' => $isFavorite,
-                'isLoggedIn' => $isLoggedIn
+                'isLoggedIn' => $isLoggedIn,
+                'petKind' => $petKind,
             ]
         );
     }
