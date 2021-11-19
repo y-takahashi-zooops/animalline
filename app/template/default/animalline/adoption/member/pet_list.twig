@@ -2,6 +2,9 @@
 {% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
+    <a href="{{ path('adoption_pets_new') }}" class="btn btn-warning text-align-center w-25 float-right">
+        ペット情報登録
+    </a>
     <section id="breeder-column" class="breeder-column_dog">
         <div class="inner">
             <div class="breeder-column__main_section_title">
@@ -23,10 +26,6 @@
                                 <div class="birthday">
                                     {{ pet.petBirthday|date('Y年m月d日') }}
                                     生                                  
-                                </div>
-                                <div class="price">
-                                    {{ pet.price|number_format(0) }}
-                                    円（税込）                                  
                                 </div>
                                 <a href="{{ path('adoption_pets_edit', {'id': pet.id} )  }}" class="btn w-100 btn-warning text-align-center my-1">
                                     編集                                        

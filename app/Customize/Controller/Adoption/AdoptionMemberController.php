@@ -149,6 +149,7 @@ class AdoptionMemberController extends AbstractController
         if (!$conservation) {
             $conservation = new Conservations;
             $conservation->setId($user->getId());
+            $conservation->setExaminationStatus(0);
         }
 
         $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();

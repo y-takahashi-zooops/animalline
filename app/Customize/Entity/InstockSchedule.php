@@ -223,4 +223,154 @@ class InstockSchedule
 
         return $this;
     }
+
+    /**
+     * @var string
+     *
+     */
+    private $product_name;
+
+    /**
+     * @var int
+     *
+     */
+    private $price = 0;
+
+    /**
+     * @var int
+     *
+     */
+    private $quantity = 0;
+
+    /**
+     * @var int
+     *
+     */
+    private $tax_rate = 0;
+
+    /**
+     * @var \Eccube\Entity\Master\TaxType
+     *
+     */
+    private $TaxType;
+
+    /**
+     * Set productName.
+     *
+     * @param string $productName
+     *
+     * @return InstockSchedule
+     */
+    public function setProductName($productName)
+    {
+        $this->product_name = $productName;
+
+        return $this;
+    }
+
+    /**
+     * Get productName.
+     *
+     * @return string
+     */
+    public function getProductName()
+    {
+        return $this->product_name;
+    }
+
+    /**
+     * Set price.
+     *
+     * @param string $price
+     *
+     * @return InstockSchedule
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price.
+     *
+     * @return string
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set quantity.
+     *
+     * @param string $quantity
+     *
+     * @return InstockSchedule
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * Get quantity.
+     *
+     * @return string
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * Set taxRate.
+     *
+     * @param string $taxRate
+     *
+     * @return InstockSchedule
+     */
+    public function setTaxRate($taxRate)
+    {
+        $this->tax_rate = $taxRate;
+
+        return $this;
+    }
+
+    /**
+     * Get taxRate.
+     *
+     * @return string
+     */
+    public function getTaxRate()
+    {
+        return $this->tax_rate;
+    }
+
+    /**
+     * Set taxType
+     *
+     * @param \Eccube\Entity\Master\TaxType $taxType
+     *
+     * @return InstockSchedule
+     */
+    public function setTaxType(\Eccube\Entity\Master\TaxType $taxType = null)
+    {
+        $this->TaxType = $taxType;
+
+        return $this;
+    }
+
+    /**
+     * Get taxType
+     *
+     * @return \Eccube\Entity\Master\TaxType
+     */
+    public function getTaxType()
+    {
+        return $this->TaxType;
+    }
 }

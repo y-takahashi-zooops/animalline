@@ -153,20 +153,13 @@ class AdoptionPetController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/adoption/member/pets/new/{bar_code}", name="adoption_pets_new", methods={"GET","POST"}, requirements={"bar_code" = "^\d{6}$"})
+     * @Route("/adoption/member/pets/new", name="adoption_pets_new", methods={"GET","POST"})
      */
     public function adoption_pets_new(Request $request): Response
     {
-        $barCode = substr($request->get('bar_code'), 1);
-        $DnaId = (int)$barCode;
-        $Dna = $this->dnaCheckStatusRepository->find($DnaId);
-        if (!$Dna) {
-            throw new HttpException\NotFoundHttpException();
-        }
         $user = $this->getUser();
         $is_conservation = $user->getIsConservation();
-        $DnaHeader = $Dna->getDnaHeader();
-        $conservation = $this->conservationsRepository->find($DnaHeader->getRegisterId());
+        $conservation = $this->conservationsRepository->find($user);
         if ($is_conservation == 0) {
             return $this->render('animalline/adopution/member/examination_guidance.twig', [
                 'conservation' => $conservation
@@ -175,7 +168,7 @@ class AdoptionPetController extends AbstractController
 
         $conservationPet = new ConservationPets();
         $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
-            'customer' => $this->getUser(),
+            'customer' => $user,
         ]);
         $form->handleRequest($request);
 
@@ -188,11 +181,7 @@ class AdoptionPetController extends AbstractController
             $entityManager->persist($conservationPet);
             $entityManager->flush();
             $petId = $conservationPet->getId();
-            $Dna->setPetId($petId)
-                ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED)
-                ->setKitPetRegisterDate(new \DateTime);
-            $entityManager->persist($Dna);
-            $entityManager->flush();
+
             $img0 = $this->setImageSrc($request->get('img0'), $petId);
             $img1 = $this->setImageSrc($request->get('img1'), $petId);
             $img2 = $this->setImageSrc($request->get('img2'), $petId);
@@ -221,21 +210,16 @@ class AdoptionPetController extends AbstractController
             $conservationPet->addConservationPetImage($petImage4);
             $conservationPet->setThumbnailPath($img0);
 
-            // $dnaCheckStatus = (new DnaCheckStatus)
-            //     ->setRegisterId($conservation->getId())
-            //     ->setPetId($conservationPet->getId())
-            //     ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION);
-
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($conservationPet);
-            // $entityManager->persist($dnaCheckStatus);
+
             $entityManager->flush();
 
-            return $this->redirectToRoute('adoption_newpet_complete');
+            return $this->redirectToRoute('adoption_pet_list');
         }
 
         return $this->render('animalline/adoption/member/pets/new.twig', [

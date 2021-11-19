@@ -19,7 +19,13 @@ file that was distributed with this source code.
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
 {% endblock stylesheet %}
 
-{% block javascript %}{% endblock javascript %}
+{% block javascript %}
+    <script>
+        $("#edit-submit").click(function() {
+            $("#path-get-all").val(localStorage.url);
+        });
+    </script>
+{% endblock javascript %}
 
 {% block main %}
     {{ form_start(form) }}
@@ -243,6 +249,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                             </div>
+                            <input type="hidden" id="path-get-all" name="url">
                         </div>
                     </div>
                 </div>
@@ -267,7 +274,7 @@ file that was distributed with this source code.
                             {{ form_errors(form.release_status) }}
                         </div>
                         <div class="col-auto">
-                            <button class="btn btn-ec-conversion px-5"
+                            <button id="edit-submit" class="btn btn-ec-conversion px-5"
                                     type="submit">{{ 'admin.common.registration'|trans }}</button>
                         </div>
                     </div>
