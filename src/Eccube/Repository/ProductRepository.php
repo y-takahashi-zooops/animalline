@@ -127,6 +127,7 @@ class ProductRepository extends AbstractRepository
      * get query builder.
      *
      * @param  array $searchData
+     * @param  object|bool $loggedUser
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
