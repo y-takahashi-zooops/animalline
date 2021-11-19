@@ -180,6 +180,38 @@ class PetController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
+        foreach ($breederPets as $index => $breederPet) {
+            // Get last contract status
+            $contractHeader = $this->breederContactHeaderRepository->findLastContractHeaderByPet(
+                $breederPet['bp_id']
+            );
+            if (empty($contractHeader)) {
+                $breederPet['contract_status'] = null;
+                $breederPet['have_messages'] = false;
+            } else {
+                $breederPet['contract_status'] = $contractHeader[0]['contract_status'];
+                $breederPet['have_messages'] = true;
+            }
+
+            $breederPets[$index] = $breederPet;
+        }
+
+        foreach ($conservationPets as $index => $conservationPet) {
+            // Get last contract status
+            $contractHeader = $this->conservationContactHeaderRepository->findLastContractHeaderByPet(
+                $conservationPet['cp_id']
+            );
+            if (empty($contractHeader)) {
+                $conservationPet['contract_status'] = null;
+                $conservationPet['have_messages'] = false;
+            } else {
+                $conservationPet['contract_status'] = $contractHeader[0]['contract_status'];
+                $conservationPet['have_messages'] = true;
+            }
+
+            $conservationPets[$index] = $conservationPet;
+        }
+
         $direction = 'ASC';
         if (array_key_exists('direction', $request)) {
             $direction = $request['direction'] == 'ASC' ? 'DESC' : 'ASC';

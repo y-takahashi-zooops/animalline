@@ -220,7 +220,11 @@ file that was distributed with this source code.
                                     <div class="text-right">
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">
                                             <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_pet_all_message', {'pet_id': breederPet.bp_id, 'site_kind': params.site_kind}) }}">
+                                                {% if breederPet.have_messages == true %}
+                                                    href="{{ url('admin_pet_all_message', {'pet_id': breederPet.bp_id, 'site_kind': params.site_kind}) }}"
+                                                {% else %}
+                                                    disabled
+                                                {% endif %}>
                                                 <i class="far fa-envelope fa-lg text-secondary" aria-hidden="true"></i>
                                             </a>
                                         </div>
@@ -272,7 +276,11 @@ file that was distributed with this source code.
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">
                                                 <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_pet_all_message', {'pet_id': conservationPet.cp_id, 'site_kind': params.site_kind }) }}">
+                                                    {% if conservationPet.have_messages == true %}
+                                                        href="{{ url('admin_pet_all_message', {'pet_id': conservationPet.cp_id, 'site_kind': params.site_kind }) }}"
+                                                    {% else %}
+                                                        disabled
+                                                    {% endif %}>
                                                     <i class="far fa-envelope fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
