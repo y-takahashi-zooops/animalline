@@ -133,8 +133,8 @@ class AdoptionQueryService
         }
 
         if ($request->get('new_pet')) {
-            $query->andWhere('p.release_date > :fromDate')
-                ->andWhere('p.release_date < :toDate')
+            $query->andWhere('p.release_date >= :fromDate')
+                ->andWhere('p.release_date <= :toDate')
                 ->setParameter('fromDate', Carbon::now()->subMonth()->toDateString())
                 ->setParameter('toDate',Carbon::now()->toDateString());
         }
