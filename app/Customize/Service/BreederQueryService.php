@@ -2,6 +2,7 @@
 
 namespace Customize\Service;
 
+use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreedersRepository;
@@ -80,10 +81,13 @@ class BreederQueryService
      */
     public function searchPetsResult($request): array
     {
+        $date_now = Carbon::now()->toDateString();
+        $time_new = Carbon::now()->subMonth()->toDateString();
+
         $query = $this->breederPetsRepository->createQueryBuilder('p')
             ->join('p.Breeder', 'c')
             ->where('p.is_active = :is_active')
-            ->setParameter('is_active', 1);;
+            ->setParameter('is_active', 1);
 
         if ($request->get('pet_kind')) {
             $query->andWhere('p.pet_kind = :pet_kind')
@@ -126,7 +130,18 @@ class BreederQueryService
             }
         }
 
-        return $query->addOrderBy('p.update_date', 'DESC')
+        if ($request->get('pet_new')) {
+            $query->andWhere('p.release_date <= :to')
+                ->andWhere('p.release_date >= :from')
+                ->setParameter(':to', $date_now)
+                ->setParameter(':from', $time_new);
+        }
+
+        if ($request->get('featured_pet')) {
+            $query->orderBy('p.favorite_count', 'DESC');
+        }
+
+        return $query->addOrderBy('p.release_date', 'DESC')
             ->getQuery()
             ->getResult();
     }
