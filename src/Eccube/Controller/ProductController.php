@@ -148,7 +148,7 @@ class ProductController extends AbstractController
 
         // paginator
         $searchData = $searchForm->getData();
-        $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
+        $qb = $this->productRepository->getQueryBuilderBySearchData($searchData, $this->getUser());
 
         $event = new EventArgs(
             [

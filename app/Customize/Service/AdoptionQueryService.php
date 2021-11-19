@@ -2,6 +2,7 @@
 
 namespace Customize\Service;
 
+use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
@@ -129,6 +130,17 @@ class AdoptionQueryService
                     ->andWhere('p.pet_kind = :pet_kind')
                     ->setParameter('pet_kind', $request->get('pet_kind'));
             }
+        }
+
+        if ($request->get('new_pet')) {
+            $query->andWhere('p.release_date >= :fromDate')
+                ->andWhere('p.release_date <= :toDate')
+                ->setParameter('fromDate', Carbon::now()->subMonth()->toDateString())
+                ->setParameter('toDate',Carbon::now()->toDateString());
+        }
+
+        if ($request->get('featured_pet')) {
+            $query->orderBy('p.favorite_count', 'DESC');
         }
 
         return $query->addOrderBy('p.release_date', 'DESC')
