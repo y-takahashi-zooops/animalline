@@ -36,4 +36,23 @@ class BreederContactHeaderRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Get last contract header by pet
+     * 
+     * @param  mixed  $pet
+     * @return array
+     */
+    public function findLastContractHeaderByPet($pet): array
+    {
+        return $this->createQueryBuilder('ch')
+            ->where('ch.Pet = :pet')
+            ->setParameter('pet', $pet)
+            ->addOrderBy('ch.last_message_date', 'DESC')
+            ->addOrderBy('ch.id', 'DESC')
+            ->select('ch.contract_status')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
 }
