@@ -60,7 +60,7 @@ class NewsType extends AbstractType
                     new Assert\Length(['max' => $this->eccubeConfig['eccube_mtext_len']]),
                 ],
             ])
-            ->add('url', FileType::class, [
+            ->add('thumbnail_path', FileType::class, [
                 'required' => true,
                 'mapped' => false,
                 'attr' => [
