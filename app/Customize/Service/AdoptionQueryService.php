@@ -63,7 +63,7 @@ class AdoptionQueryService
     /**
      * get breeds have pet
      *
-     * @param $petKind
+     * @param mixed $petKind
      * @return array
      */
     public function getBreedsHavePet($petKind): array
@@ -81,7 +81,7 @@ class AdoptionQueryService
     /**
      * Retrieve  conservation pets
      *
-     * @param $petKind
+     * @param mixed $petKind
      * @return array
      */
     public function getPetNew($petKind): array

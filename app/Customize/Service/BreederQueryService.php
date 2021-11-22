@@ -76,7 +76,7 @@ class BreederQueryService
     /**
      * Retrieve breeder pets
      *
-     * @param $petKind
+     * @param mixed $petKind
      * @return array
      */
     public function getPetNew($petKind): array
@@ -103,7 +103,7 @@ class BreederQueryService
     /**
      * Retrieve breeder pets
      *
-     * @param $petKind
+     * @param mixed $petKind
      * @return array
      */
     public function getPetFeatured($petKind): array
