@@ -177,7 +177,7 @@ file that was distributed with this source code.
 {% block stylesheet %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
     <style>
-        #admin_news_url {
+        #admin_news_thumbnail_path {
             display: none!important;
         }
         .preview {
@@ -373,7 +373,6 @@ file that was distributed with this source code.
 });
 
     $(document).ready(function() {
-        console.log(thumbnailPath);
         if (thumbnailPath) {
             $('#admin_news_thumbnail_path').hide();
             $('#admin_news_thumbnail_path').parent().find('img').attr('src', '/' + subSrc + thumbnailPath);
