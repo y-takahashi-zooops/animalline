@@ -60,17 +60,6 @@ file that was distributed with this source code.
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.company_name, '会社名', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                    </dt>
-                                    <dd>
-                                        <div class="ec-halfInput{{ has_errors(form.company_name) ? ' error' }}">
-                                            {{ form_widget(form.company_name) }}
-                                            {{ form_errors(form.company_name) }}
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>
                                         {{ form_label(form.address, '住所', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
@@ -168,17 +157,6 @@ file that was distributed with this source code.
                                         <div class="ec-radio{{ has_errors(form.sex) ? ' error' }}">
                                             {{ form_widget(form.sex) }}
                                             {{ form_errors(form.sex) }}
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>
-                                        {{ form_label(form.job, '職業', { 'label_attr': {'class': 'ec-label' }}) }}
-                                    </dt>
-                                    <dd>
-                                        <div class="ec-select{{ has_errors(form.job) ? ' error' }}">
-                                            {{ form_widget(form.job) }}
-                                            {{ form_errors(form.job) }}
                                         </div>
                                     </dd>
                                 </dl>
