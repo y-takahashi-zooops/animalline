@@ -21,6 +21,10 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Customize\Config\AnilineConf;
 use Customize\Form\Type\Front\ResetPasswordType;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Eccube\Form\Type\Front\EntryType;
 
 class BreederMemberController extends AbstractController
 {
@@ -40,20 +44,36 @@ class BreederMemberController extends AbstractController
     protected $breederQueryService;
 
     /**
+     * @var TokenStorage
+     */
+    protected $tokenStorage;
+
+    /**
+     * @var EncoderFactoryInterface
+     */
+    protected $encoderFactory;
+
+    /**
      * BreederController constructor.
      *
      * @param CustomerRepository $customerRepository
      * @param BreedersRepository $breedersRepository
      * @param BreederQueryService $breederQueryService
+     * @param EncoderFactoryInterface $encoderFactory
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         CustomerRepository  $customerRepository,
         BreedersRepository  $breedersRepository,
-        BreederQueryService $breederQueryService
+        BreederQueryService $breederQueryService,
+        EncoderFactoryInterface $encoderFactory,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
         $this->breederQueryService = $breederQueryService;
+        $this->encoderFactory = $encoderFactory;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -263,5 +283,84 @@ class BreederMemberController extends AbstractController
         return [
             'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * 会員情報編集画面.
+     *
+     * @Route("/breeder/member/change", name="breeder_change")
+     * @Template("animalline/breeder/member/breeder_change.twig")
+     */
+    public function breeder_change(Request $request)
+    {
+        $Customer = $this->getUser();
+        $LoginCustomer = clone $Customer;
+        $this->entityManager->detach($LoginCustomer);
+
+        $previous_password = $Customer->getPassword();
+        $Customer->setPassword($this->eccubeConfig['eccube_default_password']);
+
+        /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
+        $builder = $this->formFactory->createBuilder(EntryType::class, $Customer);
+
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+                'Customer' => $Customer,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_INITIALIZE, $event);
+
+        /* @var $form \Symfony\Component\Form\FormInterface */
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            log_info('会員編集開始');
+
+            if ($Customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
+                $Customer->setPassword($previous_password);
+            } else {
+                $encoder = $this->encoderFactory->getEncoder($Customer);
+                if ($Customer->getSalt() === null) {
+                    $Customer->setSalt($encoder->createSalt());
+                }
+                $Customer->setPassword(
+                    $encoder->encodePassword($Customer->getPassword(), $Customer->getSalt())
+                );
+            }
+            $this->entityManager->flush();
+
+            log_info('会員編集完了');
+
+            $event = new EventArgs(
+                [
+                    'form' => $form,
+                    'Customer' => $Customer,
+                ],
+                $request
+            );
+            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_COMPLETE, $event);
+
+            return $this->redirect($this->generateUrl('breeder_change_complete'));
+        }
+
+        $this->tokenStorage->getToken()->setUser($LoginCustomer);
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * 会員情報編集完了画面.
+     *
+     * @Route("/breeder/member/breeder_change_complete", name="breeder_change_complete")
+     * @Template("animalline/breeder/member/breeder_change_complete.twig")
+     */
+    public function complete(Request $request)
+    {
+        return [];
     }
 }
