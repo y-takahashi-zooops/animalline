@@ -24,6 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class NewsType extends AbstractType
 {
@@ -59,12 +60,14 @@ class NewsType extends AbstractType
                     new Assert\Length(['max' => $this->eccubeConfig['eccube_mtext_len']]),
                 ],
             ])
-            ->add('url', TextType::class, [
-                'required' => false,
-                'constraints' => [
-                    new Assert\Url(),
-                    new Assert\Length(['max' => $this->eccubeConfig['eccube_mtext_len']]),
+            ->add('url', FileType::class, [
+                'required' => true,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'form-inline',
+                    'data-img' => 'img'
                 ],
+                'data_class' => null,
             ])
             ->add('link_method', CheckboxType::class, [
                 'required' => false,
