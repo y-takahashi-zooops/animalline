@@ -159,9 +159,8 @@ class ConservationPetsRepository extends ServiceEntityRepository
 
         return $qb->leftJoin('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'cp.id = dna.pet_id')
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
-            ->leftJoin('Customize\Entity\ConservationContactHeader', 'cch', 'WITH', 'cch.Pet = cp.id')
             ->leftJoin('Customize\Entity\Conservations', 'c', 'WITH', 'c.id = cp.Conservation')
-            ->select('cp', 'dna', 'b.breeds_name', 'cch.contract_status', 'c.owner_name')
+            ->select('cp', 'dna', 'b.breeds_name', 'c.owner_name')
             ->orderBy('cp.' . $order['field'], $order['direction'])
             ->getQuery()
             ->getScalarResult();
