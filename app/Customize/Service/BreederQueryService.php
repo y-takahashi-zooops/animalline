@@ -74,12 +74,12 @@ class BreederQueryService
     }
 
     /**
-     * Retrive breeder pets
+     * Retrieve breeder pets
      *
-     * @param Object $request
+     * @param $petKind
      * @return array
      */
-    public function petNew($petKind): array
+    public function getPetNew($petKind): array
     {
         $date_now = Carbon::now()->toDateString();
         $time_new = Carbon::now()->subMonth()->toDateString();
@@ -90,23 +90,23 @@ class BreederQueryService
             ->andWhere('p.pet_kind = :pet_kind')
             ->setParameter('pet_kind', $petKind)
             ->andWhere('p.release_date <= :to')
-                ->andWhere('p.release_date >= :from')
-                ->setParameter(':to', $date_now)
-                ->setParameter(':from', $time_new);
+            ->andWhere('p.release_date >= :from')
+            ->setParameter(':to', $date_now)
+            ->setParameter(':from', $time_new);
 
-        return $query->setMaxResults(AnilineConf::NUMBER_ITEM_TOP)
-            ->addOrderBy('p.release_date', 'DESC')
+        return $query->addOrderBy('p.release_date', 'DESC')
+            ->setMaxResults(AnilineConf::NUMBER_ITEM_TOP)
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * Retrive breeder pets
+     * Retrieve breeder pets
      *
-     * @param Object $request
+     * @param $petKind
      * @return array
      */
-    public function petFeatured($petKind): array
+    public function getPetFeatured($petKind): array
     {
         $query = $this->breederPetsRepository->createQueryBuilder('p')
             ->where('p.is_active = :is_active')
@@ -114,8 +114,8 @@ class BreederQueryService
             ->andWhere('p.pet_kind = :pet_kind')
             ->setParameter('pet_kind', $petKind)
             ->orderBy('p.favorite_count', 'DESC');
-        return $query->setMaxResults(AnilineConf::NUMBER_ITEM_TOP)
-            ->addOrderBy('p.release_date', 'DESC')
+        return $query->addOrderBy('p.release_date', 'DESC')
+            ->setMaxResults(AnilineConf::NUMBER_ITEM_TOP)
             ->getQuery()
             ->getResult();
     }

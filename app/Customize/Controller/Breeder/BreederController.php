@@ -146,8 +146,8 @@ class BreederController extends AbstractController
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
         $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
-        $newPets = $this->breederQueryService->petNew($petKind);
-        $favoritePets = $this->breederQueryService->petFeatured($petKind);
+        $newPets = $this->breederQueryService->getPetNew($petKind);
+        $favoritePets = $this->breederQueryService->getPetFeatured($petKind);
 
         return $this->render('animalline/breeder/index.twig', [
             'petKind' => $petKind,
