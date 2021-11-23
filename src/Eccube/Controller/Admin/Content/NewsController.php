@@ -106,7 +106,7 @@ class NewsController extends AbstractController
         }
 
         $builder = $this->formFactory
-            ->createBuilder(NewsType::class, $News);
+            ->createBuilder(NewsType::class, $News, ['img' => $request->get('img') ?? '']);
 
         $event = new EventArgs(
             [

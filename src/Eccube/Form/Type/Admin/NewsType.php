@@ -22,6 +22,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -88,7 +91,11 @@ class NewsType extends AbstractType
                 'choices' => ['admin.content.news.display_status__show' => true, 'admin.content.news.display_status__hide' => false],
                 'required' => true,
                 'expanded' => false,
+            ])
+            ->add('ThumbnailPathErrors', TextType::class, [
+                'mapped' => false,
             ]);
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateThumbnail']);
     }
 
     /**
@@ -98,7 +105,11 @@ class NewsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => News::class,
+            'img' => ''
         ]);
+
+        $resolver->setRequired('img');
+        $resolver->setAllowedTypes('img', 'string');
     }
 
     /**
@@ -107,5 +118,13 @@ class NewsType extends AbstractType
     public function getBlockPrefix()
     {
         return 'admin_news';
+    }
+
+    public function validateThumbnail(FormEvent $event)
+    {
+        $form = $event->getForm();
+        if (!$event->getForm()->getConfig()->getOptions()['img']) {
+            $form['ThumbnailPathErrors']->addError(new FormError('プロフィール画像をアップロードしてください。'));
+        }
     }
 }
