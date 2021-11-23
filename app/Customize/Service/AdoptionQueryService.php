@@ -63,7 +63,7 @@ class AdoptionQueryService
     /**
      * get breeds have pet
      *
-     * @param $petKind
+     * @param mixed $petKind
      * @return array
      */
     public function getBreedsHavePet($petKind): array
@@ -74,6 +74,53 @@ class AdoptionQueryService
             ->where('b.pet_kind = :pet_kind and cp.BreedsType is not null')
             ->setParameter('pet_kind', $petKind)
             ->orderBy('b.breeds_name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Retrieve  conservation pets
+     *
+     * @param mixed $petKind
+     * @return array
+     */
+    public function getPetNew($petKind): array
+    {
+        $date_now = Carbon::now()->toDateString();
+        $time_new = Carbon::now()->subMonth()->toDateString();
+
+        $query = $this->conservationPetsRepository->createQueryBuilder('p')
+            ->where('p.release_status = :release_status')
+            ->setParameter('release_status', 1)
+            ->andWhere('p.pet_kind = :pet_kind')
+            ->setParameter('pet_kind', $petKind)
+            ->andWhere('p.release_date <= :to')
+            ->andWhere('p.release_date >= :from')
+            ->setParameter(':to', $date_now)
+            ->setParameter(':from', $time_new);
+
+        return $query->addOrderBy('p.release_date', 'DESC')
+            ->setMaxResults(AnilineConf::NUMBER_ITEM_TOP)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Retrieve conservation pets
+     *
+     * @param $petKind
+     * @return array
+     */
+    public function getPetFeatured($petKind): array
+    {
+        $query = $this->conservationPetsRepository->createQueryBuilder('p')
+            ->where('p.release_status = :release_status')
+            ->setParameter('release_status', 1)
+            ->andWhere('p.pet_kind = :pet_kind')
+            ->setParameter('pet_kind', $petKind)
+            ->orderBy('p.favorite_count', 'DESC');
+        return $query->addOrderBy('p.release_date', 'DESC')
+            ->setMaxResults(AnilineConf::NUMBER_ITEM_TOP)
             ->getQuery()
             ->getResult();
     }
