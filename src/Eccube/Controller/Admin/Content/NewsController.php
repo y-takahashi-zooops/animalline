@@ -241,12 +241,12 @@ class NewsController extends AbstractController
             mkdir(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/', 0777, 'R');
         }
         $folderPath = AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/';
-        $image_parts = explode(";base64,", $_POST['image']);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type = $image_type_aux[1];
-        $image_base64 = base64_decode($image_parts[1]);
-        $file = $folderPath . uniqid() . '.' . $image_type;
-        file_put_contents($file, $image_base64);
+        $imageParts = explode(";base64,", $_POST['image']);
+        $imageTypeAux = explode("image/", $imageParts[0]);
+        $imageType = $imageTypeAux[1];
+        $imageBase64 = base64_decode($imageParts[1]);
+        $file = $folderPath . uniqid() . '.' . $imageType;
+        file_put_contents($file, $imageBase64);
         return new JsonResponse($file);
     }
 }
