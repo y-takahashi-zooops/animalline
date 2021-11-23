@@ -124,7 +124,7 @@ class NewsType extends AbstractType
     {
         $form = $event->getForm();
         if (!$event->getForm()->getConfig()->getOptions()['img']) {
-            $form['ThumbnailPathErrors']->addError(new FormError('プロフィール画像をアップロードしてください。'));
+            $form['ThumbnailPathErrors']->addError(new FormError('サムネイル画像をアップロードしてください。'));
         }
     }
 }
