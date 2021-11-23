@@ -13,6 +13,7 @@
 
 namespace Eccube\Controller\Admin\Content;
 
+use Customize\Config\AnilineConf;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\News;
 use Eccube\Event\EccubeEvents;
@@ -25,6 +26,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class NewsController extends AbstractController
 {
@@ -104,7 +106,7 @@ class NewsController extends AbstractController
         }
 
         $builder = $this->formFactory
-            ->createBuilder(NewsType::class, $News);
+            ->createBuilder(NewsType::class, $News, ['img' => $request->get('img') ?? '']);
 
         $event = new EventArgs(
             [
@@ -117,13 +119,14 @@ class NewsController extends AbstractController
 
         $form = $builder->getForm();
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
             if (!$News->getUrl()) {
                 $News->setLinkMethod(false);
             }
             $this->newsRepository->save($News);
-
+            $NewsId = $News->getId();
+            $Img = $this->setImageSrc($request->get('img'), $NewsId);
             $event = new EventArgs(
                 [
                     'form' => $form,
@@ -137,7 +140,9 @@ class NewsController extends AbstractController
 
             // キャッシュの削除
             $cacheUtil->clearDoctrineCache();
-
+            $News->setUrl($Img);
+            $entityManager->persist($News);
+            $entityManager->flush();
             return $this->redirectToRoute('admin_content_news_edit', ['id' => $News->getId()]);
         }
 
@@ -183,5 +188,65 @@ class NewsController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_content_news');
+    }
+
+    /**
+     * Copy image and retrieve new url of the copy
+     *
+     * @param string $imageUrl
+     * @param int $newsId
+     * @return string
+     */
+    private function setImageSrc($imageUrl, $NewsId)
+    {
+        if (empty($imageUrl)) {
+            return '';
+        }
+
+        $imageUrl = ltrim($imageUrl, '/');
+        $resource = str_replace(
+            AnilineConf::ANILINE_IMAGE_URL_BASE,
+            '',
+            $imageUrl
+        );
+        $arr = explode('/', ltrim($resource, '/'));
+        if ($arr[0] === 'news') {
+            return $resource;
+        }
+
+        $imageName = str_replace(
+            AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/',
+            '',
+            $imageUrl
+        );
+        $subUrl = AnilineConf::ANILINE_IMAGE_URL_BASE . '/news/' . $NewsId . '/';
+        if (!file_exists($subUrl)) {
+            mkdir($subUrl, 0777, 'R');
+        }
+
+        copy($imageUrl, $subUrl . $imageName);
+        return '/news/' . $NewsId . '/' . $imageName;
+    }
+
+    /**
+     * Upload image
+     *
+     * @Route("/news/upload", name="news_upload_crop_image", methods={"POST"}, options={"expose"=true})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function upload(Request $request)
+    {
+        if (!file_exists(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/')) {
+            mkdir(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/', 0777, 'R');
+        }
+        $folderPath = AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/';
+        $imageParts = explode(";base64,", $_POST['image']);
+        $imageTypeAux = explode("image/", $imageParts[0]);
+        $imageType = $imageTypeAux[1];
+        $imageBase64 = base64_decode($imageParts[1]);
+        $file = $folderPath . uniqid() . '.' . $imageType;
+        file_put_contents($file, $imageBase64);
+        return new JsonResponse($file);
     }
 }
