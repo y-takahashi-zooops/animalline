@@ -13,8 +13,8 @@ file that was distributed with this source code.
 {% set menus = ['breeders', 'pet_list'] %}
 {% set params = app.request.query.all %}
 
-{% block title %}{{ '審査結果登録'|trans }}{% endblock %}
-{% block sub_title %}{{ 'ブリーダー管理'|trans }}{% endblock %}
+{% block title %}{{ '公開ステータス変更'|trans }}{% endblock %}
+{% block sub_title %}{{ 'ペット管理'|trans }}{% endblock %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
@@ -63,11 +63,11 @@ file that was distributed with this source code.
         <div class="c-contentsArea__primaryCol">
             <div class="c-primaryCol">
                 <div class="card rounded border-0 mb-4">
-                    <div class="card-header"><span class="card-title">審査結果編集</span></div>
+                    <div class="card-header"><span class="card-title">公開ステータス編集</span></div>
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-2">
-                                <span>審査結果</span>
+                                <span>公開ステータス</span>
                             </div>
                             <div class="col-2 ec-select">
                                 <select id="examination_result" name="examination_result" class="form-control">
@@ -100,7 +100,7 @@ file that was distributed with this source code.
                 <div class="col-6">
                     <div class="c-conversionArea__leftBlockItem">
                         <a class="c-baseLink" href='{{ path('admin_pet_all') }}' id="back">
-                            <i class="fa fa-backward" aria-hidden="true"></i><span>審査情報表示</span>
+                            <i class="fa fa-backward" aria-hidden="true"></i><span>ペット情報管理</span>
                         </a>
                     </div>
                 </div>
