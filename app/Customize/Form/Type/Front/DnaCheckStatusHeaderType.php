@@ -54,7 +54,7 @@ class DnaCheckStatusHeaderType extends AbstractType
                 'mapped' => false,
             ])
             ->add('choice_address', ChoiceType::class, [
-                'required' => true,
+                'required' => false,
                 'mapped' => false,
                 'choices' =>
                     [
@@ -62,36 +62,16 @@ class DnaCheckStatusHeaderType extends AbstractType
                         '犬舎住所' => 2,
                         '猫舎住所' => 3,
                     ],
-                'placeholder' => 'common.select',
-                'constraints' => [
-                    new Assert\NotBlank()
-                ],
-            ])
-            ->add('choice_address', ChoiceType::class, [
-                'required' => true,
-                'mapped' => false,
-                'choices' =>
-                    [
-                        '基本情報' => 1,
-                        '犬舎住所' => 2,
-                        '猫舎住所' => 3,
-                    ],
-                'placeholder' => 'common.select',
-                'constraints' => [
-                    new Assert\NotBlank()
-                ],
+                'placeholder' => 'common.select'
             ])
             ->add('shipping_name', TextType::class, [
                 'required' => true,
-                'attr' => [
-                    'readonly' => true,
-                ],
                 'constraints' => [
                     new Assert\NotBlank()
                 ]
             ])
             ->add('shipping_zip', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'constraints' => [
                     new Assert\Type([
                         'type' => 'numeric',
@@ -103,22 +83,22 @@ class DnaCheckStatusHeaderType extends AbstractType
                     new Assert\NotBlank()
                 ],
                 'attr' => [
-                    'readonly' => true,
                     'class' => 'p-postal-code',
                     'placeholder' => 'common.postal_code_sample',
                 ],
                 'trim' => true,
             ])
             ->add('PrefShipping', PrefType::class, [
+                'required' => true,
                 'attr' => [
-                    'class' => 'p-region-id',
-                    'readonly' => true
+                    'class' => 'p-region-id'
                 ],
                 'constraints' => [
                     new Assert\NotBlank()
                 ]
             ])
             ->add('shipping_city', TextType::class, [
+                'required' => true,
                 'constraints' => [
                     new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
                     new Assert\NotBlank()
@@ -126,11 +106,11 @@ class DnaCheckStatusHeaderType extends AbstractType
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_city_len'],
                     'class' => 'p-locality',
-                    'placeholder' => 'common.address_sample_01',
-                    'readonly' => true
+                    'placeholder' => 'common.address_sample_01'
                 ],
             ])
             ->add('shipping_address', TextType::class, [
+                'required' => true,
                 'constraints' => [
                     new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
                     new Assert\NotBlank()
@@ -138,8 +118,7 @@ class DnaCheckStatusHeaderType extends AbstractType
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_address1_len'],
                     'class' => 'p-street-address p-extended-address',
-                    'placeholder' => 'common.address_sample_02',
-                    'readonly' => true
+                    'placeholder' => 'common.address_sample_02'
                 ],
             ])
             ->add('shipping_tel', TextType::class, [
