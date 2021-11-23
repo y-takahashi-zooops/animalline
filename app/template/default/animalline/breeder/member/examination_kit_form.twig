@@ -100,8 +100,7 @@
                                             </div>
                                             {{ form_errors(form.shipping_zip) }}
                                         </div>
-                                        <div class="ec-select{{ has_errors(form.PrefShipping) ? ' error' }}"
-                                            onmousedown="(function(e){ e.preventDefault(); })(event, this)">
+                                        <div class="ec-select{{ has_errors(form.PrefShipping) ? ' error' }}">
                                             {{ form_widget(form.PrefShipping) }}
                                             {{ form_errors(form.PrefShipping) }}
                                         </div>

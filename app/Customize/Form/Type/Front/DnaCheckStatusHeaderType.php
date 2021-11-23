@@ -83,9 +83,6 @@ class DnaCheckStatusHeaderType extends AbstractType
             ])
             ->add('shipping_name', TextType::class, [
                 'required' => true,
-                'attr' => [
-                    'readonly' => true,
-                ],
                 'constraints' => [
                     new Assert\NotBlank()
                 ]
@@ -103,7 +100,6 @@ class DnaCheckStatusHeaderType extends AbstractType
                     new Assert\NotBlank()
                 ],
                 'attr' => [
-                    'readonly' => true,
                     'class' => 'p-postal-code',
                     'placeholder' => 'common.postal_code_sample',
                 ],
@@ -111,8 +107,7 @@ class DnaCheckStatusHeaderType extends AbstractType
             ])
             ->add('PrefShipping', PrefType::class, [
                 'attr' => [
-                    'class' => 'p-region-id',
-                    'readonly' => true
+                    'class' => 'p-region-id'
                 ],
                 'constraints' => [
                     new Assert\NotBlank()
@@ -126,8 +121,7 @@ class DnaCheckStatusHeaderType extends AbstractType
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_city_len'],
                     'class' => 'p-locality',
-                    'placeholder' => 'common.address_sample_01',
-                    'readonly' => true
+                    'placeholder' => 'common.address_sample_01'
                 ],
             ])
             ->add('shipping_address', TextType::class, [
@@ -138,8 +132,7 @@ class DnaCheckStatusHeaderType extends AbstractType
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_address1_len'],
                     'class' => 'p-street-address p-extended-address',
-                    'placeholder' => 'common.address_sample_02',
-                    'readonly' => true
+                    'placeholder' => 'common.address_sample_02'
                 ],
             ])
             ->add('shipping_tel', TextType::class, [
