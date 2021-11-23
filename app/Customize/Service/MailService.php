@@ -930,7 +930,7 @@ class MailService
         ]);
 
         $message = (new \Swift_Message())
-            ->setSubject('[' . $this->BaseInfo->getShopName() . '] 審査結果通知')
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] 公開ステータス通知')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
             ->setBcc($this->BaseInfo->getEmail01())
@@ -971,7 +971,7 @@ class MailService
         ]);
 
         $message = (new \Swift_Message())
-            ->setSubject('[' . $this->BaseInfo->getShopName() . '] 審査結果通知')
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] 公開ステータス通知')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
             ->setBcc($this->BaseInfo->getEmail01())

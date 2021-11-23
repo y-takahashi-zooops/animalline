@@ -336,6 +336,7 @@ class PetController extends AbstractController
         if ($request->isMethod('POST')) {
             $result = (int)$request->get('examination_result');
             $Pet->setIsActive($result);
+            if ($result === AnilineConf::RELEASE_STATUS_PUBLIC) $Pet->setReleaseDate(new DateTime);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($Pet);
             $entityManager->flush();
@@ -347,7 +348,7 @@ class PetController extends AbstractController
                 $mailService->sendPetPublicNg($Customer, $data);
             }
 
-            $this->addSuccess('審査結果を登録しました。', 'admin');
+            $this->addSuccess('公開ステータスを変更しました。', 'admin');
             return $this->redirectToRoute('admin_pet_change_public_status', ['id' => $id, 'site_kind' => $siteKind]);
         }
 
