@@ -28,12 +28,12 @@ class CustomTopController extends AbstractController
     /**
      * @var NewsRepository
      */
-    protected $newsRepository;
+    protected $NewsRepository;
 
     public function __construct(
-        NewsRepository $newsRepository
+        NewsRepository $NewsRepository
     ) {
-        $this->newsRepository = $newsRepository;
+        $this->NewsRepository = $NewsRepository;
     }
     /**
      * @Route("/ec", name="homepage")
@@ -50,10 +50,10 @@ class CustomTopController extends AbstractController
      */
     public function animalline_index()
     {
-        $listNews = $this->newsRepository->getList();
+        $ListNews = $this->NewsRepository->getList();
         
         return [
-            'listNews' => $listNews
+            'ListNews' => $ListNews
         ];
     }
 

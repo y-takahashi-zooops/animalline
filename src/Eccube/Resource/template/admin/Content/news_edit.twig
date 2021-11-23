@@ -253,7 +253,7 @@ file that was distributed with this source code.
     var image = document.getElementById('image');
     var cropper, reader, file, size;
     var subSrc = '{{ constant("Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE") }}';
-    var thumbnailPath = '{{ news.url }}';
+    var thumbnailPath = '{{ News.url }}';
     let disabledFlag = true;
     $(".form-control-file").change(function (e) {
         inputImageId = e.target.id;
