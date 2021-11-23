@@ -96,22 +96,22 @@ class NewsController extends AbstractController
     public function edit(Request $request, $id = null, CacheUtil $cacheUtil)
     {
         if ($id) {
-            $News = $this->newsRepository->find($id);
-            if (!$News) {
+            $news = $this->newsRepository->find($id);
+            if (!$news) {
                 throw new NotFoundHttpException();
             }
         } else {
-            $News = new \Eccube\Entity\News();
-            $News->setPublishDate(new \DateTime());
+            $news = new \Eccube\Entity\News();
+            $news->setPublishDate(new \DateTime());
         }
 
         $builder = $this->formFactory
-            ->createBuilder(NewsType::class, $News, ['img' => $request->get('img') ?? '']);
+            ->createBuilder(NewsType::class, $news, ['img' => $request->get('img') ?? '']);
 
         $event = new EventArgs(
             [
                 'builder' => $builder,
-                'News' => $News,
+                'news' => $news,
             ],
             $request
         );
@@ -121,16 +121,16 @@ class NewsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            if (!$News->getUrl()) {
-                $News->setLinkMethod(false);
+            if (!$news->getUrl()) {
+                $news->setLinkMethod(false);
             }
-            $this->newsRepository->save($News);
-            $NewsId = $News->getId();
-            $Img = $this->setImageSrc($request->get('img'), $NewsId);
+            $this->newsRepository->save($news);
+            $newsId = $news->getId();
+            $img = $this->setImageSrc($request->get('img'), $newsId);
             $event = new EventArgs(
                 [
                     'form' => $form,
-                    'News' => $News,
+                    'news' => $news,
                 ],
                 $request
             );
@@ -140,15 +140,15 @@ class NewsController extends AbstractController
 
             // キャッシュの削除
             $cacheUtil->clearDoctrineCache();
-            $News->setUrl($Img);
-            $entityManager->persist($News);
+            $news->setUrl($img);
+            $entityManager->persist($news);
             $entityManager->flush();
-            return $this->redirectToRoute('admin_content_news_edit', ['id' => $News->getId()]);
+            return $this->redirectToRoute('admin_content_news_edit', ['id' => $news->getId()]);
         }
 
         return [
             'form' => $form->createView(),
-            'News' => $News,
+            'news' => $news,
         ];
     }
 
@@ -197,7 +197,7 @@ class NewsController extends AbstractController
      * @param int $newsId
      * @return string
      */
-    private function setImageSrc($imageUrl, $NewsId)
+    private function setImageSrc($imageUrl, $newsId)
     {
         if (empty($imageUrl)) {
             return '';
@@ -219,13 +219,13 @@ class NewsController extends AbstractController
             '',
             $imageUrl
         );
-        $subUrl = AnilineConf::ANILINE_IMAGE_URL_BASE . '/news/' . $NewsId . '/';
+        $subUrl = AnilineConf::ANILINE_IMAGE_URL_BASE . '/news/' . $newsId . '/';
         if (!file_exists($subUrl)) {
             mkdir($subUrl, 0777, 'R');
         }
 
         copy($imageUrl, $subUrl . $imageName);
-        return '/news/' . $NewsId . '/' . $imageName;
+        return '/news/' . $newsId . '/' . $imageName;
     }
 
     /**

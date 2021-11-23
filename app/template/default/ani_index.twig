@@ -96,11 +96,11 @@
       </div>
       <div class="top-topics__slide">
         <ul>
-            {% for News in ListNews %}
+            {% for news in listNews %}
                 <li>
-                    <figure><img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ News.url }}" alt=""/></figure>
-                    <div class="date">{{ News.publish_date|date('Y/m/d') }}</div>
-                    <p>{{ News.title }}</p>
+                    <figure><img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ news.url }}" alt=""/></figure>
+                    <div class="date">{{ news.publish_date|date('Y/m/d') }}</div>
+                    <p>{{ news.title }}</p>
                 </li>
             {% endfor %}
         </ul>
