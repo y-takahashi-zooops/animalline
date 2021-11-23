@@ -33,6 +33,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
+use Customize\Service\MailService;
 use DateTime;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -255,7 +256,7 @@ class PetController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
-        return[
+        return [
             'contacts' => $contacts,
             'site_kind' => $site_kind
         ];
@@ -275,7 +276,7 @@ class PetController extends AbstractController
         $breederContacts = [];
         $conservationContacts = [];
         $contactId = $request->get('id');
-        if($request->get('site_kind') == AnilineConf::SITE_CATEGORY_BREEDER) {
+        if ($request->get('site_kind') == AnilineConf::SITE_CATEGORY_BREEDER) {
             $contact = $this->breederContactHeaderRepository->find($contactId);
             $breeder = $this->customerRepository->find($contact->getBreeder());
             $breederContacts = $this->breederContactsRepository->findBy(['BreederHeader' => $contact]);
@@ -308,17 +309,23 @@ class PetController extends AbstractController
     /**
      * 審査結果登録ブリーダー管理
      *
-     * @Route("/%eccube_admin_route%/pet/{id}/public_status/change", name="admin_pet_change_public_status", requirements={"petId" = "\d+"})
+     * @Route("/%eccube_admin_route%/pet/{id}/public_status/change", name="admin_pet_change_public_status", requirements={"id" = "\d+"})
      * @Template("@admin/Pet/public_status.twig")
      */
-    public function change_public_status(Request $request, BreederExaminationInfo $examination)
+    public function change_public_status(Request $request, MailService $mailService)
     {
-        $breederId = $examination->getBreeder()->getId();
-        /** @var $Customer \Eccube\Entity\Customer */
-        $Customer = $this->customerRepository->find($breederId);
-        if (!$Customer) {
-            throw new NotFoundHttpException();
-        }
+        $id = $request->get('id');
+        $siteKind = $request->get('site_kind');
+        $Pet = $siteKind == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
+            $this->breederPetsRepository->find($id) :
+            $this->conservationPetsRepository->find($id);
+        if (!$Pet) throw new NotFoundHttpException();
+
+        $holderId = $siteKind == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
+            $Pet->getBreeder()->getId() :
+            $Pet->getConservation()->getId();
+        $Customer = $this->customerRepository->find($holderId);
+        if (!$Customer) throw new NotFoundHttpException();
 
         $comment = $request->get('examination_result_comment');
         $data = [
@@ -328,38 +335,25 @@ class PetController extends AbstractController
 
         if ($request->isMethod('POST')) {
             $result = (int)$request->get('examination_result');
-            $examination->setExaminationResult($result)
-                ->setExaminationResultComment($comment)
-                ->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_COMPLETE);
-
-            $breeder = $this->breedersRepository->find($breederId);
-
-            // breederの審査ステータスを変更
-            if ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
-                $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK);
-            } elseif ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_NG) {
-                $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG);
-            }
-
-            $data['examination_comment'] = $comment;
-            if ($result === AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
-                $this->mailService->sendBreederExaminationMailAccept($Customer, $data);
-                $Customer->setIsBreeder(1);
-            } else {
-                $this->mailService->sendBreederExaminationMailReject($Customer, $data);
-            }
-
+            $Pet->setIsActive($result);
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($examination);
-            $entityManager->persist($Customer);
+            $entityManager->persist($Pet);
             $entityManager->flush();
 
+            $data['examination_comment'] = $comment;
+            if ($result === AnilineConf::RELEASE_STATUS_PUBLIC) {
+                $mailService->sendPetPublicOk($Customer, $data);
+            } else {
+                $mailService->sendPetPublicNg($Customer, $data);
+            }
+
             $this->addSuccess('審査結果を登録しました。', 'admin');
-            return $this->redirectToRoute('admin_breeder_examination', ['id' => $breederId]);
+            return $this->redirectToRoute('admin_pet_change_public_status', ['id' => $id, 'site_kind' => $siteKind]);
         }
 
+        $isActive = $Pet->getIsActive();
         return compact(
-            'examination',
+            'isActive',
             'data'
         );
     }

@@ -55,10 +55,8 @@ file that was distributed with this source code.
                 location.reload();
             });
 
-        })
-    });
+        });
 
-    $( "#edit" ).click(function() {
         localStorage.url = window.location.href;
     });
 </script>
@@ -222,10 +220,16 @@ file that was distributed with this source code.
                                             </a>
                                         </div>
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
-                                            <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ breederPet.bp_is_active }}"
-                                                data-action="{{ url('admin_breeder_pet_change_status', {'id': breederPet.bp_id}) }}">
-                                                <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
-                                            </a>
+                                            {% if breederPet.bp_is_active == 0 %}
+                                                <a class="btn btn-ec-actionIcon"
+                                                    href="{{ url('admin_pet_change_public_status', {'id': breederPet.bp_id, 'site_kind': 1}) }}">
+                                                    <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                            {% else %}
+                                                <a class="btn btn-ec-actionIcon" disabled>
+                                                    <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                            {% endif %}
                                         </div>
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査結果PDFダウンロード">
                                             {% if breederPet.dna_file_path %}
@@ -259,7 +263,7 @@ file that was distributed with this source code.
                                     <td class="align-middle">{{ conservationPet.cp_create_date|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ conservationPet.cp_update_date|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ conservationPet.contract_status is null ? '' : arr[conservationPet.contract_status] }}</td>
-                                    <td class="align-middle">{{ conservationPet.cp_release_status == 0 ? '非公開' : '公開' }}</td>
+                                    <td class="align-middle">{{ conservationPet.cp_is_active == 0 ? '非公開' : '公開' }}</td>
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="お問い合わせ一覧">
@@ -279,10 +283,15 @@ file that was distributed with this source code.
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
-                                                <a class="btn btn-ec-actionIcon confirm-status-btn" data-is-active="{{ conservationPet.cp_release_status }}"
-                                                    data-action="{{ url('admin_adoption_pet_change_status', {'id': conservationPet.cp_id}) }}">
-                                                        <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
+                                                {% if conservationPet.cp_is_active == 0 %}
+                                                <a class="btn btn-ec-actionIcon" href="{{ url('admin_pet_change_public_status', {'id': conservationPet.cp_id, 'site_kind': 2}) }}">
+                                                    <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
+                                                {% else %}
+                                                <a class="btn btn-ec-actionIcon" disabled>
+                                                    <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                                {% endif %}
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査結果PDFダウンロード">
                                                 

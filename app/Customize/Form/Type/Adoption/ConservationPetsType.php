@@ -145,7 +145,7 @@ class ConservationPetsType extends AbstractType
                 'data_class' => null
             ]);
         /*
-        ->add('release_status', ChoiceType::class, [
+        ->add('is_active', ChoiceType::class, [
             'choices' =>
             [
                 '非公開' => AnilineConf::RELEASE_STATUS_PRIVATE,

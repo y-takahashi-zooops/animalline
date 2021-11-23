@@ -10,7 +10,8 @@ file that was distributed with this source code.
 #}
 {% extends '@admin/default_frame.twig' %}
 
-{% set menus = ['breeders', 'breeders_breeder_list'] %}
+{% set menus = ['breeders', 'pet_list'] %}
+{% set params = app.request.query.all %}
 
 {% block title %}{{ '審査結果登録'|trans }}{% endblock %}
 {% block sub_title %}{{ 'ブリーダー管理'|trans }}{% endblock %}
@@ -48,6 +49,11 @@ file that was distributed with this source code.
     $("#confirm-yes").on('click', function () {
         $('form[name="form-examination-regist"]').submit();
     });
+
+    $(function() {
+        const preUrl = localStorage.getItem('url');
+        $('#back').attr('href', preUrl);
+    });
 </script>
 {% endblock javascript %}
 
@@ -65,9 +71,9 @@ file that was distributed with this source code.
                             </div>
                             <div class="col-2 ec-select">
                                 <select id="examination_result" name="examination_result" class="form-control">
-                                    {% set results = ['許可', '拒否'] %}
+                                    {% set results = ['公開可', '公開不可'] %}
                                     {% for i in 1..2 %}
-                                        <option value="{{ i }}" {{ examination.examinationResult == i ? 'selected' : '' }}>{{ results[i - 1] }}</option>
+                                        <option value="{{ i }}" {{ isActive == i ? 'selected' : '' }}>{{ results[i - 1] }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -78,10 +84,9 @@ file that was distributed with this source code.
                                 <span class="badge badge-primary ml-1">{{ 'admin.common.required'|trans }}</span>
                             </div>
                             <div class="col-10">
-                                {% set isNotSubmit = examination.examinationResult != constant('Customize\\Config\\AnilineConf::ANILINE_INPUT_STATUS_SUBMIT') %}
                                 <textarea id="examination_result_comment" name="examination_result_comment" class="form-control" rows="15"
-                                    {{ isNotSubmit ? 'disabled' : '' }}
-                                    >{{ isNotSubmit ? '審査に関する情報のお問い合わせにはお答えいたしかねますのでご了承ください。' : examination.examinationResultComment }}</textarea>
+                                    {{ isActive != 2 ? 'disabled' : '' }}
+                                    >{{ isActive != 2 ? '審査に関する情報のお問い合わせにはお答えいたしかねますのでご了承ください。' : '' }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -94,7 +99,7 @@ file that was distributed with this source code.
             <div class="row justify-content-between align-items-center">
                 <div class="col-6">
                     <div class="c-conversionArea__leftBlockItem">
-                        <a class="c-baseLink" href='{{ path('admin_breeder_examination', {'id': examination.breeder.id}) }}'>
+                        <a class="c-baseLink" href='{{ path('admin_pet_all') }}' id="back">
                             <i class="fa fa-backward" aria-hidden="true"></i><span>審査情報表示</span>
                         </a>
                     </div>
@@ -110,5 +115,5 @@ file that was distributed with this source code.
         </div>
     </div>
 </form>
-{{ include('animalline/components/_modal_mail_confirm.twig') }}
+{{ include('animalline/components/_modal_mail_confirm_pet.twig') }}
 {% endblock %}
