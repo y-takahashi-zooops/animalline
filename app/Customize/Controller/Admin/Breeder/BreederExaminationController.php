@@ -133,7 +133,7 @@ class BreederExaminationController extends AbstractController
      * 審査結果登録ブリーダー管理
      *
      * @Route("/%eccube_admin_route%/breeder/examination/regist/{id}", name="admin_breeder_examination_regist", requirements={"id" = "\d+"})
-     * @Template("@admin/Breeder/examination_regist.twig")
+     * @Template("@admin/Pet/examination_regist.twig")
      */
     public function Examination_regist(Request $request, BreederExaminationInfo $examination)
     {
