@@ -1,4 +1,5 @@
 {% set site_type = 'breeder' %}
+{% form_theme form 'Form/form_div_layout.twig' %}
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
@@ -83,6 +84,7 @@
                                 <dl>
                                     <dt>
                                         住所
+                                        <p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
                                     </dt>
                                     <dd class="h-adr">
                                         <span class="p-country-name" style="display:none;">Japan</span>

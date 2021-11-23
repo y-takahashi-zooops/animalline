@@ -54,7 +54,7 @@ class DnaCheckStatusHeaderType extends AbstractType
                 'mapped' => false,
             ])
             ->add('choice_address', ChoiceType::class, [
-                'required' => true,
+                'required' => false,
                 'mapped' => false,
                 'choices' =>
                     [
@@ -62,24 +62,7 @@ class DnaCheckStatusHeaderType extends AbstractType
                         '犬舎住所' => 2,
                         '猫舎住所' => 3,
                     ],
-                'placeholder' => 'common.select',
-                'constraints' => [
-                    new Assert\NotBlank()
-                ],
-            ])
-            ->add('choice_address', ChoiceType::class, [
-                'required' => true,
-                'mapped' => false,
-                'choices' =>
-                    [
-                        '基本情報' => 1,
-                        '犬舎住所' => 2,
-                        '猫舎住所' => 3,
-                    ],
-                'placeholder' => 'common.select',
-                'constraints' => [
-                    new Assert\NotBlank()
-                ],
+                'placeholder' => 'common.select'
             ])
             ->add('shipping_name', TextType::class, [
                 'required' => true,
@@ -88,7 +71,7 @@ class DnaCheckStatusHeaderType extends AbstractType
                 ]
             ])
             ->add('shipping_zip', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'constraints' => [
                     new Assert\Type([
                         'type' => 'numeric',
@@ -106,6 +89,7 @@ class DnaCheckStatusHeaderType extends AbstractType
                 'trim' => true,
             ])
             ->add('PrefShipping', PrefType::class, [
+                'required' => true,
                 'attr' => [
                     'class' => 'p-region-id'
                 ],
@@ -114,6 +98,7 @@ class DnaCheckStatusHeaderType extends AbstractType
                 ]
             ])
             ->add('shipping_city', TextType::class, [
+                'required' => true,
                 'constraints' => [
                     new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len']]),
                     new Assert\NotBlank()
@@ -125,6 +110,7 @@ class DnaCheckStatusHeaderType extends AbstractType
                 ],
             ])
             ->add('shipping_address', TextType::class, [
+                'required' => true,
                 'constraints' => [
                     new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len']]),
                     new Assert\NotBlank()
