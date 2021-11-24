@@ -156,8 +156,8 @@ class AdoptionPetController extends AbstractController
      */
     public function pet_change_status(ConservationPets $pet)
     {
-        $newStatus = !$pet->getReleaseStatus();
-        $pet->setReleaseStatus($newStatus);
+        $newStatus = !$pet->getIsActive();
+        $pet->setIsActive($newStatus);
         if ($newStatus) $pet->setReleaseDate(new DateTime);
         $em = $this->entityManager;
         $em->persist($pet);

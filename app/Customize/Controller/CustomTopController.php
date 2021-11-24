@@ -13,7 +13,9 @@
 
 namespace Customize\Controller;
 
+use Carbon\Carbon;
 use Eccube\Controller\AbstractController;
+use Eccube\Repository\NewsRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,6 +25,16 @@ use Eccube\Form\Type\Front\ContactType;
 
 class CustomTopController extends AbstractController
 {
+    /**
+     * @var NewsRepository
+     */
+    protected $NewsRepository;
+
+    public function __construct(
+        NewsRepository $NewsRepository
+    ) {
+        $this->NewsRepository = $NewsRepository;
+    }
     /**
      * @Route("/ec", name="homepage")
      * @Template("index.twig")
@@ -38,9 +50,12 @@ class CustomTopController extends AbstractController
      */
     public function animalline_index()
     {
+        $ListNews = $this->NewsRepository->getList();
         //return $this->redirectToRoute("breeder_top");
         
-        return [];
+        return [
+            'ListNews' => $ListNews
+        ];
     }
 
     /**

@@ -96,21 +96,13 @@
       </div>
       <div class="top-topics__slide">
         <ul>
-          <li>
-            <figure><img src="{{ asset('assets/img/top-topics-img01.jpg') }}" alt=""/></figure>
-            <div class="date">2021.00.00</div>
-            <p>タイトルが入りますタイトルが入りますタイトルが入ります</p>
-          </li>
-          <li>
-            <figure><img src="{{ asset('assets/img/top-topics-img02.jpg') }}" alt=""/></figure>
-            <div class="date">2021.00.00</div>
-            <p>タイトルが入りますタイトルが入りますタイトルが入ります</p>
-          </li>
-          <li>
-            <figure><img src="{{ asset('assets/img/top-topics-img03.jpg') }}" alt=""/></figure>
-            <div class="date">2021.00.00</div>
-            <p>タイトルが入りますタイトルが入りますタイトルが入ります</p>
-          </li>
+            {% for News in ListNews %}
+                <li>
+                    <figure><img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ News.url }}" alt=""/></figure>
+                    <div class="date">{{ News.publish_date|date('Y/m/d') }}</div>
+                    <p>{{ News.title }}</p>
+                </li>
+            {% endfor %}
         </ul>
       </div>
     </section>

@@ -86,9 +86,9 @@ class ConservationPets
     private $delivery_way;
 
     /**
-     * @ORM\Column(name="release_status", type="smallint", options={"default" = 0}, nullable=true)
+     * @ORM\Column(name="is_active", type="smallint", options={"default" = 0}, nullable=true)
      */
-    private $release_status;
+    private $is_active;
 
     /**
      * @ORM\Column(name="release_date", type="date", nullable=true)
@@ -295,14 +295,14 @@ class ConservationPets
         return $this;
     }
 
-    public function getReleaseStatus(): ?int
+    public function getIsActive(): ?int
     {
-        return $this->release_status;
+        return $this->is_active;
     }
 
-    public function setReleaseStatus(int $release_status): self
+    public function setIsActive(int $is_active): self
     {
-        $this->release_status = $release_status;
+        $this->is_active = $is_active;
 
         return $this;
     }
