@@ -20,7 +20,6 @@ use Customize\Entity\DnaCheckStatusDetail;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
-use Customize\Repository\DnaCheckStatusDetailRepository;
 use Customize\Service\VeqtaPdfService;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -61,11 +60,6 @@ class VeqtaController extends AbstractController
     protected $dnaCheckStatusRepository;
 
     /**
-     * @var DnaCheckStatusDetailRepository
-     */
-    protected $dnaCheckStatusDetailRepository;
-
-    /**
      * @var VeqtaQueryService
      */
     protected $veqtaQueryService;
@@ -82,7 +76,6 @@ class VeqtaController extends AbstractController
      * @param BreederPetsRepository $breederPetsRepository
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
-     * @param DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository
      * @param VeqtaQueryService $veqtaQueryService
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
      * @param MailService $mailService
@@ -93,7 +86,6 @@ class VeqtaController extends AbstractController
         BreederPetsRepository          $breederPetsRepository,
         ConservationPetsRepository     $conservationPetsRepository,
         DnaCheckStatusRepository       $dnaCheckStatusRepository,
-        DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository,
         VeqtaQueryService              $veqtaQueryService,
         DnaCheckKindsRepository        $dnaCheckKindsRepository,
         MailService $mailService
@@ -102,7 +94,6 @@ class VeqtaController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
-        $this->dnaCheckStatusDetailRepository = $dnaCheckStatusDetailRepository;
         $this->veqtaQueryService = $veqtaQueryService;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
         $this->mailService = $mailService;
@@ -136,10 +127,10 @@ class VeqtaController extends AbstractController
 
         // get check kinds
         foreach ($dnas as $idx => $dna) {
-            $details = $this->dnaCheckStatusDetailRepository->findBy(['CheckStatus' => $dna['dna_id']]);
+            $kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $dna['breeds_id']]);
             $dna['check_kinds'] = array_map(function ($item) {
-                return $item->getCheckKinds()->getCheckKind();
-            }, $details);
+                return $item->getCheckKind();
+            }, $kinds);
             $dnas[$idx] = $dna;
         }
 
