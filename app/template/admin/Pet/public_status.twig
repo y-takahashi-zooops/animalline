@@ -1,0 +1,121 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['breeders', 'pet_list'] %}
+{% set params = app.request.query.all %}
+
+{% block title %}{{ '公開ステータス変更'|trans }}{% endblock %}
+{% block sub_title %}{{ 'ペット管理'|trans }}{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css', 'admin') }}">
+    <style>
+        #ex-ok, #ex-ng {
+            white-space: pre-wrap;
+            display: none;
+        }
+    </style>
+{% endblock stylesheet %}
+
+{% block javascript %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const RESULT_OK = 1;
+    if ($('#examination_result').val() == RESULT_OK) $('#ex-ok').show();
+    else $('#ex-ng').show();
+
+    $('#examination_result').on('change', function () {
+        $('#examination_result_comment').prop('disabled', this.value == RESULT_OK);
+        $('#ex-ng').toggle();
+        $('#ex-ok').toggle();
+    });
+
+    $("#confirm").on('click', function() {
+        $('#ex-comment').text($('#examination_result_comment').val());
+        $('#modal').modal('show');
+    });
+
+    $("#confirm-yes").on('click', function () {
+        $('form[name="form-examination-regist"]').submit();
+    });
+
+    $(function() {
+        const preUrl = localStorage.getItem('url');
+        $('#back').attr('href', preUrl);
+    });
+</script>
+{% endblock javascript %}
+
+{% block main %}
+<form name="form-examination-regist" role="form" class="form-horizontal" method="post" action="">
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <div class="card rounded border-0 mb-4">
+                    <div class="card-header"><span class="card-title">公開ステータス編集</span></div>
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-2">
+                                <span>公開ステータス</span>
+                            </div>
+                            <div class="col-2 ec-select">
+                                <select id="examination_result" name="examination_result" class="form-control">
+                                    {% set results = ['公開可', '公開不可'] %}
+                                    {% for i in 1..2 %}
+                                        <option value="{{ i }}" {{ isActive == i ? 'selected' : '' }}>{{ results[i - 1] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-2">
+                                <span>メール本文</span>
+                                <span class="badge badge-primary ml-1">{{ 'admin.common.required'|trans }}</span>
+                            </div>
+                            <div class="col-10">
+                                {% set CAN_PUBLIC = isActive != constant('Customize\\Config\\AnilineConf::IS_ACTIVE_NO_PUBLIC') %}
+                                <textarea id="examination_result_comment" name="examination_result_comment" class="form-control" rows="15"
+                                    {{ CAN_PUBLIC ? 'disabled' : '' }}>
+                                    {{ CAN_PUBLIC ? '審査に関する情報のお問い合わせにはお答えいたしかねますのでご了承ください。' : '' }}
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="c-conversionArea" id="aside_column">
+        <div class="c-conversionArea__container">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-6">
+                    <div class="c-conversionArea__leftBlockItem">
+                        <a class="c-baseLink" href='{{ path('admin_pet_all') }}' id="back">
+                            <i class="fa fa-backward" aria-hidden="true"></i><span>ペット情報管理</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div id="ex-conversion-action" class="row align-items-center justify-content-end">
+                        <div class="col-auto">
+                            <button class="btn btn-ec-conversion px-5" id="confirm" type="button">{{ 'admin.common.confirm'|trans }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{ include('animalline/components/_modal_mail_confirm_pet.twig') }}
+{% endblock %}

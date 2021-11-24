@@ -62,8 +62,15 @@ final class AnilineConf
     const ADOPTION_VISIBLE_HIDE = 0;
     const ADOPTION_VISIBLE_SHOW = 1;
 
-    const RELEASE_STATUS_PRIVATE = 0;
-    const RELEASE_STATUS_PUBLIC = 1;
+    // 公開フラグ
+    const IS_ACTIVE_PRIVATE = 0;
+    const IS_ACTIVE_PUBLIC = 1;
+    const IS_ACTIVE_NO_PUBLIC = 2;
+    const IS_ACTIVES = [
+        self::IS_ACTIVE_PRIVATE => '非公開',
+        self::IS_ACTIVE_PUBLIC => '公開',
+        self::IS_ACTIVE_NO_PUBLIC => '公開不可'
+    ];
 
     const SITE_CATEGORY_BREEDER = 1;
     const SITE_CATEGORY_CONSERVATION = 2;

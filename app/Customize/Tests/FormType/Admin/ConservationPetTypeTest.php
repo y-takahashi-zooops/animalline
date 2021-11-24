@@ -25,7 +25,7 @@ class ConservationPetTypeTest extends TypeTestCase
             'description' => 'abc',
             'delivery_time' => '14h',
             'delivery_way' => 'bus',
-            'release_status' => 1,
+            'is_active' => 1,
             'release_date' => new DateTime(),
             'price' => 45346
         ];

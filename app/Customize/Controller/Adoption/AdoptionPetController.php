@@ -177,7 +177,7 @@ class AdoptionPetController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $conservationPet->setConservation($conservation);
             $conservationPet->setDnaCheckResult(0);
-            $conservationPet->setReleaseStatus(0);
+            $conservationPet->setIsActive(0);
             $conservationPet->setPrice(0);
             $entityManager->persist($conservationPet);
             $entityManager->flush();
