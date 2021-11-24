@@ -1,0 +1,26 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+
+{% block main %}
+<div class="main">
+    <div class="row">
+        <div class="main-container col-12">
+            <div class="row">
+                <div class="col-12" style="margin: 5rem auto 0 auto;">
+                    <img src="{{ asset('assets/img/sample/' ~ image_name ~ '.png') }}" style="width:100%">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-12 text-center">
+                    <a href="{{url('breeder_site_sample_menu')}}" class="btn btn-warning btn-block mt-3" role="button">一覧に戻る</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

@@ -1,0 +1,44 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+
+{% block main %}
+<div class="main">
+    <div class="row">
+        <div class="main-container col-12">
+            <h1>アニマルラインサイトイメージ</h1>
+            <div class="row">
+                <div class="col-lg-4 col-md-12 text-center">
+                    <a href="{{url('breeder_site_sample_image', {'image_name' : 'page01_m'})}}" class="btn btn-primary btn-block mt-3" role="button">検索TOP画面（スマホ)</a>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <a href="{{url('breeder_site_sample_image', {'image_name' : 'page02_m'})}}" class="btn btn-primary btn-block mt-3" role="button">ペット詳細画面（スマホ)</a>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <a href="{{url('breeder_site_sample_image', {'image_name' : 'page03_m'})}}" class="btn btn-primary btn-block mt-3" role="button">ブリーダー詳細画面（スマホ)</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-12 text-center">
+                    <a href="{{url('breeder_site_sample_image', {'image_name' : 'page01'})}}" class="btn btn-success btn-block mt-3" role="button">検索TOP画面（PC)</a>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <a href="{{url('breeder_site_sample_image', {'image_name' : 'page02'})}}" class="btn btn-success btn-block mt-3" role="button">ペット詳細画面（PC)</a>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <a href="{{url('breeder_site_sample_image', {'image_name' : 'page03'})}}" class="btn btn-success btn-block mt-3" role="button">ブリーダー詳細画面（PC)</a>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-12 text-center">
+                    <a href="{{url('breeder_mypage')}}" class="btn btn-warning btn-block mt-3" role="button">マイページに戻る</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
