@@ -409,7 +409,7 @@ class MailService
      * @param $Customer 会員情報
      * @param string $activateUrl アクティベート用url
      */
-    public function sendAdminCustomerConfirmMail(\Customize\Entity\Conservations $Conservation, $activateUrl)
+    public function sendAdminCustomerConfirmMail(\Eccube\Entity\Customer $Customer, $activateUrl)
     {
         log_info('仮会員登録再送メール送信開始');
 
@@ -418,14 +418,14 @@ class MailService
 
         $body = $this->twig->render($MailTemplate->getFileName(), [
             'BaseInfo' => $this->BaseInfo,
-            'Conservation' => $Conservation,
+            'Customer' => $Customer,
             'activateUrl' => $activateUrl,
         ]);
 
         $message = (new \Swift_Message())
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail03() => $this->BaseInfo->getShopName()])
-            ->setTo([$Conservation->getEmail()])
+            ->setTo([$Customer->getEmail()])
             ->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
@@ -435,7 +435,7 @@ class MailService
         if (!is_null($htmlFileName)) {
             $htmlBody = $this->twig->render($htmlFileName, [
                 'BaseInfo' => $this->BaseInfo,
-                'Conservation' => $Conservation,
+                'Customer' => $Customer,
                 'activateUrl' => $activateUrl,
             ]);
 
@@ -450,7 +450,7 @@ class MailService
         $event = new EventArgs(
             [
                 'message' => $message,
-                'Conservation' => $Conservation,
+                'Customer' => $Customer,
                 'BaseInfo' => $this->BaseInfo,
                 'activateUrl' => $activateUrl,
             ],
@@ -464,6 +464,7 @@ class MailService
 
         return $count;
     }
+
 
     /**
      * Send admin order mail.
