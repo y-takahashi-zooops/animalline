@@ -30,7 +30,7 @@
             <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.thumbnail_path) }}
                 {{ form_errors(form.thumbnail_path) }}
-                <img id="img_thumbnail" class="img_preview" src="" />
+                <img id="img_thumbnail" class="img_preview {{ not image0 ? 'hidden' }}" src="{{ image0 }}"/>
             </div>
             <div style="display: grid">
                 <button class="btn_remove breeder_pets_thumbnail_path">画像を削除</button>
@@ -39,7 +39,7 @@
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.image1) }}
-                <img class="img_preview" src="" />
+                <img class="img_preview {{ not image0 ? 'hidden' }}" src="{{ image1 }}" />
             </div>
             <div style="display: grid">
                 <button class="btn_set_thumbnail breeder_pets_image1">メイン画像に設定</button>
@@ -49,7 +49,7 @@
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.image2) }}
-                <img class="img_preview" src="" />
+                <img class="img_preview" src="{{ image2 }}" />
             </div>
             <div style="display: grid">
                 <button class="btn_set_thumbnail breeder_pets_image2">メイン画像に設定</button>
@@ -59,7 +59,7 @@
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.image3) }}
-                <img class="img_preview" src="" />
+                <img class="img_preview" src="{{ image3 }}" />
             </div>
             <div style="display: grid">
                 <button class="btn_set_thumbnail breeder_pets_image3">メイン画像に設定</button>
@@ -69,7 +69,7 @@
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.image4) }}
-                <img class="img_preview" src="" />
+                <img class="img_preview" src="{{ image4 }}" />
             </div>
             <div style="display: grid">
                 <button class="btn_set_thumbnail breeder_pets_image4">メイン画像に設定</button>
@@ -353,8 +353,6 @@
             cursor: pointer;
         }
         .img_preview {
-            display: none;
-            width: 100%;
             height: auto;
         }
         .btn_set_thumbnail {

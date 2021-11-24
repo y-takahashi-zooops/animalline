@@ -298,6 +298,12 @@ class BreederPetController extends AbstractController
             'Breeder' => $breeder
         ]);
 
+        $image0 = $request->get('img0') ?? '';
+        $image1 = $request->get('img1') ?? '';
+        $image2 = $request->get('img2') ?? '';
+        $image3 = $request->get('img3') ?? '';
+        $image4 = $request->get('img4') ?? '';
+
         // if (!$petInfoTemplate) {
         //     throw new NotFoundHttpException();
         // }
@@ -368,7 +374,12 @@ class BreederPetController extends AbstractController
 
         return $this->render('animalline/breeder/member/pets/new.twig', [
             'form' => $form->createView(),
-            'petInfoTemplate' => $petInfoTemplate
+            'petInfoTemplate' => $petInfoTemplate,
+            'image0' => $image0,
+            'image1' => $image1,
+            'image2' => $image2,
+            'image3' => $image3,
+            'image4' => $image4
         ]);
     }
 
