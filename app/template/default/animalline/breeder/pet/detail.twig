@@ -93,7 +93,7 @@
                                         見学地域
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ breederHouse.breederHouseCity ~ ' ' ~ breederHouse.breederHousePref ?? '' }}
+                                        {{ breederHouse.breederHousePref ~ ' ' ~ breederHouse.breederHouseCity ?? '' }}
                                     </div>
                                 </div>
                             </div>
@@ -104,16 +104,6 @@
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
                                         {{ breederPet.petBirthday.format('Y年m月d日') ?? '' }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 breeder_section_detail">
-                                <div class="row">
-                                    <div class="col-12 col-md-4 contents_col_bold">
-                                        バンドカラー
-                                    </div>
-                                    <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ band_color[breederPet.bandColor] ?? '' }}
                                     </div>
                                 </div>
                             </div>
@@ -154,9 +144,12 @@
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
                                         {% if breederPet.getIncludeVaccineFee == 1 %}
-                                            代金に含む（{{ breederPet.getVaccineDetail() ? breederPet.getVaccineDetail() : '_' }}）
+                                            代金に含む
                                         {% else %}
                                             代金に含まない
+                                            {%if breederPet.getVaccineDetail() != "" %}
+                                                （{{ breederPet.getVaccineDetail() }}）
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                 </div>
@@ -222,33 +215,21 @@
                                 </div>
                                 <table class="tbl_benefits">
                                     <tr>
-                                        <th>1ヶ月間の<br>無料ペット保険</th>
+                                        <th>ご成約特典①</th>
                                         <td>
-                                            アニマルラインを通じて子犬をご購入いただいた方に、<b>ペット保険大手アニコム損保の保険を1ヶ月間無料</b>でお付けいたします。(ブリーダーが提供する生体保証とは別の補償になります。)<br>
-                                            ご利用には別途お申し込みが必要になります。<br>
-                                            ※無料ペット保険の補償期間を過ぎた場合・子犬がお迎え時点で1歳を超えていた場合はお申し込みができません。<br>
-                                            <a href="#">詳細はこちらをご覧ください。</a>
+                                            プレミアムフードとペットシーツを無料にてご提供いたします。ご提供する商品詳細はご成約後にお伝えいたします。
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>充実のご成約特典</th>
+                                        <th>ご成約特典②</th>
                                         <td>
-                                            アニマルラインを通じて子犬をご購入いただきますと、
-                                            <b>子犬のためのフード2種</b>、
-                                            <b>消臭剤（1,650円相当）</b>、
-                                            <b>電話相談サービス</b>、
-                                            <b>総額5,000円分のクーポン</b>、
-                                            <b>乳酸菌ミルクサプリ</b>、
-                                            <b>飼育本</b>、
-                                            を無料でお付けいたします。サービスのご利用には別途お申し込みが必要になります。
-                                            <br>
-                                            <a href="#">詳細はこちらをご覧ください。</a>
+                                            オンライン無料しつけセミナーへご参加いただけます。定期的に開催いたしますのでご都合のいい日にご参加ください。
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>安心の取引保証</th>
+                                        <th>ご成約特典③</th>
                                         <td>
-                                            みんなのブリーダーを通じて子犬をご購入いただき、子犬代金支払い後に子犬の引き渡しを受けられない詐欺行為があった場合は当サイトが<b>全額返金保証</b>いたします。
+                                            ECサイトでご利用いただけるポイントを 1000ポイント付与いたします。
                                         </td>
                                     </tr>
                                 </table>
@@ -300,8 +281,8 @@
                             </div>
                             <div class="col-12 contents_col_normal mt-4 mb-4 pl-4 pr-4"
                                  style="background:#f7f5f0; border:1px solid #dcdfe1; border-radius: 3px;">
-                                当サイトではお客様に最も信頼されるブリーダー子犬 直販サイトを目指して、<br>
-                                子犬情報およびブリーダー情報の正確性向上に努めております。<br>
+                                当サイトではお客様に最も信頼されるブリーダー子犬・子猫直販サイトを目指して、<br>
+                                子犬・子猫情報およびブリーダー情報の正確性向上に努めております。<br>
                                 当サイトに掲載されている情報で誤解を招く表現、事実と異なる表現などのお気づきの点がございましたら<br>
                                 事務局へのお問い合わせフォームよりご連絡をお願いいたします。<br>
                             </div>
