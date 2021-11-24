@@ -538,6 +538,18 @@ $(document).ready( function() {
     $('.breeder_pets_image2').val(`{{ image2 }}`);
     $('.breeder_pets_image3').val(`{{ image3 }}`);
     $('.breeder_pets_image4').val(`{{ image4 }}`);
+    if ($('.breeder_pets_thumbnail_path').val()) {
+         $('#breeder_pets_thumbnail_path').parent().parent().next().find("input[type='file']").attr('disabled', false);
+    }
+    if ($('.breeder_pets_image1').val()) {
+         $('#breeder_pets_image1').parent().parent().next().find("input[type='file']").attr('disabled', false);
+    }
+    if ($('.breeder_pets_image2').val()) {
+         $('#breeder_pets_image2').parent().parent().next().find("input[type='file']").attr('disabled', false);
+    }
+    if ($('.breeder_pets_image3').val()) {
+         $('#breeder_pets_image3').parent().parent().next().find("input[type='file']").attr('disabled', false);
+    }
 });
 
 </script>

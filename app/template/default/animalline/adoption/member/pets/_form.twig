@@ -304,6 +304,18 @@
         $('.conservation_pets_image2').val(`{{ image2 }}`);
         $('.conservation_pets_image3').val(`{{ image3 }}`);
         $('.conservation_pets_image4').val(`{{ image4 }}`);
+        if ($('.conservation_pets_thumbnail_path').val()) {
+            $('#conservation_pets_thumbnail_path').parent().parent().next().find("input[type='file']").attr('disabled', false);
+        }
+        if ($('.conservation_pets_image1').val()) {
+            $('#conservation_pets_image1').parent().parent().next().find("input[type='file']").attr('disabled', false);
+        }
+        if ($('.conservation_pets_image2').val()) {
+            $('#conservation_pets_image2').parent().parent().next().find("input[type='file']").attr('disabled', false);
+        }
+        if ($('.conservation_pets_image3').val()) {
+            $('#conservation_pets_image3').parent().parent().next().find("input[type='file']").attr('disabled', false);
+        }
     });
 </script>
 {% endblock %}
