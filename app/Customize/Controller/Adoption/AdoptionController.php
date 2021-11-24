@@ -190,7 +190,7 @@ class AdoptionController extends AbstractController
 
         $petResults = $this->conservationPetsRepository->findBy([
             'Conservation' => $conservation,
-            'is_active' => AnilineConf::RELEASE_STATUS_PUBLIC
+            'is_active' => AnilineConf::IS_ACTIVE_PUBLIC
         ]);
         $pets = $paginator->paginate(
             $petResults,

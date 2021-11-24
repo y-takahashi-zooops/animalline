@@ -336,13 +336,13 @@ class PetController extends AbstractController
         if ($request->isMethod('POST')) {
             $result = (int)$request->get('examination_result');
             $Pet->setIsActive($result);
-            if ($result === AnilineConf::RELEASE_STATUS_PUBLIC) $Pet->setReleaseDate(new DateTime);
+            if ($result === AnilineConf::IS_ACTIVE_PUBLIC) $Pet->setReleaseDate(new DateTime);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($Pet);
             $entityManager->flush();
 
             $data['examination_comment'] = $comment;
-            if ($result === AnilineConf::RELEASE_STATUS_PUBLIC) {
+            if ($result === AnilineConf::IS_ACTIVE_PUBLIC) {
                 $mailService->sendPetPublicOk($Customer, $data);
             } else {
                 $mailService->sendPetPublicNg($Customer, $data);

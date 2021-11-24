@@ -96,12 +96,12 @@ class ConservationPetsRepository extends ServiceEntityRepository
             if ($criteria['public_status'] == 1) {
                 $qb
                     ->andWhere($qb->expr()->in('cp.is_active', ':release_status'))
-                    ->setParameter('release_status', AnilineConf::RELEASE_STATUS_PRIVATE);
+                    ->setParameter('release_status', AnilineConf::IS_ACTIVE_PRIVATE);
             }
             if ($criteria['public_status'] == 2) {
                 $qb
                     ->andWhere($qb->expr()->in('cp.is_active', ':release_status'))
-                    ->setParameter('release_status', AnilineConf::RELEASE_STATUS_PUBLIC);
+                    ->setParameter('release_status', AnilineConf::IS_ACTIVE_PUBLIC);
             }
             if ($criteria['public_status'] == 3) {
                 $qb

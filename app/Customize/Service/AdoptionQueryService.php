@@ -136,7 +136,7 @@ class AdoptionQueryService
         $query = $this->conservationPetsRepository->createQueryBuilder('p')
             ->join('p.Conservation', 'c')
             ->where('p.is_active = :release_status')
-            ->setParameter('release_status', AnilineConf::RELEASE_STATUS_PUBLIC);
+            ->setParameter('release_status', AnilineConf::IS_ACTIVE_PUBLIC);
 
         if ($request->get('pet_kind')) {
             $query->andWhere('p.pet_kind = :pet_kind')

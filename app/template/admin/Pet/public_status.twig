@@ -84,9 +84,11 @@ file that was distributed with this source code.
                                 <span class="badge badge-primary ml-1">{{ 'admin.common.required'|trans }}</span>
                             </div>
                             <div class="col-10">
+                                {% set CAN_PUBLIC = isActive != constant('Customize\\Config\\AnilineConf::IS_ACTIVE_NO_PUBLIC') %}
                                 <textarea id="examination_result_comment" name="examination_result_comment" class="form-control" rows="15"
-                                    {{ isActive != 2 ? 'disabled' : '' }}
-                                    >{{ isActive != 2 ? '審査に関する情報のお問い合わせにはお答えいたしかねますのでご了承ください。' : '' }}</textarea>
+                                    {{ CAN_PUBLIC ? 'disabled' : '' }}>
+                                    {{ CAN_PUBLIC ? '審査に関する情報のお問い合わせにはお答えいたしかねますのでご了承ください。' : '' }}
+                                </textarea>
                             </div>
                         </div>
                     </div>

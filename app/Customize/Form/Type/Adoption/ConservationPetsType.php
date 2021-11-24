@@ -148,8 +148,8 @@ class ConservationPetsType extends AbstractType
         ->add('is_active', ChoiceType::class, [
             'choices' =>
             [
-                '非公開' => AnilineConf::RELEASE_STATUS_PRIVATE,
-                '公開' => AnilineConf::RELEASE_STATUS_PUBLIC
+                '非公開' => AnilineConf::IS_ACTIVE_PRIVATE,
+                '公開' => AnilineConf::IS_ACTIVE_PUBLIC
             ]
         ])
         ->add('release_date', DateType::class)
