@@ -33,7 +33,7 @@
                 <img id="img_thumbnail" class="img_preview {{ not image0 ? 'hidden' }}" src="{{ image0 }}" />
             </div>
             <div style="display: grid">
-                <button class="{{ image0 ? 'btn_remove' : 'btn_remove_display' }} conservation_pets_thumbnail_path">画像を削除</button>
+                <button class="btn_remove conservation_pets_thumbnail_path">画像を削除</button>
             </div>
         </div>
         <div class="images mb-3">
@@ -42,8 +42,8 @@
                 <img class="img_preview {{ not image1 ? 'hidden' }}" src="{{ image1 }}" />
             </div>
             <div style="display: grid">
-                <button class="{{ image1 ? 'btn_set_thumbnail' : 'btn_set_thumbnail_display' }} conservation_pets_image1">メイン画像に設定</button>
-                <button class="{{ image1 ? 'btn_remove' : 'btn_remove_display' }} conservation_pets_image1">画像を削除</button>
+                <button class="btn_set_thumbnail conservation_pets_image1">メイン画像に設定</button>
+                <button class="btn_remove conservation_pets_image1">画像を削除</button>
             </div>
         </div>
         <div class="images mb-3">
@@ -52,8 +52,8 @@
                 <img class="img_preview {{ not image2 ? 'hidden' }}" src="{{ image2 }}" />
             </div>
             <div style="display: grid">
-                <button class="{{ image2 ? 'btn_set_thumbnail' : 'btn_set_thumbnail_display' }} conservation_pets_image2">メイン画像に設定</button>
-                <button class="{{ image2 ? 'btn_remove' : 'btn_remove_display' }} conservation_pets_image2">画像を削除</button>
+                <button class="btn_set_thumbnail conservation_pets_image2">メイン画像に設定</button>
+                <button class="btn_remove conservation_pets_image2">画像を削除</button>
             </div>
         </div>
         <div class="images mb-3">
@@ -62,8 +62,8 @@
                 <img class="img_preview {{ not image3 ? 'hidden' }}" src="{{ image3 }}" />
             </div>
             <div style="display: grid">
-                <button class="{{ image3 ? 'btn_set_thumbnail' : 'btn_set_thumbnail_display' }} conservation_pets_image3">メイン画像に設定</button>
-                <button class="{{ image3 ? 'btn_remove' : 'btn_remove_display' }} conservation_pets_image3">画像を削除</button>
+                <button class="btn_set_thumbnail conservation_pets_image3">メイン画像に設定</button>
+                <button class="btn_remove conservation_pets_image3">画像を削除</button>
             </div>
         </div>
         <div class="images mb-3">
@@ -72,8 +72,8 @@
                 <img class="img_preview {{ not image4 ? 'hidden' }}" src="{{ image4 }}" />
             </div>
             <div style="display: grid">
-                <button class="{{ image4 ? 'btn_set_thumbnail' : 'btn_set_thumbnail_display' }} conservation_pets_image4">メイン画像に設定</button>
-                <button class="{{ image4 ? 'btn_remove' : 'btn_remove_display' }} conservation_pets_image4">画像を削除</button>
+                <button class="btn_set_thumbnail conservation_pets_image4">メイン画像に設定</button>
+                <button class="btn_remove conservation_pets_image4">画像を削除</button>
             </div>
         </div>
     </div>
@@ -227,20 +227,8 @@
         .img_preview {
             height: auto;
         }
-        .btn_set_thumbnail_display {
-            display: none;
-            background-color: #fbb03b;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 20px;
-            width: 150px;
-            border: 2px solid black;
-            padding: 4px;
-            margin-top: 5px;
-        }
         .btn_set_thumbnail {
-            display: inline-block;
+            display: none;
             background-color: #fbb03b;
             color: #ffffff;
             font-size: 14px;
@@ -254,20 +242,8 @@
         .btn_set_thumbnail:hover {
             opacity: 0.3;
         }
-        .btn_remove_display {
-            display: none;
-            background-color: #ff1f25;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 20px;
-            width: 150px;
-            border: 2px solid black;
-            padding: 4px;
-            margin-top: 5px;
-        }
         .btn_remove {
-            display: inline-block;
+            display: none;
             background-color: #ff1f25;
             color: #ffffff;
             font-size: 14px;
@@ -306,15 +282,22 @@
         $('.conservation_pets_image4').val(`{{ image4 }}`);
         if ($('.conservation_pets_thumbnail_path').val()) {
             $('#conservation_pets_thumbnail_path').parent().parent().next().find("input[type='file']").attr('disabled', false);
+             $("#conservation_pets_image1").parent().parent().find('button').show();
         }
         if ($('.conservation_pets_image1').val()) {
             $('#conservation_pets_image1').parent().parent().next().find("input[type='file']").attr('disabled', false);
+            $("#conservation_pets_image1").parent().parent().find('button').show();
         }
         if ($('.conservation_pets_image2').val()) {
             $('#conservation_pets_image2').parent().parent().next().find("input[type='file']").attr('disabled', false);
+            $("#conservation_pets_image2").parent().parent().find('button').show();
         }
         if ($('.conservation_pets_image3').val()) {
             $('#conservation_pets_image3').parent().parent().next().find("input[type='file']").attr('disabled', false);
+            $("#conservation_pets_image3").parent().parent().find('button').show();
+        }
+        if ($('.conservation_pets_image4').val()) {
+            $("#conservation_pets_image4").parent().parent().find('button').show();
         }
     });
 </script>
