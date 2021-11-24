@@ -133,6 +133,9 @@
         <div class="col-md-3">
             {{ form_label(form.future_wait, '成犬時予想体重「kg」', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span>
+            <p style="font-size:14px;color:#DE5D50;">
+                整数で入力してください。<br />
+            </p>
         </div>
         <div class="col-md-3 ec-input">
             {{ form_widget(form.future_wait) }}
