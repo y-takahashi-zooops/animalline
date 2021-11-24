@@ -20,6 +20,7 @@ use Customize\Entity\DnaCheckStatusDetail;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
+use Customize\Repository\DnaCheckStatusDetailRepository;
 use Customize\Service\VeqtaPdfService;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -60,6 +61,11 @@ class VeqtaController extends AbstractController
     protected $dnaCheckStatusRepository;
 
     /**
+     * @var DnaCheckStatusDetailRepository
+     */
+    protected $dnaCheckStatusDetailRepository;
+
+    /**
      * @var VeqtaQueryService
      */
     protected $veqtaQueryService;
@@ -76,6 +82,7 @@ class VeqtaController extends AbstractController
      * @param BreederPetsRepository $breederPetsRepository
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
+     * @param DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository
      * @param VeqtaQueryService $veqtaQueryService
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
      * @param MailService $mailService
@@ -86,6 +93,7 @@ class VeqtaController extends AbstractController
         BreederPetsRepository          $breederPetsRepository,
         ConservationPetsRepository     $conservationPetsRepository,
         DnaCheckStatusRepository       $dnaCheckStatusRepository,
+        DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository,
         VeqtaQueryService              $veqtaQueryService,
         DnaCheckKindsRepository        $dnaCheckKindsRepository,
         MailService $mailService
@@ -94,6 +102,7 @@ class VeqtaController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
+        $this->dnaCheckStatusDetailRepository = $dnaCheckStatusDetailRepository;
         $this->veqtaQueryService = $veqtaQueryService;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
         $this->mailService = $mailService;
@@ -124,6 +133,16 @@ class VeqtaController extends AbstractController
             $request->query->getInt('page', 1),
             $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE)
         );
+
+        // get check kinds
+        foreach ($dnas as $idx => $dna) {
+            $details = $this->dnaCheckStatusDetailRepository->findBy(['CheckStatus' => $dna['dna_id']]);
+            $dna['check_kinds'] = array_map(function ($item) {
+                return $item->getCheckKinds()->getCheckKind();
+            }, $details);
+            $dnas[$idx] = $dna;
+        }
+
         return compact(
             'dnas'
         );
@@ -231,7 +250,7 @@ class VeqtaController extends AbstractController
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
                 $restext = "検査ＮＧ";
                 break;
-            default:// 61: クリア, 62: キャリア.
+            default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
                 $restext = "検査通過";
@@ -291,15 +310,17 @@ class VeqtaController extends AbstractController
                 $Dna->setCheckStatus($checkStatus);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
                 break;
-            default:// 61: クリア, 62: キャリア.
+            default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
         }
 
         $entityManager = $this->getDoctrine()->getManager();
 
-        if ($checkStatus != AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY &&
-            $dnaDetailData = $request->get('check_status')) {
+        if (
+            $checkStatus != AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY &&
+            $dnaDetailData = $request->get('check_status')
+        ) {
             for ($i = 0; $i < count($dnaDetailData['kind']); $i++) {
                 $DnaDetail = (new DnaCheckStatusDetail)
                     ->setCheckResult($dnaDetailData['status'][$dnaDetailData['kind'][$i]])

@@ -26,8 +26,10 @@
                         <th class="border-top-0 pt-2 pb-2">犬・猫種別</th>
                         <th class="border-top-0 pt-2 pb-2">犬種・猫種</th>
                         <th class="border-top-0 pt-2 pb-2">生年月日</th>
+                        <th class="border-top-0 pt-2 pb-2">検査項目</th>
                         <th class="border-top-0 pt-2 pb-2">検査ステータス</th>
                         <th class="border-top-0 pt-2 pb-2">ペット情報登録日時</th>
+                        <th class="border-top-0 pt-2 pb-2">ステータス更新日</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -39,8 +41,10 @@
                             <td data-label="犬・猫種別">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
                             <td data-label="犬種・猫種">{{ dna.breeds_name ?: '_' }}</td>
                             <td data-label="生年月日">{{ dna.pet_birthday ? dna.pet_birthday | date('Y/m/d') : '_' }}</td>
+                            <td data-label="検査項目">{{ dna.check_kinds | join('<br>') | raw }}</td>
                             <td data-label="検査ステータス	">{{ status[dna.check_status] }}</td>
                             <td data-label="ペット情報登録日時">{{ dna.kit_pet_register_date ? dna.kit_pet_register_date | date('Y/m/d H:i') : '_' }}</td>
+                            <td data-label="ステータス更新日">{{ dna.update_date ? dna.update_date | date('Y/m/d H:i') : '_' }}</td>
                         </tr>
                     {% else %}
                         <tr>
