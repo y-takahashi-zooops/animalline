@@ -167,6 +167,12 @@ class AdoptionPetController extends AbstractController
             ]);
         }
 
+        $image0 = $request->get('img0') ?? '';
+        $image1 = $request->get('img1') ?? '';
+        $image2 = $request->get('img2') ?? '';
+        $image3 = $request->get('img3') ?? '';
+        $image4 = $request->get('img4') ?? '';
+
         $conservationPet = new ConservationPets();
         $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
             'customer' => $user,
@@ -225,6 +231,11 @@ class AdoptionPetController extends AbstractController
 
         return $this->render('animalline/adoption/member/pets/new.twig', [
             'form' => $form->createView(),
+            'image0' => $image0,
+            'image1' => $image1,
+            'image2' => $image2,
+            'image3' => $image3,
+            'image4' => $image4
         ]);
     }
 
@@ -257,6 +268,13 @@ class AdoptionPetController extends AbstractController
             ['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
             ['sort_order' => 'ASC']
         );
+
+        $image0 = $request->get('img0') ?? '';
+        $image1 = $request->get('img1') ?? '';
+        $image2 = $request->get('img2') ?? '';
+        $image3 = $request->get('img3') ?? '';
+        $image4 = $request->get('img4') ?? '';
+
         $request->request->set('thumbnail_path', $conservationPet->getThumbnailPath());
         $form->handleRequest($request);
 
@@ -290,7 +308,12 @@ class AdoptionPetController extends AbstractController
         return $this->render('animalline/adoption/member/pets/edit.twig', [
             'adoption_pet' => $conservationPet,
             'pet_mages' => $petImages,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'image0' => $image0,
+            'image1' => $image1,
+            'image2' => $image2,
+            'image3' => $image3,
+            'image4' => $image4
         ]);
     }
 
