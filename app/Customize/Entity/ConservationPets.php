@@ -216,7 +216,7 @@ class ConservationPets
         return $this->future_wait;
     }
 
-    public function setFutureWait(int $future_wait): self
+    public function setFutureWait(?int $future_wait): self
     {
         $this->future_wait = $future_wait;
 
@@ -240,7 +240,7 @@ class ConservationPets
         return $this->pr_comment;
     }
 
-    public function setPrComment(string $pr_comment): self
+    public function setPrComment(?string $pr_comment): self
     {
         $this->pr_comment = $pr_comment;
 
@@ -252,7 +252,7 @@ class ConservationPets
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
@@ -264,7 +264,7 @@ class ConservationPets
         return $this->delivery_time;
     }
 
-    public function setDeliveryTime(string $delivery_time): self
+    public function setDeliveryTime(?string $delivery_time): self
     {
         $this->delivery_time = $delivery_time;
 
@@ -276,7 +276,7 @@ class ConservationPets
         return $this->delivery_way;
     }
 
-    public function setDeliveryWay(string $delivery_way): self
+    public function setDeliveryWay(?string $delivery_way): self
     {
         $this->delivery_way = $delivery_way;
 

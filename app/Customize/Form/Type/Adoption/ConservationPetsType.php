@@ -65,32 +65,32 @@ class ConservationPetsType extends AbstractType
                 ],
             ])
             ->add('future_wait', IntegerType::class, [
-                'required' => true,
+                'required' => false,
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
             ])
             //->add('dna_check_result', IntegerType::class)
             ->add('pr_comment', TextareaType::class, [
-                'required' => true,
+                'required' => false,
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
             ])
             ->add('description', TextareaType::class, [
-                'required' => true,
+                'required' => false,
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
             ])
             ->add('delivery_time', TextareaType::class, [
-                'required' => true,
+                'required' => false,
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
             ])
             ->add('delivery_way', TextareaType::class, [
-                'required' => true,
+                'required' => false,
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
