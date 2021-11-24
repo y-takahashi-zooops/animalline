@@ -70,7 +70,7 @@ class ConservationPetsType extends AbstractType
             ->add('description', TextareaType::class)
             ->add('delivery_time', TextareaType::class)
             ->add('delivery_way', TextareaType::class)
-            ->add('release_status', ChoiceType::class, [
+            ->add('is_active', ChoiceType::class, [
                 'choices' =>
                     [
                         '非公開' => AnilineConf::RELEASE_STATUS_PRIVATE,

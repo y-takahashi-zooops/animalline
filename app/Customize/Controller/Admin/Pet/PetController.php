@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
+use Customize\Entity\BreederExaminationInfo;
 use Customize\Entity\BreederPets;
 use Customize\Form\Type\Admin\BreederPetsType;
 use Customize\Repository\BreederPetImageRepository;
@@ -32,6 +33,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
+use Customize\Service\MailService;
 use DateTime;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -254,7 +256,7 @@ class PetController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
-        return[
+        return [
             'contacts' => $contacts,
             'site_kind' => $site_kind
         ];
@@ -274,7 +276,7 @@ class PetController extends AbstractController
         $breederContacts = [];
         $conservationContacts = [];
         $contactId = $request->get('id');
-        if($request->get('site_kind') == AnilineConf::SITE_CATEGORY_BREEDER) {
+        if ($request->get('site_kind') == AnilineConf::SITE_CATEGORY_BREEDER) {
             $contact = $this->breederContactHeaderRepository->find($contactId);
             $breeder = $this->customerRepository->find($contact->getBreeder());
             $breederContacts = $this->breederContactsRepository->findBy(['BreederHeader' => $contact]);
@@ -302,5 +304,58 @@ class PetController extends AbstractController
             'breederContacts',
             'conservationContacts',
         ]);
+    }
+
+    /**
+     * 審査結果登録ブリーダー管理
+     *
+     * @Route("/%eccube_admin_route%/pet/{id}/public_status/change", name="admin_pet_change_public_status", requirements={"id" = "\d+"})
+     * @Template("@admin/Pet/public_status.twig")
+     */
+    public function change_public_status(Request $request, MailService $mailService)
+    {
+        $id = $request->get('id');
+        $siteKind = $request->get('site_kind');
+        $Pet = $siteKind == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
+            $this->breederPetsRepository->find($id) :
+            $this->conservationPetsRepository->find($id);
+        if (!$Pet) throw new NotFoundHttpException();
+
+        $holderId = $siteKind == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
+            $Pet->getBreeder()->getId() :
+            $Pet->getConservation()->getId();
+        $Customer = $this->customerRepository->find($holderId);
+        if (!$Customer) throw new NotFoundHttpException();
+
+        $comment = $request->get('examination_result_comment');
+        $data = [
+            'name' => "{$Customer->getName01()} {$Customer->getName02()}",
+            'examination_comment' => "<span id='ex-comment'>{$comment}</span>"
+        ];
+
+        if ($request->isMethod('POST')) {
+            $result = (int)$request->get('examination_result');
+            $Pet->setIsActive($result);
+            if ($result === AnilineConf::RELEASE_STATUS_PUBLIC) $Pet->setReleaseDate(new DateTime);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($Pet);
+            $entityManager->flush();
+
+            $data['examination_comment'] = $comment;
+            if ($result === AnilineConf::RELEASE_STATUS_PUBLIC) {
+                $mailService->sendPetPublicOk($Customer, $data);
+            } else {
+                $mailService->sendPetPublicNg($Customer, $data);
+            }
+
+            $this->addSuccess('公開ステータスを変更しました。', 'admin');
+            return $this->redirectToRoute('admin_pet_change_public_status', ['id' => $id, 'site_kind' => $siteKind]);
+        }
+
+        $isActive = $Pet->getIsActive();
+        return compact(
+            'isActive',
+            'data'
+        );
     }
 }

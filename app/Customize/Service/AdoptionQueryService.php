@@ -90,7 +90,7 @@ class AdoptionQueryService
         $time_new = Carbon::now()->subMonth()->toDateString();
 
         $query = $this->conservationPetsRepository->createQueryBuilder('p')
-            ->where('p.release_status = :release_status')
+            ->where('p.is_active = :release_status')
             ->setParameter('release_status', 1)
             ->andWhere('p.pet_kind = :pet_kind')
             ->setParameter('pet_kind', $petKind)
@@ -114,7 +114,7 @@ class AdoptionQueryService
     public function getPetFeatured($petKind): array
     {
         $query = $this->conservationPetsRepository->createQueryBuilder('p')
-            ->where('p.release_status = :release_status')
+            ->where('p.is_active = :release_status')
             ->setParameter('release_status', 1)
             ->andWhere('p.pet_kind = :pet_kind')
             ->setParameter('pet_kind', $petKind)
@@ -135,7 +135,7 @@ class AdoptionQueryService
     {
         $query = $this->conservationPetsRepository->createQueryBuilder('p')
             ->join('p.Conservation', 'c')
-            ->where('p.release_status = :release_status')
+            ->where('p.is_active = :release_status')
             ->setParameter('release_status', AnilineConf::RELEASE_STATUS_PUBLIC);
 
         if ($request->get('pet_kind')) {

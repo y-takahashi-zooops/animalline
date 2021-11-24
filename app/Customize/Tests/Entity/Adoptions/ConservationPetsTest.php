@@ -78,7 +78,7 @@ class ConservationPetsTest extends TestCase
     {
         $ConservationsPet = new ConservationPets();
 
-        $this->assertEquals([0, 0], [$ConservationsPet->getReleaseStatus(), $ConservationsPet->getFavoriteCount()]);
+        $this->assertEquals([0, 0], [$ConservationsPet->getIsActive(), $ConservationsPet->getFavoriteCount()]);
     }
 
     /**
