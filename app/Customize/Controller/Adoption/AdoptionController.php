@@ -130,16 +130,8 @@ class AdoptionController extends AbstractController
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
         $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
-        $newPets = $this->conservationPetsRepository->findBy(
-            ['pet_kind' => $petKind, 'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC],
-            ['update_date' => 'DESC'],
-            AnilineConf::NUMBER_ITEM_TOP
-        );
-        $favoritePets = $this->conservationPetsRepository->findBy(
-            ['pet_kind' => $petKind, 'release_status' => AnilineConf::RELEASE_STATUS_PUBLIC],
-            ['favorite_count' => 'DESC'],
-            AnilineConf::NUMBER_ITEM_TOP
-        );
+        $newPets = $this->adoptionQueryService->getPetNew($petKind);
+        $favoritePets = $this->adoptionQueryService->getPetFeatured($petKind);
 
         return $this->render('animalline/adoption/index.twig', [
             'petKind' => $petKind,

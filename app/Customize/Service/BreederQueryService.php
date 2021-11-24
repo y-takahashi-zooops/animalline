@@ -74,6 +74,53 @@ class BreederQueryService
     }
 
     /**
+     * Retrieve breeder pets
+     *
+     * @param mixed $petKind
+     * @return array
+     */
+    public function getPetNew($petKind): array
+    {
+        $date_now = Carbon::now()->toDateString();
+        $time_new = Carbon::now()->subMonth()->toDateString();
+
+        $query = $this->breederPetsRepository->createQueryBuilder('p')
+            ->where('p.is_active = :is_active')
+            ->setParameter('is_active', 1)
+            ->andWhere('p.pet_kind = :pet_kind')
+            ->setParameter('pet_kind', $petKind)
+            ->andWhere('p.release_date <= :to')
+            ->andWhere('p.release_date >= :from')
+            ->setParameter(':to', $date_now)
+            ->setParameter(':from', $time_new);
+
+        return $query->addOrderBy('p.release_date', 'DESC')
+            ->setMaxResults(AnilineConf::NUMBER_ITEM_TOP)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Retrieve breeder pets
+     *
+     * @param mixed $petKind
+     * @return array
+     */
+    public function getPetFeatured($petKind): array
+    {
+        $query = $this->breederPetsRepository->createQueryBuilder('p')
+            ->where('p.is_active = :is_active')
+            ->setParameter('is_active', 1)
+            ->andWhere('p.pet_kind = :pet_kind')
+            ->setParameter('pet_kind', $petKind)
+            ->orderBy('p.favorite_count', 'DESC');
+        return $query->addOrderBy('p.release_date', 'DESC')
+            ->setMaxResults(AnilineConf::NUMBER_ITEM_TOP)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Retrive breeder pets
      *
      * @param Object $request
