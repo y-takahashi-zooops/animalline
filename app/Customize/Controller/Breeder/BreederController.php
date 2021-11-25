@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\ContactType;
-use Eccube\Service\MailService;
+use Customize\Service\MailService;
 
 class BreederController extends AbstractController
 {
