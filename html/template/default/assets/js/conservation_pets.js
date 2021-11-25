@@ -24,14 +24,14 @@ $(function () {
             }
         })
             .done(function (data) {
-                const { breeds, colors } = data;
+                const { breeds } = data;
                 $('#conservation_pets_BreedsType').empty();
+                $('#conservation_pets_BreedsType').append(new Option('選択してください', ''));
                 breeds.forEach(breed => {
                     $('#conservation_pets_BreedsType').append(new Option(breed.name, breed.id));
                 });
-
                 if (isEdit) {
-                    $('#conservation_pets_BreedsType').val(breed);
+                    $("#conservation_pets_BreedsType option[value="+breed+"]").prop("selected", true)
                 }
             })
             .fail(function (err) {

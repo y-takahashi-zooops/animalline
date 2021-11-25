@@ -40,6 +40,7 @@ class ConservationPetsType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
+                'placeholder' => 'common.select'
             ])
             ->add('pet_sex', ChoiceType::class, [
                 'choices' =>
