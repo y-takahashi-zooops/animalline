@@ -138,7 +138,7 @@
             $(`#${ lastItem.class }`).parent().find(".img_preview").attr('src', '');
             $(`#${ lastItem.class }`).parent().find(".img_preview").addClass('d-none');
             $(`#${ lastItem.class }`).parent().parent().find("button").hide();
-             $(`input.${ lastItem.class }`).val('');
+            $(`input.${ lastItem.class }`).val('');
             if (lastItem.class !== inputFileIds.pop()) {
                 $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").attr('disabled', true);
             }
