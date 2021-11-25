@@ -275,7 +275,7 @@ class AdoptionPetController extends AbstractController
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
 
-        $request->request->set('thumbnail_path', $conservationPet->getThumbnailPath());
+        $request->request->set('thumbnail_path', $image0 ? : ($conservationPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath() : ''));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

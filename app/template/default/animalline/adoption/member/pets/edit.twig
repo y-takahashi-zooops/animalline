@@ -34,17 +34,13 @@
     $(document).ready(function() {
         if (thumbnailPath) {
             $('#conservation_pets_thumbnail_path').hide();
-            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', '/' + subSrc + thumbnailPath);
+            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src',thumbnailPath);
             $('#conservation_pets_thumbnail_path').parent().find('img').show();
             $('#conservation_pets_thumbnail_path').parent().parent().find('button').show();
-            $(`input.conservation_pets_thumbnail_path`).val('/' + subSrc + thumbnailPath);
+            $(`input.conservation_pets_thumbnail_path`).val(thumbnailPath);
             disabledFlag = false;
-        } else {
-            $('#conservation_pets_thumbnail_path').hide();
-            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', image0);
-            $('#conservation_pets_thumbnail_path').parent().find('img').show();
-            $('#conservation_pets_thumbnail_path').parent().parent().find('button').show();
-            $(`input.conservation_pets_thumbnail_path`).val(image0);
+        }
+        if (image0) {
             disabledFlag = false;
         }
         petImages.forEach((p) => {
