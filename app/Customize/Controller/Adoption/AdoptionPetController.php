@@ -269,7 +269,7 @@ class AdoptionPetController extends AbstractController
             ['sort_order' => 'ASC']
         );
 
-        $image0 = $request->get('img0') ?? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath();
+        $image0 = ($request->get('img0') ? $request->get('img0') : $conservationPet->getThumbnailPath()) ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath() : '';
         $image1 = $request->get('img1') ?? '';
         $image2 = $request->get('img2') ?? '';
         $image3 = $request->get('img3') ?? '';
