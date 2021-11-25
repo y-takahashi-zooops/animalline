@@ -423,7 +423,7 @@ class BreederPetController extends AbstractController
             ['sort_order' => 'ASC']
         );
 
-        $image0 = $request->get('img0') ?? '';
+        $image0 = $request->get('img0') ?? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath();
         $image1 = $request->get('img1') ?? '';
         $image2 = $request->get('img2') ?? '';
         $image3 = $request->get('img3') ?? '';
@@ -455,11 +455,18 @@ class BreederPetController extends AbstractController
         }
 
         $petImages = [];
-        foreach ($breederPetImages as $image) {
-            $petImages[] = [
-                'image_uri' => $image->getImageUri(),
-                'sort_order' => $image->getSortOrder()
-            ];
+        foreach ($breederPetImages as $key => $image) {
+            if ($request->get('img' . $key)) {
+                $petImages[$key] = [
+                    'image_uri' => $request->get('img' . $key),
+                    'sort_order' => $image->getSortOrder()
+                ];
+            } else {
+                $petImages[$key] = [
+                    'image_uri' => $image->getImageUri() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $image->getImageUri() : '',
+                    'sort_order' => $image->getSortOrder()
+                ];
+            }
         }
 
         return [

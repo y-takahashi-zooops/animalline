@@ -30,7 +30,7 @@
             <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.thumbnail_path) }}
                 {{ form_errors(form.thumbnail_path) }}
-                <img id="img_thumbnail" class="img_preview {{ not image0 ? 'hidden' }}" src="{{ image0 }}"/>
+                <img id="img_thumbnail" class="img_preview" src="{{ image0 }}"/>
             </div>
             <div style="display: grid">
                 <button class="btn_remove breeder_pets_thumbnail_path">画像を削除</button>
@@ -39,7 +39,7 @@
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.image1) }}
-                <img class="img_preview {{ not image1 ? 'hidden' }}" src="{{ image1 }}" />
+                <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
                 <button class="btn_set_thumbnail breeder_pets_image1">メイン画像に設定</button>
@@ -59,7 +59,7 @@
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.image3) }}
-                <img class="img_preview" src="{{ image3 }}" />
+                <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
                 <button class="btn_set_thumbnail breeder_pets_image3">メイン画像に設定</button>
@@ -69,7 +69,7 @@
         <div class="images mb-3">
             <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.image4) }}
-                <img class="img_preview" src="{{ image4 }}" />
+                <img class="img_preview" src="" />
             </div>
             <div style="display: grid">
                 <button class="btn_set_thumbnail breeder_pets_image4">メイン画像に設定</button>
