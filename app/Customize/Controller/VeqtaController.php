@@ -124,6 +124,16 @@ class VeqtaController extends AbstractController
             $request->query->getInt('page', 1),
             $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE)
         );
+
+        // get check kinds
+        foreach ($dnas as $idx => $dna) {
+            $kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $dna['breeds_id']]);
+            $dna['check_kinds'] = array_map(function ($item) {
+                return $item->getCheckKind();
+            }, $kinds);
+            $dnas[$idx] = $dna;
+        }
+
         return compact(
             'dnas'
         );
@@ -231,7 +241,7 @@ class VeqtaController extends AbstractController
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
                 $restext = "検査ＮＧ";
                 break;
-            default:// 61: クリア, 62: キャリア.
+            default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
                 $restext = "検査通過";
@@ -291,15 +301,17 @@ class VeqtaController extends AbstractController
                 $Dna->setCheckStatus($checkStatus);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
                 break;
-            default:// 61: クリア, 62: キャリア.
+            default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
         }
 
         $entityManager = $this->getDoctrine()->getManager();
 
-        if ($checkStatus != AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY &&
-            $dnaDetailData = $request->get('check_status')) {
+        if (
+            $checkStatus != AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY &&
+            $dnaDetailData = $request->get('check_status')
+        ) {
             for ($i = 0; $i < count($dnaDetailData['kind']); $i++) {
                 $DnaDetail = (new DnaCheckStatusDetail)
                     ->setCheckResult($dnaDetailData['status'][$dnaDetailData['kind'][$i]])
