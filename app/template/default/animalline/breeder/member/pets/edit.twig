@@ -27,16 +27,16 @@
 <script src="{{ asset('assets/js/breeder_pets.js') }}"></script>
 <script>
     var subSrc = '{{ constant("Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE") }}';
-    var thumbnailPath = '{{ image0 }}';
+    var thumbnailPath = `{{ thumbnailPath }}`;
     var petImages = {{ pet_mages | json_encode | raw }};
     let disabledFlag = true;
     $(document).ready(function() {
         if (thumbnailPath) {
             $('#breeder_pets_thumbnail_path').hide();
-            $('#breeder_pets_thumbnail_path').parent().find('img').attr('src', thumbnailPath);
+            $('#breeder_pets_thumbnail_path').parent().find('img').attr('src','/' + subSrc + thumbnailPath);
             $('#breeder_pets_thumbnail_path').parent().find('img').show();
             $('#breeder_pets_thumbnail_path').parent().parent().find('button').show();
-            $(`input.breeder_pets_thumbnail_path`).val(thumbnailPath);
+            $(`input.breeder_pets_thumbnail_path`).val('/' + subSrc + thumbnailPath);
             disabledFlag = false;
         }
         petImages.forEach((p) => {
