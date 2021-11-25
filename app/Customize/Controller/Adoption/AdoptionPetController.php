@@ -299,7 +299,7 @@ class AdoptionPetController extends AbstractController
 
         $petImages = [];
         foreach ($conservationPetImages as $key => $image) {
-            if ($request->get('img' . $key)) {
+            if ($form->isSubmitted()) {
                 $petImages[$key] = [
                     'image_uri' => $request->get('img' . $key),
                     'sort_order' => $image->getSortOrder()

@@ -36,7 +36,7 @@
             $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', thumbnailPath);
             $('#conservation_pets_thumbnail_path').parent().find('img').show();
             $('#conservation_pets_thumbnail_path').parent().parent().find('button').show();
-            $(`input.conservation_pets_thumbnail_path`).val('/' + subSrc + thumbnailPath);
+            $(`input.conservation_pets_thumbnail_path`).val(thumbnailPath);
             disabledFlag = false;
         }
         petImages.forEach((p) => {
