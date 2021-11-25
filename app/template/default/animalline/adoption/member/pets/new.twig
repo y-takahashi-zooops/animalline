@@ -156,5 +156,12 @@
         $('#img_thumbnail').attr('src', currentSrc);
         $(`input.conservation_pets_thumbnail_path`).val(currentSrc);
     });
+    $(document).ready(function() {
+        $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', `{{ image0 }}`);
+        $('#conservation_pets_image1').parent().find('.img_preview').attr('src', `{{ image1 }}`);
+        $(`#conservation_pets_image2`).parent().find('.img_preview').attr('src', `{{ image2 }}`);
+        $(`#conservation_pets_image3`).parent().find('.img_preview').attr('src', `{{ image3 }}`);
+        $(`#conservation_pets_image4`).parent().find('.img_preview').attr('src', `{{ image4 }}`);
+    });
 </script>
 {% endblock %}

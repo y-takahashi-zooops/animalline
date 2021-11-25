@@ -282,6 +282,7 @@
         $('.conservation_pets_image4').val(`{{ image4 }}`);
         if ($('.conservation_pets_thumbnail_path').val()) {
             $('#conservation_pets_thumbnail_path').parent().parent().next().find("input[type='file']").attr('disabled', false);
+            $("#conservation_pets_thumbnail_path").parent().parent().find('button').show();
         }
         if ($('.conservation_pets_image1').val()) {
             $('#conservation_pets_image1').parent().parent().next().find("input[type='file']").attr('disabled', false);

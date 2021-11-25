@@ -27,7 +27,8 @@
 <script src="{{ asset('assets/js/conservation_pets.js') }}"></script>
 <script>
     var subSrc = '{{ constant("Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE") }}';
-    var thumbnailPath = '{{ image0 }}';
+    var thumbnailPath = '/' + subSrc +'{{ thumbnailPath ?? image0 }}';
+    console.log(thumbnailPath);
     var petImages = {{ pet_mages | json_encode | raw }};
     let disabledFlag = true;
     $(document).ready(function() {
