@@ -27,17 +27,24 @@
 <script src="{{ asset('assets/js/conservation_pets.js') }}"></script>
 <script>
     var subSrc = '{{ constant("Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE") }}';
-    var thumbnailPath = '/' + subSrc +'{{ thumbnailPath ?? image0 }}';
-    console.log(thumbnailPath);
+    var thumbnailPath = '{{ thumbnailPath }}';
+    var image0 = '{{ image0 }}';
     var petImages = {{ pet_mages | json_encode | raw }};
     let disabledFlag = true;
     $(document).ready(function() {
         if (thumbnailPath) {
             $('#conservation_pets_thumbnail_path').hide();
-            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', thumbnailPath);
+            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', '/' + subSrc + thumbnailPath);
             $('#conservation_pets_thumbnail_path').parent().find('img').show();
             $('#conservation_pets_thumbnail_path').parent().parent().find('button').show();
-            $(`input.conservation_pets_thumbnail_path`).val(thumbnailPath);
+            $(`input.conservation_pets_thumbnail_path`).val('/' + subSrc + thumbnailPath);
+            disabledFlag = false;
+        } else {
+            $('#conservation_pets_thumbnail_path').hide();
+            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', image0);
+            $('#conservation_pets_thumbnail_path').parent().find('img').show();
+            $('#conservation_pets_thumbnail_path').parent().parent().find('button').show();
+            $(`input.conservation_pets_thumbnail_path`).val(image0);
             disabledFlag = false;
         }
         petImages.forEach((p) => {
@@ -172,7 +179,7 @@
             $(`#${ lastItem.class }`).parent().find(".img_preview").attr('src', '');
             $(`#${ lastItem.class }`).parent().find(".img_preview").addClass('d-none');
             $(`#${ lastItem.class }`).parent().parent().find("button").hide();
-             $(`input.${ lastItem.class }`).val('');
+            $(`input.${ lastItem.class }`).val('');
             if (lastItem.class !== inputFileIds.pop()) {
                 $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").attr('disabled', true);
             }
