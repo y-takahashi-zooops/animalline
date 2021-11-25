@@ -429,7 +429,7 @@ class BreederPetController extends AbstractController
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
 
-        $request->request->set('thumbnail_path', $breederPet->getThumbnailPath());
+        $request->request->set('thumbnail_path', $image0 ? : ($breederPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath() : ''));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
