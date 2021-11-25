@@ -456,7 +456,7 @@ class BreederPetController extends AbstractController
 
         $petImages = [];
         foreach ($breederPetImages as $key => $image) {
-            if ($request->get('img' . $key)) {
+            if ($form->isSubmitted()) {
                 $petImages[$key] = [
                     'image_uri' => $request->get('img' . $key),
                     'sort_order' => $image->getSortOrder()
