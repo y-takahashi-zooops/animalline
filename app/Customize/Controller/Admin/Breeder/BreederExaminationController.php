@@ -125,7 +125,9 @@ class BreederExaminationController extends AbstractController
             'isEnablePetType' => $isEnablePetType,
             'breederExaminationInfo' => $breederExaminationInfo,
             'formDogKind' => $formDogKind->createView(),
-            'formCatKind' => $formCatKind->createView()
+            'formCatKind' => $formCatKind->createView(),
+            'thumbnail' => $breeder->getThumbnailPath(),
+            'licenseThumbnailPath' => $breeder->getLicenseThumbnailPath(),
         ];
     }
 
