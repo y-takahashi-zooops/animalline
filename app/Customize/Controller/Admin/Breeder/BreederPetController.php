@@ -217,11 +217,17 @@ class BreederPetController extends AbstractController
      */
     public function pet_edit(Request $request, BreederPets $breederPet)
     {
+        $oldStatus = $breederPet->getIsActive();
         $form = $this->createForm(BreederPetsType::class, $breederPet);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $breederPet->setBreedsType($this->breedsRepository->find($request->get('breeds_type')));
+
+            $curStatus = $breederPet->getIsActive();
+            if ($curStatus !== $oldStatus) {
+                $breederPet->setReleaseDate($curStatus === AnilineConf::IS_ACTIVE_PUBLIC ? new DateTime : null);
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederPet);
