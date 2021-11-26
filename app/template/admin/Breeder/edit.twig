@@ -149,8 +149,8 @@ file that was distributed with this source code.
                                         <div class="media-body">
                                             <img id="img_thumbnail"
                                                  class="img_preview mb-2 {{ not thumbnailPath ? 'hidden' }}"
-                                                 src="{{ thumbnailPath }}" alt="..."
-                                                 style="width: 200px; border: 1px solid #ddd;"/>
+                                                 src="{{ thumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png')  }}" alt="..."
+                                                 style="max-width: 200px; border: 1px solid #ddd;"/>
                                             {{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'thumbnail_path'  } }) }}
                                             <input type="hidden" name="thumbnail_path" id="breeder_src_path" value="{{ thumbnailPath }}">
                                         </div>
@@ -377,8 +377,8 @@ file that was distributed with this source code.
                                         <div class="media-body">
                                             <img id="img_license_thumbnail"
                                                  class="img_preview mb-2 {{ not licenseThumbnailPath ? 'hidden' }}"
-                                                 src="{{ licenseThumbnailPath }}" alt="..."
-                                                 style="width: 200px; border: 1px solid #ddd;"/>
+                                                 src="{{ licenseThumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png')  }}" alt="..."
+                                                 style="max-width: 200px; border: 1px solid #ddd;"/>
                                             {{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'license_thumbnail_path'  } }) }}
                                             <input type="hidden" name="license_thumbnail_path" id="breeder_license_src_path" value="{{ licenseThumbnailPath }}">
                                         </div>
