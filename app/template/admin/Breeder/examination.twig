@@ -338,7 +338,7 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <img alt="thumbnail_path" src="{{ formBreeder.thumbnail_path.vars.value | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                        <img alt="thumbnail_path" src="{{ thumbnail | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
                                              style="max-width: 200px">
                                         {{ form_widget(formBreeder.thumbnail_path) }}
                                     </div>
@@ -492,9 +492,9 @@ file that was distributed with this source code.
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
-                                        <a href="{{ formBreeder.license_thumbnail_path.vars.value }}" target="_blank">
+                                        <a href="{{ licenseThumbnailPath }}" target="_blank">
                                             <img alt="license_thumbnail_path"
-                                                 src="{{ formBreeder.license_thumbnail_path.vars.value | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png')  }}"
+                                                 src="{{ licenseThumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png')  }}"
                                                  style="max-width: 200px">
                                         </a>
                                         {{ form_widget(formBreeder.license_thumbnail_path) }}
