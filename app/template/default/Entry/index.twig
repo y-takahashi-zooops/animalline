@@ -35,6 +35,13 @@ file that was distributed with this source code.
         <div class="ec-pageHeader">
             <h1>{{ '新規会員登録'|trans }}</h1>
         </div>
+        {% if request.get('ReturnPath') =="adoption_mypage" %}
+        <div style="border: solid 1px; padding: 1rem;"><b>代表者様の情報をご記入ください。団体情報のご記入 は本会員登録後にございます。</b></div>
+        {% endif %}
+        {% if request.get('ReturnPath') =="breeder_mypage" %}
+        <div style="border: solid 1px; padding: 1rem;"><b>代表者様の情報をご記入ください。団体情報のご記入 は本会員登録後にございます。</b></div>
+        {% endif %}
+
         <div class="ec-off1Grid">
             <div class="ec-off1Grid__cell">
                 <form method="post" action="{{ url('entry') }}" novalidate class="h-adr">
