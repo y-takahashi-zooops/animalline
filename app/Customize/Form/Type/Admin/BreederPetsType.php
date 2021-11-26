@@ -125,6 +125,13 @@ class BreederPetsType extends AbstractType
                     'rows' => 5
                 ]
             ])
+            ->add('is_active', ChoiceType::class, [
+                'choices' =>
+                [
+                    '公開' => AnilineConf::IS_ACTIVE_PUBLIC,
+                    '公開不可' => AnilineConf::IS_ACTIVE_NO_PUBLIC
+                ]
+            ])
             ->add('price', IntegerType::class, [
                 'required' => false
             ]);
