@@ -29,10 +29,10 @@ class ConservationPetsType extends AbstractType
             ])
             ->add('pet_sex', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '男の子' => AnilineConf::ANILINE_PET_SEX_MALE,
-                        '女の子' => AnilineConf::ANILINE_PET_SEX_FEMALE
-                    ],
+                [
+                    '男の子' => AnilineConf::ANILINE_PET_SEX_MALE,
+                    '女の子' => AnilineConf::ANILINE_PET_SEX_FEMALE
+                ],
                 'required' => true,
             ])
             ->add('pet_birthday', DateType::class, [
@@ -59,11 +59,11 @@ class ConservationPetsType extends AbstractType
             ->add('future_wait', TextType::class)
             ->add('dna_check_result', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '検査中' => AnilineConf::DNA_CHECK_RESULT_CHECKING,
-                        '検査合格' => AnilineConf::DNA_CHECK_RESULT_CHECK_OK,
-                        '検査NG' => AnilineConf::DNA_CHECK_RESULT_CHECK_NG
-                    ],
+                [
+                    '検査中' => AnilineConf::DNA_CHECK_RESULT_CHECKING,
+                    '検査合格' => AnilineConf::DNA_CHECK_RESULT_CHECK_OK,
+                    '検査NG' => AnilineConf::DNA_CHECK_RESULT_CHECK_NG
+                ],
                 'required' => true,
             ])
             ->add('pr_comment', TextareaType::class)
@@ -72,10 +72,10 @@ class ConservationPetsType extends AbstractType
             ->add('delivery_way', TextareaType::class)
             ->add('is_active', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '非公開' => AnilineConf::IS_ACTIVE_PRIVATE,
-                        '公開' => AnilineConf::IS_ACTIVE_PUBLIC
-                    ]
+                [
+                    '公開' => AnilineConf::IS_ACTIVE_PUBLIC,
+                    '公開不可' => AnilineConf::IS_ACTIVE_NO_PUBLIC
+                ]
             ])
             ->add('release_date', DateType::class, [
                 'required' => false,
