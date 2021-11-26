@@ -30,7 +30,7 @@
             <div class="preview_box mr-4 mb-3">
                 {{ form_widget(form.thumbnail_path) }}
                 {{ form_errors(form.thumbnail_path) }}
-                <img id="img_thumbnail" class="img_preview" src="" />
+                <img id="img_thumbnail" class="img_preview" src="{{ image0 }}"/>
             </div>
             <div style="display: grid">
                 <button class="btn_remove breeder_pets_thumbnail_path">画像を削除</button>
@@ -356,8 +356,6 @@
             cursor: pointer;
         }
         .img_preview {
-            display: none;
-            width: 100%;
             height: auto;
         }
         .btn_set_thumbnail {
@@ -512,6 +510,33 @@ document.getElementById("btn_get_petinfo_template_reservation_fee").onclick = fu
     // 予約金をテンプレートからコピー
     document.getElementById("breeder_pets_reservation_fee").value = document.getElementById("petInfoTemplate_reservation_fee").value 
 };
+
+$(document).ready( function() {
+    $('.breeder_pets_thumbnail_path').val(`{{ image0 }}`);
+    $('.breeder_pets_image1').val(`{{ image1 }}`);
+    $('.breeder_pets_image2').val(`{{ image2 }}`);
+    $('.breeder_pets_image3').val(`{{ image3 }}`);
+    $('.breeder_pets_image4').val(`{{ image4 }}`);
+    if ($('.breeder_pets_thumbnail_path').val()) {
+        $('#breeder_pets_thumbnail_path').parent().parent().next().find(":input").prop('disabled', false);
+        $("#breeder_pets_thumbnail_path").parent().parent().find('button').show();
+    }
+    if ($('.breeder_pets_image1').val()) {
+        $('#breeder_pets_image1').parent().parent().next().find(":input").prop('disabled', false);
+        $("#breeder_pets_image1").parent().parent().find('button').show();
+    }
+    if ($('.breeder_pets_image2').val()) {
+        $('#breeder_pets_image2').parent().parent().next().find(":input").prop('disabled', false);
+        $("#breeder_pets_image2").parent().parent().find('button').show();
+    }
+    if ($('.breeder_pets_image3').val()) {
+        $('#breeder_pets_image3').parent().parent().next().find(":input").prop('disabled', false);
+        $("#breeder_pets_image3").parent().parent().find('button').show();
+    }
+     if ($('.breeder_pets_image4').val()) {
+        $("#breeder_pets_image4").parent().parent().find('button').show();
+    }
+});
 
 </script>
 {% endblock %}

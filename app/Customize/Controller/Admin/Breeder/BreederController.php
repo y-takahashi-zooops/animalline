@@ -186,12 +186,14 @@ class BreederController extends AbstractController
         $form = $builder->getForm();
         $form->handleRequest($request);
 
-        $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
+        $thumbnailPath = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();
+        $licenseThumbnailPath = $request->get('license_thumbnail_path') ?: $breederData->getLicenseThumbnailPath();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $breederData->setBreederPref($breederData->getPrefBreeder())
                 ->setLicensePref($breederData->getPrefLicense())
-                ->setThumbnailPath($thumbnail_path);
+                ->setThumbnailPath($thumbnailPath)
+                ->setLicenseThumbnailPath($licenseThumbnailPath);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederData);
             $entityManager->flush();
@@ -199,6 +201,8 @@ class BreederController extends AbstractController
         }
 
         return [
+            'thumbnailPath' => $thumbnailPath,
+            'licenseThumbnailPath' => $licenseThumbnailPath,
             'breederData' => $breederData,
             'form' => $form->createView(),
             'id' => $request->get('id')

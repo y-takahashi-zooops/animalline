@@ -27,16 +27,20 @@
 <script src="{{ asset('assets/js/conservation_pets.js') }}"></script>
 <script>
     var subSrc = '{{ constant("Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE") }}';
-    var thumbnailPath = '{{ adoption_pet.thumbnailPath }}';
+    var thumbnailPath = '{{ thumbnailPath }}';
+    var image0 = '{{ image0 }}';
     var petImages = {{ pet_mages | json_encode | raw }};
     let disabledFlag = true;
     $(document).ready(function() {
         if (thumbnailPath) {
             $('#conservation_pets_thumbnail_path').hide();
-            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', '/' + subSrc + thumbnailPath);
+            $('#conservation_pets_thumbnail_path').parent().find('img').attr('src',thumbnailPath);
             $('#conservation_pets_thumbnail_path').parent().find('img').show();
             $('#conservation_pets_thumbnail_path').parent().parent().find('button').show();
-            $(`input.conservation_pets_thumbnail_path`).val('/' + subSrc + thumbnailPath);
+            $(`input.conservation_pets_thumbnail_path`).val(thumbnailPath);
+            disabledFlag = false;
+        }
+        if (image0) {
             disabledFlag = false;
         }
         petImages.forEach((p) => {
@@ -52,10 +56,10 @@
         $(`#${ id }`).attr('disabled', disabledFlag);
         if (image.length > 0) {
             $(`#${ id }`).hide();
-            $(`#${ id }`).parent().find('img').attr('src', '/' + subSrc + image);
+            $(`#${ id }`).parent().find('img').attr('src', image);
             $(`#${ id }`).parent().find('img').show();
             $(`#${ id }`).parent().parent().find('button').show();
-            $(`input.${ id }`).val('/' +  subSrc + image);
+            $(`input.${ id }`).val(image);
         } else {
             disabledFlag = true;
         }
@@ -171,7 +175,7 @@
             $(`#${ lastItem.class }`).parent().find(".img_preview").attr('src', '');
             $(`#${ lastItem.class }`).parent().find(".img_preview").addClass('d-none');
             $(`#${ lastItem.class }`).parent().parent().find("button").hide();
-             $(`input.${ lastItem.class }`).val('');
+            $(`input.${ lastItem.class }`).val('');
             if (lastItem.class !== inputFileIds.pop()) {
                 $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").attr('disabled', true);
             }

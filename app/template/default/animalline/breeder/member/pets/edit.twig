@@ -27,16 +27,19 @@
 <script src="{{ asset('assets/js/breeder_pets.js') }}"></script>
 <script>
     var subSrc = '{{ constant("Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE") }}';
-    var thumbnailPath = '{{ breeder_pet.thumbnailPath }}';
+    var thumbnailPath = `{{ thumbnailPath }}`;
     var petImages = {{ pet_mages | json_encode | raw }};
     let disabledFlag = true;
     $(document).ready(function() {
         if (thumbnailPath) {
             $('#breeder_pets_thumbnail_path').hide();
-            $('#breeder_pets_thumbnail_path').parent().find('img').attr('src', '/' + subSrc + thumbnailPath);
+            $('#breeder_pets_thumbnail_path').parent().find('img').attr('src',thumbnailPath);
             $('#breeder_pets_thumbnail_path').parent().find('img').show();
             $('#breeder_pets_thumbnail_path').parent().parent().find('button').show();
-            $(`input.breeder_pets_thumbnail_path`).val('/' + subSrc + thumbnailPath);
+            $(`input.breeder_pets_thumbnail_path`).val(thumbnailPath);
+            disabledFlag = false;
+        }
+        if (`{{ image0 }}`) {
             disabledFlag = false;
         }
         petImages.forEach((p) => {
@@ -52,10 +55,10 @@
         $(`#${ id }`).attr('disabled', disabledFlag);
         if (image.length > 0) {
             $(`#${ id }`).hide();
-            $(`#${ id }`).parent().find('img').attr('src', '/' + subSrc + image);
+            $(`#${ id }`).parent().find('img').attr('src', image);
             $(`#${ id }`).parent().find('img').show();
             $(`#${ id }`).parent().parent().find('button').show();
-            $(`input.${ id }`).val('/' +  subSrc + image);
+            $(`input.${ id }`).val(image);
         } else {
             disabledFlag = true;
         }

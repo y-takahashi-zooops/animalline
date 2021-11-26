@@ -138,7 +138,7 @@
             $(`#${ lastItem.class }`).parent().find(".img_preview").attr('src', '');
             $(`#${ lastItem.class }`).parent().find(".img_preview").addClass('d-none');
             $(`#${ lastItem.class }`).parent().parent().find("button").hide();
-             $(`input.${ lastItem.class }`).val('');
+            $(`input.${ lastItem.class }`).val('');
             if (lastItem.class !== inputFileIds.pop()) {
                 $(`#${ lastItem.class }`).parent().parent().next().find("input[type='file']").attr('disabled', true);
             }
@@ -155,6 +155,13 @@
 
         $('#img_thumbnail').attr('src', currentSrc);
         $(`input.conservation_pets_thumbnail_path`).val(currentSrc);
+    });
+    $(document).ready(function() {
+        $('#conservation_pets_thumbnail_path').parent().find('img').attr('src', `{{ image0 }}`);
+        $('#conservation_pets_image1').parent().find('.img_preview').attr('src', `{{ image1 }}`);
+        $(`#conservation_pets_image2`).parent().find('.img_preview').attr('src', `{{ image2 }}`);
+        $(`#conservation_pets_image3`).parent().find('.img_preview').attr('src', `{{ image3 }}`);
+        $(`#conservation_pets_image4`).parent().find('.img_preview').attr('src', `{{ image4 }}`);
     });
 </script>
 {% endblock %}

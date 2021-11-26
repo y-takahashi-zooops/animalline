@@ -225,8 +225,6 @@
             cursor: pointer;
         }
         .img_preview {
-            display: none;
-            width: 100%;
             height: auto;
         }
         .btn_set_thumbnail {
@@ -275,4 +273,32 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+<script>
+    $(document).ready( function() {
+        $('.conservation_pets_thumbnail_path').val(`{{ image0 }}`);
+        $('.conservation_pets_image1').val(`{{ image1 }}`);
+        $('.conservation_pets_image2').val(`{{ image2 }}`);
+        $('.conservation_pets_image3').val(`{{ image3 }}`);
+        $('.conservation_pets_image4').val(`{{ image4 }}`);
+        if ($('.conservation_pets_thumbnail_path').val()) {
+            $('#conservation_pets_thumbnail_path').parent().parent().next().find("input[type='file']").attr('disabled', false);
+            $("#conservation_pets_thumbnail_path").parent().parent().find('button').show();
+        }
+        if ($('.conservation_pets_image1').val()) {
+            $('#conservation_pets_image1').parent().parent().next().find("input[type='file']").attr('disabled', false);
+            $("#conservation_pets_image1").parent().parent().find('button').show();
+        }
+        if ($('.conservation_pets_image2').val()) {
+            $('#conservation_pets_image2').parent().parent().next().find("input[type='file']").attr('disabled', false);
+            $("#conservation_pets_image2").parent().parent().find('button').show();
+        }
+        if ($('.conservation_pets_image3').val()) {
+            $('#conservation_pets_image3').parent().parent().next().find("input[type='file']").attr('disabled', false);
+            $("#conservation_pets_image3").parent().parent().find('button').show();
+        }
+        if ($('.conservation_pets_image4').val()) {
+            $("#conservation_pets_image4").parent().parent().find('button').show();
+        }
+    });
+</script>
 {% endblock %}

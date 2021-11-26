@@ -298,6 +298,12 @@ class BreederPetController extends AbstractController
             'Breeder' => $breeder
         ]);
 
+        $image0 = $request->get('img0') ?? '';
+        $image1 = $request->get('img1') ?? '';
+        $image2 = $request->get('img2') ?? '';
+        $image3 = $request->get('img3') ?? '';
+        $image4 = $request->get('img4') ?? '';
+
         // if (!$petInfoTemplate) {
         //     throw new NotFoundHttpException();
         // }
@@ -368,7 +374,12 @@ class BreederPetController extends AbstractController
 
         return $this->render('animalline/breeder/member/pets/new.twig', [
             'form' => $form->createView(),
-            'petInfoTemplate' => $petInfoTemplate
+            'petInfoTemplate' => $petInfoTemplate,
+            'image0' => $image0,
+            'image1' => $image1,
+            'image2' => $image2,
+            'image3' => $image3,
+            'image4' => $image4
         ]);
     }
 
@@ -411,7 +422,14 @@ class BreederPetController extends AbstractController
             ['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
             ['sort_order' => 'ASC']
         );
-        $request->request->set('thumbnail_path', $breederPet->getThumbnailPath());
+
+        $image0 = $request->get('img0') ?? '';
+        $image1 = $request->get('img1') ?? '';
+        $image2 = $request->get('img2') ?? '';
+        $image3 = $request->get('img3') ?? '';
+        $image4 = $request->get('img4') ?? '';
+
+        $request->request->set('thumbnail_path', $image0 ? : ($breederPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath() : ''));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -437,18 +455,31 @@ class BreederPetController extends AbstractController
         }
 
         $petImages = [];
-        foreach ($breederPetImages as $image) {
-            $petImages[] = [
-                'image_uri' => $image->getImageUri(),
-                'sort_order' => $image->getSortOrder()
-            ];
+        foreach ($breederPetImages as $key => $image) {
+            if ($form->isSubmitted()) {
+                $petImages[$key] = [
+                    'image_uri' => $request->get('img' . $key),
+                    'sort_order' => $image->getSortOrder()
+                ];
+            } else {
+                $petImages[$key] = [
+                    'image_uri' => $image->getImageUri() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $image->getImageUri() : '',
+                    'sort_order' => $image->getSortOrder()
+                ];
+            }
         }
 
         return [
             'breeder_pet' => $breederPet,
             'pet_mages' => $petImages,
+            'thumbnailPath' => $request->get('thumbnail_path'),
             'form' => $form->createView(),
-            'petInfoTemplate' => $petInfoTemplate
+            'petInfoTemplate' => $petInfoTemplate,
+            'image0' => $image0,
+            'image1' => $image1,
+            'image2' => $image2,
+            'image3' => $image3,
+            'image4' => $image4
         ];
     }
 
