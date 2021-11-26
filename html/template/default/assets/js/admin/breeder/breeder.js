@@ -1,6 +1,5 @@
 $("form[name=form1]").submit(function (e) {
     e.preventDefault();
-    console.log('1');
     $('#modal').modal('show');
 });
 $("#confirm-yes").click(function (e) {
