@@ -345,11 +345,13 @@ class BreedersType extends AbstractType
             //         new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
             //     ],
             // ])
-            ->add('thumbnail_path', HiddenType::class, [
-                'required' => false
+            ->add('thumbnail_path', FileType::class, [
+                'mapped' => false,
+                'required' => false,
             ])
-            ->add('license_thumbnail_path', HiddenType::class, [
-                'required' => false
+            ->add('license_thumbnail_path', FileType::class, [
+                'required' => false,
+                'mapped' => false,
             ])
             ->add('breeder_house_name_dog', TextType::class, [
                 'required' => true,
