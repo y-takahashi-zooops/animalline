@@ -74,6 +74,7 @@
                                     <dt>
                                         <span class="mr-2">お名前</span>
                                         <span class="ec-required">必須</span>
+                                        <div style="font-size:12px;color:#F00">キット送付の宛先となります。表示内容に追加があればご編集ください。</div>
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.shipping_name) ? ' error' }}">
@@ -86,7 +87,8 @@
                                     <dt>
                                         <span class="mr-2">住所<span>
                                         <span class="ec-required">必須</span>
-                                        <p style="font-size:14px;color:#DE5D50;">〒は'-'を入れずに入力してくだい</p>
+                                        <div style="font-size:12px;color:#F00">〒は'-'を入れずに入力してくだい<br />キット送付先住所となります。表示内容に追加・変更があれば
+ご編集ください。</div>
                                     </dt>
                                     <dd class="h-adr">
                                         <span class="p-country-name" style="display:none;">Japan</span>

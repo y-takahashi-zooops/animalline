@@ -3,8 +3,20 @@
 
 {{ data.name }} 様
 
-ペットを公開することができます。
+ＤＮＡ検査が完了し、下記ペットの情報が公開されました。
+
+生体番号　　 ： {{ data.pet_code }}
+犬種・猫種 　： {{ data.pet_breeds }}
+生年月日　　 ： {{ data.pet_birthday }}
+バンドカラー ： {{ data.pet_bandcolor }}
+
+↓↓　マイページはこちら
+{% if data.site_kind == 1 %}
+{{ url("breeder_mypage") }}
+{% else %}
+{{ url("adoption_mypage") }}
+{% endif %}
 
 今後ともAnimallineをよろしくお願い致します。
 
-{% endautoescape %}
+{% endautoescape  %}

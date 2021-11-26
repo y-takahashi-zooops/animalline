@@ -154,6 +154,30 @@ class BreederMemberController extends AbstractController
     }
 
     /**
+     *
+     * サイトサンプル
+     *
+     * @Route("/breeder/member/sample", name="breeder_site_sample_menu")
+     * @Template("animalline/breeder/member/site_sample_index.twig")
+     */
+    public function breeder_site_sample_menu(Request $request)
+    {
+        return[];
+    }
+
+    /**
+     *
+     * サイトサンプル
+     *
+     * @Route("/breeder/member/sample/image/{image_name}", name="breeder_site_sample_image")
+     * @Template("animalline/breeder/member/site_sample_image.twig")
+     */
+    public function breeder_site_sample_image(Request $request,$image_name)
+    {
+        return ["image_name" => $image_name];
+    }
+
+    /**
      * 基本情報編集画面
      *
      * @Route("/breeder/member/baseinfo", name="breeder_baseinfo")

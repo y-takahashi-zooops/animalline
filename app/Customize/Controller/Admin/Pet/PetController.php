@@ -328,9 +328,38 @@ class PetController extends AbstractController
         if (!$Customer) throw new NotFoundHttpException();
 
         $comment = $request->get('examination_result_comment');
+
+        $breeds = $this->breedsRepository->find($Pet->getBreedsType());
+
+        switch($Pet->getBandColor()){
+        case AnilineConf::ANILINE_BAND_COLOR_RED:
+            $color = "赤";
+            break;
+        case AnilineConf::ANILINE_BAND_COLOR_BLUE:
+            $color = "青";
+            break;
+        case AnilineConf::ANILINE_BAND_COLOR_GREEN:
+            $color = "緑";
+            break;
+        case AnilineConf::ANILINE_BAND_COLOR_YELLOW:
+            $color = "黄色";
+            break;
+        case AnilineConf::ANILINE_BAND_COLOR_PINK:
+            $color = "ピンク";
+            break;
+        case AnilineConf::ANILINE_BAND_COLOR_ORANGE:
+            $color = "オレンジ";
+            break;
+        }
+
         $data = [
             'name' => "{$Customer->getName01()} {$Customer->getName02()}",
-            'examination_comment' => "<span id='ex-comment'>{$comment}</span>"
+            'examination_comment' => "<span id='ex-comment'>{$comment}</span>",
+            'pet_code' =>  $Pet->getPetCode(),
+            'pet_breeds' =>  $breeds->getBreedsName(),
+            'pet_birthday' =>  $Pet->getPetBirthday()->format("Y年m月d日"),
+            'pet_bandcolor' =>  $color,
+            'site_kind' => $siteKind,
         ];
 
         if ($request->isMethod('POST')) {
