@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\ContactType;
-use Eccube\Service\MailService;
+use Customize\Service\MailService;
 
 class AdoptionController extends AbstractController
 {
@@ -111,7 +111,7 @@ class AdoptionController extends AbstractController
     /**
      * Page Adoption
      *
-     * @Route("/adoption/", name="adoption_top")
+     * @Route("/adoption_reg/", name="adoption_top_reg")
      * @Template("animalline/adoption/reg_index_tmp.twig")
      */
     public function breeder_index_reg(Request $request)
@@ -122,7 +122,7 @@ class AdoptionController extends AbstractController
     /**
      * adoption index
      *
-     * @Route("/adoption_tmp/", name="adoption_top_tmp")
+     * @Route("/adoption/", name="adoption_top")
      * @Template("animalline/adoption/index.twig")
      */
     public function adoption_index(Request $request)

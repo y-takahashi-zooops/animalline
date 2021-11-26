@@ -41,7 +41,7 @@ class CustomTopController extends AbstractController
      */
     public function index()
     {
-        return $this->redirectToRoute("breeder_top");
+        //return $this->redirectToRoute("breeder_top");
         return [];
     }
 
@@ -52,7 +52,7 @@ class CustomTopController extends AbstractController
     public function animalline_index()
     {
         $ListNews = $this->NewsRepository->getList();
-        return $this->redirectToRoute("breeder_top");
+        //return $this->redirectToRoute("breeder_top");
         
         return [
             'ListNews' => $ListNews
