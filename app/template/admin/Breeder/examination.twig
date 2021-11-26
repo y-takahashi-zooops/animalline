@@ -21,6 +21,10 @@ file that was distributed with this source code.
 
 {% block javascript %}
 <script>
+    $(document).ready(function() {
+            $("#breeders_thumbnail_path").hide();
+            $("#breeders_license_thumbnail_path").hide();
+    });
     $(function () {
     $('#pet_type').on('change', function () {
         location.href = `?pet_type=${this.value}`;

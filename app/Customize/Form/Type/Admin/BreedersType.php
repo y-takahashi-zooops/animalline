@@ -308,10 +308,6 @@ class BreedersType extends AbstractType
                     new Assert\NotBlank()
                 ],
             ])
-            ->add('thumbnail_path', FileType::class, [
-                'required' => false,
-                'mapped' => false,
-            ])
             ->add('handling_pet_kind', ChoiceType::class, [
                 'choices' =>
                     [
