@@ -10,7 +10,7 @@ file that was distributed with this source code.
 #}
 {% extends 'default_frame.twig' %}
 
-{# {% block main %}
+{% block main %}
     <div class="ec-role">
         <div class="ec-pageHeader">
             <h1>個人情報保護方針（プライバシーポリシー）</h1>
@@ -100,7 +100,4 @@ file that was distributed with this source code.
             </div>
         </div>
     </div>
-{% endblock %} #}
-{% block main %}
-   {{ include('policy.twig') }}
 {% endblock %}
