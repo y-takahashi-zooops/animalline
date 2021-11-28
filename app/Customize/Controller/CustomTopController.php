@@ -22,6 +22,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\ContactType;
+use Eccube\Repository\Master\ProductListOrderByRepository;
+use Eccube\Repository\ProductRepository;
+use Eccube\Repository\CategoryRepository;
 
 class CustomTopController extends AbstractController
 {
@@ -30,10 +33,31 @@ class CustomTopController extends AbstractController
      */
     protected $NewsRepository;
 
+    /**
+     * @var ProductRepository
+     */
+    protected $productRepository;
+
+    /**
+     * @var ProductListOrderByRepository
+     */
+    protected $productListOrderByRepository;
+
+    /**
+     * @var CategoryRepository
+     */
+    protected $categoryRepository;
+
     public function __construct(
-        NewsRepository $NewsRepository
+        NewsRepository $NewsRepository,
+        ProductRepository $productRepository,
+        CategoryRepository $categoryRepository,
+        ProductListOrderByRepository $productListOrderByRepository
     ) {
         $this->NewsRepository = $NewsRepository;
+        $this->productListOrderByRepository = $productListOrderByRepository;
+        $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
     }
     /**
      * @Route("/ec", name="homepage")
@@ -42,7 +66,38 @@ class CustomTopController extends AbstractController
     public function index()
     {
         //return $this->redirectToRoute("breeder_top");
-        return [];
+
+        /*
+        // 犬療法食
+        $category = $this->categoryRepository->find(7);
+        $searchData["category_id"] = $category;
+
+        $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
+
+        $query = $qb->getQuery();
+        $products_dog = $query->getResult();
+
+        // 犬準療法食
+        $category = $this->categoryRepository->find(15);
+        $searchData["category_id"] = $category;
+
+        $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
+
+        $query = $qb->getQuery();
+        $products_dog_semi = $query->getResult();
+        */
+        // 新着商品
+        $searchData["category_id"] = null;
+        $searchData['orderby'] = $this->productListOrderByRepository->find(2);
+
+        $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
+
+        $query = $qb->getQuery();
+        $products_new = $query->getResult();
+
+        return [
+            'products_new' => $products_new
+        ];
     }
 
     /**
