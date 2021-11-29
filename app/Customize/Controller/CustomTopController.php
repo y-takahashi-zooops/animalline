@@ -65,7 +65,7 @@ class CustomTopController extends AbstractController
      */
     public function index()
     {
-        return $this->redirectToRoute("breeder_top");
+        //return $this->redirectToRoute("breeder_top");
 
         /*
         // 犬療法食
