@@ -17,6 +17,10 @@ use Eccube\Event\EventArgs;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Customize\Config\AnilineConf;
+use Eccube\Form\Type\Front\EntryType;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AdoptionMemberController extends AbstractController
 {
@@ -36,20 +40,36 @@ class AdoptionMemberController extends AbstractController
     protected $adoptionQueryService;
 
     /**
+     * @var EncoderFactoryInterface
+     */
+    protected $encoderFactory;
+
+    /**
+     * @var TokenStorage
+     */
+    protected $tokenStorage;
+
+    /**
      * ConservationController constructor.
      *
      * @param CustomerRepository $customerRepository
      * @param ConservationsRepository $conservationsRepository
      * @param AdoptionQueryService $adoptionQueryService
+     * @param EncoderFactoryInterface $encoderFactory
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         CustomerRepository  $customerRepository,
         ConservationsRepository  $conservationsRepository,
-        AdoptionQueryService  $adoptionQueryService
+        AdoptionQueryService  $adoptionQueryService,
+        EncoderFactoryInterface $encoderFactory,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->customerRepository = $customerRepository;
         $this->conservationsRepository = $conservationsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
+        $this->encoderFactory = $encoderFactory;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -184,5 +204,84 @@ class AdoptionMemberController extends AbstractController
             'Customer' => $user,
             'thumbnail_path' => $thumbnail_path
         ];
+    }
+
+    /**
+     * 会員情報編集画面.
+     *
+     * @Route("/adoption/member/change", name="adoption_change")
+     * @Template("animalline/adoption/member/adoption_change.twig")
+     */
+    public function adoption_change(Request $request)
+    {
+        $customer = $this->getUser();
+        $loginCustomer = clone $customer;
+        $this->entityManager->detach($loginCustomer);
+
+        $previousPassword = $customer->getPassword();
+        $customer->setPassword($this->eccubeConfig['eccube_default_password']);
+
+        /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
+        $builder = $this->formFactory->createBuilder(EntryType::class, $customer);
+
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+                'Customer' => $customer,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_INITIALIZE, $event);
+
+        /* @var $form \Symfony\Component\Form\FormInterface */
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            log_info('会員編集開始');
+
+            if ($customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
+                $customer->setPassword($previousPassword);
+            } else {
+                $encoder = $this->encoderFactory->getEncoder($customer);
+                if ($customer->getSalt() === null) {
+                    $customer->setSalt($encoder->createSalt());
+                }
+                $customer->setPassword(
+                    $encoder->encodePassword($customer->getPassword(), $customer->getSalt())
+                );
+            }
+            $this->entityManager->flush();
+
+            log_info('会員編集完了');
+
+            $event = new EventArgs(
+                [
+                    'form' => $form,
+                    'Customer' => $customer,
+                ],
+                $request
+            );
+            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_COMPLETE, $event);
+
+            return $this->redirect($this->generateUrl('adoption_change_complete'));
+        }
+
+        $this->tokenStorage->getToken()->setUser($loginCustomer);
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * 会員情報編集完了画面.
+     *
+     * @Route("/adoption/member/adoption_change_complete", name="adoption_change_complete")
+     * @Template("animalline/adoption/member/adoption_change_complete.twig")
+     */
+    public function complete(Request $request)
+    {
+        return [];
     }
 }
