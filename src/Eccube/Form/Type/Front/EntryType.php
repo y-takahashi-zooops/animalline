@@ -160,8 +160,11 @@ class EntryType extends AbstractType
         if (!$event->getForm()->getConfig()->getOptions()['password']) {
             $form['passwordErrors']->addError(new FormError('入力されていません。'));
         }
-        if (strlen($event->getForm()->getConfig()->getOptions()['password']) > 32 || strlen($event->getForm()->getConfig()->getOptions()['password']) < 8) {
-            $form['passwordErrors']->addError(new FormError('半角英数記号8〜32文字。'));
+        if (strlen($event->getForm()->getConfig()->getOptions()['password']) > 32) {
+            $form['passwordErrors']->addError(new FormError('値が長すぎます。32文字以内でなければなりません。'));
+        }
+        if (strlen($event->getForm()->getConfig()->getOptions()['password']) < 8) {
+            $form['passwordErrors']->addError(new FormError('値が短すぎます。8文字以上でなければなりません。'));
         }
     }
 
