@@ -156,14 +156,15 @@ class EntryType extends AbstractType
 
     public function validatePassword(FormEvent $event)
     {
+        $length = strlen($event->getForm()->getConfig()->getOptions()['password']);
         $form = $event->getForm();
         if (!$event->getForm()->getConfig()->getOptions()['password']) {
             $form['passwordErrors']->addError(new FormError('入力されていません。'));
         }
-        if (strlen($event->getForm()->getConfig()->getOptions()['password']) > 32) {
+        if ( $length > 32) {
             $form['passwordErrors']->addError(new FormError('値が長すぎます。32文字以内でなければなりません。'));
         }
-        if (strlen($event->getForm()->getConfig()->getOptions()['password']) < 8 && strlen($event->getForm()->getConfig()->getOptions()['password']) > 0) {
+        if ($length < 8 && $length > 0) {
             $form['passwordErrors']->addError(new FormError('値が短すぎます。8文字以上でなければなりません。'));
         }
     }
