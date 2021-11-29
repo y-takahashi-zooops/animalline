@@ -165,7 +165,7 @@ var_dump($csvpath);
                     $ProductClass = $this->productClassRepository->findOneby(['code' => $data[0]]);
                     $Product = $ProductClass->getProduct();
 
-                    if(file_exists("/var/www/animalline/html/upload/save_image/".$filePath)){
+                    if(file_exists("/var/www/animalline_regist/html/upload/save_image/".$filePath)){
                         $ProductImage = new ProductImage();
                         
                         $ProductImage
