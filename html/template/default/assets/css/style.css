@@ -10549,7 +10549,7 @@ label[for="order_type_1"] {
 label[for="cycle_type_0"],
 label[for="cycle_type_1"] {
   font-weight: normal;
-  padding-left: 20px;
+  padding-left: 5px;
 }
 
 /* 間隔のラベルを消去 */
@@ -10571,10 +10571,10 @@ label[for="change_subscription_day"]{
   border-radius: 10px 4px 2px;
   list-style: none;
 }
-
+/* 
 .order_list_block .ec-numberInput {
   padding-left: 1.25rem;
-}
+} */
 
 .subscription_cycle_block,
 .next_delivery_date_block {
