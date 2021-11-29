@@ -2,6 +2,7 @@
 
 namespace Customize\Controller\Breeder;
 
+use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederPetImage;
 use Customize\Entity\BreederPets;
@@ -493,15 +494,17 @@ class BreederPetController extends AbstractController
         $curStatus = $breederPet->getIsActive();
         if ($curStatus === AnilineConf::IS_ACTIVE_PRIVATE) {
             $breederPet->setIsActive(AnilineConf::IS_ACTIVE_PUBLIC);
+            $breederPet->setReleaseDate(Carbon::now());
         } elseif ($curStatus === AnilineConf::IS_ACTIVE_PUBLIC) {
             $breederPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
+            $breederPet->setReleaseDate(null);
         }
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($breederPet);
         $em->flush();
 
-        return $this->redirectToRoute('breeder_pets_edit', ['id' => $breederPet->getId()]);
+        return $this->redirectToRoute('breeder_pet_list');
     }
 
     /**

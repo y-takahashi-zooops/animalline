@@ -2,6 +2,7 @@
 
 namespace Customize\Controller\Adoption;
 
+use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationPetImage;
 use Customize\Entity\ConservationPets;
@@ -275,7 +276,7 @@ class AdoptionPetController extends AbstractController
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
 
-        $request->request->set('thumbnail_path', $image0 ? : ($conservationPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath() : ''));
+        $request->request->set('thumbnail_path', $image0 ?: ($conservationPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath() : ''));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -335,15 +336,17 @@ class AdoptionPetController extends AbstractController
         $curStatus = $conservationPet->getIsActive();
         if ($curStatus === AnilineConf::IS_ACTIVE_PRIVATE) {
             $conservationPet->setIsActive(AnilineConf::IS_ACTIVE_PUBLIC);
+            $conservationPet->setReleaseDate(Carbon::now());
         } elseif ($curStatus === AnilineConf::IS_ACTIVE_PUBLIC) {
             $conservationPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
+            $conservationPet->setReleaseDate(null);
         }
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($conservationPet);
         $em->flush();
 
-        return $this->redirectToRoute('adoption_pets_edit', ['id' => $conservationPet->getId()]);
+        return $this->redirectToRoute('adoption_pet_list');
     }
 
     /**
@@ -394,7 +397,7 @@ class AdoptionPetController extends AbstractController
     public function pet_regist_list(Request $request, PaginatorInterface $paginator)
     {
         $codes = [];
-        $dnaCheckStatusHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id'=>$this->getUser()->getId()]);
+        $dnaCheckStatusHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $this->getUser()->getId()]);
         $DnaCheckStatus = $this->dnaCheckStatusRepository->createQueryBuilder('dcs')
             ->where('dcs.DnaHeader IN(:arr)')
             ->andWhere('dcs.site_type = :siteType')

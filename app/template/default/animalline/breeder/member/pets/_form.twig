@@ -346,6 +346,7 @@
     </div>
 </div>
 
+{% if id %}
 <div class="modal fade" id="modal-change-status" tabindex="-1" role="dialog" aria-labelledby="modal-change-status"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -362,16 +363,17 @@
                 <p class="text-left" id="modal-change-status-message">ペット情報を公開しますか？</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-ec-sub" type="button" data-bs-dismiss="modal">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
                     いいえ
                 </button>
-                <a class="btn btn-ec-conversion" href="{{ url('breeder_pets_edit_change_status', {'id': id}) }}">
+                <a class="btn btn-primary" href="{{ url('breeder_pets_edit_change_status', {'id': id}) }}">
                     はい
                 </a>
             </div>
         </div>
     </div>
 </div>
+{% endif %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
