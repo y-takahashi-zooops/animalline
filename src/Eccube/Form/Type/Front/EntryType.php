@@ -163,7 +163,7 @@ class EntryType extends AbstractType
         if (strlen($event->getForm()->getConfig()->getOptions()['password']) > 32) {
             $form['passwordErrors']->addError(new FormError('値が長すぎます。32文字以内でなければなりません。'));
         }
-        if (strlen($event->getForm()->getConfig()->getOptions()['password']) < 8) {
+        if (strlen($event->getForm()->getConfig()->getOptions()['password']) < 8 && strlen($event->getForm()->getConfig()->getOptions()['password']) > 0) {
             $form['passwordErrors']->addError(new FormError('値が短すぎます。8文字以上でなければなりません。'));
         }
     }
@@ -174,7 +174,7 @@ class EntryType extends AbstractType
         if (!$event->getForm()->getConfig()->getOptions()['email']) {
             $form['emailErrors']->addError(new FormError('入力されていません。'));
         }
-        if (!filter_var($event->getForm()->getConfig()->getOptions()['email'], FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($event->getForm()->getConfig()->getOptions()['email'], FILTER_VALIDATE_EMAIL) && $event->getForm()->getConfig()->getOptions()['email']) {
             $form['emailErrors']->addError(new FormError('有効なメールアドレスではありません。'));
         }
     }
