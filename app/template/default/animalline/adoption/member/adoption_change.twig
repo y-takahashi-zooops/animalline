@@ -8,8 +8,8 @@ http://www.ec-cube.co.jp/
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
-{% set site_type = 'breeder' %}
-{% extends 'animalline/breeder/frame.twig' %}
+{% set site_type = 'adoption' %}
+{% extends 'animalline/adoption/frame.twig' %}
 
 {% form_theme form 'Form/form_div_layout.twig' %}
 
@@ -28,7 +28,7 @@ file that was distributed with this source code.
             <div class="ec-editRole">
                 <div class="ec-off1Grid">
                     <div class="ec-off1Grid__cell">
-                        <form method="post" action="{{ url('breeder_change') }}" novalidate class="h-adr">
+                        <form method="post" action="{{ url('adoption_change') }}" novalidate class="h-adr">
                             <span class="p-country-name" style="display:none;">Japan</span>
                             {{ form_widget(form._token) }}
                             <div class="ec-borderedDefs">
@@ -105,10 +105,10 @@ file that was distributed with this source code.
                                         {{ form_label(form.email, 'メールアドレス', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
-                                        <div class="ec-input{{ has_errors(form.email.first) or has_errors(form.emailErrors)? ' error' }}">
+                                        <div class="ec-input{{ has_errors(form.email.first) or has_errors(form.emailErrors) ? ' error' }}">
                                             {{ form_widget(form.email.first, { 'attr': { 'placeholder': '例：ec-cube@example.com' }}) }}
                                         </div>
-                                        <div class="ec-input" id="breeder_email_error">
+                                        <div class="ec-input" id="adoption_email_error">
                                             {{ form_errors(form.emailErrors) }}
                                         </div>
                                         <div class="ec-input{{ has_errors(form.email.second) ? ' error' }}">
@@ -122,13 +122,13 @@ file that was distributed with this source code.
                                         {{ form_label(form.password, 'パスワード', { 'label_attr': {'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
-                                        <div class="ec-input{{ has_errors(form.password.first) or has_errors(form.passwordErrors)? ' error' }}">
+                                        <div class="ec-input{{ has_errors(form.password.first) or has_errors(form.passwordErrors) ? ' error' }}">
                                             {{ form_widget(form.password.first, {
                                                 'attr': { 'placeholder': '半角英数記号%min%〜%max%文字'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }) },
                                                 'type': 'password'
                                             }) }}
                                         </div>
-                                        <div class="ec-input" id="breeder_password_error">
+                                        <div class="ec-input" id="adoption_password_error">
                                             {{ form_errors(form.passwordErrors) }}
                                         </div>
                                         <div class="ec-input{{ has_errors(form.password.second) ? ' error' }}">
