@@ -222,7 +222,10 @@ class AdoptionMemberController extends AbstractController
         $customer->setPassword($this->eccubeConfig['eccube_default_password']);
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
-        $builder = $this->formFactory->createBuilder(EntryType::class, $customer);
+        $builder = $this->formFactory->createBuilder(EntryType::class, $customer, [
+            'password' => $request->get('entry')['password']['first'] ?? '',
+            'email' => $request->get('entry')['email']['first'] ?? '',
+        ]);
 
         $event = new EventArgs(
             [

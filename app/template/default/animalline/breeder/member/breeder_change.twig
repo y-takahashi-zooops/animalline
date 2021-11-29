@@ -105,9 +105,11 @@ file that was distributed with this source code.
                                         {{ form_label(form.email, 'メールアドレス', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
-                                        <div class="ec-input{{ has_errors(form.email.first) ? ' error' }}">
+                                        <div class="ec-input{{ has_errors(form.email.first) or has_errors(form.emailErrors)? ' error' }}">
                                             {{ form_widget(form.email.first, { 'attr': { 'placeholder': '例：ec-cube@example.com' }}) }}
-                                            {{ form_errors(form.email.first) }}
+                                        </div>
+                                        <div class="ec-input" id="breeder_img_error">
+                                            {{ form_errors(form.emailErrors) }}
                                         </div>
                                         <div class="ec-input{{ has_errors(form.email.second) ? ' error' }}">
                                             {{ form_widget(form.email.second, { 'attr': { 'placeholder': '確認のためもう一度入力してください' }}) }}
@@ -120,12 +122,14 @@ file that was distributed with this source code.
                                         {{ form_label(form.password, 'パスワード', { 'label_attr': {'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
-                                        <div class="ec-input{{ has_errors(form.password.first) ? ' error' }}">
+                                        <div class="ec-input{{ has_errors(form.password.first) or has_errors(form.passwordErrors)? ' error' }}">
                                             {{ form_widget(form.password.first, {
                                                 'attr': { 'placeholder': '半角英数記号%min%〜%max%文字'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }) },
                                                 'type': 'password'
                                             }) }}
-                                            {{ form_errors(form.password.first) }}
+                                        </div>
+                                        <div class="ec-input" id="breeder_img_error">
+                                            {{ form_errors(form.passwordErrors) }}
                                         </div>
                                         <div class="ec-input{{ has_errors(form.password.second) ? ' error' }}">
                                             {{ form_widget(form.password.second, {
