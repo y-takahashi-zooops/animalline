@@ -326,6 +326,27 @@ class AdoptionPetController extends AbstractController
     }
 
     /**
+     * ペットの状態を変更する
+     *
+     * @Route("/adoption/member/pets/edit/{id}/change_status", name="adoption_pets_edit_change_status", methods={"GET"})
+     */
+    public function adoption_pets_change_status(Request $request, ConservationPets $conservationPet)
+    {
+        $curStatus = $conservationPet->getIsActive();
+        if ($curStatus === AnilineConf::IS_ACTIVE_PRIVATE) {
+            $conservationPet->setIsActive(AnilineConf::IS_ACTIVE_PUBLIC);
+        } elseif ($curStatus === AnilineConf::IS_ACTIVE_PUBLIC) {
+            $conservationPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($conservationPet);
+        $em->flush();
+
+        return $this->redirectToRoute('adoption_pets_edit', ['id' => $conservationPet->getId()]);
+    }
+
+    /**
      * Copy image and retrieve new url of the copy
      *
      * @param string $imageUrl

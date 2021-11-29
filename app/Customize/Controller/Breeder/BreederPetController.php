@@ -429,7 +429,7 @@ class BreederPetController extends AbstractController
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
 
-        $request->request->set('thumbnail_path', $image0 ? : ($breederPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath() : ''));
+        $request->request->set('thumbnail_path', $image0 ?: ($breederPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath() : ''));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -484,6 +484,27 @@ class BreederPetController extends AbstractController
     }
 
     /**
+     * ペットの状態を変更する
+     *
+     * @Route("/breeder/member/pets/edit/{id}/change_status", name="breeder_pets_edit_change_status", methods={"GET"})
+     */
+    public function breeder_pets_change_status(Request $request, BreederPets $breederPet)
+    {
+        $curStatus = $breederPet->getIsActive();
+        if ($curStatus === AnilineConf::IS_ACTIVE_PRIVATE) {
+            $breederPet->setIsActive(AnilineConf::IS_ACTIVE_PUBLIC);
+        } elseif ($curStatus === AnilineConf::IS_ACTIVE_PUBLIC) {
+            $breederPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($breederPet);
+        $em->flush();
+
+        return $this->redirectToRoute('breeder_pets_edit', ['id' => $breederPet->getId()]);
+    }
+
+    /**
      * Copy image and retrieve new url of the copy
      *
      * @param string $imageUrl
@@ -531,7 +552,7 @@ class BreederPetController extends AbstractController
     public function pet_regist_list(Request $request, PaginatorInterface $paginator): array
     {
         $codes = [];
-        $dnaCheckStatusHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id'=>$this->getUser()->getId()]);
+        $dnaCheckStatusHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $this->getUser()->getId()]);
         $DnaCheckStatus = $this->dnaCheckStatusRepository->createQueryBuilder('dcs')
             ->where('dcs.DnaHeader IN(:arr)')
             ->andWhere('dcs.site_type = :siteType')

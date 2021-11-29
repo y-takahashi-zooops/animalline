@@ -1,3 +1,6 @@
+{% set id = app.request.get('id') %}
+{% set pet = form.vars.data %}
+
 {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 {{ form_row(form._token) }}
     <div class="row mb-3">
@@ -168,6 +171,15 @@
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4">
+            {% if id %}
+                {% if pet.isActive == 0 %}
+                    <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status"
+                        data-is-active="{{ pet.isActive }}">このペットを公開にする</button>
+                {% elseif pet.isActive == 1 %}
+                    <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status"
+                        data-is-active="{{ pet.isActive }}">このペットを非公開にする</button>
+                {% endif %}
+            {% endif %}
             <button class="ec-blockBtn--action mt-4 mb-4">{{ '登録する' }}</button>
             <a class="ec-blockBtn--cancel" href={{url('adoption_pet_list')}} style="color:white;">{{ '戻る' }}</a>
         </div>
@@ -200,6 +212,33 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
                 <button type="button" class="btn btn-primary" id="crop">切り抜き</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-change-status" tabindex="-1" role="dialog" aria-labelledby="modal-change-status"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold">
+                    確認ダイアログ
+                </h5>
+                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <p class="text-left" id="modal-change-status-message">ペット情報を公開しますか？</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ec-sub" type="button" data-bs-dismiss="modal">
+                    いいえ
+                </button>
+                <a class="btn btn-ec-conversion" href="{{ url('adoption_pets_edit_change_status', {'id': id}) }}">
+                    はい
+                </a>
             </div>
         </div>
     </div>
@@ -299,6 +338,12 @@
         if ($('.conservation_pets_image4').val()) {
             $("#conservation_pets_image4").parent().parent().find('button').show();
         }
+
+        $('#btn-change-status').on('click', function () {
+        const modalMsg = $(this).data('is-active') ? 'ペット情報を非公開にしますか？' : 'ペット情報を公開しますか？';
+        $('#modal-change-status-message').text(modalMsg);
+        $('#modal-change-status').modal('show');
+    });
     });
 </script>
 {% endblock %}
