@@ -160,6 +160,9 @@ class EntryType extends AbstractType
         if (!$event->getForm()->getConfig()->getOptions()['password']) {
             $form['passwordErrors']->addError(new FormError('入力されていません。'));
         }
+        if (strlen($event->getForm()->getConfig()->getOptions()['password']) < 32 && strlen($event->getForm()->getConfig()->getOptions()['password'])) {
+            $form['passwordErrors']->addError(new FormError('半角英数記号8〜32文字。'));
+        }
     }
 
     public function validateEmail(FormEvent $event)
@@ -167,6 +170,9 @@ class EntryType extends AbstractType
         $form = $event->getForm();
         if (!$event->getForm()->getConfig()->getOptions()['email']) {
             $form['emailErrors']->addError(new FormError('入力されていません。'));
+        }
+        if (!filter_var($event->getForm()->getConfig()->getOptions()['email'], FILTER_VALIDATE_EMAIL)) {
+            $form['emailErrors']->addError(new FormError('有効なメールアドレスではありません。'));
         }
     }
 }

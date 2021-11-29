@@ -108,7 +108,7 @@ file that was distributed with this source code.
                                         <div class="ec-input{{ has_errors(form.email.first) or has_errors(form.emailErrors)? ' error' }}">
                                             {{ form_widget(form.email.first, { 'attr': { 'placeholder': '例：ec-cube@example.com' }}) }}
                                         </div>
-                                        <div class="ec-input" id="breeder_img_error">
+                                        <div class="ec-input" id="breeder_email_error">
                                             {{ form_errors(form.emailErrors) }}
                                         </div>
                                         <div class="ec-input{{ has_errors(form.email.second) ? ' error' }}">
@@ -128,7 +128,7 @@ file that was distributed with this source code.
                                                 'type': 'password'
                                             }) }}
                                         </div>
-                                        <div class="ec-input" id="breeder_img_error">
+                                        <div class="ec-input" id="breeder_password_error">
                                             {{ form_errors(form.passwordErrors) }}
                                         </div>
                                         <div class="ec-input{{ has_errors(form.password.second) ? ' error' }}">
