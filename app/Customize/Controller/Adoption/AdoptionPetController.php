@@ -346,7 +346,7 @@ class AdoptionPetController extends AbstractController
         $em->persist($conservationPet);
         $em->flush();
 
-        return $this->redirectToRoute('adoption_pet_list');
+        return $this->redirectToRoute('adoption_pets_edit', ['id' => $conservationPet->getId()]);
     }
 
     /**

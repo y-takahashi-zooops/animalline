@@ -504,7 +504,7 @@ class BreederPetController extends AbstractController
         $em->persist($breederPet);
         $em->flush();
 
-        return $this->redirectToRoute('breeder_pet_list');
+        return $this->redirectToRoute('breeder_pets_edit', ['id' => $breederPet->getId()]);
     }
 
     /**
