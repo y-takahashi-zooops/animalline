@@ -51,6 +51,11 @@ class ConservationPets
     private $pet_birthday;
 
     /**
+     * @ORM\Column(name="pet_age", type="string", length=20, nullable=true)
+     */
+    private $pet_age;
+
+    /**
      * @ORM\Column(name="coat_color", type="string", length=20, nullable=true)
      */
     private $coat_color;
@@ -76,7 +81,7 @@ class ConservationPets
     private $description;
 
     /**
-     * @ORM\Column(name="delivery_time", type="text")
+     * @ORM\Column(name="delivery_time", type="text", nullable=true)
      */
     private $delivery_time;
 
@@ -195,6 +200,18 @@ class ConservationPets
     public function setPetBirthday(\DateTimeInterface $pet_birthday): self
     {
         $this->pet_birthday = $pet_birthday;
+
+        return $this;
+    }
+
+    public function getPetAge(): ?string
+    {
+        return $this->pet_age;
+    }
+
+    public function setPetAge(string $pet_age): self
+    {
+        $this->pet_age = $pet_age;
 
         return $this;
     }

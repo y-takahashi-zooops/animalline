@@ -94,14 +94,13 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.pet_birthday, '誕生日', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            {{ form_label(form.pet_age, '年齢', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span>
+            <span class="ec-required">おおよそ何歳かをご記入ください。</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
-            {{ form_widget(form.pet_birthday.year) }}<span>&nbsp;/&nbsp;</span>
-            {{ form_widget(form.pet_birthday.month) }}<span>&nbsp;/&nbsp;</span>
-            {{ form_widget(form.pet_birthday.day) }}
-            {{ form_errors(form.pet_birthday) }}
+            {{ form_widget(form.pet_age) }}
+            {{ form_errors(form.pet_age) }}
         </div>
     </div>
     <div class="row mb-3">
@@ -114,6 +113,7 @@
             {{ form_errors(form.coat_color) }}
         </div>
     </div>
+    {#
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.future_wait, '成犬時予想体重「kg」', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
@@ -124,9 +124,10 @@
             {{ form_errors(form.future_wait) }}
         </div>
     </div>
+    #}
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.pr_comment, 'PRコメント', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            {{ form_label(form.pr_comment, '一言コメント', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input">
@@ -136,7 +137,7 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.description, '説明文', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            {{ form_label(form.description, '性格・特長・健康状態', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span>
         </div>
         <div class="col-md-5 ec-input">
@@ -144,16 +145,7 @@
             {{ form_errors(form.description) }}
         </div>
     </div>
-    <div class="row mb-3">
-        <div class="col-md-3">
-            {{ form_label(form.delivery_time, '引き渡し時期', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-            <span class="ec-required">必須</span>
-        </div>
-        <div class="col-md-8 ec-input">
-            {{ form_widget(form.delivery_time) }}
-            {{ form_errors(form.delivery_time) }}
-        </div>
-    </div>
+
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
@@ -162,6 +154,17 @@
         <div class="col-md-8 ec-input">
             {{ form_widget(form.delivery_way, {'attr': {'rows': 5, 'placeholder' : '引き渡し方法をご記入ください。'}}) }}
             {{ form_errors(form.delivery_way) }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            {{ form_label(form.delivery_time, '備考', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">上記項目以外の譲渡条件やトライアル期間等を記載お願い致します。</span>
+        </div>
+        <div class="col-md-8 ec-input">
+            {{ form_widget(form.delivery_time) }}
+            {{ form_errors(form.delivery_time) }}
         </div>
     </div>
 

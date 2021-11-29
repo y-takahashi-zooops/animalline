@@ -6,14 +6,14 @@
     <section id="breeder-column" class="breeder-column_dog">
         <div class="inner">
             <div class="ec-pageHeader">
-                <h1>{{ petType== 1?'犬舎情報登録':'猫舎情報登録'|trans }}</h1>
+                <h1>情報登録</h1>
             </div>
             <div class="ec-off1Grid">
                 <div class="ec-off1Grid__cell">
                     <form name="adoption-house" method="post" action="{{ url('adoption_house_info', {'pet_type': petType}) }}"
                         novalidate class="h-adr">
                         <span class="p-country-name" style="display:none;">Japan</span>
-                        <h2>{{ petType == 1 ?'犬舎情報':'猫舎情報' }}</h2>
+                        <h2>情報</h2>
                         {{ form_widget(form._token) }}
                         <div class="ec-borderedDefs">
                             <div class="mb-5">
