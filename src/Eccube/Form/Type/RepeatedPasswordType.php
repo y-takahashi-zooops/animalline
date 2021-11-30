@@ -19,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\OptionsResolver\Options;
 
 /**
  * Class RepeatedPasswordType
@@ -75,6 +76,9 @@ class RepeatedPasswordType extends AbstractType
                     'placeholder' => 'common.repeated_confirm',
                 ],
             ],
+            'error_mapping' => function (Options $options) {
+                return ['.' => $options['second_name']];
+            },
         ]);
     }
 
