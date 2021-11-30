@@ -143,6 +143,15 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * @Route("/adoption/info", name="adoption_info")
+     * @Template("animalline/adoption/info.twig")
+     */
+    public function adoption_info()
+    {
+        return [];
+    }
+
+    /**
      * @Route("/adoption/guide/dog", name="adoption_guide_dog")
      * @Template("animalline/adoption/guide/dog.twig")
      */

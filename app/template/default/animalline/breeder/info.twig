@@ -1,0 +1,138 @@
+{% set site_type = 'adoption' %}
+{% extends 'animalline/adoption/frame.twig' %}
+
+{% block main %}
+<div class="page-inner">
+
+      <section id="page-mv__breeder_detail" class="page-mv_detail">
+          <div class="wrap">
+            <div class="text">
+              <h2><img src="{{ asset('assets/img/breeder/mv-logo.png') }}" alt="Animalline Breeder"/></h2>
+              <p><img src="{{ asset('assets/img/breeder/mv-copy.png') }}" alt="3つの安全・安心"/></p>
+              <ul>
+                <li><a href="#content03"><img src="{{ asset('assets/img/breeder/mv-img01.png') }}" alt="生活面"/></a></li>
+                <li><a href="#content01"><img src="{{ asset('assets/img/breeder/mv-img02.png') }}" alt="健康面"/></a></li>
+                <li><a href="#content02"><img src="{{ asset('assets/img/breeder/mv-img03.png') }}" alt="価格面"/></a></li>
+              </ul>
+            </div>
+          </div>
+      </section>
+
+      <section id="page-detail-content01">
+        <div class="page-detail-content01__title"><h3><img src="{{ asset('assets/img/breeder/title01.png') }}" alt="アニマルラインとは"/></h3>
+        </div>
+        <div class="page-detail-content01__body">
+          <p>「ブリーダー」「動物保護団体」「ペットオーナー様」3者すべてに<br>
+            <strong>“やさしい”</strong>ビジネスモデルを目指します。</p>
+        </div>
+      </section>
+
+      <section id="page-detail-content02" class="page-detail-content02_breeder">
+        <div class="page-detail-content02__title">
+          <div class="icon"><img src="{{ asset('assets/img/breeder/icon01.png') }}" alt="ブリーダーから購入するメリット"/></div>
+          <h3>ブリーダーから購入するメリット</h3>
+        </div>
+        <div class="page-detail-content02__body">
+          <article id="content01">
+            <div class="text">
+              <h3 class="color01">健康面での安心・安全</h3>
+              <p>「Animalline Breeder」では、犬猫の遺伝病発症リスクが分かる遺伝病DNA検査を全頭に実施し、
+                発症リスクのない生体のみを掲載しております。</p>
+                <p>遺伝子病とは、遺伝子に変異が起こることで発症する病気です。
+                疾患のリスクを事前に理解しておくことで、最適な飼育方法や対処法の準備ができます。</p>
+                <p>健全なブリーディングの推進により、販売子犬・子猫の遺伝病リスク低減に努め、みなさまに安心・安全を提供し、遺伝病のない世界を目指します。</p>
+            </div>
+            <figure><img src="{{ asset('assets/img/breeder/breeder-img01.jpg') }}" alt="健康面での安心・安全"/></figure>
+          </article>
+        </div>
+        <div class="dna-content02__body">
+          <article class="mh">
+            <figure><img src="{{ asset('assets/img/dna/dna-icon01.png') }}" alt="遺伝子検査とは"/></figure>
+            <h2>遺伝子検査とは</h2>
+            <h3>遺伝子検査とは、<br>
+            DNAの変異（突然変異）を<br>
+            検出する検査のことを言います。</h3>
+            <p>遺伝子検査を行うことで、遺伝子の変異によって発症する<br>
+            遺伝性疾患のリスク判定が出来ます。<br>
+            親から受け継いだ変異遺伝子を検査し、<br>
+            将来発症する遺伝性の病気リスクを判定します。</p>
+          </article>
+          <article class="mh">
+            <figure><img src="{{ asset('assets/img/dna/dna-icon02.png') }}" alt="遺伝子病とは"/></figure>
+            <h2>遺伝子病とは</h2>
+            <h3>遺伝病とは、<br>
+            遺伝子が変異することで発症する<br>
+            病気のことです。</h3>
+            <p>染色体や遺伝子の変異によって発症する病気です。<br>
+            親がもつ染色体や遺伝子の変異が子に伝わる（遺伝する）場合と、<br>
+            親自身には全く変異がないにもかかわらず、突然変異によって、<br>
+            子の身体の細胞、精子、卵子の遺伝子・染色体に変異が生じ<br>
+            病気になる場合があります。</p>
+          </article>
+        </div>
+        <div class="dna-content03__title">
+          <h2>なぜ遺伝子検査を行なうのか</h2>
+          <p>遺伝子検査を行う意義として大きく以下の3点が挙げられます。</p>
+        </div>
+        <div class="dna-content03__body">
+          <article>
+            <div class="wrap">
+            <h3>治療や生活環境の指針を示す</h3>
+            <p>例として下記のようなケースが挙げられます。</p>
+            <ul>
+              <li><i class="bi bi-check"></i>治療に使う薬によっては副作用が強く出る可能性がある</li>
+              <li><i class="bi bi-check"></i>手術具の止血が難しいため、輸血が必要になる</li>
+              <li><i class="bi bi-check"></i>適切な給餌や検査を知れる</li>
+            </ul>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+            <h3>発症リスクを知る</h3>
+            <p>遺伝子検査を行うことによって遺伝病の発症リスクを知ることができ、遺伝性疾患に対する備えができることです。事前にその病気のリスクを知ることで、定期検診を行うと共に、早期発見につながり、重症化の予防につながります。</p>
+            </div>
+          </article>
+          <article>
+            <div class="wrap">
+            <h3>変異遺伝子を次世代に残さない</h3>
+            <p>遺伝情報は両親から半分ずつ子に伝達されるため、次の世代を繁殖する前に両親の遺伝子検査を行うことは、遺伝性疾患を将来の世代に増加させないために重要な意義があります。</p>
+            </div>
+          </article>
+        </div>
+        <div class="page-detail-content02__body">
+          <article class="rev" id="content02">
+            <div class="text">
+              <h3 class="color02">価格面での安心・安全</h3>
+              <p>ブリーダー直販価格なので健康で良質な子犬・子猫を、よりお求めやすい価格で購入することができます。</p>
+            </div>
+            <figure><img src="{{ asset('assets/img/breeder/breeder-img02.jpg') }}" alt="価格面での安心・安全"/></figure>
+          </article>
+          <article id="content03">
+            <div class="text">
+              <h3 class="color03">生活面での安心・安全</h3>
+              <p>ブリーダーの元で生まれた子は、親や兄弟、誕生日が近い子に囲まれた環境で生まれ育てられていることが多く、高い社会性が身についています。</p>
+                <p>動物愛護管理法より、犬や猫の生体販売は生後8週齢からとなっておりますが、この時期は子犬や子猫の母体免疫が切れ始めるので病気にかかやすいです。<br>
+                <p>母犬や母猫といることで、犬社会や猫社会の教育をしてもらえます。<br>
+                親元にいると健康面でも精神面でも、このようなメリットがあります。</p>
+                <p>また、流通過程でかかる感染症や、狭いショーケースに入れられるなどのストレスから生じる免疫力低下などの健康を害するリスクを最大限に抑えることができます。</p>
+            </div>
+            <figure><img src="{{ asset('assets/img/breeder/breeder-img03.jpg') }}" alt="健康面での安心・安全"/></figure>
+          </article>
+        </div>
+      </section>
+
+      <div class="page-detail_btn"><a href="{{ url("breeder_top") }}"><i class="bi bi-arrow-right-circle-fill"></i>検索TOPページへ</a></div>
+
+    </div>
+
+    <div class="pageback">
+      <a href="./"><i class="bi bi-arrow-return-left"></i></a>
+    </div>
+    <div class="pagetop">
+      <a href="#wrapper"><i class="bi bi-arrow-bar-up"></i></a>
+    </div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/info/page.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
