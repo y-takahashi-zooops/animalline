@@ -6,9 +6,9 @@
       <div class="inner">
         <div class="breeder-mv__container">
           <div class="breeder-mv__text">
-            <h2>テキストが入りますテキストが入りますテキストが入ります</h2>
+            <h2></h2>
             <div class="breeder-mv__text_logo"><img src="{{ asset('assets/img/breeder-mv-logo.png') }}" alt="Animalline Breeder"/></div>
-            <p>キャッチコピーが入ります。</p>
+            <p>ペットとつながる信頼の絆</p>
             <div class="breeder-mv__text_btn">
               <ul>
                 {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
@@ -24,7 +24,11 @@
           <div class="breeder-mv__search">
             <div class="breeder-mv__search_wrap breeder-mv__search_dog">
               <div class="breeder-mv__search_title">
-                <h2>犬を探す</h2>
+                {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+                  <h2>犬を探す</h2>
+                {% else %}
+                  <h2>猫を探す</h2>
+                {% endif %}
               </div>
               <div class="breeder-mv__search_body">
                 <form action="{{ url('breeder_pet_search_result') }}" method="get">

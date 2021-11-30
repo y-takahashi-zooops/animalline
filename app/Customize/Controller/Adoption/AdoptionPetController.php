@@ -3,6 +3,7 @@
 namespace Customize\Controller\Adoption;
 
 use Carbon\Carbon;
+use DateTime;
 use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationPetImage;
 use Customize\Entity\ConservationPets;
@@ -184,8 +185,11 @@ class AdoptionPetController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $conservationPet->setConservation($conservation);
             $conservationPet->setDnaCheckResult(0);
-            $conservationPet->setIsActive(0);
+            $conservationPet->setIsActive(1);
             $conservationPet->setPrice(0);
+            $bd = new DateTime('now');
+            $conservationPet->setPetBirthday($bd);
+            $conservationPet->setFutureWait(0);
             $entityManager->persist($conservationPet);
             $entityManager->flush();
             $petId = $conservationPet->getId();
@@ -278,7 +282,6 @@ class AdoptionPetController extends AbstractController
 
         $request->request->set('thumbnail_path', $image0 ?: ($conservationPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath() : ''));
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $petId = $conservationPet->getId();
             $img0 = $this->setImageSrc($request->get('img0'), $petId);
@@ -288,6 +291,7 @@ class AdoptionPetController extends AbstractController
             $img4 = $this->setImageSrc($request->get('img4'), $petId);
             $entityManager = $this->getDoctrine()->getManager();
             $conservationPet->setThumbnailPath($img0);
+            
             $entityManager->persist($conservationPet);
             foreach ($conservationPetImages as $key => $image) {
                 $image->setImageUri(${'img' . $key});

@@ -2,7 +2,66 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-   {{include('company.twig')}}
+   <section id="breeder-column">
+        <div class="inner">
+            <div class="ec-role">
+                <div class="ec-pageHeader">
+                    <h1>{{ '会社概要'|trans }}</h1>
+                </div>
+                <div class="ec-off1Grid">
+                    <div class="ec-off1Grid__cell">
+                        <div class="ec-borderedDefs">
+                                <dl id="help_about_box__company_name">
+                                    <dt>
+                                        <label class="ec-label">{{ '会社名'|trans }}</label>
+                                    </dt>
+                                    <dd>グローバル・ブリッジ・ジャパン株式会社</dd>
+                                </dl>
+
+                                <dl id="help_about_box__address">
+                                    <dt>
+                                        <label class="ec-label">{{ '住所'|trans }}</label>
+                                    </dt>
+                                    <dd>{{ '〒'|trans }}164-0014<br />
+                                        東京都中野区南台3-37-20
+                                    </dd>
+                                </dl>
+
+                                <dl id="help_about_box__phone_number">
+                                    <dt>
+                                        <label class="ec-label">{{ '電話番号'|trans }}</label>
+                                    </dt>
+                                    <dd>03-5316-2125</dd>
+                                </dl>
+
+                                <dl id="help_about_box__good_traded">
+                                    <dt>
+                                        <label class="ec-label">設　立</label>
+                                    </dt>
+                                    <dd>平成18年2月</dd>
+                                </dl>
+
+                                <dl id="help_about_box__good_traded">
+                                    <dt>
+                                        <label class="ec-label">Webサイト</label>
+                                    </dt>
+                                    <dd><a href="https://www.gbjapan.jp" target="_blank">https://www.gbjapan.jp/</a></dd>
+                                </dl>
+
+                                <dl id="help_about_box__message">
+                                    <dt>
+                                        <label class="ec-label">主な事業内容</label>
+                                    </dt>
+                                    <dd>ブリーダー紹介ウェブサイトの運営<br>
+                                        ペット関連商品の販売<br>
+                                        ペット雑誌の企画・出版<br>
+                                    </dd>
+                                </dl>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
 {% endblock %}
 {% block stylesheet %}{% endblock %}
 {% block javascript %}{% endblock %}

@@ -52,16 +52,10 @@
                         <div class="col-lg-4 col-md-12">
                             <a href="{{url('adoption_baseinfo',{'return_path': "adoption_mypage"})}}" class="btn btn-primary btn-block mt-3" role="button">基本情報編集</a>
                         </div>
-                        {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 1 %}
-                            <div class="col-lg-4 col-md-12">
-                                <a href="{{path('adoption_house_info',{'pet_type': 1 ,'return_path': "adoption_mypage"})}}" class="btn btn-primary btn-block mt-3" role="button">犬舎情報編集</a>
-                            </div>
-                        {% endif %}
-                        {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 2 %}
-                            <div class="col-lg-4 col-md-12">
-                                <a href="{{path('adoption_house_info',{'pet_type': 2, 'return_path': "adoption_mypage" })}}" class="btn btn-primary btn-block mt-3" role="button">猫舎情報編集</a>
-                            </div>
-                        {% endif %}
+                       
+                        <div class="col-lg-4 col-md-12">
+                            <a href="{{path('adoption_house_info',{'pet_type': 1 ,'return_path': "adoption_mypage"})}}" class="btn btn-primary btn-block mt-3" role="button">情報編集</a>
+                        </div>
                     </div>
                 {% endif %}
                 <div class="row">

@@ -18,56 +18,16 @@
 
             <input type="hidden" id="step" value="{{ step }}">
             {% if step > 1 %}
-                {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 1 %}
-                    <div class="row">
-                        <div class="col-lg-4"></div>
-                        <div class="col-lg-4 col-md-12">
-                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_house_info',{'pet_type': 1 })}}'"> 
-                                {% if regcheck[2] == 1 %}<i class="fas fa-check-circle mypage-checkmark"></i>{% endif %}
-                                Step2 - 犬舎情報登録
-                            </button>
-                        </div>
-                    </div>
-                {% endif %}
-                {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 2 %}
-                    <div class="row">
+                <div class="row">
                     <div class="col-lg-4"></div>
-                        <div class="col-lg-4 col-md-12">
-                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_house_info',{'pet_type': 2 })}}'"> 
-                                {% if regcheck[3] == 1 %}<i class="fas fa-check-circle mypage-checkmark"></i>{% endif %}
-                                Step2 - 猫舎情報登録
-                            </button>
-                        </div>
+                    <div class="col-lg-4 col-md-12">
+                        <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_house_info',{'pet_type': 1 })}}'"> 
+                            {% if regcheck[2] == 1 %}<i class="fas fa-check-circle mypage-checkmark"></i>{% endif %}
+                            Step2 - 情報登録
+                        </button>
                     </div>
-                {% endif %}
+                </div>
             {% endif %}
-            <!--
-            {% if step > 2 %}
-                {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 1 %}
-                    <div class="row">
-                        <div class="col-lg-4"></div>
-                        <div class="col-lg-4 col-md-12">
-                            {# <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_examination_info',{'pet_type': 1})}}'">  #}
-                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick=""> 
-                                Step3 - 犬舎審査項目登録
-                            </button>
-                        </div>
-                    </div>
-                {% endif %}
-                
-                {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 2 %}
-                    <div class="row">
-                        <div class="col-lg-4"></div>
-                        <div class="col-lg-4 col-md-12">
-                            {# <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick="location.href='{{path('adoption_examination_info',{'pet_type': 2})}}'">  #}
-                            <button type="button" name="examination_link" class="btn btn-warning btn-block mt-3" onclick=""> 
-                                Step3 - 猫舎審査項目登録
-                            </button>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endif %}
-            -->
             {% if step > 3 %}
                 <div class="row">
                     <div class="col-lg-4"></div>
