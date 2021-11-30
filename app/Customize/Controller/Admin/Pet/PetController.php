@@ -283,7 +283,7 @@ class PetController extends AbstractController
         } else {
             $contact = $this->conservationContactHeaderRepository->find($contactId);
             $conservation = $this->customerRepository->find($contact->getConservation());
-            $conservationContacts = $this->conservationContactsRepository->findBy(['ConservationHeader' => $contact]);
+            $conservationContacts = $this->conservationContactsRepository->findBy(['ConservationContactHeader' => $contact]);
         }
         $customer = $this->customerRepository->find($contact->getCustomer());
         $breederContacts = $paginator->paginate(
