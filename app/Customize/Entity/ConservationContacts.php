@@ -25,7 +25,7 @@ class ConservationContacts
      * @ORM\ManyToOne(targetEntity=ConservationContactHeader::class, inversedBy="ConservationContacts")
      * @ORM\JoinColumn(name="header_id", nullable=false)
      */
-    private $ConservationHeader;
+    private $ConservationContactHeader;
 
     /**
      * @ORM\Column(name="message_from", type="smallint", nullable=false)
@@ -66,14 +66,14 @@ class ConservationContacts
         return $this->id;
     }
 
-    public function getConservationHeader(): ?ConservationContactHeader
+    public function getConservationContactHeader(): ?ConservationContactHeader
     {
-        return $this->ConservationHeader;
+        return $this->ConservationContactHeader;
     }
 
-    public function setConservationHeader(?ConservationContactHeader $ConservationHeader): self
+    public function setConservationContactHeader(?ConservationContactHeader $ConservationContactHeader): self
     {
-        $this->ConservationHeader = $ConservationHeader;
+        $this->ConservationContactHeader = $ConservationContactHeader;
 
         return $this;
     }

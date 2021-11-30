@@ -34,7 +34,7 @@ class ConservationContactTest extends TestCase
         $conservationContactHeader = new ConservationContactHeader;
         $ConservationContact->setMessageFrom($messageFrom)
                             ->setContactDescription($contactDescription)
-                            ->setConservationHeader($conservationContactHeader);
+                            ->setConservationContactHeader($conservationContactHeader);
 
 
         $this->assertEquals([
@@ -45,7 +45,7 @@ class ConservationContactTest extends TestCase
             [
                 $ConservationContact->getMessageFrom(),
                 $ConservationContact->getContactDescription(),
-                $ConservationContact->getConservationHeader()
+                $ConservationContact->getConservationContactHeader()
             ]
         );
     }
@@ -60,7 +60,7 @@ class ConservationContactTest extends TestCase
         $ConservationContact = new ConservationContacts();
 
         // conservation can have one
-        $this->assertNull($ConservationContact->getConservationHeader());
+        $this->assertNull($ConservationContact->getConservationContactHeader());
     }
 
     /**
