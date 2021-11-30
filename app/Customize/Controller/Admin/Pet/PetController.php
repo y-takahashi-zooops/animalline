@@ -279,7 +279,7 @@ class PetController extends AbstractController
         if ($request->get('site_kind') == AnilineConf::SITE_CATEGORY_BREEDER) {
             $contact = $this->breederContactHeaderRepository->find($contactId);
             $breeder = $this->customerRepository->find($contact->getBreeder());
-            $breederContacts = $this->breederContactsRepository->findBy(['BreederHeader' => $contact]);
+            $breederContacts = $this->breederContactsRepository->findBy(['BreederContactHeader' => $contact]);
         } else {
             $contact = $this->conservationContactHeaderRepository->find($contactId);
             $conservation = $this->customerRepository->find($contact->getConservation());

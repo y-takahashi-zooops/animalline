@@ -50,21 +50,10 @@ class BreederContactType extends AbstractType
                     [
                         '問い合わせ' => AnilineConf::CONTACT_TYPE_INQUIRY,
                         '見学希望' => AnilineConf::CONTACT_TYPE_VISIT_REQUEST,
+                        '返信' => AnilineConf::CONTACT_TYPE_REPLY,
                     ],
                 'required' => true,
                 'expanded' => false,
-            ])
-            ->add('contact_title', TextType::class, [
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'min' => 0,
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                ],
-                'required' => false,
             ])
             ->add('contact_description', TextareaType::class, [
                 'required' => false,

@@ -1,5 +1,6 @@
 {% set site_type = 'breeder' %}
 {% extends 'animalline/breeder/frame.twig' %}
+{% set status = 3 %}
 
 {% block main %}
     <div class="main">
@@ -19,12 +20,36 @@
                                         </h6>
                                     </div>
                                     <div class="col-md-10 col-9">
-                                        <h5>{{ message.contactTitle ?? '' }}</h5>
-                                        <h5>{{ message.Breeder.breederName ?? '' }}</h5>
-                                        <h6 class="text-right">返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }}
-                                            <br>
-                                            {{ message.customerNewMsg ? '未読あり' }}
-                                        </h6>
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <h5>{{ message.contactTitle ?? '' }}</h5>
+                                                <h5>{{ message.breederName.breederName ?? '' }}</h5>
+                                            </div>
+                                            <div class="col-5">
+                                                <h6 class="text-right pb-1">
+                                                    {% for item in  message.breederContacts %}
+                                                        {% if item.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER') %}
+                                                            {% set status = item.isReading %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if status == constant('Customize\\Config\\AnilineConf::RESPONSE_REPLIED') %}
+                                                        <i class="fas fa-envelope-open"></i>
+                                                    {% elseif status == constant('Customize\\Config\\AnilineConf::RESPONSE_UNREPLIED') %}
+                                                        <span data-toggle="tooltip"
+                                                              title="未読" class="d-inline-block red-tooltip"
+                                                              tabindex="0">
+                                                    <i class="fas fa-envelope"></i>
+                                                </span>
+                                                    {% endif %}
+                                                    </span>
+                                                </h6>
+                                                <h6 class="text-right">
+                                                    返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }}
+                                                    <br>
+                                                    {{ message.customerNewMsg ? '未読あり' }}
+                                                </h6>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </a>
@@ -39,5 +64,18 @@
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <style>
+        .red-tooltip .tooltip-inner {
+            background-color: #f00 !important;
+        }
+    </style>
 {% endblock %}
-{% block javascript %}{% endblock %}
+{% block javascript %}
+    <script>
+        $(document).ready(function(){
+            $("span").tooltip({
+                template: `<div class="red-tooltip tooltip"><div class="tooltip-inner"></div></div>`
+            });
+    });
+    </script>
+{% endblock %}

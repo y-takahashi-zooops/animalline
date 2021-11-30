@@ -25,7 +25,7 @@ class BreederContacts
      * @ORM\ManyToOne(targetEntity=BreederContactHeader::class, inversedBy="BreederContacts")
      * @ORM\JoinColumn(name="header_id", nullable=false)
      */
-    private $BreederHeader;
+    private $BreederContactHeader;
 
     /**
      * @ORM\Column(name="message_from", type="smallint")
@@ -66,14 +66,14 @@ class BreederContacts
         return $this->id;
     }
 
-    public function getBreederHeader(): ?BreederContactHeader
+    public function getBreederContactHeader(): ?BreederContactHeader
     {
-        return $this->BreederHeader;
+        return $this->BreederContactHeader;
     }
 
-    public function setBreederHeader(BreederContactHeader $BreederHeader): self
+    public function setBreederContactHeader(BreederContactHeader $BreederContactHeader): self
     {
-        $this->BreederHeader = $BreederHeader;
+        $this->BreederContactHeader = $BreederContactHeader;
 
         return $this;
     }
