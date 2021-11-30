@@ -1,6 +1,6 @@
 {% set site_type = 'adoption' %}
 {% extends 'animalline/adoption/frame.twig' %}
-{% set list = "" %}
+{% set status = 3 %}
 
 {% block main %}
     <div class="main">
@@ -29,7 +29,7 @@
                                                 <h6 class="text-right pb-1">
                                                     {% for item in  message.ConservationContacts %}
                                                         {% if item.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER')  %}
-                                                            {% set list = item.isReading %}
+                                                            {% set status = item.isReading %}
                                                         {% endif %}
                                                     {% endfor %}
                                                     {% if status == constant('Customize\\Config\\AnilineConf::RESPONSE_REPLIED') %}
