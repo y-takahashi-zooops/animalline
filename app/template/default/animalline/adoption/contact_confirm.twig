@@ -32,17 +32,6 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.contact_title, 'コンタクト内容タイトル', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                    </dt>
-                                    <dd>
-                                        <div class="ec-input{{ has_errors(form.contact_title) ? ' error' }}">
-                                            {{ form.contact_title.vars.data }}
-                                            {{ form_widget(form.contact_title, { 'attr': {'class': 'hidden'} }) }}
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>
                                         {{ form_label(form.contact_description, 'コンタクト内容本文', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
