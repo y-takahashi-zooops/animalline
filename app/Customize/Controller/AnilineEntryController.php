@@ -284,7 +284,7 @@ class AnilineEntryController extends AbstractController
             $prefix = "default";
         }
 
-        return ['prefix' => $prefix,];
+        return ['prefix' => $prefix,'request' => $request];
     }
 
     /**
