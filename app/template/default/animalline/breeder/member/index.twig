@@ -6,9 +6,10 @@
     <div class="row">
         <div class="main-container col-12">
             <h1>マイページ</h1>
-
+            {% if user.is_breeder == 1 %}
             <div style="text-align: center;background-color: #eee8aa"><a href="#information">▼▼　年末年始の検体送付について　▼▼</a></div>
-            <!--
+            {% endif %}
+            
             <div class="row">
                 <div class="col-lg-4 col-md-12">
                     <a href="{{url('breeder_favorite')}}" class="btn btn-warning btn-block mt-3" role="button">お気に入り一覧</a>
@@ -17,7 +18,7 @@
                     <a href="{{url('breeder_all_message')}}" class="btn btn-warning btn-block mt-3" role="button">取引メッセージ</a>
                 </div>
             </div>
-            -->
+
             <div class="m-2 p-2"></div>
             {% if user.is_breeder == 0 %}
                 <h3>ブリーダー登録申請</h3>

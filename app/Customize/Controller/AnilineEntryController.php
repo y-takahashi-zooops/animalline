@@ -119,11 +119,13 @@ class AnilineEntryController extends AbstractController
     {
         $referer = $request->headers->get('referer');
 
-        if(preg_match("/adoption/",$referer)){
-            $prefix = "adoption";
-        }
-        else if(preg_match("/breeder/",$referer)){
+        $returnPath = $request->get("ReturnPath");
+
+        if($returnPath == "breeder_mypage"){
             $prefix = "breeder";
+        }
+        else if($returnPath == "adoption_mypage"){
+            $prefix = "adoption";
         }
         else{
             $prefix = "default";
@@ -140,13 +142,13 @@ class AnilineEntryController extends AbstractController
      */
     public function index(Request $request)
     {
-        $return_path = $request->get("ReturnPath");
+        $returnPath = $request->get("ReturnPath");
 
-        if(preg_match("/^adoption/",$return_path)){
-            $prefix = "adoption";
-        }
-        else if(preg_match("/^breeder/",$return_path)){
+        if($returnPath == "breeder_mypage"){
             $prefix = "breeder";
+        }
+        else if($returnPath == "adoption_mypage"){
+            $prefix = "adoption";
         }
         else{
             $prefix = "default";
@@ -155,7 +157,7 @@ class AnilineEntryController extends AbstractController
         if ($this->isGranted('ROLE_USER')) {
             log_info('認証済のためログイン処理をスキップ');
 
-            return $this->redirectToRoute($return_path);
+            return $this->redirectToRoute($returnPath);
         }
 
         /** @var $Customer \Eccube\Entity\Customer */
@@ -239,7 +241,7 @@ class AnilineEntryController extends AbstractController
 
                         log_info('仮会員登録完了画面へリダイレクト');
 
-                        return $this->redirectToRoute('entry_complete',['ReturnPath' => $return_path,]);
+                        return $this->redirectToRoute('entry_complete',['ReturnPath' => $returnPath,]);
 
                     } else {
                         // 仮会員設定が無効な場合は、会員登録を完了させる.
@@ -272,13 +274,13 @@ class AnilineEntryController extends AbstractController
      */
     public function complete(Request $request)
     {
-        $return_path = $request->get("ReturnPath");
+        $returnPath = $request->get("ReturnPath");
 
-        if(preg_match("/adoption/",$return_path)){
-            $prefix = "adoption";
-        }
-        else if(preg_match("/breeder/",$return_path)){
+        if($returnPath == "breeder_mypage"){
             $prefix = "breeder";
+        }
+        else if($returnPath == "adoption_mypage"){
+            $prefix = "adoption";
         }
         else{
             $prefix = "default";
@@ -306,11 +308,11 @@ class AnilineEntryController extends AbstractController
      */
     public function activate(Request $request, $secret_key, $returnPath, $qtyInCart = null)
     {
-        if(preg_match("/^adoption/",$returnPath)){
-            $prefix = "adoption";
-        }
-        else if(preg_match("/^breeder/",$returnPath)){
+        if($returnPath == "breeder_mypage"){
             $prefix = "breeder";
+        }
+        else if($returnPath == "adoption_mypage"){
+            $prefix = "adoption";
         }
         else{
             $prefix = "default";
