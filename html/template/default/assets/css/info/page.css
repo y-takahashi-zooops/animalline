@@ -1,0 +1,2455 @@
+@charset "UTF-8";
+
+.page-inner{
+  max-width:1280px;
+  margin:0 auto;
+}
+
+/*--------------------------------
+PAGE - 遺伝子検査
+---------------------------------*/
+
+#page-mv__dna{
+  width:100%;
+  height:400px;
+  background:url(../img/dna/dna-mv-bg.jpg) no-repeat center /cover;
+  position:relative;
+  z-index:1;
+}
+#page-mv__dna h2{
+  text-align:center;
+  padding:40px 0 0;
+}
+
+#dna-content01{
+  background-color:#fff;
+  padding:80px 20px 60px;
+  text-align:center;
+  position:relative;
+  z-index:2;
+}
+#dna-content01 .dna-content01__title{
+  position:absolute;
+  top:-40px;
+  left:0;
+  width:100%;
+}
+#dna-content01 .dna-content01__title h3{
+  display:inline-block;
+  padding:16px 40px;
+  color:#fff4c2;
+  background-color:#388e3c;
+  font-size:36px;
+  border-radius:40px;
+}
+#dna-content01 .dna-content01__body{
+  
+}
+#dna-content01 .dna-content01__body p{
+  font-size:24px;
+  line-height:2;
+  font-weight:300;
+}
+#dna-content01 .dna-content01__body p span{
+  font-size:120%;
+}
+#dna-content01 .dna-content01__body p strong{
+  font-size:120%;
+  font-weight:500;
+  display:inline-block;
+  background:url(../img/page/dna/wave.png) repeat-x center bottom;
+  /*background:linear-gradient(transparent 60%, #f4bab9 60%);*/
+}
+
+#dna-content02{
+  padding:100px 40px;
+  background-color:#13a9a9;
+}
+#dna-content02 .dna-content02__body{
+  display:flex;
+  justify-content:space-between;
+}
+#dna-content02 .dna-content02__body article{
+  width:48%;
+  border-radius:20px;
+  background-color:#dcffff;
+  padding:60px;
+  box-shadow:10px 10px 0 rgba(0,0,0,0.05);
+  text-align:center;
+}
+#dna-content02 .dna-content02__body article figure{
+  margin:0 0 40px;
+}
+#dna-content02 .dna-content02__body article h2{
+  font-size:36px;
+  font-weight:700;
+  margin:0 0 40px;
+  padding:0 0 20px;
+  position:relative;
+}
+#dna-content02 .dna-content02__body article h2:after{
+  content:"";
+  width:60px;
+  height:4px;
+  position:absolute;
+  bottom:0;
+  left:50%;
+  margin-left:-30px;
+  background-color:#ff3d7e;
+}
+#dna-content02 .dna-content02__body article h3{
+  font-size:24px;
+  line-height:1.8;
+  font-weight:700;
+  color:#ff3d7e;
+  margin:0 0 40px;
+}
+#dna-content02 .dna-content02__body article p{
+  font-size:16px;
+  line-height:2.4;
+  font-weight:300;
+}
+
+#dna-content03{
+  padding:100px 0 0;
+}
+#dna-content03 .dna-content03__title{
+  text-align:center;
+  background:url(../img/page/dna/dna-icon03.png) no-repeat center top;
+  padding:120px 0 0;
+  margin:0 0 60px;
+}
+#dna-content03 .dna-content03__title h2{
+  font-size:48px;
+  font-weight:700;
+  margin:0 0 20px;
+}
+#dna-content03 .dna-content03__title p{
+  font-size:24px;
+}
+#dna-content03 .dna-content03__body{
+  display:flex;
+  justify-content:space-between;
+  margin:0 0 60px;
+}
+#dna-content03 .dna-content03__body article{
+  width:32%;
+  border-radius:20px;
+  background-color:#dcedc8;
+  padding:40px 30px 30px;
+  text-align:center;
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+#dna-content03 .dna-content03__body article:before{
+  content:"";
+  position:absolute;
+  top:-15px;
+  left:-15px;
+  width:60px;
+  height:60px;
+  background-repeat:no-repeat;
+  background-position:center;
+}
+#dna-content03 .dna-content03__body article:nth-child(1):before{
+  background-image:url(../img/page/dna/num01.png);
+}
+#dna-content03 .dna-content03__body article:nth-child(2):before{
+  background-image:url(../img/page/dna/num02.png);
+}
+#dna-content03 .dna-content03__body article:nth-child(3):before{
+  background-image:url(../img/page/dna/num03.png);
+}
+#dna-content03 .dna-content03__body article h3{
+  font-size:24px;
+  margin:0 0 20px;
+  font-weight:700;
+  color:#388e3c;
+}
+#dna-content03 .dna-content03__body article p{
+  font-size:16px;
+  line-height:2;
+  font-weight:300;
+  text-align:left;
+}
+#dna-content03 .dna-content03__body article ul{
+  margin:20px 0 0;
+  padding:20px 20px 10px;
+  background-color:#fff;
+  border-radius:10px;
+  text-align:left;
+}
+#dna-content03 .dna-content03__body article ul li{
+  font-size:16px;
+  position:relative;
+  padding:0 0 0 20px;
+  margin:0 0 10px;
+}
+#dna-content03 .dna-content03__body article ul li i{
+  position:absolute;
+  top:-8px;
+  left:-8px;
+  font-size:24px;
+  color:#f57f17;
+}
+#dna-content03 .comment {
+  position: relative;
+  display: block;
+  margin:0 0 30px;
+  padding: 20px 20px;
+  min-width: 120px;
+  max-width: 100%;
+  color: #fff;
+  background: #ef5350;
+  border-radius:60px;
+  text-align:center;
+}
+#dna-content03 .comment:before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -12px;
+  border: 12px solid transparent;
+  border-top: 12px solid #ef5350;
+}
+#dna-content03 .comment p{
+  line-height:1.6;
+  font-size:24px;
+  margin:0;
+}
+
+#dna-content04{
+  padding:100px 0 60px 0;
+}
+#dna-content04 .dna-content04__title{
+  text-align:center;
+  background:url(../img/page/dna/dna-icon04.png) no-repeat center top;
+  padding:100px 0 0;
+  margin:0 0 80px;
+}
+#dna-content04 .dna-content04__title h2{
+  font-size:48px;
+  font-weight:700;
+  margin:0 0 40px;
+}
+#dna-content04 .dna-content04__title p{
+  font-size:24px;
+}
+#dna-content04 .dna-content04__body{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  margin:0 0 60px;
+}
+#dna-content04 .dna-content04__body article{
+  width:24%;
+  border-radius:20px;
+  background-color:#fff;
+  padding:0;
+  border:solid #0068b7 3px;
+  text-align:center;
+  position:relative;
+  margin:0 0 60px;
+}
+#dna-content04 .dna-content04__body article:before{
+  content:"";
+  position:absolute;
+  top:-30px;
+  left:50%;
+  margin-left:-30px;
+  width:60px;
+  height:60px;
+  background-repeat:no-repeat;
+  background-position:center;
+}
+#dna-content04 .dna-content04__body article:nth-child(1):before{
+  background-image:url(../img/page/dna/num01_b.png);
+}
+#dna-content04 .dna-content04__body article:nth-child(2):before{
+  background-image:url(../img/page/dna/num02_b.png);
+}
+#dna-content04 .dna-content04__body article:nth-child(3):before{
+  background-image:url(../img/page/dna/num03_b.png);
+}
+#dna-content04 .dna-content04__body article:nth-child(4):before{
+  background-image:url(../img/page/dna/num04_b.png);
+}
+#dna-content04 .dna-content04__body article:nth-child(5):before{
+  background-image:url(../img/page/dna/num05_b.png);
+}
+#dna-content04 .dna-content04__body article:nth-child(6):before{
+  background-image:url(../img/page/dna/num06_b.png);
+}
+#dna-content04 .dna-content04__body article:nth-child(7):before{
+  background-image:url(../img/page/dna/num07_b.png);
+}
+#dna-content04 .dna-content04__body article:after{
+  content:"";
+  position:absolute;
+  right:-17px;
+  top:50%;
+  background:url(../img/page/dna/flow-arrow.png) no-repeat center /contain;
+  width:11px;
+  height:31px;
+  margin-top:-15px;
+}
+#dna-content04 .dna-content04__body article:nth-child(4):after,
+#dna-content04 .dna-content04__body article:nth-child(7):after{
+  content:none;
+}
+#dna-content04 .dna-content04__body article .flow-title{
+  display:flex;
+  align-items:center;
+  background-color:#0068b7;
+  color:#fff;
+  justify-content:center;
+  text-align:center;
+  padding:40px 20px 20px;
+  border-radius:16px 16px 0 0;
+}
+#dna-content04 .dna-content04__body article .flow-title h3{
+  font-size:22px;
+  line-height:1.6;
+}
+#dna-content04 .dna-content04__body article .flow-body{
+  padding:20px;
+  text-align:center;
+}
+#dna-content04 .dna-content04__body article .flow-body figure{
+  text-align:center;
+  margin:0 0 20px;
+}
+#dna-content04 .dna-content04__body article .flow-body p{
+  font-size:14px;
+  line-height:2;
+  text-align:left;
+  margin:0 0 20px;
+}
+#dna-content04 .dna-content04__body article .flow-body p span{
+  color:#0068b7;
+}
+#dna-content04 .dna-content04__body article .flow-body p strong{
+  background:url(../img/page/dna/wave.png) repeat-x center bottom;
+  color:#0068b7;
+}
+#dna-content04 .dna-content04__body article .flow-body h4{
+  font-size:16px;
+  color:#fff;
+  padding:10px 30px;
+  border-radius:40px;
+  background-color:#f57f17;
+  margin:0 0 20px;
+}
+#dna-content04 .dna-content04__body article .flow-body .memo{
+  background-color:#fff9c4;
+  padding:20px;
+  border-radius:10px;
+}
+#dna-content04 .dna-content04__body article .flow-body .memo-body{
+  padding:0 0 0 60px;
+  background:url(../img/page/dna/icon-coution.png) no-repeat top left /40px auto;
+}
+#dna-content04 .dna-content04__body article .flow-body .memo-body p{
+  font-weight:700;
+  line-height:1.8;
+  margin:0;
+}
+#dna-content04 .dna-content04__body article .flow-body .memo-body a{
+  color:#e53935;
+  font-weight:700;
+}
+#dna-content04 .dna-content04__body .note{
+  width:24%;
+  background:url(../img/page/dna/dna-flow-img08.png) no-repeat center bottom;
+}
+#dna-content04 .dna-content04__body .note h3{
+  text-align:center;
+  padding:80px 0 0;
+  margin:0 0 40px;
+  font-weight:700;
+  color:#e53935;
+  font-size:18px;
+  line-height:1.8;
+  background:url(../img/page/dna/icon-coution.png) no-repeat center top;
+}
+#dna-content04 .dna-content04__body .note .note-box{
+  border:solid #f57f17 2px;
+  border-radius:6px;
+  overflow:hidden;
+  text-align:center;
+}
+#dna-content04 .dna-content04__body .note .note-box h4{
+  background-color:#f57f17;
+  color:#fff;
+  padding:10px;
+  font-size:16px;
+}
+#dna-content04 .dna-content04__body .note .note-box p{
+  font-size:16px;
+  margin:0;
+  padding:5px 0 5px;
+}
+#dna-content04 .dna-content04__body .note .note-tel{
+  padding:0 10px 20px;
+}
+
+#dna-content05{
+  padding:100px 0;
+  background-color:#0068b7;
+}
+#dna-content05 .dna-content05__title{
+  margin:0 0 60px;
+}
+#dna-content05 .dna-content05__title h2{
+  font-size:48px;
+  font-weight:700;
+  color:#fff100;
+  text-align:center;
+}
+#dna-content05 .dna-content05__body{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  padding:0 80px;
+}
+#dna-content05 .dna-content05__body article{
+  width:32%;
+  border-radius:20px;
+  background-color:#fff;
+  padding:10px;
+  text-align:center;
+  position:relative;
+}
+#dna-content05 .dna-content05__body article h3{
+  margin:0 0 20px;
+  border-radius:10px;
+  background-color:#0068b7;
+  color:#fff100;
+  font-size:18px;
+  padding:20px 0;
+}
+#dna-content05 .dna-content05__body article ul{
+  text-align:left;
+  font-size:16px;
+  line-height:2;
+  padding:0 20px;
+}
+#dna-content05 .dna-content05__body article ul li{
+  position:relative;
+  padding:0 0 0 20px;
+  margin:0 0 10px;
+}
+#dna-content05 .dna-content05__body article ul li i{
+  font-size:20px;
+  position:absolute;
+  top:-4px;
+  left:-4px;
+  color:#e53935;
+}
+#dna-content05 .dna-content05__body article .ex{
+  display:flex;
+  justify-content:space-between;
+  padding:0 10px 10px;
+}
+#dna-content05 .dna-content05__body article .ex figure{
+  margin:0 10px 0 0;
+}
+#dna-content05 .dna-content05__body article .ex .ex-text{
+  text-align:left;
+}
+#dna-content05 .dna-content05__body article .ex .ex-text h4{
+  font-size:16px;
+  color:#0068b7;
+  margin:0 0 10px;
+}
+#dna-content05 .dna-content05__body article .ex .ex-text p{
+  font-size:14px;
+}
+
+#dna-content06{
+  padding:100px 0;
+}
+#dna-content06 .dna-content06__title{
+  text-align:center;
+  background:url(../img/page/dna/dna-icon04.png) no-repeat center top;
+  padding:100px 0 0;
+  margin:0 0 80px;
+}
+#dna-content06 .dna-content06__title h2{
+  font-size:48px;
+  font-weight:700;
+  margin:0 0 40px;
+}
+#dna-content06 .dna-content06__body{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+#dna-content06 .dna-content06__body article{
+  width:48%;
+  border-radius:20px;
+  padding:60px 40px;
+  border:solid #eee 1px;
+  text-align:center;
+  position:relative;
+}
+#dna-content06 .dna-content06__body article.dna-content06__body_article01{
+  border:solid #e53935 3px;
+}
+#dna-content06 .dna-content06__body article.dna-content06__body_article02{
+  border:solid #0068b7 3px;
+}
+#dna-content06 .dna-content06__body .dna-content06__body_article_title{
+  text-align:center;
+  margin:0 0 40px;
+}
+#dna-content06 .dna-content06__body .dna-content06__body_article_title h3{
+  font-size:30px;
+}
+#dna-content06 .dna-content06__body article.dna-content06__body_article01 .dna-content06__body_article_title h3{
+  color:#e53935;
+}
+#dna-content06 .dna-content06__body article.dna-content06__body_article02 .dna-content06__body_article_title h3{
+  color:#0068b7;
+}
+#dna-content06 .dna-content06__body .dna-content06__body_article_title h3{
+  font-size:30px;
+}
+#dna-content06 .dna-content06__body .dna-content06__body_article_body p{
+  text-align:left;
+  font-size:16px;
+  line-height:2;
+  margin:0 0 40px;
+}
+#dna-content06 .dna-content06__body .dna-content06__body_article_body dl{
+  text-align:left;
+  font-size:16px;
+  line-height:2;
+  margin:0 0 40px;
+}
+#dna-content06 .dna-content06__body .dna-content06__body_article_body dl dt{
+  text-align:center;
+  font-size:18px;
+  color:#fff;
+  padding:5px 0;
+  margin:0 0 10px;
+  border-radius:6px 6px 0 0;
+}
+#dna-content06 .dna-content06__body article.dna-content06__body_article01 .dna-content06__body_article_body dl dt{
+  background-color:#e53935;
+}
+#dna-content06 .dna-content06__body article.dna-content06__body_article02 .dna-content06__body_article_body dl dt{
+  background-color:#0068b7;
+}
+#dna-content06 .dna-content06__body .dna-content06__body_article_image{
+  padding:30px;
+  border-radius:10px;
+}
+#dna-content06 .dna-content06__body article.dna-content06__body_article01 .dna-content06__body_article_image{
+  border:solid #e53935 1px;
+}
+#dna-content06 .dna-content06__body article.dna-content06__body_article02 .dna-content06__body_article_image{
+  border:solid #0068b7 1px;
+}
+#dna-content06 .dna-content06__body .dna-content06__body_article_image_text{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:0 0 30px;
+}
+#dna-content06 .dna-content06__body .dna-content06__body_article_image_text p{
+  font-size:14px;
+  line-height:1.6;
+  text-align:left;
+  width:65%;
+}
+#dna-content06 .dna-content06__body .dna-content06__body_article_image_text figure{
+  width:30%;
+}
+
+#dna-content07{
+  padding:100px 40px;
+  background-color:#f1f1f1;
+}
+#dna-content07 .dna-content07__title{
+  text-align:center;
+  background:url(../img/page/dna/dna-icon04.png) no-repeat center top;
+  padding:100px 0 0;
+  margin:0 0 80px;
+}
+#dna-content07 .dna-content07__title h2{
+  font-size:48px;
+  font-weight:700;
+  margin:0 0 40px;
+}
+#dna-content07 .dna-content07__body{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+#dna-content07 .dna-content07__body article{
+  width:48%;
+}
+#dna-content07 .dna-content07__body article h3{
+  text-align:center;
+  margin:0 0 40px;
+  font-size:36px;
+}
+#dna-content07 .dna-content07__body article .list{
+  margin:0 0 40px;
+}
+#dna-content07 .dna-content07__body article .list p{
+  font-size:18px;
+  margin:0 0 5px;
+}
+#dna-content07 .dna-content07__body article .list p span{
+  margin:0 0 0 2em;
+}
+#dna-content07 .dna-content07__body article .list table{
+  width:100%;
+  border-collapse:collapse;
+  border-top:solid #ddd 1px;
+}
+#dna-content07 .dna-content07__body article .list table th{
+  width:20%;
+  padding:20px;
+  background-color:#ddd;
+  color:#686868;
+  text-align:center;
+  vertical-align:middle;
+  border-bottom:solid #fff 1px;
+}
+#dna-content07 .dna-content07__body article .list table td{
+  padding:20px;
+  background-color:#fff;
+  color:#686868;
+  line-height:2;
+  text-align:left;
+  vertical-align:middle;
+  border-bottom:solid #ddd 1px;
+}
+
+#dna-content08{
+  padding:100px 40px;
+  background:url(../img/page/dna/dna-img05.jpg) no-repeat center right /auto 100%;
+}
+#dna-content08 h2{
+  font-size:48px;
+  margin:0 0 40px;
+  padding:0 0 20px;
+  position:relative;
+}
+#dna-content08 h2:after{
+  content:"";
+  width:120px;
+  height:2px;
+  position:absolute;
+  bottom:0;
+  left:0;
+  background-color:#f07621;
+}
+#dna-content08 p{
+  font-size:18px;
+  font-weight:300;
+  line-height:2;
+}
+#dna-content08 figure{
+  padding:40px 0 0;
+}
+
+/*------------------
+Width <= 1280px
+------------------*/
+@media screen and (max-width: 1280px) {
+  
+  .page-inner.page-inner_dna{
+    width:auto;
+    margin:0 10px;
+  }
+  
+  #dna-content01{
+    padding:80px 20px 60px;
+  }
+  #dna-content01 .dna-content01__title{
+    top:-30px;
+  }
+  #dna-content01 .dna-content01__title h3{
+    font-size:24px;
+  }
+  #dna-content01 .dna-content01__body p{
+    font-size:18px;
+  }
+  
+  #dna-content02{
+    padding:80px 20px;
+  }
+  
+  #dna-content03{
+    padding:60px 20px 0;
+  }
+  
+  #dna-content04{
+    padding:40px 20px 40px;
+  }
+  #dna-content04 .dna-content04__body article{
+    width:48%;
+    margin:0 0 60px;
+  }
+  #dna-content04 .dna-content04__body article:after{
+    content:none;
+  }
+  #dna-content04 .dna-content04__body .note{
+    width:48%;
+  background:url(../img/page/dna/dna-flow-img08.png) no-repeat right top /160px auto;
+  }
+  
+  #dna-content06{
+    padding:60px 20px;
+  }
+  
+  #dna-content07{
+    padding:60px 20px;
+  }
+  
+  #dna-content08{
+    padding:60px 40px;
+  }
+  
+}
+
+/*------------------
+Width <= 980px
+------------------*/
+@media screen and (max-width: 980px) {
+  
+  #dna-content02 .dna-content02__body article{
+    padding:40px;
+  }
+  #dna-content02 .dna-content02__body article h2{
+    font-size:30px;
+  }
+  #dna-content02 .dna-content02__body article h3{
+    font-size:18px;
+  }
+  #dna-content02 .dna-content02__body article p{
+    font-size:14px;
+  }
+  
+  #dna-content03 .dna-content03__title h2{
+    font-size:36px;
+  }
+  #dna-content03 .dna-content03__title p{
+    font-size:18px;
+  }
+  
+  #dna-content04 .dna-content04__title h2{
+    font-size:36px;
+  }
+  #dna-content04 .dna-content04__title p{
+    font-size:18px;
+  }
+  
+  #dna-content05{
+    padding:60px 20px;
+  }
+  #dna-content05 .dna-content05__title{
+    margin:0 0 40px;
+  }
+  #dna-content05 .dna-content05__title h2{
+    font-size:36px;
+  }
+  #dna-content05 .dna-content05__body{
+    padding:0;
+  }
+  #dna-content05 .dna-content05__body article h3{
+    padding:20px 10px;
+  }
+  
+  #dna-content06 .dna-content06__title{
+    margin:0 0 40px;
+  }
+  #dna-content06 .dna-content06__title h2{
+    font-size:36px;
+  }
+  #dna-content06 .dna-content06__body{
+    display:block;
+  }
+  #dna-content06 .dna-content06__body article{
+    width:auto;
+    margin:0 0 20px;
+  }
+  
+  #dna-content07 .dna-content07__title{
+    margin:0 0 60px;
+  }
+  #dna-content07 .dna-content07__title h2{
+    font-size:36px;
+  }
+  #dna-content07 .dna-content07__body article h3{
+    font-size:30px;
+  }
+  
+  #dna-content08 h2{
+    font-size:36px;
+    margin:0 0 20px;
+  }
+  #dna-content08 h2:after{
+    width:80px;
+  }
+  #dna-content08 p{
+    font-size:16px;
+  }
+  #dna-content08 figure{
+    padding:20px 0 0;
+  }
+
+}
+
+/*------------------
+Width <= 768px
+------------------*/
+@media screen and (max-width: 768px) {
+  
+  #dna-content01 .dna-content01__body p{
+    font-size:16px;
+  }
+  #dna-content02{
+    padding:60px 20px;
+  }
+  #dna-content02 .dna-content02__body{
+    display:block;
+  }
+  #dna-content02 .dna-content02__body article{
+    width:auto;
+    padding:40px;
+    margin:0 0 20px;
+  }
+  
+  #dna-content03 .dna-content03__body{
+    display:block;
+    margin:0 0 20px;
+  }
+  #dna-content03 .dna-content03__body article{
+    width:auto;
+    margin:0 0 20px;
+    display:block;
+  }
+  
+  #dna-content04 .dna-content04__body{
+    display:block;
+  }
+  #dna-content04 .dna-content04__body article{
+    width:auto;
+  }
+  #dna-content04 .dna-content04__body .note{
+    width:auto;
+  }
+  
+  #dna-content05 .dna-content05__body{
+    display:block;
+  }
+  #dna-content05 .dna-content05__body article{
+    width:auto;
+    margin:0 0 20px;
+  }
+  #dna-content05 .dna-content05__body article .ex{
+    justify-content:center;
+  }
+  
+  #dna-content07 .dna-content07__body{
+    display:block;
+  }
+  #dna-content07 .dna-content07__body article{
+    width:auto;
+    margin:0 0 40px;
+  }
+  #dna-content07 .dna-content07__body article .list p{
+    font-size:16px;
+  }
+  #dna-content07 .dna-content07__body article .list table{
+    font-size:12px;
+  }
+  
+}
+
+/*------------------
+Width <= 640px
+------------------*/
+@media screen and (max-width: 640px) {
+  
+  #page-mv__dna{
+    height:240px;
+  }
+  #page-mv__dna h2{
+    padding:20px 0 0;
+  }
+  #page-mv__dna h2 img{
+    height:140px;
+    width:auto;
+  }
+  #dna-content01 .dna-content01__body p strong{
+    display:inline;
+  }
+  
+}
+
+/*------------------
+Width <= 480px
+------------------*/
+@media screen and (max-width: 480px) {
+  
+  #dna-content01{
+    padding:60px 20px 40px;
+  }
+  #dna-content01 .dna-content01__title h3{
+    font-size:18px;
+    padding:16px 20px;
+  }
+  #dna-content02 .dna-content02__body article{
+    padding:20px;
+  }
+  
+  #dna-content03 .dna-content03__title h2{
+    font-size:24px;
+  }
+  #dna-content03 .dna-content03__title p{
+    font-size:16px;
+  }
+  #dna-content03 .dna-content03__body article{
+    padding:40px 20px 20px;
+  }
+  #dna-content03 .dna-content03__body article h3{
+    font-size:20px;
+  }
+  #dna-content03 .dna-content03__body article p{
+    font-size:14px;
+  }
+  #dna-content03 .dna-content03__body article ul{
+  }
+  #dna-content03 .dna-content03__body article ul li{
+    font-size:14px;
+  }
+  #dna-content03 .dna-content03__body article ul li i{
+    font-size:22px;
+  }
+  #dna-content03 .comment p{
+    font-size:18px;
+  }
+  
+  #dna-content04 .dna-content04__body article .flow-body .memo-body{
+    padding:0 0 0 50px;
+    background:url(../img/page/dna/icon-coution.png) no-repeat top left /30px auto;
+  }
+  
+  #dna-content05 .dna-content05__body article .ex .ex-text h4{
+    font-size:14px;
+  }
+  #dna-content05 .dna-content05__body article .ex .ex-text p{
+    font-size:12px;
+  }
+  
+  #dna-content06 .dna-content06__body article{
+    padding:40px 20px;
+  }
+  #dna-content06 .dna-content06__body .dna-content06__body_article_title h3{
+    font-size:24px;
+  }
+  #dna-content06 .dna-content06__body .dna-content06__body_article_body p{
+    font-size:14px;
+  }
+  #dna-content06 .dna-content06__body .dna-content06__body_article_body dl{
+    font-size:14px;
+  }
+  #dna-content06 .dna-content06__body .dna-content06__body_article_body dl dt{
+    font-size:16px;
+    padding:5px 10px;
+  }
+  #dna-content06 .dna-content06__body .dna-content06__body_article_image{
+    padding:20px;
+    border-radius:10px;
+  }
+  
+  #dna-content07 .dna-content07__body article .list p{
+    font-size:14px;
+  }
+  
+  #dna-content08{
+    padding:40px;
+    background:url(../img/page/dna/dna-img05.jpg) no-repeat center right /auto 100%;
+  }
+  #dna-content08 h2{
+    font-size:24px;
+  }
+  #dna-content08 h2:after{
+    width:60px;
+  }
+  #dna-content08 p{
+    font-size:14px;
+  }
+  
+}
+
+/*------------------
+Width <= 375px
+------------------*/
+@media screen and (max-width: 375px) {
+}
+
+/*--------------------------------
+PAGE - ペットの家庭教師
+---------------------------------*/
+
+#page-mv__trainer{
+  width:100%;
+  height:599px;
+  background:url(../img/page/trainer/trainer-mv-bg.png) no-repeat center,
+    url(../img/page/trainer/trainer-mv-bg2.png) repeat-x center;
+  position:relative;
+  z-index:2;
+}
+#page-mv__trainer .wrap{
+  padding:60px 0 0 60px;
+  text-align:center;
+  width:475px;
+}
+#page-mv__trainer h2{
+  margin:0 0 50px;
+}
+#page-mv__trainer p{
+  display:inline-block;
+  padding:16px 40px;
+  color:#fff4c2;
+  background-color:#e9546c;
+  font-size:24px;
+  border-radius:40px;
+}
+
+#trainer-content01{
+  padding:160px 0 160px;
+  background:#f6f3f4 url(../img/page/trainer/next-arrow.png) no-repeat center bottom 60px;
+  text-align:center;
+  position:relative;
+  top:-100px;
+  margin-bottom:-100px;
+  z-index:1;
+}
+#trainer-content02{
+  padding:80px 0;
+  text-align:center;
+  background-color:#eaf7ff;
+}
+#trainer-content02 .wrap{
+  padding:0 160px;
+}
+#trainer-content02 h3{
+  margin:0 0 60px;
+}
+#trainer-content02 p{
+  font-size:20px;
+  font-weight:300;
+  line-height:2.5;
+}
+
+#trainer-content03{
+  padding:100px 0;
+  text-align:center;
+  background:url(../img/page/trainer/trainer-bg01.jpg) no-repeat right top /40% auto;
+}
+#trainer-content03 h3{
+  margin:0 0 60px;
+}
+#trainer-content03 h4{
+  font-size:36px;
+  margin:0 0 40px;
+  color:#00456f;
+  padding:242px 0 0;
+  background:url(../img/page/trainer/trainer-icon01.png) no-repeat center top;
+}
+#trainer-content03 p{
+  font-size:20px;
+  font-weight:300;
+  line-height:2.5;
+  margin:0 0 40px;
+}
+#trainer-content03 .price{
+  text-align:center;
+  margin:0 0 40px;
+}
+#trainer-content03 .price p{
+  display:inline-block;
+  padding:20px 50px;
+  margin:0;
+  border:solid #4ea5db 3px;
+  border-radius:20px;
+  font-size:48px;
+  line-height:1.5;
+  color:#00456f;
+}
+#trainer-content03 .price p strong{
+  margin:0 .5em 0 1em;
+  font-weight:700;
+  color:#e9546c;
+}
+#trainer-content03 .price p small{
+  font-size:18px;
+}
+.btn-dog{
+  text-align:center;
+}
+.btn-dog a{
+  display:inline-block;
+  color:#fff;
+  padding:25px 20px;
+  border-radius:60px;
+  font-size:36px;
+  background-color:#e9546c;
+  transition:.2s ease;
+}
+.btn-dog a span{
+  display:block;
+  background:url(../img/page/trainer/btn-icon.png) no-repeat center left 20px;
+  position:relative;
+  padding:0 80px 0 100px;
+}
+.btn-dog a span i{
+  position:absolute;
+  top:0;
+  right:0;
+  transition:.2s ease;
+}
+.btn-dog a:hover{
+  opacity:.8;
+}
+.btn-dog a:hover i{
+  right:-10px;
+}
+
+#trainer-content04{
+  padding:100px 0;
+  text-align:center;
+  background-color:#fdf2f0;
+}
+#trainer-content04 h3{
+  margin:0 0 60px;
+  padding:242px 0 0;
+  background:url(../img/page/trainer/trainer-icon02.png) no-repeat center top;
+}
+#trainer-content04 h4{
+  font-size:36px;
+  margin:0 0 60px;
+  color:#00456f;
+}
+#trainer-content04 h4 span{
+  background:linear-gradient(transparent 60%, #f4bab9 60%);
+}
+#trainer-content04 p{
+  font-size:20px;
+  font-weight:300;
+  line-height:2.5;
+  margin:0 0 40px;
+}
+#trainer-content04 .image{
+  margin:0 0 40px;
+}
+#trainer-content04 .image figure{
+  padding:20px 40px;
+  border:solid #e9546c 1px;
+  border-radius:20px;
+  background-color:#fff;
+  display:inline-block;
+}
+
+#trainer-content05{
+  padding:60px 0;
+  text-align:center;
+  background:url(../img/page/trainer/trainer-bg02.jpg) no-repeat center top /cover;
+}
+#trainer-content05 h3{
+  margin:0 0 40px;
+}
+#trainer-content05 .trainer-content05__title{
+  margin:0 0 60px;
+}
+#trainer-content05 .trainer-content05__title p{
+  font-size:30px;
+  font-weight:700;
+  color:#00456f;
+}
+#trainer-content05 .trainer-content05__title p span{
+  background:linear-gradient(transparent 70%, #f4bab9 30%);
+  line-height:1.8;
+}
+#trainer-content05 h4{
+  font-size:36px;
+  color:#e9546c;
+  padding:0 0 100px;
+  margin:0;
+  background:url(../img/page/trainer/next-arrow.png) no-repeat center bottom;
+}
+#trainer-content05 p{
+  font-size:20px;
+  font-weight:300;
+  line-height:2.5;
+  margin:0 0 40px;
+}
+#trainer-content05 .seminar{
+  width:760px;
+  margin:0 auto 40px auto;
+  border:solid #4ea5db 3px;
+  border-radius:20px;
+  overflow:hidden;
+  position:relative;
+  z-index:2;
+  background-color:#fff;
+}
+#trainer-content05 .seminar dl{
+  
+}
+#trainer-content05 .seminar dl dt{
+  font-size:30px;
+  padding:10px 0;
+  font-weight:300;
+  background-color:#4ea5db;
+  color:#fff;
+  margin:0 0 40px;
+}
+#trainer-content05 .seminar dl dd{
+  font-size:24px;
+  padding:0 60px;
+  font-weight:300;
+  text-align:left;
+}
+#trainer-content05 .seminar dl dd i{
+  margin:0 10px 0 0;
+  color:#e9546c;
+}
+#trainer-content05 .seminar p{
+  margin:0;
+  padding:0 60px 30px;
+  font-size:18px;
+  text-align:right;
+}
+
+#trainer-content06{
+  padding:60px 0;
+  text-align:center;
+  background-color:#4ea5db;
+}
+#trainer-content06 h3{
+  margin:0 0 40px;
+  color:#fff;
+  font-size:36px;
+  letter-spacing:.1em;
+  padding:15px 40px;
+  display:inline-block;
+  border:solid #fff 1px;
+  border-radius:10px;
+}
+#trainer-content06 table{
+  width:70%;
+  margin:0 auto 40px;
+  border-collapse:collapse;
+  font-size:36px;
+  letter-spacing:.1em;
+  background-color:#fff;
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+#trainer-content06 table th{
+  background-color:#d8f0ff;
+  text-align:center;
+  vertical-align:middle;
+  padding:20px;
+}
+#trainer-content06 table td{
+  background-color:#fff;
+  text-align:center;
+  vertical-align:middle;
+  padding:20px;
+}
+#trainer-content06 p{
+  color:#fff;
+  font-size:18px;
+}
+
+#trainer-content07{
+  padding:60px 0 120px;
+  text-align:center;
+}
+#trainer-content07 h3{
+  margin:0 0 40px;
+}
+#trainer-content07 p{
+  font-size:24px;
+  line-height:2;
+  font-weight:300;
+}
+#trainer-content07 p strong{
+  color:#e9546c;
+}
+#trainer-content07 small{
+  display:inline-block;
+  font-size:24px;
+  color:#e9546c;
+}
+#trainer-content07 .btn{
+  padding:40px 0 0;
+}
+
+/*------------------
+Width <= 1280px
+------------------*/
+@media screen and (max-width: 1280px) {
+  #page-mv__trainer{
+    height:400px;
+    background:url(../img/page/trainer/trainer-mv-bg.png) no-repeat center right -100px /auto 400px,
+    url(../img/page/trainer/trainer-mv-bg2.png) repeat-x center /auto 400px;
+  }
+  #page-mv__trainer .wrap{
+    padding:20px 0 0;
+    width:60%;
+  }
+  #page-mv__trainer h2{
+    margin:0 0 30px;
+  }
+  #page-mv__trainer h2 img{
+    width:300px;
+  }
+  #page-mv__trainer p{
+    font-size:20px;
+  }
+  #trainer-content01{
+    padding:160px 20px 160px;
+  }
+  #trainer-content02 .wrap{
+    padding:0 40px;
+  }
+  #trainer-content04{
+    padding:80px 20px;
+  }
+  #trainer-content05{
+    padding:40px 20px;
+  }
+  #trainer-content05 h3{
+    margin:0 -10px 40px;
+  }
+  #trainer-content07{
+    padding:40px 20px 100px;
+  }
+}
+
+/*------------------
+Width <= 980px
+------------------*/
+@media screen and (max-width: 980px) {
+  #page-mv__trainer{
+    height:400px;
+    background:url(../img/page/trainer/trainer-mv-bg.png) no-repeat center right -240px /auto 400px,
+    url(../img/page/trainer/trainer-mv-bg2.png) repeat-x center /auto 400px;
+  }
+  #trainer-content03{
+    padding:80px 20px;
+    background:url(../img/page/trainer/trainer-bg01.jpg) no-repeat right top /50% auto;
+  }
+  #trainer-content06{
+    padding:40px 20px;
+  }
+  #trainer-content06 table{
+    width:100%;
+    margin:0 0 30px;
+    font-size:30px;
+  }
+}
+
+/*------------------
+Width <= 768px
+------------------*/
+@media screen and (max-width: 768px) {
+  #page-mv__trainer{
+    height:300px;
+    background:url(../img/page/trainer/trainer-mv-bg.png) no-repeat center right -120px /auto 300px,
+    url(../img/page/trainer/trainer-mv-bg2.png) repeat-x center /auto 300px;
+  }
+  #page-mv__trainer .wrap{
+    width:60%;
+  }
+  #page-mv__trainer h2{
+    margin:0 0 20px;
+  }
+  #page-mv__trainer h2 img{
+    width:220px;
+  }
+  #page-mv__trainer p{
+    font-size:18px;
+    padding:10px 30px;
+  }
+  #trainer-content03 h3{
+    margin:0 0 40px;
+  }
+  #trainer-content03 h4{
+    font-size:30px;
+    padding:180px 0 0;
+    background:url(../img/page/trainer/trainer-icon01.png) no-repeat center top /auto 160px;
+  }
+  #trainer-content03 p{
+    font-size:16px;
+    margin:0 0 30px;
+  }
+  #trainer-content03 .price{
+    margin:0 0 30px;
+  }
+  #trainer-content03 .price p{
+    padding:10px 40px;
+    margin:0;
+    font-size:36px;
+  }
+  #trainer-content03 .price p small{
+    font-size:16px;
+  }
+  .btn-dog a{
+    padding:15px 20px;
+    border-radius:60px;
+    font-size:24px;
+  }
+  .btn-dog a span{
+    display:block;
+    background:url(../img/page/trainer/btn-icon.png) no-repeat center left 20px /auto 36px;
+    position:relative;
+    padding:0 60px 0 80px;
+  }
+  #trainer-content04 h3{
+    margin:0 0 40px;
+    padding:180px 0 0;
+    background:url(../img/page/trainer/trainer-icon02.png) no-repeat center top /auto 160px;
+  }
+  #trainer-content04 h4{
+    font-size:24px;
+    margin:0 0 40px;
+  }
+  #trainer-content04 p{
+    font-size:16px;
+    margin:0 0 30px;
+  }
+  #trainer-content04 .image{
+    margin:0 0 30px;
+  }
+  #trainer-content04 .image figure{
+    padding:10px 20px;
+  }
+  #trainer-content05 .trainer-content05__title p{
+    font-size:24px;
+  }
+  #trainer-content05 h4{
+    font-size:24px;
+  }
+  #trainer-content05 .seminar{
+    width:auto;
+    margin:0 0 40px;
+  }
+  #trainer-content05 .seminar dl dt{
+    font-size:24px;
+    margin:0 0 30px;
+  }
+  #trainer-content05 .seminar dl dd{
+    font-size:18px;
+    padding:0 30px;
+  }
+  #trainer-content05 .seminar p{
+    padding:0 30px 20px;
+    font-size:16px;
+  }
+  #trainer-content06 h3{
+    margin:0 0 30px;
+    font-size:24px;
+    padding:15px 30px;
+  }
+  #trainer-content07 h3{
+    margin:0 0 30px;
+  }
+  #trainer-content07 p{
+    font-size:18px;
+  }
+  #trainer-content07 small{
+    font-size:18px;
+  }
+}
+/*------------------
+Width <= 640px
+------------------*/
+@media screen and (max-width: 640px) {
+  #page-mv__trainer{
+    height:auto;
+    background:url(../img/page/trainer/trainer-mv-bg.png) no-repeat right calc(50% + 40px) bottom /auto 100px,
+    url(../img/page/trainer/trainer-mv-bg2.png) repeat-x center bottom /auto 100px;
+    padding:0 0 100px;
+  }
+  #page-mv__trainer .wrap{
+    width:auto;
+    padding:0 20px;
+  }
+  #page-mv__trainer h2 img{
+    width:240px;
+  }
+  
+  #trainer-content01{
+    padding:100px 20px 160px;
+    text-align:center;
+    position:relative;
+    top:-40px;
+    margin-bottom:-40px;
+  }
+  #trainer-content06 table{
+    display:block;
+  }
+  #trainer-content06 table tr,
+  #trainer-content06 table tbody{
+    display:block;
+  }
+  #trainer-content06 table th{
+    display:block;
+  }
+  #trainer-content06 table td{
+    display:block;
+  }
+}
+
+/*------------------
+Width <= 480px
+------------------*/
+@media screen and (max-width: 480px) {
+  #page-mv__trainer p{
+    padding:10px 20px;
+    font-size:16px;
+  }
+  #trainer-content01{
+    padding:60px 20px 120px;
+    background:#f6f3f4 url(../img/page/trainer/next-arrow.png) no-repeat center bottom 40px;
+  }
+  #trainer-content02{
+    padding:60px 0;
+  }
+  #trainer-content02 .wrap{
+    padding:0 20px;
+  }
+  #trainer-content02 h3{
+    margin:0 0 40px;
+  }
+  #trainer-content02 p{
+    font-size:16px;
+  }
+  #trainer-content03 .price p{
+    padding:10px 20px;
+    font-size:24px;
+  }
+  #trainer-content03 .price p strong{
+    margin:0 .3em 0 .5em;
+  }
+  #trainer-content03 .price p small{
+    font-size:14px;
+  }
+  .btn.btn-dog{
+    padding:0;
+    margin:0;
+    border:none;
+  }
+  .btn-dog a{
+    padding:15px 10px;
+    font-size:18px;
+  }
+  .btn-dog a span{
+    background:url(../img/page/trainer/btn-icon.png) no-repeat center left /auto 24px;
+    padding:0 30px 0 40px;
+  }
+  #trainer-content04{
+    padding:60px 20px;
+  }
+  #trainer-content05 .trainer-content05__title p{
+    font-size:18px;
+  }
+  #trainer-content05 h4{
+    font-size:18px;
+  }
+  #trainer-content05 .seminar dl dt{
+    font-size:18px;
+    margin:0 0 20px;
+  }
+  #trainer-content05 .seminar dl dd{
+    font-size:16px;
+    padding:0 20px;
+  }
+  #trainer-content05 .seminar p{
+    padding:0 20px 10px;
+    font-size:14px;
+  }
+  #trainer-content06 table{
+    font-size:24px;
+    margin:0 0 20px;
+  }
+  #trainer-content06 p{
+    font-size:16px;
+  }
+  #trainer-content07 p{
+    font-size:16px;
+  }
+  #trainer-content07 small{
+    font-size:16px;
+  }
+}
+
+/*------------------
+Width <= 375px
+------------------*/
+@media screen and (max-width: 375px) {
+  #trainer-content06 table{
+    font-size:20px;
+  }
+}
+
+/*--------------------------------
+PAGE - 成約特典
+---------------------------------*/
+
+#page-mv__contract{
+  width:100%;
+  position:relative;
+  z-index:1;
+  background: rgb(220,255,255);
+  background: linear-gradient(180deg, rgba(220,255,255,1) 0%, rgba(255,255,255,1) 100%);
+  text-align:center;
+  margin:0 0 40px;
+}
+#page-mv__contract h2{
+  padding:40px 0 0;
+  margin:0 0 30px;
+}
+#page-mv__contract p{
+  font-size:24px;
+}
+#page-mv__contract p span{
+  color:#fff;
+  display:inline-block;
+  padding:10px 40px;
+  border-radius:40px;
+  background-color:#0068b7;
+}
+#page-mv__contract.page-mv__contract02 p span{
+  background-color:#f45f53;
+}
+#contract-content01{
+  margin:0 0 80px;
+}
+.contract-content01__title{
+  margin:0 0 60px;
+  text-align:center;
+}
+.contract-content01__title h3{
+  font-size:24px;
+  line-height:2;
+}
+.contract-content01__body{
+  
+}
+.contract-content01__body .contract-content01__body_row{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+}
+.contract-content01__body article{
+  width:48%;
+  position:relative;
+  margin:0 0 60px;
+  text-align:center;
+}
+.contract-content01__body .contract-content01__body_col article{
+  width:100%;
+}
+.contract-content01__body article .wrap{
+  background-color:#dcffff;
+  border-radius:20px;
+  padding:0 0 60px;
+}
+.contract-content01__body article .num{
+  position:absolute;
+  top:-39px;
+  left:50%;
+  margin-left:-39px;
+}
+.contract-content01__body article h3{
+  font-size:40px;
+  padding:80px 0 20px;
+  font-weight:700;
+  color:#003896;
+}
+.contract-content01__body article p{
+  font-size:18px;
+  line-height:2;
+  font-weight:300;
+  margin:0 0 40px;
+}
+.contract-content01__body article p strong{
+  font-size:20px;
+  font-weight:700;
+  color:#f45f53;
+}
+.contract-content01__body article p a{
+  font-weight:700;
+  color:#f45f53;
+}
+.contract-content01__body article p a:hover{
+  text-decoration:underline;
+}
+.contract-content01__body article figure{
+  text-align:center;
+}
+.contract-content01__body article small{
+  display:block;
+  padding:20px 0 0;
+}
+.contract-content01__body .contract-content01__body_col ul{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  padding:0 40px 0 60px;
+}
+.contract-content01__body .contract-content01__body_col ul li{
+  width:22%;
+}
+.contract-content01__body .contract-content01__body_col ul li .image{
+  display:flex;
+  justify-content:center;
+  align-items:end;
+}
+.contract-content01__body .contract-content01__body_col ul li p{
+  font-size:14px;
+  padding:20px 0 0;
+}
+
+/*------------------
+Width <= 1280px
+------------------*/
+@media screen and (max-width: 1280px) {
+#page-mv__contract{
+  padding:0 20px;
+}
+.contract-content01__title{
+  padding:0 20px;
+}
+.contract-content01__body{
+  padding:0 20px;
+}
+.contract-content01__body article .wrap{
+  padding:0 20px 60px;
+}
+.contract-content01__body .contract-content01__body_col ul{
+  padding:0 0 0 20px;
+}
+}
+
+/*------------------
+Width <= 980px
+------------------*/
+@media screen and (max-width: 980px) {
+}
+
+/*------------------
+Width <= 768px
+------------------*/
+@media screen and (max-width: 768px) {
+.contract-content01__body .contract-content01__body_row{
+  display:block;
+}
+.contract-content01__body article{
+  width:100%;
+}
+.contract-content01__body .contract-content01__body_col ul li{
+  width:48%;
+}
+}
+
+/*------------------
+Width <= 640px
+------------------*/
+@media screen and (max-width: 640px) {
+#page-mv__contract p{
+  font-size:18px;
+}
+.contract-content01__title h3{
+  font-size:18px;
+}
+.contract-content01__body article h3{
+  font-size:30px;
+}
+.contract-content01__body article p{
+  font-size:16px;
+}
+.contract-content01__body article p strong{
+  font-size:18px;
+}
+.contract-content01__body .contract-content01__body_col ul li p{
+  font-size:12px;
+}
+}
+
+/*------------------
+Width <= 480px
+------------------*/
+@media screen and (max-width: 480px) {
+
+.contract-content01__body .contract-content01__body_col ul{
+  display:block;
+}
+.contract-content01__body .contract-content01__body_col ul li{
+  width:100%;
+}
+.contract-content01__body .contract-content01__body_col ul li .image{
+  display:block;
+}
+}
+
+/*------------------
+Width <= 375px
+------------------*/
+@media screen and (max-width: 375px) {
+}
+
+/*--------------------------------
+PAGE - Breeder詳細
+     - Adoption詳細
+---------------------------------*/
+.page-mv_detail{
+  
+}
+.page-mv_detail .wrap{
+  width:100%;
+  height:680px;
+  background-position:center;
+  background-repeat:no-repeat;
+  position:relative;
+  background-size:cover;
+}
+#page-mv__breeder_detail .wrap{
+  background-image:url(../../img/breeder/mv-bg.jpg);
+  background-position:center right;
+}
+#page-mv__adoption_detail .wrap{
+  background-image:url(../../img/adoption/mv-bg.jpg);
+}
+.page-mv_detail .wrap .text{
+  width:60%;
+  text-align:center;
+  padding:60px 40px 0;
+}
+.page-mv_detail .wrap .text h2{
+  margin:0 0 40px;
+}
+.page-mv_detail .wrap .text p{
+  margin:0 0 30px;
+}
+.page-mv_detail .wrap .text ul{
+  display:flex;
+  justify-content:center;
+}
+.page-mv_detail .wrap .text ul li{
+  margin:0 20px;
+}
+.page-mv_detail .wrap .text ul li a{
+  
+}
+.page-mv_detail .wrap .text ul li a:hover{
+  opacity:.8;
+}
+
+#page-detail-content01{
+  padding:80px 0;
+  text-align:center;
+}
+.page-detail-content01__title{
+  margin:0 0 40px;
+}
+.page-detail-content01__body{
+  
+}
+.page-detail-content01__body p{
+  font-size:30px;
+  line-height:2;
+  font-weight:300;
+}
+.page-detail-content01__body p strong{
+  color:#ef5350;
+}
+
+#page-detail-content02{
+  
+}
+.page-detail-content02__title{
+  text-align:center;
+  margin:0 0 80px;
+}
+.page-detail-content02__title h3{
+  padding:20px 0 0;
+  font-size:40px;
+}
+.page-detail-content02__body{
+  
+}
+.page-detail-content02__body article{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:0 0 80px;
+}
+.page-detail-content02__body article.rev{
+  flex-direction:row-reverse;
+}
+.page-detail-content02__body article .text{
+  width:50%;
+  padding:0 60px 0 0;
+}
+.page-detail-content02__body article.rev .text{
+  padding:0 0 0 60px;
+}
+.page-detail-content02__body article fiugre{
+  width:50%;
+}
+.page-detail-content02__body article h3{
+  font-size:48px;
+  margin:0 0 40px;
+}
+.page-detail-content02__body article h3 small{
+  display:block;
+  vertical-align:middle;
+  margin:20px 0 0;
+  font-size:18px;
+  letter-spacing:.2em;
+}
+.page-detail-content02__body article p{
+  font-sizze:16px;
+  font-weight:300;
+  line-height:2;
+  margin:0 0 1em;
+}
+.page-detail-content02__body article p:last-child{
+  margin:0;
+}
+.page-detail-content02__body article h3.color01{
+  color:#e5628a;
+}
+.page-detail-content02__body article h3.color02{
+  color:#e59362;
+}
+.page-detail-content02__body article h3.color03{
+  color:#62ace5;
+}
+.page-detail-content02__body .image{
+  margin:0 0 80px;
+}
+
+#page-detail-content02 .dna-content02__body{
+  display:flex;
+  justify-content:space-between;
+  margin:0 0 80px;
+}
+#page-detail-content02 .dna-content02__body article{
+  width:48%;
+  border-radius:20px;
+  background-color:#dcffff;
+  padding:60px;
+  box-shadow:10px 10px 0 rgba(0,0,0,0.05);
+  text-align:center;
+}
+#page-detail-content02 .dna-content02__body article figure{
+  margin:0 0 40px;
+}
+#page-detail-content02 .dna-content02__body article h2{
+  font-size:36px;
+  font-weight:700;
+  margin:0 0 40px;
+  padding:0 0 20px;
+  position:relative;
+}
+#page-detail-content02 .dna-content02__body article h2:after{
+  content:"";
+  width:60px;
+  height:4px;
+  position:absolute;
+  bottom:0;
+  left:50%;
+  margin-left:-30px;
+  background-color:#ff3d7e;
+}
+#page-detail-content02 .dna-content02__body article h3{
+  font-size:24px;
+  line-height:1.8;
+  font-weight:700;
+  color:#ff3d7e;
+  margin:0 0 40px;
+}
+#page-detail-content02 .dna-content02__body article p{
+  font-size:16px;
+  line-height:2.4;
+  font-weight:300;
+}
+#page-detail-content02 .dna-content03__title{
+  text-align:center;
+  background:url(../../img/dna/dna-icon03.png) no-repeat center top;
+  padding:120px 0 0;
+  margin:0 0 60px;
+}
+#page-detail-content02 .dna-content03__title h2{
+  font-size:48px;
+  font-weight:700;
+  margin:0 0 20px;
+}
+#page-detail-content02 .dna-content03__title p{
+  font-size:24px;
+}
+#page-detail-content02 .dna-content03__body{
+  display:flex;
+  justify-content:space-between;
+  margin:0 0 100px;
+}
+#page-detail-content02 .dna-content03__body article{
+  width:32%;
+  border-radius:20px;
+  background-color:#dcedc8;
+  padding:40px 30px 30px;
+  text-align:center;
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+#page-detail-content02 .dna-content03__body article:before{
+  content:"";
+  position:absolute;
+  top:-15px;
+  left:-15px;
+  width:60px;
+  height:60px;
+  background-repeat:no-repeat;
+  background-position:center;
+}
+#page-detail-content02 .dna-content03__body article:nth-child(1):before{
+  background-image:url(../../img/dna/num01.png);
+}
+#page-detail-content02 .dna-content03__body article:nth-child(2):before{
+  background-image:url(../../img/dna/num02.png);
+}
+#page-detail-content02 .dna-content03__body article:nth-child(3):before{
+  background-image:url(../../img/dna/num03.png);
+}
+#page-detail-content02 .dna-content03__body article h3{
+  font-size:24px;
+  margin:0 0 20px;
+  font-weight:700;
+  color:#388e3c;
+}
+#page-detail-content02 .dna-content03__body article p{
+  font-size:16px;
+  line-height:2;
+  font-weight:300;
+  text-align:left;
+}
+#page-detail-content02 .dna-content03__body article ul{
+  margin:20px 0 0;
+  padding:20px 20px 10px;
+  background-color:#fff;
+  border-radius:10px;
+  text-align:left;
+}
+#page-detail-content02 .dna-content03__body article ul li{
+  font-size:16px;
+  position:relative;
+  padding:0 0 0 20px;
+  margin:0 0 10px;
+}
+#page-detail-content02 .dna-content03__body article ul li i{
+  position:absolute;
+  top:-8px;
+  left:-8px;
+  font-size:24px;
+  color:#f57f17;
+}
+.page-detail_btn{
+  text-align:center;
+  padding:0 0 120px;
+}
+.page-detail_btn a{
+  padding:20px 60px 20px 80px;
+  border-radius:10px;
+  color:#fff;
+  background-color:#0068b7;
+  font-size:30px;
+  font-weight:500;
+  letter-spacing:.1em;
+  position:relative;
+  display:inline-block;
+}
+.page-detail_btn a:hover{
+  opacity:.8;
+}
+.page-detail_btn a i{
+  position:absolute;
+  top:20px;
+  left:20px;
+}
+
+/*------------------
+Width <= 1280px
+------------------*/
+@media screen and (max-width: 1280px) {
+#page-detail-content01{
+  padding:60px 20px;
+}
+.page-detail-content02__title{
+  margin:0 0 60px;
+}
+.page-detail-content02__body article .text{
+  padding:0 40px;
+}
+.page-detail-content02__body article.rev .text{
+  padding:0 40px;
+}
+#page-detail-content02 .dna-content02__body{
+  padding:0 20px;
+}
+#page-detail-content02 .dna-content03__body{
+  padding:0 20px;
+}
+.page-detail-content02__body .image{
+  padding:0 20px;
+}
+}
+
+/*------------------
+Width <= 980px
+------------------*/
+@media screen and (max-width: 980px) {
+.page-mv_detail .wrap{
+  height:auto;
+}
+.page-mv_detail .wrap .text{
+  width:100%;
+  text-align:center;
+  padding:60px 40px;
+}
+.page-detail-content01__body p{
+  font-size:24px;
+}
+
+.page-detail-content02__title h3{
+  font-size:32px;
+}
+.page-detail-content02__body article{
+  display:block;
+  margin:0 0 60px;
+}
+.page-detail-content02__body article .text{
+  width:auto;
+  padding:0 20px 20px;
+}
+.page-detail-content02__body article.rev .text{
+  padding:0 20px 20px;
+}
+.page-detail-content02__body article figure{
+  width:auto;
+}
+.page-detail-content02__body article figure img{
+  width:100%;
+  height:auto;
+}
+.page-detail-content02__body article h3{
+  font-size:36px;
+  margin:0 0 30px;
+  text-align:center;
+}
+.page-detail-content02__body article h3 small{
+  margin:10px 0 0;
+  font-size:16px;
+}
+.page-detail-content02__body .image{
+  margin:0 0 60px;
+}
+#page-detail-content02 .dna-content02__body article{
+    padding:40px;
+}
+#page-detail-content02 .dna-content02__body article h2{
+  font-size:30px;
+}
+#page-detail-content02 .dna-content02__body article h3{
+  font-size:18px;
+}
+#page-detail-content02 .dna-content02__body article p{
+  font-size:14px;
+}
+#page-detail-content02 .dna-content03__title h2{
+    font-size:36px;
+}
+#page-detail-content02 .dna-content03__title p{
+  font-size:18px;
+}
+}
+
+/*------------------
+Width <= 768px
+------------------*/
+@media screen and (max-width: 768px) {
+#page-detail-content02 .dna-content02__body{
+    display:block;
+}
+#page-detail-content02 .dna-content02__body article{
+  width:auto;
+  padding:40px;
+  margin:0 0 20px;
+}
+#page-detail-content02 .dna-content03__body{
+  display:block;
+  margin:0 0 60px;
+}
+#page-detail-content02 .dna-content03__body article{
+  width:auto;
+  margin:0 0 20px;
+  display:block;
+}
+}
+
+/*------------------
+Width <= 640px
+------------------*/
+@media screen and (max-width: 640px) {
+  
+}
+
+/*------------------
+Width <= 480px
+------------------*/
+@media screen and (max-width: 480px) {
+.page-mv_detail .wrap .text{
+  padding:40px 20px;
+}
+.page-mv_detail .wrap .text ul li{
+  margin:0 10px;
+}
+.page-detail-content01__body p{
+  font-size:18px;
+}
+.page-detail-content02__title h3{
+  font-size:24px;
+}
+.page-detail-content02__body article h3{
+  font-size:22px;
+  margin:0 0 20px;
+  text-align:center;
+}
+.page-detail-content02__body article h3 small{
+  font-size:14px;
+}
+#page-detail-content02 .dna-content02__body article{
+  padding:20px;
+}
+#page-detail-content02 .dna-content03__title h2{
+  font-size:24px;
+}
+#page-detail-content02 .dna-content03__title p{
+  font-size:16px;
+}
+#page-detail-content02 .dna-content03__body article{
+  padding:40px 20px 20px;
+}
+#page-detail-content02 .dna-content03__body article h3{
+  font-size:20px;
+}
+#page-detail-content02 .dna-content03__body article p{
+  font-size:14px;
+}
+#page-detail-content02 .dna-content03__body article ul{
+}
+#page-detail-content02 .dna-content03__body article ul li{
+  font-size:14px;
+}
+#page-detail-content02 .dna-content03__body article ul li i{
+  font-size:22px;
+}
+.page-detail_btn{
+  padding:0 20px 80px;
+}
+.page-detail_btn a{
+  padding:20px;
+  font-size:24px;
+  display:block;
+}
+.page-detail_btn a i{
+  top:20px;
+  left:20px;
+}
+}
+
+/*------------------
+Width <= 375px
+------------------*/
+@media screen and (max-width: 375px) {
+.page-detail_btn a{
+  font-size:18px;
+}
+}
+
+/*--------------------------------
+PAGE - よくあるご質問
+---------------------------------*/
+.page-mv_common{
+  padding:80px 0;
+  text-align:center;
+}
+.page-mv_common h2{
+  font-size:48px;
+}
+.page-mv_common small{
+  display:block;
+  font-size:18px;
+  padding:20px 0 0 .2em;
+  letter-spacing:.2em;
+  color:#0068b7;
+}
+#faq-content01{
+  padding:0 0 120px;
+}
+#faq-content01 dl{
+  margin:0 0 60px;
+  padding:0 0 60px;
+  border-bottom:solid #f0f0f0 1px;
+}
+#faq-content01 dl:last-child{
+  margin:0;
+  border-bottom:none;
+}
+#faq-content01 dl dt{
+  position:relative;
+  padding:0 0 0 100px;
+  margin:0 0 40px;
+  font-size:24px;
+  line-height:1.6;
+  color:#0068b7;
+  font-weight:300;
+}
+#faq-content01 dl dt:before{
+  content:"Q.";
+  position:absolute;
+  top:0;
+  left:0;
+  line-height:1;
+  font-size:60px;
+  font-weight:700;
+  color:#0068b7;
+  min-height:80px;
+}
+#faq-content01 dl dd{
+  position:relative;
+  padding:0 0 0 100px;
+  font-size:18px;
+  line-height:2;
+  font-weight:300;
+}
+#faq-content01 dl dd:before{
+  content:"A.";
+  position:absolute;
+  top:0;
+  left:0;
+  line-height:1;
+  font-size:60px;
+  font-weight:700;
+  color:#ef5350;
+  min-height:80px;
+}
+
+/*------------------
+Width <= 1280px
+------------------*/
+@media screen and (max-width: 1280px) {
+.page-mv_common{
+  padding:80px 20px;
+}
+#faq-content01{
+  padding:0 20px 120px;
+}
+}
+/*------------------
+Width <= 980px
+------------------*/
+@media screen and (max-width: 980px) {
+  
+}
+/*------------------
+Width <= 768px
+------------------*/
+@media screen and (max-width: 768px) {
+.page-mv_common{
+  padding:60px 20px;
+}
+.page-mv_common h2{
+  font-size:36px;
+}
+.page-mv_common small{
+  font-size:16px;
+  padding:10px 0 0 .2em;
+}  
+#faq-content01{
+  padding:0 20px 100px;
+}
+#faq-content01 dl{
+  margin:0 0 40px;
+  padding:0 0 40px;
+}
+#faq-content01 dl dt{
+  padding:0 0 0 60px;
+  margin:0 0 30px;
+  font-size:20px;
+}
+#faq-content01 dl dt:before{
+  font-size:48px;
+  min-height:60px;
+}
+#faq-content01 dl dd{
+  padding:0 0 0 60px;
+  font-size:16px;
+}
+#faq-content01 dl dd:before{
+  font-size:48px;
+  min-height:60px;
+}
+}
+/*------------------
+Width <= 640px
+------------------*/
+@media screen and (max-width: 640px) {
+  
+}
+/*------------------
+Width <= 480px
+------------------*/
+@media screen and (max-width: 480px) {
+#faq-content01 dl dt{
+  padding:0 0 0 40px;
+  margin:0 0 20px;
+  font-size:18px;
+}
+#faq-content01 dl dt:before{
+  font-size:30px;
+  min-height:40px;
+}
+#faq-content01 dl dd{
+  padding:0 0 0 40px;
+  font-size:14px;
+}
+#faq-content01 dl dd:before{
+  font-size:30px;
+  min-height:40px;
+}
+}
+/*------------------
+Width <= 375px
+------------------*/
+@media screen and (max-width: 375px) {
+  
+}
