@@ -143,9 +143,12 @@ var_dump($fileNames);
                 }
 
                 if($data[11] != "") {
-                    echo '入荷日更新'.DateTime::createFromFormat("Ymd",$data[11])."\n";
+                    echo '入荷日更新'."\n";
 
                     $Header->setArrivalDate(DateTime::createFromFormat("Ymd",$data[11]));
+                    $dd = $Header->getArrivalDate();
+                    var_dump($dd);
+                    
                     $em->persist($Header);
                 
                     $Instock = $this->instockScheduleRepository->findOneBy(['InstockHeader' => $Header, 'item_code_01' => $instockId]);
