@@ -111,7 +111,7 @@ class ImportInstockSchedule extends Command
         if (!$fileNames) {
             return;
         }
-        
+var_dump($fileNames);
         // ファイル一覧取得ここまで
         foreach ($fileNames as $fileName) {
             $csvpath = $localDir . $fileName;
