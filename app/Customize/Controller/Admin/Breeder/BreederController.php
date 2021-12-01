@@ -13,12 +13,16 @@
 
 namespace Customize\Controller\Admin\Breeder;
 
+use Customize\Entity\DnaCheckStatus;
 use Customize\Form\Type\Admin\BreedersType;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreedsRepository;
+use Customize\Repository\DnaCheckKindsRepository;
+use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\BreederQueryService;
+use Customize\Service\DnaQueryService;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,6 +76,21 @@ class BreederController extends AbstractController
     protected $mailService;
 
     /**
+     * @var DnaCheckStatusRepository
+     */
+    protected $dnaCheckStatusRepository;
+
+    /**
+     * @var DnaQueryService
+     */
+    protected $dnaQueryService;
+
+    /**
+     * @var DnaCheckKindsRepository
+     */
+    protected $dnaCheckKindsRepository;
+
+    /**
      * breederController constructor.
      * @param BreedersRepository $breedersRepository
      * @param BreedsRepository $breedsRepository
@@ -81,6 +100,9 @@ class BreederController extends AbstractController
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      * @param CustomerRepository $customerRepository
      * @param MailService $mailService
+     * @param DnaCheckStatusRepository $dnaCheckStatusRepository
+     * @param DnaQueryService $dnaQueryService
+     * @param DnaCheckKindsRepository $dnaCheckKindsRepository
      */
     public function __construct(
         BreedersRepository               $breedersRepository,
@@ -90,7 +112,10 @@ class BreederController extends AbstractController
         BreederPetsRepository            $breederPetsRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         CustomerRepository               $customerRepository,
-        MailService                      $mailService
+        MailService                      $mailService,
+        DnaCheckStatusRepository         $dnaCheckStatusRepository,
+        DnaQueryService                  $dnaQueryService,
+        DnaCheckKindsRepository          $dnaCheckKindsRepository
     ) {
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -100,6 +125,9 @@ class BreederController extends AbstractController
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
         $this->customerRepository = $customerRepository;
         $this->mailService = $mailService;
+        $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
+        $this->dnaQueryService = $dnaQueryService;
+        $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
     }
 
     /**
@@ -217,6 +245,42 @@ class BreederController extends AbstractController
      */
     public function dnaCheckList(Request $request)
     {
-        return[];
+        $arrayBreeder = [];
+        $countPet = [];
+        $count = [];
+        $arrBreeder = [];
+        $breederName = [];
+        if ($request->get('order_date_year')) {
+            $dnaCheckStatus = $this->dnaQueryService->findByDate($request->get('order_date_year'), $request->get('order_date_month'));
+            foreach ($dnaCheckStatus as $item) {
+                $arrBreeder[] = $item['breeder_id'];
+                if ($item['pet_id']) {
+                    $pet = $this->breederPetsRepository->find($item['pet_id']);
+                    $count[$item['pet_id']] = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $pet->getBreedsType()]));
+                }
+            }
+
+            $arrayBreeder = array_count_values($arrBreeder);
+            foreach ($arrayBreeder as $key => $amount) {
+                $countPet[$key] = 0;
+                $breeder = $this->breedersRepository->find($key);
+                $breederPets = $breeder->getBreederPets();
+                $breederName[$key] = $breeder->getBreederName();
+                foreach ($breederPets as $breederPet) {
+                    $dnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['pet_id' => $breederPet->getId()]);
+                    if($dnaCheckStatus) {
+//                        dump($dnaCheckStatus);die();
+                        $countPet[$key] = $countPet[$key] + $count[$breederPet->getId()];
+                    }
+                }
+            }
+            dump($dnaCheckStatus);die();
+        }
+
+        return[
+            'breederName' => $breederName,
+            'arrayBreeder' => $arrayBreeder,
+            'countPet' => $countPet
+        ];
     }
 }
