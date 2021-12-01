@@ -50,7 +50,19 @@ class ConservationPetsType extends AbstractType
                     ],
                 'required' => true,
             ])
-            ->add('pet_birthday', DateType::class)
+            ->add('pet_age', TextType::class,[
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length([
+                        'max' => 10,
+                        'min' => 0,
+                    ])
+                ],
+                'attr' => [
+                    'maxlength' => 10,
+                ],
+            ])
             ->add('coat_color', TextType::class, [
                 'required' => true,
                 'constraints' => [
@@ -65,13 +77,6 @@ class ConservationPetsType extends AbstractType
                     'placeholder' => '毛色をご記入ください。'
                 ],
             ])
-            ->add('future_wait', IntegerType::class, [
-                'required' => false,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-            ])
-            //->add('dna_check_result', IntegerType::class)
             ->add('pr_comment', TextareaType::class, [
                 'required' => false,
                 'constraints' => [
@@ -86,9 +91,6 @@ class ConservationPetsType extends AbstractType
             ])
             ->add('delivery_time', TextareaType::class, [
                 'required' => false,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
             ])
             ->add('delivery_way', TextareaType::class, [
                 'required' => false,

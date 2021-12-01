@@ -62,7 +62,7 @@ class ProductClassTypeExtension extends AbstractTypeExtension
                 'choices' => $choices,
                 'placeholder' => 'common.select'
             ])
-            ->add('jan_code', IntegerType::class, [
+            ->add('jan_code', TextType::class, [
                 'required' => false,
                 'constraints' => [
                     new Assert\Length([

@@ -47,7 +47,7 @@
             <div class="header-right">
                 <ul>
                 {% if is_granted('ROLE_USER') %}
-                    {# ブリーダー登録が済んでいない場合のみ表示 #}
+                    {# ブリーダー登録が済んでいない場合のみ表示 
                     {% if app.user.isBreeder == 0 %}
                         <li class="breeder">
                             <a href="{{url('breeder_examination')}}" class="btn">
@@ -56,6 +56,7 @@
                             </a>
                         </li>
                     {% endif %}
+                    #}
                     <li class="logout">
                         <a href="{{url('logout')}}" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">

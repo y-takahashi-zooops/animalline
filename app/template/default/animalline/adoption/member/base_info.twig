@@ -51,7 +51,7 @@
 								</dl>
 								<dl>
 									<dt>
-										{{ form_label(form.handling_pet_kind, '取り扱いペット種別', { 'label_attr': { 'class': 'ec-label' }}) }}
+										{{ form_label(form.handling_pet_kind, '取り扱い種別', { 'label_attr': { 'class': 'ec-label' }}) }}
 										<p style="font-size:14px;color:#DE5D50;">犬と猫両方取り扱う場合に、<br>「犬・猫」を選択してください</p>
 									</dt>
 									<dd>
@@ -61,6 +61,7 @@
 										</div>
 									</dd>
 								</dl>
+								{#
 								<dl id="dogHouse">
 									<dt>
 										{{ form_label(form.conservation_house_name_dog, '犬舎名', { 'label_attr': { 'class': 'ec-label' }}) }}
@@ -83,6 +84,7 @@
 										</div>
 									</dd>
 								</dl>
+								#}
 								<dl>
 									<dt>
 										{{ form_label(form.owner_name, 'お名前', { 'label_attr': { 'class': 'ec-label' }}) }}
@@ -178,7 +180,8 @@
 								</dl>
 								<dl>
 									<dt>
-										{{ form_label(form.pr_text, 'メッセージ', { 'label_attr': { 'class': 'ec-label' }}) }}
+										{{ form_label(form.pr_text, '里親様へのメッセージ', { 'label_attr': { 'class': 'ec-label' }}) }}
+										<p style="font-size:14px;color:#DE5D50;">保護団体様の紹介文として公開されます</p>
 									</dt>
 									<dd>
 										<div class="ec-input{{ has_errors(form.pr_text) ? ' error' }}">

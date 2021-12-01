@@ -93,68 +93,11 @@
                                     </div>
                                 </div>
                             {% endif %}
-                            {% if conservation.handlingPetKind == 0 or conservation.handlingPetKind == 1 %}
-                                <div class="breeder_section_header">
-                                    <i class="fas fa-paw"></i>
-                                    犬舎情報
-                                </div>
-                                <div class="col-12 breeder_section_detail">
-                                    <div class="row">
-                                        <div class="col-12 col-md-4 contents_col_bold">
-                                            運営者氏名
-                                        </div>
-                                        <div class="col-12 col-md-8 contents_col_normal">
-                                            {{ dogHouse.conservationHouseName }} 
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 breeder_section_detail">
-                                    <div class="row">
-                                        <div class="col-12 col-md-4 contents_col_bold">
-                                            犬舎住所
-                                        </div>
-                                        <div class="col-12 col-md-8 contents_col_normal">
-                                            {{ dogHouse.conservationHousePref }} 
-                                            {{ dogHouse.conservationHouseCity }}
-                                            {{ dogHouse.conservationHouseAddress }}
-                                            {{ dogHouse.conservationHouseBuillding ?? '' }}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% if conservation.handlingPetKind == 0 or conservation.handlingPetKind == 2 %}
-                                <div class="breeder_section_header">
-                                    <i class="fas fa-paw"></i>
-                                    猫舎情報
-                                </div>
-                                <div class="col-12 breeder_section_detail">
-                                    <div class="row">
-                                        <div class="col-12 col-md-4 contents_col_bold">
-                                            運営者氏名
-                                        </div>
-                                        <div class="col-12 col-md-8 contents_col_normal">
-                                            {{ catHouse.conservationHouseName }} 
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 breeder_section_detail">
-                                    <div class="row">
-                                        <div class="col-12 col-md-4 contents_col_bold">
-                                            猫舎住所
-                                        </div>
-                                        <div class="col-12 col-md-8 contents_col_normal">
-                                            {{ catHouse.conservationHousePref }} 
-                                            {{ catHouse.conservationHouseCity }}
-                                            {{ catHouse.conservationHouseAddress }}
-                                            {{ catHouse.conservationHouseBuillding ?? '' }}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
+                           
                             {% if conservation.prText %}
                                 <div class="breeder_section_header">
                                     <i class="fas fa-paw"></i>
-                                    自己PR
+                                    里親様へのメッセージ
                                 </div>
                                 <div class="col-12 breeder_section_detail">
                                     <div class="row">
@@ -174,18 +117,17 @@
                     <ul>
                         {% for pet in pets %}
                             <li>
-                                <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
+                                <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
                                     <figure>
                                         <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                              class="card-img-top" alt="Pet-image">
                                     </figure>
                                     <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
-                                    <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
+                                    <div class="birthday">{{ pet.petAge }}</div>
                                     <div class="type">
                                         <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>茶色</span>
                                     </div>
                                     <div class="publish">掲載日：2021年09月15日</div>
-                                    <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
                                     <p>{{ pet.prComment|nl2br }}</p>
                                 </a>
                             </li>

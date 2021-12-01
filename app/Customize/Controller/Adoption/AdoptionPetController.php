@@ -2,6 +2,8 @@
 
 namespace Customize\Controller\Adoption;
 
+use Carbon\Carbon;
+use DateTime;
 use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationPetImage;
 use Customize\Entity\ConservationPets;
@@ -183,8 +185,11 @@ class AdoptionPetController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $conservationPet->setConservation($conservation);
             $conservationPet->setDnaCheckResult(0);
-            $conservationPet->setIsActive(0);
+            $conservationPet->setIsActive(1);
             $conservationPet->setPrice(0);
+            $bd = new DateTime('now');
+            $conservationPet->setPetBirthday($bd);
+            $conservationPet->setFutureWait(0);
             $entityManager->persist($conservationPet);
             $entityManager->flush();
             $petId = $conservationPet->getId();
@@ -275,9 +280,8 @@ class AdoptionPetController extends AbstractController
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
 
-        $request->request->set('thumbnail_path', $image0 ? : ($conservationPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath() : ''));
+        $request->request->set('thumbnail_path', $image0 ?: ($conservationPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath() : ''));
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $petId = $conservationPet->getId();
             $img0 = $this->setImageSrc($request->get('img0'), $petId);
@@ -287,6 +291,7 @@ class AdoptionPetController extends AbstractController
             $img4 = $this->setImageSrc($request->get('img4'), $petId);
             $entityManager = $this->getDoctrine()->getManager();
             $conservationPet->setThumbnailPath($img0);
+            
             $entityManager->persist($conservationPet);
             foreach ($conservationPetImages as $key => $image) {
                 $image->setImageUri(${'img' . $key});
@@ -323,6 +328,29 @@ class AdoptionPetController extends AbstractController
             'image3' => $image3,
             'image4' => $image4
         ]);
+    }
+
+    /**
+     * ペットの状態を変更する
+     *
+     * @Route("/adoption/member/pets/edit/{id}/change_status", name="adoption_pets_edit_change_status", methods={"GET"})
+     */
+    public function adoption_pets_change_status(Request $request, ConservationPets $conservationPet)
+    {
+        $curStatus = $conservationPet->getIsActive();
+        if ($curStatus === AnilineConf::IS_ACTIVE_PRIVATE) {
+            $conservationPet->setIsActive(AnilineConf::IS_ACTIVE_PUBLIC);
+            $conservationPet->setReleaseDate(Carbon::now());
+        } elseif ($curStatus === AnilineConf::IS_ACTIVE_PUBLIC) {
+            $conservationPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
+            $conservationPet->setReleaseDate(null);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($conservationPet);
+        $em->flush();
+
+        return $this->redirectToRoute('adoption_pets_edit', ['id' => $conservationPet->getId()]);
     }
 
     /**
@@ -373,7 +401,7 @@ class AdoptionPetController extends AbstractController
     public function pet_regist_list(Request $request, PaginatorInterface $paginator)
     {
         $codes = [];
-        $dnaCheckStatusHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id'=>$this->getUser()->getId()]);
+        $dnaCheckStatusHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $this->getUser()->getId()]);
         $DnaCheckStatus = $this->dnaCheckStatusRepository->createQueryBuilder('dcs')
             ->where('dcs.DnaHeader IN(:arr)')
             ->andWhere('dcs.site_type = :siteType')
