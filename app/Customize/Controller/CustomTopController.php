@@ -65,6 +65,8 @@ class CustomTopController extends AbstractController
      */
     public function index()
     {
+        $customer = $this->getUser();
+
         $categoryDog = $this->categoryRepository->find(7);
         $categoryCat = $this->categoryRepository->find(8);
         $categoryBeside = $this->categoryRepository->find(9);
@@ -79,6 +81,10 @@ class CustomTopController extends AbstractController
             'Parent' => $categoryBeside
         ]);
 
+        $numProductDog = $this->categoryRepository->getNumberOfProduct(7, $customer);
+        $numProductCat = $this->categoryRepository->getNumberOfProduct(8, $customer);
+        $numProductBeside = $this->categoryRepository->getNumberOfProduct(9, $customer);
+
         $searchData["category_id"] = null;
         $searchData['orderby'] = $this->productListOrderByRepository->find(2);
 
@@ -91,7 +97,10 @@ class CustomTopController extends AbstractController
             'categoryChildDog' => $categoryChildDog,
             'categoryChildCat' => $categoryChildCat,
             'categoryChildBeside' => $categoryChildBeside,
-            'products_new' => $products_new
+            'products_new' => $products_new,
+            'numProductDog' => $numProductDog,
+            'numProductCat' => $numProductCat,
+            'numProductBeside' => $numProductBeside
         ];
     }
 

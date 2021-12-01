@@ -43,7 +43,7 @@
                                 <ul>
                                     {% for categoryDog in categoryChildDog %}
                                         {% if categoryDog.getProductCategories is not empty %}
-                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryDog.id }}">{{ categoryDog.name }}({{ categoryDog.getProductCategories|length }})</a></li>
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryDog.id }}">{{ categoryDog.name }}({{ numProductDog }})</a></li>
                                         {% endif %}
                                     {% endfor %}
                                 </ul>
@@ -55,19 +55,19 @@
                                 <ul>
                                     {% for categoryCat in categoryChildCat %}
                                         {% if categoryCat.getProductCategories is not empty %}
-                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryCat.id }}">{{ categoryCat.name }}({{ categoryCat.getProductCategories|length }})</a></li>
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryCat.id }}">{{ categoryCat.name }}({{ numProductCat }})</a></li>
                                         {% endif %}
                                     {% endfor %}
                                 </ul>
                             </dd>
                         </div>
                         <div>
-                            <dt>その他</dt>
+                            <dt>共通</dt>
                             <dd>
                                 <ul>
                                     {% for categoryBeside in categoryChildBeside %}
                                         {% if categoryBeside.getProductCategories is not empty %}
-                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryBeside.id }}">{{ categoryBeside.name }}({{ categoryBeside.getProductCategories|length }})</a></li>
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryBeside.id }}">{{ categoryBeside.name }}({{ numProductBeside }})</a></li>
                                         {% endif %}
                                     {% endfor %}
                                 </ul>
