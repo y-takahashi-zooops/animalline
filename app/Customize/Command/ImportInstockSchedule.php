@@ -89,11 +89,11 @@ class ImportInstockSchedule extends Command
 
         $em = $this->entityManager;
         // 自動コミットをやめ、トランザクションを開始
-        $em->getConnection()->setAutoCommit(false);
+        //$em->getConnection()->setAutoCommit(false);
 
         // sql loggerを無効にする.
-        $em->getConfiguration()->setSQLLogger(null);
-        $em->getConnection()->beginTransaction();
+        //$em->getConfiguration()->setSQLLogger(null);
+        //$em->getConnection()->beginTransaction();
 
         // ファイル一覧取得
         $localDir = "var/tmp/wms/receive/";
@@ -161,16 +161,8 @@ var_dump($fileNames);
                         $em->persist($Instock);
                         //$em->persist($ProductStock);
                     }
-                }
-                // 端数分を更新
-                try {
+
                     $em->flush();
-                    $em->getConnection()->commit();
-                    echo 'コミット'."\n";
-                } catch (Exception $e) {
-                    $em->getConnection()->rollback();
-                    throw $e;
-                    echo 'ロールバック'."\n";
                 }
             }
             $logWmsDir = 'var/log/wms/';
