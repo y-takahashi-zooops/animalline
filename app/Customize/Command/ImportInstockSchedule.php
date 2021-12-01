@@ -141,6 +141,8 @@ var_dump($fileNames);
                     log_info('ID ['.$data[0].'] が見つかりません');
                     continue;
                 }
+                $rt = $Header->getRemarkText();
+                var_dump($rt);
 
                 if($data[11] != "") {
                     echo '入荷日更新'."\n";
@@ -148,7 +150,7 @@ var_dump($fileNames);
                     $Header->setArrivalDate(DateTime::createFromFormat("Ymd",$data[11]));
                     $dd = $Header->getArrivalDate();
                     var_dump($dd);
-                    
+
                     $em->persist($Header);
                 
                     $Instock = $this->instockScheduleRepository->findOneBy(['InstockHeader' => $Header, 'item_code_01' => $instockId]);
@@ -164,9 +166,11 @@ var_dump($fileNames);
                 try {
                     $em->flush();
                     $em->getConnection()->commit();
+                    echo 'コミット'."\n";
                 } catch (Exception $e) {
                     $em->getConnection()->rollback();
                     throw $e;
+                    echo 'ロールバック'."\n";
                 }
             }
             $logWmsDir = 'var/log/wms/';
