@@ -131,6 +131,8 @@ var_dump($fileNames);
 
             // CSVファイルの登録処理
             while (($data = fgetcsv($fp)) !== FALSE) {
+                var_dump($data);
+                
                 $headerId = $data[0];   //ヘッダのID
                 $instockId = $data[8];  //アイテムコード
                 $Header = $this->instockScheduleHeaderRepository->find($headerId);
@@ -141,6 +143,8 @@ var_dump($fileNames);
                 }
 
                 if($data[11] != "") {
+                    echo '入荷日更新' .　DateTime::createFromFormat("Ymd",$data[11])　. "\n";
+
                     $Header->setArrivalDate(DateTime::createFromFormat("Ymd",$data[11]));
                     $em->persist($Header);
                 
