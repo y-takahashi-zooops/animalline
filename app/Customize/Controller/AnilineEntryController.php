@@ -295,7 +295,7 @@ class AnilineEntryController extends AbstractController
      */
     public function completed(Request $request)
     {
-        return [];
+        return ['request' => $request];
     }
 
     /**
