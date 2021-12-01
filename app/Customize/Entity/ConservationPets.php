@@ -115,6 +115,26 @@ class ConservationPets
     private $update_date;
 
     /**
+     * @ORM\Column(name="is_vaccine", type="smallint", options={"default" = 0}, nullable=true)
+     */
+    private $is_vaccine;
+
+    /**
+     * @ORM\Column(name="is_castration", type="smallint", options={"default" = 0}, nullable=true)
+     */
+    private $is_castration;
+
+    /**
+     * @ORM\Column(name="is_single", type="smallint", options={"default" = 0}, nullable=true)
+     */
+    private $is_single;
+
+    /**
+     * @ORM\Column(name="is_senior", type="smallint", options={"default" = 0}, nullable=true)
+     */
+    private $is_senior;
+
+    /**
      * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
      */
     private $thumbnail_path;
@@ -312,6 +332,55 @@ class ConservationPets
         return $this;
     }
 
+    public function getIsSenior(): ?int
+    {
+        return $this->is_senior;
+    }
+
+    public function setIsSenior(int $is_senior): self
+    {
+        $this->is_senior = $is_senior;
+
+        return $this;
+    }
+
+    public function getIsSingle(): ?int
+    {
+        return $this->is_single;
+    }
+
+    public function setIsSingle(int $is_single): self
+    {
+        $this->is_single = $is_single;
+
+        return $this;
+    }
+
+    public function getIsCastration(): ?int
+    {
+        return $this->is_castration;
+    }
+
+    public function setIsCastration(int $is_castration): self
+    {
+        $this->is_castration = $is_castration;
+
+        return $this;
+    }
+
+    public function getIsVaccine(): ?int
+    {
+        return $this->is_vaccine;
+    }
+
+    public function setIsVaccine(int $is_vaccine): self
+    {
+        $this->is_vaccine = $is_vaccine;
+
+        return $this;
+    }
+
+    
     public function getIsActive(): ?int
     {
         return $this->is_active;
@@ -323,7 +392,7 @@ class ConservationPets
 
         return $this;
     }
-
+    
     public function getReleaseDate(): ?\DateTimeInterface
     {
         return $this->release_date;

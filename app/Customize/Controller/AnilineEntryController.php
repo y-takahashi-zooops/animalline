@@ -146,12 +146,15 @@ class AnilineEntryController extends AbstractController
 
         if($returnPath == "breeder_mypage"){
             $prefix = "breeder";
+            $regist_type = 1;
         }
         else if($returnPath == "adoption_mypage"){
             $prefix = "adoption";
+            $regist_type = 2;
         }
         else{
             $prefix = "default";
+            $regist_type = 0;
         }
 
         if ($this->isGranted('ROLE_USER')) {
@@ -209,6 +212,7 @@ class AnilineEntryController extends AbstractController
                         ->setSecretKey($secretKey)
                         ->setPoint(0)
                         ->setIsBreeder(0)
+                        ->setRegistType($regist_type)
                         ->setIsConservation(0);
 
                     $this->entityManager->persist($Customer);

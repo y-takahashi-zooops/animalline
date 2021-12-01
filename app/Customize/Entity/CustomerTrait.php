@@ -21,6 +21,35 @@ trait CustomerTrait
   public $is_conservation;
 
   /**
+   * @ORM\Column(name="regist_type",type="smallint", options={"default" : 0})
+   */
+  public $regist_type;
+
+  /**
+   * Set regist_type.
+   *
+   * @param string $regist_type
+   *
+   * @return Customer
+   */
+  public function setRegistType($regist_type)
+  {
+    $this->regist_type = $regist_type;
+
+    return $this;
+  }
+
+  /**
+   * Get is_breeder.
+   *
+   * @return integer
+   */
+  public function getRegistType()
+  {
+    return $this->regist_type;
+  }
+
+  /**
    * Set is_breeder.
    *
    * @param string $is_breeder
