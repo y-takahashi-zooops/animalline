@@ -10620,3 +10620,14 @@ label[for="change_subscription_cycle_type_1"] {
   font-size: 16px;
 }
 /* 後藤追加分 20211012 -定期購入- */
+
+.ec-cartRow_subscription{
+  padding: 1.5rem 0;
+}
+.ec-cartRow_subscription span {
+  background-color: #004186;
+  font-weight: bold;
+  color: white;
+  padding: 1rem;
+  border-radius: 5px;
+}
