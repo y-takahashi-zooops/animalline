@@ -10,15 +10,14 @@ file that was distributed with this source code.
 #}
 
 {# ヘッダーの切り替え #}
-{% if prefix == "adoption" %}
+{% if request.get('ReturnPath') =="adoption_mypage" %}
     {% set base_template = 'adoption_frame.twig' %}
-{% endif %}
-{% if prefix == "breeder" %}
+{% elseif request.get('ReturnPath') =="breeder_mypage" %}
     {% set base_template = 'breeder_frame.twig' %}
+{% else %}
+    {% set base_template = 'normal_frame.twig' %}
 {% endif %}
-{% if prefix == "default" %}
-    {% set base_template = 'default_frame.twig' %}
-{% endif %}
+
 {% extends base_template %}
 {# ヘッダーの切り替え #}
 
