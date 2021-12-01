@@ -159,6 +159,15 @@ class BreederController extends AbstractController
     }
 
     /**
+     * @Route("/breeder/info", name="breeder_info")
+     * @Template("animalline/breeder/info.twig")
+     */
+    public function breeder_info()
+    {
+        return [];
+    }
+
+    /**
      * @Route("/breeder/guide/dog", name="breeder_guide_dog")
      * @Template("animalline/breeder/guide/dog.twig")
      */
