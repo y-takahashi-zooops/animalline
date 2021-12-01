@@ -213,7 +213,7 @@ class ConservationsType extends AbstractType
                 'mapped' => false
             ]);
 
-            $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
+            //$builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -221,17 +221,5 @@ class ConservationsType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Conservations::class,
         ]);
-    }
-
-    public function validatePetHouseName(FormEvent $event)
-    {
-        $data = $event->getData();
-        $form = $event->getForm();
-        if (in_array($data->getHandlingPetKind(), [AnilineConf::ANILINE_PET_KIND_DOG_CAT, AnilineConf::ANILINE_PET_KIND_DOG]) && !$data->getConservationHouseNameDog()) {
-            $form['DogHouseNameErrors']->addError(new FormError('入力されていません。'));
-        }
-        if (in_array($data->getHandlingPetKind(), [AnilineConf::ANILINE_PET_KIND_DOG_CAT, AnilineConf::ANILINE_PET_KIND_CAT]) && !$data->getConservationHouseNameCat()) {
-            $form['CatHouseNameErrors']->addError(new FormError('入力されていません。'));
-        }
     }
 }
