@@ -208,4 +208,15 @@ class BreederController extends AbstractController
             'id' => $request->get('id')
         ];
     }
+
+    /**
+     * 登録内容編集ブリーダー管理
+     *
+     * @Route("/%eccube_admin_route%/breeder/dna_check/list", name="admin_breeder_dna_check_list")
+     * @Template("@admin/Breeder/dna_check_list.twig")
+     */
+    public function dnaCheckList(Request $request)
+    {
+        return[];
+    }
 }
