@@ -171,6 +171,7 @@ var_dump($fileNames);
                     $header->setKitShippingOperationDate(new \DateTime());
 
                     $em->persist($header);
+                    $em->flush();
 
                     $data = ["name" => $header->getShippingName()];
                     $this->mailService->sendDnaKitSendComplete($customer->getEmail(),$data);
@@ -184,6 +185,7 @@ var_dump($fileNames);
                     $shippingHeader->setShippingDate($dateShipping)
                         ->setWmsShipNo($data[4]);
                     $em->persist($shippingHeader);
+                    $em->flush();
                 }
             }
             try {

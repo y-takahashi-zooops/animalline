@@ -128,7 +128,7 @@ class UlogiController extends AbstractController
             'address01' => $header->getShippingPref().$header->getShippingCity(),
             'address02' => $header->getShippingAddress(),
             'name' => $header->getShippingName(),
-            'setno' => sprintf('%06d',$header->getId())
+            'setno' => "5".sprintf('%06d',$header->getId())
         ]);
     }
 
