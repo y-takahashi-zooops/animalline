@@ -70,36 +70,6 @@ class ConservationsType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
-            ->add('conservation_house_name_dog', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'min' => 0,
-                        'max' => $this->eccubeConfig['eccube_stext_len']
-                    ]),
-                ]
-            ])
-            ->add('conservation_house_name_cat', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'min' => 0,
-                        'max' => $this->eccubeConfig['eccube_stext_len']
-                    ]),
-                ]
-            ])
-            ->add('DogHouseNameErrors', TextType::class, [
-                'mapped' => false,
-            ])
-            ->add('CatHouseNameErrors', TextType::class, [
-                'mapped' => false,
-            ])
             ->add('owner_name', TextType::class, [
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
