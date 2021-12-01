@@ -101,7 +101,7 @@ class UlogiController extends AbstractController
         foreach($dnas as $dna){
             $datas[$i] = [
                 'barcode' =>  $dna->getSiteType().sprintf('%05d',$dna->getId()),
-                'setno' => sprintf('%06d',$header->getId())
+                'setno' => "5".sprintf('%06d',$header->getId())
             ];
 
             $i++;
