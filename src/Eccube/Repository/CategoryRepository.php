@@ -183,7 +183,7 @@ class CategoryRepository extends AbstractRepository
             $query->andWhere('p.is_check_auth = :is_check_auth')
             ->setParameter('is_check_auth', AnilineConf::ANILINE_PRODUCT_CHECK_AUTH_FALSE);
         }
-        $query->select('p');
-        return count($query->getQuery()->getResult());
+        $query->groupBy('pc.category_id')->select('count(pc.category_id) as count_product, c as category');
+        return $query->getQuery()->getResult();
     }
 }

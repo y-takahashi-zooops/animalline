@@ -67,23 +67,9 @@ class CustomTopController extends AbstractController
     {
         $customer = $this->getUser();
 
-        $categoryDog = $this->categoryRepository->find(7);
-        $categoryCat = $this->categoryRepository->find(8);
-        $categoryBeside = $this->categoryRepository->find(9);
-
-        $categoryChildDog = $this->categoryRepository->findBy([
-            'Parent' => $categoryDog
-        ]);
-        $categoryChildCat = $this->categoryRepository->findBy([
-            'Parent' => $categoryCat
-        ]);
-        $categoryChildBeside = $this->categoryRepository->findBy([
-            'Parent' => $categoryBeside
-        ]);
-
-        $numProductDog = $this->categoryRepository->getNumberOfProduct(7, $customer);
-        $numProductCat = $this->categoryRepository->getNumberOfProduct(8, $customer);
-        $numProductBeside = $this->categoryRepository->getNumberOfProduct(9, $customer);
+        $categoryChildDog = $this->categoryRepository->getNumberOfProduct(7, $customer);
+        $categoryChildCat = $this->categoryRepository->getNumberOfProduct(8, $customer);
+        $categoryChildBeside = $this->categoryRepository->getNumberOfProduct(9, $customer);
 
         $searchData["category_id"] = null;
         $searchData['orderby'] = $this->productListOrderByRepository->find(2);
@@ -97,10 +83,7 @@ class CustomTopController extends AbstractController
             'categoryChildDog' => $categoryChildDog,
             'categoryChildCat' => $categoryChildCat,
             'categoryChildBeside' => $categoryChildBeside,
-            'products_new' => $products_new,
-            'numProductDog' => $numProductDog,
-            'numProductCat' => $numProductCat,
-            'numProductBeside' => $numProductBeside
+            'products_new' => $products_new
         ];
     }
 
