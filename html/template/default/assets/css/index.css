@@ -2,6 +2,7 @@
 /* ------------------------------------------- */
 /* index-title */
 /* ------------------------------------------- */
+/* type01 */
 .index-title.type01{
 	margin-bottom: 3.2rem;
 	text-align: center;
@@ -19,6 +20,23 @@
 	font-size: 3rem;
 	letter-spacing: 0.05em;
 	line-height: 1.17;
+}
+/* type02 */
+.index-title.type02{
+	margin-bottom: 5rem;
+	font-weight: 500;
+	font-size: 3rem;
+	letter-spacing: 0.05em;
+	line-height: 1.17;
+	text-align: center;
+}
+.index-title.type02.c1{ color: #FFF;}
+
+@media screen and (max-width: 767px){
+	.index-title.type02{
+		margin-bottom: 3rem;
+		font-size: 2rem;
+	}
 }
 @media screen and (max-width: 767px){
 	.index-title.type01 .main{
@@ -706,4 +724,37 @@
 	content: "・";
 	position: absolute;
 	left: 0;
+}
+
+
+/* ------------------------------------------- */
+/* common-list */
+/* ------------------------------------------- */
+.common-list{
+}
+/* cal */
+.common-list.cal-mark{
+	margin-top: 1.4rem;
+}
+.common-list.cal-mark li{
+	position: relative;
+	padding-left: 3rem;
+	font-weight: 500;
+	font-size: 1.4rem;
+	line-height: 2rem;
+	letter-spacing: 0.05em;
+}
+.common-list.cal-mark li:after{
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: block;
+	width: 2rem;
+	height: 2rem;
+	border: 0.1rem solid transparent;
+}
+.common-list.cal-mark li.holiday:after{
+	border-color: #D5D5D5;
+	background-color: #DB7064;
 }
