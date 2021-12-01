@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/index.css?ver=211102_2') }}">
 {% endblock %}
 {% block javascript %}
-   
+
 {% endblock %}
 
 {% block main %}
@@ -41,12 +41,11 @@
                             <dt>⽝⽤</dt>
                             <dd>
                                 <ul>
-                                    <li><a href="{{ url('product_list') }}?category_id=10">DRYフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=11">WETフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=12">おやつ</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=13">トイレタリー</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=14">雑貨</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=46">その他</a></li>
+                                    {% for categoryDog in categoryChildDog %}
+                                        {% if categoryDog.getProductCategories is not empty %}
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryDog.id }}">{{ categoryDog.name }}({{ categoryDog.getProductCategories|length }})</a></li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </dd>
                         </div>
@@ -54,12 +53,11 @@
                             <dt>猫⽤</dt>
                             <dd>
                                 <ul>
-                                    <li><a href="{{ url('product_list') }}?category_id=19">DRYフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=20">WETフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=21">おやつ</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=22">トイレタリー</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=23">雑貨</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=47">その他</a></li>
+                                    {% for categoryCat in categoryChildCat %}
+                                        {% if categoryCat.getProductCategories is not empty %}
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryCat.id }}">{{ categoryCat.name }}({{ categoryCat.getProductCategories|length }})</a></li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </dd>
                         </div>
@@ -67,12 +65,11 @@
                             <dt>その他</dt>
                             <dd>
                                 <ul>
-                                    <li><a href="{{ url('product_list') }}?category_id=26">DRYフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=27">WETフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=28">おやつ</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=29">トイレタリー</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=30">雑貨</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=48">その他</a></li>
+                                    {% for categoryBeside in categoryChildBeside %}
+                                        {% if categoryBeside.getProductCategories is not empty %}
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryBeside.id }}">{{ categoryBeside.name }}({{ categoryBeside.getProductCategories|length }})</a></li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </dd>
                         </div>
