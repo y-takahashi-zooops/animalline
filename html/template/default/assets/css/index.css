@@ -725,36 +725,3 @@
 	position: absolute;
 	left: 0;
 }
-
-
-/* ------------------------------------------- */
-/* common-list */
-/* ------------------------------------------- */
-.common-list{
-}
-/* cal */
-.common-list.cal-mark{
-	margin-top: 1.4rem;
-}
-.common-list.cal-mark li{
-	position: relative;
-	padding-left: 3rem;
-	font-weight: 500;
-	font-size: 1.4rem;
-	line-height: 2rem;
-	letter-spacing: 0.05em;
-}
-.common-list.cal-mark li:after{
-	content: "";
-	position: absolute;
-	left: 0;
-	top: 0;
-	display: block;
-	width: 2rem;
-	height: 2rem;
-	border: 0.1rem solid transparent;
-}
-.common-list.cal-mark li.holiday:after{
-	border-color: #D5D5D5;
-	background-color: #DB7064;
-}
