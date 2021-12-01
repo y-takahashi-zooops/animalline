@@ -52,18 +52,18 @@
                         <div class="col-lg-4 col-md-12">
                             <a href="{{url('adoption_baseinfo',{'return_path': "adoption_mypage"})}}" class="btn btn-primary btn-block mt-3" role="button">基本情報編集</a>
                         </div>
-                        {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 1 %}
-                            <div class="col-lg-4 col-md-12">
-                                <a href="{{path('adoption_house_info',{'pet_type': 1 ,'return_path': "adoption_mypage"})}}" class="btn btn-primary btn-block mt-3" role="button">犬舎情報編集</a>
-                            </div>
-                        {% endif %}
-                        {% if conservation.getHandlingPetKind() == 0 or conservation.getHandlingPetKind() == 2 %}
-                            <div class="col-lg-4 col-md-12">
-                                <a href="{{path('adoption_house_info',{'pet_type': 2, 'return_path': "adoption_mypage" })}}" class="btn btn-primary btn-block mt-3" role="button">猫舎情報編集</a>
-                            </div>
-                        {% endif %}
+                       
+                        <div class="col-lg-4 col-md-12">
+                            <a href="{{path('adoption_house_info',{'pet_type': 1 ,'return_path': "adoption_mypage"})}}" class="btn btn-primary btn-block mt-3" role="button">情報編集</a>
+                        </div>
                     </div>
                 {% endif %}
+                <div class="row">
+                    <div class="col-lg-4 col-md-12 text-center">
+                        <a href="{{ url('adoption_change') }}" class="btn btn-primary btn-block mt-3" role="button">会員情報編集</a>
+                        <span style="color: red;">メールアドレス・パスワード変更の方はこちら</span>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-lg-8 col-md-12" style="margin: 5rem auto 0 auto;">
                         <img src="{{ asset('assets/img/reg/adoption_pet_regist_info.png') }}" alt="ペットの家庭教師"/>

@@ -325,7 +325,10 @@ class BreederMemberController extends AbstractController
         $Customer->setPassword($this->eccubeConfig['eccube_default_password']);
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
-        $builder = $this->formFactory->createBuilder(EntryType::class, $Customer);
+        $builder = $this->formFactory->createBuilder(EntryType::class, $Customer, [
+            'password' => $request->get('entry')['password']['first'] ?? '',
+            'email' => $request->get('entry')['email']['first'] ?? '',
+        ]);
 
         $event = new EventArgs(
             [

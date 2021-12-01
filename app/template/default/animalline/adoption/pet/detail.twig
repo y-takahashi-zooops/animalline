@@ -99,10 +99,10 @@
                             <div class="col-12 breeder_section_detail">
                                 <div class="row">
                                     <div class="col-12 col-md-4 contents_col_bold">
-                                        誕生日
+                                        年齢
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ conservationPet.petBirthday.format('Y年m月d日') ?? '' }}
+                                        {{ conservationPet.petAge }}
                                     </div>
                                 </div>
                             </div>
@@ -116,26 +116,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 breeder_section_detail">
-                                <div class="row">
-                                    <div class="col-12 col-md-4 contents_col_bold">
-                                        成犬時予想体重
-                                    </div>
-                                    <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ conservationPet.futureWait }}kg
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 contents_col_normal mt-4 mb-4 pl-4 pr-4"
-                                 style="background:#f7f5f0; border:1px solid #dcdfe1; border-radius: 3px;">
-                                <h6 class="text-align-center mb-2" style="color:#399634">
-                                    <i class="fas fa-info-circle"></i>
-                                    【生後56日を過ぎていない子犬の引き渡しについて】
-                                </h6>
-                                動物愛護法により、生後56日を過ぎていない子犬の引き渡しが禁止されています。<br>
-                                この子犬はまだ生後56日を過ぎていませんので、すぐに引き渡しを行う事はできません。<br>
-                                生後56日を過ぎていなくてもブリーダーの下で親犬や兄弟犬と共に飼養されている環境であれば購入検討のためにご見学することは可能です。<br>
-                            </div>
+                            
                             <div class="breeder_section_header">
                                 <i class="fas fa-paw"></i>
                                 PRコメント
@@ -144,17 +125,6 @@
                                 <div class="row">
                                     <div class="col-12 contents_col_normal">
                                         {{ conservationPet.prComment | nl2br }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="breeder_section_header">
-                                <i class="fas fa-paw"></i>
-                                金額
-                            </div>
-                            <div class="col-12 breeder_section_detail">
-                                <div class="row">
-                                    <div class="col-12 contents_col_price">
-                                        {{ conservationPet.price|number_format(0) }}円（税込）
                                     </div>
                                 </div>
                             </div>
@@ -168,45 +138,6 @@
                                         </a>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="mb-4 mt-4">
-                                <div class="breeder_section_header">
-                                    {# <i class="fas fa-paw"></i> #}
-                                    アニマルラインを通して子犬をご購入いただくと下記の特典が受けられます！
-                                </div>
-                                <table class="tbl_benefits">
-                                    <tr>
-                                        <th>1ヶ月間の<br>無料ペット保険</th>
-                                        <td>
-                                            アニマルラインを通じて子犬をご購入いただいた方に、<b>ペット保険大手アニコム損保の保険を1ヶ月間無料</b>でお付けいたします。(ブリーダーが提供する生体保証とは別の補償になります。)<br>
-                                            ご利用には別途お申し込みが必要になります。<br>
-                                            ※無料ペット保険の補償期間を過ぎた場合・子犬がお迎え時点で1歳を超えていた場合はお申し込みができません。<br>
-                                            <a href="#">詳細はこちらをご覧ください。</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>充実のご成約特典</th>
-                                        <td>
-                                            アニマルラインを通じて子犬をご購入いただきますと、
-                                            <b>子犬のためのフード2種</b>、
-                                            <b>消臭剤（1,650円相当）</b>、
-                                            <b>電話相談サービス</b>、
-                                            <b>総額5,000円分のクーポン</b>、
-                                            <b>乳酸菌ミルクサプリ</b>、
-                                            <b>飼育本</b>、
-                                            を無料でお付けいたします。サービスのご利用には別途お申し込みが必要になります。
-                                            <br>
-                                            <a href="#">詳細はこちらをご覧ください。</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>安心の取引保証</th>
-                                        <td>
-                                            みんなのブリーダーを通じて子犬をご購入いただき、子犬代金支払い後に子犬の引き渡しを受けられない詐欺行為があった場合は当サイトが<b>全額返金保証</b>いたします。
-                                        </td>
-                                    </tr>
-                                </table>
                             </div>
 
                             <div class="breeder_section_header_orange">

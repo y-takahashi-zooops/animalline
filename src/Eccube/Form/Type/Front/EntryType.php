@@ -96,6 +96,12 @@ class EntryType extends AbstractType
             ])
             ->add('job', JobType::class, [
                 'required' => false,
+            ])
+            ->add('passwordErrors', TextType::class, [
+                'mapped' => false,
+            ])
+            ->add('emailErrors', TextType::class, [
+                'mapped' => false,
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -123,6 +129,8 @@ class EntryType extends AbstractType
                 $form['password']['first']->addError(new FormError(trans('common.password_eq_email')));
             }
         });
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePassword']);
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateEmail']);
     }
 
     /**
@@ -132,6 +140,8 @@ class EntryType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'Eccube\Entity\Customer',
+            'password' => '',
+            'email' => ''
         ]);
     }
 
@@ -142,5 +152,31 @@ class EntryType extends AbstractType
     {
         // todo entry,mypageで共有されているので名前を変更する
         return 'entry';
+    }
+
+    public function validatePassword(FormEvent $event)
+    {
+        $length = strlen($event->getForm()->getConfig()->getOptions()['password']);
+        $form = $event->getForm();
+        if (!$event->getForm()->getConfig()->getOptions()['password']) {
+            $form['passwordErrors']->addError(new FormError('入力されていません。'));
+        }
+        if ( $length > 32) {
+            $form['passwordErrors']->addError(new FormError('値が長すぎます。32文字以内でなければなりません。'));
+        }
+        if ($length < 8 && $length > 0) {
+            $form['passwordErrors']->addError(new FormError('値が短すぎます。8文字以上でなければなりません。'));
+        }
+    }
+
+    public function validateEmail(FormEvent $event)
+    {
+        $form = $event->getForm();
+        if (!$event->getForm()->getConfig()->getOptions()['email']) {
+            $form['emailErrors']->addError(new FormError('入力されていません。'));
+        }
+        if (!filter_var($event->getForm()->getConfig()->getOptions()['email'], FILTER_VALIDATE_EMAIL) && $event->getForm()->getConfig()->getOptions()['email']) {
+            $form['emailErrors']->addError(new FormError('有効なメールアドレスではありません。'));
+        }
     }
 }

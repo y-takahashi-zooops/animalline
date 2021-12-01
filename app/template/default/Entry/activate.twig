@@ -43,7 +43,13 @@ file that was distributed with this source code.
                         {% if qtyInCart %}
                             <a class="ec-blockBtn--action" style="margin-bottom: 3px" href="{{ url('cart') }}">{{ 'カートへ進む'|trans }}</a>
                         {% endif %}
-                        <a class="ec-blockBtn--cancel" href="{{ url(returnPath) }}">{{ '審査情報入力ページへ'|trans }}</a>
+                        {% if returnPath == "breeder_mypage" %}
+                            <a class="ec-blockBtn--cancel" href="{{ url(returnPath) }}">{{ '審査情報入力ページへ'|trans }}</a>
+                        {% elseif returnPath == "adoption_mypage" %}
+                            <a class="ec-blockBtn--cancel" href="{{ url(returnPath) }}">{{ '審査情報入力ページへ'|trans }}</a>
+                        {% else %}
+                            <a class="ec-blockBtn--cancel" href="{{ url(returnPath) }}">{{ 'TOPページへ'|trans }}</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

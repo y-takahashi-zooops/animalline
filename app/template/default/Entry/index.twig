@@ -202,7 +202,7 @@ file that was distributed with this source code.
                     当サイトからのメールは「info@animalline.jp」で届きます。
                     会員登録に必要な情報を送らせて頂きますので、
                     「info@animalline.jp」からのメールを受信できる様、
-                    ドメイン設定を解除して頂いただくか、
+                    ドメイン設定を解除して頂くか、
                     又はドメイン『animalline.jp』を
                     受信リストに加えていただきますよう、お願い申し上げます。
                     </b></div>
@@ -212,7 +212,14 @@ file that was distributed with this source code.
                                 <div class="ec-checkbox{{ has_errors(form.user_policy_check) ? ' error' }}">
                                     <label>
                                         {{ form_widget(form.user_policy_check) }}
-                                        {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('help_agreement') })|raw }}
+                                        {% if request.get('ReturnPath') =="adoption_mypage" %}
+                                            {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('adoption_terms') })|raw }}
+                                        {% elseif request.get('ReturnPath') =="breeder_mypage" %}
+                                            {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('breeder_terms') })|raw }}
+                                        {% else %}
+                                            {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('ani_terms') })|raw }}
+                                        {% endif %}
+                                        
                                     </label>
                                     {{ form_errors(form.user_policy_check) }}
                                 </div>

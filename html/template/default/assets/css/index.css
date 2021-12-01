@@ -561,3 +561,149 @@
 		width: 100%;
 	}
 }
+
+/* ------------------------------------------- */
+/* buy */
+/* ------------------------------------------- */
+.w720{  width: 72rem;}
+.w960{  width: 96rem;}
+.w1080{  width: 108rem;}
+.w1200{  width: 120rem;}
+
+.edit-area.buy{
+	padding: 8rem 0;
+}
+@media screen and (max-width: 767px){
+	.edit-area.buy{
+		padding: 4rem 0;
+	}
+}
+.edit-area.buy .inner{
+	padding: 3rem 6rem;
+	border-radius: 0.6rem;
+	background: #fff;
+	border: 0.1rem solid #b7b7b7;
+}
+@media screen and (max-width: 767px){
+	.edit-area.buy .inner{
+		padding: 2rem 1.5rem;
+	}
+}
+.edit-area.buy .buy-title{
+	margin-bottom: 2.6rem;
+	font-weight: 500;
+	font-size: 2.2rem;
+	letter-spacing: 0.05em;
+	line-height: 1.59;
+	color: #000;
+	text-align: center;
+}
+@media screen and (max-width: 767px){
+	.edit-area.buy .buy-title{
+		margin-bottom: 2rem;
+		font-size: 1.8rem;
+	}
+}
+
+/* buy-list */
+.edit-area.buy .buy-list{
+	display: flex;
+	flex-wrap: wrap;
+}
+@media all and (-ms-high-contrast: none){
+	.edit-area.buy .buy-list{
+		flex-wrap: nowrap;
+	}
+}
+@media screen and (max-width: 767px){
+	.edit-area.buy .buy-list{
+		display: block;
+	}
+}
+.edit-area.buy .buy-list > li{
+	margin-left: 4rem;
+	width: calc(50% - 2rem);
+}
+@media screen and (max-width: 767px){
+	.edit-area.buy .buy-list > li{
+		margin: 0 0 2rem;
+		width: 100%;
+	}
+	.edit-area.buy .buy-list > li:last-child{
+		margin-bottom: 0;
+	}
+}
+
+
+.edit-area.buy .buy-list > li:nth-child(2n+1){
+	margin-left: 0;
+}
+
+.edit-area.buy .buy-list dt{
+	margin-bottom: 1rem;
+	padding: 1rem 2rem;
+	font-weight: 500;
+	letter-spacing: 0.1em;
+	color: #fff;
+	background: #5e5e5e;
+}
+@media screen and (max-width: 767px){
+	.edit-area.buy .buy-list dt{
+		padding: 1rem;
+	}
+}
+.edit-area.buy .buy-list dd{
+	font-size: 1.4rem;
+	letter-spacing: 0.05em;
+	line-height: 1.71;
+}
+
+.edit-area.buy .buy-list dd .notes{
+	margin-top: 1.4rem;
+	font-weight: normal;
+	font-size: 1.4rem;
+	letter-spacing: 0.05em;
+	line-height: 1.21;
+}
+@media screen and (max-width: 767px){
+	.edit-area.buy .buy-list dd .notes{
+		margin-top: 1rem;
+		font-size: 1.2rem;
+	}
+}
+.edit-area.buy .buy-list dd .photo-box{
+	margin-top: 1.4rem;
+}
+@media screen and (max-width: 767px){
+	.edit-area.buy .buy-list dd .photo-box{
+		margin-top: 1rem;
+	}
+}
+
+/* dot */
+.edit-area.buy .buy-list .dot-list{
+	font-weight: normal;
+	font-size: 1.4rem;
+	letter-spacing: 0.05em;
+	line-height: 1.71;
+	letter-spacing: 0.05em;
+}
+@media screen and (max-width: 767px){
+	.edit-area.buy .buy-list .dot-list{
+		font-size: 1.2rem;
+	}
+}
+.edit-area.buy .buy-list .dot-list li{
+	position: relative;
+	padding-left: 1.8rem;
+}
+@media screen and (max-width: 767px){
+	.edit-area.buy .buy-list .dot-list li{
+		padding-left: 1.4rem;
+	}
+}
+.edit-area.buy .buy-list .dot-list li:before{
+	content: "・";
+	position: absolute;
+	left: 0;
+}
