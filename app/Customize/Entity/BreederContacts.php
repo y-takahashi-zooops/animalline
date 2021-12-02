@@ -25,7 +25,7 @@ class BreederContacts
      * @ORM\ManyToOne(targetEntity=BreederContactHeader::class, inversedBy="BreederContacts")
      * @ORM\JoinColumn(name="header_id", nullable=false)
      */
-    private $BreederHeader;
+    private $BreederContactHeader;
 
     /**
      * @ORM\Column(name="message_from", type="smallint")
@@ -56,19 +56,24 @@ class BreederContacts
      */
     private $update_date;
 
+    /**
+     * @ORM\Column(name="is_reading", type="integer", nullable=false)
+     */
+    private $is_reading;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBreederHeader(): ?BreederContactHeader
+    public function getBreederContactHeader(): ?BreederContactHeader
     {
-        return $this->BreederHeader;
+        return $this->BreederContactHeader;
     }
 
-    public function setBreederHeader(BreederContactHeader $BreederHeader): self
+    public function setBreederContactHeader(BreederContactHeader $BreederContactHeader): self
     {
-        $this->BreederHeader = $BreederHeader;
+        $this->BreederContactHeader = $BreederContactHeader;
 
         return $this;
     }
@@ -133,6 +138,18 @@ class BreederContacts
     public function setUpdateDate($updateDate)
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+    public function getIsReading(): ?int
+    {
+        return $this->is_reading;
+    }
+
+    public function setIsReading(int $is_reading): self
+    {
+        $this->is_reading = $is_reading;
 
         return $this;
     }

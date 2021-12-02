@@ -21,23 +21,12 @@
                             <div class="ec-borderedDefs">
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.contact_type, 'コンタクト内容', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        {{ form_label(form.contact_type, 'コンタクト内容タイトル', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.contact_type) ? ' error' }}">
                                             {{ form.contact_type.vars.choices[form.contact_type.vars.data-1].label }}
                                             {{ form_widget(form.contact_type, { 'attr': {'class': 'hidden'} }) }}
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>
-                                        {{ form_label(form.contact_title, 'コンタクト内容タイトル', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                    </dt>
-                                    <dd>
-                                        <div class="ec-input{{ has_errors(form.contact_title) ? ' error' }}">
-                                            {{ form.contact_title.vars.data }}
-                                            {{ form_widget(form.contact_title, { 'attr': {'class': 'hidden'} }) }}
                                         </div>
                                     </dd>
                                 </dl>
