@@ -252,6 +252,9 @@ class BreederPetController extends AbstractController
                 'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
             ]
         );
+        
+        $now = Carbon::now();
+        $is56DaysOld = $now->diffInDays($breederPet->getPetBirthday());
 
         return $this->render(
             'animalline/breeder/pet/detail.twig',
@@ -263,7 +266,8 @@ class BreederPetController extends AbstractController
                 'isFavorite' => $isFavorite,
                 'isLoggedIn' => $isLoggedIn,
                 'breederExamInfo' => $breederExamInfo,
-                'pedigree' => $pedigree
+                'pedigree' => $pedigree,
+                'is56DaysOld' => $is56DaysOld
             ]
         );
     }
