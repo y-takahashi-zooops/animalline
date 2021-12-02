@@ -1,0 +1,82 @@
+.calendarWrapper{
+  max-width: 712px;
+  margin: 30px auto;
+  color: #666;
+}
+#calendarHeader {
+  /* max-width: 400px; */
+  text-align: center;
+  font-size: 24px;
+  width: 100%;
+  padding: 1rem 0 0;
+  background-color: #f4f5f6;
+  margin: 0;
+}
+
+/*カレンダー*/
+.calendar {
+  /* max-width: 400px; */
+  text-align: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.calendar table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.calendar th {
+  color: #000;
+}
+.calendar th, td {
+  border: 0.5px solid #ddd;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+}
+/*日曜日*/
+.calendar td:first-child {
+  color: red;
+}
+/*土曜日*/
+.calendar td:last-child {
+  color: blue;
+}
+.calendar .holiday {
+  background-color: #FFC0CB;
+}
+
+/*前後月の日付*/
+.calendar td.disabled {
+  color: #ccc;
+}
+
+
+/*ボタン*/
+#next-prev-button {
+  max-width: 400px;
+  position: relative;
+  height: 33px;
+  background-color: #f4f5f6;
+}
+#next-prev-button button{
+  cursor: pointer;
+  background: #B78D4A;
+  color: #fff;
+  border: 1px solid #B78D4A;
+  border-radius: 4px;
+  font-size: 1rem;
+  padding: 0.5rem 2rem;
+  margin-bottom: 1rem;
+}
+#next-prev-button button:hover{
+  background-color: #D4BB92;
+  border-color: #D4BB92;
+}
+#prev {
+  float: left;
+  margin-left: 5px;
+}
+#next {
+  float: right;
+  margin-right: 5px;
+}

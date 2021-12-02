@@ -189,4 +189,7 @@ final class AnilineConf
 
     const ANILINE_NOT_READING = 0;
     const ANILINE_READ = 1;
+
+    const ANILINE_PRODUCT_CHECK_AUTH_FALSE = 0;
+    const ANILINE_PRODUCT_CHECK_AUTH_TRUE = 1;
 }

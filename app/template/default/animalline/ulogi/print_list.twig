@@ -18,7 +18,7 @@
                     <tbody>
                     {% for dna in dnas %}
                         <tr>
-                            <td class="id">{{ dna.getId() }}</td>
+                            <td class="id">5{{ "%05d"|format(dna.getId()) }}</td>
                             <td>{{ dna.getShippingName() }}</td>
                             <td>{{ dna.getShippingTel() }}</td>
                             <td>{{ dna.getKitUnit() }}</td>

@@ -146,6 +146,38 @@ class ConservationPetsType extends AbstractType
                     'data-img' => 'img5'
                 ],
                 'data_class' => null
+            ])
+            ->add('is_vaccine', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '未摂取' => 0,
+                        '接種済' => 1
+                    ],
+                'required' => true,
+            ])
+            ->add('is_castration', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '未手術' => 0,
+                        '手術済' => 1
+                    ],
+                'required' => true,
+            ])
+            ->add('is_single', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '応募不可' => 0,
+                        '応募可' => 1
+                    ],
+                'required' => true,
+            ])
+            ->add('is_senior', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '応募不可' => 0,
+                        '応募可' => 1
+                    ],
+                'required' => true,
             ]);
         /*
         ->add('is_active', ChoiceType::class, [

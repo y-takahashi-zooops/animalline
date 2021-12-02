@@ -89,11 +89,11 @@ class ImportInstockSchedule extends Command
 
         $em = $this->entityManager;
         // 自動コミットをやめ、トランザクションを開始
-        $em->getConnection()->setAutoCommit(false);
+        //$em->getConnection()->setAutoCommit(false);
 
         // sql loggerを無効にする.
-        $em->getConfiguration()->setSQLLogger(null);
-        $em->getConnection()->beginTransaction();
+        //$em->getConfiguration()->setSQLLogger(null);
+        //$em->getConnection()->beginTransaction();
 
         // ファイル一覧取得
         $localDir = "var/tmp/wms/receive/";
@@ -111,7 +111,7 @@ class ImportInstockSchedule extends Command
         if (!$fileNames) {
             return;
         }
-        
+var_dump($fileNames);
         // ファイル一覧取得ここまで
         foreach ($fileNames as $fileName) {
             $csvpath = $localDir . $fileName;
@@ -131,6 +131,8 @@ class ImportInstockSchedule extends Command
 
             // CSVファイルの登録処理
             while (($data = fgetcsv($fp)) !== FALSE) {
+                var_dump($data);
+
                 $headerId = $data[0];   //ヘッダのID
                 $instockId = $data[8];  //アイテムコード
                 $Header = $this->instockScheduleHeaderRepository->find($headerId);
@@ -139,9 +141,16 @@ class ImportInstockSchedule extends Command
                     log_info('ID ['.$data[0].'] が見つかりません');
                     continue;
                 }
+                $rt = $Header->getRemarkText();
+                var_dump($rt);
 
                 if($data[11] != "") {
+                    echo '入荷日更新'."\n";
+
                     $Header->setArrivalDate(DateTime::createFromFormat("Ymd",$data[11]));
+                    $dd = $Header->getArrivalDate();
+                    var_dump($dd);
+
                     $em->persist($Header);
                 
                     $Instock = $this->instockScheduleRepository->findOneBy(['InstockHeader' => $Header, 'item_code_01' => $instockId]);
@@ -152,14 +161,8 @@ class ImportInstockSchedule extends Command
                         $em->persist($Instock);
                         //$em->persist($ProductStock);
                     }
-                }
-                // 端数分を更新
-                try {
+
                     $em->flush();
-                    $em->getConnection()->commit();
-                } catch (Exception $e) {
-                    $em->getConnection()->rollback();
-                    throw $e;
                 }
             }
             $logWmsDir = 'var/log/wms/';

@@ -4,7 +4,98 @@
     <link rel="stylesheet" href="{{ asset('assets/css/index.css?ver=211102_2') }}">
 {% endblock %}
 {% block javascript %}
-   
+{# カレンダー表示用スクリプト #}
+<script>
+	// 業務カレンダー表示用
+	const week = ["日", "月", "火", "水", "木", "金", "土"];
+	const today = new Date();
+	// 月末だとずれる可能性があるため、1日固定で取得
+	var showDate = new Date(today.getFullYear(), today.getMonth(), 1);
+
+	$(function(){
+		year = showDate.getFullYear();
+		month = showDate.getMonth();
+
+		// showDateの月は配列なので、11が12月、0が1月
+		if( month == 11){
+			nextyear = year + 1;
+			nextmonth = 0;
+		} else {
+			nextyear = year
+			nextmonth = month + 1;
+		}
+
+		// 当月カレンダー作成
+		$.ajax({
+			url: '{{ url('calendar') }}',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				'year' : year,
+				'month' : month
+			}
+		}).done(function (data) {// 正常時
+    		calendar = createCalendar(data.year, data.month, data.dates);
+			document.querySelector('#calendar_thisMonth').innerHTML = calendar;
+		}).fail(function () { // エラー時
+			alert('読み込みエラー');
+		});
+
+		// 翌月カレンダー作成
+		$.ajax({
+			url: '{{ url('calendar') }}',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				'year' : nextyear,
+				'month' : nextmonth
+			}
+		}).done(function (data) {// 正常時
+    		calendar = createCalendar(data.year, data.month, data.dates);
+			document.querySelector('#calendar_nextMonth').innerHTML = calendar;
+		}).fail(function () { // エラー時
+			alert('読み込みエラー');
+		});
+	});
+
+	// カレンダー作成
+	function createCalendar(year, month, dates) {
+
+		// 月・曜日
+		var calendar = "<table class='common-table cal'><caption>" + year + "年<span>"+ month + "月</span></caption><thead><tr>";
+		for (var i = 0; i < week.length; i++) {
+			calendar += "<th>" + week[i] + "</th>";
+		}
+		calendar += "</thead></tr>";
+
+		var count = 0;
+		var row = Math.ceil((dates.length) / week.length);
+
+		// 1行ずつ設定
+		for (var i = 0; i < row; i++) {
+			calendar += "<tr>";
+			// 1カラム単位で設定
+			for (var j = 0; j < week.length; j++) {
+				count = j + i * 7;
+				// 休日
+				if(dates[count].holiday) {
+					calendar += "<td class='holiday'>" + dates[count].day + "</td>";
+				// 前月or翌月
+				}else if(dates[count].disabled){
+					calendar += "<td class='disabled'>" + dates[count].day + "</td>";
+				} 
+				// その他
+				else{
+					calendar += "<td>" + dates[count].day + "</td>";
+				}
+			}
+			calendar += "</tr>";
+		}
+
+		return calendar;
+	}
+</script>
+
 {% endblock %}
 
 {% block main %}
@@ -41,12 +132,11 @@
                             <dt>⽝⽤</dt>
                             <dd>
                                 <ul>
-                                    <li><a href="{{ url('product_list') }}?category_id=10">DRYフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=11">WETフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=12">おやつ</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=13">トイレタリー</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=14">雑貨</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=46">その他</a></li>
+                                    {% for categoryDog in categoryChildDog %}
+                                        {% if categoryDog['category'].getProductCategories is not empty %}
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryDog['category'].id }}">{{ categoryDog['category'].name }}({{ categoryDog['count_product'] }})</a></li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </dd>
                         </div>
@@ -54,25 +144,23 @@
                             <dt>猫⽤</dt>
                             <dd>
                                 <ul>
-                                    <li><a href="{{ url('product_list') }}?category_id=19">DRYフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=20">WETフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=21">おやつ</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=22">トイレタリー</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=23">雑貨</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=47">その他</a></li>
+                                    {% for categoryCat in categoryChildCat %}
+                                        {% if categoryCat['category'].getProductCategories is not empty %}
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryCat['category'].id }}">{{ categoryCat['category'].name }}({{ categoryCat['count_product'] }})</a></li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </dd>
                         </div>
                         <div>
-                            <dt>その他</dt>
+                            <dt>共通</dt>
                             <dd>
                                 <ul>
-                                    <li><a href="{{ url('product_list') }}?category_id=26">DRYフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=27">WETフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=28">おやつ</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=29">トイレタリー</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=30">雑貨</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=48">その他</a></li>
+                                    {% for categoryBeside in categoryChildBeside %}
+                                        {% if categoryBeside['category'].getProductCategories is not empty %}
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryBeside['category'].id }}">{{ categoryBeside['category'].name }}({{ categoryBeside['count_product'] }})</a></li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </dd>
                         </div>
@@ -110,6 +198,23 @@
 								</dd>
 							</dl>
 						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="edit-area time">
+				<div class="inner w1080">
+					<h2 class="index-title type02">営業日のご案内</h2>
+					<link rel="stylesheet" href="{{ asset('assets/css/calendar.css') }}">
+					<ul class="time-list">
+						<li>	
+							<div id="calendar_thisMonth" class="calendar"></div>
+						</li>
+						<li>	
+							<div id="calendar_nextMonth" class="calendar"></div>
+						</li>
+					</ul>
+					<ul class="common-list cal-mark">
+						<li class="holiday">休業日</li>
 					</ul>
 				</div>
 			</div>

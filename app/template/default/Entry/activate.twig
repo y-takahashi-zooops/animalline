@@ -9,15 +9,14 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
 {# ヘッダーの切り替え #}
-{% if prefix == "adoption" %}
+{% if returnPath =="adoption_mypage" %}
     {% set base_template = 'adoption_frame.twig' %}
-{% endif %}
-{% if prefix == "breeder" %}
+{% elseif returnPath =="breeder_mypage" %}
     {% set base_template = 'breeder_frame.twig' %}
+{% else %}
+    {% set base_template = 'normal_frame.twig' %}
 {% endif %}
-{% if prefix == "default" %}
-    {% set base_template = 'default_frame.twig' %}
-{% endif %}
+
 {% extends base_template %}
 {# ヘッダーの切り替え #}
 
@@ -35,9 +34,18 @@ file that was distributed with this source code.
                 <div class="ec-reportHeading">
                     <h2>{{ '会員登録ありがとうございます'|trans }}</h2>
                 </div>
-                <p class="ec-reportDescription">{{ '会員登録が完了しました。
+                {% if returnPath == "breeder_mypage" %}
+                            <p class="ec-reportDescription">{{ '会員登録が完了しました。
 引き続き必要情報の登録をお願いします。
 '|trans|nl2br }}</p>
+                        {% elseif returnPath == "adoption_mypage" %}
+                            <p class="ec-reportDescription">{{ '会員登録が完了しました。
+引き続き必要情報の登録をお願いします。
+'|trans|nl2br }}</p>
+                        {% else %}
+                            <p class="ec-reportDescription">{{ '会員登録が完了しました。'|trans|nl2br }}</p>
+                        {% endif %}
+                
                 <div class="ec-off4Grid">
                     <div class="ec-off4Grid__cell">
                         {% if qtyInCart %}
