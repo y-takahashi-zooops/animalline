@@ -92,7 +92,7 @@
                                         見学地域
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ conservationHouse.conservationHouseCity ~ ' ' ~ conservationHouse.conservationHousePref ?? '' }}
+                                        {{ conservationHouse.conservationHousePref ~ ' ' ~ conservationHouse.conservationHouseCity ?? '' }}
                                     </div>
                                 </div>
                             </div>
@@ -117,6 +117,66 @@
                                 </div>
                             </div>
                             
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        ワクチン接種
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {% if conservationPet.isVaccine == 0 %}
+                                            未接種
+                                        {% else %}
+                                            接種済み
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        去勢・避妊
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {% if conservationPet.isCastration == 0 %}
+                                            未手術
+                                        {% else %}
+                                            手術済み
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        単身者応募
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {% if conservationPet.isSingle == 0 %}
+                                            応募不可
+                                        {% else %}
+                                            応募可
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        高齢者応募
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {% if conservationPet.isSenior == 0 %}
+                                            応募不可
+                                        {% else %}
+                                            応募可
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="breeder_section_header">
                                 <i class="fas fa-paw"></i>
                                 PRコメント
@@ -142,7 +202,7 @@
 
                             <div class="breeder_section_header_orange">
                                 <i class="fas fa-paw"></i>
-                                紹介文
+                                性格・特長・健康状態
                             </div>
                             <div class="col-12 breeder_section_detail">
                                 <div class="row">
@@ -151,17 +211,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="breeder_section_header_orange">
-                                <i class="fas fa-paw"></i>
-                                    引き渡し時期
-                            </div>
-                            <div class="col-12 breeder_section_detail">
-                                <div class="row">
-                                    <div class="col-12 contents_col_normal">
-                                        {{ conservationPet.getDeliveryTime() | nl2br }}
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div class="breeder_section_header_orange">
                                 <i class="fas fa-paw"></i>
                                 引き渡し方法
@@ -173,6 +223,19 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="breeder_section_header_orange">
+                                <i class="fas fa-paw"></i>
+                                    備考
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 contents_col_normal">
+                                        {{ conservationPet.getDeliveryTime() | nl2br }}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12 contents_col_normal">
@@ -186,10 +249,10 @@
                             </div>
                             <div class="col-12 contents_col_normal mt-4 mb-4 pl-4 pr-4"
                                  style="background:#f7f5f0; border:1px solid #dcdfe1; border-radius: 3px;">
-                                当サイトではお客様に最も信頼されるブリーダー子犬 直販サイトを目指して、<br>
-                                子犬情報およびブリーダー情報の正確性向上に努めております。<br>
-                                当サイトに掲載されている情報で誤解を招く表現、事実と異なる表現などのお気づきの点がございましたら<br>
-                                事務局へのお問い合わせフォームよりご連絡をお願いいたします。<br>
+                                当サイトでは里親様に最も信頼される保護犬猫譲渡サイトを目指して、<br>
+保護犬猫情報および保護団体情報の正確性向上に努めております。<br>
+当サイトに掲載されている情報で誤解を招く表現、事実と異なる表現などお気づきの点がございましたら<br>
+事務局へのお問い合わせフォームよりご連絡をお願い致します。<br>
                             </div>
                             <div class="m-2 p-2"></div>
                             <div class="breeder_section_header">

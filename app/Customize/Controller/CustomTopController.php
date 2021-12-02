@@ -94,7 +94,7 @@ class CustomTopController extends AbstractController
     public function animalline_index()
     {
         $ListNews = $this->NewsRepository->getList();
-        return $this->redirectToRoute("breeder_top");
+        //return $this->redirectToRoute("breeder_top");
         
         return [
             'ListNews' => $ListNews
@@ -104,10 +104,21 @@ class CustomTopController extends AbstractController
     /**
      * 利用規約
      * 
-     * @Route("/terms", name="ani_terms")
-     * @Template("ani_terms.twig")
+     * @Route("/bterms", name="breeder_user_terms")
+     * @Template("breeder_user_terms.twig")
      */
-    public function terms()
+    public function breeder_terms()
+    {
+        return [];
+    }
+
+    /**
+     * 利用規約
+     * 
+     * @Route("/aterms", name="adoption_user_terms")
+     * @Template("adoption_user_terms.twig")
+     */
+    public function adoption_terms()
     {
         return [];
     }
