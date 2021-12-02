@@ -122,7 +122,7 @@ class AdoptionController extends AbstractController
     /**
      * adoption index
      *
-     * @Route("/adoptionp/", name="adoption_top")
+     * @Route("/adoption/", name="adoption_top")
      * @Template("animalline/adoption/index.twig")
      */
     public function adoption_index(Request $request)
