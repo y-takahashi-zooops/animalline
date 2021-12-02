@@ -250,6 +250,7 @@ class BreederController extends AbstractController
         $count = [];
         $arrBreeder = [];
         $breederName = [];
+        $arrPet = [];
         if ($request->get('order_date_year')) {
             $dnaCheckStatus = $this->dnaQueryService->findByDate($request->get('order_date_year'), $request->get('order_date_month'));
             foreach ($dnaCheckStatus as $item) {
