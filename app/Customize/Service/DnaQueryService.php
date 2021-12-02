@@ -271,8 +271,6 @@ class DnaQueryService
         $qb = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->join('Customize\Entity\DnaCheckStatusHeader', 'dnah', 'WITH', 'dna.DnaHeader = dnah.id')
             ->join('Customize\Entity\Breeders', 'b', 'WITH', 'dnah.register_id = b.id')
-//            ->leftjoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'dna.pet_id = bp.id')
-//            ->leftJoin('Customize\Entity\DnaCheckKinds', 'dnak', 'WITH', 'dnak.Breeds = bp.BreedsType')
             ->where('dna.site_type = :site')
             ->andWhere('dna.update_date BETWEEN :start AND :end')
             ->setParameter('site', AnilineConf::SITE_CATEGORY_BREEDER)
