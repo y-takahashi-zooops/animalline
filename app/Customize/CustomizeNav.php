@@ -31,10 +31,10 @@ class CustomizeNav implements EccubeNav
 						'name' => 'ブリーダー一覧',
 						'url' => 'admin_breeder_list',
 					],
-					// 'breeders_pet_list' => [
-					// 	'name' => 'ペット情報管理',
-					// 	'url' => 'admin_breeder_pet_all',
-					// ],
+					'breeders_dna_check_list' => [
+						'name' => '検査状況集計',
+						'url' => 'admin_breeder_dna_check_list',
+					],
 				],
 			],
 			'pets' => [

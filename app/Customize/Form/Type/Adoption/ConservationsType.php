@@ -70,36 +70,6 @@ class ConservationsType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
-            ->add('conservation_house_name_dog', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'min' => 0,
-                        'max' => $this->eccubeConfig['eccube_stext_len']
-                    ]),
-                ]
-            ])
-            ->add('conservation_house_name_cat', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'min' => 0,
-                        'max' => $this->eccubeConfig['eccube_stext_len']
-                    ]),
-                ]
-            ])
-            ->add('DogHouseNameErrors', TextType::class, [
-                'mapped' => false,
-            ])
-            ->add('CatHouseNameErrors', TextType::class, [
-                'mapped' => false,
-            ])
             ->add('owner_name', TextType::class, [
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
@@ -243,7 +213,7 @@ class ConservationsType extends AbstractType
                 'mapped' => false
             ]);
 
-            $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
+            //$builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -251,17 +221,5 @@ class ConservationsType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Conservations::class,
         ]);
-    }
-
-    public function validatePetHouseName(FormEvent $event)
-    {
-        $data = $event->getData();
-        $form = $event->getForm();
-        if (in_array($data->getHandlingPetKind(), [AnilineConf::ANILINE_PET_KIND_DOG_CAT, AnilineConf::ANILINE_PET_KIND_DOG]) && !$data->getConservationHouseNameDog()) {
-            $form['DogHouseNameErrors']->addError(new FormError('入力されていません。'));
-        }
-        if (in_array($data->getHandlingPetKind(), [AnilineConf::ANILINE_PET_KIND_DOG_CAT, AnilineConf::ANILINE_PET_KIND_CAT]) && !$data->getConservationHouseNameCat()) {
-            $form['CatHouseNameErrors']->addError(new FormError('入力されていません。'));
-        }
     }
 }
