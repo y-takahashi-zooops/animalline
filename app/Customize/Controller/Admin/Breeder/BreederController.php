@@ -269,7 +269,9 @@ class BreederController extends AbstractController
                 foreach ($arrayPet as $petId => $value) {
                     $pet = $this->breederPetsRepository->find($petId);
                     $breederId = $pet->getBreeder()->getId();
-                    $countPet[$breederId] = $countPet[$breederId] + $count[$petId];
+                    if ($breederId == $key) {
+                        $countPet[$key] = ($countPet[$key] + $count[$petId]) * $value;
+                    }
                 }
             }
         }
