@@ -254,8 +254,10 @@ class BreederPetController extends AbstractController
         );
         
         $now = Carbon::now();
-        $is56DaysOld = $now->diffInDays($breederPet->getPetBirthday());
-
+        $is56DaysOld = -1;
+        if ($now > $breederPet->getPetBirthday()) {
+            $is56DaysOld = $now->diffInDays($breederPet->getPetBirthday());
+        }
         return $this->render(
             'animalline/breeder/pet/detail.twig',
             [
