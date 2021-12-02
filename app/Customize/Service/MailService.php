@@ -1013,7 +1013,7 @@ class MailService
         ]);
 
         $message = (new \Swift_Message())
-            ->setSubject('[' . $this->BaseInfo->getShopName() . '] お問い合わせ受信通知')
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] メッセージ受信通知')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
             ->setBcc($this->BaseInfo->getEmail01())

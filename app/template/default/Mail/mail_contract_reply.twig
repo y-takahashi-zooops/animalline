@@ -1,11 +1,16 @@
 {% autoescape false %}
-{# TODO: update template #}
-{% if (data == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER')) %}
+
+{% if data.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER') %}
 保護団体から返信が届きました。
+
+マイページの「取引メッセージ」よりご確認をお願い致します。
+↓↓取引メッセージページはこちら
+{{ url("adoption_all_message") }}
 {% else %}
 お客様よりお問い合わせがございました。
+
+マイページの「問い合わせ対応」よりご確認をお願い致します。
+↓↓問い合わせ対応ページはこちら
+{{ url("adoption_all_adoption_message") }}
 {% endif %}
-マイページの「問い合わせ対応」よりご確認をお願い致します
-↓↓改ページはこちら
-「http://animalline.local/adoption/member」
 {% endautoescape %}
