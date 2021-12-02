@@ -255,11 +255,12 @@ class BreederController extends AbstractController
             foreach ($dnaCheckStatus as $item) {
                 $arrBreeder[] = $item['breeder_id'];
                 if ($item['pet_id']) {
+                    $arrPet[] = $item['pet_id'];
                     $pet = $this->breederPetsRepository->find($item['pet_id']);
                     $count[$item['pet_id']] = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $pet->getBreedsType()]));
                 }
             }
-
+            $arrayPet = array_count_values($arrPet);
             $arrayBreeder = array_count_values($arrBreeder);
             foreach ($arrayBreeder as $key => $amount) {
                 $countPet[$key] = 0;
@@ -269,12 +270,10 @@ class BreederController extends AbstractController
                 foreach ($breederPets as $breederPet) {
                     $dnaCheckStatus = $this->dnaCheckStatusRepository->findBy(['pet_id' => $breederPet->getId()]);
                     if($dnaCheckStatus) {
-//                        dump($dnaCheckStatus);die();
-                        $countPet[$key] = $countPet[$key] + $count[$breederPet->getId()];
+                        $countPet[$key] = ($countPet[$key] + $count[$breederPet->getId()]) * $arrayPet[$breederPet->getId()];
                     }
                 }
             }
-            dump($dnaCheckStatus);die();
         }
 
         return[
