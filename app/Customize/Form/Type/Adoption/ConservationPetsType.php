@@ -150,7 +150,7 @@ class ConservationPetsType extends AbstractType
             ->add('is_vaccine', ChoiceType::class, [
                 'choices' =>
                     [
-                        '未摂取' => 0,
+                        '未接種' => 0,
                         '接種済' => 1
                     ],
                 'required' => true,
