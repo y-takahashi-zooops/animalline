@@ -355,6 +355,7 @@ class PetController extends AbstractController
         $data = [
             'name' => "{$Customer->getName01()} {$Customer->getName02()}",
             'examination_comment' => "<span id='ex-comment'>{$comment}</span>",
+            'pet_id' =>  $Pet->getId(),
             'pet_code' =>  $Pet->getPetCode(),
             'pet_breeds' =>  $breeds->getBreedsName(),
             'pet_birthday' =>  $Pet->getPetBirthday()->format("Y年m月d日"),
