@@ -271,7 +271,7 @@ class BreederController extends AbstractController
                     $pet = $this->breederPetsRepository->find($petId);
                     $breederId = $pet->getBreeder()->getId();
                     if ($breederId == $key) {
-                        $countPet[$key] = ($countPet[$key] + $count[$petId]) * $value;
+                        $countPet[$key] = $countPet[$key] + $count[$petId] * $value;
                     }
                 }
             }
