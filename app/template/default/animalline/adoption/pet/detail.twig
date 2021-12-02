@@ -117,6 +117,66 @@
                                 </div>
                             </div>
                             
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        ワクチン接種
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {% if conservationPet.isVaccine == 0 %}
+                                            未接種
+                                        {% else %}
+                                            接種済み
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        去勢・避妊
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {% if conservationPet.isCastration == 0 %}
+                                            未手術
+                                        {% else %}
+                                            手術済み
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        単身者応募
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {% if conservationPet.isSingle == 0 %}
+                                            応募不可
+                                        {% else %}
+                                            応募可
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
+                                        高齢者応募
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {% if conservationPet.isSenior == 0 %}
+                                            応募不可
+                                        {% else %}
+                                            応募可
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="breeder_section_header">
                                 <i class="fas fa-paw"></i>
                                 PRコメント
@@ -142,7 +202,7 @@
 
                             <div class="breeder_section_header_orange">
                                 <i class="fas fa-paw"></i>
-                                紹介文
+                                性格・特長・健康状態
                             </div>
                             <div class="col-12 breeder_section_detail">
                                 <div class="row">
@@ -151,17 +211,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="breeder_section_header_orange">
-                                <i class="fas fa-paw"></i>
-                                    引き渡し時期
-                            </div>
-                            <div class="col-12 breeder_section_detail">
-                                <div class="row">
-                                    <div class="col-12 contents_col_normal">
-                                        {{ conservationPet.getDeliveryTime() | nl2br }}
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div class="breeder_section_header_orange">
                                 <i class="fas fa-paw"></i>
                                 引き渡し方法
@@ -173,6 +223,19 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="breeder_section_header_orange">
+                                <i class="fas fa-paw"></i>
+                                    備考
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 contents_col_normal">
+                                        {{ conservationPet.getDeliveryTime() | nl2br }}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12 contents_col_normal">
