@@ -61,7 +61,7 @@ class ConservationPetsTest extends TestCase
         // conservation must have many
         $this->assertInstanceOf(Collection::class, $ConservationsPet->getConservationPetImages());
         $this->assertInstanceOf(Collection::class, $ConservationsPet->getPetsFavorites());
-        $this->assertInstanceOf(Collection::class, $ConservationsPet->getConservationHeader());
+        $this->assertInstanceOf(Collection::class, $ConservationsPet->getConservationContactHeader());
 
         // conservation can have one
         $this->assertNull($ConservationsPet->getConservation());

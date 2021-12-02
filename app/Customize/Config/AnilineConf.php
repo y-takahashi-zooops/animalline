@@ -186,4 +186,10 @@ final class AnilineConf
     const ANILINE_BAND_COLOR_YELLOW = 4;
     const ANILINE_BAND_COLOR_PINK = 5;
     const ANILINE_BAND_COLOR_ORANGE = 6;
+
+    const ANILINE_NOT_READING = 0;
+    const ANILINE_READ = 1;
+
+    const ANILINE_PRODUCT_CHECK_AUTH_FALSE = 0;
+    const ANILINE_PRODUCT_CHECK_AUTH_TRUE = 1;
 }
