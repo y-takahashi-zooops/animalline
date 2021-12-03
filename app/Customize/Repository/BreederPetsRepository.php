@@ -80,6 +80,14 @@ class BreederPetsRepository extends ServiceEntityRepository
      */
     public function filterBreederPetsAdmin(array $criteria, array $order): array
     {
+        $status = $this->createQueryBuilder('bp')
+            ->join('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'bp.id = dna.pet_id')
+            ->where('dna.check_status = :status')
+            ->setParameter('status', AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT)
+            ->getQuery()
+            ->getArrayResult();
+        $arrId = array_column($status, 'id');
+
         $qb = $this->createQueryBuilder('bp');
         if (!empty($criteria['pet_kind']) && StringUtil::isNotBlank($criteria['pet_kind'])) {
             $qb
@@ -157,6 +165,7 @@ class BreederPetsRepository extends ServiceEntityRepository
         }
 
         return $qb->leftJoin('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'bp.id = dna.pet_id')
+            ->andWhere($qb->expr()->notIn('bp.id', $arrId))
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
             ->leftJoin('Customize\Entity\Breeders', 'bd', 'WITH', 'bd.id = bp.Breeder')
             ->select('bp', 'dna', 'b.breeds_name', 'bd.breeder_name')
