@@ -308,20 +308,17 @@ class AdoptionQueryService
      */
     public function getListPet($conservation)
     {
-        $status = $this->conservationPetsRepository->createQueryBuilder('cp')
-            ->join('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'cp.id = dna.pet_id')
-            ->where('dna.check_status = :status')
-            ->setParameter('status', AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT)
-            ->getQuery()
-            ->getArrayResult();
-        $arrId = array_column($status, 'id');
+        $status = $this->conservationPetsRepository->createQueryBuilder('cp2')
+            ->join('Customize\Entity\DnaCheckStatus', 'dna2', 'WITH', 'cp2.id = dna2.pet_id')
+            ->where('dna2.check_status = 8')
+            ->getDQL();
 
         $qb = $this->conservationPetsRepository->createQueryBuilder('cp');
         return $qb
             ->join('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = cp.BreedsType')
             ->where('cp.Conservation = :conservation')
             ->setParameter('conservation', $conservation)
-            ->andWhere($qb->expr()->notIn('cp.id', $arrId))
+            ->andWhere($qb->expr()->notIn('cp.id', $status))
             ->orderBy('cp.update_date', 'DESC')
             ->select('cp, b.breeds_name')
             ->getQuery()

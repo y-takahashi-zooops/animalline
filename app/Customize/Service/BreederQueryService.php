@@ -325,20 +325,17 @@ class BreederQueryService
      */
     public function getListPet($breeder)
     {
-        $status = $this->breederPetsRepository->createQueryBuilder('bp')
-            ->join('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'bp.id = dna.pet_id')
-            ->where('dna.check_status = :status')
-            ->setParameter('status', AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT)
-            ->getQuery()
-            ->getArrayResult();
-        $arrId = array_column($status, 'id');
+        $status = $this->breederPetsRepository->createQueryBuilder('bp2')
+            ->join('Customize\Entity\DnaCheckStatus', 'dna2', 'WITH', 'bp2.id = dna2.pet_id')
+            ->where('dna2.check_status = 8')
+            ->getDQL();
 
         $qb = $this->breederPetsRepository->createQueryBuilder('bp');
         return $qb
             ->join('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = bp.BreedsType')
             ->where('bp.Breeder = :breeder')
             ->setParameter('breeder', $breeder)
-            ->andWhere($qb->expr()->notIn('bp.id', $arrId))
+            ->andWhere($qb->expr()->notIn('bp.id', $status))
             ->orderBy('bp.update_date', 'DESC')
             ->select('bp, b.breeds_name')
             ->getQuery()
