@@ -302,4 +302,29 @@ class AdoptionQueryService
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * list breeder pets
+     */
+    public function getListPet($conservation)
+    {
+        $status = $this->conservationPetsRepository->createQueryBuilder('cp')
+            ->join('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'cp.id = dna.pet_id')
+            ->where('dna.check_status = :status')
+            ->setParameter('status', AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT)
+            ->getQuery()
+            ->getArrayResult();
+        $arrId = array_column($status, 'id');
+
+        $qb = $this->conservationPetsRepository->createQueryBuilder('cp');
+        return $qb
+            ->join('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = cp.BreedsType')
+            ->where('cp.Conservation = :conservation')
+            ->setParameter('conservation', $conservation)
+            ->andWhere($qb->expr()->notIn('cp.id', $arrId))
+            ->orderBy('cp.update_date', 'DESC')
+            ->select('cp, b.breeds_name')
+            ->getQuery()
+            ->getScalarResult();
+    }
 }

@@ -188,7 +188,7 @@ class BreederPetController extends AbstractController
      */
     public function breeder_pet_list(): ?Response
     {
-        $pets = $this->breederPetsRepository->findBy(['Breeder' => $this->getUser()], ['update_date' => 'DESC']);
+        $pets = $this->breederQueryService->getListPet($this->getUser());
 
         return $this->render(
             'animalline/breeder/member/pet_list.twig',

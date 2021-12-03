@@ -3,6 +3,7 @@
 namespace Customize\Controller\Adoption;
 
 use Carbon\Carbon;
+use Customize\Service\AdoptionQueryService;
 use DateTime;
 use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationPetImage;
@@ -61,6 +62,11 @@ class AdoptionPetController extends AbstractController
     protected $conservationContactHeaderRepository;
 
     /**
+     * @var AdoptionQueryService
+     */
+    protected $adoptionQueryService;
+
+    /**
      * ConservationController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
@@ -69,6 +75,7 @@ class AdoptionPetController extends AbstractController
      * @param ConservationPetImageRepository $conservationPetImageRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+     * @param AdoptionQueryService $adoptionQueryService
      */
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
@@ -77,7 +84,8 @@ class AdoptionPetController extends AbstractController
         ConservationPetImageRepository $conservationPetImageRepository,
         PetsFavoriteRepository         $petsFavoriteRepository,
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
-        ConservationContactHeaderRepository $conservationContactHeaderRepository
+        ConservationContactHeaderRepository $conservationContactHeaderRepository,
+        AdoptionQueryService $adoptionQueryService
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
@@ -86,6 +94,7 @@ class AdoptionPetController extends AbstractController
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
+        $this->adoptionQueryService = $adoptionQueryService;
     }
 
     /**
@@ -96,7 +105,7 @@ class AdoptionPetController extends AbstractController
      */
     public function adoption_pet_list()
     {
-        $pets = $this->conservationPetsRepository->findBy(['Conservation' => $this->getUser()], ['update_date' => 'DESC']);
+        $pets = $this->adoptionQueryService->getListPet($this->getUser());
 
         return $this->render(
             'animalline/adoption/member/pet_list.twig',

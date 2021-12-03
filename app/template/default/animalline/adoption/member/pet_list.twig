@@ -16,17 +16,17 @@
                 <ul>
                     {% for pet in pets %}
                         <li>
-                            <a href="{{ url('adoption_pets_edit', {'id': pet.id}) }}">
+                            <a href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">
                                 <figure>
-                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}" class="card-img-top" alt="Pet-image"></figure>
+                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet['cp_thumbnail_path'] | default('/noimage_plugin_list.png')) }}" class="card-img-top" alt="Pet-image"></figure>
                                 </a>
                                 <h4>
-                                    {{ pet.getBreedsType().getBreedsName() ?? '' }}
+                                    {{ pet['breeds_name'] ?? '' }}
                                 </h4>
                                 <div class="birthday">
-                                    {{ pet.petAge }}                                
+                                    {{ pet['cp_pet_age'] }}
                                 </div>
-                                <a href="{{ path('adoption_pets_edit', {'id': pet.id} )  }}" class="btn w-100 btn-warning text-align-center my-1">
+                                <a href="{{ path('adoption_pets_edit', {'id': pet['cp_id']} )  }}" class="btn w-100 btn-warning text-align-center my-1">
                                     編集                                        
                                 </a>
                             </li>
