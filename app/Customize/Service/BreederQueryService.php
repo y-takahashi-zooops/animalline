@@ -328,6 +328,7 @@ class BreederQueryService
         $status = $this->breederPetsRepository->createQueryBuilder('bp2')
             ->join('Customize\Entity\DnaCheckStatus', 'dna2', 'WITH', 'bp2.id = dna2.pet_id')
             ->where('dna2.check_status = 8')
+            ->select('bp2.id')
             ->getDQL();
 
         $qb = $this->breederPetsRepository->createQueryBuilder('bp');

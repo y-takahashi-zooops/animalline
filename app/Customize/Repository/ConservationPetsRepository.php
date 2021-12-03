@@ -84,6 +84,7 @@ class ConservationPetsRepository extends ServiceEntityRepository
         $status = $this->createQueryBuilder('cp2')
             ->join('Customize\Entity\DnaCheckStatus', 'dna2', 'WITH', 'cp2.id = dna2.pet_id')
             ->where('dna2.check_status = 8')
+            ->select('cp2.id')
             ->getDQL();
 
         $qb = $this->createQueryBuilder('cp');
