@@ -151,7 +151,7 @@ class AdoptionMemberContactController extends AbstractController
 
             $conservation = $this->customerRepository->find($msgHeader->getConservation()->getId());
 
-            $this->mailService->sendMailContractReply($conservation, $conservationContact->getMessageFrom());
+            $this->mailService->sendMailContractReply($conservation, $conservationContact);
             return $this->redirectToRoute('adoption_message', ['id' => $request->get('id'), 'isScroll' => true]);
         }
         if ($reasonCancel) {
@@ -281,7 +281,7 @@ class AdoptionMemberContactController extends AbstractController
             $entityManager->persist($msgHeader);
             $entityManager->flush();
 
-            $this->mailService->sendMailContractReply($msgHeader->getCustomer(), $conservationContact->getMessageFrom());
+            $this->mailService->sendMailContractReply($msgHeader->getCustomer(), $conservationContact);
             return $this->redirectToRoute('adoption_adoption_message', ['id' => $request->get('id'), 'isScroll' => true]);
         }
         if ($reasonCancel) {
@@ -403,7 +403,7 @@ class AdoptionMemberContactController extends AbstractController
                     $entityManager->flush();
 
                     $conservation = $this->customerRepository->find($contact->getConservation()->getId());
-                    $this->mailService->sendMailContractReply($conservation, [$conservationContact]);
+                    $this->mailService->sendMailContractReply($conservation, $conservationContact);
                     return $this->redirectToRoute('adoption_contact_complete', ['pet_id' => $id]);
             }
         }

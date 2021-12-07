@@ -213,6 +213,45 @@
 										   style="background: #f0f0f0; border: 1px solid black;">
 											{{ 'admin.common.file_select'|trans }}
 										</a>
+										<div class="ec-input" id="breeder_img_error">
+											{{ form_errors(form.ThumbnailPathErrors) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.license_thumbnail_path, '動物取扱業登録証画像', { 'label_attr': {'class': 'ec-label' }}) }}
+										<p style="font-size:14px;color:#DE5D50;">申請に使用した書類又は登録証の画像をお願い致します。<br />写真撮影いただくか、取り込み済みの画像データのアップロードをお願い致します。</p>
+									</dt>
+									<dd>
+										<div class="media-body">
+											<img id="img_license_thumbnail"
+											     class="img_preview mb-2 {{ not license_thumbnail_path ? 'hidden' }}"
+											     src="{{ license_thumbnail_path }}" alt="..."
+											     style="width: 200px; border: 1px solid #ddd;"/>
+											{{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'license_thumbnail_path'  } }) }}
+											<input type="hidden" name="license_thumbnail_path" id="conservations_license_src_path" value="{{ license_thumbnail_path }}">
+										</div>
+										<a class="btn btn-ec-regular mr-2"
+										   onclick="$('#conservations_license_thumbnail_path').click()"
+										   style="background: #f0f0f0; border: 1px solid black;">
+											{{ 'admin.common.file_select'|trans }}
+										</a>
+										<div class="ec-input" id="conservations_license_img_error">
+											{{ form_errors(form.ThumbnailLicensePathErrors) }}
+										</div>
+									</dd>
+								</dl>
+								<dl>
+									<dt>
+										{{ form_label(form.license_no, '登録証番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+										<p style="font-size:14px;color:#DE5D50;">申請後に発行された登録番号をご記入ください。<br />自治体により番号が発行されない場合は「なし」とご記入ください。</p>
+									</dt>
+									<dd>
+										<div class="ec-halfInput{{ has_errors(form.license_no) ? ' error' }}">
+											{{ form_widget(form.license_no,  { 'attr': { 'placeholder': '登録証番号' }}) }}
+											{{ form_errors(form.license_no) }}
+										</div>
 									</dd>
 								</dl>
                             </div>
