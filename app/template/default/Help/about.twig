@@ -1,0 +1,65 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% block main %}
+
+<div class="ec-role">
+    <div class="ec-pageHeader">
+        <h1>会社概要</h1>
+    </div>
+    <div class="ec-off1Grid">
+        <div class="ec-off1Grid__cell">
+            <div class="ec-borderedDefs">
+                
+                <dl id="help_about_box__company_name">
+                    <dt>
+                        <label class="ec-label">{{ '会社名'|trans }}</label>
+                    </dt>
+                    <dd>株式会社　企画／海</dd>
+                </dl>
+                <dl id="help_about_box__company_name">
+                    <dt>
+                        <label class="ec-label">代表取締役</label>
+                    </dt>
+                    <dd>峯澤　克 之</dd>
+                </dl>
+
+                <dl id="help_about_box__address">
+                    <dt>
+                        <label class="ec-label">{{ '住所'|trans }}</label>
+                    </dt>
+                    <dd>{{ '〒'|trans }}168-0074<br />
+                        {{ BaseInfo.pref }}東京都杉並区上高井戸1丁目22番12号
+                    </dd>
+                </dl>
+
+                <dl id="help_about_box__phone_number">
+                    <dt>
+                        <label class="ec-label">{{ '電話番号'|trans }}</label>
+                    </dt>
+                    <dd>03-3290-1211</dd>
+                </dl>
+                <dl>
+                    <dt>
+                        <label class="ec-label">問い合わせ先</label>
+                    </dt>
+                    <dd><a href="mailto:info@animalline.jp">info@animalline.jp</a></dd>
+                </dl>
+
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

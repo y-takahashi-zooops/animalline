@@ -81,7 +81,7 @@
 	<div id="wrapper">
 		<header id="header" role="banner">
 			<div class="inner">
-				<h1 class="logomark"><a href="{{url('homepage')}}"><img src="{{ asset('assets/css/common/img/header/logomark.png') }}" alt="ペットみらい"></a></h1>
+				<h1 class="logomark"><a href="{{url('homepage')}}"><img src="{{ asset('assets/css/common/img/header/logomark.png') }}" alt="アニマルライン"></a></h1>
                 {% set Carts = get_all_carts() %}
                 {% set totalPrice = get_carts_total_price() %}
                 {% set totalQuantity = get_carts_total_quantity() %}
@@ -109,60 +109,23 @@
                             <li class="login"><a href="{{ url('logout') }}"><span>ログアウト</span></a></li>
                         {% endif %}
                     </ul>
+                    
                     <nav class="nav" role="navigation">
 						<ul class="main-list">
 							<li>
 								<div class="menu-title">犬用</div>
-                                {#
-								<ul class="child-list">
-									<li><a href="{{ url('product_list') }}?category_id=1">療法食</a>
-										<ul class="grandchild-list">
-											<li><a href="{{ url('product_list') }}?category_id=8">ロイヤルカナン</a></li>
-											<li><a href="{{ url('product_list') }}?category_id=9">ヒルズ</a></li>
-											<li><a href="{{ url('product_list') }}?category_id=10">その他</a></li>
-										</ul>
-									</li>
-									<li><a href="{{ url('product_list') }}?category_id=3">準療法食</a>
-										<ul class="grandchild-list">
-											<li><a href="{{ url('product_list') }}?category_id=14">ロイヤルカナン</a></li>
-											<li><a href="{{ url('product_list') }}?category_id=15">ヒルズ</a></li>
-											<li><a href="{{ url('product_list') }}?category_id=16">その他</a></li>
-										</ul>
-									</li>
-									<li><a href="{{ url('product_list') }}?category_id=17">デンタル関連</a></li>
-									<li><a href="{{ url('product_list') }}?category_id=18">その他</a></li>
-								</ul>
-                                #}
+                                
 							</li>
 							<li>
 								<div class="menu-title">猫用</div>
-                                {#
-								<ul class="child-list">
-									<li><a href="{{ url('product_list') }}?category_id=2">療法食</a>
-										<ul class="grandchild-list">
-											<li><a href="{{ url('product_list') }}?category_id=11">ロイヤルカナン</a></li>
-											<li><a href="{{ url('product_list') }}?category_id=12">ヒルズ</a></li>
-											<li><a href="{{ url('product_list') }}?category_id=13">その他</a></li>
-										</ul>
-									</li>
-									<li><a href="{{ url('product_list') }}?category_id=4">準療法食</a>
-										<ul class="grandchild-list">
-											<li><a href="{{ url('product_list') }}?category_id=19">ロイヤルカナン</a></li>
-											<li><a href="{{ url('product_list') }}?category_id=20">ヒルズ</a></li>
-											<li><a href="{{ url('product_list') }}?category_id=21">その他</a></li>
-										</ul>
-									</li>
-									<li><a href="{{ url('product_list') }}?category_id=22">デンタル関連</a></li>
-									<li><a href="{{ url('product_list') }}?category_id=23">その他</a></li>
-								</ul>
-                                #}
+                                
 							</li>
 							<li>
 								<ul class="child-list custom">
 									<li><a href="{{ url('help_about') }}">会社概要</a></li>
 									<li><a href="{{ url('help_privacy') }}">プライバシーポリシー</a></li>
 									<li><a href="{{ url('help_tradelaw') }}">特定商取引法</a></li>
-									<li><a href="{{ url('contact') }}">お問合せ</a></li>
+									<li><a href="{{ url('ec_contact') }}">お問合せ</a></li>
 								</ul>
 							</li>
 						</ul>
@@ -180,9 +143,8 @@
 					<li><a href="{{ url('help_about') }}"><span>会社概要</span></a></li>
 					<li><a href="{{ url('help_privacy') }}"><span>プライバシーポリシー</span></a></li>
 					<li><a href="{{ url('help_tradelaw') }}"><span>特定商取引法に基づく表記</span></a></li>
-					<li><a href="{{ url('contact') }}"><span>お問い合わせ</span></a></li>
+					<li><a href="{{ url('ec_contact') }}"><span>お問い合わせ</span></a></li>
 				</ul>
-                <div class="logomark"><img src="{{ asset('assets/css/common/img/header/logomark.png') }}" alt="ペットみらい"></div>
 			</div>
             <small id="copyright">Copyright © 2021 アニマルライン All Rights Reserved.</small>
         </footer><!-- / #footer -->
