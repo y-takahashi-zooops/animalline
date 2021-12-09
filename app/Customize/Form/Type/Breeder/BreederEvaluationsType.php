@@ -42,19 +42,6 @@ class BreederEvaluationsType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
-            ->add('evaluation_title', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'min' => 0,
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                    ]),
-                    new Assert\NotBlank()
-                ]
-            ])
             ->add('evaluation_message', TextareaType::class, [
                 'required' => true,
                 'constraints' => [

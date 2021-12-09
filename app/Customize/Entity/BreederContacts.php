@@ -57,7 +57,7 @@ class BreederContacts
     private $update_date;
 
     /**
-     * @ORM\Column(name="is_reading", type="integer", nullable=false)
+     * @ORM\Column(name="is_reading", type="integer", options={"default" = 0}, nullable=false)
      */
     private $is_reading;
 
