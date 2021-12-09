@@ -1121,6 +1121,7 @@ class MailService
         return $this->mailer->send($message, $failures);
     }
 
+    
     /**
      * Send reply contract mail.
      *

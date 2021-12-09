@@ -395,6 +395,7 @@ class BreederMemberContactController extends AbstractController
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription('今回の取引は非成立となりました。')
                 ->setSendDate(Carbon::now())
+                ->setIsReading(0)
                 ->setBreederContactHeader($msgHeader);
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -402,8 +403,8 @@ class BreederMemberContactController extends AbstractController
             $entityManager->persist($breederContact);
             $entityManager->flush();
 
-            $this->mailService->sendMailContractCancel($msgHeader->getCustomer(), []);
-            return $this->redirectToRoute('breeder_all_message');
+            $this->mailService->sendMailContractCancel($msgHeader->getCustomer(), $breederContact);
+            return $this->redirectToRoute('breeder_all_breeder_message');
         }
         if ($isAcceptContract) {
             if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
@@ -413,6 +414,10 @@ class BreederMemberContactController extends AbstractController
             if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $msgHeader->getCustomerCheck() == 1) {
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setBreederCheck(1);
+                
+                $this->mailService->sendMailContractComplete($msgHeader->getCustomer(), []);
+
+                //取引成立時に他のユーザーと取引中のメッセージがある場合、全て非成立とし、メールを送信する。
                 foreach ($msgHeader->getPet()->getBreederContactHeader() as $item) {
                     if (!in_array($item->getContractStatus(), [AnilineConf::CONTRACT_STATUS_CONTRACT, AnilineConf::CONTRACT_STATUS_NONCONTRACT])) {
                         $item->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
@@ -421,10 +426,11 @@ class BreederMemberContactController extends AbstractController
                             ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                             ->setContactDescription('今回の取引は非成立となりました。')
                             ->setSendDate(Carbon::now())
+                            ->setIsReading(0)
                             ->setBreederContactHeader($item);
                         $entityManager->persist($breederContact);
 
-                        $this->mailService->sendMailContractCancel($item->getCustomer(), []);
+                        $this->mailService->sendMailContractCancel($item->getCustomer(), $breederContact);
                     }
                 }
             }
