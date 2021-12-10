@@ -219,4 +219,22 @@ class CustomTopController extends AbstractController
             'form' => $form->createView(),
         ];
     }
+
+    /**
+     * @Route("/guide/dog", name="breeder_guide_dog")
+     * @Template("animalline/breeder/guide/dog.twig")
+     */
+    public function breeder_guide_dog()
+    {
+        return [];
+    }
+
+    /**
+     * @Route("/guide/cat", name="breeder_guide_cat")
+     * @Template("animalline/breeder/guide/cat.twig")
+     */
+    public function breeder_guide_cat()
+    {
+        return [];
+    }
 }

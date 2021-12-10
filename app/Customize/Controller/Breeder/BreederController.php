@@ -167,23 +167,7 @@ class BreederController extends AbstractController
         return [];
     }
 
-    /**
-     * @Route("/breeder/guide/dog", name="breeder_guide_dog")
-     * @Template("animalline/breeder/guide/dog.twig")
-     */
-    public function breeder_guide_dog()
-    {
-        return [];
-    }
-
-    /**
-     * @Route("/breeder/guide/cat", name="breeder_guide_cat")
-     * @Template("animalline/breeder/guide/cat.twig")
-     */
-    public function breeder_guide_cat()
-    {
-        return [];
-    }
+    
 
     /**
      * ブリーダーマイページ
