@@ -173,21 +173,26 @@ class AdoptionMemberContactController extends AbstractController
             $entityManager->flush();
 
             $conservation = $this->customerRepository->find($msgHeader->getConservation()->getId());
-            $this->mailService->sendMailContractCancel($conservation, $conservationContact);
+            $this->mailService->sendMailContractCancelToShop($conservation, $msgHeader, 2);
 
             return $this->redirectToRoute('adoption_message', ['id' => $request->get('id'), 'isScroll' => true]);
         }
         if ($isAcceptContract) {
+            $conservation = $this->customerRepository->find($msgHeader->getConservation()->getId());
+
             if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
                     ->setCustomerCheck(1);
+                
+                    $this->mailService->sendMailContractCheckToShop($conservation, $msgHeader, 2);
             }
-
-            $this->mailService->sendMailContractComplete($msgHeader->getCustomer(), []);
-            
-            if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $msgHeader->getConservationCheck() == 1) {
+            elseif ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $msgHeader->getConservationCheck() == 1) {
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setCustomerCheck(1);
+
+                $this->mailService->sendMailContractCompleteToShop($conservation, $msgHeader, 2);
+                $this->mailService->sendMailContractCompleteToUser($msgHeader->getCustomer(), $msgHeader, 2);
+                /*
                 foreach ($msgHeader->getPet()->getConservationContactHeader() as $item) {
                     if (!in_array($item->getContractStatus(), [AnilineConf::CONTRACT_STATUS_CONTRACT, AnilineConf::CONTRACT_STATUS_NONCONTRACT])) {
                         $item->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
@@ -203,6 +208,7 @@ class AdoptionMemberContactController extends AbstractController
                         $this->mailService->sendMailContractCancel($item->getCustomer(), []);
                     }
                 }
+                */
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($msgHeader);
@@ -309,20 +315,26 @@ class AdoptionMemberContactController extends AbstractController
             $entityManager->persist($conservationContact);
             $entityManager->flush();
 
-            $this->mailService->sendMailContractCancel($msgHeader->getCustomer(), $conservationContact);
+            $this->mailService->sendMailContractCancelToUser($msgHeader->getCustomer(), $msgHeader, 2);
+
             return $this->redirectToRoute('adoption_adoption_message', ['id' => $request->get('id'), 'isScroll' => true]);
         }
         if ($isAcceptContract) {
             if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
                     ->setConservationCheck(1);
+
+                    $this->mailService->sendMailContractCheckToUser($msgHeader->getCustomer(), $msgHeader, 2);
             }
-            if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $msgHeader->getCustomerCheck() == 1) {
+            elseif ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $msgHeader->getCustomerCheck() == 1) {
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setConservationCheck(1);
 
-                $this->mailService->sendMailContractComplete($msgHeader->getCustomer(), []);
+                $conservation = $this->customerRepository->find($msgHeader->getConservation()->getId());
+                $this->mailService->sendMailContractCompleteToUser($msgHeader->getCustomer(), $msgHeader, 2);
+                $this->mailService->sendMailContractCompleteToShop($conservation, $msgHeader, 2);
 
+                /*
                 foreach ($msgHeader->getPet()->getConservationContactHeader() as $item) {
                     if (!in_array($item->getContractStatus(), [AnilineConf::CONTRACT_STATUS_CONTRACT, AnilineConf::CONTRACT_STATUS_NONCONTRACT])) {
                         $item->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
@@ -338,6 +350,7 @@ class AdoptionMemberContactController extends AbstractController
                         $this->mailService->sendMailContractCancel($item->getCustomer(), []);
                     }
                 }
+                */
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($msgHeader);

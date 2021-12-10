@@ -1,0 +1,23 @@
+{% autoescape false %}
+{% if site_type == 1 %}
+購入希望者から取引成立の通知が届きました。
+
+下記リンクから取引成立処理を行い、取引を完了してください。
+
+↓↓ 下記リンクから取引成立処理をする
+
+{{ url('breeder_breeder_message', {'id' : msgheader.getId()}) }}
+
+今後ともアニマルラインをよろしくお願い致します。
+{% else %}
+里親希望者から取引成立の通知が届きました。。
+
+下記リンクから取引成立処理を行い、取引を完了してください。
+
+↓↓ 下記リンクから取引成立処理をする
+{{ url('adoption_adoption_message', {'id' : msgheader.getId()}) }}
+
+今後ともアニマルラインをよろしくお願い致します。
+{% endif %}
+
+{% endautoescape %}
