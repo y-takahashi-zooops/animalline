@@ -406,6 +406,8 @@ class BreederMemberContactController extends AbstractController
             $this->mailService->sendMailContractCancel($msgHeader->getCustomer(), $breederContact);
             return $this->redirectToRoute('breeder_all_breeder_message');
         }
+        
+        //成約処理
         if ($isAcceptContract) {
             if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
