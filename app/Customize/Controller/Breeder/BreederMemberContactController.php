@@ -406,20 +406,26 @@ class BreederMemberContactController extends AbstractController
             $this->mailService->sendMailContractCancel($msgHeader->getCustomer(), $breederContact);
             return $this->redirectToRoute('breeder_all_breeder_message');
         }
-        
+
         //成約処理
         if ($isAcceptContract) {
             if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
+                //交渉中の場合は自身に成約フラグを立ててＰＯにメールを送る。
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_WAITCONTRACT)
                     ->setBreederCheck(1);
+
+                //ペットオーナーに成約処理依頼メール
+                $this->mailService->sendMailContractCheckToUser($msgHeader->getCustomer(), $msgHeader, 1);
             }
-            if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $msgHeader->getCustomerCheck() == 1) {
+            elseif ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $msgHeader->getCustomerCheck() == 1) {
+                //成約確認待ちの場合は成約完了なので、両者にメールを送信する。
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setBreederCheck(1);
                 
                 $this->mailService->sendMailContractComplete($msgHeader->getCustomer(), []);
 
                 //取引成立時に他のユーザーと取引中のメッセージがある場合、全て非成立とし、メールを送信する。
+                /*
                 foreach ($msgHeader->getPet()->getBreederContactHeader() as $item) {
                     if (!in_array($item->getContractStatus(), [AnilineConf::CONTRACT_STATUS_CONTRACT, AnilineConf::CONTRACT_STATUS_NONCONTRACT])) {
                         $item->setContractStatus(AnilineConf::CONTRACT_STATUS_NONCONTRACT);
@@ -435,6 +441,7 @@ class BreederMemberContactController extends AbstractController
                         $this->mailService->sendMailContractCancel($item->getCustomer(), $breederContact);
                     }
                 }
+                */
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($msgHeader);

@@ -1081,6 +1081,37 @@ class MailService
     }
 
     /**
+     * 交渉中→成約確認待ちメール（購入・譲渡者に送る）
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @param array $data
+     * @return int
+     */
+    public function sendMailContractCheckToUser(\Eccube\Entity\Customer $Customer, $msgheader, $site_type)
+    {
+        $pet = $msgheader->getPet();
+        $body = $this->twig->render('Mail/mail_contract_check_to_user.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'msgheader' => $msgheader,
+            'pet_id' => $pet->getId(),
+            'site_type' => $site_type
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] 取引成立通知')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
+
+
+    /**
      * Send cancel contract mail.
      *
      * @param \Eccube\Entity\Customer $Customer
