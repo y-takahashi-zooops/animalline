@@ -197,6 +197,28 @@ class BreederController extends AbstractController
     }
 
     /**
+     * サイトイメージ（スマホ）
+     *
+     * @Route("/breeder/simage_sp/", name="breeder_simage_sp")
+     * @Template("animalline/breeder/simage_sp.twig")
+     */
+    public function simage_sp(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * サイトイメージ（スマホ）
+     *
+     * @Route("/breeder/simage_pc/", name="breeder_simage_pc")
+     * @Template("animalline/breeder/simage_pc.twig")
+     */
+    public function simage_pc(Request $request)
+    {
+        return [];
+    }
+
+    /**
      * ブリーダー詳細
      *
      * @Route("/breeder/breeder_search/{breeder_id}", name="breeder_detail", requirements={"breeder_id" = "\d+"})

@@ -173,8 +173,12 @@ class AdoptionMemberController extends AbstractController
         }
 
         $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
+        $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $conservation->getLicenseThumbnailPath();
 
-        $builder = $this->formFactory->createBuilder(ConservationsType::class, $conservation);
+        $builder = $this->formFactory->createBuilder(ConservationsType::class, $conservation,array(
+            'adoption_img' => $thumbnail_path,
+            'license_img' => $license_thumbnail_path,
+        ));
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -189,7 +193,8 @@ class AdoptionMemberController extends AbstractController
             }
             $conservation->setPref($conservation->getPrefId())
                 ->setId($user->getId())
-                ->setThumbnailPath($thumbnail_path);
+                ->setThumbnailPath($thumbnail_path)
+                ->setLicenseThumbnailPath($license_thumbnail_path);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservation);
@@ -202,7 +207,8 @@ class AdoptionMemberController extends AbstractController
             'conservation' => $conservation,
             'form' => $form->createView(),
             'Customer' => $user,
-            'thumbnail_path' => $thumbnail_path
+            'thumbnail_path' => $thumbnail_path,
+            'license_thumbnail_path' => $license_thumbnail_path
         ];
     }
 

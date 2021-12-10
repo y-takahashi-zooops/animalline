@@ -115,6 +115,19 @@ class AdoptionMemberContactController extends AbstractController
         $msgHeader->setCustomerNewMsg(0);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($msgHeader);
+        $lastMessages = $this->conservationContactsRepository->findBy(
+            [
+                'ConservationContactHeader' => $msgHeader,
+                'message_from' => AnilineConf::MESSAGE_FROM_MEMBER
+            ],
+            ['id'=>'DESC']);
+
+        foreach ($lastMessages as $lastMessage) {
+            if ($lastMessage->getIsReading() == AnilineConf::ANILINE_NOT_READING) {
+                $lastMessage->setIsReading(AnilineConf::ANILINE_READ);
+            }
+            $entityManager->persist($lastMessage);
+        }
         $entityManager->flush();
 
         $isAcceptContract = $request->get('accept-contract');
@@ -125,7 +138,8 @@ class AdoptionMemberContactController extends AbstractController
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
                 ->setContactDescription($replyMessage)
                 ->setSendDate(Carbon::now())
-                ->setConservationHeader($msgHeader);
+                ->setIsReading(0)
+                ->setConservationContactHeader($msgHeader);
 
             $msgHeader->setConservationNewMsg(1)
                 ->setLastMessageDate(Carbon::now());
@@ -135,6 +149,9 @@ class AdoptionMemberContactController extends AbstractController
             $entityManager->persist($msgHeader);
             $entityManager->flush();
 
+            $conservation = $this->customerRepository->find($msgHeader->getConservation()->getId());
+
+            $this->mailService->sendMailContractReply($conservation, $conservationContact);
             return $this->redirectToRoute('adoption_message', ['id' => $request->get('id'), 'isScroll' => true]);
         }
         if ($reasonCancel) {
@@ -147,7 +164,7 @@ class AdoptionMemberContactController extends AbstractController
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
                 ->setContactDescription('今回の取引は非成立となりました。')
                 ->setSendDate(Carbon::now())
-                ->setConservationHeader($msgHeader);
+                ->setConservationContactHeader($msgHeader);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($msgHeader);
@@ -173,7 +190,7 @@ class AdoptionMemberContactController extends AbstractController
                             ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                             ->setContactDescription('今回の取引は非成立となりました。')
                             ->setSendDate(Carbon::now())
-                            ->setConservationHeader($item);
+                            ->setConservationContactHeader($item);
                         $entityManager->persist($conservationContact);
 
                         $this->mailService->sendMailContractCancel($item->getCustomer(), []);
@@ -189,7 +206,7 @@ class AdoptionMemberContactController extends AbstractController
 
         $user = $this->getUser();
         $Customer = $this->customerRepository->find($user);
-        $listMsg = $this->conservationContactsRepository->findBy(['ConservationHeader' => $msgHeader], ['send_date' => 'ASC']);
+        $listMsg = $this->conservationContactsRepository->findBy(['ConservationContactHeader' => $msgHeader], ['send_date' => 'ASC']);
         $reasons = $this->sendoffReasonRepository->findBy(['is_adoption_visible' => AnilineConf::BREEDER_VISIBLE_SHOW]);
 
         return [
@@ -230,6 +247,19 @@ class AdoptionMemberContactController extends AbstractController
         $msgHeader->setConservationNewMsg(0);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($msgHeader);
+        $lastMessages = $this->conservationContactsRepository->findBy(
+            [
+                'ConservationContactHeader' => $msgHeader,
+                'message_from' => AnilineConf::MESSAGE_FROM_USER
+            ],
+            ['id'=>'DESC']);
+
+        foreach ($lastMessages as $lastMessage) {
+            if ($lastMessage->getIsReading() == AnilineConf::ANILINE_NOT_READING) {
+                $lastMessage->setIsReading(AnilineConf::ANILINE_READ);
+            }
+            $entityManager->persist($lastMessage);
+        }
         $entityManager->flush();
 
         $isAcceptContract = $request->get('accept-contract');
@@ -240,7 +270,8 @@ class AdoptionMemberContactController extends AbstractController
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription($replyMessage)
                 ->setSendDate(Carbon::now())
-                ->setConservationHeader($msgHeader);
+                ->setIsReading(0)
+                ->setConservationContactHeader($msgHeader);
 
             $msgHeader->setCustomerNewMsg(1)
                 ->setLastMessageDate(Carbon::now());
@@ -250,6 +281,7 @@ class AdoptionMemberContactController extends AbstractController
             $entityManager->persist($msgHeader);
             $entityManager->flush();
 
+            $this->mailService->sendMailContractReply($msgHeader->getCustomer(), $conservationContact);
             return $this->redirectToRoute('adoption_adoption_message', ['id' => $request->get('id'), 'isScroll' => true]);
         }
         if ($reasonCancel) {
@@ -262,7 +294,7 @@ class AdoptionMemberContactController extends AbstractController
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription('今回の取引は非成立となりました。')
                 ->setSendDate(Carbon::now())
-                ->setConservationHeader($msgHeader);
+                ->setConservationContactHeader($msgHeader);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($msgHeader);
@@ -288,7 +320,7 @@ class AdoptionMemberContactController extends AbstractController
                             ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                             ->setContactDescription('今回の取引は非成立となりました。')
                             ->setSendDate(Carbon::now())
-                            ->setConservationHeader($item);
+                            ->setConservationContactHeader($item);
                         $entityManager->persist($conservationContact);
 
                         $this->mailService->sendMailContractCancel($item->getCustomer(), []);
@@ -304,7 +336,7 @@ class AdoptionMemberContactController extends AbstractController
 
         $user = $this->getUser();
         $Customer = $this->customerRepository->find($user);
-        $listMsg = $this->conservationContactsRepository->findBy(['ConservationHeader' => $msgHeader], ['send_date' => 'ASC']);
+        $listMsg = $this->conservationContactsRepository->findBy(['ConservationContactHeader' => $msgHeader], ['send_date' => 'ASC']);
         $reasons = $this->sendoffReasonRepository->findBy(['is_adoption_visible' => AnilineConf::ADOPTION_VISIBLE_SHOW]);
 
         return [
@@ -332,6 +364,7 @@ class AdoptionMemberContactController extends AbstractController
         }
 
         $contact = new ConservationContactHeader();
+        $conservationContact = new ConservationContacts();
         $builder = $this->formFactory->createBuilder(ConservationContactType::class, $contact);
         $event = new EventArgs(
             [
@@ -357,16 +390,20 @@ class AdoptionMemberContactController extends AbstractController
                     );
 
                 case 'complete':
+                    $arr = ['問い合わせ', '見学希望', '返信'];
                     $contact
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
                         ->setConservation($pet->getConservation())
                         ->setCustomer($this->getUser())
+                        ->setContactTitle($arr[$request->get('conservation_contact')['contact_type'] - 1])
                         ->setLastMessageDate(Carbon::now());
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($contact);
                     $entityManager->flush();
 
+                    $conservation = $this->customerRepository->find($contact->getConservation()->getId());
+                    $this->mailService->sendMailContractReply($conservation, $conservationContact);
                     return $this->redirectToRoute('adoption_contact_complete', ['pet_id' => $id]);
             }
         }

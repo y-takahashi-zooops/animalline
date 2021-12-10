@@ -101,70 +101,70 @@
                 </div>
                 <div class="breeder-column__main_section_body">
                     {% for adoption in adoptions %}
-                    <div class="row ml-2 mb-4">
-                        <div class="breeder-img col-md-3 col-sm-4">
-                            {# <a href="{{ url('breeder_detail', {'breeder_id': breeder.Id}) }}"> #}
-                            <img src="{{ app.request.schemeAndHttpHost ~ (adoption.thumbnailPath | default | length > 0 ? adoption.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
-                                 class="w-100 mb-4 mb-sm-0">
-                            {# </a> #}
-                        </div>
-                        <div class="breeder-info col-sm-8">
-                            <h4 class="font-weight-500 color-gray-500 mb-3">
-                                {{ adoption.organizationName }}
-                            </h4>
-                            <div class="d-flex mb-1">
-                                <h6>運営者氏名：</h6>
-                                <h6>
-                                    {{ adoption.ownerName }}({{ adoption.ownerKana }})
-                                </h6>
-                            </div>
-                            <div class="d-flex mb-1">
-                                <h6>犬舎所在地：</h6>
-                                {% set adoptionHouseDog = adoption.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
-                                {% set adoptionHouseCat = adoption.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
-                                {% if (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
-                                    <h6>
-                                        {{ adoptionHouseDog.conservationHousePref ~ adoptionHouseDog.conservationHouseCity ?? '' ~ ' ' ~ adoptionHouseCat.conservationHousePref ~ adoptionHouseCat.conservationHouseCity ?? '' }}
-                                    </h6>
-                                {% elseif (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
-                                    <h6>
-                                        {{ adoptionHouseDog.conservationHousePref ~ adoptionHouseDog.conservationHouseCity ?? '' }}
-                                    </h6>
-                                {% else %}
-                                    <h6>
-                                        {{ adoptionHouseCat.conservationHousePref ~ adoptionHouseCat.conservationHouseCity ?? '' }}
-                                    </h6>
-                                {% endif %}
-                            </div>
-                            <div class="d-flex mb-1">
-                                <h6>審査ステータス：</h6>
-                                {% if adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_SUBMIT') %}
-                                    <h6>審査前</h6>
-                                {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK') %}
-                                    <h6>審査中</h6>
-                                {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK') %}
-                                    <h6>審査OK</h6>
-                                {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG') %}
-                                    <h6>審査NG</h6>
-                                {% endif %}
-                            </div>
-                            <a href="{{ url('adoption_detail', {'adoption_id': adoption.Id}) }}">
-                                <h5 class="color-adoption font-weight-600 mt-3">保護団体詳細ページへ</h5>
-                            </a>
-                        </div>
-                    </div>
-                    {% if adoption.prText %}
                         <div class="row ml-2 mb-4">
-                            <div class="col-12" style="background:#fff3dd">
-                                <h6 style="border-bottom: 1px dotted #cd8362; color:#cd8362;">PRコメント</h6>
-                                <h6>{{ adoption.prText |nl2br }}</h6>
+                            <div class="breeder-img col-md-3 col-sm-4">
+                                {# <a href="{{ url('breeder_detail', {'breeder_id': breeder.Id}) }}"> #}
+                                <img src="{{ app.request.schemeAndHttpHost ~ (adoption.thumbnailPath | default | length > 0 ? adoption.thumbnailPath : '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png') }}"
+                                     class="w-100 mb-4 mb-sm-0">
+                                {# </a> #}
+                            </div>
+                            <div class="breeder-info col-sm-8">
+                                <h4 class="font-weight-500 color-gray-500 mb-3">
+                                    {{ adoption.organizationName }}
+                                </h4>
+                                <div class="d-flex mb-1">
+                                    <h6>運営者氏名：</h6>
+                                    <h6>
+                                        {{ adoption.ownerName }}({{ adoption.ownerKana }})
+                                    </h6>
+                                </div>
+                                <div class="d-flex mb-1">
+                                    <h6>犬舎所在地：</h6>
+                                    {% set adoptionHouseDog = adoption.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                    {% set adoptionHouseCat = adoption.getConservationHouseByPetType(constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')) %}
+                                    {% if (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG_CAT')) %}
+                                        <h6>
+                                            {{ adoptionHouseDog.conservationHousePref ~ adoptionHouseDog.conservationHouseCity ?? '' ~ ' ' ~ adoptionHouseCat.conservationHousePref ~ adoptionHouseCat.conservationHouseCity ?? '' }}
+                                        </h6>
+                                    {% elseif (adoption.handlingPetKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')) %}
+                                        <h6>
+                                            {{ adoptionHouseDog.conservationHousePref ~ adoptionHouseDog.conservationHouseCity ?? '' }}
+                                        </h6>
+                                    {% else %}
+                                        <h6>
+                                            {{ adoptionHouseCat.conservationHousePref ~ adoptionHouseCat.conservationHouseCity ?? '' }}
+                                        </h6>
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex mb-1">
+                                    <h6>審査ステータス：</h6>
+                                    {% if adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_SUBMIT') %}
+                                        <h6>審査前</h6>
+                                    {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK') %}
+                                        <h6>審査中</h6>
+                                    {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK') %}
+                                        <h6>審査OK</h6>
+                                    {% elseif adoption.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG') %}
+                                        <h6>審査NG</h6>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ url('adoption_detail', {'adoption_id': adoption.Id}) }}">
+                                    <h5 class="color-adoption font-weight-600 mt-3">保護団体詳細ページへ</h5>
+                                </a>
                             </div>
                         </div>
-                    {% endif %}
+                        {% if adoption.prText %}
+                            <div class="row ml-2 mb-4">
+                                <div class="col-12" style="background:#fff3dd">
+                                    <h6 style="border-bottom: 1px dotted #cd8362; color:#cd8362;">PRコメント</h6>
+                                    <h6>{{ adoption.prText |nl2br }}</h6>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        検索条件に該当する保護団体が存在しません。
+                    {% endfor %}
                 </div>
-                {% else %}
-                    検索条件に該当する保護団体が存在しません。
-                {% endfor %}
                 <div class="navigation float-right">
                     {{ knp_pagination_render(adoptions) }}
                 </div>

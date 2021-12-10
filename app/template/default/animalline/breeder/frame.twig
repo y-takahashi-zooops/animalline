@@ -47,16 +47,6 @@
             <div class="header-right">
                 <ul>
                 {% if is_granted('ROLE_USER') %}
-                    {# ブリーダー登録が済んでいない場合のみ表示 
-                    {% if app.user.isBreeder == 0 %}
-                        <li class="breeder">
-                            <a href="{{url('breeder_examination')}}" class="btn">
-                            <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="ブリーダー登録"/></i>
-                            <span>ブリーダー登録</span>
-                            </a>
-                        </li>
-                    {% endif %}
-                    #}
                     <li class="logout">
                         <a href="{{url('logout')}}" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -78,8 +68,8 @@
                 {% else %}
                     <li class="breeder">
                         <a href="{{url('entry')}}?ReturnPath=breeder_mypage" class="btn">
-                        <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="ブリーダー登録"/></i>
-                        <span>ブリーダー登録</span>
+                        <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="ブリーダー様登録"/></i>
+                        <span>ブリーダー様登録</span>
                         </a>
                     </li>
                     <li class="login">
@@ -96,7 +86,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                         </svg>
-                        <span>会員登録</span>
+                        <span>ペットオーナー様会員登録</span>
                         </a>
                     </li>
                 {% endif %}
@@ -141,15 +131,6 @@
             <div class="side-menu__list">
                 <ul>
                     {% if is_granted('ROLE_USER') %}
-                        {# ブリーダー登録が済んでいない場合のみ表示 #}
-                        {% if app.user.isBreeder == 0 %}
-                            <li class="breeder">
-                                <a href="{{url('breeder_examination')}}" class="btn">
-                                    <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="ブリーダー登録"/></i>
-                                    <span>ブリーダー登録</span>
-                                </a>
-                            </li>
-                        {% endif %}
                         <li class="logout">
                             <a href="{{url('logout')}}" class="btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -169,12 +150,18 @@
                             </a>
                         </li>
                     {% else %}
+                        <li class="breeder">
+                            <a href="{{url('entry')}}?ReturnPath=breeder_mypage" class="btn">
+                            <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="ブリーダー様登録"/></i>
+                            <span>ブリーダー様登録</span>
+                            </a>
+                        </li>
                         <li class="member">
                             <a href="{{url('entry')}}?ReturnPath=breeder_top" class="btn">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                                 </svg>
-                                <span>会員登録</span>
+                                <span>ペットオーナー様会員登録</span>
                             </a>
                         </li>
                         <li class="login">

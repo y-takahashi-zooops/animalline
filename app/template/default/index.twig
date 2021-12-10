@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/index.css?ver=211102_2') }}">
 {% endblock %}
 {% block javascript %}
-     {# カレンダー表示用スクリプト #}
+{# カレンダー表示用スクリプト #}
 <script>
 	// 業務カレンダー表示用
 	const week = ["日", "月", "火", "水", "木", "金", "土"];
@@ -95,6 +95,7 @@
 		return calendar;
 	}
 </script>
+
 {% endblock %}
 
 {% block main %}
@@ -131,12 +132,11 @@
                             <dt>⽝⽤</dt>
                             <dd>
                                 <ul>
-                                    <li><a href="{{ url('product_list') }}?category_id=10">DRYフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=11">WETフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=12">おやつ</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=13">トイレタリー</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=14">雑貨</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=46">その他</a></li>
+                                    {% for categoryDog in categoryChildDog %}
+                                        {% if categoryDog['category'].getProductCategories is not empty %}
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryDog['category'].id }}">{{ categoryDog['category'].name }}({{ categoryDog['count_product'] }})</a></li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </dd>
                         </div>
@@ -144,25 +144,23 @@
                             <dt>猫⽤</dt>
                             <dd>
                                 <ul>
-                                    <li><a href="{{ url('product_list') }}?category_id=19">DRYフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=20">WETフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=21">おやつ</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=22">トイレタリー</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=23">雑貨</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=47">その他</a></li>
+                                    {% for categoryCat in categoryChildCat %}
+                                        {% if categoryCat['category'].getProductCategories is not empty %}
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryCat['category'].id }}">{{ categoryCat['category'].name }}({{ categoryCat['count_product'] }})</a></li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </dd>
                         </div>
                         <div>
-                            <dt>その他</dt>
+                            <dt>共通</dt>
                             <dd>
                                 <ul>
-                                    <li><a href="{{ url('product_list') }}?category_id=26">DRYフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=27">WETフード</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=28">おやつ</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=29">トイレタリー</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=30">雑貨</a></li>
-                                    <li><a href="{{ url('product_list') }}?category_id=48">その他</a></li>
+                                    {% for categoryBeside in categoryChildBeside %}
+                                        {% if categoryBeside['category'].getProductCategories is not empty %}
+                                            <li><a href="{{ url('product_list') }}?category_id={{ categoryBeside['category'].id }}">{{ categoryBeside['category'].name }}({{ categoryBeside['count_product'] }})</a></li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </dd>
                         </div>
@@ -179,7 +177,7 @@
 							<dl>
 								<dt>お支払いについて</dt>
 								<dd>
-									お支払いは、クレジットカード・銀行振込がご利用いただけます。
+									お支払いは、クレジットカードがご利用いただけます。
 									<div class="notes">
 										※クレジットカードのセキュリティはSSLというシステムを利用しております。カード番号は暗号化されて安全に送信されますので、どうぞご安心ください。
 									</div>
@@ -193,7 +191,7 @@
 								<dd>
 									<ul class="dot-list">
 										<li>配送は 佐川急便でお届けいたします。</li>
-										<li>ご入金確認後、３営業日以内に発送いたします。</li>
+										<li>ご注文は３日以内に発送いたします。但し、在庫状況。道路事情などにより発送が遅れる倍もございますので予めご了承ください。</li>
 										<li>また、時間指定も承ります。指定できる時間帯は下記をご覧ください。</li>
 									</ul>
 									<div class="photo-box"><img src="/html/template/default/assets/img/index/buy_img02.jpg" alt=""></div>
@@ -205,7 +203,7 @@
 			</div>
 			<div class="edit-area time">
 				<div class="inner w1080">
-					<h2 class="index-title type02">営業日のご案内</h2>
+					<h2 class="index-title type02">営業時間：平日・土　9：30～18：30<br>休業日：日・祝／年末年始</h2>
 					<link rel="stylesheet" href="{{ asset('assets/css/calendar.css') }}">
 					<ul class="time-list">
 						<li>	

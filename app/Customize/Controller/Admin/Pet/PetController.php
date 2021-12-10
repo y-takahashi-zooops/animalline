@@ -279,11 +279,11 @@ class PetController extends AbstractController
         if ($request->get('site_kind') == AnilineConf::SITE_CATEGORY_BREEDER) {
             $contact = $this->breederContactHeaderRepository->find($contactId);
             $breeder = $this->customerRepository->find($contact->getBreeder());
-            $breederContacts = $this->breederContactsRepository->findBy(['BreederHeader' => $contact]);
+            $breederContacts = $this->breederContactsRepository->findBy(['BreederContactHeader' => $contact]);
         } else {
             $contact = $this->conservationContactHeaderRepository->find($contactId);
             $conservation = $this->customerRepository->find($contact->getConservation());
-            $conservationContacts = $this->conservationContactsRepository->findBy(['ConservationHeader' => $contact]);
+            $conservationContacts = $this->conservationContactsRepository->findBy(['ConservationContactHeader' => $contact]);
         }
         $customer = $this->customerRepository->find($contact->getCustomer());
         $breederContacts = $paginator->paginate(
@@ -355,6 +355,7 @@ class PetController extends AbstractController
         $data = [
             'name' => "{$Customer->getName01()} {$Customer->getName02()}",
             'examination_comment' => "<span id='ex-comment'>{$comment}</span>",
+            'pet_id' =>  $Pet->getId(),
             'pet_code' =>  $Pet->getPetCode(),
             'pet_breeds' =>  $breeds->getBreedsName(),
             'pet_birthday' =>  $Pet->getPetBirthday()->format("Y年m月d日"),

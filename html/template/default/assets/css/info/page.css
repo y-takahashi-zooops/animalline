@@ -12,7 +12,7 @@ PAGE - 遺伝子検査
 #page-mv__dna{
   width:100%;
   height:400px;
-  background:url(../img/dna/dna-mv-bg.jpg) no-repeat center /cover;
+  background:url(../../../img/dna/dna-mv-bg.jpg) no-repeat center /cover;
   position:relative;
   z-index:1;
 }
@@ -115,7 +115,7 @@ PAGE - 遺伝子検査
 }
 #dna-content03 .dna-content03__title{
   text-align:center;
-  background:url(../img/page/dna/dna-icon03.png) no-repeat center top;
+  background:url(../../../assets/img/dna/dna-icon03.png) no-repeat center top;
   padding:120px 0 0;
   margin:0 0 60px;
 }
@@ -153,13 +153,13 @@ PAGE - 遺伝子検査
   background-position:center;
 }
 #dna-content03 .dna-content03__body article:nth-child(1):before{
-  background-image:url(../img/page/dna/num01.png);
+  background-image:url(../../../img/dna/num01.png);
 }
 #dna-content03 .dna-content03__body article:nth-child(2):before{
-  background-image:url(../img/page/dna/num02.png);
+  background-image:url(../../../img/dna/num02.png);
 }
 #dna-content03 .dna-content03__body article:nth-child(3):before{
-  background-image:url(../img/page/dna/num03.png);
+  background-image:url(../../../img//dna/num03.png);
 }
 #dna-content03 .dna-content03__body article h3{
   font-size:24px;
@@ -1831,11 +1831,12 @@ PAGE - Breeder詳細
   background-size:cover;
 }
 #page-mv__breeder_detail .wrap{
-  background-image:url(../../img/breeder/mv-bg.jpg);
+  background-image:url(../../../assets/img/breeder/mv-bg.jpg);
   background-position:center right;
 }
 #page-mv__adoption_detail .wrap{
-  background-image:url(../../img/adoption/mv-bg.jpg);
+  background-image:url(../../../assets/img/adoption/mv-bg.jpg);
+  background-position: center right;
 }
 .page-mv_detail .wrap .text{
   width:60%;
@@ -1860,6 +1861,17 @@ PAGE - Breeder詳細
 }
 .page-mv_detail .wrap .text ul li a:hover{
   opacity:.8;
+}
+#page-mv__adoption_detail .wrap .text{
+  width:60%;
+  text-align:center;
+  padding:60px 60px 0;
+}
+#page-mv__adoption_detail .wrap .text h2{
+  margin:0 0 10px;
+}
+#page-mv__adoption_detail .wrap .text p{
+  margin:0 0 20px;
 }
 
 #page-detail-content01{
@@ -1994,7 +2006,7 @@ PAGE - Breeder詳細
 }
 #page-detail-content02 .dna-content03__title{
   text-align:center;
-  background:url(../../img/dna/dna-icon03.png) no-repeat center top;
+  background:url(../../../assets/img/dna/dna-icon03.png) no-repeat center top;
   padding:120px 0 0;
   margin:0 0 60px;
 }
@@ -2032,13 +2044,13 @@ PAGE - Breeder詳細
   background-position:center;
 }
 #page-detail-content02 .dna-content03__body article:nth-child(1):before{
-  background-image:url(../../img/dna/num01.png);
+  background-image:url(../../../assets/img/dna/num01.png);
 }
 #page-detail-content02 .dna-content03__body article:nth-child(2):before{
-  background-image:url(../../img/dna/num02.png);
+  background-image:url(../../../assets/img/dna/num02.png);
 }
 #page-detail-content02 .dna-content03__body article:nth-child(3):before{
-  background-image:url(../../img/dna/num03.png);
+  background-image:url(../../../assets/img/dna/num03.png);
 }
 #page-detail-content02 .dna-content03__body article h3{
   font-size:24px;
@@ -2096,6 +2108,86 @@ PAGE - Breeder詳細
   left:20px;
 }
 
+#page-detail-content03{
+  padding:0 0 80px 0;
+  text-align:center;
+}
+.page-detail-content03__body{
+  
+}
+.page-detail-content03__body p{
+  font-size:30px;
+  line-height:2;
+  font-weight:300;
+  color:#f08200;
+  font-family:serif;
+}
+.page-detail-content03__body p strong{
+  color:#ef5350;
+}
+.page-detail-content03__image{
+  text-align:center;
+  width:60%;
+  margin:0 auto;
+  padding:60px 0 0;
+}
+
+#page-detail-content04{
+  
+}
+.page-detail-content04__title{
+  text-align:center;
+  margin:0 0 80px;
+}
+.page-detail-content04__title h3{
+  padding:20px 0 0;
+  font-size:40px;
+}
+.page-detail-content04__body{
+  display:flex;
+  justify-content:space-between;
+  margin:0 80px 80px;
+}
+.page-detail-content04__body article{
+  width:48%;
+  background-color:#f4ede2;
+  background-repeat:no-repeat;
+  background-position:top center;
+  background-size:contain;
+  padding:320px 40px 40px;
+  box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+.page-detail-content04__body article#content01{
+  background-image:url(../../../assets/img/adoption/adoption-img01.png);
+}
+.page-detail-content04__body article#content02{
+  background-image:url(../../../assets/img/adoption/adoption-img02.png);
+}
+.page-detail-content04__body article h3{
+  font-size:48px;
+  margin:0 0 40px;
+  text-align:center;
+  font-family:serif;
+  color:#0068b7;
+  text-shadow:0 0 10px rgba(255,255,255,0.6);
+}
+.page-detail-content04__body article h3 small{
+  display:block;
+  vertical-align:middle;
+  margin:20px 0 0;
+  font-size:18px;
+  letter-spacing:.1em;
+}
+.page-detail-content04__body article p{
+  font-size:16px;
+  font-weight:300;
+  line-height:2;
+  margin:0 0 1em;
+}
+.page-detail-content04__body article p strong{
+  color:#f08200;
+}
+
 /*------------------
 Width <= 1280px
 ------------------*/
@@ -2120,6 +2212,36 @@ Width <= 1280px
 }
 .page-detail-content02__body .image{
   padding:0 20px;
+}
+  
+#page-mv__adoption_detail .wrap .text{
+  max-width:700px;
+  width:100%;
+  padding:60px 40px 0;
+}
+#page-detail-content03 {
+  padding: 0 40px 80px;
+}
+.page-detail-content03__body p{
+  font-size:24px;
+}
+.page-detail-content03__image{
+  width:80%;
+  padding:40px 0 0;
+}
+.page-detail-content04__body{
+  margin:0 40px 80px;
+}
+.page-detail-content04__body article{
+  padding:260px 20px 40px;
+}
+.page-detail-content04__body article h3{
+  font-size:36px;
+  margin:0 0 20px;
+}
+.page-detail-content04__body article h3 small{
+  font-size:16px;
+  letter-spacing:.1em;
 }
 }
 
@@ -2190,6 +2312,14 @@ Width <= 980px
 #page-detail-content02 .dna-content03__title p{
   font-size:18px;
 }
+  
+#page-mv__adoption_detail .wrap .text{
+  max-width:540px;
+  padding:60px 40px 40px;
+}
+#page-mv__adoption_detail .wrap .text ul li {
+    margin: 0 10px;
+}
 }
 
 /*------------------
@@ -2213,13 +2343,30 @@ Width <= 768px
   margin:0 0 20px;
   display:block;
 }
+  
+.page-detail-content03__body p{
+  font-size:18px;
+}
+.page-detail-content03__image{
+  width:90%;
+}
+.page-detail-content04__body{
+  display:block;
+  margin:0 20px 40px;
+}
+.page-detail-content04__body article{
+  width:100%;
+  padding:320px 20px 40px;
+}
 }
 
 /*------------------
 Width <= 640px
 ------------------*/
 @media screen and (max-width: 640px) {
-  
+.page-detail-content04__body article{
+  padding:260px 20px 40px;
+}
 }
 
 /*------------------
@@ -2284,6 +2431,32 @@ Width <= 480px
   top:20px;
   left:20px;
 }
+  
+#page-mv__adoption_detail .wrap .text{
+  padding:40px 20px;
+}
+#page-mv__adoption_detail .wrap .text ul li {
+  margin: 0 5px;
+}
+#page-detail-content03 {
+  padding: 0 20px 40px;
+}
+.page-detail-content03__body p{
+  font-size:16px;
+}
+.page-detail-content03__image{
+  width:100%;
+  padding:20px 0 0;
+}
+.page-detail-content04__body article h3{
+  font-size:24px;
+}
+.page-detail-content04__body article h3 small{
+  font-size:14px;
+}
+.page-detail-content04__body article p{
+  font-size:14px;
+}
 }
 
 /*------------------
@@ -2292,6 +2465,9 @@ Width <= 375px
 @media screen and (max-width: 375px) {
 .page-detail_btn a{
   font-size:18px;
+}
+.page-detail-content04__body article{
+  padding:200px 20px 20px;
 }
 }
 

@@ -70,36 +70,6 @@ class ConservationsType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
-            ->add('conservation_house_name_dog', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'min' => 0,
-                        'max' => $this->eccubeConfig['eccube_stext_len']
-                    ]),
-                ]
-            ])
-            ->add('conservation_house_name_cat', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'min' => 0,
-                        'max' => $this->eccubeConfig['eccube_stext_len']
-                    ]),
-                ]
-            ])
-            ->add('DogHouseNameErrors', TextType::class, [
-                'mapped' => false,
-            ])
-            ->add('CatHouseNameErrors', TextType::class, [
-                'mapped' => false,
-            ])
             ->add('owner_name', TextType::class, [
                 'attr' => [
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
@@ -241,27 +211,45 @@ class ConservationsType extends AbstractType
                 // 'required' => false,
                 'required' => true,
                 'mapped' => false
+            ])
+            ->add('license_thumbnail_path', FileType::class, [
+                'mapped' => false,
+                'required' => true
+            ])
+            ->add('license_no', TextType::class, [
+                'required' => false,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+            ])
+            ->add('ThumbnailPathErrors', TextType::class, [
+                'mapped' => false,
+            ])
+            ->add('ThumbnailLicensePathErrors', TextType::class, [
+                'mapped' => false,
             ]);
 
-            $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
+            //$builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
+            $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateThumbnail']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Conservations::class,
+            'adoption_img' => null,
+            'license_img' => null,
         ]);
     }
 
-    public function validatePetHouseName(FormEvent $event)
+    public function validateThumbnail(FormEvent $event)
     {
-        $data = $event->getData();
         $form = $event->getForm();
-        if (in_array($data->getHandlingPetKind(), [AnilineConf::ANILINE_PET_KIND_DOG_CAT, AnilineConf::ANILINE_PET_KIND_DOG]) && !$data->getConservationHouseNameDog()) {
-            $form['DogHouseNameErrors']->addError(new FormError('入力されていません。'));
+        if (!$event->getForm()->getConfig()->getOptions()['adoption_img']) {
+            $form['ThumbnailPathErrors']->addError(new FormError('プロフィール写真をアップロードください。'));
         }
-        if (in_array($data->getHandlingPetKind(), [AnilineConf::ANILINE_PET_KIND_DOG_CAT, AnilineConf::ANILINE_PET_KIND_CAT]) && !$data->getConservationHouseNameCat()) {
-            $form['CatHouseNameErrors']->addError(new FormError('入力されていません。'));
+        if (!$event->getForm()->getConfig()->getOptions()['license_img']) {
+            $form['ThumbnailLicensePathErrors']->addError(new FormError('動物取扱業登録証の画像をアップロードしてください。'));
         }
     }
 }

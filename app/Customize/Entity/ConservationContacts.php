@@ -25,7 +25,7 @@ class ConservationContacts
      * @ORM\ManyToOne(targetEntity=ConservationContactHeader::class, inversedBy="ConservationContacts")
      * @ORM\JoinColumn(name="header_id", nullable=false)
      */
-    private $ConservationHeader;
+    private $ConservationContactHeader;
 
     /**
      * @ORM\Column(name="message_from", type="smallint", nullable=false)
@@ -56,19 +56,24 @@ class ConservationContacts
      */
     private $update_date;
 
+    /**
+     * @ORM\Column(name="is_reading", type="integer", nullable=false)
+     */
+    private $is_reading;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getConservationHeader(): ?ConservationContactHeader
+    public function getConservationContactHeader(): ?ConservationContactHeader
     {
-        return $this->ConservationHeader;
+        return $this->ConservationContactHeader;
     }
 
-    public function setConservationHeader(?ConservationContactHeader $ConservationHeader): self
+    public function setConservationContactHeader(?ConservationContactHeader $ConservationContactHeader): self
     {
-        $this->ConservationHeader = $ConservationHeader;
+        $this->ConservationContactHeader = $ConservationContactHeader;
 
         return $this;
     }
@@ -133,6 +138,18 @@ class ConservationContacts
     public function setUpdateDate($updateDate)
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+    public function getIsReading(): ?int
+    {
+        return $this->is_reading;
+    }
+
+    public function setIsReading(int $is_reading): self
+    {
+        $this->is_reading = $is_reading;
 
         return $this;
     }

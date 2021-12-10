@@ -13,6 +13,7 @@
 
 namespace Eccube\Repository;
 
+use Customize\Config\AnilineConf;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\EccubeConfig;
@@ -161,5 +162,28 @@ class CategoryRepository extends AbstractRepository
         $em = $this->getEntityManager();
         $em->remove($Category);
         $em->flush($Category);
+    }
+
+    /**
+     * Get number of product is_check_auth = 0 or is_check_auth = 1
+     *
+     * @param int $category
+     * @param object $customer
+     * @return int
+     */
+    public function getNumberOfProduct($category, $customer = null)
+    {
+        $query = $this->createQueryBuilder('c');
+        $query->innerJoin('Eccube\Entity\ProductCategory', 'pc', 'WITH', 'c.id = pc.category_id')
+            ->innerJoin('Eccube\Entity\Product', 'p', 'WITH', 'pc.product_id = p.id')
+            ->where('c.Parent = :Parent')
+            ->setParameter('Parent', $category);
+        
+        if (!$customer) {
+            $query->andWhere('p.is_check_auth = :is_check_auth')
+            ->setParameter('is_check_auth', AnilineConf::ANILINE_PRODUCT_CHECK_AUTH_FALSE);
+        }
+        $query->groupBy('pc.category_id')->select('count(pc.category_id) as count_product, c as category');
+        return $query->getQuery()->getResult();
     }
 }

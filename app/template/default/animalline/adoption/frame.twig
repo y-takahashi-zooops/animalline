@@ -47,16 +47,6 @@
             <div class="header-right">
                 <ul>
                 {% if is_granted('ROLE_USER') %}
-                    {# 保護団体登録が済んでいない場合のみ表示 
-                    {% if app.user.isConservation == 0 %}
-                        <li class="adoption">
-                            <a href="{{url('adoption_examination')}}" class="btn">
-                            <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="保護団体登録"/></i>
-                            <span>保護団体登録</span>
-                            </a>
-                        </li>
-                    {% endif %}
-                    #}
                     <li class="logout">
                         <a href="{{url('logout')}}" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -78,8 +68,8 @@
                 {% else %}
                     <li class="breeder">
                         <a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn">
-                        <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="保護団体登録"/></i>
-                        <span>保護団体登録</span>
+                        <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="保護団体様登録"/></i>
+                        <span>保護団体様登録</span>
                         </a>
                     </li>
                     <li class="login">
@@ -92,11 +82,11 @@
                         </a>
                     </li>
                     <li class="member">
-                        <a href="{{url('entry')}}?ReturnPath=adption_top" class="btn">
+                        <a href="{{url('entry')}}?ReturnPath=adoption_top" class="btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                         </svg>
-                        <span>会員登録</span>
+                        <span>里親希望舎様会員登録</span>
                         </a>
                     </li>
                 {% endif %}
@@ -141,15 +131,6 @@
             <div class="side-menu__list">
                 <ul>
                     {% if is_granted('ROLE_USER') %}
-                        {# 保護団体登録が済んでいない場合のみ表示 #}
-                        {% if app.user.isConservation == 0 %}
-                            <li class="adoption">
-                                <a href="{{url('adoption_examination')}}" class="btn">
-                                    <i><img src="{{ asset('assets/img/guide/icon-care.png') }}" width="12" height="12" alt="保護団体登録"/></i>
-                                    <span>保護団体登録</span>
-                                </a>
-                            </li>
-                        {% endif %}
                         <li class="logout">
                             <a href="{{url('logout')}}" class="btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -169,12 +150,18 @@
                             </a>
                         </li>
                     {% else %}
+                        <li class="breeder">
+                            <a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn">
+                            <i><img src="{{ asset('assets/img/guide/icon-bone2.png') }}" width="16" height="9" alt="保護団体様登録"/></i>
+                            <span>保護団体様登録</span>
+                            </a>
+                        </li>
                         <li class="member">
                             <a href="{{url('entry')}}?ReturnPath=adoption_top" class="btn">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                                     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                                 </svg>
-                                <span>会員登録</span>
+                                <span>里親希望舎様会員登録</span>
                             </a>
                         </li>
                         <li class="login">

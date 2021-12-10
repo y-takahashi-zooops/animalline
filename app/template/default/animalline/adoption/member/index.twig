@@ -5,8 +5,8 @@
 <div class="main">
     <div class="row">
         <div class="main-container col-12">
+            {% if user.regist_type == 0 %}
             <h1>マイページ</h1>
-            <!--
             <div class="row">
                 <div class="col-lg-4 col-md-12">
                     <a href="{{url('adoption_favorite')}}" class="btn btn-warning btn-block mt-3" role="button">お気に入り一覧</a>
@@ -15,9 +15,10 @@
                     <a href="{{url('adoption_all_message')}}" class="btn btn-warning btn-block mt-3" role="button">取引メッセージ</a>
                 </div>
             </div>
-            -->
+            {% endif %}
+            
             <div class="m-2 p-2"></div>
-            {% if user.isConservation == 0 %}
+            {% if user.isConservation == 0 and user.regist_type == 2 %}
                 <h3>保護団体登録申請</h3>
                 <div class="row">
                     <div class="col-lg-4 col-md-12">

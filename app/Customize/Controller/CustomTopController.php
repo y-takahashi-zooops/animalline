@@ -65,28 +65,12 @@ class CustomTopController extends AbstractController
      */
     public function index()
     {
-        //return $this->redirectToRoute("breeder_top");
+        $customer = $this->getUser();
 
-        /*
-        // 犬療法食
-        $category = $this->categoryRepository->find(7);
-        $searchData["category_id"] = $category;
+        $categoryChildDog = $this->categoryRepository->getNumberOfProduct(7, $customer);
+        $categoryChildCat = $this->categoryRepository->getNumberOfProduct(8, $customer);
+        $categoryChildBeside = $this->categoryRepository->getNumberOfProduct(9, $customer);
 
-        $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
-
-        $query = $qb->getQuery();
-        $products_dog = $query->getResult();
-
-        // 犬準療法食
-        $category = $this->categoryRepository->find(15);
-        $searchData["category_id"] = $category;
-
-        $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
-
-        $query = $qb->getQuery();
-        $products_dog_semi = $query->getResult();
-        */
-        // 新着商品
         $searchData["category_id"] = null;
         $searchData['orderby'] = $this->productListOrderByRepository->find(2);
 
@@ -96,6 +80,9 @@ class CustomTopController extends AbstractController
         $products_new = $query->getResult();
 
         return [
+            'categoryChildDog' => $categoryChildDog,
+            'categoryChildCat' => $categoryChildCat,
+            'categoryChildBeside' => $categoryChildBeside,
             'products_new' => $products_new
         ];
     }
@@ -117,10 +104,21 @@ class CustomTopController extends AbstractController
     /**
      * 利用規約
      * 
-     * @Route("/terms", name="ani_terms")
-     * @Template("ani_terms.twig")
+     * @Route("/bterms", name="breeder_user_terms")
+     * @Template("breeder_user_terms.twig")
      */
-    public function terms()
+    public function breeder_terms()
+    {
+        return [];
+    }
+
+    /**
+     * 利用規約
+     * 
+     * @Route("/aterms", name="adoption_user_terms")
+     * @Template("adoption_user_terms.twig")
+     */
+    public function adoption_terms()
     {
         return [];
     }

@@ -35,11 +35,6 @@ class BreederEvaluations
     private $evaluation_value;
 
     /**
-     * @ORM\Column(name="evaluation_title", type="string", length=255, nullable=false)
-     */
-    private $evaluation_title;
-
-    /**
      * @ORM\Column(name="evaluation_message", type="text", nullable=false)
      */
     private $evaluation_message;
@@ -88,18 +83,6 @@ class BreederEvaluations
     public function setEvaluationValue(int $evaluation_value): self
     {
         $this->evaluation_value = $evaluation_value;
-
-        return $this;
-    }
-
-    public function getEvaluationTitle(): ?string
-    {
-        return $this->evaluation_title;
-    }
-
-    public function setEvaluationTitle(string $evaluation_title): self
-    {
-        $this->evaluation_title = $evaluation_title;
 
         return $this;
     }

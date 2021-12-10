@@ -110,11 +110,13 @@
                                         <textarea {{ params.isScroll is defined ? 'autofocus' }} aria-label="dialog-chat" class="col-12 p-2" rows="5" name="reply_message"
                                             placeholder="返信メッセージ"></textarea>
                                         <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">返信メッセージ送信</button>
-                                        ここに取引が完了した際の報告で特典が受けられることの説明を表記する
+                                        ・取引が成立した場合は“取引成約”ボタンを押してください<br />
+                                        ・取引が成立しなかった場合は“取引不成約”ボタンを押してください<br />
+                                        オーナー様、ブリーダー様双方からの取引成約を確認した時点で取引成立となります。
                                         <div class="d-flex flex-sm-column flex-md-row justify-content-between">
-                                            <button type="button" {{ message.breederCheck ? 'disabled' }} class="ec-blockBtn--action mt-2" id="contract">取引成約を報告して特典を受け取る</button>
+                                            <button type="button" {{ message.breederCheck ? 'disabled' }} class="ec-blockBtn--action mt-2" id="contract">取引成約</button>
                                             <button type="button" {{ message.breederCheck ? 'disabled' }} class="ec-blockBtn--cancel mt-2" id="cancel">
-                                                取引は成約しませんでした
+                                                取引不成約
                                             </button>
                                         </div>
                                     </form>

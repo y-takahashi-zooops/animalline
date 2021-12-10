@@ -24,16 +24,13 @@
                         <div class="col-sm-8">
                             <h3 class="font-weight-500 color-gray-500 mb-4">{{ pet.BreedsType.breedsName ?? '' }}</h3>
                             <div class="d-flex mb-2">
-                                <h6>誕生日：{{ pet.petBirthday|date('Y年m月d日') }}生</h6>
+                                <h6>年齢：{{ pet.petAge }}</h6>
                             </div>
                             <div class="d-flex mb-2">
                                 <h6>色：{{ pet.getCoatColor() ?? '' }}</h6>
                             </div>
                             <div class="d-flex mb-2">
                                 <h6>性別：{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h6>
-                            </div>
-                            <div class="d-flex mb-2">
-                                <h6>価格：{{ pet.price }}円</h6>
                             </div>
                             <a target="_blank" href="{{ url('adoption_pet_detail', {'id': message.getPet.Id}) }}">
                                 <h4 class="color-adoption d-inline-block">ペット詳細ページへ</h4>

@@ -1,0 +1,16 @@
+{% autoescape false %}
+
+{% if data.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER') %}
+ブリーダーから返信が届きました。
+
+マイページの「取引メッセージ」よりご確認をお願い致します。
+↓↓取引メッセージページはこちら
+{{ url("breeder_all_message") }}
+{% else %}
+お客様よりお問い合わせがございました。
+
+マイページの「問い合わせ対応」よりご確認をお願い致します。
+↓↓問い合わせ対応ページはこちら
+{{ url("breeder_all_breeder_message") }}
+{% endif %}
+{% endautoescape %}

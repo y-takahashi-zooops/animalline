@@ -44,7 +44,7 @@ class CustomContactController extends ContactController
     /**
      * お問い合わせ画面.
      *
-     * @Route("/ec/contact", name="contact")
+     * @Route("/ec/contact", name="ec_contact")
      * @Template("Contact/index.twig")
      */
     public function index(Request $request)
@@ -110,7 +110,7 @@ class CustomContactController extends ContactController
                     // メール送信
                     $this->mailService->sendContactMail($data);
 
-                    return $this->redirect($this->generateUrl('contact_complete'));
+                    return $this->redirect($this->generateUrl('ec_contact_complete'));
             }
         }
 
@@ -122,7 +122,7 @@ class CustomContactController extends ContactController
     /**
      * お問い合わせ完了画面.
      *
-     * @Route("/ec/contact/complete", name="contact_complete")
+     * @Route("/ec/contact/complete", name="ec_contact_complete")
      * @Template("Contact/complete.twig")
      */
     public function complete()

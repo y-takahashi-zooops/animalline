@@ -10,11 +10,12 @@
 生年月日　　 ： {{ data.pet_birthday }}
 バンドカラー ： {{ data.pet_bandcolor }}
 
-↓↓　マイページはこちら
+↓↓　マイページのペット情報はこちらです。
+    サイトに掲載しない場合は"サイトに掲載しない"を押してください。
 {% if data.site_kind == 1 %}
-{{ url("breeder_mypage") }}
+{{ url("breeder_pets_edit",{'id' : data.pet_id}) }}
 {% else %}
-{{ url("adoption_mypage") }}
+{{ url("adoption_pets_edit",{'id' : data.pet_id}) }}
 {% endif %}
 
 今後ともAnimallineをよろしくお願い致します。

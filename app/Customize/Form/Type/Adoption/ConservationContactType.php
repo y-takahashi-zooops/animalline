@@ -55,18 +55,6 @@ class ConservationContactType extends AbstractType
                 'required' => true,
                 'expanded' => false,
             ])
-            ->add('contact_title', TextType::class, [
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
-                ],
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => $this->eccubeConfig['eccube_stext_len'],
-                        'min' => 0
-                    ]),
-                ],
-                'required' => false,
-            ])
             ->add('contact_description', TextareaType::class, [
                 'required' => false,
             ])

@@ -119,7 +119,8 @@ class ExportInstockSchedule extends Command
             ->where('ihd.is_send_wms = 0')
             //->setParameters(['to' => $now])
             ->orderBy('isd.update_date', 'DESC');
-        $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_INSTOCK_SCHEDULE], ['sync_date' => 'DESC']);
+
+        //$syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_INSTOCK_SCHEDULE], ['sync_date' => 'DESC']);
         /*
         if ($syncInfo) {
             $qb = $qb->andWhere('isd.update_date >= :from')
@@ -127,12 +128,14 @@ class ExportInstockSchedule extends Command
         }
         */
         $records = $qb->getQuery()->getArrayResult();
+        echo $qb->getQuery()->getSQL();
 
         if (!$records) {
             log_info("No record instock export csv.\n");
             return;
         }
         $result = [];
+        var_dump($records);
         foreach ($records as $record) {
             $header = $this->instockScheduleHeaderRepository->find($record["invoiceNumber"]);
 
