@@ -26,6 +26,9 @@
     <div class="row">
         <div class="col-md-3">
             {{ form_label(form.thumbnail_path, '保護犬猫画像', { 'label_attr': {'class': 'ec-label' }}) }}
+            <div class="ec-input" id="breeder_img_error">
+                {{ form_errors(form.ImagePathErrors) }}
+            </div>
         </div>
     </div>
     <div class="form_img_inline">
@@ -89,6 +92,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.pet_sex, '性別', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
             {{ form_widget(form.pet_sex) }}
@@ -120,6 +124,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.pet_sex, 'ワクチン接種', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
             {{ form_widget(form.is_vaccine) }}
@@ -130,6 +135,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.pet_sex, '去勢・避妊', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
             {{ form_widget(form.is_castration) }}
@@ -140,6 +146,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.pet_sex, '単身者応募', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
             {{ form_widget(form.is_single) }}
@@ -150,6 +157,7 @@
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.pet_sex, '高齢者応募', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+            <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
             {{ form_widget(form.is_senior) }}

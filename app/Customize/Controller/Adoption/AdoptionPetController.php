@@ -176,8 +176,10 @@ class AdoptionPetController extends AbstractController
         $image4 = $request->get('img4') ?? '';
 
         $conservationPet = new ConservationPets();
+
         $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
             'customer' => $user,
+            'image1' => $image0,
         ]);
         $form->handleRequest($request);
 
