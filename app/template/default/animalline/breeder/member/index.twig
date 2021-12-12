@@ -15,8 +15,9 @@
                 <div class="col-lg-4 col-md-12">
                     <a href="{{url('breeder_favorite')}}" class="btn btn-warning btn-block mt-3" role="button">お気に入り一覧</a>
                 </div>
-                <div class="col-lg-4 col-md-12">
+                <div class="col-lg-4 col-md-12" style="text-align: center">
                     <a href="{{url('breeder_all_message')}}" class="btn btn-warning btn-block mt-3" role="button">取引メッセージ</a>
+                    {% if customer_newmsg == 1 %}<span style="color: red;">新着メッセージあり</span>{% endif %}
                 </div>
             </div>
             {% endif %}
@@ -44,8 +45,9 @@
                     <div class="col-lg-4 col-md-12">
                         <a href="{{url('breeder_pet_list')}}" class="btn btn-success btn-block mt-3" role="button">ペット管理</a>
                     </div>
-                    <div class="col-lg-4 col-md-12">
+                    <div class="col-lg-4 col-md-12" style="text-align: center">
                         <a href="{{url('breeder_all_breeder_message')}}" class="btn btn-warning btn-block mt-3" role="button">お問い合わせ対応</a>
+                        {% if breeder_newmsg == 1 %}<span style="color: red;">新着メッセージあり</span>{% endif %}
                     </div>
                 </div>
                 {% if breeder %}

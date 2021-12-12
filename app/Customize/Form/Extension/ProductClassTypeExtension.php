@@ -66,7 +66,7 @@ class ProductClassTypeExtension extends AbstractTypeExtension
                 'required' => false,
                 'constraints' => [
                     new Assert\Length([
-                        'min' => 13,
+                        'min' => 8,
                         'max' => 13,
                     ]),
                 ]
