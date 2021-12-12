@@ -390,6 +390,11 @@ file that was distributed with this source code.
                                         <div class="ec-imageGrid">
                                             <div class="ec-imageGrid__img"><img src="{{ asset((orderItem.product is null ? null : orderItem.product.MainListImage)|no_image_product, 'save_image') }}" alt="{{ orderItem.productName }}"></div>
                                             <div class="ec-imageGrid__content">
+                                                {% if orderItem.isRepeat %}
+                                                    <div class="ec-cartRow_subscription">
+                                                        <span class="subscriptionText" style="margin-left: 0;">定期便</span>
+                                                    </div>
+                                                {% endif %}
                                                 <p>{{ orderItem.productName }}{% if is_reduced_tax_rate(orderItem) %}{{ '※'|trans }}{% set isShowReducedTaxMess = true %}{% endif %}</p>
                                                 {% if orderItem.productClass is not null and orderItem.productClass.classCategory1 %}
                                                     <p>{{ orderItem.productClass.classCategory1.className.name }}：{{ orderItem.productClass.classCategory1 }}</p>
@@ -398,6 +403,9 @@ file that was distributed with this source code.
                                                     <p>{{ orderItem.productClass.classCategory2.className.name }}：{{ orderItem.productClass.classCategory2 }}</p>
                                                 {% endif %}
                                                 <p>{{ orderItem.priceIncTax|price }} × {{ orderItem.quantity|number_format }}<span>{{ '小計：'|trans }}{{ orderItem.totalPrice|price }}</span></p>
+                                                {% if orderItem.isRepeat %}
+                                                    <br><p>配送周期：{{ orderItem.repeatSpan }}{{ orderItem.spanUnit == 0 ? '日' : 'ヶ月'}}</p>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </li>

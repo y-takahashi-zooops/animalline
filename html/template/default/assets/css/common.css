@@ -54,7 +54,7 @@ img{
 main{
   position:relative;
   max-width: 1280px;
-  margin: auto;
+  margin: 0 auto 1rem;
 }
 
 /*------------------

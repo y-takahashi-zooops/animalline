@@ -188,3 +188,6 @@ services:
 
     Customize\Service\CartService:
         decorates: Eccube\Service\CartService
+        
+    Customize\Service\OrderHelper:
+        decorates: Eccube\Service\OrderHelper
