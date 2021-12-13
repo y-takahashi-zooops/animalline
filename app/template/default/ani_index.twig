@@ -2,88 +2,32 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
-    <section id="main-visual">
-        <ul class="main-visual_slider">
-            <li class="main-visual_slider_1">
-            <div class="main-visual__content">
-                <div class="main-visual__content_text">
-                <p><img src="{{ asset('assets/img/top-mv01-copy.png') }}" alt="ブリーダーと飼い主をつなぐ。アニマルラインブリーダー"/></p>
-                <div class="main-visual__content_text_btn"><a href="{{url('breeder_info')}}"><i class="bi bi-arrow-right-circle-fill"></i>詳しくはこちら</a></div>
-                </div>
-            </div>
-            </li>
-            <li class="main-visual_slider_2">
-            <div class="main-visual__content">
-                <div class="main-visual__content_text">
-                <p><img src="{{ asset('assets/img/top-mv02-copy.png') }}" alt="里親を探している・なりたい方。アニマルラインアドプション"/></p>
-                <div class="main-visual__content_text_btn"><a href="{{url('adoption_info')}}"><i class="bi bi-arrow-right-circle-fill"></i>詳しくはこちら</a></div>
-                </div>
-            </div>
-            </li>
-        </ul>
-    </section>
 
-    <section id="top-content">
-      <article class="top-content_02">
-        <div class="top-content__icon"><img src="{{ asset('assets/img/top-icon02.png') }}" alt="Animalline Adoption"/></div>
-        <div class="top-content__container">
-          <figure class="top-content__container_image"><img src="{{ asset('assets/img/top-bg02.jpg') }}" alt="Animalline Adoption"/></figure>
-          <div class="top-content__container_text">
-            <h2>保護犬・猫と里親になりたい方のマッチングサイト</h2>
-            <div class="top-content__container_text_wrap">
-              <div class="top-content__container_text_logo"><a href="{{url('adoption_top')}}"><img src="{{ asset('assets/img/top-logo02.png') }}" alt="Animalline Adoption"/></a></div>
-              <p>Animalline Adoptionは飼い主のいない保護犬猫の里親を探している方と、保護犬猫の里親になりたい方をつなぐマッチングサイトです。</p>
-              <div class="top-content__container_text_btn"><a href="{{url('adoption_info')}}"><i class="bi bi-search"></i>詳しくはこちら</a></div>
-            </div>
-          </div>
+    <div class="row">
+      <div class="col-md-6" style="padding: 4rem">
+        <h2 style="border-bottom:solid #f08200 1px;font-size: 18px;text-align:center;margin-bottom:3rem;">保護犬・猫と里親になりたい方のマッチングサイト</h2>
+        <div class="top-content__container_text_wrap" style="width: 70%;margin:auto">
+          <div class="top-content__container_text_logo" style="margin-bottom:2rem"><a href="{{url('adoption_top')}}"><img src="{{ asset('assets/img/top-logo02.png') }}" alt="Animalline Adoption"/></a></div>
+          <p style="text-align:left;font-size:18px;line-height:2.4;margin:0 0 40px;">Animalline Adoptionは飼い主のいない保護犬猫の里親を探している方と、保護犬猫の里親になりたい方をつなぐマッチングサイトです。</p>
+          <div class="top-content__container_text_btn"><a href="{{url('adoption_info')}}">里親になりたい方は<br>こちら</a></div>
+          <div class="top-content__container_text_btn"><a href="{{url('adoption_top_reg')}}">保護犬猫を掲載したい方は<br>こちら</a></div>
         </div>
-      </article>
+      </div>
 
-      <article class="top-content_01">
-        <div class="top-content__icon"><img src="{{ asset('assets/img/top-icon01.png') }}" alt="Animalline Breeder"/></div>
-        <div class="top-content__container">
-          <figure class="top-content__container_image"><img src="{{ asset('assets/img/top-bg01.jpg') }}" alt="Animalline Breeder"/></figure>
-          <div class="top-content__container_text">
-            <h2>ブリーダーと飼い主のためのマッチングサイト</h2>
-            <div class="top-content__container_text_wrap">
-              <div class="top-content__container_text_logo"><a href="{{url('breeder_top')}}"><img src="{{ asset('assets/img/top-logo01.png') }}" alt="Animalline Breeder"/></a></div>
-              <p>Animalline Breederは自慢の子犬・子猫をお譲りしたいブリーダーと、ブリーダーから直接子犬・子猫をご購入したい方をつなぐマッチングサイトです。</p>
-              <div class="top-content__container_text_btn"><a href="{{url('breeder_info')}}"><i class="bi bi-search"></i>詳しくはこちら</a></div>
-            </div>
-          </div>
+
+
+      <div class="col-md-6" style="padding: 4rem">
+        <h2 style="border-bottom:solid #f08200 1px;font-size: 18px;text-align:center;margin-bottom:3rem;">ブリーダーと飼い主のためのマッチングサイト</h2>
+        <div class="top-content__container_text_wrap" style="width: 70%;margin:auto">
+          <div class="top-content__container_text_logo" style="margin-bottom:2rem"><a href="{{url('breeder_top')}}"><img src="{{ asset('assets/img/top-logo01.png') }}" alt="Animalline Breeder"/></a></div>
+          <p style="text-align:left;font-size:18px;line-height:2.4;margin:0 0 40px;">Animalline Breederは自慢の子犬・子猫をお譲りしたいブリーダーと、ブリーダーから直接子犬・子猫をご購入したい方をつなぐマッチングサイトです。</p>
+          <div class="top-content__container_text_btn_02"><a href="{{url('breeder_info')}}">子犬・子猫をお迎えしたい方は<br>こちら</a></div>
+          <div class="top-content__container_text_btn_02"><a href="{{url('breeder_top_reg')}}"></i>ブリーダー様は<br>こちら</a></div>
         </div>
-      </article>
-      
-      <article class="top-content_03">
-        <div class="top-content__icon"><img src="{{ asset('assets/img/top-icon03.png') }}" alt="ペットの家庭教師"/></div>
-        <div class="top-content__container">
-          <figure class="top-content__container_image"><img src="{{ asset('assets/img/top-bg03.jpg') }}" alt="ペットの家庭教師"/></figure>
-          <div class="top-content__container_text">
-            <div class="top-content__container_text_wrap">
-              <div class="top-content__container_text_logo"><a href="{{ url("ani_dctn_info") }}"><img src="{{ asset('assets/img/top-logo03.png') }}" alt="ペットの家庭教師"/></a></div>
-              <p>「ペットの家庭教師」では、ご自宅にうかがい、生活環境や個性を確認のうえ、プライベート・しつけトレーニングをご提供します。</p>
-              <div class="top-content__container_text_btn"><a href="{{ url("ani_dctn_info") }}"><i class="bi bi-arrow-right-circle-fill"></i>詳しくはこちら</a></div>
-            </div>
-          </div>
-        </div>
-      </article>
-      {% if is_granted('ROLE_USER') %}
-        <article class="top-content_04">
-            <div class="top-content__icon"><img src="{{ asset('assets/img/top-icon04.png') }}" alt="Animalline EC SHOP"/></div>
-            <div class="top-content__container">
-            <figure class="top-content__container_image"><img src="{{ asset('assets/img/top-bg04.jpg') }}" alt="Animalline EC SHOP"/></figure>
-            <div class="top-content__container_text">
-                <div class="top-content__container_text_wrap">
-                <div class="top-content__container_text_logo"><a href="{{url('homepage')}}"><img src="{{ asset('assets/img/top-logo04.png') }}" alt="Animalline EC SHOP"/></a></div>
-                <p>しつけから消耗品まで、ペットに関わる様々な商品・サービスを提供しています。</p>
-                <div class="top-content__container_text_btn"><a href="{{url('homepage')}}"><i class="bi bi-cart3"></i>ショップへ</a></div>
-                </div>
-            </div>
-            </div>
-        </article>
-    {% endif %}
-    </section>
-    
+      </div>
+    </div>
+
+    {#
     <section id="top-topics">
       <div class="top-topics__title">
         <h2>TOPICS<small>新着情報</small></h2>
@@ -128,6 +72,7 @@
         </ul>
       </div>
     </section>
+    #}
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/common-style.css') }}">

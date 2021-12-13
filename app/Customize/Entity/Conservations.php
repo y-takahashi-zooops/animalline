@@ -129,6 +129,16 @@ class Conservations
     private $thumbnail_path;
 
     /**
+     * @ORM\Column(name="license_no", type="string", length=255, nullable=true)
+     */
+    private $license_no;
+
+    /**
+     * @ORM\Column(name="license_thumbnail_path", type="string", length=255, nullable=true)
+     */
+    private $license_thumbnail_path;
+
+    /**
      * @ORM\OneToMany(targetEntity=ConservationPets::class, mappedBy="Conservation")
      */
     private $ConservationPets;
@@ -391,6 +401,30 @@ class Conservations
         return $this->getUsername() == $user->getUsername();
     }
 
+    public function getLicenseNo(): ?string
+    {
+        return $this->license_no;
+    }
+
+    public function setLicenseNo(?string $license_no): self
+    {
+        $this->license_no = $license_no;
+
+        return $this;
+    }
+
+    public function getLicenseThumbnailPath(): ?string
+    {
+        return $this->license_thumbnail_path;
+    }
+
+    public function setLicenseThumbnailPath(?string $license_thumbnail_path): self
+    {
+        $this->license_thumbnail_path = $license_thumbnail_path;
+
+        return $this;
+    }
+    
     /**
      * Get createDate.
      *

@@ -211,15 +211,45 @@ class ConservationsType extends AbstractType
                 // 'required' => false,
                 'required' => true,
                 'mapped' => false
+            ])
+            ->add('license_thumbnail_path', FileType::class, [
+                'mapped' => false,
+                'required' => true
+            ])
+            ->add('license_no', TextType::class, [
+                'required' => false,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+            ])
+            ->add('ThumbnailPathErrors', TextType::class, [
+                'mapped' => false,
+            ])
+            ->add('ThumbnailLicensePathErrors', TextType::class, [
+                'mapped' => false,
             ]);
 
             //$builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
+            $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateThumbnail']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Conservations::class,
+            'adoption_img' => null,
+            'license_img' => null,
         ]);
+    }
+
+    public function validateThumbnail(FormEvent $event)
+    {
+        $form = $event->getForm();
+        if (!$event->getForm()->getConfig()->getOptions()['adoption_img']) {
+            $form['ThumbnailPathErrors']->addError(new FormError('プロフィール写真をアップロードください。'));
+        }
+        if (!$event->getForm()->getConfig()->getOptions()['license_img']) {
+            $form['ThumbnailLicensePathErrors']->addError(new FormError('動物取扱業登録証の画像をアップロードしてください。'));
+        }
     }
 }

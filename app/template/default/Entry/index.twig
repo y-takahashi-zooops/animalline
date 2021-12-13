@@ -32,7 +32,14 @@ file that was distributed with this source code.
 {% block main %}
     <div class="ec-registerRole">
         <div class="ec-pageHeader">
-            <h1>{{ '新規会員登録'|trans }}</h1>
+            
+{% if request.get('ReturnPath') =="adoption_mypage" %}
+    <h1>{{ '新規保護団体代表者様登録'|trans }}</h1>
+{% elseif request.get('ReturnPath') =="breeder_mypage" %}
+    <h1>{{ '新規ブリーダー様登録'|trans }}</h1>
+{% else %}
+    <h1>{{ '新規会員登録'|trans }}</h1>
+{% endif %}
         </div>
         {% if request.get('ReturnPath') =="adoption_mypage" %}
         <div style="border: solid 1px; padding: 1rem;"><b>代表者様の情報をご記入ください。団体情報のご記入 は本会員登録後にございます。</b></div>

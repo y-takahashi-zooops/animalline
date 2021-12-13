@@ -3,17 +3,16 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">取引キャンセル</h3>
+                <h3 class="modal-title" id="exampleModalLabel">取引不成立</h3>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="mb-2">
-                    <span>お取引をキャンセルします。</span><br>
-                    <span>キャンセル理由を以下から選択してください。</span><br>
+                    <span>今回はお取引となりませんでした。<br />お間違いない場合は“はい”を選んでください。</span><br>
                 </div>
-                <div class="ec-select">
+                <div class="ec-select" style="display: none">
                     <select aria-label="reason" name="reason">
                         {% for reason in reasons %}
                             <option value="{{ reason.id }}">{{ reason.reason }}</option>

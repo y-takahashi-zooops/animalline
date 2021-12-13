@@ -54,7 +54,7 @@ img{
 main{
   position:relative;
   max-width: 1280px;
-  margin: auto;
+  margin: 0 auto 1rem;
 }
 
 /*------------------
@@ -657,7 +657,6 @@ TOP
 #top-content article{
   padding:0 0 160px;
   position:relative;
-  min-width:1360px;
 }
 #top-content .top-content__icon{
   position:absolute;
@@ -672,7 +671,6 @@ TOP
   height:auto;
 }
 #top-content .top-content__container{
-  display:flex;
   align-items:center;
   min-height:600px;
 }
@@ -711,7 +709,7 @@ TOP
   text-align:left;
 }
 #top-content article:nth-child(odd) .top-content__container_text {
-  text-align:right;
+  text-align:center;
   padding:0 10% 0 0;
 }
 #top-content .top-content__container_text h2{
@@ -721,7 +719,7 @@ TOP
   margin:0 0 60px;
 }
 #top-content article:nth-child(odd) .top-content__container_text h2{
-  text-align:right;
+  text-align:center;
 }
 #top-content .top-content__container_text_wrap{
   max-width:360px;
@@ -742,27 +740,65 @@ TOP
   line-height:2.4;
   margin:0 0 40px;
 }
-#top-content .top-content__container_text_btn{
+
+
+.top-content__container_text_btn{
   text-align:center;
 }
-#top-content .top-content__container_text_btn a{
-  padding:20px 0;
+.top-content__container_text_btn a{
+  padding:20px 20px;
+  margin-bottom:2rem;
   border-radius:10px;
   color:#fff;
-  font-size:30px;
+  font-size:20px;
   font-weight:500;
   letter-spacing:.1em;
   position:relative;
   display:block;
 }
-#top-content .top-content__container_text_btn a:hover{
+
+.top-content__container_text_btn a:hover{
   opacity:.8;
 }
-#top-content .top-content__container_text_btn a i{
+.top-content__container_text_btn a i{
   position:absolute;
   top:20px;
   left:20px;
 }
+
+.top-content__container_text_btn a{
+  background-color:#ffc000;
+}
+
+.top-content__container_text_btn_02{
+  text-align:center;
+}
+.top-content__container_text_btn_02 a{
+  padding:20px 20px;
+  margin-bottom:2rem;
+  border-radius:10px;
+  color:#fff;
+  font-size:20px;
+  font-weight:500;
+  letter-spacing:.1em;
+  position:relative;
+  display:block;
+}
+
+.top-content__container_text_btn_02 a:hover{
+  opacity:.8;
+}
+.top-content__container_text_btn_02 a i{
+  position:absolute;
+  top:20px;
+  left:20px;
+}
+
+.top-content__container_text_btn_02 a{
+  background-color:#92d050;
+}
+
+
 #top-content article.top-content_01{
   
 }
@@ -1008,7 +1044,7 @@ Width <= 980px
     min-height: auto;
 }
 #top-content .top-content__container_image{
-  width:100%;
+  width:50%;
   height:400px;
 }
 #top-content .top-content__container_text{

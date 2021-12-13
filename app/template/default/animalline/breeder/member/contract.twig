@@ -15,7 +15,8 @@
                             name="contract-form">
                             {{ form_widget(form._token) }}
                             <p class="ec-para-nomal">
-                                お取引をしたブリーダーについて、お客様のご感想をお聞かせください。
+                                お取引をしたブリーダーについて、お客様のご感想をお聞かせください。<br />
+                                ※ご記入いただいた内容はAnimalline サイト上で公開されます。
                             </p>
                             <div class="ec-borderedDefs">
                                 <dl>
@@ -26,18 +27,6 @@
                                     <dd class="ec-radio{{ has_errors(form.evaluation_value) ? ' error' }}">
                                         {{ form_widget(form.evaluation_value) }}
                                         {{ form_errors(form.evaluation_value) }}
-                                    </dd>
-                                </dl>
-                                <dl>
-                                    <dt>
-                                        <label class="ec-label required">タイトル</label>
-                                        <span class="ec-required">必須</span>
-                                    </dt>
-                                    <dd>
-                                        <div class="ec-input{{ has_errors(form.evaluation_title) ? ' error' }}">
-                                            {{ form_widget(form.evaluation_title) }}
-                                            {{ form_errors(form.evaluation_title) }}
-                                        </div>
                                     </dd>
                                 </dl>
                                 <dl>
@@ -55,6 +44,7 @@
                                 <dl>
                                     <dt>
                                         <label class="ec-label" for="breeders_thumbnail_path">画像</label>
+                                        <p style="font-size:14px;color:#DE5D50;">お迎えしたワンちゃん・ネコちゃんの<br />写真をお願い致します。</p>
                                     </dt>
                                     <dd>
                                         <div class="media-body">

@@ -11,6 +11,27 @@ var bs_modal = $('#modal-crop');
 var image = document.getElementById('image');
 var cropper, reader, file, size;
 
+var conservationsLicenseImg = document.getElementById('img_license_thumbnail');
+var conservationsLicenseImgSrc = conservationsLicenseImg.getAttribute('src');
+if (conservationsLicenseImgSrc) {
+    $('#conservations_license_img_error').hide();
+}
+
+$("body").on("change", "#conservations_license_thumbnail_path", function (e) {
+    conservationsImgFlg = false;
+    $('#conservations_license_img_error').hide();
+});
+
+$("body").on("change", ".license_thumbnail_path", function (e) {
+    if (this.files && this.files[0] && this.files[0].size < 5000000) {
+        let reader = new FileReader();
+        reader.readAsDataURL(this.files[0]);
+        upload(reader)
+    } else {
+        alert('File too large!')
+    }
+});
+
 $("body").on("change", "#conservations_thumbnail_path", function (e) {
     e.preventDefault();
     var files = e.target.files;
@@ -76,3 +97,20 @@ $("#crop").click(function () {
         };
     });
 });
+
+function upload(reader) {
+    reader.onloadend = function () {
+        var base64data = reader.result;
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "/adoption/configration/pets/upload",
+            data: {image: base64data},
+            success: function (data) {
+                bs_modal.modal('hide');
+               $('#img_license_thumbnail').attr('src', '/' + data).removeClass('hidden')
+               $('#conservations_license_src_path').val('/' + data);
+            }
+        });
+    };
+}

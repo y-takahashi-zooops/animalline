@@ -1,0 +1,18 @@
+{% autoescape false %}
+{% if site_type == 1 %}
+購入希望者から取引不成立の通知が届きました。
+
+↓↓ 取引メッセージはこちらで確認可能です。
+{{ url('breeder_breeder_message', {'id' : msgheader.getId()}) }}
+
+今後ともアニマルラインをよろしくお願い致します。
+{% else %}
+里親希望者から取引不成立の通知が届きました。
+
+↓↓ 取引メッセージはこちらで確認可能です。
+{{ url('adoption_adoption_message', {'id' : msgheader.getId()}) }}
+
+今後ともアニマルラインをよろしくお願い致します。
+{% endif %}
+
+{% endautoescape %}

@@ -24,16 +24,13 @@
                         <div class="col-sm-8">
                             <h3 class="font-weight-500 color-gray-500 mb-4">{{ pet.BreedsType.breedsName ?? '' }}</h3>
                             <div class="d-flex mb-2">
-                                <h6>誕生日：{{ pet.petBirthday|date('Y年m月d日') }}生</h6>
+                                <h6>年齢：{{ pet.petAge }}</h6>
                             </div>
                             <div class="d-flex mb-2">
                                 <h6>色：{{ pet.getCoatColor() ?? '' }}</h6>
                             </div>
                             <div class="d-flex mb-2">
                                 <h6>性別：{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h6>
-                            </div>
-                            <div class="d-flex mb-2">
-                                <h6>価格：{{ pet.price }}円</h6>
                             </div>
                             <a target="_blank" href="{{ url('adoption_pet_detail', {'id': message.getPet.Id}) }}">
                                 <h4 class="color-adoption d-inline-block">ペット詳細ページへ</h4>
@@ -140,14 +137,17 @@
                                         <textarea {{ params.isScroll is defined ? 'autofocus' }} aria-label="dialog-chat" class="col-12 p-2" rows="5" name="reply_message"
                                             placeholder="返信メッセージ"></textarea>
                                         <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">返信メッセージ送信</button>
-                                        ここに取引が完了した際の報告で特典が受けられることの説明を表記する
+                                        犬舎／猫舎見学後、下のボタンを押してください。<br />
+                                        ・譲渡が成立した場合は“取引成約”ボタンを押してください<br />
+                                        ・譲渡が成立しなかった場合は“取引不成約”ボタンを押してください<br />
+                                        里親様、保護団体様双方からの取引成約を確認後 Animalline の特典をご案内いたします。
                                         <div class="d-flex flex-sm-column flex-md-row justify-content-between">
                                             <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--action mt-2"
                                                 type="button" id="contract">
-                                                取引成約を報告する
+                                                取引成約
                                             </button>
                                             <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--cancel mt-2" id="cancel">
-                                                取引は成約しませんでした
+                                                取引不成約
                                             </button>
                                         </div>
                                     </form>

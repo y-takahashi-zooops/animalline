@@ -167,23 +167,7 @@ class BreederController extends AbstractController
         return [];
     }
 
-    /**
-     * @Route("/breeder/guide/dog", name="breeder_guide_dog")
-     * @Template("animalline/breeder/guide/dog.twig")
-     */
-    public function breeder_guide_dog()
-    {
-        return [];
-    }
-
-    /**
-     * @Route("/breeder/guide/cat", name="breeder_guide_cat")
-     * @Template("animalline/breeder/guide/cat.twig")
-     */
-    public function breeder_guide_cat()
-    {
-        return [];
-    }
+    
 
     /**
      * ブリーダーマイページ
@@ -192,6 +176,28 @@ class BreederController extends AbstractController
      * @Template("animalline/breeder/member/index.twig")
      */
     public function breeder_mypage(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * サイトイメージ（スマホ）
+     *
+     * @Route("/breeder/simage_sp/", name="breeder_simage_sp")
+     * @Template("animalline/breeder/simage_sp.twig")
+     */
+    public function simage_sp(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * サイトイメージ（スマホ）
+     *
+     * @Route("/breeder/simage_pc/", name="breeder_simage_pc")
+     * @Template("animalline/breeder/simage_pc.twig")
+     */
+    public function simage_pc(Request $request)
     {
         return [];
     }

@@ -29,9 +29,9 @@
 <!-- サイト説明 -->
 <section id="sec01" class="top_margin_l">
 	<div class="SiteDescription">
-		アニマルラインはペットオーナー・ブリーダー・動物保護団体３者すべてに“やさしい”ビジネスモデルを目指します。<br />「ブリーダーの皆さま」には参加メリットを、「ペットオーナー」には安心・安全を提供します。
+		昨今、動物の遺伝子検査に関して関心を持たれる方が増えていく中で、健全なブリーディングの推進、販売子犬・子猫の遺伝病リスク低減に努め、ペットオーナーへ安心・安全を提供すべく『Animalline』では遺伝子検査を実施した子犬・子猫のみ掲載しております。
 	</div>
-	<div class="animalline-image">
+	<div class="animalline-image" style="margin-top:4rem">
 		<img src="{{ asset('assets/img/reg/animalline-image.png') }}" alt="">
 	</div>
 </section>
@@ -43,7 +43,7 @@
 	</div>
 	<div class="innerSBlue">
 	<h2>ペットと人の絆に　安心・安全を！</h2>
-		<p>「ブリーダーから登録する」「保護団体から譲受する」犬猫のペットオーナーになるための２つの異なるラインを、それぞれマッチングさせて運営する新しいプラットフォームです。<br /><br />
+		<p>「ブリーダーから購入する」「保護団体から譲受する」犬猫のペットオーナーになるための２つの異なるラインを、それぞれマッチングさせて運営する新しいプラットフォームです。<br /><br />
 		アニマルライン最大の特徴は、登録する子犬・子猫、保護犬・保護猫すべての生体に対して遺伝病ＤＮＡ検査を実施し、ペットオーナーが安心して購入・譲受できる環境を整えることです。
 		</p>
 	</div>
@@ -60,24 +60,32 @@
 	<img src="{{ asset('assets/img/reg/prereg_title.png') }}" alt="">
 </section>
 
-<div class="buttonReg" style="margin: 3rem 0 3rem 0">
+<div class="buttonReg" style="margin: 2rem 0 2rem 0">
 	<a href="{{url('entry')}}?ReturnPath=breeder_mypage" class="btn btn--orange">新規登録してペットを掲載する</a>
 </div>
 
 <!-- MESSAGE -->
 <section id="sec01">
+	<div class="innerImg" style="margin-top:4rem">
+		<img src="{{ asset('assets/img/reg/campaign.png') }}" alt="">
+	</div>
+
 	<img src="{{ asset('assets/img/reg/section.png') }}" style="margin-top:2rem" alt="">
 
 	<div class="titleImg">
 		<img src="{{ asset('assets/img/reg/breeder_merit_01.png') }}" alt="">
 	</div>
 	<div class="innerS">
-		<p>取引成立時の販売手数料は<b class="strong-text">業界最安値の１５％</b>となっております。ブリーダー様の負担を減らし、気軽に登録して頂き生体販売の機会を増やす事でブリーダー様を応援するマッチング・プラットフォームです。</p>
+		<p>遺伝病発症リスクが分かる遺伝病DNA検査にて、発症リスクのない生体のみプラットフォームに掲載します。<br />検査費用は<b>「アニマルラインが負担」</b>いたしますので、ブリーダー様には負担はございません。安心してご登録ください。<br /><br />
+		<h2>ブリーダー様のＤＮＡ検査費用負担０円！</h2>
+		<span>※検査結果は<b>「サイトへの掲載可否」</b>のみのお知らせとなります</span>
+		</p>
 	</div>
 	<div class="innerImg">
-		<img src="{{ asset('assets/img/reg/campaign.png') }}" alt="">
+		<img src="{{ asset('assets/img/reg/dna_check.png') }}" style="margin-top:1rem"; alt="">
 	</div>
-	<div class="titleImg">
+	
+	<div class="titleImg" style="margin-top:4rem">
 		<img src="{{ asset('assets/img/reg/breeder_merit_02.png') }}" alt="">
 	</div>
 	<div class="innerS">
@@ -86,19 +94,14 @@
 	<div class="titleImg">
 		<img src="{{ asset('assets/img/reg/merit02-image.png') }}" alt="">
 	</div>
-	<div class="titleImg">
+	<div class="titleImg" style="margin-top:4rem">
 		<img src="{{ asset('assets/img/reg/breeder_merit_03.png') }}" alt="">
 	</div>
 	<div class="innerS">
-		<p>遺伝病発症リスクが分かる遺伝病DNA検査にて、発症リスクのない生体のみプラットフォームに掲載します。検査費用は<b class="strong-text"><u>「アニマルラインが負担」</u></b>致しますので、ブリーダー様には負担はございません。安心してご登録ください。<br /><br />
-		<h2>ブリーダー様のＤＮＡ検査費用負担０円！</h2>
-		<span>※検査結果は<b>「サイトへの掲載可否」</b>のみのお知らせとなります</span>
-		</p>
+		<p>取引成立時の販売手数料は<b class="strong-text">１０～１５％</b>となっております。手数料は掲載した生体の成約率で変動いたします。ブリーダー様の負担を減らし、気軽に登録して頂き生体販売の機会を増やす事でブリーダー様を応援するマッチング・プラットフォームです。</p>
 	</div>
-	<div class="innerImg">
-		<img src="{{ asset('assets/img/reg/dna_check.png') }}" style="margin-top:1rem"; alt="">
-
-		<img src="{{ asset('assets/img/reg/pet_regist_info02.png') }}" style="margin-top:1rem"; alt="">
+	<div class="innerImg" style="margin:3rem 3rem 3rem 3rem">
+		<img src="{{ asset('assets/img/reg/pet_regist_info02.png') }}" alt="">
 
 		<div class="buttonS"">
 			<a href="{{ url('ani_dna_info') }}" target="_blank"><img src="{{ asset('assets/img/reg/veqta_link.png') }}" alt=""></a>
@@ -133,6 +136,9 @@
 <section id="sec03" class="top_margin_xl">
 	<div class="innerImg">
 		<img src="{{ asset('assets/img/reg/site_image.png') }}" alt="">
+
+		<a href="{{ url('breeder_simage_sp') }}"><img src="{{ asset('assets/img/reg/site_image01.png') }}" style="width:80%" alt=""></a>
+		<a href="{{ url('breeder_simage_pc') }}"><img src="{{ asset('assets/img/reg/site_image02.png') }}" style="margin-top: 1rem;width:80%" alt=""></a>
 	</div>
 </section>
 <section id="sec03" class="top_margin_xl">

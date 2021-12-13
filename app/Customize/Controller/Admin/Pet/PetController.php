@@ -33,6 +33,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
+use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\MailService;
 use DateTime;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -92,6 +93,11 @@ class PetController extends AbstractController
     protected $customerRepository;
 
     /**
+     * @var BreederEvaluationsRepository
+     */
+    protected $breederEvaluationsRepository;
+
+    /**
      * PetController constructor.
      * @param BreedsRepository $breedsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
@@ -103,6 +109,7 @@ class PetController extends AbstractController
      * @param CustomerRepository $customerRepository
      * @param BreederContactsRepository $breederContactsRepository
      * @param ConservationContactsRepository $conservationContactsRepository
+     * @param BreederEvaluationsRepository $breederEvaluationsRepository
      */
     public function __construct(
         BreedsRepository          $breedsRepository,
@@ -114,7 +121,8 @@ class PetController extends AbstractController
         BreederContactHeaderRepository $breederContactHeaderRepository,
         CustomerRepository $customerRepository,
         BreederContactsRepository $breederContactsRepository,
-        ConservationContactsRepository $conservationContactsRepository
+        ConservationContactsRepository $conservationContactsRepository,
+        BreederEvaluationsRepository $breederEvaluationsRepository
     ) {
         $this->breedsRepository = $breedsRepository;
         $this->breederQueryService = $breederQueryService;
@@ -126,6 +134,7 @@ class PetController extends AbstractController
         $this->customerRepository = $customerRepository;
         $this->breederContactsRepository = $breederContactsRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
+        $this->breederEvaluationsRepository = $breederEvaluationsRepository;
     }
 
     /**
@@ -387,5 +396,23 @@ class PetController extends AbstractController
             'isActive',
             'data'
         );
+    }
+
+
+    /**
+     * 評価確認
+     *
+     * @Route("/%eccube_admin_route%/pet/evaluation/{pet_id}", name="admin_pet_evaluation")
+
+     * @Template("@admin/Pet/evaluation.twig")
+     */
+    public function evaluation(Request $request)
+    {
+        $pet_id = $request->get('pet_id');
+        $evaluation = $this->breederEvaluationsRepository->findOneBy(['Pet' => $pet_id]);
+
+        return [
+            'evaluation' => $evaluation
+        ];
     }
 }

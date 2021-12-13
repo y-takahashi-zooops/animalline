@@ -428,8 +428,9 @@ Width <= 640px
 	.btn,
 	a.btn,
 	button.btn {
+		margin: 1rem;
 		padding: 1.5rem 1rem;
-		font-size:18px;
+		font-size:17px;
 	}
 }
 

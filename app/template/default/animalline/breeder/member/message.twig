@@ -153,14 +153,17 @@
                                         <textarea {{ params.isScroll is defined ? 'autofocus' }} aria-label="dialog-chat" class="col-12 p-2" rows="5" name="reply_message"
                                             placeholder="返信メッセージ"></textarea>
                                         <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">返信メッセージ送信</button>
-                                        ここに取引が完了した際の報告で特典が受けられることの説明を表記する
+                                        犬舎／猫舎見学後、下のボタンを押してください。<br />
+                                        ・取引が成立した場合は“取引成約”ボタンを押してください<br />
+                                        ・取引が成立しなかった場合は“取引不成約”ボタンを押してください<br />
+                                        オーナー様、ブリーダー様双方からの取引成約を確認後Animallineの特典をご案内いたします。
                                         <div class="d-flex flex-sm-column flex-md-row justify-content-between">
                                             <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--action mt-2"
                                                 onclick="location.href='{{ url('breeder_contract', {'pet_id': message.pet.id}) }}'">
-                                                取引成約を報告する
+                                                取引成約
                                             </button>
                                             <button {{ message.customerCheck ? 'disabled' }} type="button" class="ec-blockBtn--cancel mt-2" id="cancel">
-                                                取引は成約しませんでした
+                                                取引不成約
                                             </button>
                                         </div>
                                     </form>

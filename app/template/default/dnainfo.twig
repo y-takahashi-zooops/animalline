@@ -1,5 +1,5 @@
 {% set site_type = 'common' %}
-{% set base_template = 'breeder_frame.twig' %}
+{% set base_template = 'normal_frame.twig' %}
 {% extends base_template %}
 
 {% block stylesheet %}
@@ -19,9 +19,8 @@
     <section id="dna-content01">
       <div class="dna-content01__title"><h3>ペットと人の絆に安心・安全を!</h3></div>
       <div class="dna-content01__body">
-        <p><span>アニマルライン最大の特長</span>は、<br>
-        <strong>登録する子犬・子猫すべての生体に対して遺伝病ＤＮＡ検査を実施し、<br>
-        ペットオーナーが安心して購入・譲受できる環境を整えることです。</strong></p>
+        <p><span>アニマルライン最大の特長は、</span><br>
+        <strong>生体に対して遺伝病ＤＮＡ検査を実施し、ペットオーナーが安心して<br />購入・譲受できる環境を整えることです。</strong></p>
       </div>
     </section>
     
@@ -189,6 +188,9 @@
                 <figure><img src="{{ asset('assets/img/dna/dna-flow-img06.png') }}" alt="検体を速やかに返送する"/></figure>
                 <p>検体認識シールを貼った容器を同封の<br /><strong>返信用封筒</strong>に入れ、ご投函ください。<br>
                   ※1枚の返信用封筒で容器6本まで同時に発送可能です。</p>
+
+                  <figure><img src="{{ asset('assets/img/dna/swab.png') }}" alt="検体を速やかに返送する"/></figure>
+                  <p>このようにバーコードシールを貼り付けてください。</p>
               </div>
             </div>
           </article>

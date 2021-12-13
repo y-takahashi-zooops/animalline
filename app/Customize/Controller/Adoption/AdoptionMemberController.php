@@ -21,6 +21,7 @@ use Eccube\Form\Type\Front\EntryType;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Customize\Repository\ConservationContactHeaderRepository;
 
 class AdoptionMemberController extends AbstractController
 {
@@ -50,6 +51,11 @@ class AdoptionMemberController extends AbstractController
     protected $tokenStorage;
 
     /**
+     * @var ConservationContactHeaderRepository
+     */
+    protected $conservationContactHeaderRepository;
+
+    /**
      * ConservationController constructor.
      *
      * @param CustomerRepository $customerRepository
@@ -57,19 +63,22 @@ class AdoptionMemberController extends AbstractController
      * @param AdoptionQueryService $adoptionQueryService
      * @param EncoderFactoryInterface $encoderFactory
      * @param TokenStorageInterface $tokenStorage
+     * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      */
     public function __construct(
         CustomerRepository  $customerRepository,
         ConservationsRepository  $conservationsRepository,
         AdoptionQueryService  $adoptionQueryService,
         EncoderFactoryInterface $encoderFactory,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        ConservationContactHeaderRepository $conservationContactHeaderRepository
     ) {
         $this->customerRepository = $customerRepository;
         $this->conservationsRepository = $conservationsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
         $this->encoderFactory = $encoderFactory;
         $this->tokenStorage = $tokenStorage;
+        $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
     }
 
     /**
@@ -142,10 +151,22 @@ class AdoptionMemberController extends AbstractController
 
         $pets = $this->adoptionQueryService->findAdoptionFavoritePets($this->getUser()->getId());
 
+        $customer_newmsg = 0;
+        if($this->conservationContactHeaderRepository->findBy(["Customer" => $user, "customer_new_msg" => 1])){
+            $customer_newmsg = 1;
+        }
+
+        $conservation_newmsg = 0;
+        if($this->conservationContactHeaderRepository->findBy(["Conservation" => $user, "conservation_new_msg" => 1])){
+            $conservation_newmsg = 1;
+        }
+        
         return $this->render('animalline/adoption/member/index.twig', [
             'conservation' => $conservation,
             'pets' => $pets,
             'user' => $this->getUser(),
+            'customer_newmsg' => $customer_newmsg,
+            'conservation_newmsg' => $conservation_newmsg,
         ]);
     }
 
@@ -173,8 +194,12 @@ class AdoptionMemberController extends AbstractController
         }
 
         $thumbnail_path = $request->get('thumbnail_path') ?: $conservation->getThumbnailPath();
+        $license_thumbnail_path = $request->get('license_thumbnail_path') ?: $conservation->getLicenseThumbnailPath();
 
-        $builder = $this->formFactory->createBuilder(ConservationsType::class, $conservation);
+        $builder = $this->formFactory->createBuilder(ConservationsType::class, $conservation,array(
+            'adoption_img' => $thumbnail_path,
+            'license_img' => $license_thumbnail_path,
+        ));
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -189,7 +214,8 @@ class AdoptionMemberController extends AbstractController
             }
             $conservation->setPref($conservation->getPrefId())
                 ->setId($user->getId())
-                ->setThumbnailPath($thumbnail_path);
+                ->setThumbnailPath($thumbnail_path)
+                ->setLicenseThumbnailPath($license_thumbnail_path);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservation);
@@ -202,7 +228,8 @@ class AdoptionMemberController extends AbstractController
             'conservation' => $conservation,
             'form' => $form->createView(),
             'Customer' => $user,
-            'thumbnail_path' => $thumbnail_path
+            'thumbnail_path' => $thumbnail_path,
+            'license_thumbnail_path' => $license_thumbnail_path
         ];
     }
 

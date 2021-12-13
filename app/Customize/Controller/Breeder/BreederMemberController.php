@@ -20,11 +20,15 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Customize\Config\AnilineConf;
+use Customize\Entity\BankAccount;
+use Customize\Form\Type\Breeder\BankAccountType;
 use Customize\Form\Type\Front\ResetPasswordType;
+use Customize\Repository\BankAccountRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Eccube\Form\Type\Front\EntryType;
+use Customize\Repository\BreederContactHeaderRepository;
 
 class BreederMemberController extends AbstractController
 {
@@ -54,6 +58,16 @@ class BreederMemberController extends AbstractController
     protected $encoderFactory;
 
     /**
+     * @var BankAccountRepository
+     */
+    protected $bankAccountRepository;
+
+    /**
+     * @var BreederContactHeaderRepository
+     */
+    protected $breederContactHeaderRepository;
+
+    /**
      * BreederController constructor.
      *
      * @param CustomerRepository $customerRepository
@@ -61,19 +75,25 @@ class BreederMemberController extends AbstractController
      * @param BreederQueryService $breederQueryService
      * @param EncoderFactoryInterface $encoderFactory
      * @param TokenStorageInterface $tokenStorage
+     * @param BankAccountRepository $bankAccountRepository
+     * @param BreederContactHeaderRepository $breederContactHeaderRepository
      */
     public function __construct(
         CustomerRepository  $customerRepository,
         BreedersRepository  $breedersRepository,
         BreederQueryService $breederQueryService,
         EncoderFactoryInterface $encoderFactory,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        BankAccountRepository $bankAccountRepository,
+        BreederContactHeaderRepository $breederContactHeaderRepository
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
         $this->breederQueryService = $breederQueryService;
         $this->encoderFactory = $encoderFactory;
         $this->tokenStorage = $tokenStorage;
+        $this->bankAccountRepository = $bankAccountRepository;
+        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
     }
 
     /**
@@ -146,10 +166,22 @@ class BreederMemberController extends AbstractController
 
         $pets = $this->breederQueryService->findBreederFavoritePets($this->getUser()->getId());
 
+        $customer_newmsg = 0;
+        if($this->breederContactHeaderRepository->findBy(["Customer" => $user, "customer_new_msg" => 1])){
+            $customer_newmsg = 1;
+        }
+
+        $breefer_newmsg = 0;
+        if($this->breederContactHeaderRepository->findBy(["Breeder" => $user, "breeder_new_msg" => 1])){
+            $breefer_newmsg = 1;
+        }
+
         return $this->render('animalline/breeder/member/index.twig', [
             'breeder' => $breeder,
             'pets' => $pets,
             'user' => $this->getUser(),
+            'customer_newmsg' => $customer_newmsg,
+            'breeder_newmsg' => $breefer_newmsg,
         ]);
     }
 
@@ -387,6 +419,71 @@ class BreederMemberController extends AbstractController
      * @Template("animalline/breeder/member/breeder_change_complete.twig")
      */
     public function complete(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * 口座登録画面.
+     *
+     * @Route("/breeder/member/bank/regist", name="breeder_bank_regist")
+     * @Template("animalline/breeder/member/bank_regist.twig")
+     */
+    public function bank_regist(Request $request)
+    {
+        $user = $this->getUser();
+        $breeder = $this->breedersRepository->find($user);
+        $BankAccount = $this->bankAccountRepository->findOneBy(['Breeder' => $breeder]);
+        if(!$BankAccount){
+            $BankAccount = new BankAccount();
+        }
+
+        $form = $this->createForm(BankAccountType::class,$BankAccount);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            switch ($request->get('mode')) {
+                case 'confirm':
+
+                    return $this->render('animalline/breeder/member/bank_regist_confirm.twig', [
+                        'form' => $form->createView(),
+                    ]);
+
+                case 'complete':
+
+                    $data = $form->getData();
+
+                    $event = new EventArgs(
+                        [
+                            'form' => $form,
+                            'data' => $data,
+                        ],
+                        $request
+                    );
+                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+
+                    $data = $event->getArgument('data');
+
+                    $data->setBreeder($breeder);
+                    $this->entityManager->persist($data);
+                    $this->entityManager->flush();
+
+                    return $this->redirect($this->generateUrl('breeder_bank_regist_complete'));
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * 口座登録完了.
+     *
+     * @Route("/breeder/member/bank/regist/complete", name="breeder_bank_regist_complete")
+     * @Template("animalline/breeder/member/bank_regist_complete.twig")
+     */
+    public function bank_regist_complete()
     {
         return [];
     }
