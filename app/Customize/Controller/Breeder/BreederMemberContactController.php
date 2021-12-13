@@ -252,6 +252,7 @@ class BreederMemberContactController extends AbstractController
 
                 case 'complete':
                     $contract->setPet($pet)->setImagePath($thumbnail_path);
+                    $contract->setIsActive(1);
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($contract);
                     $entityManager->flush();
@@ -283,8 +284,9 @@ class BreederMemberContactController extends AbstractController
             throw new HttpException\NotFoundHttpException();
         }
         $breeder = $pet->getBreeder();
-        $avgEvaluation = $this->breederQueryService->calculateBreederRank($breeder->getId());
-        $breeder->setBreederRank($avgEvaluation);
+        // TODO:ランク更新タイミングの変更
+        // $avgEvaluation = $this->breederQueryService->calculateBreederRank($breeder->getId());
+        // $breeder->setBreederRank($avgEvaluation);
 
         $msgHeader = $this->breederContactHeaderRepository->findOneBy([
             'Customer' => $this->getUser(),

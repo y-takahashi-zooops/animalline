@@ -45,6 +45,11 @@ class BreederEvaluations
     private $image_path;
 
     /**
+     * @ORM\Column(name="is_active", type="smallint", options={"default" = 0})
+     */
+    private $is_active = 0;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
@@ -107,6 +112,18 @@ class BreederEvaluations
     public function setImagePath(?string $image_path): self
     {
         $this->image_path = $image_path;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?int
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(int $is_active): self
+    {
+        $this->is_active = $is_active;
 
         return $this;
     }
