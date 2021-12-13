@@ -239,7 +239,7 @@ file that was distributed with this source code.
 	            $('.normal_readonly').attr('readonly', true);
 			}
 		});
-
+		
 		// 画面ロード中はカートに入れるボタンは非活性,ロード完了後に活性にする
 		window.addEventListener("load", function() {
 			$('.add-cart').prop('disabled', false);
@@ -366,7 +366,7 @@ file that was distributed with this source code.
 											</div>
 										</div>
 									</li>
-									<li class="order_list_block subscription_block glay">
+									<li class="order_list_block subscription_block glay" style="display: none;">
 										<div class="order_label">
 											{{ form_widget(form.order_type[1]) }}
 											<div class="ec-numberInput">

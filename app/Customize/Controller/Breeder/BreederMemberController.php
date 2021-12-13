@@ -28,6 +28,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Eccube\Form\Type\Front\EntryType;
+use Customize\Repository\BreederContactHeaderRepository;
 
 class BreederMemberController extends AbstractController
 {
@@ -62,6 +63,11 @@ class BreederMemberController extends AbstractController
     protected $bankAccountRepository;
 
     /**
+     * @var BreederContactHeaderRepository
+     */
+    protected $breederContactHeaderRepository;
+
+    /**
      * BreederController constructor.
      *
      * @param CustomerRepository $customerRepository
@@ -70,6 +76,7 @@ class BreederMemberController extends AbstractController
      * @param EncoderFactoryInterface $encoderFactory
      * @param TokenStorageInterface $tokenStorage
      * @param BankAccountRepository $bankAccountRepository
+     * @param BreederContactHeaderRepository $breederContactHeaderRepository
      */
     public function __construct(
         CustomerRepository  $customerRepository,
@@ -77,7 +84,8 @@ class BreederMemberController extends AbstractController
         BreederQueryService $breederQueryService,
         EncoderFactoryInterface $encoderFactory,
         TokenStorageInterface $tokenStorage,
-        BankAccountRepository $bankAccountRepository
+        BankAccountRepository $bankAccountRepository,
+        BreederContactHeaderRepository $breederContactHeaderRepository
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
@@ -85,6 +93,7 @@ class BreederMemberController extends AbstractController
         $this->encoderFactory = $encoderFactory;
         $this->tokenStorage = $tokenStorage;
         $this->bankAccountRepository = $bankAccountRepository;
+        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
     }
 
     /**
@@ -157,10 +166,22 @@ class BreederMemberController extends AbstractController
 
         $pets = $this->breederQueryService->findBreederFavoritePets($this->getUser()->getId());
 
+        $customer_newmsg = 0;
+        if($this->breederContactHeaderRepository->findBy(["Customer" => $user, "customer_new_msg" => 1])){
+            $customer_newmsg = 1;
+        }
+
+        $breefer_newmsg = 0;
+        if($this->breederContactHeaderRepository->findBy(["Breeder" => $user, "breeder_new_msg" => 1])){
+            $breefer_newmsg = 1;
+        }
+
         return $this->render('animalline/breeder/member/index.twig', [
             'breeder' => $breeder,
             'pets' => $pets,
             'user' => $this->getUser(),
+            'customer_newmsg' => $customer_newmsg,
+            'breeder_newmsg' => $breefer_newmsg,
         ]);
     }
 

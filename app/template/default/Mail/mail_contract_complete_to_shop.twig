@@ -1,0 +1,17 @@
+{% autoescape false %}
+{% if site_type == 1 %}
+取引に関する全ての処理が完了しました。
+
+↓↓ 完了した取引メッセージはこちらで確認可能です。
+{{ url('breeder_breeder_message', {'id' : msgheader.getId()}) }}
+
+今後ともアニマルラインをよろしくお願い致します。
+{% else %}
+取引に関する全ての処理が完了しました。
+
+↓↓ 完了した取引メッセージはこちらで確認可能です。
+{{ url('adoption_adoption_message', {'id' : msgheader.getId()}) }}
+
+今後ともアニマルラインをよろしくお願い致します。
+{% endif %}
+{% endautoescape %}

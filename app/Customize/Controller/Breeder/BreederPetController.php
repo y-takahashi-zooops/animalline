@@ -317,6 +317,7 @@ class BreederPetController extends AbstractController
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
             'customer' => $this->getUser(),
+            'image1' => $image0,
         ]);
         $form->handleRequest($request);
 
@@ -422,19 +423,20 @@ class BreederPetController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        $form = $this->createForm(BreederPetsType::class, $breederPet, [
-            'customer' => $this->getUser(),
-        ]);
-        $breederPetImages = $this->breederPetImageRepository->findBy(
-            ['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
-            ['sort_order' => 'ASC']
-        );
-
         $image0 = $request->get('img0') ?? '';
         $image1 = $request->get('img1') ?? '';
         $image2 = $request->get('img2') ?? '';
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
+
+        $form = $this->createForm(BreederPetsType::class, $breederPet, [
+            'customer' => $this->getUser(),
+            'image1' => $image0,
+        ]);
+        $breederPetImages = $this->breederPetImageRepository->findBy(
+            ['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
+            ['sort_order' => 'ASC']
+        );
 
         $request->request->set('thumbnail_path', $image0 ?: ($breederPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath() : ''));
         $form->handleRequest($request);

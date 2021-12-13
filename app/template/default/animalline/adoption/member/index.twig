@@ -11,8 +11,9 @@
                 <div class="col-lg-4 col-md-12">
                     <a href="{{url('adoption_favorite')}}" class="btn btn-warning btn-block mt-3" role="button">お気に入り一覧</a>
                 </div>
-                <div class="col-lg-4 col-md-12">
+                <div class="col-lg-4 col-md-12" style="text-align: center">
                     <a href="{{url('adoption_all_message')}}" class="btn btn-warning btn-block mt-3" role="button">取引メッセージ</a>
+                    {% if customer_newmsg == 1 %}<span style="color: red;">新着メッセージあり</span>{% endif %}
                 </div>
             </div>
             {% endif %}
@@ -42,8 +43,9 @@
                     <div class="col-lg-4 col-md-12">
                         <a href="{{url('adoption_pet_list')}}" class="btn btn-success btn-block mt-3" role="button">保護犬猫管理</a>
                     </div>
-                    <div class="col-lg-4 col-md-12">
+                    <div class="col-lg-4 col-md-12" style="text-align: center">
                         <a href="{{url('adoption_all_adoption_message')}}" class="btn btn-warning btn-block mt-3" role="button">お問い合わせ対応</a>
+                        {% if conservation_newmsg == 1 %}<span style="color: red;">新着メッセージあり</span>{% endif %}
                     </div>
                 </div>
                 {% if conservation %}

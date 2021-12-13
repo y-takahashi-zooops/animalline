@@ -176,8 +176,10 @@ class AdoptionPetController extends AbstractController
         $image4 = $request->get('img4') ?? '';
 
         $conservationPet = new ConservationPets();
+
         $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
             'customer' => $user,
+            'image1' => $image0,
         ]);
         $form->handleRequest($request);
 
@@ -266,19 +268,20 @@ class AdoptionPetController extends AbstractController
      */
     public function adoption_pets_edit(Request $request, ConservationPets $conservationPet): Response
     {
-        $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
-            'customer' => $this->getUser(),
-        ]);
-        $conservationPetImages = $this->conservationPetImageRepository->findBy(
-            ['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
-            ['sort_order' => 'ASC']
-        );
-
         $image0 = $request->get('img0') ?? '';
         $image1 = $request->get('img1') ?? '';
         $image2 = $request->get('img2') ?? '';
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
+        
+        $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
+            'customer' => $this->getUser(),
+            'image1' => $image0,
+        ]);
+        $conservationPetImages = $this->conservationPetImageRepository->findBy(
+            ['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
+            ['sort_order' => 'ASC']
+        );
 
         $request->request->set('thumbnail_path', $image0 ?: ($conservationPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath() : ''));
         $form->handleRequest($request);

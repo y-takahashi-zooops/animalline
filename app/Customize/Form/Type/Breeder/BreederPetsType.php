@@ -58,6 +58,10 @@ class BreederPetsType extends AbstractType
                     '女の子(メス)' => AnilineConf::ANILINE_PET_SEX_FEMALE
                 ],
                 'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+                'placeholder' => '----'
             ])
             ->add('pet_birthday', DateType::class, [
                 // 'data' => new DateTime(),
@@ -243,9 +247,13 @@ class BreederPetsType extends AbstractType
             ])
             ->add('pedigreeCodeErrors', TextType::class, [
                 'mapped' => false
+            ])
+            ->add('ImagePathErrors', TextType::class, [
+                'mapped' => false,
             ]);
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateVaccineDetail']);
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePedigree']);
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateThumbnail']);
 
         $customer = $options['customer'];
         $breeder = $this->breedersRepository->find($customer);
@@ -273,8 +281,17 @@ class BreederPetsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => BreederPets::class,
-            'customer' => null
+            'customer' => null,
+            'image1' => null
         ]);
+    }
+
+    public function validateThumbnail(FormEvent $event)
+    {
+        $form = $event->getForm();
+        if (!$event->getForm()->getConfig()->getOptions()['image1']) {
+            $form['ImagePathErrors']->addError(new FormError('写真を1点以上アップロードください。'));
+        }
     }
 
     public function validateVaccineDetail(FormEvent $event)

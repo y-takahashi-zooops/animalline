@@ -1,13 +1,21 @@
 {% autoescape false %}
 {% if site_type == 1 %}
-ブリーダーから取引成立の通知が届きました。。
-{% else %}
-保護団体から取引成立の通知が届きました。。
-{% endif %}
+ブリーダーから取引成立の通知が届きました。
 
 下記リンクから取引成立処理を行うと、成約特典を受け取ることが可能になります。
 
 ↓↓ 下記リンクから取引成立処理をする
-{{ url('breeder_all_message', {'id' : msgheader.getId()}) }}
+{{ url('breeder_message', {'id' : msgheader.getId()}) }}
 
+今後ともアニマルラインをよろしくお願い致します。
+{% else %}
+保護団体から取引成立の通知が届きました。
+
+下記リンクから取引成立処理を行うと、成約特典を受け取ることが可能になります。
+
+↓↓ 下記リンクから取引成立処理をする
+{{ url('adoption_message', {'id' : msgheader.getId()}) }}
+
+今後ともアニマルラインをよろしくお願い致します。
+{% endif %}
 {% endautoescape %}

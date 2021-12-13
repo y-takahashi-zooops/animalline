@@ -17,6 +17,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormError;
 
 class ConservationPetsType extends AbstractType
 {
@@ -48,7 +51,11 @@ class ConservationPetsType extends AbstractType
                         '男の子' => AnilineConf::ANILINE_PET_SEX_MALE,
                         '女の子' => AnilineConf::ANILINE_PET_SEX_FEMALE
                     ],
-                'required' => true,
+                    'required' => true,
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ],
+                    'placeholder' => '----'
             ])
             ->add('pet_age', TextType::class,[
                 'required' => true,
@@ -153,7 +160,12 @@ class ConservationPetsType extends AbstractType
                         '未接種' => 0,
                         '接種済' => 1
                     ],
-                'required' => true,
+                    'required' => true,
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ],
+                    'placeholder' => '----'
+                
             ])
             ->add('is_castration', ChoiceType::class, [
                 'choices' =>
@@ -161,7 +173,11 @@ class ConservationPetsType extends AbstractType
                         '未手術' => 0,
                         '手術済' => 1
                     ],
-                'required' => true,
+                    'required' => true,
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ],
+                    'placeholder' => '----'
             ])
             ->add('is_single', ChoiceType::class, [
                 'choices' =>
@@ -169,7 +185,11 @@ class ConservationPetsType extends AbstractType
                         '応募不可' => 0,
                         '応募可' => 1
                     ],
-                'required' => true,
+                    'required' => true,
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ],
+                    'placeholder' => '----'
             ])
             ->add('is_senior', ChoiceType::class, [
                 'choices' =>
@@ -177,8 +197,15 @@ class ConservationPetsType extends AbstractType
                         '応募不可' => 0,
                         '応募可' => 1
                     ],
-                'required' => true,
-            ]);
+                    'required' => true,
+                    'constraints' => [
+                        new Assert\NotBlank(),
+                    ],
+                    'placeholder' => '----'
+            ])
+            ->add('ImagePathErrors', TextType::class, [
+                'mapped' => false,
+            ]);;
         /*
         ->add('is_active', ChoiceType::class, [
             'choices' =>
@@ -190,13 +217,23 @@ class ConservationPetsType extends AbstractType
         ->add('release_date', DateType::class)
         ->add('price', IntegerType::class);
         */
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateThumbnail']);
+    }
+
+    public function validateThumbnail(FormEvent $event)
+    {
+        $form = $event->getForm();
+        if (!$event->getForm()->getConfig()->getOptions()['image1']) {
+            $form['ImagePathErrors']->addError(new FormError('写真を1点以上アップロードください。'));
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => ConservationPets::class,
-            'customer' => null
+            'customer' => null,
+            'image1' => null
         ]);
     }
 }
