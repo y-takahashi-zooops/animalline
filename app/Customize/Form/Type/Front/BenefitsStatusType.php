@@ -3,6 +3,7 @@
 namespace Customize\Form\Type\Front;
 
 use Customize\Entity\BenefitsStatus;
+use Eccube\Common\EccubeConfig;
 use Eccube\Form\Type\Master\PrefType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,6 +13,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class BenefitsStatusType extends AbstractType
 {
+    /**
+     * @var EccubeConfig
+     */
+    protected $eccubeConfig;
+
+    /**
+     * ContactType constructor.
+     *
+     * @param EccubeConfig $eccubeConfig
+     */
+    public function __construct(EccubeConfig $eccubeConfig)
+    {
+        $this->eccubeConfig = $eccubeConfig;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
