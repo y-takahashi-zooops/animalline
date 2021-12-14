@@ -251,6 +251,33 @@ class BreederController extends AbstractController
         );
     }
 
+    
+    /**
+     * 評価一覧
+     *
+     * @Route("/breeder/evaluation/{breeder_id}", name="breeder_evaluation", requirements={"breeder_id" = "\d+"})
+     * @Template("/animalline/breeder/breeder_evaluation.twig")
+     */
+    public function breeder_evaluation(Request $request, $breeder_id, PaginatorInterface $paginator)
+    {
+        $breeder = $this->breedersRepository->find($breeder_id);
+        if (!$breeder) {
+            throw new NotFoundHttpException();
+        }
+
+        $evaluationsResult = $this->breederEvaluationsRepository->findBy(['Breeder' => $breeder, 'is_active' => 2], ['create_date' => 'DESC']);
+        $evaluations = $paginator->paginate(
+            $evaluationsResult,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+       
+        return compact(
+            'breeder',
+            'evaluations'
+        );
+    }
+
     /**
      * 会社概要.
      *
