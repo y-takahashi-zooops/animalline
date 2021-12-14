@@ -22,7 +22,6 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Customize\Repository\ConservationContactHeaderRepository;
-use Eccube\Repository\OrderRepository;
 
 class AdoptionMemberController extends AbstractController
 {
@@ -56,11 +55,6 @@ class AdoptionMemberController extends AbstractController
      */
     protected $conservationContactHeaderRepository;
 
-        /**
-     * @var OrderRepository
-     */
-    protected $orderRepository;
-
     /**
      * ConservationController constructor.
      *
@@ -70,7 +64,6 @@ class AdoptionMemberController extends AbstractController
      * @param EncoderFactoryInterface $encoderFactory
      * @param TokenStorageInterface $tokenStorage
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
-     * @param OrderRepository $orderRepository
      */
     public function __construct(
         CustomerRepository  $customerRepository,
@@ -78,8 +71,7 @@ class AdoptionMemberController extends AbstractController
         AdoptionQueryService  $adoptionQueryService,
         EncoderFactoryInterface $encoderFactory,
         TokenStorageInterface $tokenStorage,
-        ConservationContactHeaderRepository $conservationContactHeaderRepository,
-        OrderRepository $orderRepository
+        ConservationContactHeaderRepository $conservationContactHeaderRepository
     ) {
         $this->customerRepository = $customerRepository;
         $this->conservationsRepository = $conservationsRepository;
@@ -87,7 +79,6 @@ class AdoptionMemberController extends AbstractController
         $this->encoderFactory = $encoderFactory;
         $this->tokenStorage = $tokenStorage;
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
-        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -157,7 +148,7 @@ class AdoptionMemberController extends AbstractController
     {
         $user = $this->getUser();
         $conservation = $this->conservationsRepository->find($user);
-        $isBoughtPet = $this->orderRepository->findBy(['Customer' => $user]);
+        $canBenefits = !!$this->conservationContactHeaderRepository->findBy(["Customer" => $user, "contract_status" => AnilineConf::CONTRACT_STATUS_CONTRACT]);
 
         $pets = $this->adoptionQueryService->findAdoptionFavoritePets($this->getUser()->getId());
 
@@ -177,7 +168,7 @@ class AdoptionMemberController extends AbstractController
             'user' => $this->getUser(),
             'customer_newmsg' => $customer_newmsg,
             'conservation_newmsg' => $conservation_newmsg,
-            'isBoughtPet' => $isBoughtPet
+            'canBenefits' => $canBenefits
         ]);
     }
 

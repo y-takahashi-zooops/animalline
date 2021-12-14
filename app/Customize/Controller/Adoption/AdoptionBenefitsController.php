@@ -8,10 +8,7 @@ use Customize\Repository\BenefitsStatusRepository;
 use Customize\Form\Type\Front\BenefitsStatusType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Eccube\Controller\AbstractController;
-use Eccube\Event\EccubeEvents;
-use Eccube\Event\EventArgs;
-use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Eccube\Repository\Master\PrefRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -25,14 +22,22 @@ class AdoptionBenefitsController extends AbstractController
     protected $benefitsStatusRepository;
 
     /**
+     * @var PrefRepository
+     */
+    protected $prefRepository;
+
+    /**
      * BreederController constructor.
      * 
      * @param BenefitsStatusRepository $benefitsStatusRepository
+     * @param PrefRepository $prefRepository
      */
     public function __construct(
-        BenefitsStatusRepository    $benefitsStatusRepository
+        BenefitsStatusRepository    $benefitsStatusRepository,
+        PrefRepository $prefRepository
     ) {
         $this->benefitsStatusRepository = $benefitsStatusRepository;
+        $this->prefRepository = $prefRepository;
     }
 
     /**
@@ -43,20 +48,23 @@ class AdoptionBenefitsController extends AbstractController
      */
     public function benefits(Request $request)
     {
+        $dataRequest = $request->get('benefits_status');
+        $Pref = $this->prefRepository->find($dataRequest['Pref'] ?? '');
         $user = $this->getUser();
-        $benefitsStatus = new BenefitsStatus();
+        $isBenefitsStatus = $this->benefitsStatusRepository->findBy(['register_id' => $user->getId()]);
+        if (!$isBenefitsStatus) {
+            $benefitsStatus = new BenefitsStatus();
+            $benefitsStatus->setShippingName($dataRequest['shipping_name'] ?? $user->getName01() . $user->getName02())
+                        ->setShippingZip($dataRequest['shipping_zip'] ?? $user->getPostalCode())
+                        ->setPref($Pref ?? $user->getPref())
+                        ->setShippingCity($dataRequest['shipping_city'] ?? $user->getAddr01())
+                        ->setShippingAddress($dataRequest['shipping_address'] ?? $user->getAddr02())
+                        ->setShippingTel($dataRequest['shipping_tel'] ?? $user->getPhoneNumber());
+        } else {
+            $benefitsStatus = $isBenefitsStatus[0];
+        }
+
         $builder = $this->formFactory->createBuilder(BenefitsStatusType::class, $benefitsStatus);
-
-        // FRONT_CONTACT_INDEX_INITIALIZE
-        $event = new EventArgs(
-            [
-                'builder' => $builder,
-                'benefitsStatus' => $benefitsStatus
-            ],
-            $request
-        );
-
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
         $form = $builder->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -70,23 +78,14 @@ class AdoptionBenefitsController extends AbstractController
                     ]);
 
                 case 'complete':
-                    $data = $form->getData();
-
-                    $event = new EventArgs(
-                        [
-                            'form' => $form,
-                            'data' => $data,
-                        ],
-                        $request
-                    );
-
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
-                    $data = $event->getArgument('data');
                     $benefitsStatus->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
                                 ->setRegisterId($user->getId())
                                 ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
                                 ->setShippingPref($benefitsStatus->getPref()->getName());
                     $shippingdate = new \DateTime();
+                    if(intval(date("H")) >= 14){
+                        $shippingdate->modify('+1 days');
+                    }
                     $benefitsStatus->setBenefitsShippingDate($shippingdate);
                 
                     $entityManager = $this->getDoctrine()->getManager();
@@ -95,7 +94,6 @@ class AdoptionBenefitsController extends AbstractController
                     $entityManager->flush();
                     return $this->redirect($this->generateUrl('benefits_complete'));
             }
-            
         }
 
         return [

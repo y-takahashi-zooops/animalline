@@ -15,10 +15,10 @@
                     <a href="{{url('adoption_all_message')}}" class="btn btn-warning btn-block mt-3" role="button">取引メッセージ</a>
                     {% if customer_newmsg == 1 %}<span style="color: red;">新着メッセージあり</span>{% endif %}
                 </div>
-                {% if isBoughtPet %}
-                <div class="col-lg-4 col-md-12" style="text-align: center">
-                    <a href="{{url('adoption_benefits')}}" class="btn btn-warning btn-block mt-3" role="button">特典受取手続き</a>
-                </div>
+                {% if canBenefits %}
+                    <div class="col-lg-4 col-md-12" style="text-align: center">
+                        <a href="{{url('adoption_benefits')}}" class="btn btn-warning btn-block mt-3" role="button">特典受取手続き</a>
+                    </div>
                 {% endif %}
             </div>
             {% endif %}
