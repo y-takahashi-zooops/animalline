@@ -66,7 +66,7 @@ class BenefitsStatusType extends AbstractType
                 ],
                 'trim' => true,
             ])
-            ->add('pref', PrefType::class, [
+            ->add('Pref', PrefType::class, [
                 'attr' => ['class' => 'p-region-id'],
                 'constraints' => [
                     new Assert\NotBlank()

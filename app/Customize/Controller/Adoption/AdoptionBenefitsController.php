@@ -5,8 +5,8 @@ namespace Customize\Controller\Adoption;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BenefitsStatus;
 use Customize\Repository\BenefitsStatusRepository;
+use Customize\Form\Type\Front\BenefitsStatusType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Repository\BreedersRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,7 +43,7 @@ class AdoptionBenefitsController extends AbstractController
     {
         $user = $this->getUser();
         $benefitsStatus = new BenefitsStatus();
-        $builder = $this->formFactory->createBuilder(ConservationHouseType::class, $benefitsStatus);
+        $builder = $this->formFactory->createBuilder(BenefitsStatusType::class, $benefitsStatus);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
