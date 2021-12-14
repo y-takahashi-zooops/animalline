@@ -187,12 +187,14 @@ file that was distributed with this source code.
                                                         <div class="col-3">本文</div>
                                                         <div class="col-9">{{ evaluation.EvaluationMessage |nl2br}}</div>
                                                     </div>
-                                                    <div class="row mb-2">
-                                                        <div class="col-3">画像</div>
-                                                        <div class="col-9">
-                                                            <img alt="..." img src="{{ evaluation.ImagePath}}">
+                                                    {% if evaluation.ImagePath %}
+                                                        <div class="row mb-2">
+                                                            <div class="col-3">画像</div>
+                                                            <div class="col-9">
+                                                                <img alt="..." img src="{{ evaluation.ImagePath}}" style="max-width: 300px">
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    {% endif %}
                                                     <div class="row mb-2">
                                                         <div class="col-3">公開状況</div>
                                                         <div class="col-9">

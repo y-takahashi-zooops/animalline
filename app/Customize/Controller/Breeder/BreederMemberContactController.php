@@ -251,8 +251,11 @@ class BreederMemberContactController extends AbstractController
                     );
 
                 case 'complete':
-                    $contract->setPet($pet)->setImagePath($thumbnail_path);
-                    $contract->setIsActive(1);
+                    $contract
+                        ->setPet($pet)->setImagePath($thumbnail_path)
+                        ->setIsActive(1)
+                        ->setBreeder($pet->getBreeder())
+                        ->setCustomer($this->getUser());
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($contract);
                     $entityManager->flush();

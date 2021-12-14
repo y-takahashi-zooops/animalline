@@ -4465,3 +4465,46 @@ CONTENTS後藤追加分
 .img-container > div {
   height: 40vh !important;
 }
+
+/* フロント評価表示(ブリーダー詳細画面) */
+.evl {
+  margin-bottom: 15px;
+}
+
+.evl .evlHeader {
+  margin-top: 4px;
+  background-color: #ede6cc;
+  border: 1px solid #ced4da;
+  border-bottom: 0;
+  padding: 6px 10px;
+  border-radius: 6px 6px 0 0;
+}
+
+.evl .evlData {
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-bottom: 1px;
+  padding: 6px 10px;
+}
+
+.evl .evlMessage {
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 0 0 6px 6px;
+  font-weight: 300;
+}
+
+.evlMoreButton {
+  display: block;
+  background-color: #ffab00;
+  color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  border: solid #ffab00 1px;
+  transition: .4s;
+  font-size: 20px;
+  line-height: 1;
+  width: 33%;
+  margin: 0 auto;
+  text-align: center;
+}
