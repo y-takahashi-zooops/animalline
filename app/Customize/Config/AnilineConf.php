@@ -192,4 +192,9 @@ final class AnilineConf
 
     const ANILINE_PRODUCT_CHECK_AUTH_FALSE = 0;
     const ANILINE_PRODUCT_CHECK_AUTH_TRUE = 1;
+
+    const ANILINE_MESSAGE_DELETED = 1;
+
+    const MESSAGE_USER = 1;
+    const MESSAGE_MEMBER = 2;
 }

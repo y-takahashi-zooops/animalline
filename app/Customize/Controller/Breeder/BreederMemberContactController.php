@@ -561,4 +561,28 @@ class BreederMemberContactController extends AbstractController
             'id' => $request->get('pet_id')
         ]);
     }
+
+    /**
+     * Delete message
+     *
+     * @Route("/breeder/member/message/delete", name="delete_message_breeder")
+     *
+     */
+    public function deleteMessageContact(Request $request) {
+        $msg = $this->breederContactsRepository->find($request->get('msgId'));
+        $msgHeaderId = $msg->getBreederContactHeader()->getId();
+        $entityManager = $this->getDoctrine()->getManager();
+        $msg->setIsDelete(AnilineConf::ANILINE_MESSAGE_DELETED);
+        $entityManager->persist($msg);
+        $entityManager->flush();
+        if ($request->get('role') == AnilineConf::MESSAGE_MEMBER) {
+            return $this->redirect($this->generateUrl('breeder_breeder_message', [
+                'id' => $msgHeaderId
+            ]));
+        }
+
+        return $this->redirect($this->generateUrl('breeder_message', [
+            'id' => $msgHeaderId
+        ]));
+    }
 }
