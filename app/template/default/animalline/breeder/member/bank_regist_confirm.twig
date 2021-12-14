@@ -29,12 +29,34 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.bank_name, '支店名', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        {{ form_label(form.bank_code, '銀行コード', { 'label_attr': { 'class': 'ec-label' }}) }}                                                                            
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.bank_code) ? ' error' }}">
+                                            {{ form.bank_code.vars.data }}
+                                            {{ form_widget(form.bank_code, { type : 'hidden' }) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.branch_name, '支店名', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.branch_name) ? ' error' }}">
                                             {{ form.branch_name.vars.data }}
                                             {{ form_widget(form.branch_name, { type : 'hidden' }) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.branch_number, '支店番号', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.branch_number) ? ' error' }}">
+                                            {{ form.branch_number.vars.data }}
+                                            {{ form_widget(form.branch_number, { type : 'hidden' }) }}
                                         </div>
                                     </dd>
                                 </dl>
@@ -55,7 +77,7 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.account_kind) ? ' error' }}">
-                                            {{ form.account_kind.vars.data }}
+                                            {{ form.account_kind.vars.choices[form.account_kind.vars.data-1].label }}
                                             {{ form_widget(form.account_kind, { type : 'hidden' }) }}
                                         </div>
                                     </dd>

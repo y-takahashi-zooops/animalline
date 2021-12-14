@@ -35,6 +35,10 @@ class CustomizeNav implements EccubeNav
 						'name' => '検査状況集計',
 						'url' => 'admin_breeder_dna_check_list',
 					],
+					'breeders_evaluation' => [
+						'name' => '評価一覧',
+						'url' => 'admin_breeder_evaluation',
+					],
 				],
 			],
 			'pets' => [

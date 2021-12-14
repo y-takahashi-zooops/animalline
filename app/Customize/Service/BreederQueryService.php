@@ -274,6 +274,7 @@ class BreederQueryService
             ->join('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.Breeder')
             ->join('Customize\Entity\BreederEvaluations', 'be', 'WITH', 'be.Pet = bp.id')
             ->where('b.id = :breeder_id')
+            ->andWhere('be.is_active = 2')
             ->setParameter('breeder_id', $breederId)
             ->select('avg(be.evaluation_value) as avg_evaluation')
             ->getQuery()
