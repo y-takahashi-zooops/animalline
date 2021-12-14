@@ -140,7 +140,7 @@
         <input type="hidden" value="" name="role" class="role">
         {{ include('animalline/components/_modal_delete.twig') }}
     </form>
-    <form action="{{ url('breeder_breeder_message') }}" method="post" name="contract-cancel-form">
+    <form action="{{ url('breeder_breeder_message', {'id': message.id}) }}" method="post" name="contract-cancel-form">
         {{ include('animalline/components/_modal_contract_cancel.twig') }}
     </form>
     <form action="{{ url('breeder_breeder_message', {'id': message.id}) }}" method="post" name="contract-accept-form">
