@@ -171,9 +171,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     $(".delete").click(function() {
-        $('#modal_delete').modal('show');
         $(".msgId").val($(this).data('id'));
         $(".role").val($(this).data('role'));
+        $('#modal_delete').modal('show');
     })
 
     if (document.getElementById("cancel")) {
