@@ -8,6 +8,8 @@ use Customize\Repository\BenefitsStatusRepository;
 use Customize\Form\Type\Front\BenefitsStatusType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Eccube\Controller\AbstractController;
+use Eccube\Event\EccubeEvents;
+use Eccube\Event\EventArgs;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,22 +47,67 @@ class AdoptionBenefitsController extends AbstractController
         $benefitsStatus = new BenefitsStatus();
         $builder = $this->formFactory->createBuilder(BenefitsStatusType::class, $benefitsStatus);
 
+        // FRONT_CONTACT_INDEX_INITIALIZE
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+                'benefitsStatus' => $benefitsStatus
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
         $form = $builder->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $benefitsStatus->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
-            ->setRegisterId($user->getId())
-            ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
-            ->setShippingPref($benefitsStatus->getShippingPref());
+            switch ($request->get('mode')) {
+                case 'confirm':
+                    $form = $builder->getForm();
+                    $form->handleRequest($request);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($benefitsStatus);
+                    return $this->render('animalline/adoption/member/benefits_confirm.twig', [
+                        'form' => $form->createView(),
+                    ]);
 
-            $entityManager->flush();
-            return $this->redirect($this->generateUrl('adoption_mypage'));
+                case 'complete':
+                    $data = $form->getData();
+
+                    $event = new EventArgs(
+                        [
+                            'form' => $form,
+                            'data' => $data,
+                        ],
+                        $request
+                    );
+
+                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+                    $data = $event->getArgument('data');
+                    $benefitsStatus->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
+                                ->setRegisterId($user->getId())
+                                ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
+                                ->setShippingPref($benefitsStatus->getShippingPref());
+
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($benefitsStatus);
+
+                    $entityManager->flush();
+                    return $this->redirect($this->generateUrl('benefits_complete'));
+            }
+            
         }
+
         return [
             'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * お問い合わせ完了画面.
+     *
+     * @Route("/adoption/member/benefits/complete", name="benefits_complete")
+     * @Template("animalline/adoption/member/benefits_complete.twig")
+     */
+    public function complete()
+    {
+        return [];
     }
 }
