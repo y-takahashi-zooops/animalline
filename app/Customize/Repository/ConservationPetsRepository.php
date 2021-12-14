@@ -81,6 +81,12 @@ class ConservationPetsRepository extends ServiceEntityRepository
      */
     public function filterConservationPetsAdmin(array $criteria, array $order): array
     {
+        $status = $this->createQueryBuilder('cp2')
+            ->join('Customize\Entity\DnaCheckStatus', 'dna2', 'WITH', 'cp2.id = dna2.pet_id')
+            ->where('dna2.check_status = 8')
+            ->select('cp2.id')
+            ->getDQL();
+
         $qb = $this->createQueryBuilder('cp');
         if (!empty($criteria['pet_kind']) && StringUtil::isNotBlank($criteria['pet_kind'])) {
             $qb
@@ -158,6 +164,7 @@ class ConservationPetsRepository extends ServiceEntityRepository
         }
 
         return $qb->leftJoin('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'cp.id = dna.pet_id')
+            ->andWhere($qb->expr()->notIn('cp.id', $status))
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
             ->leftJoin('Customize\Entity\Conservations', 'c', 'WITH', 'c.id = cp.Conservation')
             ->select('cp', 'dna', 'b.breeds_name', 'c.owner_name')
