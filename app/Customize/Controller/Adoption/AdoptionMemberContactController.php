@@ -458,4 +458,28 @@ class AdoptionMemberContactController extends AbstractController
             'id' => $request->get('pet_id')
         ]);
     }
+
+    /**
+     * Delete message
+     *
+     * @Route("/adoption/member/message/delete", name="delete_message_adoption")
+     *
+     */
+    public function deleteMessageContact(Request $request) {
+        $msg = $this->conservationContactsRepository->find($request->get('msgId'));
+        $msgHeaderId = $msg->getConservationContactHeader()->getId();
+        $entityManager = $this->getDoctrine()->getManager();
+        $msg->setIsDelete(AnilineConf::ANILINE_MESSAGE_DELETED);
+        $entityManager->persist($msg);
+        $entityManager->flush();
+        if ($request->get('role') == AnilineConf::MESSAGE_MEMBER) {
+            return $this->redirect($this->generateUrl('adoption_adoption_message', [
+                'id' => $msgHeaderId
+            ]));
+        }
+
+        return $this->redirect($this->generateUrl('adoption_message', [
+            'id' => $msgHeaderId
+        ]));
+    }
 }

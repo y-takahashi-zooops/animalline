@@ -61,6 +61,11 @@ class ConservationContacts
      */
     private $is_reading;
 
+    /**
+     * @ORM\Column(name="is_delete", type="smallint", nullable=false, options={"default" = 0})
+     */
+    private $is_delete = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -150,6 +155,18 @@ class ConservationContacts
     public function setIsReading(int $is_reading): self
     {
         $this->is_reading = $is_reading;
+
+        return $this;
+    }
+
+    public function getIsDelete(): ?int
+    {
+        return $this->is_delete;
+    }
+
+    public function setIsDelete(int $is_delete): self
+    {
+        $this->is_delete = $is_delete;
 
         return $this;
     }
