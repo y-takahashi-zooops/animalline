@@ -1,0 +1,26 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+
+{% block main %}
+<div class="ec-layoutRole__main">
+    <div class="ec-mypageRole">
+        <div class="ec-pageHeader">
+            <h1>特典受取手続き(完了)</h1>
+        </div>
+    </div>
+    <div class="ec-registerCompleteRole">
+        <div class="ec-off2Grid ec-text-ac">
+            <div class="ec-off2Grid__cell">
+                <div class="ec-reportHeading">
+                    <h2>{{ '特典受取手続きが完了いたしました'|trans }}</h2>
+                </div>
+                <div class="ec-off4Grid">
+                    <div class="ec-off4Grid__cell"><a class="ec-blockBtn--cancel" href="{{ url('breeder_mypage') }}">{{
+                            '戻る'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

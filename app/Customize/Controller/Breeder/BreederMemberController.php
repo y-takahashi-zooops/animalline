@@ -167,14 +167,16 @@ class BreederMemberController extends AbstractController
         $pets = $this->breederQueryService->findBreederFavoritePets($this->getUser()->getId());
 
         $customer_newmsg = 0;
-        if($this->breederContactHeaderRepository->findBy(["Customer" => $user, "customer_new_msg" => 1])){
+        if ($this->breederContactHeaderRepository->findBy(["Customer" => $user, "customer_new_msg" => 1])) {
             $customer_newmsg = 1;
         }
 
         $breefer_newmsg = 0;
-        if($this->breederContactHeaderRepository->findBy(["Breeder" => $user, "breeder_new_msg" => 1])){
+        if ($this->breederContactHeaderRepository->findBy(["Breeder" => $user, "breeder_new_msg" => 1])) {
             $breefer_newmsg = 1;
         }
+
+        $canBenefits = !!$this->breederContactHeaderRepository->findBy(["Customer" => $user, "contract_status" => AnilineConf::CONTRACT_STATUS_CONTRACT]);
 
         return $this->render('animalline/breeder/member/index.twig', [
             'breeder' => $breeder,
@@ -182,6 +184,7 @@ class BreederMemberController extends AbstractController
             'user' => $this->getUser(),
             'customer_newmsg' => $customer_newmsg,
             'breeder_newmsg' => $breefer_newmsg,
+            'canBenefits' => $canBenefits,
         ]);
     }
 
@@ -194,7 +197,7 @@ class BreederMemberController extends AbstractController
      */
     public function breeder_site_sample_menu(Request $request)
     {
-        return[];
+        return [];
     }
 
     /**
@@ -204,7 +207,7 @@ class BreederMemberController extends AbstractController
      * @Route("/breeder/member/sample/image/{image_name}", name="breeder_site_sample_image")
      * @Template("animalline/breeder/member/site_sample_image.twig")
      */
-    public function breeder_site_sample_image(Request $request,$image_name)
+    public function breeder_site_sample_image(Request $request, $image_name)
     {
         return ["image_name" => $image_name];
     }
@@ -434,11 +437,11 @@ class BreederMemberController extends AbstractController
         $user = $this->getUser();
         $breeder = $this->breedersRepository->find($user);
         $BankAccount = $this->bankAccountRepository->findOneBy(['Breeder' => $breeder]);
-        if(!$BankAccount){
+        if (!$BankAccount) {
             $BankAccount = new BankAccount();
         }
 
-        $form = $this->createForm(BankAccountType::class,$BankAccount);
+        $form = $this->createForm(BankAccountType::class, $BankAccount);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

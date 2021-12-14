@@ -3,32 +3,31 @@
 namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
+use Customize\Entity\BenefitsStatus;
+use Customize\Form\Type\Front\BenefitsStatusType;
+use Customize\Repository\BenefitsStatusRepository;
+use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Customize\Repository\BreedersRepository;
 use Eccube\Controller\AbstractController;
-use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederBenefitsController extends AbstractController
 {
-
     /**
-     * @var BreedersRepository
+     * @var BenefitsStatusRepository
      */
-    protected $breedersRepository;
+    protected $benefitsStatusRepository;
 
     /**
-     * BreederController constructor.
+     * BreederBenefitsController constructor.
      *
-     * @param BreedersRepository $breedersRepository
+     * @param BenefitsStatusRepository $benefitsStatusRepository
      */
     public function __construct(
-        BreedersRepository               $breedersRepository
+        BenefitsStatusRepository $benefitsStatusRepository
     ) {
-        $this->breedersRepository = $breedersRepository;
+        $this->benefitsStatusRepository = $benefitsStatusRepository;
     }
 
     /**
@@ -39,5 +38,56 @@ class BreederBenefitsController extends AbstractController
      */
     public function benefits(Request $request)
     {
+        $user = $this->getUser();
+        $BenefitsStatus = $this->benefitsStatusRepository->findOneBy(['register_id' => $user->getId()]);
+        if (!$BenefitsStatus) {
+            $BenefitsStatus = new BenefitsStatus;
+            $BenefitsStatus->setShippingName($user->getName01() . ' ' . $user->getName02())
+                //->setShippingZip($user->getPostalCode())
+                ->setShippingTel($user->getPhoneNumber());
+        }
+
+        $form = $this->createForm(BenefitsStatusType::class, $BenefitsStatus);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            switch ($request->get('mode')) {
+                case 'confirm':
+                    return $this->render('animalline/breeder/member/benefits_confirm.twig', [
+                        'form' => $form->createView(),
+                    ]);
+                case 'complete':
+                    $BenefitsStatus->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
+                        ->setRegisterId($user->getId())
+                        ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
+                        ->setShippingPref($BenefitsStatus->getPref()->getName());
+                    $shippingDate = new DateTime;
+                    if (intval(date("H")) >= 14) {
+                        $shippingDate->modify('+1 days');
+                    }
+                    $BenefitsStatus->setBenefitsShippingDate($shippingDate);
+
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($BenefitsStatus);
+                    $entityManager->flush();
+
+                    return $this->redirect($this->generateUrl('breeder_benefits_complete'));
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * 完了した特典.
+     *
+     * @Route("/breeder/member/benefits/complete", name="breeder_benefits_complete")
+     * @Template("animalline/breeder/member/benefits_complete.twig")
+     */
+    public function benefits_complete()
+    {
+        return [];
     }
 }

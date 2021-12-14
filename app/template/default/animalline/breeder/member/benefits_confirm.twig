@@ -1,15 +1,14 @@
 {% set site_type = 'breeder' %}
 {% extends 'animalline/breeder/frame.twig' %}
-{# {% form_theme form 'Form/form_div_layout.twig' %} #}
+{% form_theme form 'Form/form_div_layout.twig' %}
 
 {% block main %}
 <div class="ec-layoutRole__main">
     <div class="ec-mypageRole">
         <div class="ec-pageHeader">
-            <h1>特典受取手続き</h1>
+            <h1>特典受取手続き(確認)</h1>
         </div>
     </div>
-
     <div class="ec-mypageRole">
         <div class="ec-editRole">
             <div class="ec-off1Grid">
@@ -23,8 +22,8 @@
                                 <label style="color: red">特典送付の宛先になります。表示内容に追加があればご編集ください。</label>
                             </div>
                             <div class="col-md-8 ec-input ec-select">
-                                {{ form_widget(form.shipping_name) }}
-                                {{ form_errors(form.shipping_name) }}
+                                {{ form.shipping_name.vars.data }}
+                                {{ form_widget(form.shipping_name, { type : 'hidden' }) }}
                             </div>
                         </div>
                         <div>
@@ -41,7 +40,8 @@
                                     </div>
                                     <div class="col-2 mb-2">
                                         <div class="ec-zipInput">
-                                            {{ form_widget(form.shipping_zip) }}
+                                            {{ form.shipping_zip.vars.data }}
+                                            {{ form_widget(form.shipping_zip, { type : 'hidden' }) }}
                                         </div>
                                     </div>
                                 </div>
@@ -54,7 +54,8 @@
                                     </div>
                                     <div class="col-2 mb-2">
                                         <div class="ec-select">
-                                            {{ form_widget(form.Pref) }}
+                                            {{ form.Pref.vars.data }}
+                                            {{ form_widget(form.Pref, { type : 'hidden' }) }}
                                         </div>
                                     </div>
                                 </div>
@@ -67,22 +68,23 @@
                                     </div>
                                     <div class="col-2 mb-2">
                                         <div class="ec-input">
-                                            {{ form_widget(form.shipping_city, { 'attr': { 'placeholder':
-                                            '市区町村名(例：大阪市北区)'}}) }}
+                                            {{ form.shipping_city.vars.data }}
+                                            {{ form_widget(form.shipping_city, { type : 'hidden' }) }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-3">
                                         <div class="d-inline-block">
+                                            {{ form.shipping_name.vars.data }}
                                             {{ form_label(form.shipping_address, '市区町村以下住所', { 'label_attr': { 'class':
                                             'ec-label' }}) }}
                                         </div>
                                     </div>
                                     <div class="col-6 mb-2">
                                         <div class="ec-input">
-                                            {{ form_widget(form.shipping_address, { 'attr': { 'placeholder':
-                                            '番地・ビル名(例：西梅田1丁目6-8)'}}) }}
+                                            {{ form.shipping_address.vars.data }}
+                                            {{ form_widget(form.shipping_address, { type : 'hidden' }) }}
                                         </div>
                                     </div>
                                 </div>
@@ -94,15 +96,20 @@
                                     </div>
                                 </div>
                                 <div class="col-2 mb-2">
-                                    {{ form_widget(form.shipping_tel) }}
+                                    {{ form.shipping_tel.vars.data }}
+                                    {{ form_widget(form.shipping_tel, { type : 'hidden' }) }}
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mx-auto">
-                                <button class="ec-blockBtn--action" type="submit" name="mode"
-                                    value="confirm">登録</button>
+                                <button type="submit" class="ec-blockBtn--action mb-2" name="mode" value="complete">{{
+                                    '送信する'|trans }}
+                                </button>
+                                <button type="submit" class="ec-blockBtn--cancel" name="mode" value="back">{{ '戻る'|trans
+                                    }}
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -116,6 +123,4 @@
 {% block stylesheet %}
 <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 {% endblock %}
-{% block javascript %}
-<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
-{% endblock %}
+{% block javascript %}{% endblock %}
