@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Eccube\Controller\AbstractController;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
+use Eccube\Repository\OrderRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,14 +26,22 @@ class AdoptionBenefitsController extends AbstractController
     protected $benefitsStatusRepository;
 
     /**
+     * @var OrderRepository
+     */
+    protected $orderRepository;
+
+    /**
      * BreederController constructor.
-     *
+     * 
+     * @param OrderRepository $orderRepository
      * @param BenefitsStatusRepository $benefitsStatusRepository
      */
     public function __construct(
-        BenefitsStatusRepository    $benefitsStatusRepository
+        BenefitsStatusRepository    $benefitsStatusRepository,
+        OrderRepository $orderRepository
     ) {
         $this->benefitsStatusRepository = $benefitsStatusRepository;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -55,6 +64,9 @@ class AdoptionBenefitsController extends AbstractController
             ],
             $request
         );
+
+        $isBoughtPet = $this->orderRepository->findBy(['Customer' => $user]);
+
         $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -99,6 +111,7 @@ class AdoptionBenefitsController extends AbstractController
 
         return [
             'form' => $form->createView(),
+            'isBoughtPet' => $isBoughtPet
         ];
     }
 
