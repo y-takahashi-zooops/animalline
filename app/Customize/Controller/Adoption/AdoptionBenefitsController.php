@@ -84,8 +84,10 @@ class AdoptionBenefitsController extends AbstractController
                     $benefitsStatus->setSiteType(AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
                                 ->setRegisterId($user->getId())
                                 ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
-                                ->setShippingPref($benefitsStatus->getShippingPref());
-
+                                ->setShippingPref($benefitsStatus->getPref()->getName());
+                    $shippingdate = new \DateTime();
+                    $benefitsStatus->setBenefitsShippingDate($shippingdate);
+                
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($benefitsStatus);
 

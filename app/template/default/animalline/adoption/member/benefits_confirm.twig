@@ -54,7 +54,7 @@
                                                 </div>
                                             </div>
                                             <div class="ec-select{{ has_errors(form.Pref) ? ' error' }}">
-                                                {{ form.Pref.vars.choices[form.Pref.vars.data-1].label }}
+                                                {{ form.Pref.vars.choices[form.Pref.vars.data.id].label }}
                                                 {{ form_widget(form.Pref, { 'attr': {'class': 'hidden'} }) }}
                                             </div>
                                             <div class="ec-input{{ has_errors(form.shipping_city) ? ' error' }}">
