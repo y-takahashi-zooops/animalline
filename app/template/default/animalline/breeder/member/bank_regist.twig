@@ -30,12 +30,34 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.bank_name, '支店名', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        {{ form_label(form.bank_code, '銀行コード（4桁）', { 'label_attr': { 'class': 'ec-label' }}) }}                                                                            
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.bank_code) ? ' error' }}">
+                                            {{ form_widget(form.bank_code, { 'attr': { 'placeholder': '' }}) }}
+                                            {{ form_errors(form.bank_code) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.branch_name, '支店名', { 'label_attr': { 'class': 'ec-label' }}) }}
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.branch_name) ? ' error' }}">
                                             {{ form_widget(form.branch_name, { 'attr': { 'placeholder': '' }}) }}
                                             {{ form_errors(form.branch_name) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.branch_number, '支店番号（3桁）', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.branch_number) ? ' error' }}">
+                                            {{ form_widget(form.branch_number, { 'attr': { 'placeholder': '' }}) }}
+                                            {{ form_errors(form.branch_number) }}
                                         </div>
                                     </dd>
                                 </dl>

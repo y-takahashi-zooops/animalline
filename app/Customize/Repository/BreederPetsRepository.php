@@ -80,6 +80,12 @@ class BreederPetsRepository extends ServiceEntityRepository
      */
     public function filterBreederPetsAdmin(array $criteria, array $order): array
     {
+        $status = $this->createQueryBuilder('bp2')
+            ->join('Customize\Entity\DnaCheckStatus', 'dna2', 'WITH', 'bp2.id = dna2.pet_id')
+            ->where('dna2.check_status = 8')
+            ->select('bp2.id')
+            ->getDQL();
+
         $qb = $this->createQueryBuilder('bp');
         if (!empty($criteria['pet_kind']) && StringUtil::isNotBlank($criteria['pet_kind'])) {
             $qb
@@ -157,6 +163,7 @@ class BreederPetsRepository extends ServiceEntityRepository
         }
 
         return $qb->leftJoin('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'bp.id = dna.pet_id')
+            ->andWhere($qb->expr()->notIn('bp.id', $status))
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
             ->leftJoin('Customize\Entity\Breeders', 'bd', 'WITH', 'bd.id = bp.Breeder')
             ->select('bp', 'dna', 'b.breeds_name', 'bd.breeder_name')

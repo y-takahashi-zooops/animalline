@@ -274,6 +274,7 @@ class BreederQueryService
             ->join('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.Breeder')
             ->join('Customize\Entity\BreederEvaluations', 'be', 'WITH', 'be.Pet = bp.id')
             ->where('b.id = :breeder_id')
+            ->andWhere('be.is_active = 2')
             ->setParameter('breeder_id', $breederId)
             ->select('avg(be.evaluation_value) as avg_evaluation')
             ->getQuery()
@@ -318,5 +319,28 @@ class BreederQueryService
         return $qb->orderBy('p.' . $order['field'], $order['direction'])
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * list breeder pets
+     */
+    public function getListPet($breeder)
+    {
+        $status = $this->breederPetsRepository->createQueryBuilder('bp2')
+            ->join('Customize\Entity\DnaCheckStatus', 'dna2', 'WITH', 'bp2.id = dna2.pet_id')
+            ->where('dna2.check_status = 8')
+            ->select('bp2.id')
+            ->getDQL();
+
+        $qb = $this->breederPetsRepository->createQueryBuilder('bp');
+        return $qb
+            ->join('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = bp.BreedsType')
+            ->where('bp.Breeder = :breeder')
+            ->setParameter('breeder', $breeder)
+            ->andWhere($qb->expr()->notIn('bp.id', $status))
+            ->orderBy('bp.update_date', 'DESC')
+            ->select('bp, b.breeds_name')
+            ->getQuery()
+            ->getScalarResult();
     }
 }

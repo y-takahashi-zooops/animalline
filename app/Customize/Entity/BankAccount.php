@@ -34,9 +34,19 @@ class BankAccount
     private $bank_name;
 
     /**
+     * @ORM\Column(name="bank_code", type="integer")
+     */
+    private $bank_code;
+
+    /**
      * @ORM\Column(name="branch_name", type="string", length=40)
      */
     private $branch_name;
+
+    /**
+     * @ORM\Column(name="branch_number", type="integer")
+     */
+    private $branch_number;
 
     /**
      * @ORM\Column(name="account_number", type="integer")
@@ -96,6 +106,18 @@ class BankAccount
         return $this;
     }
 
+    public function getBankCode(): ?int
+    {
+        return $this->bank_code;
+    }
+
+    public function setBankCode(int $bank_code): self
+    {
+        $this->bank_code = $bank_code;
+
+        return $this;
+    }
+
     public function getBranchName(): ?string
     {
         return $this->branch_name;
@@ -104,6 +126,18 @@ class BankAccount
     public function setBranchName(string $branch_name): self
     {
         $this->branch_name = $branch_name;
+
+        return $this;
+    }
+
+    public function getBranchNumber(): ?int
+    {
+        return $this->branch_number;
+    }
+
+    public function setBranchNumber(int $branch_number): self
+    {
+        $this->branch_number = $branch_number;
 
         return $this;
     }

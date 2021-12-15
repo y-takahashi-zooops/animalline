@@ -30,6 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetImageRepository;
 use Eccube\Repository\CustomerRepository;
+use Customize\Repository\BreederEvaluationsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Customize\Service\MailService;
 
@@ -91,6 +92,11 @@ class BreederController extends AbstractController
     protected $dnaCheckKindsRepository;
 
     /**
+     * @var BreederEvaluationsRepository
+     */
+    protected $breederEvaluationsRepository;
+
+    /**
      * breederController constructor.
      * @param BreedersRepository $breedersRepository
      * @param BreedsRepository $breedsRepository
@@ -103,6 +109,7 @@ class BreederController extends AbstractController
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
+     * @param BreederEvaluationsRepository $breederEvaluationsRepository
      */
     public function __construct(
         BreedersRepository               $breedersRepository,
@@ -115,7 +122,8 @@ class BreederController extends AbstractController
         MailService                      $mailService,
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
         DnaQueryService                  $dnaQueryService,
-        DnaCheckKindsRepository          $dnaCheckKindsRepository
+        DnaCheckKindsRepository          $dnaCheckKindsRepository,
+        BreederEvaluationsRepository     $breederEvaluationsRepository
     ) {
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -128,6 +136,7 @@ class BreederController extends AbstractController
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
+        $this->breederEvaluationsRepository = $breederEvaluationsRepository;
     }
 
     /**
@@ -277,10 +286,50 @@ class BreederController extends AbstractController
             }
         }
 
-        return[
+        return [
             'breederName' => $breederName,
             'arrayBreeder' => $arrayBreeder,
             'countPet' => $countPet
+        ];
+    }
+
+    /**
+     * ブリーダー評価一覧
+     *
+     * @Route("/%eccube_admin_route%/breeder/evaluation", name="admin_breeder_evaluation")
+     * @Template("@admin/Breeder/evaluation.twig")
+     */
+    public function evaluation(PaginatorInterface $paginator, Request $request)
+    {
+        $evaluations = $paginator->paginate(
+            $this->breederEvaluationsRepository->findBy([], ['update_date' => 'DESC']),
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        if ($request->isMethod('POST')) {
+            $result = (int)$request->get('is_active');
+            $id = (int)$request->get('id');
+
+            $evaluation = $this->breederEvaluationsRepository->find($id);
+            $evaluation->setIsActive($result);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($evaluation);
+            $entityManager->flush();
+
+            $breeder = $evaluation->getPet()->getBreeder();
+            $avgEvaluation = $this->breederQueryService->calculateBreederRank($breeder->getId());
+            $breeder->setBreederRank($avgEvaluation);
+            $entityManager->persist($breeder);
+
+            $entityManager->flush();
+
+            $this->addSuccess('公開ステータスを変更しました。', 'admin');
+            return $this->redirectToRoute('admin_breeder_evaluation');
+        }
+
+        return [
+            'evaluations' => $evaluations,
         ];
     }
 }

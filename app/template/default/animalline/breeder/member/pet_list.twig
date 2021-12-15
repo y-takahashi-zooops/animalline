@@ -13,22 +13,22 @@
                 <ul>
                     {% for pet in pets %}
                         <li>
-                            <a href="{{ url('breeder_pets_edit', {'id': pet.id}) }}">
+                            <a href="{{ url('breeder_pets_edit', {'id': pet['bp_id']}) }}">
                                 <figure>
-                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}" class="card-img-top" alt="Pet-image"></figure>
+                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet['bp_thumbnail_path'] | default('/noimage_plugin_list.png')) }}" class="card-img-top" alt="Pet-image"></figure>
                                 </a>
                                 <h4>
-                                    {{ pet.getBreedsType().getBreedsName() ?? '' }}
+                                    {{ pet['breeds_name'] ?? '' }}
                                 </h4>
                                 <div class="birthday">
-                                    {{ pet.petBirthday|date('Y年m月d日') }}
+                                    {{ pet['bp_pet_birthday']|date('Y年m月d日') }}
                                     生                                  
                                 </div>
                                 <div class="price">
-                                    {{ pet.price|number_format(0) }}
+                                    {{ pet['bp_price']|number_format(0) }}
                                     円（税込）                                  
                                 </div>
-                                <a href="{{ path('breeder_pets_edit', {'id': pet.id} )  }}" class="btn w-100 btn-warning text-align-center my-1">
+                                <a href="{{ path('breeder_pets_edit', {'id': pet['bp_id']} )  }}" class="btn w-100 btn-warning text-align-center my-1">
                                     編集                                        
                                 </a>
                             </li>

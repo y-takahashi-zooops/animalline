@@ -44,6 +44,23 @@ class BankAccountType extends AbstractType
                     new Assert\NotBlank()
                 ]
             ])
+            ->add('bank_code', TextType::class, [
+                'required' => true,
+                'attr' => [
+                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                ],
+                'constraints' => [
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ]),
+                    new Assert\Length([
+                        'min' => 0,
+                        'max' => 4
+                    ]),
+                    new Assert\NotBlank()
+                ]
+            ])
             ->add('branch_name', TextType::class, [
                 'required' => true,
                 'attr' => [
@@ -53,6 +70,20 @@ class BankAccountType extends AbstractType
                     new Assert\Length([
                         'min' => 0,
                         'max' => $this->eccubeConfig['eccube_stext_len']
+                    ]),
+                    new Assert\NotBlank()
+                ]
+            ])
+            ->add('branch_number', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\Type([
+                        'type' => 'numeric',
+                        'message' => 'form_error.numeric_only',
+                    ]),
+                    new Assert\Length([
+                        'min' => 0,
+                        'max' => 3
                     ]),
                     new Assert\NotBlank()
                 ]

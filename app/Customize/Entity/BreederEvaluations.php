@@ -5,6 +5,7 @@ namespace Customize\Entity;
 use Customize\Repository\BreederEvaluationsRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Eccube\Entity\Customer;
 
 /**
  * @ORM\Entity(repositoryClass=BreederEvaluationsRepository::class)
@@ -23,11 +24,22 @@ class BreederEvaluations
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="BreederEvaluations")
+     * @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=false)
+     */
+    private $Customer;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="BreederEvaluations")
+     * @ORM\JoinColumn(name="breeder_id", referencedColumnName="id", nullable=false)
+     */
+    private $Breeder;
+
+    /**
      * @ORM\ManyToOne(targetEntity=BreederPets::class, inversedBy="BreederEvaluations")
      * @ORM\JoinColumn(name="pet_id", nullable=false)
      */
     private $Pet;
-
 
     /**
      * @ORM\Column(name="evaluation_value", type="integer", nullable=false)
@@ -43,6 +55,11 @@ class BreederEvaluations
      * @ORM\Column(name="image_path", type="string", length=255, nullable=true)
      */
     private $image_path;
+
+    /**
+     * @ORM\Column(name="is_active", type="smallint", options={"default" = 0})
+     */
+    private $is_active = 0;
 
     /**
      * @var \DateTime
@@ -61,6 +78,30 @@ class BreederEvaluations
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getBreeder(): ?Breeders
+    {
+        return $this->Breeder;
+    }
+
+    public function setBreeder(Breeders $breeder): self
+    {
+        $this->Breeder = $breeder;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->Customer;
+    }
+
+    public function setCustomer(Customer $customer): self
+    {
+        $this->Customer = $customer;
+
+        return $this;
     }
 
     public function getPet(): ?BreederPets
@@ -109,6 +150,23 @@ class BreederEvaluations
         $this->image_path = $image_path;
 
         return $this;
+    }
+
+    public function getIsActive(): ?int
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(int $is_active): self
+    {
+        $this->is_active = $is_active;
+
+        return $this;
+    }
+
+    public function getCreateDate(): ?\DateTimeInterface
+    {
+        return $this->create_date;
     }
 
     /**
