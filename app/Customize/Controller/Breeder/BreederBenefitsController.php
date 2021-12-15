@@ -9,7 +9,6 @@ use Customize\Repository\BenefitsStatusRepository;
 use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Eccube\Controller\AbstractController;
-use Eccube\Repository\Master\PrefRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -37,17 +36,17 @@ class BreederBenefitsController extends AbstractController
      * @Route("/breeder/member/benefits", name="breeder_benefits")
      * @Template("animalline/breeder/member/benefits.twig")
      */
-    public function benefits(Request $request, PrefRepository $prefRepository)
+    public function benefits(Request $request)
     {
         $user = $this->getUser();
         $BenefitsStatus = $this->benefitsStatusRepository->findOneBy(['register_id' => $user->getId()]);
         if (!$BenefitsStatus) {
             $BenefitsStatus = new BenefitsStatus;
-            $BenefitsStatus->setShippingName($user->getName01() . ' ' . $user->getName02())
+            $BenefitsStatus->setShippingName($user->getName01() . $user->getName02())
                 ->setShippingZip($user->getPostalCode())
                 ->setPref($user->getPref())
-                ->setShippingCity($user->getPref()->getName())
-                ->setShippingAddress($user->getAddr01())
+                ->setShippingCity($user->getAddr01())
+                ->setShippingAddress($user->getAddr02())
                 ->setShippingTel($user->getPhoneNumber());
         }
 
