@@ -148,6 +148,7 @@ class AdoptionMemberController extends AbstractController
     {
         $user = $this->getUser();
         $conservation = $this->conservationsRepository->find($user);
+        $canBenefits = !!$this->conservationContactHeaderRepository->findBy(["Customer" => $user, "contract_status" => AnilineConf::CONTRACT_STATUS_CONTRACT]);
 
         $pets = $this->adoptionQueryService->findAdoptionFavoritePets($this->getUser()->getId());
 
@@ -167,6 +168,7 @@ class AdoptionMemberController extends AbstractController
             'user' => $this->getUser(),
             'customer_newmsg' => $customer_newmsg,
             'conservation_newmsg' => $conservation_newmsg,
+            'canBenefits' => $canBenefits
         ]);
     }
 

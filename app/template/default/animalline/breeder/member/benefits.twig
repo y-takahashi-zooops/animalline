@@ -3,26 +3,102 @@
 {# {% form_theme form 'Form/form_div_layout.twig' %} #}
 
 {% block main %}
-    <div class="ec-layoutRole__main">
-        <div class="ec-mypageRole">
-            <div class="ec-pageHeader">
-                <h1>特典受取手続き</h1>
-            </div>
+<div class="ec-layoutRole__main">
+    <div class="ec-mypageRole">
+        <div class="ec-pageHeader">
+            <h1>特典受取手続き</h1>
         </div>
-        <div class="ec-mypageRole">
-            <div class="ec-editRole">
-                <div class="ec-off1Grid">
-                    <div class="ec-off1Grid__cell">
-                        
-                    </div>
+    </div>
+
+    <div class="ec-mypageRole">
+        <div class="ec-editRole">
+            <div class="ec-off1Grid">
+                <div class="ec-off1Grid__cell">
+                    <form method="post" action="{{ url('breeder_benefits') }}">
+                        {{ form_widget(form._token) }}
+                        <div class="ec-borderedDefs">
+                            <div class="mb-5">
+                                <dl>
+                                    <dt>
+                                        <span class="mr-2">受取の宛名</span>
+                                        <span class="ec-required">必須</span>
+                                        <div style="font-size:12px;color:#F00">特典送付の宛先になります。表示内容に追加があればご編集ください。</div>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.shipping_name) ? ' error' }}">
+                                            {{ form_widget(form.shipping_name) }}
+                                            {{ form_errors(form.shipping_name) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        <span class="mr-2">住所<span>
+                                                <span class="ec-required">必須</span>
+                                                <div style="font-size:12px;color:#F00">〒は'-'を入れずに入力してくだい<br />特典送付先住所となります。表示内容に追加・変更があれば
+                                                    ご編集ください。</div>
+                                    </dt>
+                                    <dd class="h-adr">
+                                        <span class="p-country-name" style="display:none;">Japan</span>
+                                        <div class="ec-zipInput{{ has_errors(form.shipping_zip) ? ' error' }}">
+                                            <span>{{ '〒'|trans }}</span>
+                                            {{ form_widget(form.shipping_zip) }}
+                                            <div class="ec-zipInputHelp">
+                                                <div class="ec-zipInputHelp__icon">
+                                                    <div class="ec-icon"><img src="/html/template/default/assets/icon/question-white.svg"
+                                                            alt="">
+                                                    </div>
+                                                </div>
+                                                <a href="https://www.post.japanpost.jp/zipcode/" target="_blank"><span>郵便番号検索</span></a>
+                                            </div>
+                                            {{ form_errors(form.shipping_zip) }}
+                                        </div>
+                                        <div class="ec-select{{ has_errors(form.Pref) ? ' error' }}">
+                                            {{ form_widget(form.Pref) }}
+                                            {{ form_errors(form.Pref) }}
+                                        </div>
+                                        <div class="ec-input{{ has_errors(form.shipping_city) ? ' error' }}">
+                                            {{ form_widget(form.shipping_city, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)' }}) }}
+                                            {{ form_errors(form.shipping_city) }}
+                                        </div>
+                                        <div class="ec-input{{ has_errors(form.shipping_address) ? ' error' }}">
+                                            {{ form_widget(form.shipping_address, { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)' }}) }}
+                                            {{ form_errors(form.shipping_address) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        <span class="mr-2">電話番号<span>
+                                                <span class="ec-required">必須</span>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.shipping_tel) ? ' error' }}">
+                                            {{ form_widget(form.shipping_tel) }}
+                                            {{ form_errors(form.shipping_tel) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="ec-registerRole__actions">
+                            <div class="row">
+                                <div class="col-md-6 mx-auto">
+                                    <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 {% endblock %}
-{% block javascript %}{% endblock %}
-    
+{% block javascript %}
+<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+{% endblock %}
