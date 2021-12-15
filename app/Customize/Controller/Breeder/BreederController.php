@@ -15,6 +15,7 @@ use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederHouseRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
+use Customize\Repository\BreederEvaluationsRepository;
 use Eccube\Controller\AbstractController;
 use Eccube\Event\EccubeEvents;
 use Knp\Component\Pager\PaginatorInterface;
@@ -79,6 +80,11 @@ class BreederController extends AbstractController
     protected $breederExaminationInfoRepository;
 
     /**
+     * @var BreederEvaluationsRepository
+     */
+    protected $breederEvaluationsRepository;
+
+    /**
      * @var MailService
      */
     protected $mailService;
@@ -95,6 +101,7 @@ class BreederController extends AbstractController
      * @param BreederHouseRepository $breederHouseRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
+     * @param BreederEvaluationsRepository $breederEvaluationsRepository
      * @param MailService $mailService
      */
     public function __construct(
@@ -108,6 +115,7 @@ class BreederController extends AbstractController
         BreederPetsRepository     $breederPetsRepository,
         PrefRepository            $prefRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
+        BreederEvaluationsRepository $breederEvaluationsRepository,
         MailService                      $mailService
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
@@ -120,6 +128,7 @@ class BreederController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->prefRepository = $prefRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
+        $this->breederEvaluationsRepository = $breederEvaluationsRepository;
         $this->mailService = $mailService;
     }
 
@@ -132,7 +141,7 @@ class BreederController extends AbstractController
      */
     public function breeder_index_reg(Request $request)
     {
-        return[];
+        return [];
     }
 
     /**
@@ -167,7 +176,7 @@ class BreederController extends AbstractController
         return [];
     }
 
-    
+
 
     /**
      * ブリーダーマイページ
@@ -228,14 +237,47 @@ class BreederController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
+        $allEvaluations = $this->breederEvaluationsRepository->findBy(['Breeder' => $breeder, 'is_active' => 2], ['create_date' => 'DESC']);
+        $evaluationCount = count($allEvaluations);
+        $evaluations = $this->breederEvaluationsRepository->findBy(['Breeder' => $breeder, 'is_active' => 2], ['create_date' => 'DESC'], 3);
+
         return compact(
             'breeder',
             'dogHouse',
             'catHouse',
-            'pets'
+            'pets',
+            'evaluations',
+            'evaluationCount'
         );
     }
+
     
+    /**
+     * 評価一覧
+     *
+     * @Route("/breeder/evaluation/{breeder_id}", name="breeder_evaluation", requirements={"breeder_id" = "\d+"})
+     * @Template("/animalline/breeder/breeder_evaluation.twig")
+     */
+    public function breeder_evaluation(Request $request, $breeder_id, PaginatorInterface $paginator)
+    {
+        $breeder = $this->breedersRepository->find($breeder_id);
+        if (!$breeder) {
+            throw new NotFoundHttpException();
+        }
+
+        $evaluationsResult = $this->breederEvaluationsRepository->findBy(['Breeder' => $breeder, 'is_active' => 2], ['create_date' => 'DESC']);
+        $evaluations = $paginator->paginate(
+            $evaluationsResult,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+       
+        return compact(
+            'breeder',
+            'evaluations'
+        );
+    }
+
     /**
      * 会社概要.
      *
@@ -246,7 +288,7 @@ class BreederController extends AbstractController
     {
         return;
     }
-    
+
     /**
      * 特定商取引法に基づく表記.
      *
@@ -257,7 +299,7 @@ class BreederController extends AbstractController
     {
         return;
     }
-    
+
     /**
      * プライバシーポリシー.
      *
@@ -268,7 +310,7 @@ class BreederController extends AbstractController
     {
         return;
     }
-    
+
     /**
      * 利用規約.
      *
@@ -279,7 +321,7 @@ class BreederController extends AbstractController
     {
         return;
     }
-    
+
     /**
      * 問い合わせ.
      *

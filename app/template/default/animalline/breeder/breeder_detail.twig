@@ -276,6 +276,50 @@
                 <div class="navigation">
                     {{ knp_pagination_render(pets) }}
                 </div>
+                <div class="breeder-column__main_section_title">
+                    <h3>{{ breeder.breederName }}ブリーダーの評価({{ evaluationCount }}件)</h3>
+                </div>
+                <div class="breeder-column__main_section_body">
+                    {% for evaluation in evaluations %}
+                        <div class="evl">
+                            <div class="evlHeader">
+                                お迎えいただいた子犬：
+                                <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'), 'breed_type' : evaluation.Pet.BreedsType.id }) }}">
+                                    {{ evaluation.Pet.BreedsType.BreedsName }}
+                                </a>
+                            </div>
+                            <div class="evlData d-flex">
+                                <span class="mr-3">
+                                    評価：
+                                    <!-- 0 star or 1 star -->
+                                    <i class="{{ evaluation.EvaluationValue == 0 ? 'far fa-star' :  'fas fa-star' }}"></i>
+                                    <!-- 2 star  -->
+                                    <i class="{{ evaluation.EvaluationValue >= 2 ? 'fas fa-star' : 'far fa-star' }}"></i>
+                                    <!-- 3 star  -->
+                                    <i class="{{ evaluation.EvaluationValue >= 3 ? 'fas fa-star' : 'far fa-star' }}"></i>
+                                    <!-- 4 star  -->
+                                    <i class="{{ evaluation.EvaluationValue >= 4 ? 'fas fa-star' : 'far fa-star' }}"></i>
+                                    <!-- 5 star  -->
+                                    <i class="{{ evaluation.EvaluationValue >= 5 ? 'fas fa-star' : 'far fa-star' }}"></i>
+                                    {{ evaluation.EvaluationValue }}
+                                </span>
+                                <span class="mr-3">評価者：{{ evaluation.Customer.name01 }}{{ evaluation.Customer.name02 }}様</span>
+                                <span>評価日時：{{ evaluation.createDate|date('Y/m/d H:i') }}</span>
+                            </div>
+                            <div class="evlMessage">
+                                <div>{{ evaluation.EvaluationMessage|nl2br }}</div>
+                                {% if evaluation.ImagePath %}
+                                    <img class="mt-2" alt="..." img src="{{ evaluation.ImagePath}}">
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <span class="mb-2">結果が０件です。</span>
+                    {% endfor %}
+                    {% if evaluationCount > 3 %}
+                        <a class="evlMoreButton" href="{{ url('breeder_evaluation', {'breeder_id': breeder.id}) }}">もっと見る</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </section>
