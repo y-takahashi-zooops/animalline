@@ -534,7 +534,7 @@ class BreederMemberContactController extends AbstractController
                     $entityManager->flush();
                     $breederContact = new BreederContacts();
                     $breeder = $this->customerRepository->find($contact->getBreeder()->getId());
-                    $this->mailService->sendMailNoticeMsg($breeder, $breederContact);
+                    $this->mailService->sendMailContractAccept($breeder, 1);
 
                     return $this->redirectToRoute('breeder_contact_complete', ['pet_id' => $id]);
             }

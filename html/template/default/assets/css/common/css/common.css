@@ -1202,7 +1202,6 @@ a {
 	display: flex;
 	flex-wrap: wrap;
 	margin-bottom: 2.4rem;
-	border-right: 0.1rem solid #b1b1b1;
 }
 @media screen and (max-width: 767px){
 	#footer .sitemap-list{
@@ -1210,11 +1209,9 @@ a {
 		order: 1;
 		display: block;
 		border-right: 0;
-		border-top: 0.1rem solid #b1b1b1;
 	}
 }
 #footer .sitemap-list li{
-	border-left: 0.1rem solid #b1b1b1;
 }
 @media screen and (max-width: 767px){
 	#footer .sitemap-list li{

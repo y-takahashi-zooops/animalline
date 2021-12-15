@@ -29,7 +29,7 @@ use Eccube\Entity\Master\TaxDisplayType;
  */
 class OrderItem extends \Eccube\Entity\AbstractEntity implements ItemInterface
 {
-    use PointRateTrait;
+    use PointRateTrait, \Customize\Entity\OrderItemTrait;
     use \Customize\Entity\OrderItemTrait;
 
     /**

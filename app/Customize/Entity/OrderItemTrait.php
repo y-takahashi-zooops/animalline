@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Eccube\Annotation\EntityExtension;
 
 /**
- * @EntityExtension("Eccube\Entity\OrderItemTrait")
+ * @EntityExtension("Eccube\Entity\OrderItem")
  */
 trait OrderItemTrait
 {
