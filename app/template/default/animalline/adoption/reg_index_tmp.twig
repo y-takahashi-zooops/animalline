@@ -23,12 +23,14 @@
 <body id="top">
 <div id="mainImg">
 	<img src="{{ asset('assets/img/reg/title.png') }}" alt="">
-	<img src="{{ asset('assets/img/reg/top_image.jpg') }}" alt="" style="margin-top: 2rem">
+</div>
+<div class="imgFull">
+	<img src="{{ asset('assets/img/reg/adoption_img01.jpg') }}" alt="" style="margin-top: 2rem">
 </div>
 <!-- サイト説明 -->
 <section id="sec01" class="top_margin_l">
 	<div class="SiteDescription">
-		アニマルラインは飼い主のいない保護犬猫の里親を探している方と、保護犬猫の里親になりたい方をつなぐマッチングサイトです。動物保護団体等の皆さまを継続的に応援するとともに、保護犬猫と里親さん、双方に寄り添うサポートを実施致します。
+		アニマルラインは飼い主のいない保護犬猫の里親を探している方と、保護犬猫の里親になりたい方をつなぐ<b>マッチングサイト</b>です。<br /><br />動物保護団体等の皆さまを継続的に応援するとともに、保護犬猫と里親さん、双方に寄り添うサポートを実施致します。
 	</div>
 	<div class="" style="margin: 3rem 1rem">
 		<img src="{{ asset('assets/img/reg/adoption_schema.png') }}" alt="">
@@ -61,7 +63,7 @@
 </section>
 
 <div class="buttonReg" style="margin: 3rem 0 3rem 0">
-	<a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn btn--green">新規登録してペットを掲載する</a>
+	<a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn btn--brown">新規登録<br />（ペットを掲載する）</a>
 </div>
 
 <!-- MESSAGE -->
@@ -71,18 +73,18 @@
 	<div class="titleImg">
 		<img src="{{ asset('assets/img/reg/adoption_toku1.png') }}" alt="">
 	</div>
-	<div class="innerS">
-		<p>保護犬猫と里親が<b class="strong-text">“一生の家族”</b>として結ばれ、社会的な<b class="strong-text">殺処分問題を解決につなげること</b>を目指して。<br />
-		ペットを伴侶動物（コンパニオン・アニマル）として迎え入れる飼い主の意識をさらに高め、<b class="strong-text">一頭でも多くの温かな家庭に導けるようお手伝い</b>をしていきます。
+	<div class="innerBorder">
+		<p>保護犬猫と里親が<b>“一生の家族”</b>として結ばれ、社会的な<u>殺処分問題を解決につなげること</u>を目指して。<br />
+		ペットを伴侶動物（コンパニオン・アニマル）として迎え入れる飼い主の意識をさらに高め、<b>一頭でも多くの温かな家庭に導けるようお手伝い</b>をしていきます。
 		</p>
 	</div>
 	<div class="titleImg">
 		<img src="{{ asset('assets/img/reg/adoption_toku2.png') }}" alt="">
 	</div>
-	<div class="innerS">
-		<p>犬猫の遺伝病発症リスクが分かる<b class="strong-text">遺伝病ＤＮＡ検査を実施</b>しています。<br />
-		里親希望者が遺伝病ＤＮＡ検査を希望する場合、里親希望者の費用負担で行います。<br />
-		●疾患リスクを事前に理解しておくことで、最適な飼育方法や対処法の準備ができます。里親さんに安心・安全な譲渡を提供します。
+	<div class="innerBorder">
+		<p>譲渡後、犬猫の遺伝病発症リスクが分かる遺伝病ＤＮＡ検査が実施可能です。<br />
+		<u>里親希望者が遺伝病ＤＮＡ検査を希望する場合に限り</u>、里親希望者の費用負担で行います。<br />
+		<b>●疾患リスクを事前に理解しておくことで、最適な飼育方法や対処法の準備ができます。</b>
 		</p>
 	</div>
 	<div class="buttonS"">
@@ -91,9 +93,9 @@
 	<div class="titleImg">
 		<img src="{{ asset('assets/img/reg/adoption_toku3.png') }}" alt="">
 	</div>
-	<div class="innerS">
-		<p>里親さんによる商品購入やサービスの利用が、<b class="strong-text">動物保護活動のサポートにつながるプログラムを導入</b>しています。<br />
-		<b class="strong-text">アニマルライン内のＥＣサイトご利用</b>で、その<b class="strong-text">売上の一部を寄付金として保護団体の皆様にお支払い</b>します。
+	<div class="innerBorder">
+		<p>里親さんによる商品購入やサービスの利用が、動物保護活動の<u>サポートにつながるプログラム</u>を導入しています。<br />
+		アニマルライン内のＥＣサイトご利用で、その<b>売上の一部を寄付金として保護団体の皆様にお支払い</b>します。
 		</p>
 	</div>
 	
@@ -106,17 +108,17 @@
 		<h2><span>Gallery</span></h2>
 	</header>
 	<ul id="gallery">
-		<li><img src="{{ asset('assets/img/reg/img_cat.jpg') }}" width="426" height="418" alt=""></li>
-        <li><img src="{{ asset('assets/img/reg/img_dog2.jpg') }}" width="426" height="418" alt=""></li>
-		<li><img src="{{ asset('assets/img/reg/img_dog.jpg') }}" width="426" height="418" alt=""></li>
+		<li><img src="{{ asset('assets/img/reg/adoption_img02.jpg') }}" width="426" height="418" alt=""></li>
+        <li><img src="{{ asset('assets/img/reg/adoption_img03.jpg') }}" width="426" height="418" alt=""></li>
+		<li><img src="{{ asset('assets/img/reg/adoption_img04.jpg') }}" width="426" height="418" alt=""></li>
 	</ul>
 </section>
 <!-- // GALLERY -->
 <section id="sec02"></section>
 <!-- GALLERY -->
 <section id="sec02">
-	<div class="buttonReg" style="margin-top: 1.5rem; margin-bottom: 1.5rem">
-		<a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn btn--green">新規登録してペットを掲載する</a>
+	<div class="buttonReg" style="margin: 3rem 0 3rem 0">
+		<a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn btn--brown">新規登録<br />（ペットを掲載する）</a>
 	</div>
 </section>
 <!-- BRAND --> 
@@ -135,17 +137,17 @@
 </section>
 <!-- // PROJECT -->
 <div class="buttonReg">
-	<a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn btn--green">新規登録してペットを掲載する</a>
+	<a href="{{url('entry')}}?ReturnPath=adoption_mypage" class="btn btn--brown">新規登録<br />（ペットを掲載する）</a>
 </div>
 <div class="buttonReg">
-	<a href="{{url('adoption_login')}}?ReturnPath=adoption_mypage" class="btn btn--orange">既に登録している方(ログイン)</a>
+	<a href="{{url('adoption_login')}}?ReturnPath=adoption_mypage" class="btn btn--white">ログイン<br />（既に登録している方)</a>
 </div>
 <!-- COMPANY -->
 <section id="mainImg">
 	<img src="{{ asset('assets/img/reg/animalline_footer.png') }}" alt="">
 </section>
 
-<section id="sec05">
+<section id="sec05" style="margin-top: 5rem">
 	<header>
 		<h2>運営会社</h2>
 	</header>

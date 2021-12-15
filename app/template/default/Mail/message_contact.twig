@@ -1,16 +1,23 @@
 {% autoescape false %}
+※本メールは自動配信メールです。
+
+{{UserName}} 様
 
 {% if data.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER') %}
-ブリーダーから返信が届きました。
+ブリーダーよりメッセージの返信が届きました。
 
 マイページの「取引メッセージ」よりご確認をお願い致します。
 ↓↓取引メッセージページはこちら
 {{ url("breeder_all_message") }}
+
+今後ともAnimallineを宜しくお願い致します。
 {% else %}
-お客様よりお問い合わせがございました。
+お客様よりメッセージの返信が届きました。
 
 マイページの「問い合わせ対応」よりご確認をお願い致します。
 ↓↓問い合わせ対応ページはこちら
 {{ url("breeder_all_breeder_message") }}
+
+今後ともAnimallineを宜しくお願い致します。
 {% endif %}
 {% endautoescape %}

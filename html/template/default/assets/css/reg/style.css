@@ -60,6 +60,11 @@ a:active, a:focus,input:active, input:focus{outline:0;}
 	
 }
 
+.imgFull {
+	padding: 1.5rem 1rem 1.5rem 1rem;
+	text-align: center;
+}
+
 /* フッター
 ------------------------------------------------------------*/
 #footer{
@@ -155,6 +160,40 @@ section h2 span {
 	margin-bottom: 1.5rem;
 	margin-left: 1rem;
 	margin-right: 1rem;
+}
+
+.innerBorder{
+	margin: 2rem auto;
+	padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+	margin-bottom: 1.5rem;
+	background-color: #FFF;
+	margin-left: 1rem;
+	margin-right: 1rem;
+
+	position: relative;
+	border: 1px solid rgb(0, 0, 0);
+	
+}
+.innerBorder:before {
+	  height: 0;
+	  display: block;
+	  position: absolute;
+	  left: -1.5px;
+	  content: "";
+	  border-top: solid 30px #fff;
+	  border-right: solid 30px transparent;
+	  top: -1.5px;
+	  z-index: 2;
+}
+.innerBorder:after {
+	  height: 0;
+	  display: block;
+	  position: absolute;
+	  left: -1px;
+	  content: "";
+	  border-top: solid 30px rgb(32, 31, 31);
+	  border-right: solid 30px transparent;
+	  top: -1px;
 }
 
 .SiteDescription{
@@ -255,6 +294,26 @@ a.btn--green {
 a.btn--green:hover {
 	color: #fff;
 	background: #028117;
+}
+
+.btn--brown,
+a.btn--brown {
+	color: #fff;
+	background-color: #543618;
+	width: 60%;
+}
+.btn--brown:hover,
+a.btn--brown:hover {
+	color: #fff;
+	background: #6b4622;
+}
+
+.btn--white,
+a.btn--white {
+	color: #000;
+	border: solid;
+	background-color: #FFF;
+	width: 60%;
 }
 
 /* SEC02 Gallery
@@ -429,7 +488,7 @@ Width <= 640px
 	a.btn,
 	button.btn {
 		margin: 1rem;
-		padding: 1.5rem 1rem;
+		padding: 1rem 1rem;
 		font-size:17px;
 	}
 }
