@@ -19,6 +19,7 @@ class BankAccount
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(name="id", type="integer")
+
      */
     private $id;
 
@@ -34,7 +35,7 @@ class BankAccount
     private $bank_name;
 
     /**
-     * @ORM\Column(name="bank_code", type="integer")
+     * @ORM\Column(name="bank_code", type="string", length=4)
      */
     private $bank_code;
 
@@ -44,12 +45,12 @@ class BankAccount
     private $branch_name;
 
     /**
-     * @ORM\Column(name="branch_number", type="integer")
+     * @ORM\Column(name="branch_number", type="string", length=3)
      */
     private $branch_number;
 
     /**
-     * @ORM\Column(name="account_number", type="integer")
+     * @ORM\Column(name="account_number", type="string", length=7)
      */
     private $account_number;
 
@@ -106,12 +107,12 @@ class BankAccount
         return $this;
     }
 
-    public function getBankCode(): ?int
+    public function getBankCode(): ?string
     {
         return $this->bank_code;
     }
 
-    public function setBankCode(int $bank_code): self
+    public function setBankCode(string $bank_code): self
     {
         $this->bank_code = $bank_code;
 
@@ -130,24 +131,24 @@ class BankAccount
         return $this;
     }
 
-    public function getBranchNumber(): ?int
+    public function getBranchNumber(): ?string
     {
         return $this->branch_number;
     }
 
-    public function setBranchNumber(int $branch_number): self
+    public function setBranchNumber(string $branch_number): self
     {
         $this->branch_number = $branch_number;
 
         return $this;
     }
 
-    public function getAccountNumber(): ?int
+    public function getAccountNumber(): ?string
     {
         return $this->account_number;
     }
 
-    public function setAccountNumber(int $account_number): self
+    public function setAccountNumber(string $account_number): self
     {
         $this->account_number = $account_number;
 

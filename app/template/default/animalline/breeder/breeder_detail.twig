@@ -317,7 +317,7 @@
                         <span class="mb-2">結果が０件です。</span>
                     {% endfor %}
                     {% if evaluationCount > 3 %}
-                        <a class="evlMoreButton" href="#">もっと見る</a>
+                        <a class="evlMoreButton" href="{{ url('breeder_evaluation', {'breeder_id': breeder.id}) }}">もっと見る</a>
                     {% endif %}
                 </div>
             </div>
