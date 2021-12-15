@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
      */
     class Customer extends \Eccube\Entity\AbstractEntity implements UserInterface
     {
-    use \Customize\Entity\CustomerTrait;
+    use \Customize\Entity\CustomerTrait, \Plugin\GmoPaymentGateway4\Entity\CustomerTrait;
 
         /**
          * @var int
