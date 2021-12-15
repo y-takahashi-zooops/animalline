@@ -428,7 +428,7 @@ class AdoptionMemberContactController extends AbstractController
                     $entityManager->flush();
 
                     $conservation = $this->customerRepository->find($contact->getConservation()->getId());
-                    $this->mailService->sendMailContractReply($conservation, $conservationContact);
+                    $this->mailService->sendMailContractAccept($conservation, 2);
                     return $this->redirectToRoute('adoption_contact_complete', ['pet_id' => $id]);
             }
         }

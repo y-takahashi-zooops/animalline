@@ -27,6 +27,8 @@ use Eccube\Repository\MailHistoryRepository;
 use Eccube\Repository\MailTemplateRepository;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Customize\Repository\BreedersRepository;
+use Customize\Repository\ConservationsRepository;
 
 class MailService
 {
@@ -66,6 +68,16 @@ class MailService
     protected $twig;
 
     /**
+     * @var BreedersRepository
+     */
+    protected $breedersRepository;
+
+    /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
      * MailService constructor.
      *
      * @param \Swift_Mailer $mailer
@@ -75,6 +87,8 @@ class MailService
      * @param EventDispatcherInterface $eventDispatcher
      * @param \Twig_Environment $twig
      * @param EccubeConfig $eccubeConfig
+     * @param BreedersRepository $breedersRepository
+     * @param ConservationsRepository $conservationsRepository
      */
     public function __construct(
         \Swift_Mailer $mailer,
@@ -83,7 +97,9 @@ class MailService
         BaseInfoRepository $baseInfoRepository,
         EventDispatcherInterface $eventDispatcher,
         \Twig_Environment $twig,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        BreedersRepository $breedersRepository,
+        ConservationsRepository $conservationsRepository
     ) {
         $this->mailer = $mailer;
         $this->mailTemplateRepository = $mailTemplateRepository;
@@ -92,6 +108,8 @@ class MailService
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->twig = $twig;
+        $this->breedersRepository = $breedersRepository;
+        $this->conservationsRepository = $conservationsRepository;
     }
 
     /**
@@ -1212,7 +1230,7 @@ class MailService
 
     
     /**
-     * Send reply contract mail.
+     * 保護団体お問い合わせ受付（フロントページ・マイページ）
      *
      * @param \Eccube\Entity\Customer $Customer
      * @param int $data
@@ -1220,9 +1238,69 @@ class MailService
      */
     public function sendMailContractReply(\Eccube\Entity\Customer $Customer, $data)
     {
+        if($data->getMessageFrom() == 1){
+            $conservation = $this->conservations->find($Customer->getId());
+            $user_name = $conservation->getOrganizationName();
+        }
+        else{
+            $user_name = $Customer->getName01()."　".$Customer->getName02();
+        }
+
         $body = $this->twig->render('Mail/mail_contract_reply.twig', [
             'BaseInfo' => $this->BaseInfo,
-            'data' => $data
+            'data' => $data,
+            'UserName' => $user_name
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] メッセージ受信通知')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        // HTMLテンプレートが存在する場合
+        $htmlFileName = $this->getHtmlTemplate('Mail/mail_contract_reply.twig');
+        if (!is_null($htmlFileName)) {
+            $htmlBody = $this->twig->render($htmlFileName, [
+                'BaseInfo' => $this->BaseInfo,
+                'data' => $data
+            ]);
+
+            $message
+                ->setContentType('text/plain; charset=UTF-8')
+                ->setBody($body, 'text/plain')
+                ->addPart($htmlBody, 'text/html');
+        } else {
+            $message->setBody($body);
+        }
+
+        return $this->mailer->send($message, $failures);
+    }
+
+    /**
+     * 保護団体お問い合わせ受付（フロントページ・マイページ）
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @param int $data
+     * @return int
+     */
+    public function sendMailContractAccept(\Eccube\Entity\Customer $Customer, $site_type)
+    {
+        if($site_type == 1){
+            $breeder = $this->breedersRepository->find($Customer->getId());
+            $user_name = $breeder->getBreederName();
+        }
+        else{
+            $conservation = $this->conservationsRepository->find($Customer->getId());
+            $user_name = $conservation->getOrganizationName();
+        }
+
+        $body = $this->twig->render('Mail/mail_contract_accept.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'site_type' => $site_type,
+            'UserName' => $user_name
         ]);
 
         $message = (new \Swift_Message())
