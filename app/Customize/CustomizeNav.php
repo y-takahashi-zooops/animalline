@@ -97,6 +97,16 @@ class CustomizeNav implements EccubeNav
 					],
 				],
 			],
+			'benefits' => [
+				'name' => '特典管理',
+				'icon' => 'fa-gift',
+				'children' => [
+					'benefits_delivery_status' => [
+						'name' => '発送状況管理',
+						'url' => 'admin_benefits_delivery_status',
+					],
+				],
+			],
 		];
 	}
 }
