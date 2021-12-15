@@ -39,7 +39,7 @@ class BreederBenefitsController extends AbstractController
     public function benefits(Request $request)
     {
         $user = $this->getUser();
-        $BenefitsStatus = $this->benefitsStatusRepository->findOneBy(['register_id' => $user->getId()]);
+        $BenefitsStatus = $this->benefitsStatusRepository->findOneBy(['register_id' => $user->getId(), 'site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER]);
         if (!$BenefitsStatus) {
             $BenefitsStatus = new BenefitsStatus;
             $BenefitsStatus->setShippingName($user->getName01() . $user->getName02())

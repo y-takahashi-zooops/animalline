@@ -51,7 +51,7 @@ class AdoptionBenefitsController extends AbstractController
         $dataRequest = $request->get('benefits_status');
         $Pref = $this->prefRepository->find($dataRequest['Pref'] ?? '');
         $user = $this->getUser();
-        $isBenefitsStatus = $this->benefitsStatusRepository->findBy(['register_id' => $user->getId()]);
+        $isBenefitsStatus = $this->benefitsStatusRepository->findBy(['register_id' => $user->getId(), 'site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION]);
         if (!$isBenefitsStatus) {
             $benefitsStatus = new BenefitsStatus();
             $benefitsStatus->setShippingName($dataRequest['shipping_name'] ?? $user->getName01() . $user->getName02())
