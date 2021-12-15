@@ -1025,9 +1025,18 @@ class MailService
      */
     public function sendMailNoticeMsg(\Eccube\Entity\Customer $Customer, $data)
     {
+        if($data->getMessageFrom() == 1){
+            $breeder = $this->breedersRepository->find($Customer->getId());
+            $user_name = $breeder->getBreederName();
+        }
+        else{
+            $user_name = $Customer->getName01()."　".$Customer->getName02();
+        }
+
         $body = $this->twig->render('Mail/message_contact.twig', [
             'BaseInfo' => $this->BaseInfo,
-            'data' => $data
+            'data' => $data,
+            'UserName' => $user_name
         ]);
 
         $message = (new \Swift_Message())
@@ -1038,21 +1047,7 @@ class MailService
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
-        // HTMLテンプレートが存在する場合
-        $htmlFileName = $this->getHtmlTemplate('Mail/message_contact.twig');
-        if (!is_null($htmlFileName)) {
-            $htmlBody = $this->twig->render($htmlFileName, [
-                'BaseInfo' => $this->BaseInfo,
-                'data' => $data
-            ]);
-
-            $message
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
-        } else {
-            $message->setBody($body);
-        }
+        $message->setBody($body);
 
         return $this->mailer->send($message, $failures);
     }
@@ -1066,10 +1061,20 @@ class MailService
      */
     public function sendMailContractCancelToShop(\Eccube\Entity\Customer $Customer, $msgheader, $site_type)
     {
+        if($site_type == 1){
+            $breeder = $this->breedersRepository->find($Customer->getId());
+            $user_name = $breeder->getBreederName();
+        }
+        else{
+            $conservation = $this->conservationsRepository->find($Customer->getId());
+            $user_name = $conservation->getOrganizationName();
+        }
+           
         $body = $this->twig->render('Mail/mail_contract_cancel_to_shop.twig', [
             'BaseInfo' => $this->BaseInfo,
             'msgheader' => $msgheader,
-            'site_type' => $site_type
+            'site_type' => $site_type,
+            'UserName' => $user_name
         ]);
 
         $message = (new \Swift_Message())
@@ -1094,10 +1099,13 @@ class MailService
      */
     public function sendMailContractCancelToUser(\Eccube\Entity\Customer $Customer, $msgheader, $site_type)
     {
+        $user_name = $Customer->getName01()."　".$Customer->getName02();
+
         $body = $this->twig->render('Mail/mail_contract_cancel_to_user.twig', [
             'BaseInfo' => $this->BaseInfo,
             'msgheader' => $msgheader,
-            'site_type' => $site_type
+            'site_type' => $site_type,
+            'UserName' => $user_name
         ]);
 
         $message = (new \Swift_Message())
@@ -1123,11 +1131,14 @@ class MailService
      */
     public function sendMailContractCheckToUser(\Eccube\Entity\Customer $Customer, $msgheader, $site_type)
     {
+        $user_name = $Customer->getName01()."　".$Customer->getName02();
+
         $pet = $msgheader->getPet();
         $body = $this->twig->render('Mail/mail_contract_check_to_user.twig', [
             'BaseInfo' => $this->BaseInfo,
             'msgheader' => $msgheader,
-            'site_type' => $site_type
+            'site_type' => $site_type,
+            'UserName' => $user_name
         ]);
 
         $message = (new \Swift_Message())
@@ -1152,11 +1163,21 @@ class MailService
      */
     public function sendMailContractCheckToShop(\Eccube\Entity\Customer $Customer, $msgheader, $site_type)
     {
+        if($site_type == 1){
+            $breeder = $this->breedersRepository->find($Customer->getId());
+            $user_name = $breeder->getBreederName();
+        }
+        else{
+            $conservation = $this->conservationsRepository->find($Customer->getId());
+            $user_name = $conservation->getOrganizationName();
+        }
+
         $pet = $msgheader->getPet();
         $body = $this->twig->render('Mail/mail_contract_check_to_shop.twig', [
             'BaseInfo' => $this->BaseInfo,
             'msgheader' => $msgheader,
-            'site_type' => $site_type
+            'site_type' => $site_type,
+            'UserName' => $user_name
         ]);
 
         $message = (new \Swift_Message())
@@ -1181,10 +1202,13 @@ class MailService
      */
     public function sendMailContractCompleteToUser(\Eccube\Entity\Customer $Customer, $msgheader, $site_type)
     {
+        $user_name = $Customer->getName01()."　".$Customer->getName02();
+
         $body = $this->twig->render('Mail/mail_contract_complete_to_user.twig', [
             'BaseInfo' => $this->BaseInfo,
             'msgheader' => $msgheader,
-            'site_type' => $site_type
+            'site_type' => $site_type,
+            'UserName' => $user_name
         ]);
 
         $message = (new \Swift_Message())
@@ -1209,10 +1233,20 @@ class MailService
      */
     public function sendMailContractCompleteToShop(\Eccube\Entity\Customer $Customer, $msgheader, $site_type)
     {
+        if($site_type == 1){
+            $breeder = $this->breedersRepository->find($Customer->getId());
+            $user_name = $breeder->getBreederName();
+        }
+        else{
+            $conservation = $this->conservationsRepository->find($Customer->getId());
+            $user_name = $conservation->getOrganizationName();
+        }
+
         $body = $this->twig->render('Mail/mail_contract_complete_to_shop.twig', [
             'BaseInfo' => $this->BaseInfo,
             'msgheader' => $msgheader,
-            'site_type' => $site_type
+            'site_type' => $site_type,
+            'UserName' => $user_name
         ]);
 
         $message = (new \Swift_Message())
@@ -1239,7 +1273,7 @@ class MailService
     public function sendMailContractReply(\Eccube\Entity\Customer $Customer, $data)
     {
         if($data->getMessageFrom() == 1){
-            $conservation = $this->conservations->find($Customer->getId());
+            $conservation = $this->conservationsRepository->find($Customer->getId());
             $user_name = $conservation->getOrganizationName();
         }
         else{

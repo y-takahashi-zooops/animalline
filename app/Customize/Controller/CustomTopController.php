@@ -79,6 +79,9 @@ class CustomTopController extends AbstractController
         $query = $qb->getQuery();
         $products_new = $query->getResult();
 
+        //$searchData["category_id"] = 49;
+        //$osusume = $this->productRepository->getQueryBuilderBySearchData($searchData);
+
         return [
             'categoryChildDog' => $categoryChildDog,
             'categoryChildCat' => $categoryChildCat,
