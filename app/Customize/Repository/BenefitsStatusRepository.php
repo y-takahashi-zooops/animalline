@@ -2,7 +2,6 @@
 
 namespace Customize\Repository;
 
-use Customize\Config\AnilineConf;
 use Customize\Entity\BenefitsStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
