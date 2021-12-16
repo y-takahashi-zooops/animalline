@@ -2,28 +2,28 @@
 
 namespace Customize\Controller\Admin\Benefits;
 
-use Carbon\Carbon;
 use Customize\Config\AnilineConf;
-use Customize\Entity\DnaCheckKinds;
-use Customize\Service\DnaQueryService;
+use Customize\Repository\BenefitsStatusRepository;
 use Eccube\Controller\AbstractController;
 use Knp\Component\Pager\PaginatorInterface;
-use phpDocumentor\Reflection\Types\AbstractList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BenefitsController extends AbstractController
-{   
+{
+    /**
+     * @var BenefitsStatusRepository
+     */
+    protected $benefitsStatusRepository;
+
     /**
      * BenefitsController constructor
      */
     public function __construct(
+        BenefitsStatusRepository $benefitsStatusRepository
     ) {
+        $this->benefitsStatusRepository = $benefitsStatusRepository;
     }
 
     /**
@@ -34,6 +34,14 @@ class BenefitsController extends AbstractController
      */
     public function index(PaginatorInterface $paginator, Request $request)
     {
-      return[];
+        $results = $this->benefitsStatusRepository->filterBenefitAdmin($request->query->all());
+        $Benefits = $paginator->paginate(
+            $results,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE_ADMIN)
+        );
+        return [
+            'benefits' => $Benefits
+        ];
     }
 }
