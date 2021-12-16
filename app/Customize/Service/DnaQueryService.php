@@ -93,7 +93,7 @@ class DnaQueryService
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
             ->where('dna.site_type = :site_type')
             ->setParameters(['site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION])
-            ->select('dna.id as dna_id, dna.site_type, cp.id as pet_id, c.id as customer_id, cp.thumbnail_path, cp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date, dna.file_path, dna.update_date,c.name01,c.name02');
+            ->select('dna.id as dna_id, dna.site_type, cp.id as pet_id, c.id as customer_id, cp.thumbnail_path, cp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date, dna.file_path, dna.update_date,c.name01,c.name02,dnah.shipping_name,dnah.shipping_pref,dnah.shipping_city,dnah.shipping_address');
         if (!empty($customerName)) {
             $queryConservation->andWhere('c.name01 like :customer_name or c.name02 like :customer_name')
                 ->setParameter(':customer_name', '%' . $criteria['customer_name'] . '%');
@@ -146,7 +146,7 @@ class DnaQueryService
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
             ->where('dna.site_type = :site_type')
             ->setParameters(['site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER])
-            ->select('dna.id as dna_id, dna.site_type, bp.id as pet_id, c.id as customer_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date, dna.file_path, dna.update_date,c.name01,c.name02');
+            ->select('dna.id as dna_id, dna.site_type, bp.id as pet_id, c.id as customer_id, bp.thumbnail_path, bp.pet_kind, b.breeds_name, dna.check_status, dnah.kit_shipping_date, dna.kit_return_date, dna.check_return_date, dna.file_path, dna.update_date,c.name01,c.name02,dnah.shipping_name,dnah.shipping_pref,dnah.shipping_city,dnah.shipping_address');
         if (!empty($customerName)) {
             $queryBreeder->andWhere('c.name01 like :customer_name or c.name02 like :customer_name')
                 ->setParameter(':customer_name', '%' . $criteria['customer_name'] . '%');

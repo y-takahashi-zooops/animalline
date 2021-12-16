@@ -43,6 +43,10 @@ file that was distributed with this source code.
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('assets/css/base-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/common.css') }}">
+
     {% block stylesheet %}{% endblock %}
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script>
@@ -129,18 +133,17 @@ file that was distributed with this source code.
     {% endif %}
 
     {# Layout: CONTENTS_FOOTER #}
-        <div class="ec-layoutRole__footer" style = "margin-top: 30px">
-            <div class="ec-footerRole" style="margin-top: 0px">
-                <div class="ec-footerRole__inner">
-                    <div class="ec-footerTitle">
-                        <div class="ec-footerTitle__logo">
-                            {{ BaseInfo.shop_name }}
-                        </div>
-                        <div class="ec-footerTitle__copyright">Copyright © 2021 アニマルライン All Rights Reserved.</div>
-                    </div>
+        <footer style="margin-top: 4rem">
+            <div class="inner">
+            <div class="footer-row">
+                <div class="footer-logo"><img src="{{ asset('assets/img/logo.png') }}" width="305" height="40" alt="Animalline"/></div>
+                <div class="footer-link">
+                <a href="{{url('ani_company')}}">会社概要</a>｜<a href="{{url('ani_policy')}}">プライバシーポリシー</a>
                 </div>
             </div>
-        </div>
+            <div class="copyright"><small>Copyright © 2021 Animalline All Rights Reserved.</small></div>
+            </div>
+        </footer>
 </div><!-- ec-layoutRole -->
 
 <div class="ec-overlayRole"></div>
