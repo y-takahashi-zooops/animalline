@@ -6,11 +6,6 @@ use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\WmsSyncInfo;
 use Customize\Repository\BenefitsStatusRepository;
-use Customize\Repository\DnaCheckStatusHeaderRepository;
-use Customize\Repository\DnaCheckStatusRepository;
-use Customize\Repository\WmsSyncInfoRepository;
-use Eccube\Repository\ProductClassRepository;
-use Eccube\Repository\ProductStockRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -18,7 +13,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Customize\Service\ProductStockService;
 
 class ExportBenefitShippingSchedule extends Command
 {
@@ -34,36 +28,6 @@ class ExportBenefitShippingSchedule extends Command
      */
     protected $io;
 
-    /**
-     * @var WmsSyncInfoRepository
-     */
-    protected $wmsSyncInfoRepository;
-
-    /**
-     * @var DnaCheckStatusHeaderRepository
-     */
-    protected $dnaCheckStatusHeaderRepository;
-
-    /**
-     * @var DnaCheckStatusRepository
-     */
-    protected $dnaCheckStatusRepository;
-
-    /**
-     * @var ProductClassRepository
-     */
-    protected $productClassRepository;
-
-    /**
-     * @var ProductStockRepository
-     */
-    protected $productStockRepository;
-
-    /**
-     * @var ProductStockService
-     */
-    protected $productStockService;
-
         /**
      * @var BenefitsStatusRepository
      */
@@ -73,32 +37,14 @@ class ExportBenefitShippingSchedule extends Command
      * Export DNA kit shipping schedule constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param WmsSyncInfoRepository $wmsSyncInfoRepository
-     * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
-     * @param DnaCheckStatusRepository $dnaCheckStatusRepository
-     * @param ProductClassRepository $productClassRepository
-     * @param ProductStockRepository $productStockRepository
-     * @param ProductStockService $productStockService
      * @param BenefitsStatusRepository $benefitsStatusRepository
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        WmsSyncInfoRepository $wmsSyncInfoRepository,
-        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
-        DnaCheckStatusRepository $dnaCheckStatusRepository,
-        ProductClassRepository $productClassRepository,
-        ProductStockRepository $productStockRepository,
-        ProductStockService $productStockService,
         BenefitsStatusRepository $benefitsStatusRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
-        $this->wmsSyncInfoRepository = $wmsSyncInfoRepository;
-        $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
-        $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
-        $this->productClassRepository = $productClassRepository;
-        $this->productStockRepository = $productStockRepository;
-        $this->productStockService = $productStockService;
         $this->benefitsStatusRepository = $benefitsStatusRepository;
     }
 
@@ -148,17 +94,6 @@ class ExportBenefitShippingSchedule extends Command
                 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT
             ])
             ->orderBy('bs.id', 'ASC');
-
-        /*
-        $SyncInfo = $this->wmsSyncInfoRepository->findOneBy(
-            ['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_SCHEDULED_SHIPMENT],
-            ['sync_date' => 'DESC']
-        );
-        if ($SyncInfo) {
-            $qb = $qb->andWhere('dnah.update_date >= :from')
-                ->setParameter('from', $SyncInfo->getSyncDate());
-        }
-        */
 
         if (!$records = $qb->getQuery()->getArrayResult()) {
             echo "Records not found.\n";
