@@ -8,7 +8,7 @@
                 <h1>特典受取手続き(確認)</h1>
             </div>
         </div>
-    
+
         <div class="ec-mypageRole">
             <div class="ec-editRole">
                 <div class="ec-off1Grid">
@@ -31,8 +31,8 @@
                                     </dl>
                                     <dl>
                                         <dt>
-                                            <span class="mr-2">住所<span>
-                                                    <span class="ec-required">必須</span>
+                                            <span class="mr-2">住所</span>
+                                            <span class="ec-required">必須</span>
                                         </dt>
                                         <dd class="h-adr">
                                             <span class="p-country-name" style="display:none;">Japan</span>
@@ -57,8 +57,8 @@
                                     </dl>
                                     <dl>
                                         <dt>
-                                            <span class="mr-2">電話番号<span>
-                                                    <span class="ec-required">必須</span>
+                                            <span class="mr-2">電話番号</span>
+                                            <span class="ec-required">必須</span>
                                         </dt>
                                         <dd>
                                             <div class="ec-input{{ has_errors(form.shipping_tel) ? ' error' }}">
@@ -72,10 +72,12 @@
                             <div class="ec-registerRole__actions">
                                 <div class="ec-off4Grid">
                                     <div class="ec-off4Grid__cell">
-                                        <button class="basic-btn breeder-btn mb-4" type="submit" name="mode" value="complete">
+                                        <button class="basic-btn breeder-btn mb-4" type="submit" name="mode"
+                                                value="complete">
                                             {{ '送信'|trans }}
                                         </button>
-                                        <button class="basic-btn accent-btn bg-accent text-align-center" type="submit" name="mode" value="back">
+                                        <button class="basic-btn accent-btn bg-accent text-align-center" type="submit"
+                                                name="mode" value="back">
                                             {{ '戻る'|trans }}
                                         </button>
                                     </div>
@@ -90,6 +92,6 @@
 {% endblock %}
 
 {% block stylesheet %}
-<link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 {% endblock %}
 {% block javascript %}{% endblock %}
