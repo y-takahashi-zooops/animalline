@@ -6,38 +6,36 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\BenefitsStatus;
 use Customize\Repository\BenefitsStatusRepository;
 use Customize\Form\Type\Front\BenefitsStatusType;
+use Customize\Repository\ConservationContactHeaderRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Eccube\Controller\AbstractController;
-use Eccube\Repository\Master\PrefRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AdoptionBenefitsController extends AbstractController
 {
-
     /**
      * @var BenefitsStatusRepository
      */
     protected $benefitsStatusRepository;
 
     /**
-     * @var PrefRepository
+     * @var ConservationContactHeaderRepository
      */
-    protected $prefRepository;
+    protected $conservationContactHeaderRepository;
 
     /**
      * BreederController constructor.
      * 
      * @param BenefitsStatusRepository $benefitsStatusRepository
-     * @param PrefRepository $prefRepository
+     * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      */
     public function __construct(
         BenefitsStatusRepository    $benefitsStatusRepository,
-        PrefRepository $prefRepository
+        ConservationContactHeaderRepository $conservationContactHeaderRepository
     ) {
         $this->benefitsStatusRepository = $benefitsStatusRepository;
-        $this->prefRepository = $prefRepository;
+        $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
     }
 
     /**
@@ -48,20 +46,22 @@ class AdoptionBenefitsController extends AbstractController
      */
     public function benefits(Request $request)
     {
-        $dataRequest = $request->get('benefits_status');
-        $Pref = $this->prefRepository->find($dataRequest['Pref'] ?? '');
         $user = $this->getUser();
-        $isBenefitsStatus = $this->benefitsStatusRepository->findBy(['register_id' => $user->getId(), 'site_type' => AnilineConf::ANILINE_SITE_TYPE_ADOPTION]);
-        if (!$isBenefitsStatus) {
-            $benefitsStatus = new BenefitsStatus();
-            $benefitsStatus->setShippingName($dataRequest['shipping_name'] ?? $user->getName01() . $user->getName02())
-                        ->setShippingZip($dataRequest['shipping_zip'] ?? $user->getPostalCode())
-                        ->setPref($Pref ?? $user->getPref())
-                        ->setShippingCity($dataRequest['shipping_city'] ?? $user->getAddr01())
-                        ->setShippingAddress($dataRequest['shipping_address'] ?? $user->getAddr02())
-                        ->setShippingTel($dataRequest['shipping_tel'] ?? $user->getPhoneNumber());
-        } else {
-            $benefitsStatus = $isBenefitsStatus[0];
+        $benefitsStatus = new BenefitsStatus;
+        $contactHeaders = $this->conservationContactHeaderRepository->findBy(['Customer' => $user, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT], ['create_date'=>'ASC']);
+
+        foreach ($contactHeaders as $contactHeader) {
+            $petBenefit = $this->benefitsStatusRepository->findOneBy(['site_type' => AnilineConf::SITE_CATEGORY_CONSERVATION, 'pet_id' => $contactHeader->getPet()->getId()]);
+            if(!$petBenefit) {
+                $benefitsStatus->setShippingName($user->getName01() . $user->getName02())
+                    ->setPetId($contactHeader->getPet()->getId())
+                    ->setShippingZip($user->getPostalCode())
+                    ->setPref($Pref ?? $user->getPref())
+                    ->setShippingCity($user->getAddr01())
+                    ->setShippingAddress($user->getAddr02())
+                    ->setShippingTel($user->getPhoneNumber());
+                break;
+            }
         }
 
         $builder = $this->formFactory->createBuilder(BenefitsStatusType::class, $benefitsStatus);
@@ -70,9 +70,6 @@ class AdoptionBenefitsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
-                    $form = $builder->getForm();
-                    $form->handleRequest($request);
-
                     return $this->render('animalline/adoption/member/benefits_confirm.twig', [
                         'form' => $form->createView(),
                     ]);
@@ -84,7 +81,7 @@ class AdoptionBenefitsController extends AbstractController
                                 ->setShippingPref($benefitsStatus->getPref()->getName());
                     $shippingdate = new \DateTime();
                     if(intval(date("H")) >= 14){
-                        $shippingdate->modify('+1 days');
+                        $shippingdate->modify('+1 day');
                     }
                     $benefitsStatus->setBenefitsShippingDate($shippingdate);
                 
