@@ -2,7 +2,6 @@
 
 namespace Customize\Repository;
 
-use Customize\Config\AnilineConf;
 use Customize\Entity\BenefitsStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,7 +29,7 @@ class BenefitsStatusRepository extends ServiceEntityRepository
     {
         $siteType = $criteria['site_type'] ?? '';
         $checkStatus = $criteria['check_status'] ?? '';
-        $createDateFrom = $criteria['kit_regist_date_from'] ?? '';
+        $createDateFrom = $criteria['create_date_from'] ?? '';
         $createDateTo = $criteria['create_date_to'] ?? '';
         $benefitsShippingDateFrom = $criteria['benefits_shipping_date_from'] ?? '';
         $benefitsShippingDateTo = $criteria['benefits_shipping_date_to'] ?? '';
@@ -43,29 +42,28 @@ class BenefitsStatusRepository extends ServiceEntityRepository
                 ->setParameters(['site_type' => $siteType]);
         }
 
-        if (!empty($checkStatus)) {
+        if ($checkStatus) {
             $query->andWhere('bf.shipping_status = :shipping_status')
                 ->setParameter(':shipping_status', $checkStatus);
         }
 
-        if (!empty($createDateFrom)) {
+        if ($createDateFrom) {
             $fromDatetime = $createDateFrom . $fromTime;
             $query
                 ->andWhere("bf.create_date >= '$fromDatetime'");
         }
-
-        if (!empty($createDateTo)) {
+        if ($createDateTo) {
             $toDatetime = $createDateTo . $toTime;
             $query
                 ->andWhere("bf.create_date <= '$toDatetime'");
         }
 
-        if (!empty($benefitsShippingDateFrom)) {
+        if ($benefitsShippingDateFrom) {
             $fromDatetime = $benefitsShippingDateFrom . $fromTime;
             $query
                 ->andWhere("bf.benefits_shipping_date >= '$fromDatetime'");
         }
-        if (!empty($benefitsShippingDateTo)) {
+        if ($benefitsShippingDateTo) {
             $toDatetime = $benefitsShippingDateTo . $toTime;
             $query
                 ->andWhere("bf.benefits_shipping_date <= '$toDatetime'");
