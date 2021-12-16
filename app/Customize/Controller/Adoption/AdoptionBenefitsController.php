@@ -6,18 +6,14 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\BenefitsStatus;
 use Customize\Repository\BenefitsStatusRepository;
 use Customize\Form\Type\Front\BenefitsStatusType;
-use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\ConservationContactHeaderRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Eccube\Controller\AbstractController;
-use Eccube\Repository\Master\PrefRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AdoptionBenefitsController extends AbstractController
 {
-
     /**
      * @var BenefitsStatusRepository
      */
@@ -85,7 +81,7 @@ class AdoptionBenefitsController extends AbstractController
                                 ->setShippingPref($benefitsStatus->getPref()->getName());
                     $shippingdate = new \DateTime();
                     if(intval(date("H")) >= 14){
-                        $shippingdate->modify('+1 days');
+                        $shippingdate->modify('+1 day');
                     }
                     $benefitsStatus->setBenefitsShippingDate($shippingdate);
                 

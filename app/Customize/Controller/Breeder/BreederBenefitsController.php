@@ -81,7 +81,7 @@ class BreederBenefitsController extends AbstractController
                         ->setShippingPref($benefitsStatus->getPref()->getName());
                     $shippingDate = new DateTime;
                     if (intval(date("H")) >= 14) {
-                        $shippingDate->modify('+1 days');
+                        $shippingDate->modify('+1 day');
                     }
                     $benefitsStatus->setBenefitsShippingDate($shippingDate);
 
