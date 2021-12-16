@@ -180,8 +180,7 @@ class ExportBenefitShippingSchedule extends Command
         foreach ($records as $record) {
             $dnaNo = $this->generateZeroFillStr($record['benefit_id']);
             $nextDay = (new DateTime($now->toString() . ' +1 day'))->format('Ymd');
-            
-            $record['shipping_zip'] = substr($record['shipping_zip'],0,3) . "-" . substr($record['shipping_zip'],3);
+
             for($i=0;$i<3;$i++){
                 $record['delivery_instruction_no'] = $dnaNo;
                 $record['expected_shipping_date'] = date("Ymd");
