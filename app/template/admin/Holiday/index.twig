@@ -40,7 +40,7 @@
                                 <form role="form" class="form-row" method="post"
                                     action="{{ url('admin_setting_shop_holiday') }}">
                                     <div class="col-auto align-items-center">
-                                        <input type="datetime-local" name="holiday_date" class="form-control" required>
+                                        <input type="datetime-local" name="holiday_date" class="form-control" required max="9999-12-31T23:59:59">
                                     </div>
                                     <div class="col-auto align-items-center">
                                         <button class="btn btn-ec-regular" type="submit">
