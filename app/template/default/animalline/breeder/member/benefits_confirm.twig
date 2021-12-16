@@ -21,7 +21,7 @@
                                         <dt>
                                             <span class="mr-2">受取の宛名</span>
                                             <span class="ec-required">必須</span>
-                                            <div style="font-size:12px;color:#F00">特典送付の宛先になります。表示内容に追加があればご編集ください。</div>
+                                            {# <div style="font-size:12px;color:#F00">特典送付の宛先になります。表示内容に追加があればご編集ください。</div> #}
                                         </dt>
                                         <dd>
                                             <div class="ec-input{{ has_errors(form.shipping_name) ? ' error' }}">
@@ -34,8 +34,8 @@
                                         <dt>
                                             <span class="mr-2">住所<span>
                                                     <span class="ec-required">必須</span>
-                                                    <div style="font-size:12px;color:#F00">
-                                                        〒は'-'を入れずに入力してくだい<br />特典送付先住所となります。表示内容に追加・変更があれば ご編集ください。</div>
+                                                    {# <div style="font-size:12px;color:#F00">
+                                                        〒は'-'を入れずに入力してくだい<br />特典送付先住所となります。表示内容に追加・変更があれば ご編集ください。</div> #}
                                         </dt>
                                         <dd class="h-adr">
                                             <span class="p-country-name" style="display:none;">Japan</span>
@@ -43,14 +43,14 @@
                                                 <span>{{ '〒'|trans }}</span>
                                                 {{ form.shipping_zip.vars.data|nl2br }}
                                                 {{ form_widget(form.shipping_zip, { 'attr': {'class': 'hidden'} }) }}
-                                                <div class="ec-zipInputHelp">
+                                                {# <div class="ec-zipInputHelp">
                                                     <div class="ec-zipInputHelp__icon">
                                                         <div class="ec-icon"><img src="/html/template/default/assets/icon/question-white.svg"
                                                                 alt="">
                                                         </div>
                                                     </div>
                                                     <a href="https://www.post.japanpost.jp/zipcode/" target="_blank"><span>郵便番号検索</span></a>
-                                                </div>
+                                                </div> #}
                                             </div>
                                             <div class="ec-select{{ has_errors(form.Pref) ? ' error' }}">
                                                 {{ form.Pref.vars.choices[form.Pref.vars.data.id].label }}

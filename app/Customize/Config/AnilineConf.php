@@ -30,6 +30,7 @@ final class AnilineConf
     const ANILINE_PET_SEX_FEMALE = 2;
 
     const ANILINE_NUMBER_ITEM_PER_PAGE = 12;
+    const ANILINE_NUMBER_ITEM_PER_PAGE_ADMIN = 50;
 
     const ROOT_MESSAGE_ID = 0;
 
