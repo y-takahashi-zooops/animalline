@@ -99,7 +99,7 @@ file that was distributed with this source code.
                                         {% if(form.pedigree_organization.vars.data==constant('Customize\\Config\\AnilineConf::PEDIGREE_ORGANIZATION_OTHER')) %}
                                             {{ form_widget(form.pedigree_organization_other, { 'attr': {'disable': 'disable'} }) }}
                                         {% else %}
-                                            {{ form.pedigree_organization.vars.choices[form.pedigree_organization.vars.data].label }}
+                                            {{ breederExaminationInfo.getPedigreeOrganization() }}
                                         {% endif %}
                                     </div>
                                 </div>
