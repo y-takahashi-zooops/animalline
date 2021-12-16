@@ -69,7 +69,7 @@ class BusinessCalendar
             }
 
             $dates[$i] = [
-                'day' => $target->format('d'),  // 日
+                'day' => intval($target->format('d')),  // 日
                 'week' => $target->format('w'), // 曜日
                 'holiday' => $holiday,          // 祝日フラグ
             ];

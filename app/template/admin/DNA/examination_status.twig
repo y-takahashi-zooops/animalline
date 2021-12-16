@@ -173,6 +173,8 @@ file that was distributed with this source code.
                                     <th class="border-top-0 pt-2 pb-2">キット出荷</th>
                                     <th class="border-top-0 pt-2 pb-2">キット返送</th>
                                     <th class="border-top-0 pt-2 pb-2">結果受信</th>
+                                    <th class="border-top-0 pt-2 pb-2">宛先名</th>
+                                    <th class="border-top-0 pt-2 pb-2">送付住所</th>
                                     <th class="border-top-0 pt-2 pb-2">ブリーダー名</th>
                                     <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
                                 </tr>
@@ -205,6 +207,8 @@ file that was distributed with this source code.
                                         | date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ dna.check_return_date is empty ? '_' :
                                         dna.check_return_date | date('Y/m/d H:i') }}</td>
+                                    <td class="align-middle">{{ dna.shipping_name }}</td>
+                                    <td class="align-middle">{{ dna.shipping_pref }}{{ dna.shipping_city }}{{ dna.shipping_address }}</td>
                                     <td class="align-middle">{{ dna.name01 }}　{{ dna.name02 }}</td>
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
