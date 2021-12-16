@@ -114,7 +114,6 @@ class ExportBenefitShippingSchedule extends Command
         $item_code = ["8790000","8790004","8790005"];
         foreach ($records as $record) {
             $dnaNo = $this->generateZeroFillStr($record['benefit_id']);
-            $nextDay = (new DateTime($now->toString() . ' +1 day'))->format('Ymd');
 
             for($i=0;$i<3;$i++){
                 $record['delivery_instruction_no'] = $dnaNo;
