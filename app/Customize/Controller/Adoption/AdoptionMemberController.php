@@ -2,6 +2,7 @@
 
 namespace Customize\Controller\Adoption;
 
+use Customize\Repository\BenefitsStatusRepository;
 use Customize\Service\AdoptionQueryService;
 use Eccube\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -56,6 +57,11 @@ class AdoptionMemberController extends AbstractController
     protected $conservationContactHeaderRepository;
 
     /**
+     * @var BenefitsStatusRepository
+     */
+    protected $benefitsStatusRepository;
+
+    /**
      * ConservationController constructor.
      *
      * @param CustomerRepository $customerRepository
@@ -64,6 +70,7 @@ class AdoptionMemberController extends AbstractController
      * @param EncoderFactoryInterface $encoderFactory
      * @param TokenStorageInterface $tokenStorage
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
+     * @param BenefitsStatusRepository $benefitsStatusRepository
      */
     public function __construct(
         CustomerRepository  $customerRepository,
@@ -71,7 +78,8 @@ class AdoptionMemberController extends AbstractController
         AdoptionQueryService  $adoptionQueryService,
         EncoderFactoryInterface $encoderFactory,
         TokenStorageInterface $tokenStorage,
-        ConservationContactHeaderRepository $conservationContactHeaderRepository
+        ConservationContactHeaderRepository $conservationContactHeaderRepository,
+        BenefitsStatusRepository $benefitsStatusRepository
     ) {
         $this->customerRepository = $customerRepository;
         $this->conservationsRepository = $conservationsRepository;
@@ -79,6 +87,7 @@ class AdoptionMemberController extends AbstractController
         $this->encoderFactory = $encoderFactory;
         $this->tokenStorage = $tokenStorage;
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
+        $this->benefitsStatusRepository = $benefitsStatusRepository;
     }
 
     /**
@@ -148,7 +157,12 @@ class AdoptionMemberController extends AbstractController
     {
         $user = $this->getUser();
         $conservation = $this->conservationsRepository->find($user);
-        $canBenefits = !!$this->conservationContactHeaderRepository->findBy(["Customer" => $user, "contract_status" => AnilineConf::CONTRACT_STATUS_CONTRACT]);
+        $canBenefits = false;
+        $contactHeaders = $this->conservationContactHeaderRepository->findBy(["Customer" => $user, "contract_status" => AnilineConf::CONTRACT_STATUS_CONTRACT]);
+
+        foreach ($contactHeaders as $contactHeader) {
+            $canBenefits = !$this->benefitsStatusRepository->findOneBy(['site_type' => AnilineConf::SITE_CATEGORY_CONSERVATION, 'pet_id' => $contactHeader->getPet()->getId()]);
+        }
 
         $pets = $this->adoptionQueryService->findAdoptionFavoritePets($this->getUser()->getId());
 
