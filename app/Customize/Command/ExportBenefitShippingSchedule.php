@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\WmsSyncInfo;
 use Customize\Repository\BenefitsStatusRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -28,7 +27,7 @@ class ExportBenefitShippingSchedule extends Command
      */
     protected $io;
 
-        /**
+    /**
      * @var BenefitsStatusRepository
      */
     protected $benefitsStatusRepository;
@@ -111,12 +110,11 @@ class ExportBenefitShippingSchedule extends Command
         $rows = [];
         $benefitsStatusIds = [];
 
-        $item_code = ["8790000","8790004","8790005"];
+        $item_code = ["8790000", "8790004", "8790005"];
         foreach ($records as $record) {
             $dnaNo = $this->generateZeroFillStr($record['benefit_id']);
-            $nextDay = (new DateTime($now->toString() . ' +1 day'))->format('Ymd');
 
-            for($i=0;$i<3;$i++){
+            for ($i = 0; $i < 3; $i++) {
                 $record['delivery_instruction_no'] = $dnaNo;
                 $record['expected_shipping_date'] = date("Ymd");
                 $record['warehouse_code'] = '00001';
@@ -141,7 +139,7 @@ class ExportBenefitShippingSchedule extends Command
                 $record['part_number_code_2'] = $item_code[$i];
                 $record['handling flight_type'] = '000';
                 $record['destination_classification'] = '1';
-                $record['slip_output_order'] = $dnaNo.$i;
+                $record['slip_output_order'] = $dnaNo . $i;
                 $record['kit_unit'] = 1;
 
                 $row = [];
@@ -173,7 +171,7 @@ class ExportBenefitShippingSchedule extends Command
         foreach ($uniqIds as $id) {
             $Benefit = $this->benefitsStatusRepository->find($id);
             $Benefit->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_INSTRUCTING)
-                    ->setBenefitsShippingDate($now);
+                ->setBenefitsShippingDate($now);
             $em->persist($Benefit);
         }
 
