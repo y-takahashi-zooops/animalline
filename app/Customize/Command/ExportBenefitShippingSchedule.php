@@ -174,7 +174,7 @@ class ExportBenefitShippingSchedule extends Command
         $em->getConnection()->beginTransaction();
 
         $rows = [];
-        $benefitsStatus = [];
+        $benefitsStatusIds = [];
 
         $item_code = ["8790000","8790004","8790005"];
         foreach ($records as $record) {
@@ -208,10 +208,7 @@ class ExportBenefitShippingSchedule extends Command
                 $record['handling flight_type'] = '000';
                 $record['destination_classification'] = '1';
                 $record['slip_output_order'] = $dnaNo.$i;
-                //キット以外はキット数量に関わらず１個
-                if($i > 0) {
-                    $record['kit_unit'] = 1;
-                }
+                $record['kit_unit'] = 1;
 
                 $row = [];
                 foreach ($cols as $col) {
@@ -219,7 +216,7 @@ class ExportBenefitShippingSchedule extends Command
                 }
                 $rows[] = $row;
 
-                $benefitsStatus[] = $record['benefit_id'];
+                $benefitsStatusIds[] = $record['benefit_id'];
             }
         }
 
@@ -238,10 +235,19 @@ class ExportBenefitShippingSchedule extends Command
         }
         fclose($csvFile);
 
+        $uniqIds = array_unique($benefitsStatusIds);
+        foreach ($uniqIds as $id) {
+            $Benefit = $this->benefitsStatusRepository->find($id);
+            $Benefit->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_INSTRUCTING)
+                    ->setBenefitsShippingDate($now);
+            $em->persist($Benefit);
+        }
+
         $Wms = (new WmsSyncInfo)
             ->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_SCHEDULED_SHIPMENT)
             ->setSyncDate($now)
             ->setSyncResult(AnilineConf::ANILINE_WMS_RESULT_SUCCESS);
+
         $em->persist($Wms);
 
         // 端数分を更新
