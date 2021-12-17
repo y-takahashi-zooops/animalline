@@ -125,7 +125,8 @@ class BreederFavoriteController extends AbstractController
 
         return $this->render('animalline/breeder/favorite.twig', [
             'pets' => $favoritePets,
-            'pref' => $pref
+            'pref' => $pref,
+            'user' => $this->getUser()
         ]);
     }
 }
