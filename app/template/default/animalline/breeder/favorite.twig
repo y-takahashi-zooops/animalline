@@ -36,10 +36,10 @@
                                     <h6>{{ pet[0].Breeder.breederName ?? '' }}</h6>
                                 </div>
                                 <div class="d-flex mb-2">
-                                    <h6 class="price">{{ pet[0].price }}円</h6>
+                                    <h6 class="price">{{ pet[0].price }}円（税込み)</h6>
                                 </div>
                                 <div class="d-flex mb-2">
-                                    <h6>{{ pref[pet[0].id] ? pref[pet[0].id].breederHousePref : '' }}</h6>
+                                    <h6>{{ pet['pref'] ? pet['pref'].breederHousePref : '' }}</h6>
                                 </div>
                             </div>
                         </div>

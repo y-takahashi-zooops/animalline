@@ -113,19 +113,18 @@ class BreederFavoriteController extends AbstractController
     public function favorite(PaginatorInterface $paginator, Request $request): ?Response
     {
         $favoritePetResults = $this->breederPetsRepository->findByFavoriteCount();
-        $pref = [];
-        foreach ($favoritePetResults as $favoritePetResult) {
-            $pref[$favoritePetResult[0]->getId()] = $this->breederHouseRepository->findOneBy(['Breeder' => $favoritePetResult[0]->getBreeder(), 'pet_type' => $favoritePetResult[0]->getPetSex()]);
-        }
         $favoritePets = $paginator->paginate(
             $favoritePetResults,
             $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
+        foreach ($favoritePets as $key => $favoritePet) {
+            $favoritePet['pref'] = $this->breederHouseRepository->findOneBy(['Breeder' => $favoritePet[0]->getBreeder(), 'pet_type' => $favoritePet[0]->getPetSex()]);
+            $favoritePets[$key] = $favoritePet;
+        }
 
         return $this->render('animalline/breeder/favorite.twig', [
             'pets' => $favoritePets,
-            'pref' => $pref,
             'user' => $this->getUser()
         ]);
     }
