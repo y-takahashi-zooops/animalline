@@ -31,7 +31,9 @@ class ConservationPetsRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.favorite_count > 0')
+            ->leftJoin('Customize\Entity\ConservationContactHeader', 'cch', 'WITH', 'cch.Pet = a.id')
             ->orderBy('a.favorite_count', 'DESC')
+            ->select('a, cch.contract_status')
             ->getQuery()
             ->getResult();
     }

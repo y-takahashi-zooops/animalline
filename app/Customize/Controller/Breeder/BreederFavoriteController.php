@@ -3,6 +3,7 @@
 namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
+use Customize\Repository\BreederHouseRepository;
 use Eccube\Repository\Master\PrefRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
@@ -39,23 +40,31 @@ class BreederFavoriteController extends AbstractController
     protected $prefRepository;
 
     /**
+     * @var BreederHouseRepository
+     */
+    protected $breederHouseRepository;
+
+    /**
      * BreederController constructor.
      *
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param BreedersRepository $breedersRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param PrefRepository $prefRepository
+     * @param BreederHouseRepository $breederHouseRepository
      */
     public function __construct(
         PetsFavoriteRepository    $petsFavoriteRepository,
         BreedersRepository        $breedersRepository,
         BreederPetsRepository     $breederPetsRepository,
-        PrefRepository            $prefRepository
+        PrefRepository            $prefRepository,
+        BreederHouseRepository $breederHouseRepository
     ) {
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->prefRepository = $prefRepository;
+        $this->breederHouseRepository = $breederHouseRepository;
     }
 
     /**
@@ -104,12 +113,19 @@ class BreederFavoriteController extends AbstractController
     public function favorite(PaginatorInterface $paginator, Request $request): ?Response
     {
         $favoritePetResults = $this->breederPetsRepository->findByFavoriteCount();
+        $pref = [];
+        foreach ($favoritePetResults as $favoritePetResult) {
+            $pref[$favoritePetResult[0]->getId()] = $this->breederHouseRepository->findOneBy(['Breeder' => $favoritePetResult[0]->getBreeder(), 'pet_type' => $favoritePetResult[0]->getPetSex()]);
+        }
         $favoritePets = $paginator->paginate(
             $favoritePetResults,
             $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
-        return $this->render('animalline/breeder/favorite.twig', ['pets' => $favoritePets]);
+        return $this->render('animalline/breeder/favorite.twig', [
+            'pets' => $favoritePets,
+            'pref' => $pref
+        ]);
     }
 }
