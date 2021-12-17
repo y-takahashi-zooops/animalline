@@ -14,16 +14,21 @@
                             <a href="{{ url('breeder_message', {'id': message.Id}) }}">
                                 <div class="row">
                                     <div class="col-md-2 col-3" style="display: grid; place-items: center;">
-                                        <h6 class="p-2 rounded" style="background:#539b34; color:#fff;">
+                                        {# <h6 class="p-2 rounded" style="background:#539b34; color:#fff;">
                                             {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
                                             {{ status[message.contractStatus] }}
-                                        </h6>
+                                        </h6> #}
+                                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (message.pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                            class="card-img-top" alt="Pet-image" style="max-width:100px; border-radius:100px;">
+                                        <div class="type"><span style="font-weight:300">{{ message.pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span></div>
                                     </div>
                                     <div class="col-md-10 col-9">
                                         <div class="row">
                                             <div class="col-7">
-                                                <h5>{{ message.contactTitle ?? '' }}</h5>
-                                                <h5>{{ message.breederName.breederName ?? '' }}</h5>
+                                                {# <h5>{{ message.contactTitle ?? '' }}</h5> #}
+                                                <h5>{{ message.Breeder.breederName }}ブリーダー</h5><br>
+                                                <span style="font-weight:300">{{ message.pet.breedsType.breedsName}}</span><br>
+                                                <span style="font-weight:300">{{ message.pet.petBirthday|date('Y/m/d') }} 生まれ</span>
                                             </div>
                                             <div class="col-5">
                                                 <h6 class="text-right pb-1">
@@ -47,7 +52,8 @@
                                                     {% endif %}
                                                 </h6>
                                                 <h6 class="text-right">
-                                                    返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }}
+                                                    {# 返信日時：{{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }} #}
+                                                    {{ message.lastMessageDate.format('Y/m/d H:i') ?? 'なし' }}
                                                     <br>
                                                     {{ message.customerNewMsg ? '未読あり' }}
                                                 </h6>
