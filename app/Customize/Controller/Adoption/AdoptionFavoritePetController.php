@@ -4,6 +4,7 @@ namespace Customize\Controller\Adoption;
 
 use Customize\Config\AnilineConf;
 use Customize\Repository\ConservationsHousesRepository;
+use Eccube\Repository\CustomerRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\ConservationPetsRepository;
@@ -33,20 +34,28 @@ class AdoptionFavoritePetController extends AbstractController
     protected $conservationsHousesRepository;
 
     /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param ConservationsHousesRepository $conservationsHousesRepository
+     * @param CustomerRepository $customerRepository
      */
     public function __construct(
-        ConservationPetsRepository     $conservationPetsRepository,
-        PetsFavoriteRepository         $petsFavoriteRepository,
-        ConservationsHousesRepository $conservationsHousesRepository
+        ConservationPetsRepository    $conservationPetsRepository,
+        PetsFavoriteRepository        $petsFavoriteRepository,
+        ConservationsHousesRepository $conservationsHousesRepository,
+        CustomerRepository            $customerRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->conservationsHousesRepository = $conservationsHousesRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -109,7 +118,8 @@ class AdoptionFavoritePetController extends AbstractController
 
         return $this->render('animalline/adoption/favorite.twig', [
             'pets' => $favoritePets,
-            'pref' => $pref
+            'pref' => $pref,
+            'user' => $this->getUser()
         ]);
     }
 }
