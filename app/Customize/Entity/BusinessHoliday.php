@@ -31,7 +31,7 @@ if (!class_exists('\Customize\Entity\BusinessHoliday')) {
          * @ORM\Column(name="holiday_date", type="datetimetz", nullable=true)
          */
         private $holiday_date;
-        
+
         /**
          * Get id
          *
@@ -49,7 +49,7 @@ if (!class_exists('\Customize\Entity\BusinessHoliday')) {
          * 
          * @return BusinessHoliday
          */
-        public function setHolodayDate($holiday_date = null)
+        public function setHolidayDate(?\DateTime $holiday_date = null)
         {
             $this->holiday_date = $holiday_date;
 
