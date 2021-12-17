@@ -6,6 +6,7 @@ use Customize\Config\AnilineConf;
 use Customize\Entity\BenefitsStatus;
 use Customize\Form\Type\Front\BenefitsStatusType;
 use Customize\Repository\BenefitsStatusRepository;
+use Customize\Repository\BreederContactHeaderRepository;
 use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Eccube\Controller\AbstractController;
@@ -20,14 +21,22 @@ class BreederBenefitsController extends AbstractController
     protected $benefitsStatusRepository;
 
     /**
+     * @var BreederContactHeaderRepository
+     */
+    protected $breederContactHeaderRepository;
+
+    /**
      * BreederBenefitsController constructor.
      *
      * @param BenefitsStatusRepository $benefitsStatusRepository
+     * @param BreederContactHeaderRepository $breederContactHeaderRepository
      */
     public function __construct(
-        BenefitsStatusRepository $benefitsStatusRepository
+        BenefitsStatusRepository $benefitsStatusRepository,
+        BreederContactHeaderRepository $breederContactHeaderRepository
     ) {
         $this->benefitsStatusRepository = $benefitsStatusRepository;
+        $this->breederContactHeaderRepository = $breederContactHeaderRepository;
     }
 
     /**
@@ -39,18 +48,24 @@ class BreederBenefitsController extends AbstractController
     public function benefits(Request $request)
     {
         $user = $this->getUser();
-        $BenefitsStatus = $this->benefitsStatusRepository->findOneBy(['register_id' => $user->getId(), 'site_type' => AnilineConf::ANILINE_SITE_TYPE_BREEDER]);
-        if (!$BenefitsStatus) {
-            $BenefitsStatus = new BenefitsStatus;
-            $BenefitsStatus->setShippingName($user->getName01() . $user->getName02())
-                ->setShippingZip($user->getPostalCode())
-                ->setPref($user->getPref())
-                ->setShippingCity($user->getAddr01())
-                ->setShippingAddress($user->getAddr02())
-                ->setShippingTel($user->getPhoneNumber());
+        $benefitsStatus = new BenefitsStatus;
+        $contactHeaders = $this->breederContactHeaderRepository->findBy(['Customer' => $user, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT], ['create_date'=>'ASC']);
+
+        foreach ($contactHeaders as $contactHeader) {
+            $petBenefit = $this->benefitsStatusRepository->findOneBy(['site_type' => AnilineConf::SITE_CATEGORY_BREEDER, 'pet_id' => $contactHeader->getPet()->getId()]);
+            if(!$petBenefit) {
+                $benefitsStatus->setShippingName($user->getName01() . $user->getName02())
+                    ->setPetId($contactHeader->getPet()->getId())
+                    ->setShippingZip($user->getPostalCode())
+                    ->setPref($Pref ?? $user->getPref())
+                    ->setShippingCity($user->getAddr01())
+                    ->setShippingAddress($user->getAddr02())
+                    ->setShippingTel($user->getPhoneNumber());
+                break;
+            }
         }
 
-        $form = $this->createForm(BenefitsStatusType::class, $BenefitsStatus);
+        $form = $this->createForm(BenefitsStatusType::class, $benefitsStatus);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -60,18 +75,18 @@ class BreederBenefitsController extends AbstractController
                         'form' => $form->createView(),
                     ]);
                 case 'complete':
-                    $BenefitsStatus->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
+                    $benefitsStatus->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
                         ->setRegisterId($user->getId())
                         ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
-                        ->setShippingPref($BenefitsStatus->getPref()->getName());
+                        ->setShippingPref($benefitsStatus->getPref()->getName());
                     $shippingDate = new DateTime;
                     if (intval(date("H")) >= 14) {
-                        $shippingDate->modify('+1 days');
+                        $shippingDate->modify('+1 day');
                     }
-                    $BenefitsStatus->setBenefitsShippingDate($shippingDate);
+                    $benefitsStatus->setBenefitsShippingDate($shippingDate);
 
                     $entityManager = $this->getDoctrine()->getManager();
-                    $entityManager->persist($BenefitsStatus);
+                    $entityManager->persist($benefitsStatus);
                     $entityManager->flush();
 
                     return $this->redirect($this->generateUrl('breeder_benefits_complete'));
