@@ -110,12 +110,13 @@ class ExportBenefitShippingSchedule extends Command
         $rows = [];
         $benefitsStatusIds = [];
 
+        // 商品コードは一時的にダミー
         $item_code = ["8790000", "8790004", "8790005"];
         foreach ($records as $record) {
-            $dnaNo = $this->generateZeroFillStr($record['benefit_id']);
-
+            $benefitsNo = $this->generateZeroFillStr($record['benefit_id']);
+            $record['shipping_zip'] = substr($record['shipping_zip'],0,3) . "-" . substr($record['shipping_zip'],3);
             for ($i = 0; $i < 3; $i++) {
-                $record['delivery_instruction_no'] = $dnaNo;
+                $record['delivery_instruction_no'] = $benefitsNo;
                 $record['expected_shipping_date'] = date("Ymd");
                 $record['warehouse_code'] = '00001';
                 $record['sale_category'] = 0;
@@ -139,7 +140,7 @@ class ExportBenefitShippingSchedule extends Command
                 $record['part_number_code_2'] = $item_code[$i];
                 $record['handling flight_type'] = '000';
                 $record['destination_classification'] = '1';
-                $record['slip_output_order'] = $dnaNo . $i;
+                $record['slip_output_order'] = $benefitsNo . $i;
                 $record['kit_unit'] = 1;
 
                 $row = [];
