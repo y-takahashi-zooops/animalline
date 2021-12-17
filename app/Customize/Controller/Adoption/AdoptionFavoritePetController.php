@@ -3,6 +3,7 @@
 namespace Customize\Controller\Adoption;
 
 use Customize\Config\AnilineConf;
+use Customize\Repository\ConservationsHousesRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\ConservationPetsRepository;
@@ -27,17 +28,25 @@ class AdoptionFavoritePetController extends AbstractController
     protected $petsFavoriteRepository;
 
     /**
+     * @var ConservationsHousesRepository
+     */
+    protected $conservationsHousesRepository;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
+     * @param ConservationsHousesRepository $conservationsHousesRepository
      */
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
-        PetsFavoriteRepository         $petsFavoriteRepository
+        PetsFavoriteRepository         $petsFavoriteRepository,
+        ConservationsHousesRepository $conservationsHousesRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
+        $this->conservationsHousesRepository = $conservationsHousesRepository;
     }
 
     /**
@@ -88,12 +97,19 @@ class AdoptionFavoritePetController extends AbstractController
     public function favorite(PaginatorInterface $paginator, Request $request): ?Response
     {
         $favoritePetResults = $this->conservationPetsRepository->findByFavoriteCount();
+        $pref = [];
+        foreach ($favoritePetResults as $favoritePetResult) {
+            $pref[$favoritePetResult[0]->getId()] = $this->conservationsHousesRepository->findOneBy(['Conservation' => $favoritePetResult[0]->getConservation(), 'pet_type' => $favoritePetResult[0]->getPetSex()]);
+        }
         $favoritePets = $paginator->paginate(
             $favoritePetResults,
             $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
-        return $this->render('animalline/adoption/favorite.twig', ['pets' => $favoritePets]);
+        return $this->render('animalline/adoption/favorite.twig', [
+            'pets' => $favoritePets,
+            'pref' => $pref
+        ]);
     }
 }
