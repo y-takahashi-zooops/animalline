@@ -18,7 +18,7 @@
                     {% for pet in pets %}
                         <div class="row mb-4 mt-4">
                             <div class="col-md-3 col-sm-4">
-                                <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet[0].thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                      class="w-100 mb-4 mb-sm-0 image" alt="...">
                                 <span class="span-pet-type btn">
                                         {{ pet[0].petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}
@@ -36,37 +36,39 @@
                                     <h6>{{ pet[0].Conservation.ownerName ?? '' }}</h6>
                                 </div>
                                 <div class="d-flex mb-2">
-                                    <h6>{{ pet[0].price }}円</h6>
+                                    <h6 class="price">{{ pet[0].price }}円</h6>
                                 </div>
                                 <div class="d-flex mb-2">
-                                    <h6>{{ pref[pet[0].id] ? pref[pet[0].id].conservationHousePref : '' }}</h6>
+                                    <h6>{{ pet['pref'] ? pet['pref'].conservationHousePref : '' }}</h6>
                                 </div>
                             </div>
                         </div>
-                        {% if pet['contract_status'] is null %}
-                            <div class="col-6 btn_center">
-                                <div class="row">
-                                    <div class="col-12 contents_col_normal">
-                                        <a href="{{ url('adoption_contact', {'pet_id': pet[0].id}) }}">
-                                            <button class="btn basic-btn adoption-btn" style="height:65px;">
-                                                この子犬の見学希望／お問い合わせ(無料)
-                                            </button>
-                                        </a>
+                        {% if pet[0].Conservation.id != user.id %}
+                            {% if pet['contract_status'] is null  or pet['contract_status'] == constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_NONCONTRACT') %}
+                                <div class="col-6 btn_center">
+                                    <div class="row">
+                                        <div class="col-12 contents_col_normal">
+                                            <a href="{{ url('adoption_contact', {'pet_id': pet[0].id}) }}">
+                                                <button class="btn basic-btn adoption-btn" style="height:65px;">
+                                                    この子犬の見学希望／お問い合わせ(無料)
+                                                </button>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% else %}
-                            <div class="col-6 btn_center contracted">
-                                <div class="row">
-                                    <div class="col-12 contents_col_normal">
-                                        <a href="{{ url('adoption_all_message') }}">
-                                            <button class="btn basic-btn" style="height:65px;">
-                                                問い合わせ済み／取引メッセージを見る
-                                            </button>
-                                        </a>
+                            {% else %}
+                                <div class="col-6 btn_center contracted">
+                                    <div class="row">
+                                        <div class="col-12 contents_col_normal">
+                                            <a href="{{ url('adoption_all_message') }}">
+                                                <button class="btn basic-btn" style="height:65px;">
+                                                    問い合わせ済み／取引メッセージを見る
+                                                </button>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% endif %}
                         {% endif %}
                     {% else %}
                         <span class="mb-2">結果が０件です。</span>
@@ -82,14 +84,14 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
     <style>
-        .breeder-column__main_section_title h4{
-            font-size:30px;
-            color:black;
-            display:inline-block;
-            padding:0 0 0 5px;
-            background-position:center left;
-            background-repeat:no-repeat;
-            background-size:contain;
+        .breeder-column__main_section_title h4 {
+            font-size: 30px;
+            color: black;
+            display: inline-block;
+            padding: 0 0 0 5px;
+            background-position: center left;
+            background-repeat: no-repeat;
+            background-size: contain;
         }
 
         .image {
@@ -112,6 +114,10 @@
 
         .contracted:hover button {
             color: #549B35;
+        }
+
+        .price {
+            color: red
         }
     </style>
 {% endblock %}

@@ -4,6 +4,7 @@ namespace Customize\Controller\Adoption;
 
 use Customize\Config\AnilineConf;
 use Customize\Repository\ConservationsHousesRepository;
+use Eccube\Repository\CustomerRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\ConservationPetsRepository;
@@ -33,20 +34,28 @@ class AdoptionFavoritePetController extends AbstractController
     protected $conservationsHousesRepository;
 
     /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param ConservationsHousesRepository $conservationsHousesRepository
+     * @param CustomerRepository $customerRepository
      */
     public function __construct(
-        ConservationPetsRepository     $conservationPetsRepository,
-        PetsFavoriteRepository         $petsFavoriteRepository,
-        ConservationsHousesRepository $conservationsHousesRepository
+        ConservationPetsRepository    $conservationPetsRepository,
+        PetsFavoriteRepository        $petsFavoriteRepository,
+        ConservationsHousesRepository $conservationsHousesRepository,
+        CustomerRepository            $customerRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->conservationsHousesRepository = $conservationsHousesRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -97,19 +106,20 @@ class AdoptionFavoritePetController extends AbstractController
     public function favorite(PaginatorInterface $paginator, Request $request): ?Response
     {
         $favoritePetResults = $this->conservationPetsRepository->findByFavoriteCount();
-        $pref = [];
-        foreach ($favoritePetResults as $favoritePetResult) {
-            $pref[$favoritePetResult[0]->getId()] = $this->conservationsHousesRepository->findOneBy(['Conservation' => $favoritePetResult[0]->getConservation(), 'pet_type' => $favoritePetResult[0]->getPetSex()]);
-        }
         $favoritePets = $paginator->paginate(
             $favoritePetResults,
             $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
+        foreach ($favoritePets as $key => $favoritePet) {
+            $favoritePet['pref'] = $this->conservationsHousesRepository->findOneBy(['Conservation' => $favoritePet[0]->getConservation(), 'pet_type' => $favoritePet[0]->getPetSex()]);
+            $favoritePets[$key] = $favoritePet;
+        }
+
         return $this->render('animalline/adoption/favorite.twig', [
             'pets' => $favoritePets,
-            'pref' => $pref
+            'user' => $this->getUser()
         ]);
     }
 }
