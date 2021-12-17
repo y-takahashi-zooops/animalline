@@ -18,7 +18,6 @@
                     {% for pet in pets %}
                         <div class="row mb-4 mt-4">
                             <div class="col-md-3 col-sm-4">
-                                {{ dump(pet[0].thumbnailPath) }}
                                 <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet[0].thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                      class="w-100 mb-4 mb-sm-0 image" alt="...">
                                 <span class="span-pet-type btn">
