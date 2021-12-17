@@ -20,7 +20,7 @@
                                         </h6> #}
                                         <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (message.pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                             class="card-img-top" alt="Pet-image" style="max-width:100px; border-radius:100px;">
-                                        <div class="type"><span style="font-weight:300">{{ message.pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>{{ pet.getCoatColor() ?? '' }}</span></div>
+                                        <div class="type"><span style="font-weight:300">{{ message.pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span></div>
                                     </div>
                                     <div class="col-md-10 col-9">
                                         <div class="row">
