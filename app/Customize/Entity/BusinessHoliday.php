@@ -28,7 +28,7 @@ if (!class_exists('\Customize\Entity\BusinessHoliday')) {
         /**
          * @var \DateTime
          *
-         * @ORM\Column(name="holiday_date", type="datetimetz", nullable=true)
+         * @ORM\Column(name="holiday_date", type="date", nullable=true)
          */
         private $holiday_date;
 

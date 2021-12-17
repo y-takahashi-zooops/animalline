@@ -40,7 +40,7 @@
                                 <form role="form" class="form-row" method="post"
                                     action="{{ url('admin_setting_shop_holiday') }}">
                                     <div class="col-auto align-items-center">
-                                        <input type="datetime-local" name="holiday_date" class="form-control" required max="9999-12-31T23:59:59">
+                                        <input type="date" name="holiday_date" class="form-control" required min="{{ date('+1day').format('Y-m-d') }}" max="9999-12-31">
                                     </div>
                                     <div class="col-auto align-items-center">
                                         <button class="btn btn-ec-regular" type="submit">
@@ -60,8 +60,7 @@
                             <li id="ex-tag-{{ Holiday.id }}" class="list-group-item sortable-item"
                                 data-id="{{ Holiday.id }}">
                                 <div class="row justify-content-around mode-view">
-                                    <div class="col d-flex align-items-center"><a>{{ Holiday.holidayDate.format('Y-m-d
-                                            H:i') }}</a>
+                                    <div class="col d-flex align-items-center"><a>{{ Holiday.holidayDate.format('Y-m-d') }}</a>
                                     </div>
                                     <div class="col-auto text-right">
                                         <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top"
@@ -70,7 +69,7 @@
                                                 data-target="#DeleteModal"
                                                 data-url="{{ url('admin_setting_shop_holiday_delete', {'id' : Holiday.id}) }}"
                                                 data-message="{{ 'admin.common.delete_modal__message'|trans({ "%name%"
-                                                : Holiday.holidayDate.format('Y-m-d H:i') }) }}">
+                                                : Holiday.holidayDate.format('Y-m-d') }) }}">
                                                 <i class="fa fa-close fa-lg text-secondary"></i>
                                             </a>
                                         </div>
@@ -82,6 +81,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="navigation float-right">
+            {{ knp_pagination_render(Holidays) }}
         </div>
     </div>
 </div>
