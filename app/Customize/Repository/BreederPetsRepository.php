@@ -30,9 +30,7 @@ class BreederPetsRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.favorite_count > 0')
-            ->leftJoin('Customize\Entity\BreederContactHeader', 'bch', 'WITH', 'bch.Pet = a.id')
             ->orderBy('a.favorite_count', 'DESC')
-            ->select('a, bch.contract_status')
             ->getQuery()
             ->getResult();
     }
