@@ -97,7 +97,7 @@ file that was distributed with this source code.
                 <div class="c-outsideBlock__contents mb-5">
                     <ul class="list-inline">
                         <li class="list-inline-item">
-                            <span class="font-weight-bold">検査状況:&nbsp;</span>{{ check_status[params.check_status] }}
+                            <span class="font-weight-bold">発送状況:&nbsp;</span>{{ check_status[params.check_status] }}
                         </li>
                     </ul>
                 </div>
@@ -105,7 +105,7 @@ file that was distributed with this source code.
                 <div class="c-outsideBlock__contents mb-5">
                     <ul class="list-inline">
                         <li class="list-inline-item">
-                            <span class="font-weight-bold">検査状況:&nbsp;</span>全て
+                            <span class="font-weight-bold">発送状況:&nbsp;</span>全て
                         </li>
                     </ul>
                 </div>
@@ -116,7 +116,7 @@ file that was distributed with this source code.
         <div class="c-contentsArea__primaryCol">
             <div class="c-primaryCol">
                 <form id="form_bulk" method="post" action="">
-                    <input type="hidden" name="dna-id" value="">
+                    {# <input type="hidden" name="dna-id" value="">
                     <input type="hidden" name="change-status-id" value="">
                     <div class="row justify-content-between mb-2">
                         <div class="col-6">
@@ -139,7 +139,7 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> #}
                     <div class="card rounded border-0 mb-4 d-block">
                         <div class="card-body p-0">
                             <table class="table table-sm">
@@ -167,7 +167,7 @@ file that was distributed with this source code.
                                         <td class="align-middle">
                                             {{ benefit.create_date | date('Y/m/d H:i') }}</td>
                                         <td class="align-middle">{{ benefit.benefits_shipping_date is empty ? '_' : benefit.benefits_shipping_date
-                                            | date('Y/m/d H:i') }}</td>
+                                            | date('Y/m/d') }}</td>
                                         {# <td class="align-middle pr-3" colspan="3"> #}
                                         {# <div class="text-right"> #}
                                         {# <div class="px-1 d-inline-block text-center" data-tooltip="true" #}
@@ -192,58 +192,6 @@ file that was distributed with this source code.
                                 {% endfor %}
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="modal fade" id="confirm-modal-status" tabindex="-1" role="dialog"
-                             aria-labelledby="confirm-modal" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title font-weight-bold">
-                                            確認ダイアログ
-                                        </h5>
-                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body text-left">
-                                        <p class="text-left modal-message">ペット情報を公開しますか？</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
-                                            いいえ
-                                        </button>
-                                        <button class="btn btn-ec-conversion" type="submit">
-                                            はい
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog"
-                             aria-labelledby="confirm-modal" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title font-weight-bold">
-                                            確認ダイアログ
-                                        </h5>
-                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body text-left">
-                                        <p class="text-left modal-message">検体を再送付しますか？</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
-                                            {{ 'admin.common.cancel'|trans }}
-                                        </button>
-                                        <button class="btn btn-ec-conversion" type="submit">
-                                            はい
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </form>
