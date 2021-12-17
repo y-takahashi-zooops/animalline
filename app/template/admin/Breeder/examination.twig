@@ -99,7 +99,14 @@ file that was distributed with this source code.
                                         {% if(form.pedigree_organization.vars.data==constant('Customize\\Config\\AnilineConf::PEDIGREE_ORGANIZATION_OTHER')) %}
                                             {{ form_widget(form.pedigree_organization_other, { 'attr': {'disable': 'disable'} }) }}
                                         {% else %}
-                                            {{ form.pedigree_organization.vars.choices[form.pedigree_organization.vars.data].label }}
+                                            {% if(breederExaminationInfo.getPedigreeOrganization() == 1) %}JKC
+                                            {% elseif(breederExaminationInfo.getPedigreeOrganization() == 2) %}KC
+                                            {% elseif(breederExaminationInfo.getPedigreeOrganization() == 3) %}TICA
+                                            {% elseif(breederExaminationInfo.getPedigreeOrganization() == 4) %}CFA
+                                            {% elseif(breederExaminationInfo.getPedigreeOrganization() == 5) %}ICC
+                                            {% elseif(breederExaminationInfo.getPedigreeOrganization() == 6) %}ACC
+                                            {% else %}なし
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                 </div>

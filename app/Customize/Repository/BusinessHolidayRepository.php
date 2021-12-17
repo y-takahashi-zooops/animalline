@@ -1,7 +1,9 @@
 <?php
+
 namespace Customize\Repository;
 
 use Customize\Entity\BusinessHoliday;
+use DateTime;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Eccube\Repository\AbstractRepository;
 
@@ -16,5 +18,25 @@ class BusinessHolidayRepository extends AbstractRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, BusinessHoliday::class);
+    }
+
+    /**
+     * Get future holidays.
+     *
+     * @param DateTime $fromDateTime
+     * @return array
+     */
+    public function getFutureHolidays(?DateTime $fromDateTime = null): array
+    {
+        if (!$fromDateTime) {
+            $fromDateTime = new DateTime('now +1 day');
+        }
+
+        return $this->createQueryBuilder('h')
+            ->andWhere('h.holiday_date > :from_datetime')
+            ->setParameters(['from_datetime' => $fromDateTime->format('Y-m-d H:i:s')])
+            ->orderBy('h.holiday_date', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

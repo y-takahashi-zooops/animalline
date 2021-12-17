@@ -18,11 +18,13 @@
                             class="card-img-top" alt="Pet-image">
                           　</figure>
                             <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
-                            <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
-                            <div class="type"><span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>茶色</span></div>
-                            <div class="publish">掲載日：2021年09月15日</div>
+                            <div>{{ pet.petBirthday|date('Y/m/d') }}生まれ</div>
+                            <div class="birthday">{{ pet.Breeder.BreederName }}</div>
+                            {# <div class="type"><span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>茶色</span></div> #}
+                            <div class="type">{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</div>
+                            {# <div class="publish">掲載日：2021年09月15日</div> #}
                             <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
-                            <p>{{ pet.prComment|nl2br }}</p>
+                            {# <p>{{ pet.prComment|nl2br }}</p> #}
                             </a>
                         </li>
                     {% else %}

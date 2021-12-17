@@ -4,6 +4,7 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Entity\BreederPetinfoTemplate;
 use Customize\Form\Type\Breeder\BreederPetinfoTemplateType;
+use Customize\Repository\BenefitsStatusRepository;
 use Customize\Service\BreederQueryService;
 use Eccube\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -68,6 +69,11 @@ class BreederMemberController extends AbstractController
     protected $breederContactHeaderRepository;
 
     /**
+     * @var BenefitsStatusRepository
+     */
+    protected $benefitsStatusRepository;
+
+    /**
      * BreederController constructor.
      *
      * @param CustomerRepository $customerRepository
@@ -77,6 +83,7 @@ class BreederMemberController extends AbstractController
      * @param TokenStorageInterface $tokenStorage
      * @param BankAccountRepository $bankAccountRepository
      * @param BreederContactHeaderRepository $breederContactHeaderRepository
+     * @param BenefitsStatusRepository $benefitsStatusRepository
      */
     public function __construct(
         CustomerRepository  $customerRepository,
@@ -85,7 +92,8 @@ class BreederMemberController extends AbstractController
         EncoderFactoryInterface $encoderFactory,
         TokenStorageInterface $tokenStorage,
         BankAccountRepository $bankAccountRepository,
-        BreederContactHeaderRepository $breederContactHeaderRepository
+        BreederContactHeaderRepository $breederContactHeaderRepository,
+        BenefitsStatusRepository $benefitsStatusRepository
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
@@ -94,6 +102,7 @@ class BreederMemberController extends AbstractController
         $this->tokenStorage = $tokenStorage;
         $this->bankAccountRepository = $bankAccountRepository;
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
+        $this->benefitsStatusRepository = $benefitsStatusRepository;
     }
 
     /**
@@ -163,6 +172,7 @@ class BreederMemberController extends AbstractController
     {
         $user = $this->getUser();
         $breeder = $this->breedersRepository->find($user);
+        $canBenefits = false;
 
         $pets = $this->breederQueryService->findBreederFavoritePets($this->getUser()->getId());
 
@@ -176,7 +186,11 @@ class BreederMemberController extends AbstractController
             $breefer_newmsg = 1;
         }
 
-        $canBenefits = !!$this->breederContactHeaderRepository->findBy(["Customer" => $user, "contract_status" => AnilineConf::CONTRACT_STATUS_CONTRACT]);
+        $contactHeaders = $this->breederContactHeaderRepository->findBy(["Customer" => $user, "contract_status" => AnilineConf::CONTRACT_STATUS_CONTRACT]);
+
+        foreach ($contactHeaders as $contactHeader) {
+            $canBenefits = !$this->benefitsStatusRepository->findOneBy(['site_type' => AnilineConf::SITE_CATEGORY_BREEDER, 'pet_id' => $contactHeader->getPet()->getId()]);
+        }
 
         return $this->render('animalline/breeder/member/index.twig', [
             'breeder' => $breeder,

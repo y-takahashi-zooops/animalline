@@ -97,6 +97,18 @@ class CustomizeNav implements EccubeNav
 					],
 				],
 			],
+			'setting' => [
+				'children' => [
+					'shop' => [
+						'children' => [
+							'holidays' => [
+								'name' => '休日設定',
+								'url' => 'admin_setting_shop_holiday',
+							]
+						],
+					],
+				],
+			],
 			'benefits' => [
 				'name' => '特典管理',
 				'icon' => 'fa-gift',
