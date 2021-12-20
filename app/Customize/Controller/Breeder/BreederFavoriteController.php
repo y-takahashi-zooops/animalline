@@ -4,10 +4,8 @@ namespace Customize\Controller\Breeder;
 
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreederHouseRepository;
-use Eccube\Repository\Master\PrefRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
-use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Eccube\Controller\AbstractController;
@@ -20,11 +18,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class BreederFavoriteController extends AbstractController
 {
     /**
-     * @var BreedersRepository
-     */
-    protected $breedersRepository;
-
-    /**
      * @var BreederPetsRepository
      */
     protected $breederPetsRepository;
@@ -35,11 +28,6 @@ class BreederFavoriteController extends AbstractController
     protected $petsFavoriteRepository;
 
     /**
-     * @var PrefRepository
-     */
-    protected $prefRepository;
-
-    /**
      * @var BreederHouseRepository
      */
     protected $breederHouseRepository;
@@ -48,22 +36,16 @@ class BreederFavoriteController extends AbstractController
      * BreederController constructor.
      *
      * @param PetsFavoriteRepository $petsFavoriteRepository
-     * @param BreedersRepository $breedersRepository
      * @param BreederPetsRepository $breederPetsRepository
-     * @param PrefRepository $prefRepository
      * @param BreederHouseRepository $breederHouseRepository
      */
     public function __construct(
         PetsFavoriteRepository    $petsFavoriteRepository,
-        BreedersRepository        $breedersRepository,
         BreederPetsRepository     $breederPetsRepository,
-        PrefRepository            $prefRepository,
         BreederHouseRepository $breederHouseRepository
     ) {
         $this->petsFavoriteRepository = $petsFavoriteRepository;
-        $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
-        $this->prefRepository = $prefRepository;
         $this->breederHouseRepository = $breederHouseRepository;
     }
 
@@ -119,7 +101,7 @@ class BreederFavoriteController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
         foreach ($favoritePets as $key => $favoritePet) {
-            $favoritePet['pref'] = $this->breederHouseRepository->findOneBy(['Breeder' => $favoritePet[0]->getBreeder(), 'pet_type' => $favoritePet[0]->getPetSex()]);
+            $favoritePet['pref'] = $this->breederHouseRepository->findOneBy(['Breeder' => $favoritePet[0]->getBreeder(), 'pet_type' => $favoritePet[0]->getPetKind()]);
             $favoritePets[$key] = $favoritePet;
         }
 

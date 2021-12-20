@@ -34,28 +34,20 @@ class AdoptionFavoritePetController extends AbstractController
     protected $conservationsHousesRepository;
 
     /**
-     * @var CustomerRepository
-     */
-    protected $customerRepository;
-
-    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param ConservationsHousesRepository $conservationsHousesRepository
-     * @param CustomerRepository $customerRepository
      */
     public function __construct(
         ConservationPetsRepository    $conservationPetsRepository,
         PetsFavoriteRepository        $petsFavoriteRepository,
-        ConservationsHousesRepository $conservationsHousesRepository,
-        CustomerRepository            $customerRepository
+        ConservationsHousesRepository $conservationsHousesRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
         $this->conservationsHousesRepository = $conservationsHousesRepository;
-        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -113,7 +105,7 @@ class AdoptionFavoritePetController extends AbstractController
         );
 
         foreach ($favoritePets as $key => $favoritePet) {
-            $favoritePet['pref'] = $this->conservationsHousesRepository->findOneBy(['Conservation' => $favoritePet[0]->getConservation(), 'pet_type' => $favoritePet[0]->getPetSex()]);
+            $favoritePet['pref'] = $this->conservationsHousesRepository->findOneBy(['Conservation' => $favoritePet[0]->getConservation(), 'pet_type' => $favoritePet[0]->getPetKind()]);
             $favoritePets[$key] = $favoritePet;
         }
 
