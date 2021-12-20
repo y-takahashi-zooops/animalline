@@ -3,13 +3,22 @@
 
 {% block main %}
     <div class="page-inner">
+        <div class="breadcrumbs">
+            <ul>
+                <li><a href="">アニマルラインTOP</a></li>
+                <li><i class="bi bi-chevron-right"></i>マイページ</li>
+            </ul>
+        </div>
+        <div id="mypage-menu">
+            <h1><i class="bi bi-heart"></i>お気に入りペット</h1>
+        </div>
         <div class="mypage-service_list">
             <div class="mypage-service_list__content">
                 <div class="mypage-service_list__content_body">
                     <ul>
                         {% for pet in pets %}
                             <li>
-                                <a href="">
+                                <a href="{{ url('adoption_pet_detail', {'id': pet[0].id}) }}">
                                     <div class="image">
                                         <figure>
                                             <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet[0].thumbnailPath | default('/noimage_plugin_list.png')) }}"
@@ -88,18 +97,18 @@
         </div>
     </div>
 {% endblock %}
-{% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/mypage.css') }}">
-    <style>
-        .contracted button {
-            border: 1px solid #549B35;
-            color: #549B35;
-        }
+    {% block stylesheet %}
+        <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/mypage.css') }}">
+        <style>
+            .contracted button {
+                border: 1px solid #549B35;
+                color: #549B35;
+            }
 
-        .contracted:hover button {
-            color: #549B35;
-        }
-    </style>
-{% endblock %}
+            .contracted:hover button {
+                color: #549B35;
+            }
+        </style>
+    {% endblock %}
 {% block javascript %}{% endblock %}
