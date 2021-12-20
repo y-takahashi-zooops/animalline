@@ -2,10 +2,12 @@
 
 namespace Customize\Controller\Admin\Holiday;
 
+use Customize\Config\AnilineConf;
 use Customize\Entity\BusinessHoliday;
 use Customize\Repository\BusinessHolidayRepository;
 use DateTime;
 use Eccube\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,17 +31,21 @@ class HolidayController extends AbstractController
      * @Route("/%eccube_admin_route%/setting/shop/holiday", name="admin_setting_shop_holiday")
      * @Template("@admin/Holiday/index.twig")
      */
-    public function index(Request $request)
+    public function index(Request $request, PaginatorInterface $paginator)
     {
-        $Holidays = $this->businessHolidayRepository->getFutureHolidays();
-
         if ('POST' === $request->getMethod()) {
             $holidayDate = DateTime::createFromFormat(
-                'Y-m-d\TH:i',
-                $request->get('holiday_date')
+                'Y-m-d H:i:s',
+                $request->get('holiday_date') . '00:00:00'
             );
-            $Holiday = (new BusinessHoliday)->setHolidayDate($holidayDate);
+            if ($this->businessHolidayRepository->findOneBy(['holiday_date' => $holidayDate])) {
+                $this->addError('既に登録されている休日です', 'admin');
 
+                return $this->redirectToRoute('admin_setting_shop_holiday');
+            }
+
+            $Holiday = (new BusinessHoliday)
+                ->setHolidayDate($holidayDate);
             $em = $this->getDoctrine()->getManager();
             $em->persist($Holiday);
             $em->flush();
@@ -48,6 +54,13 @@ class HolidayController extends AbstractController
 
             return $this->redirectToRoute('admin_setting_shop_holiday');
         }
+
+        $Results = $this->businessHolidayRepository->getFutureHolidays();
+        $Holidays = $paginator->paginate(
+            $Results,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE_ADMIN)
+        );
 
         return [
             'Holidays' => $Holidays

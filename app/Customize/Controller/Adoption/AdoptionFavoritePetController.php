@@ -3,6 +3,8 @@
 namespace Customize\Controller\Adoption;
 
 use Customize\Config\AnilineConf;
+use Customize\Repository\ConservationsHousesRepository;
+use Eccube\Repository\CustomerRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
 use Customize\Repository\ConservationPetsRepository;
@@ -27,17 +29,33 @@ class AdoptionFavoritePetController extends AbstractController
     protected $petsFavoriteRepository;
 
     /**
+     * @var ConservationsHousesRepository
+     */
+    protected $conservationsHousesRepository;
+
+    /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param PetsFavoriteRepository $petsFavoriteRepository
+     * @param ConservationsHousesRepository $conservationsHousesRepository
+     * @param CustomerRepository $customerRepository
      */
     public function __construct(
-        ConservationPetsRepository     $conservationPetsRepository,
-        PetsFavoriteRepository         $petsFavoriteRepository
+        ConservationPetsRepository    $conservationPetsRepository,
+        PetsFavoriteRepository        $petsFavoriteRepository,
+        ConservationsHousesRepository $conservationsHousesRepository,
+        CustomerRepository            $customerRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
+        $this->conservationsHousesRepository = $conservationsHousesRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -94,6 +112,14 @@ class AdoptionFavoritePetController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
-        return $this->render('animalline/adoption/favorite.twig', ['pets' => $favoritePets]);
+        foreach ($favoritePets as $key => $favoritePet) {
+            $favoritePet['pref'] = $this->conservationsHousesRepository->findOneBy(['Conservation' => $favoritePet[0]->getConservation(), 'pet_type' => $favoritePet[0]->getPetSex()]);
+            $favoritePets[$key] = $favoritePet;
+        }
+
+        return $this->render('animalline/adoption/favorite.twig', [
+            'pets' => $favoritePets,
+            'user' => $this->getUser()
+        ]);
     }
 }
