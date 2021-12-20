@@ -119,7 +119,7 @@ class BreederFavoriteController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
         foreach ($favoritePets as $key => $favoritePet) {
-            $favoritePet['pref'] = $this->breederHouseRepository->findOneBy(['Breeder' => $favoritePet[0]->getBreeder(), 'pet_type' => $favoritePet[0]->getPetSex()]);
+            $favoritePet['pref'] = $this->breederHouseRepository->findOneBy(['Breeder' => $favoritePet[0]->getBreeder(), 'pet_type' => $favoritePet[0]->getPetKind()]);
             $favoritePets[$key] = $favoritePet;
         }
 

@@ -113,7 +113,7 @@ class AdoptionFavoritePetController extends AbstractController
         );
 
         foreach ($favoritePets as $key => $favoritePet) {
-            $favoritePet['pref'] = $this->conservationsHousesRepository->findOneBy(['Conservation' => $favoritePet[0]->getConservation(), 'pet_type' => $favoritePet[0]->getPetSex()]);
+            $favoritePet['pref'] = $this->conservationsHousesRepository->findOneBy(['Conservation' => $favoritePet[0]->getConservation(), 'pet_type' => $favoritePet[0]->getPetKind()]);
             $favoritePets[$key] = $favoritePet;
         }
 
