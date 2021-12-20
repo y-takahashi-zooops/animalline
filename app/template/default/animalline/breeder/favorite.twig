@@ -45,12 +45,12 @@
                                         </div>
                                         <div class="profile">
                                             <ul>
-                                                <li>{{ pet[0].petBirthday|date('Y年m月d日') }}生まれ</li>
+                                                <li>{{ pet[0].petBirthday|date('Y/m/d') }} 生まれ</li>
                                                 <li>{{ pet[0].Breeder.breederName ?? '' }}</li>
                                             </ul>
                                         </div>
                                         <div class="price">
-                                            <p>{{ pet[0].price }}円（税込み)</p>
+                                            <p>{{ pet[0].price|number_format(0) }}円（税込み)</p>
                                         </div>
                                         <div class="locale">
                                             <p>{{ pet['pref'] ? pet['pref'].breederHousePref : '' }}</p>
