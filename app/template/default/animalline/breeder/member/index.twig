@@ -3,128 +3,68 @@
 
 {% block main %}
 <div class="main">
-    <div class="row">
-        <div class="main-container col-12">
-            {% if user.is_breeder == 1 %}
+    <div class="page-inner">
+    
+        {% if user.is_breeder == 1 %}
             <div style="text-align: center;background-color: #eee8aa"><a href="#information">▼▼　年末年始の検体送付について　▼▼</a></div>
-            {% endif %}
-            
-            {% if user.regist_type == 0 %}
-            <h1>マイページ</h1>
-            <div class="row">
-                <div class="col-lg-4 col-md-12">
-                    <a href="{{url('breeder_favorite')}}" class="btn btn-warning btn-block mt-3" role="button">お気に入り一覧</a>
-                </div>
-                <div class="col-lg-4 col-md-12" style="text-align: center">
-                    <a href="{{url('breeder_all_message')}}" class="btn btn-warning btn-block mt-3" role="button">取引メッセージ</a>
-                    {% if customer_newmsg == 1 %}<span style="color: red;">新着メッセージあり</span>{% endif %}
-                </div>
-                {% if canBenefits %}
-                    <div class="col-lg-4 col-md-12" style="text-align: center">
-                        <a href="{{url('breeder_benefits')}}" class="btn btn-warning btn-block mt-3" role="button">特典受取手続き</a>
-                    </div>
-                {% endif %}
+        {% endif %}
+        <div id="mypage-menu">
+            <h1>〇〇〇 〇〇〇 様のマイページ</h1>
+            <div class="mypage-menu_list">
+                <ul>
+                    {% if user.regist_type == 0 %}
+                    
+                        <li><a href="{{url('breeder_favorite')}}"><i class="bi bi-heart"></i>お気に入り一覧</a>{# <span class="budge">123</span> #}</li>
+                        <li><a href="{{url('breeder_all_message')}}"><i class="bi bi-chat-right-quote-fill"></i>取引メッセージ</a>{% if customer_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li>
+                        {% if canBenefits %}<li><a href="{{url('breeder_benefits')}}"><i class="bi bi-gift-fill"></i>ご成約特典</a></li>{% endif %}
+                    
+                    {% endif %}
+                    {% if user.is_breeder == 0 and user.regist_type == 1 %}
+                        <li><a href="{{url('breeder_examination')}}"><i class="bi bi-pencil-fill"></i>ブリーダー申請を行う</a></li>
+                    {% endif %}
+                    {% if user.is_breeder == 1 %}
+                        <li><a href="{{url('breeder_examination_kit')}}"><i class="bi bi-heart"></i>DNA検査キット請求</a></li>
+                        <li><a href="{{url('breeder_examination_status')}}"><i class="bi bi-heart"></i>DNA検査状況確認</a></li>
+                        <li><a href="{{url('breeder_pet_list')}}"><i class="bi bi-heart"></i>ペット管理</a></li>
+                        <li><a href="{{url('breeder_all_breeder_message')}}"><i class="bi bi-chat-right-quote-fill"></i>お問い合わせ対応</a>{% if breeder_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li>
+                        <li><a href="{{url('breeder_baseinfo',{'return_path': "breeder_mypage"})}}"><i class="bi bi-pencil-fill"></i>基本情報編集</a></li>
+                        <li><a href="{{path('breeder_house_info',{'pet_type': 1 ,'return_path': "breeder_mypage"})}}"><i class="bi bi-pencil-fill"></i>犬舎情報編集</a></li>
+                        <li><a href="{{path('breeder_house_info',{'pet_type': 2, 'return_path': "breeder_mypage" })}}"><i class="bi bi-pencil-fill"></i>猫舎情報編集</a></li>
+                        <li><a href="{{ url('breeder_change') }}"><i class="bi bi-pencil-fill"></i>会員情報編集</a></li>
+                        <li><a href="{{url('breeder_bank_regist')}}"><i class="bi bi-pencil-fill"></i>口座登録</a></li>
+                        <li><a href="{{ url('breeder_site_sample_menu') }}"><i class="bi bi-bell-fill"></i>検索サイトイメージ</a></li>
+                    {% endif %}
+                </ul>
             </div>
-            {% endif %}
-
-            <div class="m-2 p-2"></div>
-            {% if user.is_breeder == 0 and user.regist_type == 1 %}
-                <h3>ブリーダー登録申請</h3>
-                <div class="row">
-                    <div class="col-lg-4 col-md-12">
-                        <a href="{{url('breeder_examination')}}" class="btn btn-warning btn-block mt-3" role="button">ブリーダー申請を行う</a>
-                    </div>
-                </div>
-            {% endif %}
-            {% if user.is_breeder == 1 %}
-                <div class="m-2 p-2"></div>
-                <h1>ブリーダー様管理メニュー</h1>
-                <div class="row">
-                    <div class="col-lg-4 col-md-12 text-center">
-                        <a href="{{url('breeder_examination_kit')}}" class="btn btn-success btn-block mt-3" role="button">DNA検査キット請求</a>
-                        <span style="color: red;">生体掲載をご希望の方はこちら</span>
-                    </div>
-                    <div class="col-lg-4 col-md-12">
-                        <a href="{{url('breeder_examination_status')}}" class="btn btn-success btn-block mt-3" role="button">DNA検査状況確認</a>
-                    </div>
-                    <div class="col-lg-4 col-md-12">
-                        <a href="{{url('breeder_pet_list')}}" class="btn btn-success btn-block mt-3" role="button">ペット管理</a>
-                    </div>
-                    <div class="col-lg-4 col-md-12" style="text-align: center">
-                        <a href="{{url('breeder_all_breeder_message')}}" class="btn btn-warning btn-block mt-3" role="button">お問い合わせ対応</a>
-                        {% if breeder_newmsg == 1 %}<span style="color: red;">新着メッセージあり</span>{% endif %}
-                    </div>
-                </div>
-                {% if breeder %}
-                    <div class="m-2 p-2"></div>
-                    <h1>登録情報編集</h1>
-                    <div class="row">
-                        <div class="col-lg-4 col-md-12">
-                            <a href="{{url('breeder_baseinfo',{'return_path': "breeder_mypage"})}}" class="btn btn-primary btn-block mt-3" role="button">基本情報編集</a>
-                        </div>
-                        {% if breeder.getHandlingPetKind() == 0 or breeder.getHandlingPetKind() == 1 %}
-                            <div class="col-lg-4 col-md-12">
-                                <a href="{{path('breeder_house_info',{'pet_type': 1 ,'return_path': "breeder_mypage"})}}" class="btn btn-primary btn-block mt-3" role="button">犬舎情報編集</a>
-                            </div>
-                        {% endif %}
-                        {% if breeder.getHandlingPetKind() == 0 or breeder.getHandlingPetKind() == 2 %}
-                            <div class="col-lg-4 col-md-12">
-                                <a href="{{path('breeder_house_info',{'pet_type': 2, 'return_path': "breeder_mypage" })}}" class="btn btn-primary btn-block mt-3" role="button">猫舎情報編集</a>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="row">
-                        {#
-                        <div class="col-lg-4 col-md-12">
-                            <a href="{{url('password_change')}}" class="btn btn-primary btn-block mt-3" role="button">パスワード変更</a>
-                        </div>
-                        #}
-                        <div class="col-lg-4 col-md-12 text-center">
-                            <a href="{{ url('breeder_change') }}" class="btn btn-primary btn-block mt-3" role="button">会員情報編集</a>
-                            <span style="color: red;">メールアドレス・パスワード変更の方はこちら</span>
-                        </div>
-                        <div class="col-lg-4 col-md-12 text-center">
-                            <a href="{{url('breeder_bank_regist')}}" class="btn btn-primary btn-block mt-3" role="button">口座登録</a>
-                            <span style="color: red;">弊社からのインセンティブ支払先をこちらからご登録ください</span>
-                        </div>
-                    </div>
-
-                    <div class="m-2 p-2"></div>
-                    <h1>サイトサンプル</h1>
-                    <div class="row">
-                        <div class="col-lg-4 col-md-12 text-center">
-                            <a href="{{ url('breeder_site_sample_menu') }}" class="btn btn-info btn-block mt-3" role="button">検索サイトイメージ</a>
-                            <span style="color: red;">お客様用の検索ページのイメージをご覧いただけます。</span>
-                        </div>
-                    </div>
-                    <a id="information"></a>
-                    <div style="margin: 2rem 0 0 0;padding:0 1rem 0 1rem; background-color:#eee8aa">お知らせ<br />DNA検体の送付について</div>
-                    <div style="background-color:#f5f5dc;padding:1rem 1rem 1rem 1rem;">
-                    平素よりAnimallineをご利用いただき誠にありがとうございます。<br />
-                    年末年始の遺伝病DNA検査に関してお伝えさせて頂きます。<br />
-                    <br />
-                    12月11日（土）迄に投函された分については本年内に検査結果をお伝えさせて頂きます。<br />
-                    12月12日（日）以降に投函された分については来年に検査結果をお伝えさせて頂きます。<br />
-                    <br />
-                    また12月25日（土）から1月3日（月）に検体を投函された場合、<br />
-                    DNA検体の保管ができかねますので<br />
-                    お手数ですが1月4日（火）以降の投函をお願い致します。<br />
-                    <br />
-                    今後ともAnimallineを宜しくお願い致します。<br />
-                    </div>
-                {% endif %}
-
-                <div class="row">
-                    <div class="col-lg-8 col-md-12" style="margin: 5rem auto 0 auto;">
-                        <img src="{{ asset('assets/img/reg/pet_regist_info.png') }}" alt="ペットの家庭教師"/>
-                    </div>
-                </div>
-            {% endif %}
         </div>
     </div>
+     {% if user.is_breeder == 1 %}
+        <a id="information"></a>
+        <div style="margin: 2rem 0 0 0;padding:0 1rem 0 1rem; background-color:#eee8aa">お知らせ<br />DNA検体の送付について</div>
+        <div style="background-color:#f5f5dc;padding:1rem 1rem 1rem 1rem;">
+        平素よりAnimallineをご利用いただき誠にありがとうございます。<br />
+        年末年始の遺伝病DNA検査に関してお伝えさせて頂きます。<br />
+        <br />
+        12月11日（土）迄に投函された分については本年内に検査結果をお伝えさせて頂きます。<br />
+        12月12日（日）以降に投函された分については来年に検査結果をお伝えさせて頂きます。<br />
+        <br />
+        また12月25日（土）から1月3日（月）に検体を投函された場合、<br />
+        DNA検体の保管ができかねますので<br />
+        お手数ですが1月4日（火）以降の投函をお願い致します。<br />
+        <br />
+        今後ともAnimallineを宜しくお願い致します。<br />
+        </div>
+
+         <div class="row">
+            <div class="col-lg-8 col-md-12" style="margin: 5rem auto 0 auto;">
+                <img src="{{ asset('assets/img/reg/pet_regist_info.png') }}" alt="ペット情報掲載までの流れ"/>
+            </div>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/mypage.css') }}">
 {% endblock %}
 {% block javascript %}{% endblock %}

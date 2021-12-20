@@ -274,22 +274,23 @@ footer{
 }
 
 .footer-row{
-  display:flex;
+  display:block;
   justify-content:space-between;
   align-items:center;
 }
 .footer-logo{
-  
+  text-align:center;
 }
 .footer-logo img{
   width:305px;
 }
 .footer-link{
   font-size:16px;
+  margin-bottom: 40px;
 }
 .copyright{
   text-align:center;
-  padding:60px 0 0;
+  padding:10px 0 0;
 }
 .copyright small{
   font-size:14px;

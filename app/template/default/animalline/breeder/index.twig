@@ -7,9 +7,6 @@
       <div class="inner">
         <div class="breeder-mv__container">
           <div class="breeder-mv__text">
-            <h2></h2>
-            <div class="breeder-mv__text_logo"><img src="{{ asset('assets/img/breeder-mv-logo.png') }}" alt="Animalline Breeder"/></div>
-            <p>ペットとつながる信頼の絆</p>
             <div class="breeder-mv__text_btn">
               <ul>
                 {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
@@ -21,6 +18,10 @@
                 {% endif %}
               </ul>
             </div>
+            <h2></h2>
+            <div class="breeder-mv__text_logo"><img src="{{ asset('assets/img/breeder-mv-logo.png') }}" alt="Animalline Breeder"/></div>
+            <p>ペットとつながる信頼の絆</p>
+            
           </div>
           <div class="breeder-mv__search">
             {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
