@@ -41,7 +41,7 @@
                             <a href="{{ url('adoption_adoption_message', {'id': message.Id}) }}">
                                 <div class="receive-icon">
                                     {% for item in message.conservationContacts %}
-                                        {% if item.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER') %}
+                                        {% if item.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') %}
                                             {% set status = item.isReading %}
                                         {% endif %}
                                     {% endfor %}
