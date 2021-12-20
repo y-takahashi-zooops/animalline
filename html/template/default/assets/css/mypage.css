@@ -1,8 +1,8 @@
 @charset "UTF-8";
 
 .page-inner{
-  max-width:1280px;
-  margin:0 auto;
+    max-width:1280px;
+    margin:0 auto;
 }
 
 /*--------------------------------
@@ -10,575 +10,575 @@ MYPAGE - 共通
 ---------------------------------*/
 
 .breadcrumbs{
-  padding:20px 0;
+    padding:20px 0;
 }
 .breadcrumbs ul{
-  display:flex;
-  flex-wrap:wrap;
-  margin:0;
+    display:flex;
+    flex-wrap:wrap;
+    margin:0;
 }
 .breadcrumbs ul li{
-  font-size:14px;
-  line-height:1.6;
-  margin:0 .5em 0 0;
+    font-size:14px;
+    line-height:1.6;
+    margin:0 .5em 0 0;
 }
 .breadcrumbs ul li:last-child{
-  margin:0;
+    margin:0;
 }
 .breadcrumbs ul li i{
-  margin:0 .5em 0 0;
+    margin:0 .5em 0 0;
 }
 .breadcrumbs ul li a{
-  color:#024ca2;
+    color:#024ca2;
 }
 
 #mypage-menu{
-  margin:0 0 40px;
+    margin:0 0 40px;
 }
 #mypage-menu h1{
-  text-align:center;
-  font-size:24px;
-  padding:20px;
-  color:#fff;
-  background-color:#0068b7;
-  font-weight:300;
-  margin:0;
+    text-align:center;
+    font-size:24px;
+    padding:20px;
+    color:#fff;
+    background-color:#0068b7;
+    font-weight:300;
+    margin:0;
 }
 #mypage-menu h1 i{
-  margin:0 .5em 0 0;
+    margin:0 .5em 0 0;
 }
 #mypage-menu .mypage-menu_list{
-  padding:20px 20px 0;
-  background-color:#efefef;
+    padding:20px 20px 0;
+    background-color:#efefef;
 }
 #mypage-menu .mypage-menu_list ul{
-  display:flex;
-  flex-wrap:wrap;
+    display:flex;
+    flex-wrap:wrap;
 }
 #mypage-menu .mypage-menu_list ul li{
-  width:49%;
-  margin:0 2% 20px 0;
-  position:relative;
+    width:49%;
+    margin:0 2% 20px 0;
+    position:relative;
 }
 #mypage-menu .mypage-menu_list ul li:nth-child(even){
-  margin:0 0 20px 0;
+    margin:0 0 20px 0;
 }
 #mypage-menu .mypage-menu_list ul li a{
-  display:block;
-  padding:20px;
-  font-size:20px;
-  line-height:1;
-  border-radius:6px;
-  background-color:#fff;
-  box-shadow:0 1px 1px rgba(0,0,0,0.2);
+    display:block;
+    padding:20px;
+    font-size:20px;
+    line-height:1;
+    border-radius:6px;
+    background-color:#fff;
+    box-shadow:0 1px 1px rgba(0,0,0,0.2);
 }
 #mypage-menu .mypage-menu_list ul li a i{
-  margin:0 .5em 0 0;
-  color:#ef5350;
+    margin:0 .5em 0 0;
+    color:#ef5350;
 }
 #mypage-menu .mypage-menu_list ul li .budge{
-  display:block;
-  position:absolute;
-  width:30px;
-  height:30px;
-  top:-10px;
-  right:-10px;
-  color:#fff;
-  font-size:14px;
-  text-align:center;
-  line-height:30px;
-  background-color:#ef5350;
-  border-radius:50%;
+    display:block;
+    position:absolute;
+    width:30px;
+    height:30px;
+    top:-10px;
+    right:-10px;
+    color:#fff;
+    font-size:14px;
+    text-align:center;
+    line-height:30px;
+    background-color:#ef5350;
+    border-radius:50%;
 }
 
 #mypage-header{
-  padding:40px 0;
-  text-align:center;
-  background-color:
+    padding:40px 0;
+    text-align:center;
+    background-color:
 }
 
 .mypage-dialog{
-  padding:40px 20px;
-  background-color:#fffcf2;
-  border:solid #ffab00 1px;
-  border-radius:10px;
-  margin:0 0 40px;
-  text-align:center;
+    padding:40px 20px;
+    background-color:#fffcf2;
+    border:solid #ffab00 1px;
+    border-radius:10px;
+    margin:0 0 40px;
+    text-align:center;
 }
 .mypage-dialog h2{
-  color:#382600;
-  font-size:24px;
-  margin:0 0 20px;
+    color:#382600;
+    font-size:24px;
+    margin:0 0 20px;
 }
 .mypage-dialog p{
-  font-size:16px;
-  line-height:2;
-  margin:0;
+    font-size:16px;
+    line-height:2;
+    margin:0;
 }
 .mypage-dialog_btn{
-  padding:20px 0 0;
+    padding:20px 0 0;
 }
 .mypage-dialog_btn a{
-  display:inline-block;
-  padding:20px 40px;
-  border-radius:6px;
-  font-size:16px;
-  color:#fff;
-  background-color:#ffab00;
+    display:inline-block;
+    padding:20px 40px;
+    border-radius:6px;
+    font-size:16px;
+    color:#fff;
+    background-color:#ffab00;
 }
 .mypage-dialog_btn a:hover{
-  opacity:.8;
+    opacity:.8;
 }
 
 .mypage-area_bnr{
-  margin:0 0 40px;
-  text-align:center;
+    margin:0 0 40px;
+    text-align:center;
 }
 
 .mypage-point_campaign{
-  margin:0 0 40px;
+    margin:0 0 40px;
 }
 .mypage-point_title{
-  padding:20px;
-  text-align:center;
-  margin:0 0 20px;
-  border-top:solid #388e3c 3px;
-  border-bottom:solid #388e3c 1px;
-  background-color:#eeffef;
+    padding:20px;
+    text-align:center;
+    margin:0 0 20px;
+    border-top:solid #388e3c 3px;
+    border-bottom:solid #388e3c 1px;
+    background-color:#eeffef;
 }
 .mypage-point_title h2{
-  font-size:24px;
-  line-height:1;
-  color:#388e3c;
-  margin:0;
+    font-size:24px;
+    line-height:1;
+    color:#388e3c;
+    margin:0;
 }
 .mypage-point_title h2 .icon{
-  margin:0 .5em 0 0;
+    margin:0 .5em 0 0;
 }
 .mypage-point_title h2 .icon img{
-  width:30px;
-  height:auto;
-  vertical-align:middle;
+    width:30px;
+    height:auto;
+    vertical-align:middle;
 }
 .mypage-point_body{
-  padding:40px;
+    padding:40px;
 }
 .mypage-point_body figure{
-  text-align:center;
+    text-align:center;
 }
 
 .mypage-service_list{
-  margin:0 0 40px;
+    margin:0 0 40px;
 }
 .mypage-service_list__content{
-  
+
 }
 .mypage-service_list__content_title{
-  background-color:#0068b7;
-  color:#fff;
-  padding:20px;
+    background-color:#0068b7;
+    color:#fff;
+    padding:20px;
 }
 .mypage-service_list__content_title h2{
-  font-size:24px;
-  margin:0;
-  padding:0 0 0 44px;
-  background:url(../img/mypage/icon-dog.png) no-repeat center left /32px auto;
+    font-size:24px;
+    margin:0;
+    padding:0 0 0 44px;
+    background:url(../img/mypage/icon-dog.png) no-repeat center left /32px auto;
 }
 .mypage-service_list__content_title h2 .count{
-  margin:0 0 0 .5em;
+    margin:0 0 0 .5em;
 }
 .mypage-service_list__content_body{
-  padding:40px;
+    padding:40px;
 }
 .mypage-service_list__content_body p.nodata{
-  text-align:center;
-  font-size:24px;
-  color:#999;
-  background-color:#efefef;
-  padding:20px;
-  border-radius:10px;
-  margin:0;
+    text-align:center;
+    font-size:24px;
+    color:#999;
+    background-color:#efefef;
+    padding:20px;
+    border-radius:10px;
+    margin:0;
 }
 .mypage-service_list__content_body ul{
-  margin:0;
+    margin:0;
 }
 .mypage-service_list__content_body ul li{
-  border-bottom:solid #ddd 1px;
+    border-bottom:solid #ddd 1px;
 }
 .mypage-service_list__content_body ul li:last-child{
-  border-bottom:none;
+    border-bottom:none;
 }
 .mypage-service_list__content_body ul li a{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px;
 }
 .mypage-service_list__content_body ul li a:hover{
-  background-color:#fffcf2;
+    background-color:#fffcf2;
 }
 .mypage-service_list__content_body ul li .image{
-  width:30%;
-  position:relative;
+    width:30%;
+    position:relative;
 }
 .mypage-service_list__content_body ul li .image figure{
-  width:100%;
-  height:300px;
-  overflow:hidden;
-  position:relative;
+    width:100%;
+    height:300px;
+    overflow:hidden;
+    position:relative;
 }
 .mypage-service_list__content_body ul li .image figure img{
-	position: absolute;
-  width: auto;
-  height: auto;
-  min-width: 100%;
-  min-height: 100%;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate3d(-50%, -50%, 0);
-          transform: translate3d(-50%, -50%, 0);
-  object-fit: cover;
+    position: absolute;
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate3d(-50%, -50%, 0);
+    transform: translate3d(-50%, -50%, 0);
+    object-fit: cover;
 }
 .mypage-service_list__content_body ul li .text{
-  width:65%;
+    width:65%;
 }
 .mypage-service_list__content_body ul li .image-icon{
-  position:absolute;
-  bottom:30px;
-  left:-10px;
+    position:absolute;
+    bottom:30px;
+    left:-10px;
 }
 .mypage-service_list__content_body ul li .image-icon span{
-  display:inline-block;
-  text-align:center;
-  width:80px;
-  padding:5px 15px;
-  font-size:16px;
-  background-color:#fff;
-  border-radius:30px;
+    display:inline-block;
+    text-align:center;
+    width:80px;
+    padding:5px 15px;
+    font-size:16px;
+    background-color:#fff;
+    border-radius:30px;
 }
 .mypage-service_list__content_body ul li .image-icon span.image-icon_female{
-  color:#ef5350;
-  border:solid #ef5350 1px;
+    color:#ef5350;
+    border:solid #ef5350 1px;
 }
 .mypage-service_list__content_body ul li .image-icon span.image-icon_male{
-  color:#0068b7;
-  border:solid #0068b7 1px;
+    color:#0068b7;
+    border:solid #0068b7 1px;
 }
 .mypage-service_list__content_body ul li .text .status{
-  margin:0 0 10px;
+    margin:0 0 10px;
 }
 .mypage-service_list__content_body ul li .text .status span{
-  display:inline-block;
-  text-align:center;
-  padding:5px 20px;
-  font-size:16px;
-  background-color:#fff;
-  border-radius:30px;
-  margin:0 10px 0 0;
+    display:inline-block;
+    text-align:center;
+    padding:5px 20px;
+    font-size:16px;
+    background-color:#fff;
+    border-radius:30px;
+    margin:0 10px 0 0;
 }
 .mypage-service_list__content_body ul li .text .status span.status-gray{
-  color:#999;
-  border:solid #999 1px;
+    color:#999;
+    border:solid #999 1px;
 }
 .mypage-service_list__content_body ul li .text .status span.status-green{
-  color:#388e3c;
-  border:solid #388e3c 1px;
+    color:#388e3c;
+    border:solid #388e3c 1px;
 }
 .mypage-service_list__content_body ul li .text .name{
-  margin:0 0 20px;
+    margin:0 0 20px;
 }
 .mypage-service_list__content_body ul li .text .name h3{
-  font-size:24px;
+    font-size:24px;
 }
 .mypage-service_list__content_body ul li .text .profile{
-  
+
 }
 .mypage-service_list__content_body ul li .text .profile ul{
-  
+
 }
 .mypage-service_list__content_body ul li .text .profile ul li{
-  font-size:18px;
-  line-height:1.8;
-  border:none;
-  margin:0;
+    font-size:18px;
+    line-height:1.8;
+    border:none;
+    margin:0;
 }
 .mypage-service_list__content_body ul li .text .price{
-  margin:0;
+    margin:0;
 }
 .mypage-service_list__content_body ul li .text .price p{
-  font-size:24px;
-  color:#f08200;
-  margin:0;
+    font-size:24px;
+    color:#f08200;
+    margin:0;
 }
 .mypage-service_list__content_body ul li .text .locale{
 
 }
 .mypage-service_list__content_body ul li .text .locale p{
-  font-size:18px;
-  margin:0;
+    font-size:18px;
+    margin:0;
 }
 .mypage-service_list__content_body ul.message li .image{
 }
 .mypage-service_list__content_body ul.message li .image figure{
 }
 .mypage-service_list__content_body ul.message li .text{
-  width:40%;
+    width:40%;
 }
 .mypage-service_list__content_body ul.message li .receive{
-  width:20%;
-  text-align:center;
+    width:20%;
+    text-align:center;
 }
 .mypage-service_list__content_body ul.message li .receive-icon{
-  position:relative;
-  width:48px;
-  height:48px;
-  margin:0 auto;
-} 
+    position:relative;
+    width:48px;
+    height:48px;
+    margin:0 auto;
+}
 .mypage-service_list__content_body ul.message li .receive-icon i{
-  font-size:48px;
+    font-size:48px;
 }
 .mypage-service_list__content_body ul.message li .receive .budge{
-  display:block;
-  position:absolute;
-  width:30px;
-  height:30px;
-  top:8px;
-  right:-12px;
-  color:#fff;
-  font-size:14px;
-  text-align:center;
-  line-height:30px;
-  background-color:#ef5350;
-  border-radius:50%;
+    display:block;
+    position:absolute;
+    width:30px;
+    height:30px;
+    top:8px;
+    right:-12px;
+    color:#fff;
+    font-size:14px;
+    text-align:center;
+    line-height:30px;
+    background-color:#ef5350;
+    border-radius:50%;
 }
 .mypage-service_list__content_body ul.message li .receive p{
-  font-size:14px;
-  padding:20px 0 0;
+    font-size:14px;
+    padding:20px 0 0;
 }
 
 .mypage-guide_topics{
-  
+
 }
 .mypage-guide_topics__title{
-  background:url(../img/mypage/guide_bg02.jpg) no-repeat center /cover;
-  padding:20px 40px;
-  position:relative;
+    background:url(../img/mypage/guide_bg02.jpg) no-repeat center /cover;
+    padding:20px 40px;
+    position:relative;
 }
 .mypage-guide_topics__title h2{
-  font-size:36px;
-  color:#ef5350;
-  line-height:1.3;
-  margin:0;
-  text-shadow:0 0 5px #fff,0 0 5px #fff,0 0 5px #fff,0 0 5px #fff,0 0 5px #fff;
+    font-size:36px;
+    color:#ef5350;
+    line-height:1.3;
+    margin:0;
+    text-shadow:0 0 5px #fff,0 0 5px #fff,0 0 5px #fff,0 0 5px #fff,0 0 5px #fff;
 }
 .mypage-guide_topics__title:after{
-  content:"";
-  position:absolute;
-  bottom:0;
-  right:0;
-  background:url(../img/mypage/guide_bg01.png) no-repeat center /contain;
-  width:309px;
-  height:214px;
+    content:"";
+    position:absolute;
+    bottom:0;
+    right:0;
+    background:url(../img/mypage/guide_bg01.png) no-repeat center /contain;
+    width:309px;
+    height:214px;
 }
 .mypage-guide_topics__body{
 }
 .mypage-guide_topics__body_lead{
-  padding:40px;
+    padding:40px;
 }
 .mypage-guide_topics__body_lead p{
-  font-size:18px;
-  line-height:2;
-  color:#382600;
+    font-size:18px;
+    line-height:2;
+    color:#382600;
 }
 .mypage-guide_topics__body_content{
-  padding:40px;
-  background-color:#f6fff2;
-  border-top:solid #539b34 3px;
+    padding:40px;
+    background-color:#f6fff2;
+    border-top:solid #539b34 3px;
 }
 .mypage-guide_topics__body_content h3{
-  font-size:30px;
-  margin:0 0 40px;
-  text-align:center;
-  color:#539b34;
+    font-size:30px;
+    margin:0 0 40px;
+    text-align:center;
+    color:#539b34;
 }
 .mypage-guide_topics__body_content h3 i{
-  margin:0 .5em 0 0;
+    margin:0 .5em 0 0;
 }
 .mypage-guide_topics__body_content ul{
-  margin:0;
+    margin:0;
 }
 .mypage-guide_topics__body_content ul li{
-  margin:0 0 20px;
+    margin:0 0 20px;
 }
 .mypage-guide_topics__body_content ul li a{
-  display:flex;
-  justify-content:space-between;
-  align-items: stretch;
-  background-color:#fff;
-  box-shadow:5px 5px 0 rgba(0,0,0,0.1);
+    display:flex;
+    justify-content:space-between;
+    align-items: stretch;
+    background-color:#fff;
+    box-shadow:5px 5px 0 rgba(0,0,0,0.1);
 }
 .mypage-guide_topics__body_content ul li figure{
-  width:25%;
-  min-height:200px;
-  /*height:100%;*/
-  overflow:hidden;
-  position:relative;
-  margin:0;
+    width:25%;
+    min-height:200px;
+    /*height:100%;*/
+    overflow:hidden;
+    position:relative;
+    margin:0;
 }
 .mypage-guide_topics__body_content ul li figure img{
-	position: absolute;
-  width: auto;
-  height: auto;
-  min-width: 100%;
-  min-height: 100%;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate3d(-50%, -50%, 0);
-          transform: translate3d(-50%, -50%, 0);
-  object-fit: cover;
+    position: absolute;
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate3d(-50%, -50%, 0);
+    transform: translate3d(-50%, -50%, 0);
+    object-fit: cover;
 }
 .mypage-guide_topics__body_content ul li p{
-  width:75%;
-  font-size:16px;
-  line-height:1.8;
-  padding:20px 40px;
-  margin:0;
+    width:75%;
+    font-size:16px;
+    line-height:1.8;
+    padding:20px 40px;
+    margin:0;
 }
 .mypage-guide_topics__body_btn{
-  text-align:center;
-  padding:20px 0 0;
+    text-align:center;
+    padding:20px 0 0;
 }
 .mypage-guide_topics__body_btn a{
-  display:inline-block;
-  padding:20px 40px;
-  border-radius:6px;
-  font-size:16px;
-  color:#fff;
-  background-color:#ffab00;
-  max-width:100%;
-  width:40%;
+    display:inline-block;
+    padding:20px 40px;
+    border-radius:6px;
+    font-size:16px;
+    color:#fff;
+    background-color:#ffab00;
+    max-width:100%;
+    width:40%;
 }
 .mypage-guide_topics__body_btn a:hover{
-  opacity:.8;
+    opacity:.8;
 }
 
 .mypage-footer{
-  padding:40px;
+    padding:40px;
 }
 .mypage-footer .polocy{
-  display:flex;
-  justify-content:center;
-  align-items:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 .mypage-footer .polocy figure{
-  margin:0 20px 0 0;
+    margin:0 20px 0 0;
 }
 .mypage-footer .polocy figure img{
-  width:95px;
-  height:auto;
+    width:95px;
+    height:auto;
 }
 .mypage-footer .polocy p{
-  font-size:14px;
-  line-height:1.6;
-  margin:0;
+    font-size:14px;
+    line-height:1.6;
+    margin:0;
 }
 
 .mypage-service_list__table_body{
-  
+
 }
 .mypage-service_list__table_body table{
-  width:100%;
-  border-collapse:collapse;
+    width:100%;
+    border-collapse:collapse;
 }
 .mypage-service_list__table_body table th{
-  font-size:14px;
-  padding:0 0 10px;
-  text-align:center;
-  border-bottom:solid #ddd 1px;
+    font-size:14px;
+    padding:0 0 10px;
+    text-align:center;
+    border-bottom:solid #ddd 1px;
 }
 .mypage-service_list__table_body table td{
-  padding:20px;
-  text-align:center;
-  vertical-align:middle;
-  font-size:14px;
-  border-bottom:solid #ddd 1px;
+    padding:20px;
+    text-align:center;
+    vertical-align:middle;
+    font-size:14px;
+    border-bottom:solid #ddd 1px;
 }
 .mypage-service_list__table_body table td.image{
-  position:relative;
+    position:relative;
 }
 .mypage-service_list__table_body table td.image p{
-  margin:0;
-  padding:10px 0 0;
+    margin:0;
+    padding:10px 0 0;
 }
 .mypage-service_list__table_body table td.image figure{
-  width:240px;
-  height:240px;
-  overflow:hidden;
-  position:relative;
-  border-radius:50%;
-  margin:0 auto;
+    width:240px;
+    height:240px;
+    overflow:hidden;
+    position:relative;
+    border-radius:50%;
+    margin:0 auto;
 }
 .mypage-service_list__table_body table td.image figure img{
-	position: absolute;
-  width: auto;
-  height: auto;
-  min-width: 100%;
-  min-height: 100%;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate3d(-50%, -50%, 0);
-          transform: translate3d(-50%, -50%, 0);
-  object-fit: cover;
+    position: absolute;
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate3d(-50%, -50%, 0);
+    transform: translate3d(-50%, -50%, 0);
+    object-fit: cover;
 }
 .mypage-service_list__table_body table td.receive .receive-icon{
-  position:relative;
-  width:48px;
-  height:48px;
-  margin:0 auto;
-} 
+    position:relative;
+    width:48px;
+    height:48px;
+    margin:0 auto;
+}
 .mypage-service_list__table_body table td.receive .receive-icon i{
-  font-size:48px;
+    font-size:48px;
 }
 .mypage-service_list__table_body table td.receive .budge{
-  display:block;
-  position:absolute;
-  width:30px;
-  height:30px;
-  top:8px;
-  right:-12px;
-  color:#fff;
-  font-size:14px;
-  text-align:center;
-  line-height:30px;
-  background-color:#ef5350;
-  border-radius:50%;
+    display:block;
+    position:absolute;
+    width:30px;
+    height:30px;
+    top:8px;
+    right:-12px;
+    color:#fff;
+    font-size:14px;
+    text-align:center;
+    line-height:30px;
+    background-color:#ef5350;
+    border-radius:50%;
 }
 .mypage-service_list__table_body table td.receive p{
-  font-size:14px;
-  padding:20px 0 0;
-  margin:0;
+    font-size:14px;
+    padding:20px 0 0;
+    margin:0;
 }
 
 /*------------------
 Width <= 1280px
 ------------------*/
 @media screen and (max-width: 1280px) {
-  
-.breadcrumbs{
-  padding:20px;
-}
-  
-.mypage-dialog{
-  margin:0 20px 40px;
-}
-  
-.mypage-area_bnr{
-  margin:0 20px 40px;
-}
-  
-.mypage-footer{
-  padding:40px 80px;
-}
+
+    .breadcrumbs{
+        padding:20px;
+    }
+
+    .mypage-dialog{
+        margin:0 20px 40px;
+    }
+
+    .mypage-area_bnr{
+        margin:0 20px 40px;
+    }
+
+    .mypage-footer{
+        padding:40px 80px;
+    }
 }
 
 /*------------------
@@ -587,303 +587,300 @@ Width <= 980px
 @media screen and (max-width: 980px) {
 
 
-.mypage-service_list__content_body ul li .image figure {
-    height: 200px;
-}
-  
-.mypage-service_list__table_body table td.image figure{
-  width:160px;
-  height:160px;
-}
-  
+    .mypage-service_list__content_body ul li .image figure {
+        height: 200px;
+    }
+
+    .mypage-service_list__table_body table td.image figure{
+        width:160px;
+        height:160px;
+    }
+
 }
 
 /*------------------
 Width <= 768px
 ------------------*/
 @media screen and (max-width: 768px) {
-  
-.mypage-guide_topics__body_content ul li figure{
-  min-height:160px;
-}
-  
+
+    .mypage-guide_topics__body_content ul li figure{
+        min-height:160px;
+    }
+
 }
 
 /*------------------
 Width <= 640px
 ------------------*/
 @media screen and (max-width: 640px) {
-  
-.breadcrumbs ul li{
-  font-size:12px;
-}
-  
-#mypage-menu{
-  margin:0 0 20px;
-}
-#mypage-menu h1{
-  font-size:18px;
-}
-#mypage-menu .mypage-menu_list ul li{
-  margin:0 2% 10px 0;
-}
-#mypage-menu .mypage-menu_list ul li:nth-child(even){
-  margin:0 0 10px 0;
-}
-#mypage-menu .mypage-menu_list ul li a{
-  font-size:16px;
-  padding:20px 10px;
-}
-#mypage-menu .mypage-menu_list ul li .budge{
-  width:24px;
-  height:24px;
-  top:-6px;
-  right:-6px;
-  line-height:24px;
-  font-size:12px;
-}
-  
-.mypage-dialog{
-  padding:20px;
-  margin:0 20px 20px;
-}
-.mypage-dialog h2{
-  font-size:18px;
-  margin:0 0 10px;
-}
-.mypage-dialog p{
-  font-size:14px;
-}
-  
-.mypage-area_bnr{
-  margin:0 0 20px;
-}
-  
-.mypage-point_campaign{
-  margin:0 0 20px;
-}
-.mypage-point_title h2{
-  font-size:18px;
-}
-.mypage-point_body{
-  padding:20px;
-}
-  
-.mypage-service_list{
-  margin:0 0 20px;
-}
-.mypage-service_list__content_title h2{
-  font-size:18px;
-  padding:0 0 0 38px;
-  background:url(../img/mypage/icon-dog.png) no-repeat center left /24px auto;
-}
-.mypage-service_list__content_body{
-  padding:20px;
-}
-.mypage-service_list__content_body p.nodata{
-  font-size:18px;
-}
-.mypage-service_list__content_body ul li .image figure{
-  height:120px;
-}
-.mypage-service_list__content_body ul li .image-icon{
-  bottom:10px;
-}
-.mypage-service_list__content_body ul li .image-icon span{
-  padding:3px 10px;
-  font-size:12px;
-}
-.mypage-service_list__content_body ul li .text .status span{
-  padding:5px 10px;
-  font-size:12px;
-}
-.mypage-service_list__content_body ul li .text .name{
-  margin:0 0 10px;
-}
-.mypage-service_list__content_body ul li .text .name h3{
-  font-size:18px;
-}
-.mypage-service_list__content_body ul li .text .profile ul li{
-  font-size:16px;
-}
-.mypage-service_list__content_body ul li .text .price p{
-  font-size:18px;
-}
-.mypage-service_list__content_body ul li .text .locale p{
-  font-size:16px;
-}
-.mypage-guide_topics__title{
-  padding:20px;
-}
-.mypage-guide_topics__title h2{
-  font-size:24px;
-}
-.mypage-guide_topics__title:after{
-  width:154px;
-  height:107px;
-}
-.mypage-guide_topics__body_lead{
-  padding:20px;
-}
-.mypage-guide_topics__body_lead p{
-  font-size:14px;
-}
-.mypage-guide_topics__body_content{
-  padding:20px;
-}
-.mypage-guide_topics__body_content h3{
-  font-size:24px;
-  margin:0 0 20px;
-}
-.mypage-guide_topics__body_content ul li figure{
-  width:35%;
-  min-height:120px;
-}
-.mypage-guide_topics__body_content ul li p{
-  width:65%;
-  font-size:14px;
-  padding:20px;
-}
-.mypage-guide_topics__body_btn a{
-  padding:20px;
-  font-size:16px;
-  width:100%;
-}
-.mypage-footer .polocy p{
-  font-size:12px;
-}
-  
-.mypage-service_list__table_body table td.image figure{
-  width:100px;
-  height:100px;
-}
-.mypage-service_list__table_body table td.name,
-.mypage-service_list__table_body table td.time{
-  padding:20px 10px;
-}
-.mypage-service_list__table_body table td.image{
-  padding:20px 10px 20px 20px;
-}
-.mypage-service_list__table_body table td.receive{
-  padding:20px 20px 20px 10px;
-}
+
+    .breadcrumbs ul li{
+        font-size:12px;
+    }
+
+    #mypage-menu{
+        margin:0 0 20px;
+    }
+    #mypage-menu h1{
+        font-size:18px;
+    }
+    #mypage-menu .mypage-menu_list ul li{
+        margin:0 2% 10px 0;
+    }
+    #mypage-menu .mypage-menu_list ul li:nth-child(even){
+        margin:0 0 10px 0;
+    }
+    #mypage-menu .mypage-menu_list ul li a{
+        font-size:16px;
+        padding:20px 10px;
+    }
+    #mypage-menu .mypage-menu_list ul li .budge{
+        width:24px;
+        height:24px;
+        top:-6px;
+        right:-6px;
+        line-height:24px;
+        font-size:12px;
+    }
+
+    .mypage-dialog{
+        padding:20px;
+        margin:0 20px 20px;
+    }
+    .mypage-dialog h2{
+        font-size:18px;
+        margin:0 0 10px;
+    }
+    .mypage-dialog p{
+        font-size:14px;
+    }
+
+    .mypage-area_bnr{
+        margin:0 0 20px;
+    }
+
+    .mypage-point_campaign{
+        margin:0 0 20px;
+    }
+    .mypage-point_title h2{
+        font-size:18px;
+    }
+    .mypage-point_body{
+        padding:20px;
+    }
+
+    .mypage-service_list{
+        margin:0 0 20px;
+    }
+    .mypage-service_list__content_title h2{
+        font-size:18px;
+        padding:0 0 0 38px;
+        background:url(../img/mypage/icon-dog.png) no-repeat center left /24px auto;
+    }
+    .mypage-service_list__content_body{
+        padding:20px;
+    }
+    .mypage-service_list__content_body p.nodata{
+        font-size:18px;
+    }
+    .mypage-service_list__content_body ul li .image figure{
+        height:120px;
+    }
+    .mypage-service_list__content_body ul li .image-icon{
+        bottom:10px;
+    }
+    .mypage-service_list__content_body ul li .image-icon span{
+        padding:3px 10px;
+        font-size:12px;
+    }
+    .mypage-service_list__content_body ul li .text .status span{
+        padding:5px 10px;
+        font-size:12px;
+    }
+    .mypage-service_list__content_body ul li .text .name{
+        margin:0 0 10px;
+    }
+    .mypage-service_list__content_body ul li .text .name h3{
+        font-size:18px;
+    }
+    .mypage-service_list__content_body ul li .text .profile ul li{
+        font-size:16px;
+    }
+    .mypage-service_list__content_body ul li .text .price p{
+        font-size:18px;
+    }
+    .mypage-service_list__content_body ul li .text .locale p{
+        font-size:16px;
+    }
+    .mypage-guide_topics__title{
+        padding:20px;
+    }
+    .mypage-guide_topics__title h2{
+        font-size:24px;
+    }
+    .mypage-guide_topics__title:after{
+        width:154px;
+        height:107px;
+    }
+    .mypage-guide_topics__body_lead{
+        padding:20px;
+    }
+    .mypage-guide_topics__body_lead p{
+        font-size:14px;
+    }
+    .mypage-guide_topics__body_content{
+        padding:20px;
+    }
+    .mypage-guide_topics__body_content h3{
+        font-size:24px;
+        margin:0 0 20px;
+    }
+    .mypage-guide_topics__body_content ul li figure{
+        width:35%;
+        min-height:120px;
+    }
+    .mypage-guide_topics__body_content ul li p{
+        width:65%;
+        font-size:14px;
+        padding:20px;
+    }
+    .mypage-guide_topics__body_btn a{
+        padding:20px;
+        font-size:16px;
+        width:100%;
+    }
+    .mypage-footer .polocy p{
+        font-size:12px;
+    }
+
+    .mypage-service_list__table_body table td.image figure{
+        width:100px;
+        height:100px;
+    }
+    .mypage-service_list__table_body table td.name,
+    .mypage-service_list__table_body table td.time{
+        padding:20px 10px;
+    }
+    .mypage-service_list__table_body table td.image{
+        padding:20px 10px 20px 20px;
+    }
+    .mypage-service_list__table_body table td.receive{
+        padding:20px 20px 20px 10px;
+    }
 }
 
 /*------------------
 Width <= 480px
 ------------------*/
 @media screen and (max-width: 480px) {
-  
-#mypage-menu .mypage-menu_list{
-  padding:10px 10px 0;
-}
-#mypage-menu .mypage-menu_list ul li a {
-  font-size: 12px;
-  padding:20px 10px;
-}
-  
-.mypage-service_list__content_body p.nodata {
-    font-size: 14px;
-}
-  
-.mypage-guide_topics__body_content h3{
-  font-size:18px;
-}
-.mypage-guide_topics__body_content ul li figure{
-  min-height:80px;
-}
-.mypage-guide_topics__body_content ul li p{
-  font-size:12px;
-}
-  
-.mypage-footer{
-  padding:20px 60px 20px 20px;
-}
-  
-.mypage-service_list__content_body {
-    padding: 0;
-}
-.mypage-service_list__content_body ul li .image-icon span {
-    width: auto;
-}
-.mypage-service_list__content_body ul li .text .name h3 {
-    font-size: 14px;
-}
-.mypage-service_list__content_body ul li .text .profile ul li {
-    font-size: 12px;
-}
-.mypage-service_list__content_body ul li .text .locale p {
-    font-size: 12px;
-}
-.mypage-service_list__content_body ul.message li .receive p {
-    font-size: 12px;
-}
-.mypage-service_list__content_body ul.message li .receive-icon{
-  width:36px;
-  height:36px;
-} 
-.mypage-service_list__content_body ul.message li .receive-icon i{
-  font-size:36px;
-}
-.mypage-service_list__content_body ul.message li .receive .budge{
-  width:24px;
-  height:24px;
-  top:4px;
-  right:-8px;
-  font-size:12px;
-  line-height:24px;
-}
-  
-.mypage-service_list__table_body table th{
-  font-size:12px;
-}
-.mypage-service_list__table_body table td{
-  font-size:12px;
-}
-.mypage-service_list__table_body table td.image figure{
-  width:60px;
-  height:60px;
-}
-.mypage-service_list__table_body table td.receive .receive-icon{
-  width:36px;
-  height:36px;
-} 
-.mypage-service_list__table_body table td.receive .receive-icon i{
-  font-size:36px;
-}
-.mypage-service_list__table_body table td.receive .budge{
-  width:24px;
-  height:24px;
-  top:4px;
-  right:-8px;
-  font-size:12px;
-  line-height:24px;
-}
-.mypage-service_list__table_body table td.receive p{
-  font-size:12px;
-}
+
+    #mypage-menu .mypage-menu_list{
+        padding:10px 10px 0;
+    }
+    #mypage-menu .mypage-menu_list ul li a {
+        font-size: 12px;
+        padding:20px 10px;
+    }
+
+    .mypage-service_list__content_body p.nodata {
+        font-size: 14px;
+    }
+
+    .mypage-guide_topics__body_content h3{
+        font-size:18px;
+    }
+    .mypage-guide_topics__body_content ul li figure{
+        min-height:80px;
+    }
+    .mypage-guide_topics__body_content ul li p{
+        font-size:12px;
+    }
+
+    .mypage-footer{
+        padding:20px 60px 20px 20px;
+    }
+
+    .mypage-service_list__content_body {
+        padding: 0;
+    }
+    .mypage-service_list__content_body ul li .image-icon span {
+        width: auto;
+    }
+    .mypage-service_list__content_body ul li .text .name h3 {
+        font-size: 14px;
+    }
+    .mypage-service_list__content_body ul li .text .profile ul li {
+        font-size: 12px;
+    }
+    .mypage-service_list__content_body ul li .text .locale p {
+        font-size: 12px;
+    }
+    .mypage-service_list__content_body ul.message li .receive p {
+        font-size: 12px;
+    }
+    .mypage-service_list__content_body ul.message li .receive-icon{
+        width:36px;
+        height:36px;
+    }
+    .mypage-service_list__content_body ul.message li .receive-icon i{
+        font-size:36px;
+    }
+    .mypage-service_list__content_body ul.message li .receive .budge{
+        width:24px;
+        height:24px;
+        top:4px;
+        right:-8px;
+        font-size:12px;
+        line-height:24px;
+    }
+
+    .mypage-service_list__table_body table th{
+        font-size:12px;
+    }
+    .mypage-service_list__table_body table td{
+        font-size:12px;
+    }
+    .mypage-service_list__table_body table td.image figure{
+        width:60px;
+        height:60px;
+    }
+    .mypage-service_list__table_body table td.receive .receive-icon{
+        width:36px;
+        height:36px;
+    }
+    .mypage-service_list__table_body table td.receive .receive-icon i{
+        font-size:36px;
+    }
+    .mypage-service_list__table_body table td.receive .budge{
+        width:24px;
+        height:24px;
+        top:4px;
+        right:-8px;
+        font-size:12px;
+        line-height:24px;
+    }
+    .mypage-service_list__table_body table td.receive p{
+        font-size:12px;
+    }
 }
 
 /*------------------
 Width <= 375px
 ------------------*/
 @media screen and (max-width: 375px) {
-  
-#mypage-menu .mypage-menu_list{
-  padding:10px 10px 1px;
-}
-#mypage-menu .mypage-menu_list ul{
-  display:block;
-}
-#mypage-menu .mypage-menu_list ul li{
-  width:auto;
-  margin:0 0 10px 0;
-  position:relative;
-}
-#mypage-menu .mypage-menu_list ul li:nth-child(even){
-  margin:0 0 10px 0;
-}
-  
 
-  
+    #mypage-menu .mypage-menu_list{
+        padding:10px 10px 1px;
+    }
+    #mypage-menu .mypage-menu_list ul{
+        display:block;
+    }
+    #mypage-menu .mypage-menu_list ul li{
+        width:auto;
+        margin:0 0 10px 0;
+        position:relative;
+    }
+    #mypage-menu .mypage-menu_list ul li:nth-child(even){
+        margin:0 0 10px 0;
+    }
 }
