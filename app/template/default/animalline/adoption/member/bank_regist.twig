@@ -1,0 +1,137 @@
+{% set site_type = 'adoption' %}
+{% extends 'animalline/adoption/frame.twig' %}
+{% form_theme form 'Form/form_div_layout.twig' %}
+
+{% block main %}
+    <div class="ec-layoutRole__main">
+        <div class="ec-mypageRole">
+            <div class="ec-pageHeader">
+                <h1>口座登録</h1>
+            </div>
+        </div>
+        <div class="ec-mypageRole">
+            <div class="ec-editRole">
+                <div class="ec-off1Grid">
+                    <div class="ec-off1Grid__cell">
+                        <form method="post" action="{{ url('adoption_bank_regist') }}" novalidate>
+                            <span class="p-country-name" style="display:none;">Japan</span>
+                            {{ form_widget(form._token) }}
+                            <div class="ec-borderedDefs">
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.bank_name, '銀行名', { 'label_attr': { 'class': 'ec-label' }}) }}                                                                            
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.bank_name) ? ' error' }}">
+                                            {{ form_widget(form.bank_name, { 'attr': { 'placeholder': '' }}) }}
+                                            {{ form_errors(form.bank_name) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.bank_code, '銀行コード（4桁）', { 'label_attr': { 'class': 'ec-label' }}) }}                                                                            
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.bank_code) ? ' error' }}">
+                                            {{ form_widget(form.bank_code, { 'attr': { 'maxlength': '4' }}) }}
+                                            {{ form_errors(form.bank_code) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.branch_name, '支店名', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.branch_name) ? ' error' }}">
+                                            {{ form_widget(form.branch_name, { 'attr': { 'placeholder': '' }}) }}
+                                            {{ form_errors(form.branch_name) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.branch_number, '支店番号（3桁）', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.branch_number) ? ' error' }}">
+                                            {{ form_widget(form.branch_number, { 'attr': { 'maxlength': '3' }}) }}
+                                            {{ form_errors(form.branch_number) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.account_number, '口座番号', { 'label_attr': { 'class': 'ec-label' }}) }}                                                                            
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.account_number) ? ' error' }}">
+                                            {{ form_widget(form.account_number, { 'attr': { 'maxlength': '7' }}) }}
+                                            {{ form_errors(form.account_number) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.account_kind, '口座種別', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.account_kind) ? ' error' }}">
+                                            {{ form_widget(form.account_kind) }}
+                                            {{ form_errors(form.account_kind) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.name, '名義(カナ)', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.name) ? ' error' }}">
+                                            {{ form_widget(form.name, { 'attr': { 'placeholder': '' }}) }}
+                                            {{ form_errors(form.name) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                {# エンティティ拡張の自動出力 #}
+                                {% for f in form if f.vars.eccube_form_options.auto_render %}
+                                    {% if f.vars.eccube_form_options.form_theme %}
+                                        {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                        {{ form_row(f) }}
+                                    {% else %}
+                                        <dl>
+                                            <dt>
+                                                {{ form_label(f) }}
+                                            </dt>
+                                            <dd>
+                                                <div class="{{ f.vars.eccube_form_options.style_class }}{{ has_errors(f) ? ' error' }}">
+                                                    {{ form_widget(f) }}
+                                                    {{ form_errors(f) }}
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="ec-RegisterRole__actions">
+                                <div class="ec-off4Grid">
+                                    <div class="ec-off4Grid__cell">
+                                        <button type="submit" class="ec-blockBtn--action" name="mode" value="confirm">{{ '確認ページへ'|trans }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+    {% endblock %}
+    {% block javascript %}{% endblock %}
+    

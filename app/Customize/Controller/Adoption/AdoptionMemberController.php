@@ -18,6 +18,9 @@ use Eccube\Event\EventArgs;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Form\Type\Front\CustomerLoginType;
 use Customize\Config\AnilineConf;
+use Customize\Entity\ConservationBankAccount;
+use Customize\Form\Type\Adoption\ConservationBankAccountType;
+use Customize\Repository\ConservationBankAccountRepository;
 use Eccube\Form\Type\Front\EntryType;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -62,6 +65,11 @@ class AdoptionMemberController extends AbstractController
     protected $benefitsStatusRepository;
 
     /**
+     * @var ConservationBankAccountRepository
+     */
+    protected $conservationBankAccountRepository;
+
+    /**
      * ConservationController constructor.
      *
      * @param CustomerRepository $customerRepository
@@ -71,6 +79,7 @@ class AdoptionMemberController extends AbstractController
      * @param TokenStorageInterface $tokenStorage
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      * @param BenefitsStatusRepository $benefitsStatusRepository
+     * @param ConservationBankAccountRepository $conservationBankAccountRepository
      */
     public function __construct(
         CustomerRepository  $customerRepository,
@@ -79,7 +88,8 @@ class AdoptionMemberController extends AbstractController
         EncoderFactoryInterface $encoderFactory,
         TokenStorageInterface $tokenStorage,
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
-        BenefitsStatusRepository $benefitsStatusRepository
+        BenefitsStatusRepository $benefitsStatusRepository,
+        ConservationBankAccountRepository $conservationBankAccountRepository
     ) {
         $this->customerRepository = $customerRepository;
         $this->conservationsRepository = $conservationsRepository;
@@ -88,6 +98,7 @@ class AdoptionMemberController extends AbstractController
         $this->tokenStorage = $tokenStorage;
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->benefitsStatusRepository = $benefitsStatusRepository;
+        $this->conservationBankAccountRepository = $conservationBankAccountRepository;
     }
 
     /**
@@ -327,6 +338,71 @@ class AdoptionMemberController extends AbstractController
      * @Template("animalline/adoption/member/adoption_change_complete.twig")
      */
     public function complete(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * 口座登録画面.
+     *
+     * @Route("/adoption/member/bank/regist", name="adoption_bank_regist")
+     * @Template("animalline/adoption/member/bank_regist.twig")
+     */
+    public function bank_regist(Request $request)
+    {
+        $user = $this->getUser();
+        $conservation = $this->conservationsRepository->find($user);
+        $BankAccount = $this->conservationBankAccountRepository->findOneBy(['Conservation' => $conservation]);
+        if (!$BankAccount) {
+            $BankAccount = new ConservationBankAccount();
+        }
+
+        $form = $this->createForm(ConservationBankAccountType::class, $BankAccount);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            switch ($request->get('mode')) {
+                case 'confirm':
+
+                    return $this->render('animalline/adoption/member/bank_regist_confirm.twig', [
+                        'form' => $form->createView(),
+                    ]);
+
+                case 'complete':
+
+                    $data = $form->getData();
+
+                    $event = new EventArgs(
+                        [
+                            'form' => $form,
+                            'data' => $data,
+                        ],
+                        $request
+                    );
+                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+
+                    $data = $event->getArgument('data');
+
+                    $data->setConservation($conservation);
+                    $this->entityManager->persist($data);
+                    $this->entityManager->flush();
+
+                    return $this->redirect($this->generateUrl('adoption_bank_regist_complete'));
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * 口座登録完了.
+     *
+     * @Route("/adoption/member/bank/regist/complete", name="adoption_bank_regist_complete")
+     * @Template("animalline/adoption/member/bank_regist_complete.twig")
+     */
+    public function bank_regist_complete()
     {
         return [];
     }
