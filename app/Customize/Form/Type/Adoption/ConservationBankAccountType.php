@@ -47,7 +47,11 @@ class ConservationBankAccountType extends AbstractType
                         'pattern' => "/^\d+$/u",
                         'message' => 'form_error.numeric_only',
                     ]),
-                    new Assert\Length(['max' => 4, 'min' => 4]),
+                    new Assert\Length([
+                        'max' => 4,
+                        'min' => 4,
+                        'exactMessage' => '銀行コードは４桁の数字を入力してください。'
+                    ]),
                 ],
             ])
             ->add('branch_name', TextType::class, [
@@ -58,9 +62,7 @@ class ConservationBankAccountType extends AbstractType
                 'constraints' => [
                     new Assert\Length([
                         'min' => 0,
-                        'max' => 40,
-                        'maxMessage' => '銀行コードは４桁の数字を入力してください。',
-                        'minMessage' => '銀行コードは４桁の数字を入力してください。'
+                        'max' => 40
                     ]),
                     new Assert\NotBlank()
                 ]
@@ -76,8 +78,7 @@ class ConservationBankAccountType extends AbstractType
                     new Assert\Length([
                         'max' => 3,
                         'min' => 3,
-                        'maxMessage' => '支店番号は３桁の数字を入力してください。',
-                        'minMessage' => '支店番号は３桁の数字を入力してください。'
+                        'exactMessage' => '支店番号は３桁の数字を入力してください。'
                     ]),
                 ]
             ])
