@@ -186,15 +186,37 @@ class BreederPetController extends AbstractController
      * @Route("/breeder/member/pet_list", name="breeder_pet_list")
      * @Template("animalline/breeder/member/pet_list.twig")
      */
-    public function breeder_pet_list(): ?Response
+    public function breeder_pet_list(PaginatorInterface $paginator, Request $request): ?Response
     {
+        $arrayPets = [];
         $pets = $this->breederQueryService->getListPet($this->getUser());
+        foreach ($pets as $key => $pet) {
+            $pet['check'] = false;
+            if ($pet['bch_id']) {
+                $msgHeader = $this->breederContactHeaderRepository->find($pet['bch_id']);
+                $pet['message'] = $this->breederContactsRepository->findOneBy(['BreederContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_USER], ['create_date' => 'DESC']);
+                if ($msgHeader->getBreederNewMsg() == AnilineConf::NEW_MESSAGE) {
+                    $pet['check'] = true;
+                }
+                if ($pet['message']) {
+                    if($pet['message']->getIsReading() == AnilineConf::RESPONSE_UNREPLIED) {
+                        $pet['check'] = true;
+                    }
+                }
+            }
+                $arrayPets[$pet['bp_id']] = $pet;
+        }
+        $arrayPets = $paginator->paginate(
+            array_reverse($arrayPets),
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
 
         return $this->render(
             'animalline/breeder/member/pet_list.twig',
             [
                 'breeder' => $this->getUser(),
-                'pets' => $pets,
+                'pets' => $arrayPets,
             ]
         );
     }
@@ -252,7 +274,7 @@ class BreederPetController extends AbstractController
                 'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
             ]
         );
-        
+
         $now = Carbon::now();
         $is56DaysOld = -1;
         if ($now > $breederPet->getPetBirthday()) {

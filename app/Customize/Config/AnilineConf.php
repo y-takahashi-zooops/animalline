@@ -198,4 +198,6 @@ final class AnilineConf
 
     const MESSAGE_USER = 1;
     const MESSAGE_MEMBER = 2;
+
+    const NEW_MESSAGE = 1;
 }
