@@ -58,7 +58,9 @@ class ConservationBankAccountType extends AbstractType
                 'constraints' => [
                     new Assert\Length([
                         'min' => 0,
-                        'max' => 40
+                        'max' => 40,
+                        'maxMessage' => '銀行コードは４桁の数字を入力してください。',
+                        'minMessage' => '銀行コードは４桁の数字を入力してください。'
                     ]),
                     new Assert\NotBlank()
                 ]
@@ -71,7 +73,12 @@ class ConservationBankAccountType extends AbstractType
                         'message' => 'form_error.numeric_only',
                     ]),
                     new Assert\NotBlank(),
-                    new Assert\Length(['max' => 3, 'min' => 3]),
+                    new Assert\Length([
+                        'max' => 3,
+                        'min' => 3,
+                        'maxMessage' => '支店番号は３桁の数字を入力してください。',
+                        'minMessage' => '支店番号は３桁の数字を入力してください。'
+                    ]),
                 ]
             ])
             ->add('account_number', TextType::class, [
