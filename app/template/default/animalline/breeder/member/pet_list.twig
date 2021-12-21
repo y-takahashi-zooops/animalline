@@ -27,7 +27,7 @@
                                 {{ pet['breeds_name'] ?? '' }}
                             </a>
                         </td>
-                        <td class="time">{{ pet['bp_pet_birthday']|date('Y/m/d H:i') }}</td>
+                        <td class="time">{{ pet['bp_create_date']|date('Y/m/d H:i') }}</td>
                         <td class="receive">
                             {% if pet['check'] %}
                                 <a href="{{ url('breeder_breeder_message', {'id':pet['bch_id']}) }}">
