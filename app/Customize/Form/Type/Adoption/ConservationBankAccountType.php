@@ -2,19 +2,12 @@
 
 namespace Customize\Form\Type\Adoption;
 
-use Customize\Config\AnilineConf;
 use Customize\Entity\ConservationBankAccount;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -49,12 +42,12 @@ class ConservationBankAccountType extends AbstractType
             ->add('bank_code', TextType::class, [
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(),
-                    new Regex([
+                    new Assert\NotBlank(),
+                    new Assert\Regex([
                         'pattern' => "/^\d+$/u",
                         'message' => 'form_error.numeric_only',
                     ]),
-                    new Length(['max' => 4]),
+                    new Assert\Length(['max' => 4]),
                 ],
             ])
             ->add('branch_name', TextType::class, [

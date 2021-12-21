@@ -30,37 +30,37 @@ class ConservationBankAccount
     private $Conservation;
 
     /**
-     * @ORM\Column(name="bank_name", type="string", length=40)
+     * @ORM\Column(name="bank_name", type="string", length=40, nullable=false)
      */
     private $bank_name;
 
     /**
-     * @ORM\Column(name="bank_code", type="string", length=4)
+     * @ORM\Column(name="bank_code", type="string", length=4, nullable=false)
      */
     private $bank_code;
 
     /**
-     * @ORM\Column(name="branch_name", type="string", length=40)
+     * @ORM\Column(name="branch_name", type="string", length=40, nullable=false)
      */
     private $branch_name;
 
     /**
-     * @ORM\Column(name="branch_number", type="string", length=3)
+     * @ORM\Column(name="branch_number", type="string", length=3, nullable=false)
      */
     private $branch_number;
 
     /**
-     * @ORM\Column(name="account_number", type="string", length=7)
+     * @ORM\Column(name="account_number", type="string", length=7, nullable=false)
      */
     private $account_number;
 
     /**
-     * @ORM\Column(name="account_kind", type="smallint")
+     * @ORM\Column(name="account_kind", type="smallint", nullable=false)
      */
     private $account_kind;
 
     /**
-     * @ORM\Column(name="name", type="string", length=40)
+     * @ORM\Column(name="name", type="string", length=40, nullable=false)
      */
     private $name;
 
