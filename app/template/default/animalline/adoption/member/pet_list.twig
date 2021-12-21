@@ -36,7 +36,7 @@
                                 <td class="time">{{ pet['cp_create_date'].format('Y/m/d H:i') ?? '' }}</td>
                                 <td class="receive">
                                     {% if pet['check'] %}
-                                        <a href="{{ url('adoption_message', {'id':pet['cch_id']}) }}">
+                                        <a href="{{ url('adoption_adoption_message', {'id':pet['cch_id']}) }}">
                                             <div class="receive-icon">
                                                 {% if pet['message'] %}
                                                 
