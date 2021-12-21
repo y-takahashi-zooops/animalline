@@ -317,11 +317,12 @@ class AdoptionQueryService
         $qb = $this->conservationPetsRepository->createQueryBuilder('cp');
         return $qb
             ->join('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = cp.BreedsType')
+            ->leftJoin('Customize\Entity\ConservationContactHeader', 'cch', 'WITH', 'cch.Pet = cp.id')
             ->where('cp.Conservation = :conservation')
             ->setParameter('conservation', $conservation)
             ->andWhere($qb->expr()->notIn('cp.id', $status))
             ->orderBy('cp.update_date', 'DESC')
-            ->select('cp, b.breeds_name')
+            ->select('cp, cch.id as cch_id, cch.last_message_date as last_msg, b.breeds_name')
             ->getQuery()
             ->getScalarResult();
     }
