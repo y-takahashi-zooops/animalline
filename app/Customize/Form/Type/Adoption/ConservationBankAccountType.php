@@ -47,7 +47,7 @@ class ConservationBankAccountType extends AbstractType
                         'pattern' => "/^\d+$/u",
                         'message' => 'form_error.numeric_only',
                     ]),
-                    new Assert\Length(['max' => 4]),
+                    new Assert\Length(['max' => 4, 'min' => 4]),
                 ],
             ])
             ->add('branch_name', TextType::class, [
@@ -70,7 +70,8 @@ class ConservationBankAccountType extends AbstractType
                         'pattern' => '/^[0-9]+$/u',
                         'message' => 'form_error.numeric_only',
                     ]),
-                    new Assert\NotBlank()
+                    new Assert\NotBlank(),
+                    new Assert\Length(['max' => 3, 'min' => 3]),
                 ]
             ])
             ->add('account_number', TextType::class, [
