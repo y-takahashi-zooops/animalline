@@ -186,7 +186,7 @@ class BreederPetController extends AbstractController
      * @Route("/breeder/member/pet_list", name="breeder_pet_list")
      * @Template("animalline/breeder/member/pet_list.twig")
      */
-    public function breeder_pet_list(): ?Response
+    public function breeder_pet_list(PaginatorInterface $paginator, Request $request): ?Response
     {
         $arrayPets = [];
         $pets = $this->breederQueryService->getListPet($this->getUser());
@@ -206,12 +206,17 @@ class BreederPetController extends AbstractController
             }
                 $arrayPets[$pet['bp_id']] = $pet;
         }
+        $arrayPets = $paginator->paginate(
+            array_reverse($arrayPets),
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
 
         return $this->render(
             'animalline/breeder/member/pet_list.twig',
             [
                 'breeder' => $this->getUser(),
-                'pets' => array_reverse($arrayPets),
+                'pets' => $arrayPets,
             ]
         );
     }

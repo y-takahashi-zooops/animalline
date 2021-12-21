@@ -85,16 +85,17 @@ class AdoptionPetController extends AbstractController
      * @param ConservationContactsRepository $conservationContactsRepository
      */
     public function __construct(
-        ConservationPetsRepository     $conservationPetsRepository,
-        DnaCheckStatusRepository       $dnaCheckStatusRepository,
-        ConservationsRepository        $conservationsRepository,
-        ConservationPetImageRepository $conservationPetImageRepository,
-        PetsFavoriteRepository         $petsFavoriteRepository,
-        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
+        ConservationPetsRepository          $conservationPetsRepository,
+        DnaCheckStatusRepository            $dnaCheckStatusRepository,
+        ConservationsRepository             $conservationsRepository,
+        ConservationPetImageRepository      $conservationPetImageRepository,
+        PetsFavoriteRepository              $petsFavoriteRepository,
+        DnaCheckStatusHeaderRepository      $dnaCheckStatusHeaderRepository,
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
-        AdoptionQueryService $adoptionQueryService,
-        ConservationContactsRepository $conservationContactsRepository
-    ) {
+        AdoptionQueryService                $adoptionQueryService,
+        ConservationContactsRepository      $conservationContactsRepository
+    )
+    {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->conservationsRepository = $conservationsRepository;
@@ -112,7 +113,7 @@ class AdoptionPetController extends AbstractController
      * @Route("/adoption/member/pet_list", name="adoption_pet_list")
      * @Template("animalline/adoption/member/pet_list.twig")
      */
-    public function adoption_pet_list()
+    public function adoption_pet_list(PaginatorInterface $paginator, Request $request)
     {
         $arrayPets = [];
         $pets = $this->adoptionQueryService->getListPet($this->getUser());
@@ -126,7 +127,7 @@ class AdoptionPetController extends AbstractController
                     $pet['check'] = true;
                 }
                 if ($pet['message']) {
-                    if($pet['message']->getIsReading() == AnilineConf::RESPONSE_UNREPLIED) {
+                    if ($pet['message']->getIsReading() == AnilineConf::RESPONSE_UNREPLIED) {
                         $pet['check'] = true;
                     }
                 }
@@ -134,11 +135,17 @@ class AdoptionPetController extends AbstractController
             $arrayPets[$pet['cp_id']] = $pet;
         }
 
+        $arrayPets = $paginator->paginate(
+            array_reverse($arrayPets),
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
         return $this->render(
             'animalline/adoption/member/pet_list.twig',
             [
                 'conservation' => $this->getUser(),
-                'pets' => array_reverse($arrayPets),
+                'pets' => $arrayPets,
             ]
         );
     }
@@ -309,7 +316,7 @@ class AdoptionPetController extends AbstractController
         $image2 = $request->get('img2') ?? '';
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
-        
+
         $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
             'customer' => $this->getUser(),
             'image1' => $image0,
@@ -330,7 +337,7 @@ class AdoptionPetController extends AbstractController
             $img4 = $this->setImageSrc($request->get('img4'), $petId);
             $entityManager = $this->getDoctrine()->getManager();
             $conservationPet->setThumbnailPath($img0);
-            
+
             $entityManager->persist($conservationPet);
             foreach ($conservationPetImages as $key => $image) {
                 $image->setImageUri(${'img' . $key});
