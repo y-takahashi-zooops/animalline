@@ -100,7 +100,7 @@ class ConservationBankAccount
         return $this->bank_name;
     }
 
-    public function setBankName(string $bank_name): self
+    public function setBankName(?string $bank_name): self
     {
         $this->bank_name = $bank_name;
 
@@ -112,7 +112,7 @@ class ConservationBankAccount
         return $this->bank_code;
     }
 
-    public function setBankCode(string $bank_code): self
+    public function setBankCode(?string $bank_code): self
     {
         $this->bank_code = $bank_code;
 
@@ -124,7 +124,7 @@ class ConservationBankAccount
         return $this->branch_name;
     }
 
-    public function setBranchName(string $branch_name): self
+    public function setBranchName(?string $branch_name): self
     {
         $this->branch_name = $branch_name;
 
@@ -136,7 +136,7 @@ class ConservationBankAccount
         return $this->branch_number;
     }
 
-    public function setBranchNumber(string $branch_number): self
+    public function setBranchNumber(?string $branch_number): self
     {
         $this->branch_number = $branch_number;
 
@@ -148,7 +148,7 @@ class ConservationBankAccount
         return $this->account_number;
     }
 
-    public function setAccountNumber(string $account_number): self
+    public function setAccountNumber(?string $account_number): self
     {
         $this->account_number = $account_number;
 
@@ -160,7 +160,7 @@ class ConservationBankAccount
         return $this->account_kind;
     }
 
-    public function setAccountKind(int $account_kind): self
+    public function setAccountKind(?int $account_kind): self
     {
         $this->account_kind = $account_kind;
 
@@ -172,7 +172,7 @@ class ConservationBankAccount
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
