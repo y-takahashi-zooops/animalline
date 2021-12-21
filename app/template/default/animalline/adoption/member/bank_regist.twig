@@ -23,7 +23,7 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.bank_name) ? ' error' }}">
-                                            {{ form_widget(form.bank_name, { 'attr': { 'placeholder': '' }}) }}
+                                            {{ form_widget(form.bank_name, { 'attr': { 'placeholder': '', 'maxlength': '40' }}) }}
                                             {{ form_errors(form.bank_name) }}
                                         </div>
                                     </dd>
@@ -45,7 +45,7 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.branch_name) ? ' error' }}">
-                                            {{ form_widget(form.branch_name, { 'attr': { 'placeholder': '' }}) }}
+                                            {{ form_widget(form.branch_name, { 'attr': { 'placeholder': '', 'maxlength': '40' }}) }}
                                             {{ form_errors(form.branch_name) }}
                                         </div>
                                     </dd>
@@ -89,7 +89,7 @@
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.name) ? ' error' }}">
-                                            {{ form_widget(form.name, { 'attr': { 'placeholder': '' }}) }}
+                                            {{ form_widget(form.name, { 'attr': { 'placeholder': '', 'maxlength': '40' }}) }}
                                             {{ form_errors(form.name) }}
                                         </div>
                                     </dd>

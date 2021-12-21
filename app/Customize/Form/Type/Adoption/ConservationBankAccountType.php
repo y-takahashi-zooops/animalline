@@ -36,12 +36,12 @@ class ConservationBankAccountType extends AbstractType
             ->add('bank_name', TextType::class, [
                 'required' => true,
                 'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                    'maxlength' => 40,
                 ],
                 'constraints' => [
                     new Assert\Length([
                         'min' => 0,
-                        'max' => $this->eccubeConfig['eccube_stext_len']
+                        'max' => 40
                     ]),
                     new Assert\NotBlank()
                 ]
@@ -60,12 +60,12 @@ class ConservationBankAccountType extends AbstractType
             ->add('branch_name', TextType::class, [
                 'required' => true,
                 'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                    'maxlength' => 40,
                 ],
                 'constraints' => [
                     new Assert\Length([
                         'min' => 0,
-                        'max' => $this->eccubeConfig['eccube_stext_len']
+                        'max' => 40
                     ]),
                     new Assert\NotBlank()
                 ]
@@ -100,12 +100,12 @@ class ConservationBankAccountType extends AbstractType
             ->add('name', TextType::class, [
                 'required' => true,
                 'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_stext_len'],
+                    'maxlength' => 40,
                 ],
                 'constraints' => [
                     new Assert\Length([
                         'min' => 0,
-                        'max' => $this->eccubeConfig['eccube_stext_len']
+                        'max' => 40
                     ]),
                     new Assert\Regex([
                         'pattern' => '/^[ァ-ヶｦ-ﾟー 　]+$/u',
