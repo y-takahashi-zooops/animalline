@@ -189,6 +189,17 @@ class BreederPetController extends AbstractController
     public function breeder_pet_list(): ?Response
     {
         $pets = $this->breederQueryService->getListPet($this->getUser());
+        foreach ($pets as $key => $pet) {
+            $pet['check'] = false;
+            if ($pet['bch_id']) {
+                $msgHeader = $this->breederContactHeaderRepository->find($pet['bch_id']);
+                $pet['message'] = $this->breederContactsRepository->findOneBy(['BreederContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_USER], ['create_date' => 'DESC']);
+                if ($pet['message']) {
+                    $pet['check'] = true;
+                }
+            }
+            $pets[$key] = $pet;
+        }
 
         return $this->render(
             'animalline/breeder/member/pet_list.twig',
