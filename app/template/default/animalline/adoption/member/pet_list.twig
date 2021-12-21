@@ -5,43 +5,77 @@
     <a href="{{ path('adoption_pets_new') }}" class="btn btn-warning text-align-center w-25 float-right">
         保護犬猫情報登録
     </a>
-    <section id="breeder-column" class="breeder-column_dog">
-        <div class="inner">
-            <div class="breeder-column__main_section_title">
-                <h3>
-                    掲載中の保護犬猫
-                </h3>
-            </div>
-            <div class="breeder-column__main_section_body">
-                <ul>
-                    {% for pet in pets %}
-                        <li>
-                            <a href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">
-                                <figure>
-                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet['cp_thumbnail_path'] | default('/noimage_plugin_list.png')) }}" class="card-img-top" alt="Pet-image"></figure>
+    <div class="clear-both"></div>
+    <div id="mypage-menu">
+        <h1><i class="bi bi-heart"></i>ペット管理</h1>
+    </div>
+    <div class="mypage-service_list__table">
+        <div class="mypage-service_list__table_body">
+            <table>
+                <tr>
+                    <th></th>
+                    <th>犬種/猫種</th>
+                    <th>登録日時</th>
+                    <th></th>
+                </tr>
+                {% for pet in pets %}
+                    <tr>
+                        <td class="image">
+                            <figure>
+                                <a href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">
+                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet['cp_thumbnail_path'] | default('/noimage_plugin_list.png')) }}"
+                                         class="card-img-top">
                                 </a>
-                                <h4>
-                                    {{ pet['breeds_name'] ?? '' }}
-                                </h4>
-                                <div class="birthday">
-                                    {{ pet['cp_pet_age'] }}
-                                </div>
-                                <a href="{{ path('adoption_pets_edit', {'id': pet['cp_id']} )  }}" class="btn w-100 btn-warning text-align-center my-1">
-                                    編集                                        
+                            </figure>
+                            <p>ID {{ pet.cp_id }}</p>
+                        </td>
+                        <td class="name"><a
+                                    href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">{{ pet['breeds_name'] ?? '' }}</a>
+                        </td>
+                        <td class="time">{{ pet['cp_create_date'].format('Y/m/d H:i') ?? '' }}</td>
+                        <td class="receive">
+                            {% if pet['cch_id'] %}
+                                <a href="{{ url('adoption_adoption_message', {'id':pet['cch_id']}) }}">
+                                    <div class="receive-icon">
+                                        {% if pet['check'] %}
+                                            <i class="bi bi-envelope"></i>
+                                            <span class="budge">1</span>
+                                        {% else %}
+                                            <i class="bi bi-envelope-open"></i>
+                                        {% endif %}
+                                    </div>
+                                    <p>{{ pet['last_msg'] ? pet['last_msg']|date('Y/m/d H:i') : 'なし' }}</p>
                                 </a>
-                            </li>
-                        {% else %}
-                            <span class="mb-2">
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <span class="mb-2">
                                 結果が０件です。
                             </span>
-                        {% endfor %}
-                    </ul>
-                </div>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="navigation float-right">
+            {{ knp_pagination_render(pets) }}
+        </div>
+        <div class="mypage-footer">
+            <div class="polocy">
+                <figure><img src="{{ asset('assets/img/mypage/privacy_d.gif') }}" alt="プライバシーマーク"/></figure>
+                <p>〇〇〇〇は、個人情報の適切な管理をするプライバシーマーク付与事業者として認定されています。</p>
             </div>
-    </section>
+        </div>
+    </div>
 {% endblock %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/mypage.css') }}">
+    <style>
+        .clear-both {
+            clear:both;
+            margin-bottom: 30px;
+        }
+    </style>
 {% endblock %}
 {% block javascript %}{% endblock %}
