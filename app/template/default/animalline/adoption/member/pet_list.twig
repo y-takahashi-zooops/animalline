@@ -25,7 +25,7 @@
                                 <p>{{ pet.cp_id }}</p>
                             </td>
                             <td class="name"><a href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">{{ pet['breeds_name'] ?? '' }}</a></td>
-                            <td class="time">{{ pet['cp_pet_birthday'].format('Y/m/d H:i:s') }}</td>
+                            <td class="time">{{ pet['cp_release_date'].format('Y/m/d H:i:s') ?? '' }}</td>
                             <td class="receive">
                                 {% if pet['check'] %}
                                     <a href="{{ url('adoption_message', {'id':pet['cch_id']}) }}">
