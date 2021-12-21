@@ -114,6 +114,7 @@ class AdoptionPetController extends AbstractController
      */
     public function adoption_pet_list()
     {
+        $arrayPets = [];
         $pets = $this->adoptionQueryService->getListPet($this->getUser());
 
         foreach ($pets as $key => $pet) {
@@ -121,18 +122,23 @@ class AdoptionPetController extends AbstractController
             if ($pet['cch_id']) {
                 $msgHeader = $this->conservationContactHeaderRepository->find($pet['cch_id']);
                 $pet['message'] = $this->conservationContactsRepository->findOneBy(['ConservationContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_USER], ['create_date' => 'DESC']);
-                if ($pet['message']) {
+                if ($msgHeader->getConservationNewMsg() == AnilineConf::NEW_MESSAGE) {
                     $pet['check'] = true;
                 }
+                if ($pet['message']) {
+                    if($pet['message']->getIsReading() == AnilineConf::RESPONSE_UNREPLIED) {
+                        $pet['check'] = true;
+                    }
+                }
             }
-            $pets[$key] = $pet;
+            $arrayPets[$pet['bp_id']] = $pet;
         }
 
         return $this->render(
             'animalline/adoption/member/pet_list.twig',
             [
                 'conservation' => $this->getUser(),
-                'pets' => $pets,
+                'pets' => array_reverse($arrayPets),
             ]
         );
     }

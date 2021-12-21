@@ -29,7 +29,7 @@
                         </td>
                         <td class="time">{{ pet['bp_create_date']|date('Y/m/d H:i') }}</td>
                         <td class="receive">
-                            {% if pet['check'] %}
+                            {% if pet['bch_id'] %}
                                 <a href="{{ url('breeder_breeder_message', {'id':pet['bch_id']}) }}">
                                     <div class="receive-icon">
                                         {% if pet['check'] %}

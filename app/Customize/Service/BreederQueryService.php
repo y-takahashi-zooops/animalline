@@ -340,7 +340,7 @@ class BreederQueryService
             ->setParameter('breeder', $breeder)
             ->andWhere($qb->expr()->notIn('bp.id', $status))
             ->orderBy('bch.last_message_date', 'ASC')
-            ->select('bp, bch.id as bch_id, bch.last_message_date as last_msg, bch.breeder_new_msg, b.breeds_name')
+            ->select('bp, bch.id as bch_id, bch.last_message_date as last_msg, b.breeds_name')
             ->getQuery()
             ->getScalarResult();
     }

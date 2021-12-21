@@ -35,17 +35,14 @@
                                 <td class="name"><a href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">{{ pet['breeds_name'] ?? '' }}</a></td>
                                 <td class="time">{{ pet['cp_create_date'].format('Y/m/d H:i') ?? '' }}</td>
                                 <td class="receive">
-                                    {% if pet['check'] %}
+                                    {% if pet['cch_id'] %}
                                         <a href="{{ url('adoption_adoption_message', {'id':pet['cch_id']}) }}">
                                             <div class="receive-icon">
-                                                {% if pet['message'] %}
-                                                
-                                                    {% if pet['message'].isReading == constant('Customize\\Config\\AnilineConf::RESPONSE_REPLIED') %}
-                                                        <i class="bi bi-envelope-open"></i>
-                                                    {% elseif pet['message'].isReading == constant('Customize\\Config\\AnilineConf::RESPONSE_UNREPLIED') %}
-                                                        <i class="bi bi-envelope"></i>
-                                                        <span class="budge">1</span>
-                                                    {% endif %}
+                                                {% if pet['check'] %}
+                                                    <i class="bi bi-envelope"></i>
+                                                    <span class="budge">1</span>
+                                                {% else %}
+                                                    <i class="bi bi-envelope-open"></i>
                                                 {% endif %}
                                             </div>
                                             <p>{{ pet['last_msg'] ? pet['last_msg']|date('Y/m/d H:i') : 'なし' }}</p>
