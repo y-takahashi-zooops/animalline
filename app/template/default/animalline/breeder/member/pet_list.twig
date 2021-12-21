@@ -32,11 +32,11 @@
                             {% if pet['check'] %}
                                 <a href="{{ url('breeder_breeder_message', {'id':pet['bch_id']}) }}">
                                     <div class="receive-icon">
-                                        {% if pet['message'].isReading == constant('Customize\\Config\\AnilineConf::RESPONSE_REPLIED') %}
-                                            <i class="bi bi-envelope-open"></i>
-                                        {% elseif pet['message'].isReading == constant('Customize\\Config\\AnilineConf::RESPONSE_UNREPLIED') %}
+                                        {% if pet['check'] %}
                                             <i class="bi bi-envelope"></i>
                                             <span class="budge">1</span>
+                                        {% else %}
+                                            <i class="bi bi-envelope-open"></i>
                                         {% endif %}
                                     </div>
                                     <p>{{ pet['last_msg'] ? pet['last_msg']|date('Y/m/d H:i') : 'なし' }}</p>

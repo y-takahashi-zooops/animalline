@@ -188,24 +188,30 @@ class BreederPetController extends AbstractController
      */
     public function breeder_pet_list(): ?Response
     {
+        $arrayPets = [];
         $pets = $this->breederQueryService->getListPet($this->getUser());
         foreach ($pets as $key => $pet) {
             $pet['check'] = false;
             if ($pet['bch_id']) {
                 $msgHeader = $this->breederContactHeaderRepository->find($pet['bch_id']);
                 $pet['message'] = $this->breederContactsRepository->findOneBy(['BreederContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_USER], ['create_date' => 'DESC']);
-                if ($pet['message']) {
+                if ($msgHeader->getBreederNewMsg() == AnilineConf::NEW_MESSAGE) {
                     $pet['check'] = true;
                 }
+                if ($pet['message']) {
+                    if($pet['message']->getIsReading() == AnilineConf::RESPONSE_UNREPLIED) {
+                        $pet['check'] = true;
+                    }
+                }
             }
-            $pets[$key] = $pet;
+                $arrayPets[$pet['bp_id']] = $pet;
         }
 
         return $this->render(
             'animalline/breeder/member/pet_list.twig',
             [
                 'breeder' => $this->getUser(),
-                'pets' => $pets,
+                'pets' => array_reverse($arrayPets),
             ]
         );
     }
@@ -263,7 +269,7 @@ class BreederPetController extends AbstractController
                 'image_type' => AnilineConf::PET_PHOTO_TYPE_VIDEO
             ]
         );
-        
+
         $now = Carbon::now();
         $is56DaysOld = -1;
         if ($now > $breederPet->getPetBirthday()) {
