@@ -321,7 +321,7 @@ class AdoptionQueryService
             ->where('cp.Conservation = :conservation')
             ->setParameter('conservation', $conservation)
             ->andWhere($qb->expr()->notIn('cp.id', $status))
-            ->orderBy('cp.update_date', 'DESC')
+            ->orderBy('cch.last_message_date', 'DESC')
             ->select('cp, cch.id as cch_id, cch.last_message_date as last_msg, b.breeds_name')
             ->getQuery()
             ->getScalarResult();
