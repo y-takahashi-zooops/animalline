@@ -131,7 +131,7 @@ class AdoptionPetController extends AbstractController
                     }
                 }
             }
-            $arrayPets[$pet['bp_id']] = $pet;
+            $arrayPets[$pet['cp_id']] = $pet;
         }
 
         return $this->render(
