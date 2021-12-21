@@ -34,7 +34,7 @@
                                     <div class="receive-icon">
                                         {% if pet['message'].isReading == constant('Customize\\Config\\AnilineConf::RESPONSE_REPLIED') %}
                                             <i class="bi bi-envelope-open"></i>
-                                        {% elseif pet['message'] == constant('Customize\\Config\\AnilineConf::RESPONSE_UNREPLIED') %}
+                                        {% elseif pet['message'].isReading == constant('Customize\\Config\\AnilineConf::RESPONSE_UNREPLIED') %}
                                             <i class="bi bi-envelope"></i>
                                             <span class="budge">1</span>
                                         {% endif %}
