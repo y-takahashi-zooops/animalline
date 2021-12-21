@@ -39,7 +39,7 @@
                                             <span class="budge">1</span>
                                         {% endif %}
                                     </div>
-                                    <p>{{ pet['last_msg'].format('Y/m/d H:i') ?? 'なし' }}</p>
+                                    <p>{{ pet['last_msg'] ? pet['last_msg']|date('Y/m/d H:i') : 'なし' }}</p>
                                 </a>
                             {% endif %}
                         </td>
