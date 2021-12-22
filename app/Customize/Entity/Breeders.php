@@ -202,6 +202,11 @@ class Breeders
     private $BreederExaminationInfos;
 
     /**
+     * @ORM\OneToMany(targetEntity=BankAccount::class, mappedBy="Breeder")
+     */
+    private $BankAccounts;
+
+    /**
      * @ORM\OneToMany(targetEntity=BreederHouse::class, mappedBy="Breeder")
      */
     private $BreederHouses;
@@ -216,6 +221,7 @@ class Breeders
         $this->BreederPets = new ArrayCollection();
         $this->BreederContactHeader = new ArrayCollection();
         $this->BreederExaminationInfos = new ArrayCollection();
+        $this->BankAccounts = new ArrayCollection();
         $this->BreederHouses = new ArrayCollection();
     }
 
@@ -715,6 +721,14 @@ class Breeders
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|BankAccount[]
+     */
+    public function getBankAccounts(): Collection
+    {
+        return $this->BankAccounts;
     }
 
     /**

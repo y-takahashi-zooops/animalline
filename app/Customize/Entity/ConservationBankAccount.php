@@ -24,7 +24,7 @@ class ConservationBankAccount
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="BankAccount")
+     * @ORM\ManyToOne(targetEntity=Conservations::class, inversedBy="BankAccounts")
      * @ORM\JoinColumn(name="conservation_id", referencedColumnName="id", nullable=false)
      */
     private $Conservation;

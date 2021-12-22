@@ -24,7 +24,7 @@ class BankAccount
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="BankAccount")
+     * @ORM\ManyToOne(targetEntity=Breeders::class, inversedBy="BankAccounts")
      * @ORM\JoinColumn(name="breeder_id", referencedColumnName="id", nullable=false)
      */
     private $Breeder;

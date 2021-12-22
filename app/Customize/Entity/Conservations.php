@@ -163,11 +163,17 @@ class Conservations
      */
     private $conservation_house_name_cat;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ConservationBankAccount::class, mappedBy="Conservation")
+     */
+    private $BankAccounts;
+
     public function __construct()
     {
         $this->ConservationPets = new ArrayCollection();
         $this->ConservationContactHeader = new ArrayCollection();
         $this->ConservationsHouses = new ArrayCollection();
+        $this->BankAccounts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -360,7 +366,7 @@ class Conservations
 
         return $this;
     }
-    
+
     public function getPrText(): ?string
     {
         return $this->pr_text;
@@ -424,7 +430,7 @@ class Conservations
 
         return $this;
     }
-    
+
     /**
      * Get createDate.
      *
@@ -616,5 +622,13 @@ class Conservations
         }
 
         return $result;
+    }
+
+    /**
+     * @return Collection|BankAccount[]
+     */
+    public function getBankAccounts(): Collection
+    {
+        return $this->BankAccounts;
     }
 }
