@@ -177,7 +177,7 @@ file that was distributed with this source code.
                                                     <i class="fa fa-file fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>
-                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="銀行口座">
+                                            <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="振込先口座照会">
                                                 <a class="btn btn-ec-actionIcon" {% if conservation.bankAccounts.count %}
                                                     href="{{ url('admin_adoption_bank_account', {'id': conservation.bankAccounts[0].id}) }}" {% else %} disabled {% endif
                                                     %}>
