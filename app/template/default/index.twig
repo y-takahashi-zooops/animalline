@@ -102,7 +102,8 @@
 		slidesToShow:2,
     	slidesToScroll:2,
 		centerMode: true,
-    	centerPadding: '100px',
+    	centerPadding: '50px',
+		arrows: false,
 	});
 </script>
 
@@ -111,23 +112,19 @@
 {% block main %}
     <main role="main" id="container">
         <div id="contents">
-			<!-- 
-            <div class="edit-area keyvisual">
-                <div class="inner w1190">
-                    <div class="photo-box"><img src="{{ asset('assets/img/main.jpg') }}" alt="アニマルライン"></div>
-                </div>
-            </div>
-			-->
-			<div class="edit-area keyvisual">
-				<ul class="slider">
-					<li><img alt="画像1" src="{{ asset('assets/img/ec/m_square.jpg') }}" /></li>
-					<li><img alt="画像2" src="{{ asset('assets/img/ec/m_square.jpg') }}" /></li>
-					<li><img alt="画像3" src="{{ asset('assets/img/ec/m_square.jpg') }}" /></li>
-				</ul>
-			</div>
-
             <div class="side-set">
                 <div class="main-area">
+					<div class="edit-area keyvisual">
+						{% if is_granted('ROLE_USER') == false %}
+							<div class="photo-box"><img src="{{ asset('assets/img/main.jpg') }}" alt="アニマルライン"></div>
+						{% else %}
+							<ul class="slider" style="width: 100%;margin-top: 0">
+								<li><a href="{{ url('product_detail', {'id': '1560'}) }}"><img alt="画像1" src="{{ asset('assets/img/ec/banner_puppy.png') }}" /></a></li>
+								<li><a href="{{ url('product_detail', {'id': '1561'}) }}"><img alt="画像2" src="{{ asset('assets/img/ec/banner_puppy02.png') }}" /></a></li>
+								<li><a href="{{ url('product_detail', {'id': '1562'}) }}"><img alt="画像3" src="{{ asset('assets/img/ec/banner_puppy03.png') }}" /></a></li>
+							</ul>
+						{% endif %}
+					</div>
 
                     <div class="edit-area lineup new">
                         <div class="inner">
@@ -193,7 +190,7 @@
 					</div>
                 </div><!-- main-area -->
 
-                <div class="side-area">
+                <div class="side-area" style="margin-top: 3rem">
                     <dl class="side-list">
                         <div>
                             <dt>⽝⽤</dt>
@@ -232,9 +229,7 @@
                             </dd>
                         </div>
                     </dl>
-					<img alt="画像3" src="{{ asset('assets/img/ec/m_square.jpg') }}" />
-					<img alt="画像3" src="{{ asset('assets/img/ec/m_square.jpg') }}" style="margin-top: 2rem" />
-					<img alt="画像3" src="{{ asset('assets/img/ec/m_square.jpg') }}" style="margin-top: 2rem" />
+					<a href="{{ url('ani_homepage') }}"><img alt="画像3" src="{{ asset('assets/img/ec/banner_animalline.png') }}" /></a>
                 </div>
             </div><!-- side-area -->
 
