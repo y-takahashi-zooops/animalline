@@ -1,6 +1,7 @@
 {% extends '@admin/default_frame.twig' %}
 
 {% set menus = ['adoptions', 'adoptions_adoption_list'] %}
+{% set kinds = {1: '普通', 2: '貯蓄', 3: '当座'} %}
 
 {% block title %}{{ '振込先口座'|trans }}{% endblock %}
 {% block sub_title %}{{ '保護団体管理'|trans }}{% endblock %}
@@ -99,7 +100,7 @@
                                 </div>
                             </div>
                             <div class="col">
-                                {{BankAccount.accountKind}}
+                                {{ kinds[BankAccount.accountKind] ?? '' }}
                             </div>
                         </div>
 
