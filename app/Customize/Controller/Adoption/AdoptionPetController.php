@@ -15,6 +15,7 @@ use Customize\Form\Type\Adoption\ConservationPetsType;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
 use Customize\Repository\ConservationContactHeaderRepository;
+use Customize\Repository\ConservationContactsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Repository\ConservationPetImageRepository;
 use Eccube\Controller\AbstractController;
@@ -62,6 +63,11 @@ class AdoptionPetController extends AbstractController
     protected $conservationContactHeaderRepository;
 
     /**
+     * @var ConservationContactsRepository
+     */
+    protected $conservationContactsRepository;
+
+    /**
      * @var AdoptionQueryService
      */
     protected $adoptionQueryService;
@@ -76,17 +82,20 @@ class AdoptionPetController extends AbstractController
      * @param PetsFavoriteRepository $petsFavoriteRepository
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      * @param AdoptionQueryService $adoptionQueryService
+     * @param ConservationContactsRepository $conservationContactsRepository
      */
     public function __construct(
-        ConservationPetsRepository     $conservationPetsRepository,
-        DnaCheckStatusRepository       $dnaCheckStatusRepository,
-        ConservationsRepository        $conservationsRepository,
-        ConservationPetImageRepository $conservationPetImageRepository,
-        PetsFavoriteRepository         $petsFavoriteRepository,
-        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
+        ConservationPetsRepository          $conservationPetsRepository,
+        DnaCheckStatusRepository            $dnaCheckStatusRepository,
+        ConservationsRepository             $conservationsRepository,
+        ConservationPetImageRepository      $conservationPetImageRepository,
+        PetsFavoriteRepository              $petsFavoriteRepository,
+        DnaCheckStatusHeaderRepository      $dnaCheckStatusHeaderRepository,
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
-        AdoptionQueryService $adoptionQueryService
-    ) {
+        AdoptionQueryService                $adoptionQueryService,
+        ConservationContactsRepository      $conservationContactsRepository
+    )
+    {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->conservationsRepository = $conservationsRepository;
@@ -95,6 +104,7 @@ class AdoptionPetController extends AbstractController
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->adoptionQueryService = $adoptionQueryService;
+        $this->conservationContactsRepository = $conservationContactsRepository;
     }
 
     /**
@@ -103,15 +113,39 @@ class AdoptionPetController extends AbstractController
      * @Route("/adoption/member/pet_list", name="adoption_pet_list")
      * @Template("animalline/adoption/member/pet_list.twig")
      */
-    public function adoption_pet_list()
+    public function adoption_pet_list(PaginatorInterface $paginator, Request $request)
     {
+        $arrayPets = [];
         $pets = $this->adoptionQueryService->getListPet($this->getUser());
+
+        foreach ($pets as $key => $pet) {
+            $pet['check'] = false;
+            if ($pet['cch_id']) {
+                $msgHeader = $this->conservationContactHeaderRepository->find($pet['cch_id']);
+                $pet['message'] = $this->conservationContactsRepository->findOneBy(['ConservationContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_USER], ['create_date' => 'DESC']);
+                if ($msgHeader->getConservationNewMsg() == AnilineConf::NEW_MESSAGE) {
+                    $pet['check'] = true;
+                }
+                if ($pet['message']) {
+                    if ($pet['message']->getIsReading() == AnilineConf::RESPONSE_UNREPLIED) {
+                        $pet['check'] = true;
+                    }
+                }
+            }
+            $arrayPets[$pet['cp_id']] = $pet;
+        }
+
+        $arrayPets = $paginator->paginate(
+            array_reverse($arrayPets),
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
 
         return $this->render(
             'animalline/adoption/member/pet_list.twig',
             [
                 'conservation' => $this->getUser(),
-                'pets' => $pets,
+                'pets' => $arrayPets,
             ]
         );
     }
@@ -282,7 +316,7 @@ class AdoptionPetController extends AbstractController
         $image2 = $request->get('img2') ?? '';
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
-        
+
         $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
             'customer' => $this->getUser(),
             'image1' => $image0,
@@ -303,7 +337,7 @@ class AdoptionPetController extends AbstractController
             $img4 = $this->setImageSrc($request->get('img4'), $petId);
             $entityManager = $this->getDoctrine()->getManager();
             $conservationPet->setThumbnailPath($img0);
-            
+
             $entityManager->persist($conservationPet);
             foreach ($conservationPetImages as $key => $image) {
                 $image->setImageUri(${'img' . $key});
