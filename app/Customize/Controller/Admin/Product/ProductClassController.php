@@ -323,6 +323,7 @@ class ProductClassController extends AbstractController
 			//追加フィールドに値をセット（デフォルトからコピー）
 			$pc->setStockCode($DefaultProductClass->getStockCode());
 			$pc->setIncentiveRatio($DefaultProductClass->getIncentiveRatio());
+			$pc->setItemCost($DefaultProductClass->getItemCost());
 
             // 新規登録時、チェックを入れていなければ更新しない
             if (!$pc->getId() && !$pc->isVisible()) {
