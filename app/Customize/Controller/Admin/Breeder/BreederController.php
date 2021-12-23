@@ -343,7 +343,7 @@ class BreederController extends AbstractController
     }
 
     /**
-     * 銀行口座
+     * 銀行口座情報
      *
      * @Route("/%eccube_admin_route%/breeder/bank_account/{id}", name="admin_breeder_bank_account", requirements={"id" = "\d+"})
      * @Template("@admin/Breeder/bank_account.twig")

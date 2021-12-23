@@ -158,7 +158,7 @@ class AdoptionController extends AbstractController
     }
 
     /**
-     * 銀行口座
+     * 銀行口座情報
      *
      * @Route("/%eccube_admin_route%/adoption/bank_account/{id}", name="admin_adoption_bank_account", requirements={"id" = "\d+"})
      * @Template("@admin/Adoption/bank_account.twig")

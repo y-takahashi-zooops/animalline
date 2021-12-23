@@ -1,8 +1,9 @@
 {% extends '@admin/default_frame.twig' %}
 
 {% set menus = ['breeders', 'breeders_breeder_list'] %}
+{% set kinds = {1: '普通', 2: '貯蓄', 3: '当座'} %}
 
-{% block title %}{{ '銀行口座'|trans }}{% endblock %}
+{% block title %}{{ '振込先口座'|trans }}{% endblock %}
 {% block sub_title %}{{ 'ブリーダー管理'|trans }}{% endblock %}
 
 {% block stylesheet %}
@@ -22,7 +23,7 @@
                         <div class="col-6">
                             <div class="d-inline-block">
                                 <span class="card-title">
-                                    {{ '銀行口座情報'|trans }}
+                                    {{ '振込先口座情報'|trans }}
                                 </span>
                             </div>
                         </div>
@@ -99,7 +100,7 @@
                                 </div>
                             </div>
                             <div class="col">
-                                {{BankAccount.accountKind}}
+                                {{ kinds[BankAccount.accountKind] ?? '' }}
                             </div>
                         </div>
 
