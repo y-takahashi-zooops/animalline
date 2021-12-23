@@ -40,7 +40,12 @@ class HolidayController extends AbstractController
         $form = $builder->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                $this->addError('有効な日付を入力してください。', 'admin');
+
+                return $this->redirectToRoute('admin_setting_shop_holiday', ['year' => $request->get('holiday')['holiday_date']['year']]);
+            }
             $holidayDate = DateTime::createFromFormat(
                 'Y-m-d H:i:s',
                 $request->get('holiday')['holiday_date']['year'] . '-'. $request->get('holiday')['holiday_date']['month'] . '-' . $request->get('holiday')['holiday_date']['day'] . ' ' . '00:00:00'
@@ -54,7 +59,7 @@ class HolidayController extends AbstractController
             if ($this->businessHolidayRepository->findOneBy(['holiday_date' => $holidayDate])) {
                 $this->addError('既に登録されている休日です', 'admin');
 
-                return $this->redirectToRoute('admin_setting_shop_holiday');
+                return $this->redirectToRoute('admin_setting_shop_holiday', ['year' => $request->get('holiday')['holiday_date']['year']]);
             }
 
             $Holiday = (new BusinessHoliday)
@@ -93,6 +98,7 @@ class HolidayController extends AbstractController
      */
     public function delete(Request $request, BusinessHoliday $Holiday)
     {
+        $year = $Holiday->getHolidayDate()->format('Y');
         $this->isTokenValid();
 
         $em = $this->getDoctrine()->getManager();
@@ -101,6 +107,6 @@ class HolidayController extends AbstractController
 
         $this->addSuccess('admin.common.delete_complete', 'admin');
 
-        return $this->redirectToRoute('admin_setting_shop_holiday');
+        return $this->redirectToRoute('admin_setting_shop_holiday', ['year' => $year]);
     }
 }
