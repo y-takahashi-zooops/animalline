@@ -23,15 +23,16 @@ class BusinessHolidayRepository extends AbstractRepository
     /**
      * Get future holidays.
      *
-     * @param ?DateTime $fromDateTime
+     * @param $year
      * @return array
      */
-    public function getFutureHolidays(?DateTime $fromDateTime = null): array
+    public function getFutureHolidays($year): array
     {
         return $this->createQueryBuilder('h')
-            ->andWhere('h.holiday_date > :from_datetime')
-            ->setParameters(['from_datetime' => ($fromDateTime ?? new DateTime)->format('Y-m-d')])
-            ->orderBy('h.holiday_date', 'ASC')
+            ->where('h.holiday_date >= :fromDate')
+            ->andWhere('h.holiday_date <= :toDate')
+            ->setParameters(['fromDate' => $year . '/01/01', 'toDate' => $year . '/12/31'])
+            ->orderBy('h.holiday_date', 'DESC')
             ->getQuery()
             ->getResult();
     }

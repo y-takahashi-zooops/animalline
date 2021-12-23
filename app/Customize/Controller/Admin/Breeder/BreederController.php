@@ -13,7 +13,6 @@
 
 namespace Customize\Controller\Admin\Breeder;
 
-use Customize\Entity\DnaCheckStatus;
 use Customize\Form\Type\Admin\BreedersType;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreedersRepository;
@@ -28,11 +27,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Config\AnilineConf;
+use Customize\Repository\BankAccountRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Eccube\Repository\CustomerRepository;
 use Customize\Repository\BreederEvaluationsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Customize\Service\MailService;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederController extends AbstractController
 {
@@ -65,6 +66,11 @@ class BreederController extends AbstractController
      * @var BreederExaminationInfoRepository
      */
     protected $breederExaminationInfoRepository;
+
+    /**
+     * @var BankAccountRepository
+     */
+    protected $bankAccountRepository;
 
     /**
      * @var CustomerRepository
@@ -104,6 +110,7 @@ class BreederController extends AbstractController
      * @param BreederQueryService $breederQueryService
      * @param BreederPetsRepository $breederPetsRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
+     * @param BankAccountRepository $bankAccountRepository
      * @param CustomerRepository $customerRepository
      * @param MailService $mailService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
@@ -118,6 +125,7 @@ class BreederController extends AbstractController
         BreederQueryService              $breederQueryService,
         BreederPetsRepository            $breederPetsRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
+        BankAccountRepository            $bankAccountRepository,
         CustomerRepository               $customerRepository,
         MailService                      $mailService,
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
@@ -131,6 +139,7 @@ class BreederController extends AbstractController
         $this->breederQueryService = $breederQueryService;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
+        $this->bankAccountRepository = $bankAccountRepository;
         $this->customerRepository = $customerRepository;
         $this->mailService = $mailService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
@@ -330,6 +339,23 @@ class BreederController extends AbstractController
 
         return [
             'evaluations' => $evaluations,
+        ];
+    }
+
+    /**
+     * 銀行口座情報
+     *
+     * @Route("/%eccube_admin_route%/breeder/bank_account/{id}", name="admin_breeder_bank_account", requirements={"id" = "\d+"})
+     * @Template("@admin/Breeder/bank_account.twig")
+     */
+    public function bankAccount(Request $request): array
+    {
+        if (!$BankAccount = $this->bankAccountRepository->find($request->get('id'))) {
+            throw new NotFoundHttpException();
+        }
+
+        return [
+            'BankAccount' => $BankAccount
         ];
     }
 }

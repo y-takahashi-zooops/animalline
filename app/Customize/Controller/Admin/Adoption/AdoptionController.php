@@ -20,6 +20,7 @@ use Customize\Repository\ConservationsRepository;
 use Customize\Entity\Conservations;
 use Customize\Repository\ConservationPetImageRepository;
 use Customize\Form\Type\Adoption\ConservationsType;
+use Customize\Repository\ConservationBankAccountRepository;
 use Customize\Service\AdoptionQueryService;
 use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;
@@ -27,6 +28,7 @@ use Eccube\Repository\CustomerRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AdoptionController extends AbstractController
@@ -62,6 +64,11 @@ class AdoptionController extends AbstractController
     protected $customerRepository;
 
     /**
+     * @var ConservationBankAccountRepository
+     */
+    protected $conservationBankAccountRepository;
+
+    /**
      * @var MailService
      */
     protected $mailService;
@@ -75,6 +82,7 @@ class AdoptionController extends AbstractController
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param AdoptionQueryService $adoptionQueryService
      * @param CustomerRepository $customerRepository
+     * @param ConservationBankAccountRepository $conservationBankAccountRepository
      * @param MailService $mailService
      */
 
@@ -85,6 +93,7 @@ class AdoptionController extends AbstractController
         ConservationPetsRepository     $conservationPetsRepository,
         AdoptionQueryService           $adoptionQueryService,
         CustomerRepository             $customerRepository,
+        ConservationBankAccountRepository             $conservationBankAccountRepository,
         MailService                    $mailService
     ) {
         $this->conservationsRepository = $conservationsRepository;
@@ -93,6 +102,7 @@ class AdoptionController extends AbstractController
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
         $this->customerRepository = $customerRepository;
+        $this->conservationBankAccountRepository = $conservationBankAccountRepository;
         $this->mailService = $mailService;
     }
 
@@ -145,5 +155,22 @@ class AdoptionController extends AbstractController
         return $this->render('@admin/Adoption/edit.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * 銀行口座情報
+     *
+     * @Route("/%eccube_admin_route%/adoption/bank_account/{id}", name="admin_adoption_bank_account", requirements={"id" = "\d+"})
+     * @Template("@admin/Adoption/bank_account.twig")
+     */
+    public function bankAccount(Request $request): array
+    {
+        if (!$BankAccount = $this->conservationBankAccountRepository->find($request->get('id'))) {
+            throw new NotFoundHttpException();
+        }
+
+        return [
+            'BankAccount' => $BankAccount
+        ];
     }
 }
