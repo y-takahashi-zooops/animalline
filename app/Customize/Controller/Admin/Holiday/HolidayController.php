@@ -2,6 +2,7 @@
 
 namespace Customize\Controller\Admin\Holiday;
 
+use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BusinessHoliday;
 use Customize\Form\Type\Admin\HolidayType;
@@ -44,6 +45,12 @@ class HolidayController extends AbstractController
                 'Y-m-d H:i:s',
                 $request->get('holiday')['holiday_date']['year'] . '-'. $request->get('holiday')['holiday_date']['month'] . '-' . $request->get('holiday')['holiday_date']['day'] . ' ' . '00:00:00'
             );
+
+            if ($holidayDate <= Carbon::now()) {
+                $this->addError('未来の日付を入力してください。', 'admin');
+
+                return $this->redirectToRoute('admin_setting_shop_holiday');
+            }
             if ($this->businessHolidayRepository->findOneBy(['holiday_date' => $holidayDate])) {
                 $this->addError('既に登録されている休日です', 'admin');
 
@@ -58,12 +65,13 @@ class HolidayController extends AbstractController
 
             $this->addSuccess('admin.common.save_complete', 'admin');
 
-            return $this->redirectToRoute('admin_setting_shop_holiday');
+            return $this->redirectToRoute('admin_setting_shop_holiday', ['year' => $request->get('holiday')['holiday_date']['year']]);
         }
 
         $Results = $this->businessHolidayRepository->getFutureHolidays(date('y'));
         if ($request->get('year')) {
             $Results = $this->businessHolidayRepository->getFutureHolidays($request->get('year'));
+            $year = $request->get('year');
         }
         $Holidays = $paginator->paginate(
             $Results,
@@ -74,7 +82,7 @@ class HolidayController extends AbstractController
         return [
             'Holidays' => $Holidays,
             'form' => $form->createView(),
-            'year' => $request->get('year') ?? null
+            'year' => $year ?? null
         ];
     }
 
