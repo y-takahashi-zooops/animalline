@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Eccube\Controller\Admin\Product;
+namespace Customize\Controller\Admin\Product;
 
 use Doctrine\ORM\NoResultException;
 use Eccube\Controller\AbstractController;
