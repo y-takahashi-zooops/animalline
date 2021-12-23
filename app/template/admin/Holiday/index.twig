@@ -24,6 +24,13 @@
         // messageの変更
         $(this).find('p.modal-message').text(target.data('message'));
     });
+
+    const year = (new URLSearchParams(location.search)).get('year') ?? (new Date).getFullYear();
+    const month = (new URLSearchParams(location.search)).get('month') ?? 1;
+    const day = (new URLSearchParams(location.search)).get('day') ?? 1;
+    $('#holiday_holiday_date_year').val(year);
+    $('#holiday_holiday_date_month').val(month);
+    $('#holiday_holiday_date_day').val(day);
 });
     $('#holiday_holiday_date_year').on('change', function() {
         const year = this.value;
@@ -31,14 +38,6 @@
         const day = $('#holiday_holiday_date_day').val();
         location.href = `/aniconfig/setting/shop/holiday?year=${year}&month=${month}&day=${day}`
     });
-    $(document).ready(function() {
-        const year = (new URLSearchParams(location.search)).get('year') ?? (new Date).getFullYear();
-        const month = (new URLSearchParams(location.search)).get('month') ?? 1;
-        const day = (new URLSearchParams(location.search)).get('day') ?? 1;
-        $('#holiday_holiday_date_year').val(year);
-        $('#holiday_holiday_date_month').val(month);
-        $('#holiday_holiday_date_day').val(day);
-    })
 </script>
 {% endblock %}
 

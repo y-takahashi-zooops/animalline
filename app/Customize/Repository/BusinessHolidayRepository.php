@@ -29,9 +29,9 @@ class BusinessHolidayRepository extends AbstractRepository
     public function getFutureHolidays($year): array
     {
         return $this->createQueryBuilder('h')
-            ->where('h.holiday_date >= :fromYear')
-            ->andWhere('h.holiday_date <= :toYear')
-            ->setParameters(['fromYear' => $year . '/01/01', 'toYear' => $year . '/12/31'])
+            ->where('h.holiday_date >= :fromDate')
+            ->andWhere('h.holiday_date <= :toDate')
+            ->setParameters(['fromDate' => $year . '/01/01', 'toDate' => $year . '/12/31'])
             ->orderBy('h.holiday_date', 'DESC')
             ->getQuery()
             ->getResult();
