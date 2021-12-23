@@ -6,116 +6,141 @@
 {% block sub_title %}{{ '店舗設定' }}{% endblock %}
 
 {% block stylesheet %}
-<style>
-    .list-group-item:hover {
-        z-index: inherit;
-    }
-</style>
+    <style>
+        .list-group-item:hover {
+            z-index: inherit;
+        }
+    </style>
 {% endblock stylesheet %}
 {% block javascript %}
 <script>
     $(function () {
-        // 削除モーダルのhrefとmessageの変更
-        $('#DeleteModal').on('shown.bs.modal', function (event) {
-            var target = $(event.relatedTarget);
-            // hrefの変更
-            $(this).find('[data-method="delete"]').attr('href', target.data('url'));
+    // 削除モーダルのhrefとmessageの変更
+    $('#DeleteModal').on('shown.bs.modal', function (event) {
+        var target = $(event.relatedTarget);
+        // hrefの変更
+        $(this).find('[data-method="delete"]').attr('href', target.data('url'));
 
-            // messageの変更
-            $(this).find('p.modal-message').text(target.data('message'));
-        });
+        // messageの変更
+        $(this).find('p.modal-message').text(target.data('message'));
     });
+});
+    $('#holiday_holiday_date_year').on('change', function() {
+        const year = this.value;
+        const month = $('#holiday_holiday_date_month').val();
+        const day = $('#holiday_holiday_date_day').val();
+        location.href = `/aniconfig/setting/shop/holiday?year=${year}&month=${month}&day=${day}`
+    });
+    $(document).ready(function() {
+        const year = (new URLSearchParams(location.search)).get('year') ?? (new Date).getFullYear();
+        const month = (new URLSearchParams(location.search)).get('month') ?? 1;
+        const day = (new URLSearchParams(location.search)).get('day') ?? 1;
+        $('#holiday_holiday_date_year').val(year);
+        $('#holiday_holiday_date_month').val(month);
+        $('#holiday_holiday_date_day').val(day);
+    })
 </script>
 {% endblock %}
 
 {% block main %}
-<div class="c-contentsArea__cols">
-    <div class="c-contentsArea__primaryCol">
-        <div class="c-primaryCol">
-            <div class="card rounded border-0 mb-4">
-                <div class="card-body p-0">
-                    <div class="card rounded border-0">
-                        <ul class="list-group list-group-flush sortable-container">
-                            <li class="list-group-item">
-                                <form role="form" class="form-row" method="post"
-                                    action="{{ url('admin_setting_shop_holiday') }}">
-                                    <div class="col-auto align-items-center">
-                                        <input type="date" name="holiday_date" class="form-control" required min="{{ date('+1day').format('Y-m-d') }}" max="9999-12-31">
-                                    </div>
-                                    <div class="col-auto align-items-center">
-                                        <button class="btn btn-ec-regular" type="submit">
-                                            {{ 'admin.common.create__new'|trans }}
-                                        </button>
-                                    </div>
-                                </form>
-                            </li>
-
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-1"><strong>休日</strong></div>
-                                </div>
-                            </li>
-
-                            {% for Holiday in Holidays %}
-                            <li id="ex-tag-{{ Holiday.id }}" class="list-group-item sortable-item"
-                                data-id="{{ Holiday.id }}">
-                                <div class="row justify-content-around mode-view">
-                                    <div class="col d-flex align-items-center"><a>{{ Holiday.holidayDate.format('Y-m-d') }}</a>
-                                    </div>
-                                    <div class="col-auto text-right">
-                                        <div class="d-inline-block mr-2" data-tooltip="true" data-placement="top"
-                                            title="{{ 'admin.common.delete'|trans }}">
-                                            <a class="btn btn-ec-actionIcon" data-toggle="modal"
-                                                data-target="#DeleteModal"
-                                                data-url="{{ url('admin_setting_shop_holiday_delete', {'id' : Holiday.id}) }}"
-                                                data-message="{{ 'admin.common.delete_modal__message'|trans({ "%name%"
-                                                : Holiday.holidayDate.format('Y-m-d') }) }}">
-                                                <i class="fa fa-close fa-lg text-secondary"></i>
-                                            </a>
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <div class="card rounded border-0 mb-4">
+                    <div class="card-body p-0">
+                        <div class="card rounded border-0">
+                            <ul class="list-group list-group-flush sortable-container">
+                                <li class="list-group-item">
+                                    <form role="form" class="form-row" name="form1" id="form1" novalidate method="post"
+                                          action="{{ url('admin_setting_shop_holiday') }}">
+                                        {{ form_widget(form._token) }}
+                                        <div class="col-auto align-items-center">
+                                            <div class="col-6 mb-2">
+                                                <div class="ec-birth{{ has_errors(form.holiday_date) ? ' error' }} date">
+                                                    {{ form_widget(form.holiday_date.year) }}&nbsp;/&nbsp;
+                                                    {{ form_widget(form.holiday_date.month) }}&nbsp;/&nbsp;
+                                                    {{ form_widget(form.holiday_date.day) }}
+                                                    {{ form_errors(form.holiday_date) }}
+                                                </div>
+                                            </div>
                                         </div>
+                                        <div class="col-auto align-items-center">
+                                            <button class="btn btn-ec-regular" type="submit">
+                                                {{ 'admin.common.create__new'|trans }}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </li>
+
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-1"><strong>休日</strong></div>
                                     </div>
-                                </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
+                                </li>
+
+                                {% for Holiday in Holidays %}
+                                    <li id="ex-tag-{{ Holiday.id }}" class="list-group-item sortable-item"
+                                        data-id="{{ Holiday.id }}">
+                                        <div class="row justify-content-around mode-view">
+                                            <div class="col d-flex align-items-center">
+                                                <a>{{ Holiday.holidayDate.format('Y-m-d') }}</a>
+                                            </div>
+                                            <div class="col-auto text-right">
+                                                <div class="d-inline-block mr-2" data-tooltip="true"
+                                                     data-placement="top"
+                                                     title="{{ 'admin.common.delete'|trans }}">
+                                                    <a class="btn btn-ec-actionIcon" data-toggle="modal"
+                                                       data-target="#DeleteModal"
+                                                       data-url="{{ url('admin_setting_shop_holiday_delete', {'id' : Holiday.id}) }}"
+                                                       data-message="{{ 'admin.common.delete_modal__message'|trans({ "%name%"
+                                                           : Holiday.holidayDate.format('Y-m-d') }) }}">
+                                                        <i class="fa fa-close fa-lg text-secondary"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="navigation float-right">
-            {{ knp_pagination_render(Holidays) }}
-        </div>
-    </div>
-</div>
-
-<!-- 削除モーダル -->
-<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModal" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title font-weight-bold">
-                    {{ 'admin.common.delete_modal__title'|trans }}
-                </h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body text-left">
-                <p class="text-left modal-message">
-                    <!-- jsでメッセージを挿入 -->
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
-                    {{ 'admin.common.cancel'|trans }}
-                </button>
-                <a class="btn btn-ec-delete" href="#" {{ csrf_token_for_anchor() }} data-method="delete"
-                    data-confirm="false">
-                    {{ 'admin.common.delete'|trans }}
-                </a>
+            <div class="navigation float-right">
+                {{ knp_pagination_render(Holidays) }}
             </div>
         </div>
     </div>
-</div>
+
+    <!-- 削除モーダル -->
+    <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold">
+                        {{ 'admin.common.delete_modal__title'|trans }}
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <p class="text-left modal-message">
+                        <!-- jsでメッセージを挿入 -->
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+                        {{ 'admin.common.cancel'|trans }}
+                    </button>
+                    <a class="btn btn-ec-delete" href="#" {{ csrf_token_for_anchor() }} data-method="delete"
+                       data-confirm="false">
+                        {{ 'admin.common.delete'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

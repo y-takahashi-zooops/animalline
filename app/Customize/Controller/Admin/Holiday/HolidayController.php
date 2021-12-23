@@ -4,6 +4,7 @@ namespace Customize\Controller\Admin\Holiday;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\BusinessHoliday;
+use Customize\Form\Type\Admin\HolidayType;
 use Customize\Repository\BusinessHolidayRepository;
 use DateTime;
 use Eccube\Controller\AbstractController;
@@ -33,10 +34,15 @@ class HolidayController extends AbstractController
      */
     public function index(Request $request, PaginatorInterface $paginator)
     {
-        if ('POST' === $request->getMethod()) {
+        $builder = $this->formFactory->createBuilder(HolidayType::class);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $holidayDate = DateTime::createFromFormat(
                 'Y-m-d H:i:s',
-                $request->get('holiday_date') . '00:00:00'
+                $request->get('holiday')['holiday_date']['year'] . '-'. $request->get('holiday')['holiday_date']['month'] . '-' . $request->get('holiday')['holiday_date']['day'] . ' ' . '00:00:00'
             );
             if ($this->businessHolidayRepository->findOneBy(['holiday_date' => $holidayDate])) {
                 $this->addError('既に登録されている休日です', 'admin');
@@ -55,7 +61,10 @@ class HolidayController extends AbstractController
             return $this->redirectToRoute('admin_setting_shop_holiday');
         }
 
-        $Results = $this->businessHolidayRepository->getFutureHolidays();
+        $Results = $this->businessHolidayRepository->getFutureHolidays(date('y'));
+        if ($request->get('year')) {
+            $Results = $this->businessHolidayRepository->getFutureHolidays($request->get('year'));
+        }
         $Holidays = $paginator->paginate(
             $Results,
             $request->query->getInt('page', 1),
@@ -63,7 +72,9 @@ class HolidayController extends AbstractController
         );
 
         return [
-            'Holidays' => $Holidays
+            'Holidays' => $Holidays,
+            'form' => $form->createView(),
+            'year' => $request->get('year') ?? null
         ];
     }
 
