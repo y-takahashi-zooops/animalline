@@ -27,9 +27,11 @@
                                          class="card-img-top">
                                 </a>
                             </figure>
-                            <a href="{{ path('adoption_pets_new',{id : pet['cp_id']}) }}" class="btn btn-warning text-align-center w-25">
-                                情報をコピーして登録
-                            </a>
+                            <div class="mt-2">
+                                <a href="{{ path('adoption_pets_new',{clone_id : pet['cp_id']}) }}" class="btn btn-warning text-align-center">
+                                    情報をコピーして登録
+                                </a>
+                            </div>
                         </td>
                         <td class="name"><a
                                     href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">{{ pet['breeds_name'] ?? '' }}</a>
