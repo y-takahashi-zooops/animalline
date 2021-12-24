@@ -218,7 +218,9 @@ class AdoptionPetController extends AbstractController
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
 
-        $conservationPet = new ConservationPets();
+        if ($request->get('id')) {
+            $conservationPet = $this->conservationPetsRepository->find($request->get('id'));
+        } else $conservationPet = new ConservationPets();
 
         $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
             'customer' => $user,
