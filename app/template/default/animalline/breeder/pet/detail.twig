@@ -203,7 +203,11 @@
                                     <div class="col-12 contents_col_normal">
                                         <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
                                             <button class="btn basic-btn breeder-btn" style="height:65px;">
+                                                {% if breederPet.getPetKind() == 1 %}
                                                 この子犬の見学希望／お問い合わせ(無料)
+                                                {% else %}
+                                                この子猫の見学希望／お問い合わせ(無料)
+                                                {% endif %}
                                             </button>
                                         </a>
                                     </div>
@@ -275,7 +279,11 @@
                                     <div class="col-12">
                                         <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
                                             <button class="btn basic-btn breeder-btn" style="height:65px;">
+                                                {% if breederPet.getPetKind() == 1 %}
                                                 この子犬の見学希望／お問い合わせ(無料)
+                                                {% else %}
+                                                この子猫の見学希望／お問い合わせ(無料)
+                                                {% endif %}
                                             </button>
                                         </a>
                                     </div>

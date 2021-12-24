@@ -91,6 +91,11 @@ MYPAGE - 共通
     border-radius:50%;
 }
 
+.mypage-menu_list p{
+    color: #F00;
+    font-size: 15px;
+}
+
 #mypage-header{
     padding:40px 0;
     text-align:center;
@@ -641,6 +646,11 @@ Width <= 640px
         right:-6px;
         line-height:24px;
         font-size:12px;
+    }
+
+    .mypage-menu_list p{
+        color: #F00;
+        font-size: 10px;
     }
 
     .mypage-dialog{

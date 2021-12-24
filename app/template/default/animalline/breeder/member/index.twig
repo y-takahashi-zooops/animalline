@@ -9,7 +9,7 @@
             <div style="text-align: center;background-color: #eee8aa"><a href="#information">▼▼　年末年始の検体送付について　▼▼</a></div>
         {% endif %}
         <div id="mypage-menu">
-            <h1>〇〇〇 〇〇〇 様のマイページ</h1>
+            <h1>マイページ</h1>
             <div class="mypage-menu_list">
                 <ul>
                     {% if user.regist_type == 0 %}
@@ -23,21 +23,39 @@
                         <li><a href="{{url('breeder_examination')}}"><i class="bi bi-pencil-fill"></i>ブリーダー申請を行う</a></li>
                     {% endif %}
                     {% if user.is_breeder == 1 %}
-                        <li><a href="{{url('breeder_examination_kit')}}"><i class="bi bi-heart"></i>DNA検査キット請求</a></li>
-                        <li><a href="{{url('breeder_examination_status')}}"><i class="bi bi-heart"></i>DNA検査状況確認</a></li>
-                        <li><a href="{{url('breeder_pet_list')}}"><i class="bi bi-heart"></i>ペット管理</a></li>
-                        <li><a href="{{url('breeder_all_breeder_message')}}"><i class="bi bi-chat-right-quote-fill"></i>お問い合わせ対応</a>{% if breeder_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li>
-                        <li><a href="{{url('breeder_baseinfo',{'return_path': "breeder_mypage"})}}"><i class="bi bi-pencil-fill"></i>基本情報編集</a></li>
-                        <li><a href="{{path('breeder_house_info',{'pet_type': 1 ,'return_path': "breeder_mypage"})}}"><i class="bi bi-pencil-fill"></i>犬舎情報編集</a></li>
-                        <li><a href="{{path('breeder_house_info',{'pet_type': 2, 'return_path': "breeder_mypage" })}}"><i class="bi bi-pencil-fill"></i>猫舎情報編集</a></li>
-                        <li><a href="{{ url('breeder_change') }}"><i class="bi bi-pencil-fill"></i>会員情報編集</a></li>
-                        <li><a href="{{url('breeder_bank_regist')}}"><i class="bi bi-pencil-fill"></i>口座登録</a></li>
-                        <li><a href="{{ url('breeder_site_sample_menu') }}"><i class="bi bi-bell-fill"></i>検索サイトイメージ</a></li>
+                        <li><a href="{{url('breeder_examination_kit')}}"><i class="fas fa-dna"></i>DNA検査キット請求<br /><p>生体掲載をご希望の方はこちら</p></a></li>
+                        
+                        <li><a href="{{url('breeder_examination_status')}}"><i class="fas fa-dna"></i>DNA検査状況確認<br /><p>　</p></a></li>
+                        <li><a href="{{url('breeder_pet_list')}}"><i class="fas fa-paw"></i>ペット管理<br /><p>　</p></a></li>
+                        {# <li><a href="{{url('breeder_all_breeder_message')}}"><i class="bi bi-chat-right-quote-fill"></i>お問い合わせ対応<br /><p>　</p></a>{% if breeder_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li> #}
                     {% endif %}
                 </ul>
             </div>
         </div>
     </div>
+
+    <div id="mypage-menu">
+            <h1>会員情報管理</h1>
+            <div class="mypage-menu_list">
+                <ul>
+                    <li><a href="{{ url('breeder_change') }}"><i class="bi bi-pencil-fill"></i>会員情報編集<br /><p>メールアドレス・パスワード変更の方はこちら</p></a></li>
+                    
+                    {% if user.is_breeder == 1 %}
+                        <li><a href="{{url('breeder_baseinfo',{'return_path': "breeder_mypage"})}}"><i class="bi bi-pencil-fill"></i>基本情報編集<br /><p>　</p></a></li>
+                        {% if breeder.getHandlingPetKind() == 0 or breeder.getHandlingPetKind() == 1 %}
+                            <li><a href="{{path('breeder_house_info',{'pet_type': 1 ,'return_path': "breeder_mypage"})}}"><i class="bi bi-pencil-fill"></i>犬舎情報編集<br /><p>　</p></a></li>
+                        {% endif %}
+                        {% if breeder.getHandlingPetKind() == 0 or breeder.getHandlingPetKind() == 2 %}
+                            <li><a href="{{path('breeder_house_info',{'pet_type': 2, 'return_path': "breeder_mypage" })}}"><i class="bi bi-pencil-fill"></i>猫舎情報編集<br /><p>　</p></a></li>
+                        {% endif %}
+                        <li><a href="{{url('breeder_bank_regist')}}"><i class="bi bi-pencil-fill"></i>口座登録<br /><p>弊社からのインセンティブ支払先をこちらからご登録ください</p></a></li>
+                        {# <li><a href="{{ url('breeder_site_sample_menu') }}"><i class="bi bi-bell-fill"></i>検索サイトイメージ</a></li> #}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
      {% if user.is_breeder == 1 %}
         <a id="information"></a>
         <div style="margin: 2rem 0 0 0;padding:0 1rem 0 1rem; background-color:#eee8aa">お知らせ<br />DNA検体の送付について</div>

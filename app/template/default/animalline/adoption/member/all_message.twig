@@ -4,12 +4,6 @@
 
 {% block main %}
     <div class="page-inner">
-        <div class="breadcrumbs">
-            <ul>
-                <li><a href="/">アニマルラインTOP</a></li>
-                <li><i class="bi bi-chevron-right"></i>マイページ</li>
-            </ul>
-        </div>
     
         <div id="mypage-menu">
             <h1><i class="bi bi-chat-right-quote-fill"></i>取引メッセージ</h1>
@@ -18,7 +12,7 @@
         <div class="mypage-service_list">
             <div class="mypage-service_list__content">
                 <div class="mypage-service_list__content_body">
-                    <ul class="message">
+                    <ul class="message" style="background: #FFF">
                         {% for message in listMessages %}
                         {% set status = null %}
                         <li>
@@ -70,12 +64,14 @@
             </div>
         </div>
     
+        {#
         <div class="mypage-footer">
             <div class="polocy">
                 <figure><img src="/html/template/default/assets/img//mypage/privacy_d.gif" alt="プライバシーマーク" /></figure>
                 <p>〇〇〇〇は、個人情報の適切な管理をするプライバシーマーク付与事業者として認定されています。</p>
             </div>
         </div>
+        #}
     </div>
 {% endblock %}
 {% block stylesheet %}
