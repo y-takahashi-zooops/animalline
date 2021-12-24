@@ -88,7 +88,7 @@ class ProductClassEditType extends AbstractType
             ->add('jan_code', TextType::class, [
                 'required' => false,
             ])
-            ->add('item_cost', TextType::class, [
+            ->add('item_cost', PriceType::class, [
                 'required' => false,
             ])
             ->add('stock', IntegerType::class, [
@@ -212,6 +212,10 @@ class ProductClassEditType extends AbstractType
             // jan code
             $errors = $this->validator->validate($data['jan_code'], [
                 new Assert\NotBlank(),
+                new Assert\Length([
+                    'min' => 8,
+                    'max' => 13,
+                ]),
             ]);
             $this->addErrors('jan_code', $form, $errors);
 
@@ -220,9 +224,6 @@ class ProductClassEditType extends AbstractType
                 new Assert\NotBlank(),
             ]);
             $this->addErrors('item_cost', $form, $errors);
-            if ($data['item_cost'] && !is_numeric($data['item_cost'])) {
-                $form['item_cost']->addError(new FormError('有効な番号を挿入してください。'));
-            }
 
             // 在庫数
             $errors = $this->validator->validate($data['stock'], [
