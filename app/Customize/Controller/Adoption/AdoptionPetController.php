@@ -221,6 +221,7 @@ class AdoptionPetController extends AbstractController
         if ($request->get('clone_id')) {
             $conservationPetClone = $this->conservationPetsRepository->find($request->get('clone_id'));
             $conservationPet = clone $conservationPetClone;
+            $conservationPet->setReleaseDate(null);
         } else $conservationPet = new ConservationPets();
 
         $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
