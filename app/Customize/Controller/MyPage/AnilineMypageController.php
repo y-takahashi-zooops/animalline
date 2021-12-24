@@ -104,7 +104,7 @@ class AnilineMypageController extends AbstractController
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             log_info('認証済のためログイン処理をスキップ');
 
-            return $this->redirectToRoute('mypage');
+            return $this->redirectToRoute('homepage');
         }
 
         /* @var $form \Symfony\Component\Form\FormInterface */
@@ -137,4 +137,21 @@ class AnilineMypageController extends AbstractController
             'prefix' => $prefix,
         ];
     }
+
+    /**
+     * ログイン画面.
+     *
+     * @Route("/market", name="market_login")
+     */
+    public function market(Request $request, AuthenticationUtils $utils)
+    {   
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            log_info('認証済のためログイン処理をスキップ');
+
+            return $this->redirectToRoute('homepage');
+        }
+    
+        return $this->redirectToRoute('mypage_login');
+    }
+
 }

@@ -8,7 +8,7 @@ http://www.ec-cube.co.jp/
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
-{% extends 'breeder_frame.twig' %}
+{% extends 'normal_frame.twig' %}
 
 {% set body_class = 'mypage' %}
 
@@ -63,11 +63,9 @@ file that was distributed with this source code.
                                 <div class="ec-login__link"><a class="ec-link"
                                                                href="{{ url('forgot') }}">{{ 'ログイン情報をお忘れですか？'|trans }}</a>
                                 </div>
-                                <!--
                                 <div class="ec-login__link"><a class="ec-link"
                                                                href="{{ url('entry') }}">{{ '新規会員登録'|trans }}</a>
                                 </div>
-                                -->
                             </div>
                         </div>
                     </div>
