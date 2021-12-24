@@ -1,0 +1,137 @@
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['adoptions', 'adoptions_adoption_list'] %}
+{% set kinds = {1: '普通', 2: '貯蓄', 3: '当座'} %}
+
+{% block title %}{{ '振込先口座'|trans }}{% endblock %}
+{% block sub_title %}{{ '保護団体管理'|trans }}{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+{% endblock stylesheet %}
+
+{% block javascript %}
+{% endblock javascript %}
+
+{% block main %}
+<div class="c-contentsArea__cols">
+    <div class="c-contentsArea__primaryCol">
+        <div class="c-primaryCol">
+            <div class="card rounded border-0 mb-4">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-inline-block">
+                                <span class="card-title">
+                                    {{ '振込先口座情報'|trans }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-6 text-right">
+                            <a data-toggle="collapse" href="#basicConfig" aria-expanded="false"
+                                aria-controls="basicConfig">
+                                <i class="fa fa-angle-up fa-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapse show ec-cardCollapse" id="basicConfig">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-3">
+                                <div class="d-inline-block">
+                                    <span>銀行名</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                {{BankAccount.bankName}}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-3">
+                                <div class="d-inline-block">
+                                    <span>銀行コード（4桁）</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                {{BankAccount.bankCode}}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-3">
+                                <div class="d-inline-block">
+                                    <span>支店名</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                {{BankAccount.branchName}}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-3">
+                                <div class="d-inline-block">
+                                    <span>支店番号（3桁）</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                {{BankAccount.branchNumber}}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-3">
+                                <div class="d-inline-block">
+                                    <span>口座番号</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                {{BankAccount.accountNumber}}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-3">
+                                <div class="d-inline-block">
+                                    <span>口座種別</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                {{ kinds[BankAccount.accountKind] ?? '' }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-3">
+                                <div class="d-inline-block">
+                                    <span>名義(カナ)</span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                {{BankAccount.name}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="c-conversionArea">
+    <div class="c-conversionArea__container">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-6">
+                <div class="c-conversionArea__leftBlockItem">
+                    <a class="c-baseLink" href="{{ url('admin_adoption_list') }}">
+                        <i class="fa fa-backward" aria-hidden="true"></i><span>保護団体一覧</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
