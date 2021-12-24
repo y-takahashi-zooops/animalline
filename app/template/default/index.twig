@@ -120,8 +120,8 @@
 						{% else %}
 							<ul class="slider" style="width: 100%;margin-top: 0">
 								<li><a href="{{ url('product_detail', {'id': '1560'}) }}"><img alt="画像1" src="{{ asset('assets/img/ec/banner_top01.png') }}" /></a></li>
-								<li><a href="{{ url('product_detail', {'id': '1561'}) }}"><img alt="画像2" src="{{ asset('assets/img/ec/banner_top01.png') }}" /></a></li>
-								<li><a href="{{ url('product_detail', {'id': '1562'}) }}"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top01.png') }}" /></a></li>
+								<li><a href="{{ url('product_detail', {'id': '1561'}) }}"><img alt="画像2" src="{{ asset('assets/img/ec/banner_top02.png') }}" /></a></li>
+								<li><a href="{{ url('product_detail', {'id': '1562'}) }}"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top03.png') }}" /></a></li>
 							</ul>
 						{% endif %}
 					</div>
@@ -148,7 +148,7 @@
 								<h2 class="main"><span>おすすめ商品</span></h2>
 							</div>
 							<ul class="lineup-list">
-								{% for product in products_new %}
+								{% for product in osusume %}
 									<li><a href="{{ url('product_detail', {'id': product.id}) }}">
 										<div class="list-photo"><img src="{{ asset(product.main_list_image|no_image_product, 'save_image') }}"></div>
 										<div class="list-title">{{ product.name }}</div>
@@ -165,25 +165,16 @@
 							</div>
 							<ul class="lineup-list">
 								<li><a href="#">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/brand01.jpg') }}"></div>
+									<div class="list-photo"><img src="{{ asset('assets/img/ec/maker01.jpg') }}"></div>
 								</a></li>
 								<li><a href="#">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/brand01.jpg') }}"></div>
+									<div class="list-photo"><img src="{{ asset('assets/img/ec/maker02.png') }}"></div>
 								</a></li>
 								<li><a href="#">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/brand01.jpg') }}"></div>
+									<div class="list-photo"><img src="{{ asset('assets/img/ec/maker03.png') }}"></div>
 								</a></li>
 								<li><a href="#">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/brand01.jpg') }}"></div>
-								</a></li>
-								<li><a href="#">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/brand01.jpg') }}"></div>
-								</a></li>
-								<li><a href="#">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/brand01.jpg') }}"></div>
-								</a></li>
-								<li><a href="#">
-									<div class="list-photo"><img src="{{ asset('assets/img/ec/brand01.jpg') }}"></div>
+									<div class="list-photo"><img src="{{ asset('assets/img/ec/maker04.png') }}"></div>
 								</a></li>
 							</ul>
 						</div>

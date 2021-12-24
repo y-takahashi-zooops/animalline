@@ -202,7 +202,7 @@ file that was distributed with this source code.
                                     <td class="align-middle">{{ dna.pet_id ? dna.breeds_name : '_' }}</td>
                                     <td class="align-middle">{{ check_status[dna.check_status] }}</td>
                                     <td class="align-middle">{{ dna.kit_shipping_date is empty ? '_' :
-                                        dna.kit_shipping_date | date('Y/m/d H:i') }}</td>
+                                        dna.kit_shipping_date | date('Y/m/d') }}</td>
                                     <td class="align-middle">{{ dna.kit_return_date is empty ? '_' : dna.kit_return_date
                                         | date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ dna.check_return_date is empty ? '_' :

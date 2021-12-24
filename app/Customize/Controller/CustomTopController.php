@@ -71,22 +71,26 @@ class CustomTopController extends AbstractController
         $categoryChildCat = $this->categoryRepository->getNumberOfProduct(8, $customer);
         $categoryChildBeside = $this->categoryRepository->getNumberOfProduct(9, $customer);
 
+        //新着
         $searchData["category_id"] = null;
-        $searchData['orderby'] = $this->productListOrderByRepository->find(2);
-
+        //$searchData['orderby'] = $this->productListOrderByRepository->find(2);
         $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
-
         $query = $qb->getQuery();
         $products_new = $query->getResult();
 
-        //$searchData["category_id"] = 49;
-        //$osusume = $this->productRepository->getQueryBuilderBySearchData($searchData);
+        //おすすめ
+        $searchData["category_id"] = $this->categoryRepository->find(49);
+        //$searchData['orderby'] = $this->productListOrderByRepository->find(2);
+        $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
+        $query = $qb->getQuery();
+        $osusume = $query->getResult();
 
         return [
             'categoryChildDog' => $categoryChildDog,
             'categoryChildCat' => $categoryChildCat,
             'categoryChildBeside' => $categoryChildBeside,
-            'products_new' => $products_new
+            'products_new' => $products_new,
+            'osusume' => $osusume
         ];
     }
 
