@@ -467,6 +467,38 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
 
+                                {# ▼ Product追加カラム #}
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>総重量(kg)</span>
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col mb-2">
+                                        <div>
+                                            {{ form_widget(form.item_weight) }}
+                                            {{ form_errors(form.item_weight) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="d-inline-block">
+                                            <span>ログイン時のみ表示</span>
+                                        </div>
+                                    </div>
+                                    <div class="col mb-2">
+                                        <div>
+                                            {{ form_widget(form.is_check_auth) }}
+                                            {{ form_errors(form.is_check_auth) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {# ▼ ProductClass追加カラム #}
+
                                 {% if has_class == false %}
                                     <div class="row">
                                         <div class="col-3">
@@ -516,37 +548,7 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                     </div>
-                                    {# ▼ Product追加カラム #}
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <div class="d-inline-block">
-                                                <span>総重量(kg)</span>
-                                                <span class="badge badge-primary ml-1">
-                                                    {{ 'admin.common.required'|trans }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col mb-2">
-                                            <div>
-                                                {{ form_widget(form.item_weight) }}
-                                                {{ form_errors(form.item_weight) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <div class="d-inline-block">
-                                                <span>ログイン時のみ表示</span>
-                                            </div>
-                                        </div>
-                                        <div class="col mb-2">
-                                            <div>
-                                                {{ form_widget(form.is_check_auth) }}
-                                                {{ form_errors(form.is_check_auth) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {# ▼ ProductClass追加カラム #}
+                                    
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="d-inline-block">
