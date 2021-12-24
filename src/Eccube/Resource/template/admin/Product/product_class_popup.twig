@@ -16,6 +16,8 @@ file that was distributed with this source code.
         <th class="pt-2 pb-2">{{ 'admin.product.product_code__short'|trans }}</th>
         <th class="pt-2 pb-2">{{ 'admin.product.stock'|trans }}</th>
         <th class="pt-2 pb-2 pr-2">{{ 'admin.product.price'|trans }}</th>
+        <th class="pt-2 pb-2">{{ コード }}</th>
+        <th class="pt-2 pb-2 pr-2">{{ 価格 }}</th>
     </tr>
     </thead>
     <tbody>
@@ -26,6 +28,8 @@ file that was distributed with this source code.
             <td>{{ Class.code }}</td>
             <td>{% if Class.stock_unlimited %}{{ 'admin.product.stock_unlimited__short'|trans }}{% else %}{{ Class.stock }}{% endif %}</td>
             <td class="pr-3">{{ Class.price02|price }}</td>
+            <td class="pr-3">{{ Class.janCode|price }}</td>
+            <td class="pr-3">{{ Class.itemCost|price }}</td>
         </tr>
     {% endfor %}
     </tbody>
