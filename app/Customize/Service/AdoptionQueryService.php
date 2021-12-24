@@ -93,11 +93,14 @@ class AdoptionQueryService
             ->where('p.is_active = :release_status')
             ->setParameter('release_status', 1)
             ->andWhere('p.pet_kind = :pet_kind')
-            ->setParameter('pet_kind', $petKind)
+            ->setParameter('pet_kind', $petKind);
+
+            /*
             ->andWhere('p.release_date <= :to')
             ->andWhere('p.release_date >= :from')
             ->setParameter(':to', $date_now)
             ->setParameter(':from', $time_new);
+            */
 
         return $query->addOrderBy('p.release_date', 'DESC')
             ->setMaxResults(AnilineConf::NUMBER_ITEM_TOP)

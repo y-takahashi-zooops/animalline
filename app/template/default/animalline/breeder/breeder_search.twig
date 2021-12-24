@@ -156,18 +156,6 @@
                                         </h6>
                                     {% endif %}
                                 </div>
-                                <div class="d-flex mb-1">
-                                    <h6>審査ステータス：</h6>
-                                    {% if breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_SUBMIT') %}
-                                        <h6>審査前</h6>
-                                    {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK') %}
-                                        <h6>審査中</h6>
-                                    {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK') %}
-                                        <h6>審査OK</h6>
-                                    {% elseif breeder.examinationStatus() == constant('Customize\\Config\\AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG') %}
-                                        <h6>審査NG</h6>
-                                    {% endif %}
-                                </div>
                                 <a href="{{ url('breeder_detail', {'breeder_id': breeder.Id}) }}">
                                     <h5 class="color-breeder font-weight-600 mt-3">ブリーダー詳細ページへ</h5>
                                 </a>
