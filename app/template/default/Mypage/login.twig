@@ -56,7 +56,7 @@ file that was distributed with this source code.
                             <div class="ec-grid2__cell">
                                 <div class="ec-login__actions">
                                     <button type="submit"
-                                            class="ec-blockBtn--cancel">{{ 'ログイン'|trans }}</button>
+                                            class="ec-blockBtn--action">{{ 'ログイン'|trans }}</button>
                                 </div>
                             </div>
                             <div class="ec-grid2__cell">
@@ -68,9 +68,23 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                         </div>
+                        <div style="text-align: center; margin: 2rem auto 0 auto; padding:0.5rem 1rem 0.5rem 1rem; border: 1px solid; background: #008080; color: #FFFFFF">
+                            会員登録のご案内
+                        </div>
+                        <div style="text-align: left; margin: 0.5rem auto 0.5rem auto; padding:0.5rem 1rem 0.5rem 1rem;">
+                            Animallineの会員にご登録頂くことで、お得な会員様限定商品などの情報をご覧頂けます。<br />
+                            ぜひ事前に会員登録の上、ログイン状態でお買い物をお楽しみください。<br />
+                            <div style="text-align: center;margin 0 auto 0 auto">
+                                <a href="{{ url('entry') }}" class="btn btn-danger btn-lg">新規会員登録</button></a>
+                            </div>
+                        </div>
+                        
                     </div>
+                    
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 </form>
+
+                
             </div>
         </div>
     </div>
