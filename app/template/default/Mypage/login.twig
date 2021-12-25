@@ -12,7 +12,20 @@ file that was distributed with this source code.
 
 {% set body_class = 'mypage' %}
 
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/index.css?ver=211102_2') }}">
+{% endblock %}
+
 {% block main %}
+    <main role="main" id="container">
+        <div id="contents">
+            <div class="edit-area keyvisual">
+                <div class="inner w1190">
+                    <div class="photo-box"><img src="{{ asset('assets/img/ec/top.png') }}" alt="アニマルライン"></div>
+                </div>
+            </div>
+        </div>
+    </main>
     <div class="ec-role">
         <div class="ec-pageHeader">
             <h1>{{ 'ログイン'|trans }}</h1>
