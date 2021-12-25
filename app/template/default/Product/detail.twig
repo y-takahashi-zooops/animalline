@@ -245,6 +245,10 @@ file that was distributed with this source code.
 			$('.add-cart').prop('disabled', false);
 		});
 
+		{% if Product.ClassName1 %}
+			$('#order_type_1').prop('checked', true);
+			$('#order_type_1').click();
+		{% endif %}
 	</script>
 {% endblock %}
 
@@ -354,9 +358,25 @@ file that was distributed with this source code.
 					{% endif %}
 					<form action="{{ url('product_add_cart', {id:Product.id}) }}" method="post" id="form1" name="form1">
 						{% if Product.stock_find %}
+							{# 仕様 #}
+							{% if Product.ClassName1 %}
+								<div class="ec-select" style="margin-top:1rem">
+									<span>{{ form_label(form.classcategory_id1) }}▼</span><br>
+									{{ form_widget(form.classcategory_id1) }}
+									{{ form_row(form.classcategory_id1) }}
+								</div>
+							{% endif %}
+							{% if Product.ClassName2 %}
+								<div class="ec-select">
+									<span>{{ form_label(form.classcategory_id2) }}</span><br>
+									{{ form_widget(form.classcategory_id2) }}
+									{{ form_row(form.classcategory_id2) }}
+								</div>
+							{% endif %}
+
 							<div class="ec-productRole__order">
 								<ul class="order_list">
-									<li class="order_list_block normal_block">
+									<li class="order_list_block normal_block" {% if Product.ClassName1 %}style="display: none"{% endif %}>
 										<div class="order_label">
 											{{ form_widget(form.order_type[0]) }}
 											<div class="ec-numberInput">

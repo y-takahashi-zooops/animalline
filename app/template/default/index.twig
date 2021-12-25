@@ -112,17 +112,33 @@
 {% block main %}
     <main role="main" id="container">
         <div id="contents">
+			<div class="edit-area keyvisual">
+                <div class="inner w1190">
+                    <div class="photo-box"><img src="{{ asset('assets/img/ec/top.png') }}" alt="アニマルライン"></div>
+                </div>
+
+				<div class="inner w1190 box-area">
+					<h2 class="box-title">わんちゃん、ねこちゃんが、生涯幸せでいられる環境を目指して<h2>
+					<p class="box-detail">Animalline（アニマルライン）ECサイトは、皆さまにご参加いただく、社会貢献活動を行っているサイトです。<br />
+					皆さまに購入頂いた売上金の一部を提携の保護団体・ブリーダーへ支援金としてご活用いただく仕組みを通じて、<br />
+					犬・猫の殺処分ゼロの輪に繋げ、全ての犬・猫の幸せな未来の為に、『絆』を繋げていく活動を行っています。<br /></p>
+				</div>
+            </div>
             <div class="side-set">
                 <div class="main-area">
 					<div class="edit-area keyvisual">
-						{% if is_granted('ROLE_USER') == false %}
-							<div class="photo-box"><img src="{{ asset('assets/img/main.jpg') }}" alt="アニマルライン"></div>
-						{% else %}
+						{% if is_granted('ROLE_USER') == true %}
+							<a href="{{ url('product_detail', {'id': '1562'}) }}"><img alt="画像1" src="{{ asset('assets/img/ec/banner_top01.png') }}" /></a>
+							<a href="{{ url('product_detail', {'id': '1561'}) }}" style="margin-top:1rem;"><img alt="画像2" src="{{ asset('assets/img/ec/banner_top02.png') }}" /></a>
+							<a href="{{ url('product_detail', {'id': '1560'}) }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top03.png') }}" /></a>
+
+							{#
 							<ul class="slider" style="width: 100%;margin-top: 0">
 								<li><a href="{{ url('product_detail', {'id': '1562'}) }}"><img alt="画像1" src="{{ asset('assets/img/ec/banner_top01.png') }}" /></a></li>
 								<li><a href="{{ url('product_detail', {'id': '1561'}) }}"><img alt="画像2" src="{{ asset('assets/img/ec/banner_top02.png') }}" /></a></li>
 								<li><a href="{{ url('product_detail', {'id': '1560'}) }}"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top03.png') }}" /></a></li>
 							</ul>
+							#}
 						{% endif %}
 					</div>
 
@@ -220,7 +236,11 @@
                             </dd>
                         </div>
                     </dl>
-					<a href="{{ url('ani_homepage') }}"><img alt="画像3" src="{{ asset('assets/img/ec/banner_animalline.png') }}" /></a>
+					<a href="{{ url("ani_dctn_info") }}">
+						<figure>
+						<img src="{{ asset('assets/img/breeder-bnr03.png') }}" alt="ペットの家庭教師"/>
+						</figure>
+					</a>
                 </div>
             </div><!-- side-area -->
 
