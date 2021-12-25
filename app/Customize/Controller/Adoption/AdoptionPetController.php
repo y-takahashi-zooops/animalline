@@ -183,9 +183,11 @@ class AdoptionPetController extends AbstractController
             ]
         );
 
+        $html_title = "ペット詳細 - ".$conservationPet->getBreedsType()->getbreedsName();
         return $this->render(
             'animalline/adoption/pet/detail.twig',
             [
+                'title' => $html_title,
                 'conservationPet' => $conservationPet,
                 'images' => $images,
                 'video' => $video,

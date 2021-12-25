@@ -280,9 +280,13 @@ class BreederPetController extends AbstractController
         if ($now > $breederPet->getPetBirthday()) {
             $is56DaysOld = $now->diffInDays($breederPet->getPetBirthday());
         }
+
+        $html_title = "ペット詳細 - ".$breederPet->getBreedsType()->getbreedsName();
+
         return $this->render(
             'animalline/breeder/pet/detail.twig',
             [
+                'title' => $html_title,
                 'breederPet' => $breederPet,
                 'petKind' => $petKind,
                 'images' => $images,

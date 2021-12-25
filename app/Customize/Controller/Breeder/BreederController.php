@@ -136,7 +136,7 @@ class BreederController extends AbstractController
     /**
      * Page Breeder
      *
-     * @Route("/breeder/", name="breeder_top")
+     * @Route("/breeder_reg/", name="breeder_top_reg")
      * @Template("animalline/breeder/reg_index.twig")
      */
     public function breeder_index_reg(Request $request)
@@ -147,7 +147,7 @@ class BreederController extends AbstractController
     /**
      * Page Breeder
      *
-     * @Route("/breeder_tmp/", name="breeder_top_tmp")
+     * @Route("/breeder/", name="breeder_top")
      * @Template("animalline/breeder/index.twig")
      */
     public function breeder_index(Request $request)
@@ -159,6 +159,7 @@ class BreederController extends AbstractController
         $favoritePets = $this->breederQueryService->getPetFeatured($petKind);
 
         return $this->render('animalline/breeder/index.twig', [
+            'title' => 'Breeder TOP',
             'petKind' => $petKind,
             'breeds' => $breeds,
             'regions' => $regions,
