@@ -41,6 +41,11 @@ class ConservationPets
     private $BreedsType;
 
     /**
+     * @ORM\Column(name="name", type="string", length=64, nullable=true)
+     */
+    private $name;
+
+    /**
      * @ORM\Column(name="pet_sex", type="smallint")
      */
     private $pet_sex;
@@ -196,6 +201,18 @@ class ConservationPets
     public function setBreedsType(Breeds $BreedsType): self
     {
         $this->BreedsType = $BreedsType;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setname(?string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
@@ -380,7 +397,7 @@ class ConservationPets
         return $this;
     }
 
-    
+
     public function getIsActive(): ?int
     {
         return $this->is_active;
@@ -392,7 +409,7 @@ class ConservationPets
 
         return $this;
     }
-    
+
     public function getReleaseDate(): ?\DateTimeInterface
     {
         return $this->release_date;
