@@ -102,8 +102,8 @@ class AdoptionQueryService
             ->setParameter(':from', $time_new);
             */
 
-        return $query->addOrderBy('p.release_date', 'DESC')
-            ->setMaxResults(AnilineConf::NUMBER_ITEM_TOP)
+        return $query->addOrderBy('p.update_date', 'DESC')
+            ->setMaxResults(16)
             ->getQuery()
             ->getResult();
     }

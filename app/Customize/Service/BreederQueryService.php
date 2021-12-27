@@ -88,8 +88,9 @@ class BreederQueryService
             ->where('p.is_active = :is_active')
             ->setParameter('is_active', 1)
             ->andWhere('p.pet_kind = :pet_kind')
-            ->setParameter('pet_kind', $petKind);
-
+            ->setParameter('pet_kind', $petKind)
+            ->orderBy('p.update_date', 'desc')
+            ->setMaxResults(16);
             /*
             ->andWhere('p.release_date <= :to')
             ->andWhere('p.release_date >= :from')
@@ -97,10 +98,7 @@ class BreederQueryService
             ->setParameter(':from', $time_new);
             */
 
-        return $query->addOrderBy('p.release_date', 'DESC')
-            ->setMaxResults(AnilineConf::NUMBER_ITEM_TOP)
-            ->getQuery()
-            ->getResult();
+        return $query->getQuery()->getResult();
     }
 
     /**

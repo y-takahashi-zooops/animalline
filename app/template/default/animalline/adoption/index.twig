@@ -87,7 +87,7 @@
         <div class="breeder-column-row">
           <div class="breeder-column__main">
             <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
-            <div class="breeder-column__main_section_title">
+            <div class="breeder-column__main_section_title" style="display: none">
               <h3>新着のペット</h3>
               <div class="breeder-column__main_section_title_btn">
                 <a href="{{ url('adoption_pet_search_result', {'pet_kind': petKind, 'new_pet': 1}) }}"><i class="bi bi-list"></i>一覧へ</a>
@@ -123,6 +123,7 @@
                 </ul>
               </div>
             </div>
+            {#
             <div class="breeder-column__main_section" id="breeder-column__main_section_dog_recommend">
               <div class="breeder-column__main_section_title">
                 <h3>注目のペット</h3>
@@ -157,7 +158,7 @@
                 </ul>
               </div>
             </div>
-            
+            #}
             {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
                 <div class="breeder-column__main_section" id="breeder-column__main_section_dog_type">
                     <div class="breeder-column__main_section_title">
