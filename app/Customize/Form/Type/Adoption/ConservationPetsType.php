@@ -47,6 +47,14 @@ class ConservationPetsType extends AbstractType
             ])
             ->add('name', TextType::class, [
                 'required' => false,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 64,
+                    ])
+                ],
+                'attr' => [
+                    'maxlength' => 64,
+                ],
             ])
             ->add('pet_sex', ChoiceType::class, [
                 'choices' =>

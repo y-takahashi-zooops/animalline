@@ -99,8 +99,10 @@
                             class="card-img-top" alt="Pet-image">
                             </figure>
                             <h4>{{ pet.name }}</h4>
-                            <div class="birthday">{{ pet.breedsType.breedsName }}</div>
-                            <div class="type"><span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>茶色</span></div>
+                            <div>{{ pet.breedsType.breedsName }}</div>
+                            <div class="type">
+                              <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span>
+                              <span>{{ pet.coatColor}}</span>
                             <p>{{ pet.prComment|nl2br }}</p>
                             </a>
                         </li>
