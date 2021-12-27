@@ -328,26 +328,29 @@ class AdoptionPetController extends AbstractController
             ['sort_order' => 'ASC']
         );
 
-        $request->request->set('thumbnail_path', $image0 ?: ($conservationPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath() : ''));
+        $request->request->set('thumbnail_path', $conservationPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath() : '');
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $petId = $conservationPet->getId();
-            $img0 = $this->setImageSrc($request->get('img0'), $petId);
-            $img1 = $this->setImageSrc($request->get('img1'), $petId);
-            $img2 = $this->setImageSrc($request->get('img2'), $petId);
-            $img3 = $this->setImageSrc($request->get('img3'), $petId);
-            $img4 = $this->setImageSrc($request->get('img4'), $petId);
-            $entityManager = $this->getDoctrine()->getManager();
-            $conservationPet->setThumbnailPath($img0);
+        if ($form->isSubmitted()) {
+            $request->request->set('thumbnail_path', $image0);
+            if ($form->isValid()) {
+                $petId = $conservationPet->getId();
+                $img0 = $this->setImageSrc($request->get('img0'), $petId);
+                $img1 = $this->setImageSrc($request->get('img1'), $petId);
+                $img2 = $this->setImageSrc($request->get('img2'), $petId);
+                $img3 = $this->setImageSrc($request->get('img3'), $petId);
+                $img4 = $this->setImageSrc($request->get('img4'), $petId);
+                $entityManager = $this->getDoctrine()->getManager();
+                $conservationPet->setThumbnailPath($img0);
 
-            $entityManager->persist($conservationPet);
-            foreach ($conservationPetImages as $key => $image) {
-                $image->setImageUri(${'img' . $key});
-                $entityManager->persist($image);
+                $entityManager->persist($conservationPet);
+                foreach ($conservationPetImages as $key => $image) {
+                    $image->setImageUri(${'img' . $key});
+                    $entityManager->persist($image);
+                }
+                $entityManager->flush();
+
+                return $this->redirectToRoute('adoption_pet_list');
             }
-            $entityManager->flush();
-
-            return $this->redirectToRoute('adoption_pet_list');
         }
 
         $petImages = [];
