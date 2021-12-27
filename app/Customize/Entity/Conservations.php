@@ -615,10 +615,10 @@ class Conservations
     {
         $result =  new ConservationsHouse();
         foreach ($this->ConservationsHouses as $house) {
-            if ($house->getPetType() === $petType) {
+            //if ($house->getPetType() === $petType) {
                 $result = $house;
-                break;
-            }
+                //break;
+            //}
         }
 
         return $result;

@@ -269,6 +269,8 @@ file that was distributed with this source code.
 							<div class="slideThumb" data-index="{{ loop.index0 }}"><img src="{{ asset(ProductImage, 'save_image') }}"></div>
 						{% endfor %}
 					</div>
+					{# <div class="ec-productRole__description">{{ Product.description_detail|raw|nl2br }} #}
+					<div class="ec-productRole__description">{{ Product.description_detail|raw }}</div>
 				</div>
 			</div>
 			<div class="ec-grid2__cell">
@@ -453,9 +455,7 @@ file that was distributed with this source code.
 							</div>
 						</form>
 					{% endif %}
-					{# <div class="ec-productRole__description">{{ Product.description_detail|raw|nl2br }} #}
-					<div class="ec-productRole__description">{{ Product.description_detail|raw }}
-				</div>
+					
 			</div>
 		</div>
 	</div>
