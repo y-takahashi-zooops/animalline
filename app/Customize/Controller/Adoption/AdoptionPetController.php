@@ -220,7 +220,10 @@ class AdoptionPetController extends AbstractController
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
 
-        $conservationPet = new ConservationPets();
+        if ($request->get('clone_id') && $conservationPetClone = $this->conservationPetsRepository->find($request->get('clone_id'))) {
+            $conservationPet = clone $conservationPetClone;
+            $conservationPet->setReleaseDate(null);
+        } else $conservationPet = new ConservationPets();
 
         $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
             'customer' => $user,
@@ -274,7 +277,6 @@ class AdoptionPetController extends AbstractController
             $entityManager->persist($petImage2);
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
-            $entityManager->persist($conservationPet);
 
             $entityManager->flush();
 
