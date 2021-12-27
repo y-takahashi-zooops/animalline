@@ -343,8 +343,7 @@ class BreederPetController extends AbstractController
         // }
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
-            'customer' => $this->getUser(),
-            'image1' => $image0,
+            'customer' => $this->getUser()
         ]);
         $form->handleRequest($request);
 
@@ -457,8 +456,7 @@ class BreederPetController extends AbstractController
         $image4 = $request->get('img4') ?? '';
 
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
-            'customer' => $this->getUser(),
-            'image1' => $image0,
+            'customer' => $this->getUser()
         ]);
         $breederPetImages = $this->breederPetImageRepository->findBy(
             ['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],

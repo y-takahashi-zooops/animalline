@@ -217,23 +217,13 @@ class ConservationPetsType extends AbstractType
         ->add('release_date', DateType::class)
         ->add('price', IntegerType::class);
         */
-        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateThumbnail']);
-    }
-
-    public function validateThumbnail(FormEvent $event)
-    {
-        $form = $event->getForm();
-        if (!$event->getForm()->getConfig()->getOptions()['image1']) {
-            $form['ImagePathErrors']->addError(new FormError('写真を1点以上アップロードください。'));
-        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => ConservationPets::class,
-            'customer' => null,
-            'image1' => null
+            'customer' => null
         ]);
     }
 }
