@@ -218,8 +218,7 @@ class AdoptionPetController extends AbstractController
         $image3 = $request->get('img3') ?? '';
         $image4 = $request->get('img4') ?? '';
 
-        if ($request->get('clone_id')) {
-            $conservationPetClone = $this->conservationPetsRepository->find($request->get('clone_id'));
+        if ($request->get('clone_id') && $conservationPetClone = $this->conservationPetsRepository->find($request->get('clone_id'))) {
             $conservationPet = clone $conservationPetClone;
             $conservationPet->setReleaseDate(null);
         } else $conservationPet = new ConservationPets();
