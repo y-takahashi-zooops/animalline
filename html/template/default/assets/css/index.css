@@ -31,7 +31,7 @@
 	position: relative;
 	margin-bottom: 1rem;
 	font-weight: bold;
-	font-size: 3rem;
+	font-size: 2rem;
 	letter-spacing: 0.05em;
 	line-height: 1.17;
 }
@@ -101,7 +101,7 @@
 /* keyvisual */
 /* ------------------------------------------- */
 .edit-area.keyvisual{
-	padding: 3.2rem 0 5.1rem;
+	padding: 3.2rem 0 3rem;
 }
 @media screen and (max-width: 767px){
 	.edit-area.keyvisual{
@@ -224,11 +224,11 @@
 /* lineup
 /* ------------------------------------------- */
 .edit-area.lineup{
-	padding: 0 0 7.8rem;
+	padding: 0 0 4rem;
 }
 @media screen and (max-width: 767px){
 	.edit-area.lineup{
-		padding: 0 0 4rem;
+		padding: 0 0 2rem;
 	}
 	.edit-area.lineup .inner{
 		margin-left: -3%;
@@ -603,7 +603,7 @@
 .w1200{  width: 120rem;}
 
 .edit-area.buy{
-	padding: 8rem 0;
+	padding: 4rem 0;
 }
 @media screen and (max-width: 767px){
 	.edit-area.buy{
@@ -751,7 +751,7 @@
     margin-bottom: 2.6rem;
     font-family: "Noto Serif JP";
     font-weight: 300;
-    font-size: 3.4rem;
+    font-size: 3rem;
     letter-spacing: 0.1em;
     line-height: 1.56;
     color: #503c83;
@@ -763,3 +763,10 @@
     line-height: 1.75;
     color: #503c83;
 }
+
+@media screen and (max-width: 767px){
+	.box-title {
+		font-size: 2rem;
+	}
+}
+
