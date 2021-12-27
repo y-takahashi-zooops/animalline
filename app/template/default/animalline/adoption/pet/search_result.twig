@@ -93,16 +93,16 @@
                 <ul>
                     {% for pet in pets %}
                         <li>
-                            <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
+                            <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}" style="font-weight: 300;">
                             <figure>
                               <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                             class="card-img-top" alt="Pet-image">
                             </figure>
-                            <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
-                            <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
-                            <div class="type"><span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>茶色</span></div>
-                            <div class="publish">掲載日：2021年09月15日</div>
-                            <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
+                            <h4>{{ pet.name }}</h4>
+                            <div>{{ pet.breedsType.breedsName }}</div>
+                            <div class="type">
+                              <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span>
+                              <span>{{ pet.coatColor}}</span>
                             <p>{{ pet.prComment|nl2br }}</p>
                             </a>
                         </li>
