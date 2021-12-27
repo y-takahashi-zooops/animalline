@@ -160,7 +160,8 @@ class BreederPetController extends AbstractController
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
         DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository,
         BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository
-    ) {
+    )
+    {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->petsFavoriteRepository = $petsFavoriteRepository;
@@ -199,12 +200,12 @@ class BreederPetController extends AbstractController
                     $pet['check'] = true;
                 }
                 if ($pet['message']) {
-                    if($pet['message']->getIsReading() == AnilineConf::RESPONSE_UNREPLIED) {
+                    if ($pet['message']->getIsReading() == AnilineConf::RESPONSE_UNREPLIED) {
                         $pet['check'] = true;
                     }
                 }
             }
-                $arrayPets[$pet['bp_id']] = $pet;
+            $arrayPets[$pet['bp_id']] = $pet;
         }
         $arrayPets = $paginator->paginate(
             array_reverse($arrayPets),
@@ -281,7 +282,7 @@ class BreederPetController extends AbstractController
             $is56DaysOld = $now->diffInDays($breederPet->getPetBirthday());
         }
 
-        $html_title = "ペット詳細 - ".$breederPet->getBreedsType()->getbreedsName();
+        $html_title = "ペット詳細 - " . $breederPet->getBreedsType()->getbreedsName();
 
         return $this->render(
             'animalline/breeder/pet/detail.twig',
@@ -464,10 +465,10 @@ class BreederPetController extends AbstractController
             ['sort_order' => 'ASC']
         );
 
-        $request->request->set('thumbnail_path', $image0 ?: ($breederPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath() : ''));
+        $request->request->set('thumbnail_path', $breederPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $breederPet->getThumbnailPath() : '');
         $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
+            $request->request->set('thumbnail_path', $image0);
             if ($request->get('breeder_pets')['is_pedigree'] == 0 || $request->get('breeder_pets')['pedigree_code']) {
                 $breederPet->setPedigreeCode('0');
             }
