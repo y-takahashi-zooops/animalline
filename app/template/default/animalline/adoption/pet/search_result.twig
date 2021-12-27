@@ -93,7 +93,7 @@
                 <ul>
                     {% for pet in pets %}
                         <li>
-                            <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
+                            <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}" style="font-weight: 300;">
                             <figure>
                               <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                             class="card-img-top" alt="Pet-image">
