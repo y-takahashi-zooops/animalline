@@ -156,11 +156,11 @@ file that was distributed with this source code.
                 btnClass.attr('disabled', true);
                 var productId = btnClass.data('product-id');
                 let url = '/aniconfig/product/set/'+ productId;
-                let button = `<a class="btn btn-ec-conversion" href="` + url + `">
-                                    セット商品管理
-                                </a>`
                 if (btnClass.data('is-product-class')) {
-                    $('.footer-product-class').append(button)
+                    $("#hidden-product-set").css('display', 'inline')
+                    $("#hidden-product-set").attr("href", url)
+                } else {
+                    $("#hidden-product-set").css('display', 'none')
                 }
                 if (dataClass[productId] != undefined) {
                     renderClass(dataClass[productId], btnClass);
@@ -554,7 +554,7 @@ file that was distributed with this source code.
                 <div class="modal-body">
                     {# Append data list #}
                 </div>
-                <div class="modal-footer footer-product-class">
+                <div class="modal-footer">
                     <button class="btn btn-v-sub" type="button" data-dismiss="modal">
                         {{ 'admin.common.cancel'|trans }}
                     </button>
@@ -562,6 +562,9 @@ file that was distributed with this source code.
                        href="#">
                         {{ 'admin.product.move_to_product_class'|trans }}
                     </a>
+                    `<a class="btn" id="hidden-product-set" href="">
+                        セット商品管理
+                    </a>`
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
