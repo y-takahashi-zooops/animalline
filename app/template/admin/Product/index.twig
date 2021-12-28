@@ -155,7 +155,13 @@ file that was distributed with this source code.
                 var btnClass = $(this);
                 btnClass.attr('disabled', true);
                 var productId = btnClass.data('product-id');
-
+                let url = '/aniconfig/product/set/'+ productId;
+                let button = `<a class="btn btn-ec-conversion" href="` + url + `">
+                                    セット商品管理
+                                </a>`
+                if (btnClass.data('is-product-class')) {
+                    $('.footer-product-class').append(button)
+                }
                 if (dataClass[productId] != undefined) {
                     renderClass(dataClass[productId], btnClass);
                     return;
@@ -392,6 +398,7 @@ file that was distributed with this source code.
                                                 {% if Product.hasProductClass %}
                                                     <button type="button" class="btn page-link text-dark d-inline-block"
                                                             data-product-id="{{ Product.id }}"
+                                                            data-is-product-class="{{ Product.productSet is not empty ? true : false }}"
                                                             data-message="{{ 'admin.product.move_to_product_class__confirm_title'|trans({'%name%': Product.name}) }}"
                                                             data-class-load="{{ url('admin_product_classes_load', { 'id' : Product.id }) }}"
                                                             data-class-url="{{ url('admin_product_product_class', { 'id' : Product.id, 'return_product_list' : true }) }}">
@@ -420,10 +427,11 @@ file that was distributed with this source code.
                                                     <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                          data-placement="top"
                                                          title="セット商品管理">
-                                                            <a class="btn btn-ec-actionIcon"
-                                                                href="{{url('admin_product_set', {'id': Product.id}) }}">
-                                                                    <i class="fa fa-boxes fa-lg text-secondary"aria-hidden="true"></i>
-                                                            </a>
+                                                        <a class="btn btn-ec-actionIcon" {% if Product.productSet is empty %} href="{{ url('admin_product_set', {'id': Product.id}) }}"
+                                                        {% else %} disabled {% endif %}>
+                                                            <i class="fa fa-boxes fa-lg text-secondary"
+                                                               aria-hidden="true"></i>
+                                                        </a>
                                                     </div>
                                                     <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                          data-placement="top"
@@ -546,7 +554,7 @@ file that was distributed with this source code.
                 <div class="modal-body">
                     {# Append data list #}
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer footer-product-class">
                     <button class="btn btn-v-sub" type="button" data-dismiss="modal">
                         {{ 'admin.common.cancel'|trans }}
                     </button>

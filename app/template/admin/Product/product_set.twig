@@ -242,10 +242,12 @@ file that was distributed with this source code.
                                                     {{ form_widget(productSetForm.product_name) }}
                                                 {% endif %}
                                             </p>
+                                            <p>
+                                                {{ productSet.product_code }}
+                                            </p>
                                             <span>
-                                            {{ productSet.product_code }}
                                                 {% if productSet.class_category_name1 is not empty %}
-                                                    / (
+                                                    (
                                                     {{ productSet.class_name1 }}：
                                                     {{ productSet.class_category_name1 }}
                                                     {% if productSet.class_category_name2 is not empty %}
