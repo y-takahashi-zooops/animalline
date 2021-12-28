@@ -212,23 +212,22 @@ file that was distributed with this source code.
                                 <tbody>
                                 {% for key , productSetForm in form.ProductSet %}
                                     {% set productSet = productSetForm.vars.data %}
-{#                                    {{ dump(productSet) }}#}
                                     <tr>
                                         {# hidden values #}
                                         {{ form_widget(productSetForm.ProductClass) }}
-                                        {{ form_widget(productSetForm.order_item_type) }}
-                                        {{ form_widget(productSetForm.tax_type) }}
+                                        {# {{ form_widget(productSetForm.order_item_type) }} #}
+                                        {# {{ form_widget(productSetForm.tax_type) }} #}
 
                                         <td class="align-middle">
                                             <div class="col-12 col-xl-8 text-center">
-                                                {{ productSet.Product.id }}
+                                                {# {{ productSet.Product.id }} #}
                                             </div>
                                         </td>
 
                                         <td class="align-middle pl-3">
                                             <p class="mb-0 font-weight-bold">
                                                 {# 商品とポイント値引きは名前変更できない #}
-                                                {% if (productSet.isProduct or productSet.isPoint) %}
+                                                {# {% if (productSet.isProduct or productSet.isPoint) %}
                                                     {% if productSet.isProduct %}
                                                         <a href="{{ url('admin_product_product_edit', {id: productSet.ProductClass.Product.id}) }}"
                                                            target="_blank">
@@ -240,11 +239,11 @@ file that was distributed with this source code.
                                                     {{ form_widget(productSetForm.product_name, { 'type': 'hidden' }) }}
                                                 {% else %}
                                                     {{ form_widget(productSetForm.product_name) }}
-                                                {% endif %}
+                                                {% endif %} #}
                                             </p>
                                             <span>
-                                            {{ productSet.product_code }}
-                                                {% if productSet.class_category_name1 is not empty %}
+                                            {# {{ productSet.product_code }} #}
+                                                {# {% if productSet.class_category_name1 is not empty %}
                                                     / (
                                                     {{ productSet.class_name1 }}：
                                                     {{ productSet.class_category_name1 }}
@@ -254,7 +253,7 @@ file that was distributed with this source code.
                                                         {{ productSet.class_category_name2 }}
                                                     {% endif %}
                                                     )
-                                                {% endif %}
+                                                {% endif %} #}
                                         </span>
                                             {{ form_errors(productSetForm.product_name) }}
                                         </td>
@@ -278,59 +277,45 @@ file that was distributed with this source code.
 
                                         <td class="align-middle text-right pr-3">
                                             <div class="row justify-content-end">
-                                                {# 複数配送の場合は商品を削除できない #}
-                                                {% if (not productSet.isProduct) %}
-                                                    <div class="col-auto text-center">
-                                                        <div class="d-inline-block mr-3" data-tooltip="true"
-                                                             data-placement="top"
-                                                             title="{{ 'admin.common.delete'|trans }}">
-                                                            <a class="btn btn-ec-actionIcon disabled">
-                                                                <i class="fa fa-close fa-lg text-secondary"
-                                                                   aria-hidden="true"></i>
-                                                            </a>
-                                                        </div>
+                                                <div class="col-auto text-center">
+                                                    <div class="d-inline-block mr-3" data-tooltip="true"
+                                                            data-placement="top"
+                                                            title="{{ 'admin.common.delete'|trans }}">
+                                                        <a class="btn btn-ec-actionIcon" data-toggle="modal"
+                                                            data-target="#delete_{{ productSetForm.vars.id }}">
+                                                            <i class="fa fa-close fa-lg text-secondary"
+                                                                aria-hidden="true"></i>
+                                                        </a>
                                                     </div>
-                                                {% else %}
-                                                    <div class="col-auto text-center">
-                                                        <div class="d-inline-block mr-3" data-tooltip="true"
-                                                             data-placement="top"
-                                                             title="{{ 'admin.common.delete'|trans }}">
-                                                            <a class="btn btn-ec-actionIcon" data-toggle="modal"
-                                                               data-target="#delete_{{ productSetForm.vars.id }}">
-                                                                <i class="fa fa-close fa-lg text-secondary"
-                                                                   aria-hidden="true"></i>
-                                                            </a>
-                                                        </div>
-                                                        <!-- 明細の削除確認モーダル -->
-                                                        <div class="modal fade"
-                                                             id="delete_{{ productSetForm.vars.id }}"
-                                                             tabindex="-1" role="dialog"
-                                                             aria-labelledby="delete_{{ productSetForm.vars.id }}"
-                                                             aria-hidden="true">
-                                                            <div class="modal-dialog" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title font-weight-bold">{{ 'admin.common.delete_modal__title'|trans }}</h5>
-                                                                        <button class="close" type="button"
-                                                                                data-dismiss="modal"
-                                                                                aria-label="Close">
-                                                                            <span aria-hidden="true">×</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body text-left">
-                                                                        <p class="text-left">{{ 'admin.order.delete_item__confirm_message'|trans({ '%name%' : productSet.product_name }) }}</p>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button class="btn btn-ec-sub" type="button"
-                                                                                data-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
-                                                                        <a href="#"
-                                                                           class="btn delete btn-ec-delete">{{ 'admin.common.delete'|trans }}</a>
-                                                                    </div>
+                                                    <!-- 明細の削除確認モーダル -->
+                                                    <div class="modal fade"
+                                                            id="delete_{{ productSetForm.vars.id }}"
+                                                            tabindex="-1" role="dialog"
+                                                            aria-labelledby="delete_{{ productSetForm.vars.id }}"
+                                                            aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title font-weight-bold">{{ 'admin.common.delete_modal__title'|trans }}</h5>
+                                                                    <button class="close" type="button"
+                                                                            data-dismiss="modal"
+                                                                            aria-label="Close">
+                                                                        <span aria-hidden="true">×</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body text-left">
+                                                                    <p class="text-left">{{ 'admin.order.delete_item__confirm_message'|trans({ '%name%' : productSet.productName }) }}</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button class="btn btn-ec-sub" type="button"
+                                                                            data-dismiss="modal">{{ 'admin.common.cancel'|trans }}</button>
+                                                                    <a href="#"
+                                                                        class="btn delete btn-ec-delete">{{ 'admin.common.delete'|trans }}</a>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                {% endif %}
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>

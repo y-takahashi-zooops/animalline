@@ -1114,7 +1114,7 @@ class Product extends \Eccube\Entity\AbstractEntity
         return $this;
     }
 
-    public function addProductSet(OrderItem $ProductSet): self
+    public function addProductSet(ProductSet $ProductSet): self
     {
         if (!$this->ProductSet->contains($ProductSet)) {
             $this->ProductSet[] = $ProductSet;

@@ -83,39 +83,46 @@ class ProductSetController extends AbstractController
         if (!$Product || !$ProductClass) {
             throw new NotFoundHttpException();
         }
-        $countSet = 0;
+
+        $Sets = $this->productSetRepository->findBy(['ParentProduct' => $Product]);
+        $countSet = count($Sets);
+
         $OriginSets = new ArrayCollection();
-        foreach ($this->productSetRepository->findBy(['ParentProduct' => $Product]) as $set) {
-            $countSet++;
-            $item = new OrderItem;
-            $item->setId($set->getId());
-            $item->setOrderItemType($this->orderItemTypeRepository->find(1));
+        foreach ($Sets as $set) {
+            $item = new ProductSet;
+            //$item->setId($set->getId());
+            //$item->setOrderItemType($this->orderItemTypeRepository->find(1));
             $item->setQuantity($set->getSetUnit());
             $item->setProduct($set->getProduct());
-            $item->setPrice($set->getProductClass()->getPrice02());
+            $item->setPrice($set->getProductClass()->getItemCost());
             $item->setProductClass($set->getProductClass());
             $item->setProductName($set->getProduct()->getName());
-            $item->setProductCode($set->getProductClass()->getCode());
-            if ($set->getProductClass()->getClassCategory1()) {
-                $item->setClassName1('フレーバー');
-                $item->setClassCategoryName1($set->getProductClass()->getClassCategory1()->getName());
-            }
-            if ($set->getProductClass()->getClassCategory2()) {
-                $item->setClassName2('サイズ');
-                $item->setClassCategoryName2($set->getProductClass()->getClassCategory2()->getName());
-            }
+            //$item->setProductCode($set->getProductClass()->getCode());
+            // if ($set->getProductClass()->getClassCategory1()) {
+            //     $item->setClassName1('フレーバー');
+            //     $item->setClassCategoryName1($set->getProductClass()->getClassCategory1()->getName());
+            // }
+            // if ($set->getProductClass()->getClassCategory2()) {
+            //     $item->setClassName2('サイズ');
+            //     $item->setClassCategoryName2($set->getProductClass()->getClassCategory2()->getName());
+            // }
             $OriginSets->add($item);
         }
         $Product->setProductSet();
         foreach ($OriginSets as $key => $item) {
             $Product->addProductSet($item);
         }
+
         $builder = $this->formFactory->createBuilder(ProductSetType::class, $Product);
         $form = $builder->getForm();
         $form->handleRequest($request);
 
+        $builder = $this->formFactory->createBuilder(SearchProductType::class);
+        $searchProductModalForm = $builder->getForm();
+
         if ($form->isSubmitted() && $form['ProductSet']->isValid()) {
             $items = $form['ProductSet']->getData();
+            //dump($items);die;
             switch ($request->get('mode')) {
                 case 'register':
                     if ($form->isValid()) {
@@ -126,16 +133,16 @@ class ProductSetController extends AbstractController
                             array_push($idDb, $item->getId());
                         }
                         foreach ($items as $key => $item) {
-                            array_push($idReq, $item['id']);
-                            if ($item['id']) {
-                                $ProductSet = $this->productSetRepository->find($item['id']);
+                            array_push($idReq, $item->getId());
+                            if ($item->getId()) {
+                                $ProductSet = $this->productSetRepository->find($item->getId());
                                 $ProductSet->setSetUnit($item->getQuantity());
                             } else {
                                 $ProductSet = (new ProductSet())
                                     ->setSetUnit($item->getQuantity())
                                     ->setParentProduct($Product)
                                     ->setParentProductClass($ProductClass)
-                                    ->setProduct($item->getProduct())
+                                    ->setProduct($item->getProductClass()->getProduct())
                                     ->setProductClass($item->getProductClass());
                             }
                             $this->entityManager->persist($ProductSet);
@@ -151,13 +158,9 @@ class ProductSetController extends AbstractController
                         $this->addSuccess('admin.common.save_complete', 'admin');
                         return $this->redirectToRoute('admin_product');
                     }
-                    break;
-                default:
-                    break;
             }
         }
-        $builder = $this->formFactory->createBuilder(SearchProductType::class);
-        $searchProductModalForm = $builder->getForm();
+
         return [
             'form' => $form->createView(),
             'searchProductModalForm' => $searchProductModalForm->createView(),
