@@ -194,7 +194,7 @@ class ProductSet
      *
      * @param string $productName
      *
-     * @return InstockSchedule
+     * @return ProductSet
      */
     public function setProductName($productName)
     {
@@ -216,9 +216,9 @@ class ProductSet
     /**
      * Set price.
      *
-     * @param string $price
+     * @param float $price
      *
-     * @return InstockSchedule
+     * @return ProductSet
      */
     public function setPrice($price)
     {
@@ -230,7 +230,7 @@ class ProductSet
     /**
      * Get price.
      *
-     * @return string
+     * @return float
      */
     public function getPrice()
     {
@@ -240,9 +240,9 @@ class ProductSet
     /**
      * Set quantity.
      *
-     * @param string $quantity
+     * @param int $quantity
      *
-     * @return InstockSchedule
+     * @return ProductSet
      */
     public function setQuantity($quantity)
     {
@@ -254,7 +254,7 @@ class ProductSet
     /**
      * Get quantity.
      *
-     * @return string
+     * @return int
      */
     public function getQuantity()
     {
