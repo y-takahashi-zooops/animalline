@@ -1,13 +1,3 @@
-{#
-This file is part of EC-CUBE
-
-Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
-
-http://www.ec-cube.co.jp/
-
-For the full copyright and license information, please view the LICENSE
-file that was distributed with this source code.
-#}
 {% extends '@admin/default_frame.twig' %}
 
 {% set menus = ['product', 'product_edit'] %}
@@ -17,7 +7,7 @@ file that was distributed with this source code.
 {% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
 
 {% block javascript %}
-<script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.core.min.js', 'admin') }}"></script>
+    <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.core.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.widget.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.mouse.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/jquery.ui/jquery.ui.sortable.min.js', 'admin') }}"></script>
@@ -29,7 +19,7 @@ file that was distributed with this source code.
             var list = $('#searchProductModalList');
             list.children().remove();
             $.ajax({
-                url: "{{ url('admin_order_search_product') }}",
+                url: "{{ url('admin_product_set_search_product') }}",
                     type: 'POST',
                     dataType: 'html',
                     data: {
@@ -164,24 +154,21 @@ file that was distributed with this source code.
                             <div class="row justify-content-between mb-2">
                                 <div class="col-6">
                                     <a class="btn btn-ec-regular mr-2 add" data-toggle="modal"
-                                       data-target="#addProduct">商品を追加</a>
+                                        data-target="#addProduct">商品を追加</a>
                                     <div class="modal fade" id="addProduct" tabindex="-1" role="dialog"
-                                         aria-labelledby="addProduct" aria-hidden="true">
+                                        aria-labelledby="addProduct" aria-hidden="true">
                                         <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">商品を追加</h5>
-                                                    <button class="close" type="button" data-dismiss="modal"
-                                                            aria-label="Close">
+                                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">×</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
                                                     {{ form_widget(searchProductModalForm.id, { attr : {'class': 'mb-3', 'placeholder': 'admin.product.multi_search_label' }}) }}
                                                     {{ form_widget(searchProductModalForm.category_id) }}
-                                                    <button type="button" id="search"
-                                                            class="btn btn-ec-conversion px-5 mb-4 mt-2">検索
-                                                    </button>
+                                                    <button type="button" id="search" class="btn btn-ec-conversion px-5 mb-4 mt-2">検索</button>
                                                     <div id="searchProductModalList"></div>
                                                 </div>
                                             </div>
@@ -193,8 +180,8 @@ file that was distributed with this source code.
                             {% set keys = form.ProductSet.vars.data|keys %}
                             {% set nextIndex = keys ? max(keys) + 1 : 0 %}
                             <table id="table-form-field" class="table table-striped table-sm mb-0"
-                                   data-next-index="{{ nextIndex }}"
-                                   data-prototype="{% filter escape %}{{ include('@admin/Order/product_set_prototype.twig', {'productSetForm': form.ProductSet.vars.prototype}) }}{% endfilter %}"
+                                data-next-index="{{ nextIndex }}"
+                                data-prototype="{% filter escape %}{{ include('@admin/Order/product_set_prototype.twig', {'productSetForm': form.ProductSet.vars.prototype}) }}{% endfilter %}"
                             >
                                 <thead class="table-active">
                                 <tr class="text-nowrap">
@@ -215,45 +202,33 @@ file that was distributed with this source code.
                                     <tr>
                                         {# hidden values #}
                                         {{ form_widget(productSetForm.ProductClass) }}
-                                        {# {{ form_widget(productSetForm.order_item_type) }} #}
-                                        {# {{ form_widget(productSetForm.tax_type) }} #}
 
                                         <td class="align-middle">
                                             <div class="col-12 col-xl-8 text-center">
-                                                {# {{ productSet.Product.id }} #}
+                                                {{ productSet.ProductClass.Product.id }}
                                             </div>
                                         </td>
 
                                         <td class="align-middle pl-3">
                                             <p class="mb-0 font-weight-bold">
-                                                {# 商品とポイント値引きは名前変更できない #}
-                                                {# {% if (productSet.isProduct or productSet.isPoint) %}
-                                                    {% if productSet.isProduct %}
-                                                        <a href="{{ url('admin_product_product_edit', {id: productSet.ProductClass.Product.id}) }}"
-                                                           target="_blank">
-                                                            {{ productSet.product_name }}
-                                                        </a>
-                                                    {% else %}
-                                                        {{ productSet.product_name }}
-                                                    {% endif %}
-                                                    {{ form_widget(productSetForm.product_name, { 'type': 'hidden' }) }}
-                                                {% else %}
-                                                    {{ form_widget(productSetForm.product_name) }}
-                                                {% endif %} #}
+                                                <a href="{{ url('admin_product_product_edit', {id: productSet.productClass.product.id}) }}" target="_blank">
+                                                    {{ productSet.productClass.product.name }}
+                                                </a>
                                             </p>
                                             <span>
-                                            {# {{ productSet.product_code }} #}
-                                                {# {% if productSet.class_category_name1 is not empty %}
-                                                    / (
-                                                    {{ productSet.class_name1 }}：
-                                                    {{ productSet.class_category_name1 }}
-                                                    {% if productSet.class_category_name2 is not empty %}
-                                                        /
-                                                        {{ productSet.class_name2 }}：
-                                                        {{ productSet.class_category_name2 }}
-                                                    {% endif %}
-                                                    )
-                                                {% endif %} #}
+                                            {{ productSet.productClass.code }}
+                                            {% if productSet.productClass.classCategory1 is not empty %}
+                                                <br>
+                                                (
+                                                {{ productSet.productClass.classCategory1.className.name }}：
+                                                {{ productSet.productClass.classCategory1.name }}
+                                                {% if productSet.productClass.classCategory1 is not empty %}
+                                                    /
+                                                    {{ productSet.productClass.classCategory2.className.name }}：
+                                                    {{ productSet.productClass.classCategory2.name }}
+                                                {% endif %}
+                                                )
+                                            {% endif %}
                                         </span>
                                             {{ form_errors(productSetForm.product_name) }}
                                         </td>
@@ -343,7 +318,7 @@ file that was distributed with this source code.
                         <div id="ex-conversion-action" class="row align-items-center justify-content-end">
                             <div class="col-auto">
                                 <button class="btn btn-ec-conversion px-5" name="mode"
-                                        value="register" type="submit">{{ 'admin.common.registration'|trans }}</button>
+                                    value="register" type="submit">{{ 'admin.common.registration'|trans }}</button>
                             </div>
                         </div>
                     </div>
@@ -352,4 +327,3 @@ file that was distributed with this source code.
         </div>
     </form>
 {% endblock %}
-

@@ -89,6 +89,18 @@ class ProductSet
         return $this->id;
     }
 
+    /**
+     * Set id.
+     *
+     * @return ProductSet
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getParentProduct(): ?Product
     {
         return $this->ParentProduct;
