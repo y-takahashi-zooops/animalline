@@ -291,6 +291,16 @@ class ProductController extends BaseProductController
         }
 
         $qb = $this->productRepository->getQueryBuilderBySearchDataForAdmin($searchData);
+        $isCheck = false;
+        $arrayCheck = [];
+        foreach ($qb->getQuery()->getResult() as $key => $product) {
+            foreach ($product['ProductClasses'] as $item) {
+                if ($item->hasClassCategory1()) {
+                    $isCheck = true;
+                }
+            }
+            $arrayCheck[$product['id']] = $isCheck;
+        }
 
         $event = new EventArgs(
             [
@@ -315,6 +325,7 @@ class ProductController extends BaseProductController
             'page_no' => $page_no,
             'page_count' => $page_count,
             'has_errors' => false,
+            'arrCheck' => $arrayCheck
         ];
     }
 

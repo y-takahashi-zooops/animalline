@@ -398,7 +398,7 @@ file that was distributed with this source code.
                                                 {% if Product.hasProductClass %}
                                                     <button type="button" class="btn page-link text-dark d-inline-block"
                                                             data-product-id="{{ Product.id }}"
-                                                            data-is-product-class="{{ Product.productSet is not empty ? true : false }}"
+                                                            data-is-product-class="{{ arrCheck[Product.id] }}"
                                                             data-message="{{ 'admin.product.move_to_product_class__confirm_title'|trans({'%name%': Product.name}) }}"
                                                             data-class-load="{{ url('admin_product_classes_load', { 'id' : Product.id }) }}"
                                                             data-class-url="{{ url('admin_product_product_class', { 'id' : Product.id, 'return_product_list' : true }) }}">
@@ -427,8 +427,8 @@ file that was distributed with this source code.
                                                     <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                          data-placement="top"
                                                          title="セット商品管理">
-                                                        <a class="btn btn-ec-actionIcon" {% if Product.productSet is empty %} href="{{ url('admin_product_set', {'id': Product.id}) }}"
-                                                        {% else %} disabled {% endif %}>
+                                                        <a class="btn btn-ec-actionIcon" {% if arrCheck[Product.id] %} disabled
+                                                        {% else %} href="{{ url('admin_product_set', {'id': Product.id}) }}" {% endif %}>
                                                             <i class="fa fa-boxes fa-lg text-secondary"
                                                                aria-hidden="true"></i>
                                                         </a>
@@ -562,9 +562,9 @@ file that was distributed with this source code.
                        href="#">
                         {{ 'admin.product.move_to_product_class'|trans }}
                     </a>
-                    `<a class="btn" id="hidden-product-set" href="">
+                    <a class="btn" id="hidden-product-set" href="">
                         セット商品管理
-                    </a>`
+                    </a>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
