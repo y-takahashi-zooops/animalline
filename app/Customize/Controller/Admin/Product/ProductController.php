@@ -291,9 +291,9 @@ class ProductController extends BaseProductController
         }
 
         $qb = $this->productRepository->getQueryBuilderBySearchDataForAdmin($searchData);
-        $isCheck = false;
         $arrayCheck = [];
-        foreach ($qb->getQuery()->getResult() as $key => $product) {
+        foreach ($qb->getQuery()->getResult() as $product) {
+            $isCheck = false;
             foreach ($product['ProductClasses'] as $item) {
                 if ($item->hasClassCategory1()) {
                     $isCheck = true;
