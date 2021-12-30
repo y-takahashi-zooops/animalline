@@ -8,7 +8,7 @@ http://www.ec-cube.co.jp/
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
-<table class="table table-striped">
+<table class="table table-striped" id="modal-class">
     <thead class="table-active">
     <tr>
         <th class="pt-2 pb-2 pl-2">{{ 'admin.product.class_category1__short'|trans }}</th>
@@ -28,10 +28,10 @@ file that was distributed with this source code.
             <td>{% if Class.hasClassCategory2 %}{{ Class.ClassCategory2.name }}{% endif %}</td>
             <td>{{ Class.code }}</td>
             <td>{% if Class.stock_unlimited %}{{ 'admin.product.stock_unlimited__short'|trans }}{% else %}{{ Class.stock }}{% endif %}</td>
-            <td class="pr-3">{{ Class.price02|price }}</td>
+            <td class="pr-3 ">{{ Class.price02|price }}</td>
             <td class="pr-3">{{ Class.janCode }}</td>
             <td class="pr-3">{{ Class.itemCost|price }}</td>
-            <td>
+            <td class="pr-3">
                 <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="セット商品管理">
                     <a class="btn btn-ec-actionIcon"
                        href="{{ url('admin_product_set', {'id': Class.product.id}) }}">

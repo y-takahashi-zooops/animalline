@@ -29,6 +29,10 @@ file that was distributed with this source code.
         .datepicker-days td:last-child {
             color: #00f;
         }
+        #modal-class th,td {
+            white-space: nowrap;
+            word-break: break-word;
+        }
     </style>
 {% endblock stylesheet %}
 
@@ -536,7 +540,7 @@ file that was distributed with this source code.
     </div>
 
     <div class="modal fade" id="productClassesModal" tabindex="-1" role="dialog" aria-labelledby="productClassesModal" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title font-weight-bold">{# Title #}</h5>
