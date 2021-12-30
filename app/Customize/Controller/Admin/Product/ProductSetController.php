@@ -8,6 +8,7 @@ use Customize\Repository\ProductSetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eccube\Controller\AbstractController;
 use Eccube\Form\Type\Admin\SearchProductType;
+use Eccube\Repository\CategoryRepository;
 use Eccube\Repository\ProductClassRepository;
 use Eccube\Repository\ProductRepository;
 use Knp\Component\Pager\Paginator;
@@ -35,20 +36,28 @@ class ProductSetController extends AbstractController
     protected $productSetRepository;
 
     /**
+     * @var CategoryRepository
+     */
+    protected $categoryRepository;
+
+    /**
      * ProductSetController constructor.
      *
      * @param ProductClassRepository $productClassRepository
      * @param ProductRepository $productRepository
      * @param ProductSetRepository $productSetRepository
+     * @param CategoryRepository $categoryRepository
      */
     public function __construct(
-        ProductClassRepository  $productClassRepository,
-        ProductRepository       $productRepository,
-        ProductSetRepository    $productSetRepository
+        ProductClassRepository $productClassRepository,
+        ProductRepository      $productRepository,
+        ProductSetRepository   $productSetRepository,
+        CategoryRepository     $categoryRepository
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->productRepository = $productRepository;
         $this->productSetRepository = $productSetRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
