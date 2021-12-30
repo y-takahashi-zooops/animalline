@@ -33,8 +33,8 @@ file that was distributed with this source code.
             <td class="pr-3">{{ Class.itemCost|price }}</td>
             <td>
                 <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="セット商品管理">
-                    <a class="btn btn-ec-actionIcon" {% if Class.productSet|length == 0 %} disabled {% else %}
-                        href="{{ url('admin_product_set', {'id': Class.product.id}) }}" {% endif %}>
+                    <a class="btn btn-ec-actionIcon"
+                       href="{{ url('admin_product_set', {'id': Class.product.id}) }}">
                         <i class="fa fa-boxes fa-lg text-secondary" aria-hidden="true"></i>
                     </a>
                 </div>
