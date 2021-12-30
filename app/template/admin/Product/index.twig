@@ -155,13 +155,6 @@ file that was distributed with this source code.
                 var btnClass = $(this);
                 btnClass.attr('disabled', true);
                 var productId = btnClass.data('product-id');
-                let url = '/aniconfig/product/set/'+ productId;
-                if (btnClass.data('is-product-class')) {
-                    $("#hidden-product-set").css('display', 'inline')
-                    $("#hidden-product-set").attr("href", url)
-                } else {
-                    $("#hidden-product-set").css('display', 'none')
-                }
                 if (dataClass[productId] != undefined) {
                     renderClass(dataClass[productId], btnClass);
                     return;
@@ -398,7 +391,6 @@ file that was distributed with this source code.
                                                 {% if Product.hasProductClass %}
                                                     <button type="button" class="btn page-link text-dark d-inline-block"
                                                             data-product-id="{{ Product.id }}"
-                                                            data-is-product-class="{{ arrCheck[Product.id] }}"
                                                             data-message="{{ 'admin.product.move_to_product_class__confirm_title'|trans({'%name%': Product.name}) }}"
                                                             data-class-load="{{ url('admin_product_classes_load', { 'id' : Product.id }) }}"
                                                             data-class-url="{{ url('admin_product_product_class', { 'id' : Product.id, 'return_product_list' : true }) }}">
@@ -561,9 +553,6 @@ file that was distributed with this source code.
                     <a class="btn btn-ec-conversion"
                        href="#">
                         {{ 'admin.product.move_to_product_class'|trans }}
-                    </a>
-                    <a class="btn" id="hidden-product-set" href="">
-                        セット商品管理
                     </a>
                 </div>
             </div><!-- /.modal-content -->
