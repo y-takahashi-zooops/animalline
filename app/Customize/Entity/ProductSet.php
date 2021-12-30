@@ -42,7 +42,7 @@ class ProductSet
     private $Product;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ProductClass::class)
+     * @ORM\ManyToOne(targetEntity=ProductClass::class, inversedBy="ProductSet")
      * @ORM\JoinColumn(name="product_class_id", nullable=true)
      */
     private $ProductClass;
