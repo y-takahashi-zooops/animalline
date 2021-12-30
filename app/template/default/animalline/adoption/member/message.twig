@@ -22,7 +22,10 @@
                             </a>
                         </div>
                         <div class="col-sm-8">
-                            <h3 class="font-weight-500 color-gray-500 mb-4">{{ pet.BreedsType.breedsName ?? '' }}</h3>
+                            <h3 class="font-weight-500 color-gray-500 mb-4">{{ pet.name }}</h3>
+                            <div class="d-flex mb-2">
+                                <h6>種類：{{ pet.BreedsType.breedsName ?? '' }}</h6>
+                            </div>
                             <div class="d-flex mb-2">
                                 <h6>年齢：{{ pet.petAge }}</h6>
                             </div>

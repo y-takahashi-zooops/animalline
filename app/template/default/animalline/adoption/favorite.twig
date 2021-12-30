@@ -41,10 +41,11 @@
                                             {% endif %}
                                         </div>
                                         <div class="name">
-                                            <h3>{{ pet[0].BreedsType.breedsName ?? '' }}</h3>
+                                            <h3>{{ pet[0].name }}</h3>
                                         </div>
                                         <div class="profile">
                                             <ul>
+                                                <li>{{ pet[0].breedsType.breedsName ?? '' }}</li>
                                                 <li>{{ pet[0].petBirthday|date('Y/m/d') }} 生まれ</li>
                                                 <li>{{ pet[0].Conservation.ownerName ?? '' }}</li>
                                             </ul>

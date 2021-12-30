@@ -36,7 +36,7 @@ class ProductSet
     private $ParentProductClass;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Product::class)
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="ProductSet")
      * @ORM\JoinColumn(name="product_id", nullable=true)
      */
     private $Product;

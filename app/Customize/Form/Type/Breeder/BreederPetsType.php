@@ -253,7 +253,6 @@ class BreederPetsType extends AbstractType
             ]);
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateVaccineDetail']);
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePedigree']);
-        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateThumbnail']);
 
         $customer = $options['customer'];
         $breeder = $this->breedersRepository->find($customer);
@@ -281,17 +280,8 @@ class BreederPetsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => BreederPets::class,
-            'customer' => null,
-            'image1' => null
+            'customer' => null
         ]);
-    }
-
-    public function validateThumbnail(FormEvent $event)
-    {
-        $form = $event->getForm();
-        if (!$event->getForm()->getConfig()->getOptions()['image1']) {
-            $form['ImagePathErrors']->addError(new FormError('写真を1点以上アップロードください。'));
-        }
     }
 
     public function validateVaccineDetail(FormEvent $event)

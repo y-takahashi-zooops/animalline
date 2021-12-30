@@ -211,7 +211,6 @@ class ProductClassEditType extends AbstractType
 
             // jan code
             $errors = $this->validator->validate($data['jan_code'], [
-                new Assert\NotBlank(),
                 new Assert\Length([
                     'min' => 8,
                     'max' => 13,
