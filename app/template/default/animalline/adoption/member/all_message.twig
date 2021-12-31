@@ -41,6 +41,9 @@
                                 </div>
                                 <div class="receive">
                                     <div class="receive-icon">
+                                        {% if (message.conservationContacts|length==0) and (message.contractStatus is not constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_NONCONTRACT')) %}
+                                            <i class="bi bi-envelope"></i>
+                                        {% endif %}
                                         {% for item in message.conservationContacts %}
                                             {% if item.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER') %}
                                                 {% set status = item.isReading %}
