@@ -2,6 +2,12 @@
 {% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
+    <div class="breadcrumbs">
+        <ul>
+            <li><a href="{{ url('adoption_top') }}">アニマルラインTOP</a></li>
+            <li><i class="bi bi-chevron-right"></i>マイページ</li>
+        </ul>
+    </div>
     <a href="{{ path('adoption_pets_new') }}" class="btn btn-warning text-align-center w-25 float-right">
         保護犬猫情報登録
     </a>
