@@ -2,77 +2,79 @@
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
-    <div class="breadcrumbs">
-        <ul>
-            <li><a href="/">アニマルラインTOP</a></li>
-            <li><i class="bi bi-chevron-right"></i>マイページ</li>
-        </ul>
-    </div>
-    <div id="mypage-menu">
-        <h1><i class="bi bi-heart"></i>ペット管理</h1>
-    </div>
-    <div class="mypage-service_list__table">
-        <div class="mypage-service_list__table_body">
-            <table>
-                <tr>
-                    <th></th>
-                    <th>犬種/猫種</th>
-                    <th>登録日時</th>
-                    <th></th>
-                </tr>
-                {% for pet in pets %}
+    <section id="breeder-column">
+        <div class="breadcrumbs">
+            <ul>
+                <li><a href="/">アニマルラインTOP</a></li>
+                <li><i class="bi bi-chevron-right"></i>マイページ</li>
+            </ul>
+        </div>
+        <div id="mypage-menu">
+            <h1><i class="bi bi-heart"></i>ペット管理</h1>
+        </div>
+        <div class="mypage-service_list__table">
+            <div class="mypage-service_list__table_body">
+                <table>
                     <tr>
-                        <td class="image">
-                            <a href="{{ url('breeder_pets_edit', {'id': pet['bp_id']}) }}">
-                                <figure>
-                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet['bp_thumbnail_path'] | default('/noimage_plugin_list.png')) }}"
-                                         class="card-img-top" alt="Pet-image">
-                                </figure>
-                                <p>ID {{ pet['bp_id'] }}</p>
-                            </a>
-                        </td>
-                        <td class="name">
-                            <a href="{{ url('breeder_pets_edit', {'id': pet['bp_id']}) }}">
-                                {{ pet['breeds_name'] ?? '' }}
-                            </a>
-                        </td>
-                        <td class="time">{{ pet['bp_create_date']|date('Y/m/d H:i') }}</td>
-                        <td class="receive">
-                            {% if pet['bch_id'] %}
-                                <a href="{{ url('breeder_breeder_message', {'id':pet['bch_id']}) }}">
-                                    <div class="receive-icon">
-                                        {% if pet['check'] %}
-                                            <i class="bi bi-envelope"></i>
-                                            <span class="budge">1</span>
-                                        {% else %}
-                                            <i class="bi bi-envelope-open"></i>
-                                        {% endif %}
-                                    </div>
-                                    <p>{{ pet['last_msg'] ? pet['last_msg']|date('Y/m/d H:i') : 'なし' }}</p>
-                                </a>
-                            {% endif %}
-                        </td>
+                        <th></th>
+                        <th>犬種/猫種</th>
+                        <th>登録日時</th>
+                        <th></th>
                     </tr>
-                {% else %}
-                    <span class="mb-2">
+                    {% for pet in pets %}
+                        <tr>
+                            <td class="image">
+                                <a href="{{ url('breeder_pets_edit', {'id': pet['bp_id']}) }}">
+                                    <figure>
+                                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet['bp_thumbnail_path'] | default('/noimage_plugin_list.png')) }}"
+                                             class="card-img-top" alt="Pet-image">
+                                    </figure>
+                                    <p>ID {{ pet['bp_id'] }}</p>
+                                </a>
+                            </td>
+                            <td class="name">
+                                <a href="{{ url('breeder_pets_edit', {'id': pet['bp_id']}) }}">
+                                    {{ pet['breeds_name'] ?? '' }}
+                                </a>
+                            </td>
+                            <td class="time">{{ pet['bp_create_date']|date('Y/m/d H:i') }}</td>
+                            <td class="receive">
+                                {% if pet['bch_id'] %}
+                                    <a href="{{ url('breeder_breeder_message', {'id':pet['bch_id']}) }}">
+                                        <div class="receive-icon">
+                                            {% if pet['check'] %}
+                                                <i class="bi bi-envelope"></i>
+                                                <span class="budge">1</span>
+                                            {% else %}
+                                                <i class="bi bi-envelope-open"></i>
+                                            {% endif %}
+                                        </div>
+                                        <p>{{ pet['last_msg'] ? pet['last_msg']|date('Y/m/d H:i') : 'なし' }}</p>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <span class="mb-2">
                         結果が０件です。
                     </span>
-                {% endfor %}
-            </table>
-        </div>
-        <div class="navigation float-right">
-            {{ knp_pagination_render(pets) }}
-        </div>
-
-        {#
-        <div class="mypage-footer">
-            <div class="polocy">
-                <figure><img src="{{ asset('assets/img/mypage/privacy_d.gif') }}" alt="プライバシーマーク"/></figure>
-                <p>〇〇〇〇は、個人情報の適切な管理をするプライバシーマーク付与事業者として認定されています。</p>
+                    {% endfor %}
+                </table>
             </div>
+            <div class="navigation float-right pt-4">
+                {{ knp_pagination_render(pets) }}
+            </div>
+
+            {#
+            <div class="mypage-footer">
+                <div class="polocy">
+                    <figure><img src="{{ asset('assets/img/mypage/privacy_d.gif') }}" alt="プライバシーマーク"/></figure>
+                    <p>〇〇〇〇は、個人情報の適切な管理をするプライバシーマーク付与事業者として認定されています。</p>
+                </div>
+            </div>
+            #}
         </div>
-        #}
-    </div>
+    </section>
 {% endblock %}
 
 {% block stylesheet %}

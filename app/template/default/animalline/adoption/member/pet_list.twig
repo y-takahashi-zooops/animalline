@@ -2,82 +2,85 @@
 {% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
-    <div class="breadcrumbs">
-        <ul>
-            <li><a href="{{ url('adoption_top') }}">アニマルラインTOP</a></li>
-            <li><i class="bi bi-chevron-right"></i>マイページ</li>
-        </ul>
-    </div>
-    <a href="{{ path('adoption_pets_new') }}" class="btn btn-warning text-align-center w-25 float-right">
-        保護犬猫情報登録
-    </a>
-    <div class="clear-both"></div>
-    <div id="mypage-menu">
-        <h1><i class="bi bi-heart"></i>保護犬猫管理</h1>
-    </div>
-    <div class="mypage-service_list__table">
-        <div class="mypage-service_list__table_body">
-            <table>
-                <tr>
-                    <th></th>
-                    <th>犬種/猫種</th>
-                    <th>登録日時</th>
-                    <th></th>
-                </tr>
-                {% for pet in pets %}
+    <section id="breeder-column">
+        <div class="breadcrumbs">
+            <ul>
+                <li><a href="/">アニマルラインTOP</a></li>
+                <li><i class="bi bi-chevron-right"></i>マイページ</li>
+            </ul>
+        </div>
+        <a href="{{ path('adoption_pets_new') }}" class="btn btn-warning text-align-center w-25 float-right">
+            保護犬猫情報登録
+        </a>
+        <div class="clear-both"></div>
+        <div id="mypage-menu">
+            <h1><i class="bi bi-heart"></i>保護犬猫管理</h1>
+        </div>
+        <div class="mypage-service_list__table">
+            <div class="mypage-service_list__table_body">
+                <table>
                     <tr>
-                        <td class="image">
-                            <figure>
-                                <a href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">
-                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet['cp_thumbnail_path'] | default('/noimage_plugin_list.png')) }}"
-                                         class="card-img-top">
-                                </a>
-                            </figure>
-                            <div class="mt-2">
-                                <a href="{{ path('adoption_pets_new',{clone_id : pet['cp_id']}) }}" class="btn btn-warning text-align-center">
-                                    情報をコピーして登録
-                                </a>
-                            </div>
-                        </td>
-                        <td class="name"><a
-                                    href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">{{ pet['breeds_name'] ?? '' }}</a>
-                        </td>
-                        <td class="time">{{ pet['cp_create_date'].format('Y/m/d H:i') ?? '' }}</td>
-                        <td class="receive">
-                            {% if pet['cch_id'] %}
-                                <a href="{{ url('adoption_adoption_message', {'id':pet['cch_id']}) }}">
-                                    <div class="receive-icon">
-                                        {% if pet['check'] %}
-                                            <i class="bi bi-envelope"></i>
-                                            <span class="budge">1</span>
-                                        {% else %}
-                                            <i class="bi bi-envelope-open"></i>
-                                        {% endif %}
-                                    </div>
-                                    <p>{{ pet['last_msg'] ? pet['last_msg']|date('Y/m/d H:i') : 'なし' }}</p>
-                                </a>
-                            {% endif %}
-                        </td>
+                        <th></th>
+                        <th>犬種/猫種</th>
+                        <th>登録日時</th>
+                        <th></th>
                     </tr>
-                {% else %}
-                    <span class="mb-2">
-                                結果が０件です。
-                            </span>
-                {% endfor %}
-            </table>
-        </div>
-        <div class="navigation float-right">
-            {{ knp_pagination_render(pets) }}
-        </div>
-        {#
-        <div class="mypage-footer">
-            <div class="polocy">
-                <figure><img src="{{ asset('assets/img/mypage/privacy_d.gif') }}" alt="プライバシーマーク"/></figure>
-                <p>〇〇〇〇は、個人情報の適切な管理をするプライバシーマーク付与事業者として認定されています。</p>
+                    {% for pet in pets %}
+                        <tr>
+                            <td class="image">
+                                <figure>
+                                    <a href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">
+                                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet['cp_thumbnail_path'] | default('/noimage_plugin_list.png')) }}"
+                                             class="card-img-top">
+                                    </a>
+                                </figure>
+                                <div class="mt-2">
+                                    <a href="{{ path('adoption_pets_new',{clone_id : pet['cp_id']}) }}"
+                                       class="btn btn-warning text-align-center">
+                                        情報をコピーして登録
+                                    </a>
+                                </div>
+                            </td>
+                            <td class="name"><a
+                                        href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">{{ pet['breeds_name'] ?? '' }}</a>
+                            </td>
+                            <td class="time">{{ pet['cp_create_date'].format('Y/m/d H:i') ?? '' }}</td>
+                            <td class="receive">
+                                {% if pet['cch_id'] %}
+                                    <a href="{{ url('adoption_adoption_message', {'id':pet['cch_id']}) }}">
+                                        <div class="receive-icon">
+                                            {% if pet['check'] %}
+                                                <i class="bi bi-envelope"></i>
+                                                <span class="budge">1</span>
+                                            {% else %}
+                                                <i class="bi bi-envelope-open"></i>
+                                            {% endif %}
+                                        </div>
+                                        <p>{{ pet['last_msg'] ? pet['last_msg']|date('Y/m/d H:i') : 'なし' }}</p>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <span class="mb-2">
+                        結果が０件です。
+                    </span>
+                    {% endfor %}
+                </table>
             </div>
+            <div class="navigation float-right pt-4">
+                {{ knp_pagination_render(pets) }}
+            </div>
+            {#
+            <div class="mypage-footer">
+                <div class="polocy">
+                    <figure><img src="{{ asset('assets/img/mypage/privacy_d.gif') }}" alt="プライバシーマーク"/></figure>
+                    <p>〇〇〇〇は、個人情報の適切な管理をするプライバシーマーク付与事業者として認定されています。</p>
+                </div>
+            </div>
+            #}
         </div>
-        #}
-    </div>
+    </section>
 {% endblock %}
 
 {% block stylesheet %}
@@ -85,7 +88,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/mypage.css') }}">
     <style>
         .clear-both {
-            clear:both;
+            clear: both;
             margin-bottom: 30px;
         }
     </style>
