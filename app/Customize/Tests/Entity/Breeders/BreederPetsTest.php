@@ -2,15 +2,12 @@
 
 namespace Customize\Tests\Breeders;
 
-use Customize\Entity\BreederHouse;
 use Customize\Entity\BreederPets;
 use Customize\Entity\Breeders;
 use Customize\Entity\Breeds;
-use Customize\Entity\CoatColors;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
-use TypeError;
 
 class BreederPetsTest extends TestCase
 {
@@ -28,20 +25,20 @@ class BreederPetsTest extends TestCase
             ->setBreederName($breederName)
             ->setBreederKana($breederKana);
         $Breeds = new Breeds;
-        $CoatColors = new CoatColors;
+        $coatColor = 'coat color';
 
         $BreederPets = (new BreederPets)
             ->setPetKind(1)
             ->setPetSex(1)
             ->setBreeder($Breeder)
             ->setBreedsType($Breeds)
-            ->setCoatColor($CoatColors);
+            ->setCoatColor($coatColor);
 
         $this->assertEquals(1, $BreederPets->getPetKind());
         $this->assertEquals(1, $BreederPets->getPetSex());
         $this->assertEquals($Breeder, $BreederPets->getBreeder());
         $this->assertEquals($Breeds, $BreederPets->getBreedsType());
-        $this->assertEquals($CoatColors, $BreederPets->getCoatColor());
+        $this->assertEquals($coatColor, $BreederPets->getCoatColor());
     }
 
     public function testRelations(): void

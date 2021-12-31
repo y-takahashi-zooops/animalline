@@ -96,15 +96,4 @@ class BreedersTest extends TestCase
         // breeder can have houses for pets
         $this->assertInstanceOf(BreederHouse::class, $Breeder->getBreederHouseByPetType(1));
     }
-
-    public function testLicenseType(): void
-    {
-        $Breeder = new Breeders;
-
-        // breeder can have license type
-        $this->assertNull($Breeder->getLicenseType());
-        // license type must be integer value
-        $Breeder->setLicenseType(1);
-        $this->assertInternalType("int", $Breeder->getLicenseType());
-    }
 }
