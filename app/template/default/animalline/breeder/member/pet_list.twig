@@ -2,6 +2,7 @@
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
+<section id="breeder-column">
     <div id="mypage-menu">
         <h1><i class="bi bi-heart"></i>ペット管理</h1>
     </div>
@@ -54,7 +55,7 @@
                 {% endfor %}
             </table>
         </div>
-        <div class="navigation float-right">
+        <div class="navigation float-right pt-4">
             {{ knp_pagination_render(pets) }}
         </div>
 
@@ -67,6 +68,7 @@
         </div>
         #}
     </div>
+</section>
 {% endblock %}
 
 {% block stylesheet %}

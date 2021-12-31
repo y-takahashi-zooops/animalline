@@ -2,6 +2,7 @@
 {% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
+<section id="breeder-column">
     <a href="{{ path('adoption_pets_new') }}" class="btn btn-warning text-align-center w-25 float-right">
         保護犬猫情報登録
     </a>
@@ -55,12 +56,12 @@
                     </tr>
                 {% else %}
                     <span class="mb-2">
-                                結果が０件です。
-                            </span>
+                        結果が０件です。
+                    </span>
                 {% endfor %}
             </table>
         </div>
-        <div class="navigation float-right">
+        <div class="navigation float-right pt-4">
             {{ knp_pagination_render(pets) }}
         </div>
         {#
@@ -72,6 +73,7 @@
         </div>
         #}
     </div>
+</section>
 {% endblock %}
 
 {% block stylesheet %}
