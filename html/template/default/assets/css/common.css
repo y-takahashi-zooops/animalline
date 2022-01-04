@@ -555,7 +555,7 @@ TOP
 
 #main-visual{
   width:100%;
-  min-width:1360px;
+  min-width:1280px;
   height:620px;
   position:relative;
   overflow:hidden;
@@ -4565,4 +4565,30 @@ CONTENTS後藤追加分
   width: 33%;
   margin: 0 auto;
   text-align: center;
+}
+
+
+.innerSBlue{
+	margin: 0 auto;
+	padding: 0.8rem 0.8rem 0.8rem 0.8rem;
+	margin-bottom: 1.5rem;
+	background-color: #D0E1EF;
+	border-radius: 1rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.innerSBlue h2 {
+	font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+	font-size: 40px;
+	font-weight: 700;
+	width: 100%;
+	margin-bottom: 1rem;
+}
+
+.innerImg{
+	text-align: center;
+	margin-bottom: 1.5rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
 }

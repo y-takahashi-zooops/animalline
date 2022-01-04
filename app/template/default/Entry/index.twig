@@ -204,14 +204,45 @@ file that was distributed with this source code.
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <div style="border: solid 1px; padding: 1rem;"><b>
-                    当サイトからのメールは「info@animalline.jp」で届きます。
-                    会員登録に必要な情報を送らせて頂きますので、
-                    「info@animalline.jp」からのメールを受信できる様、
-                    ドメイン設定を解除して頂くか、
-                    又はドメイン『animalline.jp』を
-                    受信リストに加えていただきますよう、お願い申し上げます。
-                    </b></div>
+                    {% if request.get('ReturnPath') =="adoption_mypage" %}
+                        <div style="border: solid 1px; padding: 1rem;"><b>
+                        当サイトからのメールは「info@animalline.jp」で届きます。
+                        保護団体登録に必要な情報を送らせて頂きますので、
+                        「info@animalline.jp」からのメールを受信できる様、
+                        ドメイン設定を解除して頂くか、
+                        又はドメイン『animalline.jp』を
+                        受信リストに加えていただきますよう、お願い申し上げます。
+                        </b></div>
+                    {% elseif request.get('ReturnPath') =="breeder_mypage" %}
+                        <div style="border: solid 1px; padding: 1rem;"><b>
+                        当サイトからのメールは「info@animalline.jp」で届きます。
+                        ブリーダー登録に必要な情報を送らせて頂きますので、
+                        「info@animalline.jp」からのメールを受信できる様、
+                        ドメイン設定を解除して頂くか、
+                        又はドメイン『animalline.jp』を
+                        受信リストに加えていただきますよう、お願い申し上げます。
+                        </b></div>
+                    {% elseif request.get('ReturnPath') =="adoption_top" %}
+                        <div style="border: solid 1px; padding: 1rem;"><b>
+                        当サイトからのメールは「info@animalline.jp」で届きます。
+                        本会員認証に必要な情報を送らせて頂きますので、
+                        「info@animalline.jp」からのメールを受信できる様、
+                        ドメイン設定を解除して頂くか、
+                        又はドメイン『animalline.jp』を
+                        受信リストに加えていただきますよう、お願い申し上げます。
+                        </b></div>
+                    {% else %}
+                        <div style="border: solid 1px; padding: 1rem;"><b>
+                        当サイトからのメールは「info@animalline.jp」で届きます。
+                        本会員認証に必要な情報を送らせて頂きますので、
+                        「info@animalline.jp」からのメールを受信できる様、
+                        ドメイン設定を解除して頂くか、
+                        又はドメイン『animalline.jp』を
+                        受信リストに加えていただきますよう、お願い申し上げます。
+                        </b></div>
+                    {% endif %}
+
+                    
                     <div class="ec-registerRole__actions">
                         <div class="ec-off4Grid">
                             <div class="ec-off4Grid__cell">

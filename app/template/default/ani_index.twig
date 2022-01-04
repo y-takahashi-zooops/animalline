@@ -2,31 +2,72 @@
 {% extends 'ani_frame.twig' %}
 
 {% block main %}
+    <section id="main-visual">
+        <ul class="main-visual_slider">
+            <li class="main-visual_slider_1">
+            <div class="main-visual__content">
+                <div class="main-visual__content_text">
+                <p><img src="{{ asset('assets/img/top-mv01-copy.png') }}" alt="ブリーダーと飼い主をつなぐ。アニマルラインブリーダー"/></p>
+                <div class="main-visual__content_text_btn"><a href="{{url('breeder_info')}}"><i class="bi bi-arrow-right-circle-fill"></i>詳しくはこちら</a></div>
+                </div>
+            </div>
+            </li>
+            <li class="main-visual_slider_2">
+            <div class="main-visual__content">
+                <div class="main-visual__content_text">
+                <p><img src="{{ asset('assets/img/top-mv02-copy.png') }}" alt="里親を探している・なりたい方。アニマルラインアドプション"/></p>
+                <div class="main-visual__content_text_btn"><a href="{{url('adoption_info')}}"><i class="bi bi-arrow-right-circle-fill"></i>詳しくはこちら</a></div>
+                </div>
+            </div>
+            </li>
+        </ul>
+    </section>
 
-    <div class="row">
-      <div class="col-md-6" style="padding: 4rem">
-        <h2 style="border-bottom:solid #f08200 1px;font-size: 18px;text-align:center;margin-bottom:3rem;">保護犬・猫と里親になりたい方のマッチングサイト</h2>
-        <div class="top-content__container_text_wrap" style="width: 70%;margin:auto">
-          <div class="top-content__container_text_logo" style="margin-bottom:2rem"><a href="{{url('adoption_top')}}"><img src="{{ asset('assets/img/top-logo02.png') }}" alt="Animalline Adoption"/></a></div>
-          <p style="text-align:left;font-size:18px;line-height:2.4;margin:0 0 40px;">Animalline Adoptionは飼い主のいない保護犬猫の里親を探している方と、保護犬猫の里親になりたい方をつなぐマッチングサイトです。</p>
-          <div class="top-content__container_text_btn"><a href="{{url('adoption_info')}}">里親になりたい方は<br>こちら</a></div>
-          <div class="top-content__container_text_btn_03"><a href="{{url('adoption_top_reg')}}">保護犬猫を掲載したい方は<br>こちら</a></div>
+    <div style="margin: 0 auto">
+
+      <section id="sec01" class="top_margin_xl" style="margin-top:3rem">
+        <div class="innerImg">
+          <img src="{{ asset('assets/img/reg/animalline_info_title.png') }}" alt="">
         </div>
-      </div>
+        <div class="innerSBlue" style="text-align:center">
+          Animalline（アニマルライン）は、ブリーダー、動物保護団体、ペットをこれから飼われる方、皆さまに寄り添うサポートを実施致しています。<br />
+          動物愛護先進国と呼ばれる欧米などでは、ペットを迎える主な手段は「ブリーダー直販」と「里親としてペットを迎える」という２つの方法です。<br />
+          全てのペットが幸せな一生を過ごせるように『優しい絆』をつなげていきます。<br />
+          <br />
+          <h2>健全なブリーディングの推進</h2>
+          販売子犬・子猫の遺伝病リスク低減に努め、ペットオーナーへ安心・安全を提供すべく『Animalline』では遺伝子検査を実施した子犬・子猫のみを掲載しております。<br />
+          『変異遺伝子を次世代に残さない』遺伝性疾患を将来の世代に増加させないために重要な意義があります。<br />
+          <br />
+          <h2>殺処分ゼロを目指して</h2>
+          動物愛護センター（保健所）や保護団体へ飼い主に持ち込まれたり、捨てられてしまう犬や猫が毎年多数発生しています。<br />
+          一頭でも多くの保護犬猫が救われ、社会的な殺処分問題の解決につなげることを目指します。<br />
+        </div>
+      </section>
+
+      <div class="row">
+        <div class="col-md-6" style="padding: 4rem">
+          <h2 style="border-bottom:solid #f08200 1px;font-size: 18px;text-align:center;margin-bottom:3rem;">保護犬・猫と里親になりたい方のマッチングサイト</h2>
+          <div class="top-content__container_text_wrap" style="width: 70%;margin:auto">
+            <div class="top-content__container_text_logo" style="margin-bottom:2rem"><a href="{{url('adoption_top')}}"><img src="{{ asset('assets/img/top-logo02.png') }}" alt="Animalline Adoption"/></a></div>
+            <p style="text-align:left;font-size:18px;line-height:2.4;margin:0 0 40px;">Animalline Adoptionは飼い主のいない保護犬猫の里親を探している方と、保護犬猫の里親になりたい方をつなぐマッチングサイトです。</p>
+            <div class="top-content__container_text_btn"><a href="{{url('adoption_info')}}">里親になりたい方は<br>こちら</a></div>
+            {# <div class="top-content__container_text_btn_03"><a href="{{url('adoption_top_reg')}}">保護犬猫を掲載したい方は<br>こちら</a></div> #}
+          </div>
+        </div>
 
 
 
-      <div class="col-md-6" style="padding: 4rem">
-        <h2 style="border-bottom:solid #f08200 1px;font-size: 18px;text-align:center;margin-bottom:3rem;">ブリーダーと飼い主のためのマッチングサイト</h2>
-        <div class="top-content__container_text_wrap" style="width: 70%;margin:auto">
-          <div class="top-content__container_text_logo" style="margin-bottom:2rem"><a href="{{url('breeder_top')}}"><img src="{{ asset('assets/img/top-logo01.png') }}" alt="Animalline Breeder"/></a></div>
-          <p style="text-align:left;font-size:18px;line-height:2.4;margin:0 0 40px;">Animalline Breederは自慢の子犬・子猫をお譲りしたいブリーダーと、ブリーダーから直接子犬・子猫をご購入したい方をつなぐマッチングサイトです。</p>
-          <div class="top-content__container_text_btn_02"><a href="{{url('breeder_info')}}">子犬・子猫をお迎えしたい方は<br>こちら</a></div>
-          <div class="top-content__container_text_btn_04"><a href="{{url('breeder_top_reg')}}"></i>ブリーダー様は<br>こちら</a></div>
+        <div class="col-md-6" style="padding: 4rem">
+          <h2 style="border-bottom:solid #f08200 1px;font-size: 18px;text-align:center;margin-bottom:3rem;">ブリーダーと飼い主のためのマッチングサイト</h2>
+          <div class="top-content__container_text_wrap" style="width: 70%;margin:auto">
+            <div class="top-content__container_text_logo" style="margin-bottom:2rem"><a href="{{url('breeder_top')}}"><img src="{{ asset('assets/img/top-logo01.png') }}" alt="Animalline Breeder"/></a></div>
+            <p style="text-align:left;font-size:18px;line-height:2.4;margin:0 0 40px;">Animalline Breederは自慢の子犬・子猫をお譲りしたいブリーダーと、ブリーダーから直接子犬・子猫をご購入したい方をつなぐマッチングサイトです。</p>
+            <div class="top-content__container_text_btn_02"><a href="{{url('breeder_info')}}">子犬・子猫をお迎えしたい方は<br>こちら</a></div>
+            {# <div class="top-content__container_text_btn_04"><a href="{{url('breeder_top_reg')}}"></i>ブリーダー様は<br>こちら</a></div> #}
+          </div>
         </div>
       </div>
     </div>
-
     {#
     <section id="top-topics">
       <div class="top-topics__title">
