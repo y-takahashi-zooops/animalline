@@ -74,7 +74,7 @@ class ReturnScheduleHeaderTest extends TestCase
         $returnScheduleHeader = new ReturnScheduleHeader();
 
         // Conservation contact header can have many
-        $this->assertInstanceOf(Collection::class, $returnScheduleHeader->getReturnDateSchedule());
+        $this->assertInstanceOf(Collection::class, $returnScheduleHeader->getReturnSchedule());
 
         // Conservation contact header can have one
         $this->assertNull($returnScheduleHeader->getOrder());

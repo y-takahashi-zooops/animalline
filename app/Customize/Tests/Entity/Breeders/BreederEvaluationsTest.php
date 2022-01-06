@@ -19,17 +19,15 @@ class BreederEvaluationsTest extends TestCase
     {
         $Pet = new BreederPets;
         $value = 1;
-        $title = 'test title';
         $message = 'test message';
         $BreederEvaluation = (new BreederEvaluations)
             ->setPet($Pet)
             ->setEvaluationValue($value)
-            ->setEvaluationTitle($title)
             ->setEvaluationMessage($message);
 
         $this->assertEquals(
-            [$Pet, $value, $title, $message],
-            [$BreederEvaluation->getPet(), $BreederEvaluation->getEvaluationValue(), $BreederEvaluation->getEvaluationTitle(), $BreederEvaluation->getEvaluationMessage()]
+            [$Pet, $value, $message],
+            [$BreederEvaluation->getPet(), $BreederEvaluation->getEvaluationValue(), $BreederEvaluation->getEvaluationMessage()]
         );
     }
 
@@ -58,11 +56,6 @@ class BreederEvaluationsTest extends TestCase
         }
         try {
             $BreederEvaluation->setEvaluationValue(null);
-        } catch (TypeError $e) {
-            $this->assertTrue(true);
-        }
-        try {
-            $BreederEvaluation->setEvaluationTitle(null);
         } catch (TypeError $e) {
             $this->assertTrue(true);
         }

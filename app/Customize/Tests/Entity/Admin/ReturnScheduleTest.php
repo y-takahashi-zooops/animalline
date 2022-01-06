@@ -38,7 +38,7 @@ class ReturnScheduleTest extends TestCase
         $sellingPrice = 1;
         $OrderItem = new OrderItem();
 
-        $returnSchedule->setReturnScheduleHeader()
+        $returnSchedule->setReturnScheduleHeader($ReturnScheduleHeader)
             ->setProductClass($ProductClass)
             ->setWarehouseCode($warehouseCode)
             ->setItemCode01($itemCode01)
@@ -47,16 +47,17 @@ class ReturnScheduleTest extends TestCase
             ->setSellingPrice($sellingPrice)
             ->setOrderItem($OrderItem);
 
-        $this->assertEquals([
-            $ReturnScheduleHeader,
-            $ProductClass,
-            $warehouseCode,
-            $itemCode01,
-            $quantitySchedule,
-            $standerdPrice,
-            $sellingPrice,
-            $OrderItem
-        ],
+        $this->assertEquals(
+            [
+                $ReturnScheduleHeader,
+                $ProductClass,
+                $warehouseCode,
+                $itemCode01,
+                $quantitySchedule,
+                $standerdPrice,
+                $sellingPrice,
+                $OrderItem
+            ],
             [
                 $returnSchedule->getReturnScheduleHeader(),
                 $returnSchedule->getProductClass(),

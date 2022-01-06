@@ -4,8 +4,6 @@ namespace Customize\Tests\Breeders;
 
 use Customize\Entity\BreederContactHeader;
 use Customize\Entity\BreederContacts;
-use Customize\Entity\BreederEvaluations;
-use Customize\Entity\BreederPets;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use TypeError;
@@ -24,26 +22,26 @@ class BreederContactsTest extends TestCase
         $from = 1;
         $date = new DateTime();
         $BreederContact = (new BreederContacts)
-            ->setBreederHeader($BreederHeader)
+            ->setBreederContactHeader($BreederHeader)
             ->setMessageFrom($from)
             ->setSendDate($date);
 
         $this->assertEquals(
             [$BreederHeader, $from, $date],
-            [$BreederContact->getBreederHeader(), $BreederContact->getMessageFrom(), $BreederContact->getSendDate()]
+            [$BreederContact->getBreederContactHeader(), $BreederContact->getMessageFrom(), $BreederContact->getSendDate()]
         );
     }
 
     public function testRelations(): void
     {
         $BreederContact = (new BreederContacts)
-            ->setBreederHeader(new BreederContactHeader);
+            ->setBreederContactHeader(new BreederContactHeader);
 
         // breeder contact must be belongs to a header
-        $this->assertInstanceOf(BreederContactHeader::class, $BreederContact->getBreederHeader());
-        $this->assertNotNull($BreederContact->getBreederHeader());
+        $this->assertInstanceOf(BreederContactHeader::class, $BreederContact->getBreederContactHeader());
+        $this->assertNotNull($BreederContact->getBreederContactHeader());
         $this->expectException(TypeError::class);
-        $BreederContact->setBreederHeader(null);
+        $BreederContact->setBreederContactHeader(null);
     }
 
     public function testRequiredFields(): void
@@ -52,7 +50,7 @@ class BreederContactsTest extends TestCase
 
         // below fields must have a value
         try {
-            $BreederContact->setBreederHeader(null);
+            $BreederContact->setBreederContactHeader(null);
         } catch (TypeError $e) {
             $this->assertTrue(true);
         }
