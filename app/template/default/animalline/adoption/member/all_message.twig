@@ -4,7 +4,12 @@
 
 {% block main %}
     <div class="page-inner">
-    
+        <div class="breadcrumbs">
+            <ul>
+                <li><a href="/">アニマルラインTOP</a></li>
+                <li><i class="bi bi-chevron-right"></i>マイページ</li>
+            </ul>
+        </div>
         <div id="mypage-menu">
             <h1><i class="bi bi-chat-right-quote-fill"></i>取引メッセージ</h1>
         </div>
@@ -33,6 +38,7 @@
                                     </div>
                                     <div class="profile">
                                         <ul>
+                                            <li>{{ message.pet.name ?? '' }}</li>
                                             <li>{{ message.pet.breedsType.breedsName ?? '' }}</li>
                                             <li>{{ message.pet.petBirthday.format('Y/m/d') ?? '' }} 生まれ</li>
                                         </ul>
@@ -40,6 +46,9 @@
                                 </div>
                                 <div class="receive">
                                     <div class="receive-icon">
+                                        {% if (message.conservationContacts|length==0) and (message.contractStatus is not constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_NONCONTRACT')) %}
+                                            <i class="bi bi-envelope"></i>
+                                        {% endif %}
                                         {% for item in message.conservationContacts %}
                                             {% if item.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER') %}
                                                 {% set status = item.isReading %}

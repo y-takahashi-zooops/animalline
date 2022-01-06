@@ -41,6 +41,11 @@ class ConservationPets
     private $BreedsType;
 
     /**
+     * @ORM\Column(name="name", type="string", length=64, nullable=true)
+     */
+    private $name;
+
+    /**
      * @ORM\Column(name="pet_sex", type="smallint")
      */
     private $pet_sex;
@@ -154,21 +159,9 @@ class ConservationPets
      */
     private $favorite_count = 0;
 
-    /**
-     * @ORM\OneToMany(targetEntity=PetsFavorite::class, mappedBy="Pet")
-     */
-    private $PetsFavorites;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ConservationContactHeader::class, mappedBy="Pet")
-     */
-    private $ConservationHeader;
-
     public function __construct()
     {
         $this->ConservationPetImages = new ArrayCollection();
-        $this->PetsFavorites = new ArrayCollection();
-        $this->ConservationHeader = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,6 +189,18 @@ class ConservationPets
     public function setBreedsType(Breeds $BreedsType): self
     {
         $this->BreedsType = $BreedsType;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setname(?string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
@@ -380,7 +385,7 @@ class ConservationPets
         return $this;
     }
 
-    
+
     public function getIsActive(): ?int
     {
         return $this->is_active;
@@ -392,7 +397,7 @@ class ConservationPets
 
         return $this;
     }
-    
+
     public function getReleaseDate(): ?\DateTimeInterface
     {
         return $this->release_date;
@@ -497,44 +502,6 @@ class ConservationPets
         $this->favorite_count = $favorite_count;
 
         return $this;
-    }
-
-    /**
-     * @return Collection|PetsFavorite[]
-     */
-    public function getPetsFavorites(): Collection
-    {
-        return $this->PetsFavorites;
-    }
-
-    public function addPetsFavorite(PetsFavorite $PetsFavorite): self
-    {
-        if (!$this->PetsFavorites->contains($PetsFavorite)) {
-            $this->PetsFavorites[] = $PetsFavorite;
-            $PetsFavorite->setPetId($this);
-        }
-
-        return $this;
-    }
-
-    public function removePetsFavorite(PetsFavorite $PetsFavorite): self
-    {
-        if ($this->PetsFavorites->removeElement($PetsFavorite)) {
-            // set the owning side to null (unless already changed)
-            if ($PetsFavorite->getPetId() === $this) {
-                $PetsFavorite->setPetId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|ConservationContactHeader[]
-     */
-    public function getConservationContactHeader(): Collection
-    {
-        return $this->ConservationHeader;
     }
 
     public function getCreateDate()

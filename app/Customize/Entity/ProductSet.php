@@ -36,13 +36,13 @@ class ProductSet
     private $ParentProductClass;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Product::class)
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="ProductSet")
      * @ORM\JoinColumn(name="product_id", nullable=true)
      */
     private $Product;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ProductClass::class)
+     * @ORM\ManyToOne(targetEntity=ProductClass::class, inversedBy="ProductSet")
      * @ORM\JoinColumn(name="product_class_id", nullable=true)
      */
     private $ProductClass;
@@ -66,9 +66,39 @@ class ProductSet
      */
     private $update_date;
 
+    /**
+     * @var string
+     *
+     */
+    private $product_name;
+
+    /**
+     * @var int
+     *
+     */
+    private $price = 0;
+
+    /**
+     * @var int
+     *
+     */
+    private $quantity = 0;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * Set id.
+     *
+     * @return ProductSet
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getParentProduct(): ?Product
@@ -100,7 +130,7 @@ class ProductSet
         return $this->Product;
     }
 
-    public function setProduct(Product $Product): self
+    public function setProduct(?Product $Product): self
     {
         $this->Product = $Product;
 
@@ -157,5 +187,77 @@ class ProductSet
         $this->update_date = $updateDate;
 
         return $this;
+    }
+
+    /**
+     * Set productName.
+     *
+     * @param string $productName
+     *
+     * @return ProductSet
+     */
+    public function setProductName($productName)
+    {
+        $this->product_name = $productName;
+
+        return $this;
+    }
+
+    /**
+     * Get productName.
+     *
+     * @return string
+     */
+    public function getProductName()
+    {
+        return $this->product_name;
+    }
+
+    /**
+     * Set price.
+     *
+     * @param float $price
+     *
+     * @return ProductSet
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price.
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set quantity.
+     *
+     * @param int $quantity
+     *
+     * @return ProductSet
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * Get quantity.
+     *
+     * @return int
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
     }
 }

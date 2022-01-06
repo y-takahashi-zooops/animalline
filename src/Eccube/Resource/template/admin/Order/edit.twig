@@ -766,7 +766,8 @@ file that was distributed with this source code.
                                                 <span>
                                                     {{ OrderItem.product_code }}
                                                     {% if OrderItem.class_category_name1 is not empty %}
-                                                        / (
+                                                        <br>
+                                                        (
                                                         {{ OrderItem.class_name1 }}：
                                                         {{ OrderItem.class_category_name1 }}
                                                         {% if OrderItem.class_category_name2 is not empty %}

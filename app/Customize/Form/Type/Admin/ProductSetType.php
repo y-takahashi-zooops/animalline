@@ -18,7 +18,7 @@ class ProductSetType extends AbstractType
     {
         $builder
             ->add('ProductSet', CollectionType::class, [
-                'entry_type' => OrderItemType::class,
+                'entry_type' => ProductSetItemType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true

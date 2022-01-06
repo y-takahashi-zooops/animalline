@@ -256,15 +256,16 @@ file that was distributed with this source code.
                                                 <span>
                                                     {{ instockSchedule.productClass.code }}
                                                     {% if instockSchedule.productClass.classCategory1 is not empty %}
-                                                        / (
-                                                            {{ instockSchedule.productClass.classCategory1.className.name }} : 
-                                                            {{ instockSchedule.productClass.classCategory1.name }}
+                                                        <br>
+                                                        (
+                                                        {{ instockSchedule.productClass.classCategory1.className.name }} :
+                                                        {{ instockSchedule.productClass.classCategory1.name }}
 
-                                                            {% if instockSchedule.productClass.classCategory2 is not empty %}
-                                                                /
-                                                                {{ instockSchedule.productClass.classCategory2.className.name }} :
-                                                                {{ instockSchedule.productClass.classCategory2.name }}
-                                                            {% endif %}
+                                                        {% if instockSchedule.productClass.classCategory2 is not empty %}
+                                                            /
+                                                            {{ instockSchedule.productClass.classCategory2.className.name }} :
+                                                            {{ instockSchedule.productClass.classCategory2.name }}
+                                                        {% endif %}
                                                         )
                                                     {% endif %}
                                                 </span>

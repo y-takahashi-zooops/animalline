@@ -28,10 +28,10 @@ class ConservationPetsType extends AbstractType
         $builder
             ->add('pet_kind', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
-                        '猫' => AnilineConf::ANILINE_PET_KIND_CAT
-                    ],
+                [
+                    '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
+                    '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+                ],
                 'required' => true,
             ])
             ->add('BreedsType', EntityType::class, [
@@ -45,19 +45,30 @@ class ConservationPetsType extends AbstractType
                 ],
                 'placeholder' => 'common.select'
             ])
+            ->add('name', TextType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 64,
+                    ])
+                ],
+                'attr' => [
+                    'maxlength' => 64,
+                ],
+            ])
             ->add('pet_sex', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '男の子' => AnilineConf::ANILINE_PET_SEX_MALE,
-                        '女の子' => AnilineConf::ANILINE_PET_SEX_FEMALE
-                    ],
-                    'required' => true,
-                    'constraints' => [
-                        new Assert\NotBlank(),
-                    ],
-                    'placeholder' => '----'
+                [
+                    '男の子' => AnilineConf::ANILINE_PET_SEX_MALE,
+                    '女の子' => AnilineConf::ANILINE_PET_SEX_FEMALE
+                ],
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+                'placeholder' => '----'
             ])
-            ->add('pet_age', TextType::class,[
+            ->add('pet_age', TextType::class, [
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(),
@@ -156,52 +167,52 @@ class ConservationPetsType extends AbstractType
             ])
             ->add('is_vaccine', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '未接種' => 0,
-                        '接種済' => 1
-                    ],
-                    'required' => true,
-                    'constraints' => [
-                        new Assert\NotBlank(),
-                    ],
-                    'placeholder' => '----'
-                
+                [
+                    '未接種' => 0,
+                    '接種済' => 1
+                ],
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+                'placeholder' => '----'
+
             ])
             ->add('is_castration', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '未手術' => 0,
-                        '手術済' => 1
-                    ],
-                    'required' => true,
-                    'constraints' => [
-                        new Assert\NotBlank(),
-                    ],
-                    'placeholder' => '----'
+                [
+                    '未手術' => 0,
+                    '手術済' => 1
+                ],
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+                'placeholder' => '----'
             ])
             ->add('is_single', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '応募不可' => 0,
-                        '応募可' => 1
-                    ],
-                    'required' => true,
-                    'constraints' => [
-                        new Assert\NotBlank(),
-                    ],
-                    'placeholder' => '----'
+                [
+                    '応募不可' => 0,
+                    '応募可' => 1
+                ],
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+                'placeholder' => '----'
             ])
             ->add('is_senior', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '応募不可' => 0,
-                        '応募可' => 1
-                    ],
-                    'required' => true,
-                    'constraints' => [
-                        new Assert\NotBlank(),
-                    ],
-                    'placeholder' => '----'
+                [
+                    '応募不可' => 0,
+                    '応募可' => 1
+                ],
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+                'placeholder' => '----'
             ])
             ->add('ImagePathErrors', TextType::class, [
                 'mapped' => false,
@@ -217,23 +228,13 @@ class ConservationPetsType extends AbstractType
         ->add('release_date', DateType::class)
         ->add('price', IntegerType::class);
         */
-        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateThumbnail']);
-    }
-
-    public function validateThumbnail(FormEvent $event)
-    {
-        $form = $event->getForm();
-        if (!$event->getForm()->getConfig()->getOptions()['image1']) {
-            $form['ImagePathErrors']->addError(new FormError('写真を1点以上アップロードください。'));
-        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => ConservationPets::class,
-            'customer' => null,
-            'image1' => null
+            'customer' => null
         ]);
     }
 }

@@ -2,10 +2,17 @@
 {% extends 'animalline/adoption/frame.twig' %}
 
 {% block main %}
-    <a href="{{ path('adoption_pets_new') }}" class="btn btn-warning text-align-center w-25 float-right">
-        保護犬猫情報登録
-    </a>
-    <div class="clear-both"></div>
+    <div class="breadcrumbs d-flex justify-content-between">
+        <ul>
+            <li><a href="/">アニマルラインTOP</a></li>
+            <li><i class="bi bi-chevron-right"></i>マイページ</li>
+        </ul>
+        <div>
+            <a href="{{ path('adoption_pets_new') }}" class="btn btn-warning text-align-center pet-new">
+                保護犬猫情報登録
+            </a>
+        </div>
+    </div>
     <div id="mypage-menu">
         <h1><i class="bi bi-heart"></i>保護犬猫管理</h1>
     </div>
@@ -27,7 +34,12 @@
                                          class="card-img-top">
                                 </a>
                             </figure>
-                            <p>ID {{ pet.cp_id }}</p>
+                            <div class="mt-2">
+                                <a href="{{ path('adoption_pets_new',{clone_id : pet['cp_id']}) }}"
+                                   class="btn btn-warning text-align-center">
+                                    情報をコピーして登録
+                                </a>
+                            </div>
                         </td>
                         <td class="name"><a
                                     href="{{ url('adoption_pets_edit', {'id': pet['cp_id']}) }}">{{ pet['breeds_name'] ?? '' }}</a>
@@ -51,12 +63,12 @@
                     </tr>
                 {% else %}
                     <span class="mb-2">
-                                結果が０件です。
-                            </span>
+                        結果が０件です。
+                    </span>
                 {% endfor %}
             </table>
         </div>
-        <div class="navigation float-right">
+        <div class="navigation float-right pt-4">
             {{ knp_pagination_render(pets) }}
         </div>
         {#
@@ -74,9 +86,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/mypage.css') }}">
     <style>
-        .clear-both {
-            clear:both;
-            margin-bottom: 30px;
+        .pet-new {
+            padding: 10px;
         }
     </style>
 {% endblock %}

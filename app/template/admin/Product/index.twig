@@ -29,6 +29,10 @@ file that was distributed with this source code.
         .datepicker-days td:last-child {
             color: #00f;
         }
+        #modal-class th,td {
+            white-space: nowrap;
+            word-break: break-word;
+        }
     </style>
 {% endblock stylesheet %}
 
@@ -155,7 +159,6 @@ file that was distributed with this source code.
                 var btnClass = $(this);
                 btnClass.attr('disabled', true);
                 var productId = btnClass.data('product-id');
-
                 if (dataClass[productId] != undefined) {
                     renderClass(dataClass[productId], btnClass);
                     return;
@@ -420,10 +423,11 @@ file that was distributed with this source code.
                                                     <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                          data-placement="top"
                                                          title="セット商品管理">
-                                                            <a class="btn btn-ec-actionIcon"
-                                                                href="{{url('admin_product_set', {'id': Product.id}) }}">
-                                                                    <i class="fa fa-boxes fa-lg text-secondary"aria-hidden="true"></i>
-                                                            </a>
+                                                        <a class="btn btn-ec-actionIcon" {% if arrCheck[Product.id] %} disabled
+                                                        {% else %} href="{{ url('admin_product_set', {'id': Product.id}) }}" {% endif %}>
+                                                            <i class="fa fa-boxes fa-lg text-secondary"
+                                                               aria-hidden="true"></i>
+                                                        </a>
                                                     </div>
                                                     <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                          data-placement="top"
@@ -536,7 +540,7 @@ file that was distributed with this source code.
     </div>
 
     <div class="modal fade" id="productClassesModal" tabindex="-1" role="dialog" aria-labelledby="productClassesModal" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title font-weight-bold">{# Title #}</h5>
