@@ -189,7 +189,7 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.pedigree_code, '血統書の有無', { 'label_attr': {'class': 'ec-label'}}) }}
+            {{ form_label(form.is_pedigree, '血統書の有無', { 'label_attr': {'class': 'ec-label'}}) }}
             <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-radio">
@@ -208,6 +208,7 @@
             {{ form_errors(form.pedigreeErrors) }}
             </div>
         </div>
+        {#
         <div class="row mb-3">
             <div class="col-md-3">
             {{ form_label(form.pedigree_code, '血統証番号', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
@@ -218,6 +219,7 @@
             {{ form_errors(form.pedigreeCodeErrors) }}
             </div>
         </div>
+        #}
     </div>
     {#
     <div class="row mb-3">
@@ -232,7 +234,7 @@
     #}
     <div class="row mb-3">
         <div class="col-md-3">
-            {{ form_label(form.pedigree_code, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label'}}) }}
+            {{ form_label(form.include_vaccine_fee, 'ワクチン代の有無', { 'label_attr': {'class': 'ec-label'}}) }}
             <span class="ec-required">必須</span>  
         </div>
         <div class="col-md-8 ec-radio">
