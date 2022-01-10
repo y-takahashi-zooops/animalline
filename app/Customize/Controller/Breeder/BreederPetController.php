@@ -545,6 +545,25 @@ class BreederPetController extends AbstractController
     }
 
     /**
+     * ペットの状態を削除する
+     *
+     * @Route("/breeder/member/pets/edit/{id}/delete", name="breeder_pets_delete", methods={"GET"})
+     */
+    public function breeder_pets_delete(Request $request, BreederPets $breederPet)
+    {
+        $curStatus = $breederPet->getIsActive();
+        
+        $breederPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
+        $breederPet->setIsDelete(1);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($breederPet);
+        $em->flush();
+
+        return $this->redirectToRoute('breeder_pet_list');
+    }
+
+    /**
      * Copy image and retrieve new url of the copy
      *
      * @param string $imageUrl

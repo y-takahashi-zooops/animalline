@@ -205,6 +205,11 @@ class BreederPets
      */
     private $reservation_fee;
 
+    /**
+     * @ORM\Column(name="is_delete",type="smallint", nullable=true, options={"default" = 0})
+     */
+    private $is_delete = 0;
+    
     public function __construct()
     {
         $this->BreederPetImages = new ArrayCollection();
@@ -697,6 +702,18 @@ class BreederPets
     public function setReservationFee(?string $reservation_fee): self
     {
         $this->reservation_fee = $reservation_fee;
+
+        return $this;
+    }
+
+    public function getIsDelete()
+    {
+        return $this->is_delete;
+    }
+
+    public function setIsDelete(?string $is_delete)
+    {
+        $this->is_delete = $is_delete;
 
         return $this;
     }

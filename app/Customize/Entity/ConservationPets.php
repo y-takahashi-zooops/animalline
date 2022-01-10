@@ -159,6 +159,11 @@ class ConservationPets
      */
     private $favorite_count = 0;
 
+    /**
+     * @ORM\Column(name="is_delete",type="smallint", nullable=true, options={"default" = 0})
+     */
+    private $is_delete = 0;
+
     public function __construct()
     {
         $this->ConservationPetImages = new ArrayCollection();
@@ -512,5 +517,17 @@ class ConservationPets
     public function getUpdateDate()
     {
         return $this->update_date;
+    }
+
+    public function getIsDelete()
+    {
+        return $this->is_delete;
+    }
+
+    public function setIsDelete(?string $is_delete)
+    {
+        $this->is_delete = $is_delete;
+
+        return $this;
     }
 }
