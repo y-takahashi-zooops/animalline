@@ -327,11 +327,13 @@ class BreederQueryService
      */
     public function getListPet($breeder)
     {
+        /*
         $status = $this->breederPetsRepository->createQueryBuilder('bp2')
             ->join('Customize\Entity\DnaCheckStatus', 'dna2', 'WITH', 'bp2.id = dna2.pet_id')
             ->where('dna2.check_status = 8')
             ->select('bp2.id')
             ->getDQL();
+        */
 
         $qb = $this->breederPetsRepository->createQueryBuilder('bp');
         return $qb
@@ -339,7 +341,7 @@ class BreederQueryService
             ->leftJoin('Customize\Entity\BreederContactHeader', 'bch', 'WITH', 'bch.Pet = bp.id')
             ->where('bp.Breeder = :breeder')
             ->setParameter('breeder', $breeder)
-            ->andWhere($qb->expr()->notIn('bp.id', $status))
+            //->andWhere($qb->expr()->notIn('bp.id', $status))
             ->andWhere('bp.is_delete = 0')
             ->orderBy('bch.last_message_date', 'ASC')
             ->select('bp, bch.id as bch_id, bch.last_message_date as last_msg, b.breeds_name')
