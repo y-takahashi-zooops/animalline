@@ -19,6 +19,7 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Eccube\Common\EccubeConfig;
 use Eccube\Entity\Category;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Eccube\Repository\Master\ProductStatusRepository;
 
 /**
  * CategoryRepository
@@ -34,17 +35,26 @@ class CategoryRepository extends AbstractRepository
     protected $eccubeConfig;
 
     /**
+     * @var ProductStatusRepository
+     */
+    protected $productStatusRepository;
+
+
+    /**
      * CategoryRepository constructor.
      *
      * @param RegistryInterface $registry
      * @param EccubeConfig $eccubeConfig
+     * @param ProductStatusRepository $productStatusRepository
      */
     public function __construct(
         RegistryInterface $registry,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        ProductStatusRepository $productStatusRepository
     ) {
         parent::__construct($registry, Category::class);
         $this->eccubeConfig = $eccubeConfig;
+        $this->productStatusRepository = $productStatusRepository;
     }
 
     /**
@@ -173,11 +183,15 @@ class CategoryRepository extends AbstractRepository
      */
     public function getNumberOfProduct($category, $customer = null)
     {
+        $staus = $this->productStatusRepository->find(1);
+
         $query = $this->createQueryBuilder('c');
         $query->innerJoin('Eccube\Entity\ProductCategory', 'pc', 'WITH', 'c.id = pc.category_id')
             ->innerJoin('Eccube\Entity\Product', 'p', 'WITH', 'pc.product_id = p.id')
             ->where('c.Parent = :Parent')
-            ->setParameter('Parent', $category);
+            ->setParameter('Parent', $category)
+            ->andWhere('p.Status = :Status')
+            ->setParameter('Status', $staus);
         
         if (!$customer) {
             $query->andWhere('p.is_check_auth = :is_check_auth')
