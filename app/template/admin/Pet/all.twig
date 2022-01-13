@@ -24,11 +24,26 @@ file that was distributed with this source code.
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+
+    <!-- select2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"
+        integrity="sha256-FdatTf20PQr/rWg+cAKfl6j4/IY3oohFAJ7gVC3M34E=" crossorigin="anonymous">
+    <!-- select2-bootstrap4-theme -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
 {% endblock stylesheet %}
 
 {% block javascript %}
+<!-- select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"
+    integrity="sha256-AFAYEOkzB6iIKnTYZOdUf9FFje6lOTYdwRJKwTN5mks=" crossorigin="anonymous"></script>
+
 <script>
     $(function() {
+        $("#breed_type").select2({
+            theme: 'bootstrap4',
+        });
+
         $('.confirm-status-btn').on('click', function () {
             const modalMsg = $(this).data('is-active') ? 'ペット情報を非公開にしますか？' : 'ペット情報を公開しますか？';
             $('.modal-message').text(modalMsg);
