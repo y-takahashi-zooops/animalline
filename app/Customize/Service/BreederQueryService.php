@@ -337,7 +337,7 @@ class BreederQueryService
 
         $qb = $this->breederPetsRepository->createQueryBuilder('bp');
         return $qb
-            ->join('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = bp.BreedsType')
+            ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = bp.BreedsType')
             ->leftJoin('Customize\Entity\BreederContactHeader', 'bch', 'WITH', 'bch.Pet = bp.id')
             ->where('bp.Breeder = :breeder')
             ->setParameter('breeder', $breeder)

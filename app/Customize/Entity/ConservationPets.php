@@ -191,7 +191,7 @@ class ConservationPets
         return $this->BreedsType;
     }
 
-    public function setBreedsType(Breeds $BreedsType): self
+    public function setBreedsType(?Breeds $BreedsType): self
     {
         $this->BreedsType = $BreedsType;
 
