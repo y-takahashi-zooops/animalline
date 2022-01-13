@@ -42,6 +42,11 @@ file that was distributed with this source code.
     $(function() {
         $("#breed_type").select2({
             theme: 'bootstrap4',
+            language: {
+                "noResults": function () {
+                    return "結果が見つかりません。";
+                }
+            }
         });
 
         $('.confirm-status-btn').on('click', function () {

@@ -17,10 +17,32 @@ file that was distributed with this source code.
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+
+    <!-- select2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"
+        integrity="sha256-FdatTf20PQr/rWg+cAKfl6j4/IY3oohFAJ7gVC3M34E=" crossorigin="anonymous">
+    <!-- select2-bootstrap4-theme -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
 {% endblock stylesheet %}
 
 {% block javascript %}
+    <!-- select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"
+        integrity="sha256-AFAYEOkzB6iIKnTYZOdUf9FFje6lOTYdwRJKwTN5mks=" crossorigin="anonymous"></script>
+
     <script>
+        $(function(){
+            $("#breeds_type").select2({
+                theme: 'bootstrap4',
+                language: {
+                    "noResults": function () {
+                        return "結果が見つかりません。";
+                    }
+                }
+            });
+        });
+
         $("#edit-submit").click(function() {
             $("#path-get-all").val(localStorage.url);
         });
@@ -75,7 +97,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <div class="col-2 mb-2">
-                                    <select name="breeds_type" class="form-control">
+                                    <select id="breeds_type" name="breeds_type" class="form-control">
                                         {% for breed in breeds %}
                                             <option {{ conservationPet.breedsType and conservationPet.breedsType.id == breed.id ? 'selected' : '' }}
                                                     value="{{ breed.id }}">{{ breed.breedsName }}</option>
