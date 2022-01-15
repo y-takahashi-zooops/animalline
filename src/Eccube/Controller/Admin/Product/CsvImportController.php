@@ -46,6 +46,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Eccube\Repository\ProductClassRepository;
 
 class CsvImportController extends AbstractCsvImportController
 {
@@ -85,6 +86,11 @@ class CsvImportController extends AbstractCsvImportController
     protected $productRepository;
 
     /**
+     * @var ProductClassRepository
+     */
+    protected $productClassRepository;
+
+    /**
      * @var TaxRuleRepository
      */
     private $taxRuleRepository;
@@ -111,6 +117,7 @@ class CsvImportController extends AbstractCsvImportController
      * @param ClassCategoryRepository $classCategoryRepository
      * @param ProductStatusRepository $productStatusRepository
      * @param ProductRepository $productRepository
+     * @param ProductClassRepository $ProductClassRepository
      * @param TaxRuleRepository $taxRuleRepository
      * @param BaseInfoRepository $baseInfoRepository
      * @param ValidatorInterface $validator
@@ -124,6 +131,7 @@ class CsvImportController extends AbstractCsvImportController
         ClassCategoryRepository $classCategoryRepository,
         ProductStatusRepository $productStatusRepository,
         ProductRepository $productRepository,
+        ProductClassRepository $productClassRepository,
         TaxRuleRepository $taxRuleRepository,
         BaseInfoRepository $baseInfoRepository,
         ValidatorInterface $validator
@@ -135,6 +143,7 @@ class CsvImportController extends AbstractCsvImportController
         $this->classCategoryRepository = $classCategoryRepository;
         $this->productStatusRepository = $productStatusRepository;
         $this->productRepository = $productRepository;
+        $this->productClassRepository = $productClassRepository;
         $this->taxRuleRepository = $taxRuleRepository;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->validator = $validator;
@@ -823,8 +832,53 @@ class CsvImportController extends AbstractCsvImportController
     public function csvTemplate(Request $request, $type)
     {
         if ($type == 'product') {
-            $headers = $this->getProductCsvHeader();
-            $filename = 'product.csv';
+            set_time_limit(0);
+
+            $em = $this->entityManager;
+            $em->getConfiguration()->setSQLLogger(null);
+
+            $headers = [
+                '商品コード', '商品名', '商品説明(一覧)', '商品説明(詳細)', '検索ワード',
+                '商品画像', '商品カテゴリ(ID)', '在庫数(-1で無制限）', '通常価格', '販売価格',
+                'JANｺｰﾄﾞ(13桁）', '仕入価格（税抜）', '仕入先コード(4桁)', '重量（kg）', 'メーカーID'
+            ];
+            $results = $this->productRepository->findAll();
+
+            $response = new StreamedResponse();
+            $response->setCallback(
+                function () use ($results, $headers) {
+                    $handle = fopen('php://output', 'r+');
+
+                    fputcsv($handle, $headers);
+
+                    foreach ($results as $row) {
+                        $Class = $this->productClassRepository->findOneBy(['Product' => $row]);
+                        $data = [
+                            $Class->getCode() ?? '',
+                            $row->getName(),
+                            $row->getDescriptionList(),
+                            $row->getDescriptionDetail(),
+                            $row->getSearchWord(),
+                            $row->getProductImage()[0]->getFileName() ?? '',
+                            $row->getProductCategories()[0]->getCategoryId() ?? '',
+                            $Class->getStock() ?? '',
+                            $Class->getPrice01() ?? '',
+                            $Class->getPrice02() ?? '',
+                            $Class->getJanCode() ?? '',
+                            $Class->getItemCost() ?? '',
+                            $Class->getSupplierCode() ?? '',
+                            $row->getItemWeight(),
+                            $row->gettMakerId()
+                        ];
+                        fputcsv($handle, $data);
+                    }
+                    fclose($handle);
+                }
+            );
+            $response->headers->set('Content-Type', 'application/force-download');
+            $response->headers->set('Content-Disposition', 'attachment; filename="product.csv"');
+
+            return $response;
         } elseif ($type == 'category') {
             $headers = $this->getCategoryCsvHeader();
             $filename = 'category.csv';
