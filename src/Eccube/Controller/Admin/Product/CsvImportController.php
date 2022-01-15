@@ -848,14 +848,28 @@ class CsvImportController extends AbstractCsvImportController
                     fputcsv($handle, $headers);
 
                     foreach ($results as $row) {
+                        $imgs = [];
+                        if ($row->getProduct() && count($row->getProduct()->getProductImage())) {
+                            $images = $row->getProduct()->getProductImage();
+                            foreach ($images as $image) {
+                                $imgs[] = $image->getFileName();
+                            }
+                        }
+                        $cats = [];
+                        if ($row->getProduct() && count($row->getProduct()->getProductCategories())) {
+                            $categories = $row->getProduct()->getProductCategories();
+                            foreach ($categories as $category) {
+                                $cats[] = $category->getCategoryId();
+                            }
+                        }
                         $data = [
                             $row->getCode() ?? '',
                             $row->getProduct()->getName() ?? '',
                             $row->getProduct()->getDescriptionList() ?? '',
                             $row->getProduct()->getDescriptionDetail() ?? '',
                             $row->getProduct()->getSearchWord() ?? '',
-                            $row->getProduct()->getProductImage()[0] ? $row->getProduct()->getProductImage()[0]->getFileName() : '',
-                            $row->getProduct()->getProductCategories()[0] ? $row->getProduct()->getProductCategories()[0]->getCategoryId() : '',
+                            join(',', $imgs),
+                            join(',', $cats),
                             $row->getStock() ?? '',
                             $row->getPrice01() ?? '',
                             $row->getPrice02() ?? '',
