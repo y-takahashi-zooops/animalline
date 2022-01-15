@@ -457,16 +457,14 @@ class CsvImportController extends AbstractCsvImportController
                             $classCategoryId1 = null;
                             $classCategoryId2 = null;
 
-                            foreach ($ProductClasses as $pc) {
-                                $classCategory1 = is_null($pc->getClassCategory1()) ? null : $pc->getClassCategory1()->getId();
-                                $classCategory2 = is_null($pc->getClassCategory2()) ? null : $pc->getClassCategory2()->getId();
+                                $classCategory1 = is_null($productClass->getClassCategory1()) ? null : $productClass->getClassCategory1()->getId();
+                                $classCategory2 = is_null($productClass->getClassCategory2()) ? null : $productClass->getClassCategory2()->getId();
 
                                 // 登録されている商品規格を更新
                                 if ($classCategory1 == $classCategoryId1 &&
                                     $classCategory2 == $classCategoryId2
                                 ) {
-                                    $productClass =
-                                    $this->updateProductClass($row, $Product,$pc, $data, $headerByKey);
+                                    $this->updateProductClass($row, $Product,$productClass, $data, $headerByKey);
 
 //                                    if ($this->BaseInfo->isOptionProductDeliveryFee()) {
 //                                        if (isset($row[$headerByKey['delivery_fee']]) && StringUtil::isNotBlank($row[$headerByKey['delivery_fee']])) {
@@ -515,7 +513,6 @@ class CsvImportController extends AbstractCsvImportController
                                     $flag = true;
                                     break;
                                 }
-                            }
 
                             // 商品規格を登録
                             if (!$flag) {
@@ -1135,7 +1132,8 @@ class CsvImportController extends AbstractCsvImportController
 
         $ProductClass->setClassCategory1($ClassCategory1);
         $ProductClass->setClassCategory2($ClassCategory2);
-        $ProductClass->setDeliveryDuration(3);
+        $deliveryDuration = $this->deliveryDurationRepository->findBy(['id' => 3]);
+        $ProductClass->setDeliveryDuration($deliveryDuration[0]);
 
 //        if (isset($row[$headerByKey['delivery_date']]) && StringUtil::isNotBlank($row[$headerByKey['delivery_date']])) {
 //            if (preg_match('/^\d+$/', $row[$headerByKey['delivery_date']])) {
@@ -1195,7 +1193,7 @@ class CsvImportController extends AbstractCsvImportController
 //                }
                 $ProductClass->setStock(0);
             }
-        } elseif ($row[$headerByKey['stock']] >= (string) Constant::ENABLED) {
+        } elseif ($row[$headerByKey['stock']] >= (string) Constant::DISABLED) {
             $ProductClass->setStockUnlimited(false);
             $ProductClass->setStock($row[$headerByKey['stock']]);
         } else {
@@ -1275,12 +1273,12 @@ class CsvImportController extends AbstractCsvImportController
      *
      * @param $row
      * @param Product $Product
-     * @param ProductClass $ProductClass
+     * @param Object $ProductClass
      * @param CsvImportService $data
      *
      * @return ProductClass
      */
-    protected function updateProductClass($row, Product $Product, ProductClass $ProductClass, $data, $headerByKey)
+    protected function updateProductClass($row, Product $Product, Object $ProductClass, $data, $headerByKey)
     {
         $ProductClass->setProduct($Product);
 
