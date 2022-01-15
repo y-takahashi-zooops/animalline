@@ -48,7 +48,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Eccube\Repository\ProductClassRepository;
 
 class CsvImportController extends AbstractCsvImportController
 {
@@ -107,11 +106,6 @@ class CsvImportController extends AbstractCsvImportController
      */
     protected $validator;
 
-    /**
-     * @var ProductClassepository
-     */
-    protected $productClassRepository;
-
     private $errors = [];
 
     /**
@@ -128,7 +122,6 @@ class CsvImportController extends AbstractCsvImportController
      * @param TaxRuleRepository $taxRuleRepository
      * @param BaseInfoRepository $baseInfoRepository
      * @param ValidatorInterface $validator
-     * @param ProductClassRepository $productClassRepository
      * @throws \Exception
      */
     public function __construct(
@@ -142,8 +135,7 @@ class CsvImportController extends AbstractCsvImportController
         ProductClassRepository $productClassRepository,
         TaxRuleRepository $taxRuleRepository,
         BaseInfoRepository $baseInfoRepository,
-        ValidatorInterface $validator,
-        ProductClassRepository $productClassRepository
+        ValidatorInterface $validator
     ) {
         $this->deliveryDurationRepository = $deliveryDurationRepository;
         $this->saleTypeRepository = $saleTypeRepository;
@@ -156,7 +148,6 @@ class CsvImportController extends AbstractCsvImportController
         $this->taxRuleRepository = $taxRuleRepository;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->validator = $validator;
-        $this->productClassRepository = $productClassRepository;
     }
 
     /**
