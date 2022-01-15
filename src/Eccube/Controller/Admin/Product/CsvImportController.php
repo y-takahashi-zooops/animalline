@@ -842,7 +842,7 @@ class CsvImportController extends AbstractCsvImportController
                 '商品画像', '商品カテゴリ(ID)', '在庫数(-1で無制限）', '通常価格', '販売価格',
                 'JANｺｰﾄﾞ(13桁）', '仕入価格（税抜）', '仕入先コード(4桁)', '重量（kg）', 'メーカーID'
             ];
-            $results = $this->productRepository->findAll();
+            $results = $this->productClassRepository->findAll();
 
             $response = new StreamedResponse();
             $response->setCallback(
@@ -852,23 +852,22 @@ class CsvImportController extends AbstractCsvImportController
                     fputcsv($handle, $headers);
 
                     foreach ($results as $row) {
-                        $Class = $this->productClassRepository->findOneBy(['Product' => $row]);
                         $data = [
-                            $Class->getCode() ?? '',
-                            $row->getName(),
-                            $row->getDescriptionList(),
-                            $row->getDescriptionDetail(),
-                            $row->getSearchWord(),
-                            $row->getProductImage()[0]->getFileName() ?? '',
-                            $row->getProductCategories()[0]->getCategoryId() ?? '',
-                            $Class->getStock() ?? '',
-                            $Class->getPrice01() ?? '',
-                            $Class->getPrice02() ?? '',
-                            $Class->getJanCode() ?? '',
-                            $Class->getItemCost() ?? '',
-                            $Class->getSupplierCode() ?? '',
-                            $row->getItemWeight(),
-                            $row->gettMakerId()
+                            $row->getCode() ?? '',
+                            $row->getProduct()->getName() ?? '',
+                            $row->getProduct()->getDescriptionList() ?? '',
+                            $row->getProduct()->getDescriptionDetail() ?? '',
+                            $row->getProduct()->getSearchWord() ?? '',
+                            $row->getProduct()->getProductImage()[0]->getFileName() ?? '',
+                            $row->getProduct()->getProductCategories()[0]->getCategoryId() ?? '',
+                            $row->getStock() ?? '',
+                            $row->getPrice01() ?? '',
+                            $row->getPrice02() ?? '',
+                            $row->getJanCode() ?? '',
+                            $row->getItemCost() ?? '',
+                            $row->getSupplierCode() ?? '',
+                            $row->getProduct()->getItemWeight() ?? '',
+                            $row->getProduct()->gettMakerId() ?? ''
                         ];
                         fputcsv($handle, $data);
                     }
