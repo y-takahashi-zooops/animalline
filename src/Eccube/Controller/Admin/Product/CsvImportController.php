@@ -1377,6 +1377,81 @@ class CsvImportController extends AbstractCsvImportController
     protected function getProductCsvHeader()
     {
         return [
+            trans('admin.product.product_csv.product_code_col') => [
+                'id' => 'product_code',
+                'description' => 'admin.product.product_csv.product_code_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.product_name_col') => [
+                'id' => 'name',
+                'description' => 'admin.product.product_csv.product_name_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.description_list_col') => [
+                'id' => 'description_list',
+                'description' => 'admin.product.product_csv.description_list_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.description_detail_col') => [
+                'id' => 'description_detail',
+                'description' => 'admin.product.product_csv.description_detail_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.keyword_col') => [
+                'id' => 'search_word',
+                'description' => 'admin.product.product_csv.keyword_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.product_image_col') => [
+                'id' => 'product_image',
+                'description' => 'admin.product.product_csv.product_image_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.category_col') => [
+                'id' => 'category_id',
+                'description' => 'admin.product.product_csv.category_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.stock_col') => [
+                'id' => 'stock',
+                'description' => 'admin.product.product_csv.stock_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.normal_price_col') => [
+                'id' => 'price01',
+                'description' => 'admin.product.product_csv.normal_price_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.sale_price_col') => [
+                'id' => 'price02',
+                'description' => 'admin.product.product_csv.sale_price_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.JAN_code_col') => [
+                'id' => 'JAN_code',
+                'description' => 'admin.product.product_csv.JAN_code_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.item_cost_col') => [
+                'id' => 'item_cost',
+                'description' => 'admin.product.product_csv.item_cost_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.supplier_code_col') => [
+                'id' => 'supplier_code',
+                'description' => 'admin.product.product_csv.supplier_code_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.item_weight_col') => [
+                'id' => 'item_weight',
+                'description' => 'admin.product.product_csv.item_weight_description',
+                'required' => true,
+            ],
+            trans('admin.product.product_csv.maker_id_col') => [
+                'id' => 'maker_id',
+                'description' => 'admin.product.product_csv.maker_id_description',
+                'required' => true,
+            ],
             trans('admin.product.product_csv.product_id_col') => [
                 'id' => 'id',
                 'description' => 'admin.product.product_csv.product_id_description',
@@ -1385,31 +1460,11 @@ class CsvImportController extends AbstractCsvImportController
             trans('admin.product.product_csv.display_status_col') => [
                 'id' => 'status',
                 'description' => 'admin.product.product_csv.display_status_description',
-                'required' => true,
-            ],
-            trans('admin.product.product_csv.product_name_col') => [
-                'id' => 'name',
-                'description' => 'admin.product.product_csv.product_name_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.shop_memo_col') => [
                 'id' => 'note',
                 'description' => 'admin.product.product_csv.shop_memo_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.description_list_col') => [
-                'id' => 'description_list',
-                'description' => 'admin.product.product_csv.description_list_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.description_detail_col') => [
-                'id' => 'description_detail',
-                'description' => 'admin.product.product_csv.description_detail_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.keyword_col') => [
-                'id' => 'search_word',
-                'description' => 'admin.product.product_csv.keyword_description',
                 'required' => false,
             ],
             trans('admin.product.product_csv.free_area_col') => [
@@ -1422,16 +1477,6 @@ class CsvImportController extends AbstractCsvImportController
                 'description' => 'admin.product.product_csv.delete_flag_description',
                 'required' => false,
             ],
-            trans('admin.product.product_csv.product_image_col') => [
-                'id' => 'product_image',
-                'description' => 'admin.product.product_csv.product_image_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.category_col') => [
-                'id' => 'product_category',
-                'description' => 'admin.product.product_csv.category_description',
-                'required' => false,
-            ],
             trans('admin.product.product_csv.tag_col') => [
                 'id' => 'product_tag',
                 'description' => 'admin.product.product_csv.tag_description',
@@ -1440,7 +1485,7 @@ class CsvImportController extends AbstractCsvImportController
             trans('admin.product.product_csv.sale_type_col') => [
                 'id' => 'sale_type',
                 'description' => 'admin.product.product_csv.sale_type_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.class_category1_col') => [
                 'id' => 'class_category1',
@@ -1457,16 +1502,6 @@ class CsvImportController extends AbstractCsvImportController
                 'description' => 'admin.product.product_csv.delivery_duration_description',
                 'required' => false,
             ],
-            trans('admin.product.product_csv.product_code_col') => [
-                'id' => 'product_code',
-                'description' => 'admin.product.product_csv.product_code_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.stock_col') => [
-                'id' => 'stock',
-                'description' => 'admin.product.product_csv.stock_description',
-                'required' => false,
-            ],
             trans('admin.product.product_csv.stock_unlimited_col') => [
                 'id' => 'stock_unlimited',
                 'description' => 'admin.product.product_csv.stock_unlimited_description',
@@ -1477,19 +1512,14 @@ class CsvImportController extends AbstractCsvImportController
                 'description' => 'admin.product.product_csv.sale_limit_description',
                 'required' => false,
             ],
-            trans('admin.product.product_csv.normal_price_col') => [
-                'id' => 'price01',
-                'description' => 'admin.product.product_csv.normal_price_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.sale_price_col') => [
-                'id' => 'price02',
-                'description' => 'admin.product.product_csv.sale_price_description',
-                'required' => true,
-            ],
             trans('admin.product.product_csv.delivery_fee_col') => [
                 'id' => 'delivery_fee',
                 'description' => 'admin.product.product_csv.delivery_fee_description',
+                'required' => false,
+            ],
+            trans('admin.product.product_csv.tax_rate_col') => [
+                'id' => 'tax_rate',
+                'description' => 'admin.product.product_csv.tax_rate_description',
                 'required' => false,
             ],
             trans('admin.product.product_csv.tax_rate_col') => [

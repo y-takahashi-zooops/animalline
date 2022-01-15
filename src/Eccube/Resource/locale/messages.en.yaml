@@ -719,7 +719,7 @@ admin.product.product_csv.delivery_duration_col: Estimated Shipping Date (ID)
 admin.product.product_csv.delivery_duration_description: ''
 admin.product.product_csv.product_code_col: SKU
 admin.product.product_csv.product_code_description: ''
-admin.product.product_csv.stock_col: Stock Qty
+admin.product.product_csv.stock_col: Stock Qty(-1 unlimited)
 admin.product.product_csv.stock_description: If the unlimited stock flag is set to 0, please set the value more than 0.
 admin.product.product_csv.stock_unlimited_col: Unlimited Stock Flag
 admin.product.product_csv.stock_unlimited_description: 'Specify 0: Limited or 1: Unlimited'
@@ -733,6 +733,16 @@ admin.product.product_csv.delivery_fee_col: Shipping Charge
 admin.product.product_csv.delivery_fee_description: If the shipping charge is set per product, set the value more than 0
 admin.product.product_csv.tax_rate_col: Tax Rate
 admin.product.product_csv.tax_rate_description: If the Tax Rate is set per product, set the value more than 0
+admin.product.product_csv.JAN_code_col: JAN code (13 digits)
+admin.product.product_csv.JAN_code_description: ''
+admin.product.product_csv.item_cost_col: item code (excluding tax)
+admin.product.product_csv.item_cost_description: ''
+admin.product.product_csv.supplier_code_col: Supplier code(4 digits)
+admin.product.product_csv.supplier_code_description: ''
+admin.product.product_csv.item_weight_col: Weight (kg)
+admin.product.product_csv.item_weight_description: ''
+admin.product.product_csv.maker_id_col: maker_id
+admin.product.product_csv.maker_id_description: ''
 
 # Category CSV Templates
 admin.product.category_csv.category_id_col: Category ID
