@@ -1531,88 +1531,13 @@ class CsvImportController extends AbstractCsvImportController
             ],
             trans('admin.product.product_csv.item_weight_col') => [
                 'id' => 'item_weight',
-                'description' => 'admin.product.product_csv.item_weight_description',
+                'description' => '',
                 'required' => true,
             ],
             trans('admin.product.product_csv.maker_id_col') => [
                 'id' => 'maker_id',
                 'description' => 'admin.product.product_csv.maker_id_description',
                 'required' => true,
-            ],
-            trans('admin.product.product_csv.product_id_col') => [
-                'id' => 'id',
-                'description' => 'admin.product.product_csv.product_id_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.display_status_col') => [
-                'id' => 'status',
-                'description' => 'admin.product.product_csv.display_status_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.shop_memo_col') => [
-                'id' => 'note',
-                'description' => 'admin.product.product_csv.shop_memo_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.free_area_col') => [
-                'id' => 'free_area',
-                'description' => 'admin.product.product_csv.free_area_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.delete_flag_col') => [
-                'id' => 'product_del_flg',
-                'description' => 'admin.product.product_csv.delete_flag_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.tag_col') => [
-                'id' => 'product_tag',
-                'description' => 'admin.product.product_csv.tag_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.sale_type_col') => [
-                'id' => 'sale_type',
-                'description' => 'admin.product.product_csv.sale_type_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.class_category1_col') => [
-                'id' => 'class_category1',
-                'description' => 'admin.product.product_csv.class_category1_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.class_category2_col') => [
-                'id' => 'class_category2',
-                'description' => 'admin.product.product_csv.class_category2_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.delivery_duration_col') => [
-                'id' => 'delivery_date',
-                'description' => 'admin.product.product_csv.delivery_duration_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.stock_unlimited_col') => [
-                'id' => 'stock_unlimited',
-                'description' => 'admin.product.product_csv.stock_unlimited_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.sale_limit_col') => [
-                'id' => 'sale_limit',
-                'description' => 'admin.product.product_csv.sale_limit_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.delivery_fee_col') => [
-                'id' => 'delivery_fee',
-                'description' => 'admin.product.product_csv.delivery_fee_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.tax_rate_col') => [
-                'id' => 'tax_rate',
-                'description' => 'admin.product.product_csv.tax_rate_description',
-                'required' => false,
-            ],
-            trans('admin.product.product_csv.tax_rate_col') => [
-                'id' => 'tax_rate',
-                'description' => 'admin.product.product_csv.tax_rate_description',
-                'required' => false,
             ],
         ];
     }
