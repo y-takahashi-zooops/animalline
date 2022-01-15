@@ -1467,7 +1467,7 @@ class CsvImportController extends AbstractCsvImportController
             trans('admin.product.product_csv.product_code_col') => [
                 'id' => 'product_code',
                 'description' => 'admin.product.product_csv.product_code_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.product_name_col') => [
                 'id' => 'name',
@@ -1477,37 +1477,37 @@ class CsvImportController extends AbstractCsvImportController
             trans('admin.product.product_csv.description_list_col') => [
                 'id' => 'description_list',
                 'description' => 'admin.product.product_csv.description_list_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.description_detail_col') => [
                 'id' => 'description_detail',
                 'description' => 'admin.product.product_csv.description_detail_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.keyword_col') => [
                 'id' => 'search_word',
                 'description' => 'admin.product.product_csv.keyword_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.product_image_col') => [
                 'id' => 'product_image',
                 'description' => 'admin.product.product_csv.product_image_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.category_col') => [
                 'id' => 'product_category',
                 'description' => 'admin.product.product_csv.category_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.stock_col') => [
                 'id' => 'stock',
                 'description' => 'admin.product.product_csv.stock_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.normal_price_col') => [
                 'id' => 'price01',
                 'description' => 'admin.product.product_csv.normal_price_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.sale_price_col') => [
                 'id' => 'price02',
@@ -1517,27 +1517,27 @@ class CsvImportController extends AbstractCsvImportController
             trans('admin.product.product_csv.JAN_code_col') => [
                 'id' => 'JAN_code',
                 'description' => 'admin.product.product_csv.JAN_code_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.item_cost_col') => [
                 'id' => 'item_cost',
                 'description' => 'admin.product.product_csv.item_cost_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.supplier_code_col') => [
                 'id' => 'supplier_code',
                 'description' => 'admin.product.product_csv.supplier_code_description',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.item_weight_col') => [
                 'id' => 'item_weight',
                 'description' => '',
-                'required' => true,
+                'required' => false,
             ],
             trans('admin.product.product_csv.maker_id_col') => [
                 'id' => 'maker_id',
                 'description' => 'admin.product.product_csv.maker_id_description',
-                'required' => true,
+                'required' => false,
             ],
         ];
     }
