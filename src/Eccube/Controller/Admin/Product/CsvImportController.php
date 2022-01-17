@@ -1109,7 +1109,7 @@ class CsvImportController extends AbstractCsvImportController
         $ProductClass = new ProductClass();
         $ProductClass->setProduct($Product)
             ->setStockCode('')
-            ->setIncentiveRatio(0)
+            ->setIncentiveRatio(5)
             ->setVisible(true);
 
         $line = $data->key() + 1;
