@@ -1169,8 +1169,8 @@ class CsvImportController extends AbstractCsvImportController
             $ProductClass->setJanCode(null);
         }
 
-        if (isset($row[$headerByKey['supplier_code']]) && StringUtil::isNotBlank($row[$headerByKey['JAN_code']])) {
-            $ProductClass->setSupplierCode($row[$headerByKey['JAN_code']]);
+        if (isset($row[$headerByKey['supplier_code']]) && StringUtil::isNotBlank($row[$headerByKey['supplier_code']])) {
+            $ProductClass->setSupplierCode($row[$headerByKey['supplier_code']]);
         } else {
             $ProductClass->setSupplierCode(null);
         }
@@ -1366,8 +1366,8 @@ class CsvImportController extends AbstractCsvImportController
             $ProductClass->setJanCode(null);
         }
 
-        if (isset($row[$headerByKey['supplier_code']]) && StringUtil::isNotBlank($row[$headerByKey['JAN_code']])) {
-            $ProductClass->setSupplierCode($row[$headerByKey['JAN_code']]);
+        if (isset($row[$headerByKey['supplier_code']]) && StringUtil::isNotBlank($row[$headerByKey['supplier_code']])) {
+            $ProductClass->setSupplierCode($row[$headerByKey['supplier_code']]);
         } else {
             $ProductClass->setSupplierCode(null);
         }
