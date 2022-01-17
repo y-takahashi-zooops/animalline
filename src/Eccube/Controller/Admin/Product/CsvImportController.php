@@ -628,7 +628,6 @@ class CsvImportController extends AbstractCsvImportController
                         }
                         $this->entityManager->persist($Product);
                     }
-                    die();
                     $this->entityManager->flush();
                     $this->entityManager->getConnection()->commit();
 
