@@ -208,7 +208,6 @@ class CsvImportController extends AbstractCsvImportController
                     $this->entityManager->getConnection()->beginTransaction();
                     // CSVファイルの登録処理
                     foreach ($data as $row) {
-                        dump($row);die();
                         $line = $data->key() + 1;
                         if ($headerSize != count($row)) {
                             $message = trans('admin.common.csv_invalid_format_line', ['%line%' => $line]);
@@ -216,52 +215,14 @@ class CsvImportController extends AbstractCsvImportController
 
                             return $this->renderWithError($form, $headers);
                         }
-                        $productStatus = $this->productStatusRepository->findBy(['id'=>1]);
-                                $productClass = $this->productClassRepository->findOneBy(['code'=>$row[$headerByKey['product_code']]]);
-                                if (!$productClass) {
-                                    $Product = new Product();
-                                    $Product->setStatus($productStatus[0]);
-                                    $this->entityManager->persist($Product);
-                                } else
-                                $Product = $this->productRepository->find($productClass->getProduct());
-
-//                            if (isset($row[$headerByKey['product_del_flg']])) {
-//                                if (StringUtil::isNotBlank($row[$headerByKey['product_del_flg']]) && $row[$headerByKey['product_del_flg']] == (string) Constant::ENABLED) {
-//                                    // 商品を物理削除
-//                                    $deleteImages[] = $Product->getProductImage();
-//
-//                                    try {
-//                                        $this->productRepository->delete($Product);
-//                                        $this->entityManager->flush();
-//
-//                                        continue;
-//                                    } catch (ForeignKeyConstraintViolationException $e) {
-//                                        $message = trans('admin.common.csv_invalid_foreign_key', ['%line%' => $line, '%name%' => $Product->getName()]);
-//                                        $this->addErrors($message);
-//
-//                                        return $this->renderWithError($form, $headers);
-//                                    }
-//                                }
-//                            }
-
-//                        if (StringUtil::isBlank($row[$headerByKey['status']])) {
-//                            $message = trans('admin.common.csv_invalid_required', ['%line%' => $line, '%name%' => $headerByKey['status']]);
-//                            $this->addErrors($message);
-//                        } else {
-//                            if (preg_match('/^\d+$/', $row[$headerByKey['status']])) {
-//                                $ProductStatus = $this->productStatusRepository->find($row[$headerByKey['status']]);
-//                                if (!$ProductStatus) {
-//                                    $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['status']]);
-//                                    $this->addErrors($message);
-//                                } else {
-//                                    $Product->setStatus($ProductStatus);
-//                                }
-//                            } else {
-//                                $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['status']]);
-//                                $this->addErrors($message);
-//                            }
-//                        }
-
+                        $productStatus = $this->productStatusRepository->findBy(['id' => 1]);
+                        $productClass = $this->productClassRepository->findOneBy(['code' => $row[$headerByKey['product_code']]]);
+                        if (!$productClass) {
+                            $Product = new Product();
+                            $Product->setStatus($productStatus[0]);
+                            $this->entityManager->persist($Product);
+                        } else
+                            $Product = $this->productRepository->find($productClass->getProduct());
                         if (StringUtil::isBlank($row[$headerByKey['name']])) {
                             $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['name']]);
                             $this->addErrors($message);
@@ -270,14 +231,6 @@ class CsvImportController extends AbstractCsvImportController
                         } else {
                             $Product->setName(StringUtil::trimAll($row[$headerByKey['name']]));
                         }
-
-//                        if (isset($row[$headerByKey['note']])) {
-//                            if (StringUtil::isNotBlank($row[$headerByKey['note']])) {
-//                                $Product->setNote(StringUtil::trimAll($row[$headerByKey['note']]));
-//                            } else {
-//                                $Product->setNote(null);
-//                            }
-//                        }
 
                         if (isset($row[$headerByKey['description_list']])) {
                             if (StringUtil::isNotBlank($row[$headerByKey['description_list']])) {
@@ -313,15 +266,6 @@ class CsvImportController extends AbstractCsvImportController
                                 $Product->setSearchWord(null);
                             }
                         }
-
-//                        if (isset($row[$headerByKey['free_area']])) {
-//                            if (StringUtil::isNotBlank($row[$headerByKey['free_area']])) {
-//                                $Product->setFreeArea(StringUtil::trimAll($row[$headerByKey['free_area']]));
-//                            } else {
-//                                $Product->setFreeArea(null);
-//                            }
-//                        }
-
                         // 商品画像登録
                         $this->createProductImage($row, $Product, $data, $headerByKey);
                         if (StringUtil::isBlank($row[$headerByKey['item_weight']])) {
@@ -330,7 +274,7 @@ class CsvImportController extends AbstractCsvImportController
 
                             return $this->renderWithError($form, $headers);
                         } else {
-                            $Product->setName($row[$headerByKey['item_weight']]);
+                            $Product->setItemWeight($row[$headerByKey['item_weight']]);
                         }
                         $Product->setMakerId($row[$headerByKey['maker_id']]);
                         $this->entityManager->flush();
@@ -338,298 +282,49 @@ class CsvImportController extends AbstractCsvImportController
                         // 商品カテゴリ登録
                         $this->createProductCategory($row, $Product, $data, $headerByKey);
 
-                        //タグ登録
-//                        $this->createProductTag($row, $Product, $data, $headerByKey);
-
                         // 商品規格が存在しなければ新規登録
                         /** @var ProductClass[] $ProductClasses */
                         $ProductClasses = $Product->getProductClasses();
                         if ($ProductClasses->count() < 1) {
                             // 規格分類1(ID)がセットされていると規格なし商品、規格あり商品を作成
                             $ProductClassOrg = $this->createProductClass($row, $Product, $data, $headerByKey);
-//                            if ($this->BaseInfo->isOptionProductDeliveryFee()) {
-//                                if (isset($row[$headerByKey['delivery_fee']]) && StringUtil::isNotBlank($row[$headerByKey['delivery_fee']])) {
-//                                    $deliveryFee = str_replace(',', '', $row[$headerByKey['delivery_fee']]);
-//                                    $errors = $this->validator->validate($deliveryFee, new GreaterThanOrEqual(['value' => 0]));
-//                                    if ($errors->count() === 0) {
-//                                        $ProductClassOrg->setDeliveryFee($deliveryFee);
-//                                    } else {
-//                                        $message = trans('admin.common.csv_invalid_greater_than_zero', ['%line%' => $line, '%name%' => $headerByKey['delivery_fee']]);
-//                                        $this->addErrors($message);
-//                                    }
-//                                }
-//                            }
-
-                            // 商品別税率機能が有効の場合に税率を更新
-//                            if ($this->BaseInfo->isOptionProductTaxRule()) {
-//                                if (isset($row[$headerByKey['tax_rate']]) && StringUtil::isNotBlank($row[$headerByKey['tax_rate']])) {
-//                                    $taxRate = $row[$headerByKey['tax_rate']];
-//                                    $errors = $this->validator->validate($taxRate, new GreaterThanOrEqual(['value' => 0]));
-//                                    if ($errors->count() === 0) {
-//                                        if ($ProductClassOrg->getTaxRule()) {
-//                                            // 商品別税率の設定があれば税率を更新
-//                                            $ProductClassOrg->getTaxRule()->setTaxRate($taxRate);
-//                                        } else {
-//                                            // 商品別税率の設定がなければ新規作成
-//                                            $TaxRule = $this->taxRuleRepository->newTaxRule();
-//                                            $TaxRule->setTaxRate($taxRate);
-//                                            $TaxRule->setApplyDate(new \DateTime());
-//                                            $TaxRule->setProduct($Product);
-//                                            $TaxRule->setProductClass($ProductClassOrg);
-//                                            $ProductClassOrg->setTaxRule($TaxRule);
-//                                        }
-//                                    } else {
-//                                        $message = trans('admin.common.csv_invalid_greater_than_zero', ['%line%' => $line, '%name%' => $headerByKey['tax_rate']]);
-//                                        $this->addErrors($message);
-//                                    }
-//                                } else {
-//                                    // 税率の入力がなければ税率の設定を削除
-//                                    if ($ProductClassOrg->getTaxRule()) {
-//                                        $this->taxRuleRepository->delete($ProductClassOrg->getTaxRule());
-//                                        $ProductClassOrg->setTaxRule(null);
-//                                    }
-//                                }
-//                            }
-
-//                            if (isset($row[$headerByKey['class_category1']]) && StringUtil::isNotBlank($row[$headerByKey['class_category1']])) {
-//                                if (isset($row[$headerByKey['class_category2']]) && $row[$headerByKey['class_category1']] == $row[$headerByKey['class_category2']]) {
-//                                    $message = trans('admin.common.csv_invalid_not_same', [
-//                                        '%line%' => $line,
-//                                        '%name1%' => $headerByKey['class_category1'],
-//                                        '%name2%' => $headerByKey['class_category2'],
-//                                    ]);
-//                                    $this->addErrors($message);
-//                                } else {
-//                                    // 商品規格あり
-//                                    // 規格分類あり商品を作成
-//                                    $ProductClass = clone $ProductClassOrg;
-//                                    $ProductStock = clone $ProductClassOrg->getProductStock();
-//
-//                                    // 規格分類1、規格分類2がnullであるデータを非表示
-//                                    $ProductClassOrg->setVisible(false);
-//
-//                                    // 規格分類1、2をそれぞれセットし作成
-//                                    $ClassCategory1 = null;
-//                                    if (preg_match('/^\d+$/', $row[$headerByKey['class_category1']])) {
-//                                        $ClassCategory1 = $this->classCategoryRepository->find($row[$headerByKey['class_category1']]);
-//                                        if (!$ClassCategory1) {
-//                                            $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['class_category1']]);
-//                                            $this->addErrors($message);
-//                                        } else {
-//                                            $ProductClass->setClassCategory1($ClassCategory1);
-//                                        }
-//                                    } else {
-//                                        $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['class_category1']]);
-//                                        $this->addErrors($message);
-//                                    }
-//
-//                                    if (isset($row[$headerByKey['class_category2']]) && StringUtil::isNotBlank($row[$headerByKey['class_category2']])) {
-//                                        if (preg_match('/^\d+$/', $row[$headerByKey['class_category2']])) {
-//                                            $ClassCategory2 = $this->classCategoryRepository->find($row[$headerByKey['class_category2']]);
-//                                            if (!$ClassCategory2) {
-//                                                $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['class_category2']]);
-//                                                $this->addErrors($message);
-//                                            } else {
-//                                                if ($ClassCategory1 &&
-//                                                    ($ClassCategory1->getClassName()->getId() == $ClassCategory2->getClassName()->getId())
-//                                                ) {
-//                                                    $message = trans('admin.common.csv_invalid_not_same', ['%line%' => $line, '%name1%' => $headerByKey['class_category1'], '%name2%' => $headerByKey['class_category2']]);
-//                                                    $this->addErrors($message);
-//                                                } else {
-//                                                    $ProductClass->setClassCategory2($ClassCategory2);
-//                                                }
-//                                            }
-//                                        } else {
-//                                            $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['class_category2']]);
-//                                            $this->addErrors($message);
-//                                        }
-//                                    }
-//                                    $ProductClass->setProductStock($ProductStock);
-//                                    $ProductStock->setProductClass($ProductClass);
-//
-//                                    $this->entityManager->persist($ProductClass);
-//                                    $this->entityManager->persist($ProductStock);
-//                                }
-//                            } else {
-//                                if (isset($row[$headerByKey['class_category2']]) && StringUtil::isNotBlank($row[$headerByKey['class_category2']])) {
-//                                    $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['class_category2']]);
-//                                    $this->addErrors($message);
-//                                }
-//                            }
                         } else {
                             // 商品規格の更新
-                            $flag = false;
-                            $classCategoryId1 = null;
-                            $classCategoryId2 = null;
+//                            $flag = false;
+//                            $classCategoryId1 = null;
+//                            $classCategoryId2 = null;
+//
+//                            $classCategory1 = is_null($productClass->getClassCategory1()) ? null : $productClass->getClassCategory1()->getId();
+//                            $classCategory2 = is_null($productClass->getClassCategory2()) ? null : $productClass->getClassCategory2()->getId();
 
-                                $classCategory1 = is_null($productClass->getClassCategory1()) ? null : $productClass->getClassCategory1()->getId();
-                                $classCategory2 = is_null($productClass->getClassCategory2()) ? null : $productClass->getClassCategory2()->getId();
-
-                                // 登録されている商品規格を更新
-                                if ($classCategory1 == $classCategoryId1 &&
-                                    $classCategory2 == $classCategoryId2
-                                ) {
-                                    $this->updateProductClass($row, $Product,$productClass, $data, $headerByKey);
-
-//                                    if ($this->BaseInfo->isOptionProductDeliveryFee()) {
-//                                        if (isset($row[$headerByKey['delivery_fee']]) && StringUtil::isNotBlank($row[$headerByKey['delivery_fee']])) {
-//                                            $deliveryFee = str_replace(',', '', $row[$headerByKey['delivery_fee']]);
-//                                            $errors = $this->validator->validate($deliveryFee, new GreaterThanOrEqual(['value' => 0]));
-//                                            if ($errors->count() === 0) {
-//                                                $pc->setDeliveryFee($deliveryFee);
-//                                            } else {
-//                                                $message = trans('admin.common.csv_invalid_greater_than_zero', ['%line%' => $line, '%name%' => $headerByKey['delivery_fee']]);
-//                                                $this->addErrors($message);
-//                                            }
-//                                        }
-//                                    }
-
-                                    // 商品別税率機能が有効の場合に税率を更新
-//                                    if ($this->BaseInfo->isOptionProductTaxRule()) {
-//                                        if (isset($row[$headerByKey['tax_rate']]) && StringUtil::isNotBlank($row[$headerByKey['tax_rate']])) {
-//                                            $taxRate = $row[$headerByKey['tax_rate']];
-//                                            $errors = $this->validator->validate($taxRate, new GreaterThanOrEqual(['value' => 0]));
-//                                            if ($errors->count() === 0) {
-//                                                if ($pc->getTaxRule()) {
-//                                                    // 商品別税率の設定があれば税率を更新
-//                                                    $pc->getTaxRule()->setTaxRate($taxRate);
-//                                                } else {
-//                                                    // 商品別税率の設定がなければ新規作成
-//                                                    $TaxRule = $this->taxRuleRepository->newTaxRule();
-//                                                    $TaxRule->setTaxRate($taxRate);
-//                                                    $TaxRule->setApplyDate(new \DateTime());
-//                                                    $TaxRule->setProduct($Product);
-//                                                    $TaxRule->setProductClass($pc);
-//                                                    $pc->setTaxRule($TaxRule);
-//                                                }
-//                                            } else {
-//                                                $message = trans('admin.common.csv_invalid_greater_than_zero', ['%line%' => $line, '%name%' => $headerByKey['tax_rate']]);
-//                                                $this->addErrors($message);
-//                                            }
-//                                        } else {
-//                                            // 税率の入力がなければ税率の設定を削除
-//                                            if ($pc->getTaxRule()) {
-//                                                $this->taxRuleRepository->delete($pc->getTaxRule());
-//                                                $pc->setTaxRule(null);
-//                                            }
-//                                        }
-//                                    }
-
-                                    $flag = true;
-                                    break;
-                                }
+                            // 登録されている商品規格を更新
+//                            if ($classCategory1 == $classCategoryId1 &&
+//                                $classCategory2 == $classCategoryId2
+//                            ) {
+                                $this->updateProductClass($row, $Product, $productClass, $data, $headerByKey);
+//                                $flag = true;
+//                            }
 
                             // 商品規格を登録
-                            if (!$flag) {
-                                $pc = $ProductClasses[0];
-                                if ($pc->getClassCategory1() == null &&
-                                    $pc->getClassCategory2() == null
-                                ) {
-                                    // 規格分類1、規格分類2がnullであるデータを非表示
-                                    $pc->setVisible(false);
-                                }
-
-                                if (isset($row[$headerByKey['class_category1']]) && isset($row[$headerByKey['class_category2']])
-                                    && $row[$headerByKey['class_category1']] == $row[$headerByKey['class_category2']]) {
-                                    $message = trans('admin.common.csv_invalid_not_same', [
-                                        '%line%' => $line,
-                                        '%name1%' => $headerByKey['class_category1'],
-                                        '%name2%' => $headerByKey['class_category2'],
-                                    ]);
-                                    $this->addErrors($message);
-                                } else {
-                                    // 必ず規格分類1がセットされている
-                                    // 規格分類1、2をそれぞれセットし作成
-                                    $ClassCategory1 = null;
-                                    if (preg_match('/^\d+$/', $classCategoryId1)) {
-                                        $ClassCategory1 = $this->classCategoryRepository->find($classCategoryId1);
-                                        if (!$ClassCategory1) {
-                                            $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['class_category1']]);
-                                            $this->addErrors($message);
-                                        }
-                                    } else {
-                                        $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['class_category1']]);
-                                        $this->addErrors($message);
-                                    }
-
-                                    $ClassCategory2 = null;
-                                    if (isset($row[$headerByKey['class_category2']]) && StringUtil::isNotBlank($row[$headerByKey['class_category2']])) {
-                                        if ($pc->getClassCategory1() != null && $pc->getClassCategory2() == null) {
-                                            $message = trans('admin.common.csv_invalid_can_not', ['%line%' => $line, '%name%' => $headerByKey['class_category2']]);
-                                            $this->addErrors($message);
-                                        } else {
-                                            if (preg_match('/^\d+$/', $classCategoryId2)) {
-                                                $ClassCategory2 = $this->classCategoryRepository->find($classCategoryId2);
-                                                if (!$ClassCategory2) {
-                                                    $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['class_category2']]);
-                                                    $this->addErrors($message);
-                                                } else {
-                                                    if ($ClassCategory1 &&
-                                                        ($ClassCategory1->getClassName()->getId() == $ClassCategory2->getClassName()->getId())
-                                                    ) {
-                                                        $message = trans('admin.common.csv_invalid_not_same', [
-                                                            '%line%' => $line,
-                                                            '%name1%' => $headerByKey['class_category1'],
-                                                            '%name2%' => $headerByKey['class_category2'],
-                                                        ]);
-                                                        $this->addErrors($message);
-                                                    }
-                                                }
-                                            } else {
-                                                $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['class_category2']]);
-                                                $this->addErrors($message);
-                                            }
-                                        }
-                                    } else {
-                                        if ($pc->getClassCategory1() != null && $pc->getClassCategory2() != null) {
-                                            $message = trans('admin.common.csv_invalid_required', ['%line%' => $line, '%name%' => $headerByKey['class_category2']]);
-                                            $this->addErrors($message);
-                                        }
-                                    }
-                                    $ProductClass = $this->createProductClass($row, $Product, $data, $headerByKey, $ClassCategory1, $ClassCategory2);
-
-//                                    if ($this->BaseInfo->isOptionProductDeliveryFee()) {
-//                                        if (isset($row[$headerByKey['delivery_fee']]) && StringUtil::isNotBlank($row[$headerByKey['delivery_fee']])) {
-//                                            $deliveryFee = str_replace(',', '', $row[$headerByKey['delivery_fee']]);
-//                                            $errors = $this->validator->validate($deliveryFee, new GreaterThanOrEqual(['value' => 0]));
-//                                            if ($errors->count() === 0) {
-//                                                $ProductClass->setDeliveryFee($deliveryFee);
-//                                            } else {
-//                                                $message = trans('admin.common.csv_invalid_greater_than_zero', ['%line%' => $line, '%name%' => $headerByKey['delivery_fee']]);
-//                                                $this->addErrors($message);
-//                                            }
-//                                        }
-//                                    }
-
-                                    // 商品別税率機能が有効の場合に税率を更新
-//                                    if ($this->BaseInfo->isOptionProductTaxRule()) {
-//                                        if (isset($row[$headerByKey['tax_rate']]) && StringUtil::isNotBlank($row[$headerByKey['tax_rate']])) {
-//                                            $taxRate = $row[$headerByKey['tax_rate']];
-//                                            $errors = $this->validator->validate($taxRate, new GreaterThanOrEqual(['value' => 0]));
-//                                            if ($errors->count() === 0) {
-//                                                $TaxRule = $this->taxRuleRepository->newTaxRule();
-//                                                $TaxRule->setTaxRate($taxRate);
-//                                                $TaxRule->setApplyDate(new \DateTime());
-//                                                $TaxRule->setProduct($Product);
-//                                                $TaxRule->setProductClass($ProductClass);
-//                                                $ProductClass->setTaxRule($TaxRule);
-//                                            } else {
-//                                                $message = trans('admin.common.csv_invalid_greater_than_zero', ['%line%' => $line, '%name%' => $headerByKey['tax_rate']]);
-//                                                $this->addErrors($message);
-//                                            }
-//                                        }
-//                                    }
-
-                                    $Product->addProductClass($ProductClass);
-                                }
-                            }
+//                            if (!$flag) {
+//                                $pc = $ProductClasses[0];
+//                                if ($pc->getClassCategory1() == null &&
+//                                    $pc->getClassCategory2() == null
+//                                ) {
+//                                    // 規格分類1、規格分類2がnullであるデータを非表示
+//                                    $pc->setVisible(false);
+//                                }
+//
+//                                $ProductClass = $this->createProductClass($row, $Product, $data, $headerByKey);
+//
+//                                $Product->addProductClass($ProductClass);
+//                            }
                         }
                         if ($this->hasErrors()) {
                             return $this->renderWithError($form, $headers);
                         }
                         $this->entityManager->persist($Product);
                     }
-                    die();
                     $this->entityManager->flush();
                     $this->entityManager->getConnection()->commit();
 
@@ -638,7 +333,7 @@ class CsvImportController extends AbstractCsvImportController
                         foreach ($images as $image) {
                             try {
                                 $fs = new Filesystem();
-                                $fs->remove($this->eccubeConfig['eccube_save_image_dir'].'/'.$image);
+                                $fs->remove($this->eccubeConfig['eccube_save_image_dir'] . '/' . $image);
                             } catch (\Exception $e) {
                                 // エラーが発生しても無視する
                             }
