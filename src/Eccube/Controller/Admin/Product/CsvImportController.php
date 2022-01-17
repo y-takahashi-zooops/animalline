@@ -195,7 +195,7 @@ class CsvImportController extends AbstractCsvImportController
                         } else
                             $Product = $this->productRepository->find($productClass->getProduct());
                         if (StringUtil::isBlank($row[$headerByKey['name']])) {
-                            $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['name']]);
+                            $message = trans('admin.common.csv_invalid_required', ['%line%' => $line, '%name%' => $headerByKey['name']]);
                             $this->addErrors($message);
 
                             return $this->renderWithError($form, $headers);
@@ -240,7 +240,7 @@ class CsvImportController extends AbstractCsvImportController
                         // 商品画像登録
                         $this->createProductImage($row, $Product, $data, $headerByKey);
                         if (StringUtil::isBlank($row[$headerByKey['item_weight']])) {
-                            $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['item_weight']]);
+                            $message = trans('admin.common.csv_invalid_required', ['%line%' => $line, '%name%' => $headerByKey['item_weight']]);
                             $this->addErrors($message);
 
                             return $this->renderWithError($form, $headers);
