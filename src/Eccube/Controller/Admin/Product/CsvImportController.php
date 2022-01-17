@@ -327,7 +327,8 @@ class CsvImportController extends AbstractCsvImportController
 
                         // 商品画像登録
                         $this->createProductImage($row, $Product, $data, $headerByKey);
-
+                        $Product->setItemWeight($row[$headerByKey['item_weight']])
+                            ->setMakerId($row[$headerByKey['maker_id']]);
                         $this->entityManager->flush();
 
                         // 商品カテゴリ登録
@@ -622,8 +623,6 @@ class CsvImportController extends AbstractCsvImportController
                         if ($this->hasErrors()) {
                             return $this->renderWithError($form, $headers);
                         }
-                        $Product->setItemWeight($row[$headerByKey['item_weight']])
-                            ->setMakerId($row[$headerByKey['maker_id']]);
                         $this->entityManager->persist($Product);
                     }
                     $this->entityManager->flush();
@@ -1094,8 +1093,10 @@ class CsvImportController extends AbstractCsvImportController
     {
         // 規格分類1、規格分類2がnullとなる商品を作成
         $ProductClass = new ProductClass();
-        $ProductClass->setProduct($Product);
-        $ProductClass->setVisible(true);
+        $ProductClass->setProduct($Product)
+            ->setStockCode('')
+            ->setIncentiveRatio(0)
+            ->setVisible(true);
 
         $line = $data->key() + 1;
 //        if (isset($row[$headerByKey['sale_type']]) && StringUtil::isNotBlank($row[$headerByKey['sale_type']])) {
@@ -1375,7 +1376,7 @@ class CsvImportController extends AbstractCsvImportController
 //                }
                 $ProductClass->setStock(0);
             }
-        } elseif ($row[$headerByKey['stock']] >= (string) Constant::ENABLED) {
+        } elseif ($row[$headerByKey['stock']] >= (string) Constant::DISABLED) {
             $ProductClass->setStockUnlimited(false);
             $ProductClass->setStock($row[$headerByKey['stock']]);
         } else {
