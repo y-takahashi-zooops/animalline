@@ -215,14 +215,16 @@ class CsvImportController extends AbstractCsvImportController
 
                             return $this->renderWithError($form, $headers);
                         }
-
+                        $productStatus = $this->productStatusRepository->findBy(['id'=>1]);
                         if (!isset($row[$headerByKey['product_code']]) || StringUtil::isBlank($row[$headerByKey['product_code']])) {
                             $Product = new Product();
+                            $Product->setStatus($productStatus[0]);
                             $this->entityManager->persist($Product);
                         } else {
                                 $productClass = $this->productClassRepository->findOneBy(['code'=>$row[$headerByKey['product_code']]]);
                                 if (!$productClass) {
                                     $Product = new Product();
+                                    $Product->setStatus($productStatus[0]);
                                     $this->entityManager->persist($Product);
                                 } else
                                 $Product = $this->productRepository->find($productClass->getProduct());
