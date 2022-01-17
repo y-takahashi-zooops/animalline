@@ -566,7 +566,7 @@ class CsvImportController extends AbstractCsvImportController
                             $row->getProduct()->getSearchWord() ?? '',
                             join(',', $imgs),
                             join(',', $cats),
-                            $row->getStock() ?? '',
+                            $row->getStock() === null ? -1 : $row->getStock(),
                             $row->getPrice01() ?? '',
                             $row->getPrice02() ?? '',
                             $row->getJanCode() ?? '',
