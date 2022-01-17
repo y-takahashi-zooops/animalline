@@ -208,7 +208,6 @@ class CsvImportController extends AbstractCsvImportController
                     $this->entityManager->getConnection()->beginTransaction();
                     // CSVファイルの登録処理
                     foreach ($data as $row) {
-                        dump($row);die();
                         $line = $data->key() + 1;
                         if ($headerSize != count($row)) {
                             $message = trans('admin.common.csv_invalid_format_line', ['%line%' => $line]);
