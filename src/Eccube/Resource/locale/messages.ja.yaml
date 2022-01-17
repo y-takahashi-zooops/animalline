@@ -720,7 +720,7 @@ admin.product.product_csv.delivery_duration_description: ''
 admin.product.product_csv.product_code_col: 商品コード
 admin.product.product_csv.product_code_description: ''
 admin.product.product_csv.stock_col: 在庫数(-1で無制限）
-admin.product.product_csv.stock_description: 在庫数無制限フラグが0の場合、0以上の数値を設定してください。
+admin.product.product_csv.stock_description: 0以上の数値を設定してください。（無制限の場合、-1の数値を設定）
 admin.product.product_csv.stock_unlimited_col: 在庫数無制限フラグ
 admin.product.product_csv.stock_unlimited_description: '0:制限 1: 無制限を指定します。'
 admin.product.product_csv.sale_limit_col: 販売制限数

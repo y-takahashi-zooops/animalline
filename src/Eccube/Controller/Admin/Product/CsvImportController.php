@@ -208,6 +208,7 @@ class CsvImportController extends AbstractCsvImportController
                     $this->entityManager->getConnection()->beginTransaction();
                     // CSVファイルの登録処理
                     foreach ($data as $row) {
+                        dump($row);die();
                         $line = $data->key() + 1;
                         if ($headerSize != count($row)) {
                             $message = trans('admin.common.csv_invalid_format_line', ['%line%' => $line]);
@@ -216,11 +217,6 @@ class CsvImportController extends AbstractCsvImportController
                             return $this->renderWithError($form, $headers);
                         }
                         $productStatus = $this->productStatusRepository->findBy(['id'=>1]);
-                        if (!isset($row[$headerByKey['product_code']]) || StringUtil::isBlank($row[$headerByKey['product_code']])) {
-                            $Product = new Product();
-                            $Product->setStatus($productStatus[0]);
-                            $this->entityManager->persist($Product);
-                        } else {
                                 $productClass = $this->productClassRepository->findOneBy(['code'=>$row[$headerByKey['product_code']]]);
                                 if (!$productClass) {
                                     $Product = new Product();
@@ -247,7 +243,6 @@ class CsvImportController extends AbstractCsvImportController
 //                                    }
 //                                }
 //                            }
-                        }
 
 //                        if (StringUtil::isBlank($row[$headerByKey['status']])) {
 //                            $message = trans('admin.common.csv_invalid_required', ['%line%' => $line, '%name%' => $headerByKey['status']]);
@@ -329,8 +324,15 @@ class CsvImportController extends AbstractCsvImportController
 
                         // 商品画像登録
                         $this->createProductImage($row, $Product, $data, $headerByKey);
-                        $Product->setItemWeight($row[$headerByKey['item_weight']])
-                            ->setMakerId($row[$headerByKey['maker_id']]);
+                        if (StringUtil::isBlank($row[$headerByKey['item_weight']])) {
+                            $message = trans('admin.common.csv_invalid_not_found', ['%line%' => $line, '%name%' => $headerByKey['item_weight']]);
+                            $this->addErrors($message);
+
+                            return $this->renderWithError($form, $headers);
+                        } else {
+                            $Product->setName($row[$headerByKey['item_weight']]);
+                        }
+                        $Product->setMakerId($row[$headerByKey['maker_id']]);
                         $this->entityManager->flush();
 
                         // 商品カテゴリ登録
@@ -627,6 +629,7 @@ class CsvImportController extends AbstractCsvImportController
                         }
                         $this->entityManager->persist($Product);
                     }
+                    die();
                     $this->entityManager->flush();
                     $this->entityManager->getConnection()->commit();
 
@@ -1162,7 +1165,8 @@ class CsvImportController extends AbstractCsvImportController
         if (isset($row[$headerByKey['item_cost']]) && StringUtil::isNotBlank($row[$headerByKey['item_cost']])) {
             $ProductClass->setItemCost($row[$headerByKey['item_cost']]);
         } else {
-            $ProductClass->setItemCost(null);
+            $message = trans('admin.common.csv_invalid_required', ['%line%' => $line, '%name%' => $headerByKey['item_cost']]);
+            $this->addErrors($message);
         }
 
         if (isset($row[$headerByKey['JAN_code']]) && StringUtil::isNotBlank($row[$headerByKey['JAN_code']])) {
@@ -1194,7 +1198,7 @@ class CsvImportController extends AbstractCsvImportController
 //                    $message = trans('admin.common.csv_invalid_greater_than_zero', ['%line%' => $line, '%name%' => $headerByKey['stock']]);
 //                    $this->addErrors($message);
 //                }
-                $ProductClass->setStock(0);
+                $ProductClass->setStock(null);
             }
         } elseif ($row[$headerByKey['stock']] >= (string) Constant::DISABLED) {
             $ProductClass->setStockUnlimited(false);
@@ -1359,7 +1363,8 @@ class CsvImportController extends AbstractCsvImportController
         if (isset($row[$headerByKey['item_cost']]) && StringUtil::isNotBlank($row[$headerByKey['item_cost']])) {
             $ProductClass->setItemCost($row[$headerByKey['item_cost']]);
         } else {
-            $ProductClass->setItemCost(null);
+            $message = trans('admin.common.csv_invalid_required', ['%line%' => $line, '%name%' => $headerByKey['item_cost']]);
+            $this->addErrors($message);
         }
 
         if (isset($row[$headerByKey['JAN_code']]) && StringUtil::isNotBlank($row[$headerByKey['JAN_code']])) {
@@ -1390,7 +1395,7 @@ class CsvImportController extends AbstractCsvImportController
 //                    $message = trans('admin.common.csv_invalid_greater_than_zero', ['%line%' => $line, '%name%' => $headerByKey['stock']]);
 //                    $this->addErrors($message);
 //                }
-                $ProductClass->setStock(0);
+                $ProductClass->setStock(null);
             }
         } elseif ($row[$headerByKey['stock']] >= (string) Constant::DISABLED) {
             $ProductClass->setStockUnlimited(false);
@@ -1482,7 +1487,7 @@ class CsvImportController extends AbstractCsvImportController
             trans('admin.product.product_csv.product_code_col') => [
                 'id' => 'product_code',
                 'description' => 'admin.product.product_csv.product_code_description',
-                'required' => false,
+                'required' => true,
             ],
             trans('admin.product.product_csv.product_name_col') => [
                 'id' => 'name',
@@ -1517,7 +1522,7 @@ class CsvImportController extends AbstractCsvImportController
             trans('admin.product.product_csv.stock_col') => [
                 'id' => 'stock',
                 'description' => 'admin.product.product_csv.stock_description',
-                'required' => false,
+                'required' => true,
             ],
             trans('admin.product.product_csv.normal_price_col') => [
                 'id' => 'price01',
@@ -1537,7 +1542,7 @@ class CsvImportController extends AbstractCsvImportController
             trans('admin.product.product_csv.item_cost_col') => [
                 'id' => 'item_cost',
                 'description' => 'admin.product.product_csv.item_cost_description',
-                'required' => false,
+                'required' => true,
             ],
             trans('admin.product.product_csv.supplier_code_col') => [
                 'id' => 'supplier_code',
@@ -1547,7 +1552,7 @@ class CsvImportController extends AbstractCsvImportController
             trans('admin.product.product_csv.item_weight_col') => [
                 'id' => 'item_weight',
                 'description' => '',
-                'required' => false,
+                'required' => true,
             ],
             trans('admin.product.product_csv.maker_id_col') => [
                 'id' => 'maker_id',
