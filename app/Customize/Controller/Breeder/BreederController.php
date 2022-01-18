@@ -159,7 +159,7 @@ class BreederController extends AbstractController
         $favoritePets = $this->breederQueryService->getPetFeatured($petKind);
 
         return $this->render('animalline/breeder/index.twig', [
-            'title' => 'Breeder TOP',
+            'title' => 'ペット検索',
             'petKind' => $petKind,
             'breeds' => $breeds,
             'regions' => $regions,
@@ -242,6 +242,17 @@ class BreederController extends AbstractController
         $evaluationCount = count($allEvaluations);
         $evaluations = $this->breederEvaluationsRepository->findBy(['Breeder' => $breeder, 'is_active' => 2], ['create_date' => 'DESC'], 3);
 
+        return [
+            'title' => 'ブリーダー検索',
+            'breeder' => $breeder,
+            'dogHouse' => $dogHouse,
+            'catHouse' => $catHouse,
+            'pets' => $pets,
+            'evaluations' => $evaluations,
+            'evaluationCount' => $evaluationCount,
+        ];
+
+        /*
         return compact(
             'breeder',
             'dogHouse',
@@ -250,6 +261,7 @@ class BreederController extends AbstractController
             'evaluations',
             'evaluationCount'
         );
+        */
     }
 
     
@@ -287,7 +299,7 @@ class BreederController extends AbstractController
      */
     public function company(Request $request)
     {
-        return;
+        return['title' => '会社概要',];
     }
 
     /**

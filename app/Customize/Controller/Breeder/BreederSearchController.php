@@ -136,6 +136,7 @@ class BreederSearchController extends AbstractController
         );
 
         return $this->render('animalline/breeder/breeder_search.twig', [
+            'title' => 'ブリーダー検索',
             'breeders' => $breeders,
             'petKind' => $petKind,
             'breeds' => $breeds,

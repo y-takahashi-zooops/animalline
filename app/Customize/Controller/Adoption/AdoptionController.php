@@ -134,6 +134,7 @@ class AdoptionController extends AbstractController
         $favoritePets = $this->adoptionQueryService->getPetFeatured($petKind);
 
         return $this->render('animalline/adoption/index.twig', [
+            'title' => 'ペット検索',
             'petKind' => $petKind,
             'breeds' => $breeds,
             'regions' => $regions,
@@ -207,12 +208,23 @@ class AdoptionController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
+        return[
+            'title' => '保護団体検索',
+            'conservation' => $conservation,
+            'dogHouse' => $dogHouse,
+            'catHouse' => $catHouse,
+            'pets' => $pets,
+        ];
+
+        /*
         return compact(
             'conservation',
             'dogHouse',
             'catHouse',
             'pets'
         );
+        */
+
     }
 
     /**
@@ -223,7 +235,7 @@ class AdoptionController extends AbstractController
      */
     public function company(Request $request)
     {
-        return;
+        return['title' => '会社概要',];
     }
     
     /**

@@ -103,9 +103,31 @@ class CustomTopController extends AbstractController
         $ListNews = $this->NewsRepository->getList();
         //return $this->redirectToRoute("breeder_top");
         
+        $title = "TOPページ";
+
         return [
-            'ListNews' => $ListNews
+            'ListNews' => $ListNews,
+            'title'  => $title
         ];
+    }
+
+    /**
+     * @Route("/tr", name="ani_traning")
+     * @Template("ani_traning.twig")
+     */
+    public function animalline_traning()
+    {   
+        /*
+        $customer = $this->getUser();
+
+        if(!$customer){
+            return $this->redirectToRoute("breeder_login");
+        }
+        */
+
+        $title = "成約特典について";
+
+        return ['title'  => $title];
     }
 
     /**
@@ -116,7 +138,9 @@ class CustomTopController extends AbstractController
      */
     public function breeder_terms()
     {
-        return [];
+        $title = "利用規約";
+
+        return ['title'  => $title];
     }
 
     /**
@@ -127,7 +151,9 @@ class CustomTopController extends AbstractController
      */
     public function adoption_terms()
     {
-        return [];
+        $title = "利用規約";
+
+        return ['title'  => $title];
     }
 
     /**
@@ -138,7 +164,9 @@ class CustomTopController extends AbstractController
      */
     public function policy()
     {
-        return [];
+        $title = "プライバシーポリシー";
+
+        return ['title'  => $title];
     }
 
     /**
@@ -149,7 +177,9 @@ class CustomTopController extends AbstractController
      */
     public function tradelaw()
     {
-        return [];
+        $title = "特定商取引法に基づく表記";
+
+        return ['title'  => $title];
     }
 
     /**
@@ -160,7 +190,9 @@ class CustomTopController extends AbstractController
      */
     public function company()
     {
-        return [];
+        $title = "会社概要";
+
+        return ['title'  => $title];
     }
 
     /**
@@ -170,7 +202,9 @@ class CustomTopController extends AbstractController
      * @Template("dnainfo.twig")
      */
     public function dna_detail(){
-        return [];
+        $title = "ＤＮＡ検査について";
+
+        return ['title'  => $title];
     }
 
     /**

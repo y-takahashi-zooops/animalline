@@ -97,6 +97,7 @@ class AdoptionSearchController extends AbstractController
         $regions = $this->prefRepository->findAll();
 
         return $this->render('animalline/adoption/pet/search_result.twig', [
+            'title' => '保護犬・保護猫検索',
             'pets' => $pets,
             'petKind' => $petKind,
             'breeds' => $breeds,
@@ -123,6 +124,7 @@ class AdoptionSearchController extends AbstractController
         );
 
         return $this->render('animalline/adoption/adoption_search.twig', [
+            'title' => '保護団体検索',
             'adoptions' => $adoptions,
             'petKind' => $petKind,
             'breeds' => $breeds,
