@@ -18,6 +18,12 @@ file that was distributed with this source code.
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+    <!-- select2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"
+        integrity="sha256-FdatTf20PQr/rWg+cAKfl6j4/IY3oohFAJ7gVC3M34E=" crossorigin="anonymous">
+    <!-- select2-bootstrap4-theme -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
 {% endblock stylesheet %}
 
 {% block main %}
@@ -255,7 +261,20 @@ file that was distributed with this source code.
 {% endblock %}
 {% block javascript %}
 <script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+<!-- select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"
+    integrity="sha256-AFAYEOkzB6iIKnTYZOdUf9FFje6lOTYdwRJKwTN5mks=" crossorigin="anonymous"></script>
 <script>
+    $(function() {
+        $("#breeds").select2({
+            theme: 'bootstrap4',
+            language: {
+                "noResults": function () {
+                    return "結果が見つかりません。";
+                }
+            }
+        });
+    });
     $(".ban").on('click', function () {
     $('#BanModal').modal('show');
     $('.id-destroy-ban').val($(this).data('id'));

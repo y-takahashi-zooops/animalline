@@ -719,8 +719,8 @@ admin.product.product_csv.delivery_duration_col: 発送日目安(ID)
 admin.product.product_csv.delivery_duration_description: ''
 admin.product.product_csv.product_code_col: 商品コード
 admin.product.product_csv.product_code_description: ''
-admin.product.product_csv.stock_col: 在庫数
-admin.product.product_csv.stock_description: 在庫数無制限フラグが0の場合、0以上の数値を設定してください。
+admin.product.product_csv.stock_col: 在庫数(-1で無制限）
+admin.product.product_csv.stock_description: 0以上の数値を設定してください。（無制限の場合、-1の数値を設定）
 admin.product.product_csv.stock_unlimited_col: 在庫数無制限フラグ
 admin.product.product_csv.stock_unlimited_description: '0:制限 1: 無制限を指定します。'
 admin.product.product_csv.sale_limit_col: 販売制限数
@@ -733,6 +733,16 @@ admin.product.product_csv.delivery_fee_col: 送料
 admin.product.product_csv.delivery_fee_description: 商品ごとの送料設定が有効の場合、0以上の数値を設定
 admin.product.product_csv.tax_rate_col: 税率
 admin.product.product_csv.tax_rate_description: 商品別税率機能設定が有効の場合、0以上の数値を設定
+admin.product.product_csv.JAN_code_col: JANｺｰﾄﾞ(13桁）
+admin.product.product_csv.JAN_code_description: ''
+admin.product.product_csv.item_cost_col: 仕入価格（税抜）
+admin.product.product_csv.item_cost_description: ''
+admin.product.product_csv.supplier_code_col: 仕入先コード(4桁)
+admin.product.product_csv.supplier_code_description: ''
+admin.product.product_csv.item_weight_col: 重量（kg）
+admin.product.product_csv.item_weight_description:
+admin.product.product_csv.maker_id_col: メーカーID
+admin.product.product_csv.maker_id_description: ''
 
 # カテゴリCSV雛形
 admin.product.category_csv.category_id_col: カテゴリID

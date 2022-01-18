@@ -319,7 +319,7 @@ class AdoptionQueryService
 
         $qb = $this->conservationPetsRepository->createQueryBuilder('cp');
         return $qb
-            ->join('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = cp.BreedsType')
+            ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = cp.BreedsType')
             ->leftJoin('Customize\Entity\ConservationContactHeader', 'cch', 'WITH', 'cch.Pet = cp.id')
             ->where('cp.Conservation = :conservation')
             ->setParameter('conservation', $conservation)

@@ -4592,3 +4592,10 @@ CONTENTS後藤追加分
 	margin-left: 1rem;
 	margin-right: 1rem;
 }
+
+/* select2 */
+.select2-container--bootstrap4.select2-container--focus .select2-selection {
+  border-color: #80bdff !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}

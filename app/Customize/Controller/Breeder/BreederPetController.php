@@ -474,24 +474,25 @@ class BreederPetController extends AbstractController
                 $breederPet->setPedigreeCode('0');
             }
             */
-            $petId = $breederPet->getId();
-            $img0 = $this->setImageSrc($request->get('img0'), $petId);
-            $img1 = $this->setImageSrc($request->get('img1'), $petId);
-            $img2 = $this->setImageSrc($request->get('img2'), $petId);
-            $img3 = $this->setImageSrc($request->get('img3'), $petId);
-            $img4 = $this->setImageSrc($request->get('img4'), $petId);
-            $entityManager = $this->getDoctrine()->getManager();
-            $breederPet->setThumbnailPath($img0);
-            $entityManager->persist($breederPet);
-            foreach ($breederPetImages as $key => $image) {
-                $image->setImageUri(${'img' . $key});
-                $entityManager->persist($image);
+            if ($form->isValid()) {
+                $petId = $breederPet->getId();
+                $img0 = $this->setImageSrc($request->get('img0'), $petId);
+                $img1 = $this->setImageSrc($request->get('img1'), $petId);
+                $img2 = $this->setImageSrc($request->get('img2'), $petId);
+                $img3 = $this->setImageSrc($request->get('img3'), $petId);
+                $img4 = $this->setImageSrc($request->get('img4'), $petId);
+                $entityManager = $this->getDoctrine()->getManager();
+                $breederPet->setThumbnailPath($img0);
+                $entityManager->persist($breederPet);
+                foreach ($breederPetImages as $key => $image) {
+                    $image->setImageUri(${'img' . $key});
+                    $entityManager->persist($image);
+                }
+                $entityManager->flush();
+
+                return $this->redirectToRoute('breeder_pet_list');
             }
-            $entityManager->flush();
-
-            return $this->redirectToRoute('breeder_pet_list');
         }
-
         $petImages = [];
         foreach ($breederPetImages as $key => $image) {
             if ($form->isSubmitted()) {
