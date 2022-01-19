@@ -282,7 +282,7 @@ class CustomTopController extends AbstractController
     /**
      * ニュートロ
      * 
-     * @Route("/ec/nutro", name="ec_nutro")
+     * @Route("/nutro", name="ec_nutro")
      * @Template("nutro.twig")
      */
     public function ec_nutro(){
