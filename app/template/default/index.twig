@@ -126,7 +126,6 @@
             </div>
             <div class="side-set">
                 <div class="main-area">
-					{#
 					{% if is_granted('ROLE_USER') == true %}
 						<div class="edit-area keyvisual">
 							<div class="row">
@@ -138,10 +137,11 @@
 
 								<div class="col-md-6 col-sm1-12"><a href="{{ url('product_detail', {'id': '1560'}) }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top03.png') }}" /></a></div>
 								<div class="col-md-6 col-sm1-12"><a href="{{ url('product_detail', {'id': '1580'}) }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top06.png') }}" /></a></div>
+
+								<div class="col-md-12 col-sm1-12"><a href="{{ url('ec_nutro') }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_nutro.png') }}" /></a></div>
 							</div>
-						</div>		
+						</div>
 					{% endif %}
-					#}
 
                     <div class="edit-area lineup new">
                         <div class="inner">
