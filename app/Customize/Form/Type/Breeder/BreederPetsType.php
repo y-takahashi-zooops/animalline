@@ -286,15 +286,18 @@ class BreederPetsType extends AbstractType
 
     public function validateVaccineDetail(FormEvent $event)
     {
+        /*
         $data = $event->getData();
         $form = $event->getForm();
         if ($data->getIncludeVaccineFee() && !$data->getVaccineDetail()) {
             $form['vaccineDetailErrors']->addError(new FormError('入力されていません。'));
         }
+        */
     }
 
     public function validatePedigree(FormEvent $event)
     {
+        /*
         $data = $event->getData();
         $form = $event->getForm();
         if ($data->getIsPedigree()) {
@@ -305,5 +308,6 @@ class BreederPetsType extends AbstractType
                 $form['pedigreeCodeErrors']->addError(new FormError('入力されていません。'));
             }
         }
+        */
     }
 }
