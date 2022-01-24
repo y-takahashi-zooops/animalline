@@ -13,6 +13,7 @@
 
 namespace Customize\Controller;
 
+use Carbon\Carbon;
 use Customize\Repository\DnaCheckKindsRepository;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Customize\Config\AnilineConf;
@@ -230,6 +231,13 @@ class VeqtaController extends AbstractController
         if (!$Pet) {
             throw new NotFoundHttpException();
         }
+        $dnaCheckKinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $Pet->getBreedsType()]);
+        $countCheckKind = null;
+        if ($dnaCheckKinds) {
+            foreach ($dnaCheckKinds as $dnaCheckKind) {
+                $countCheckKind += $dnaCheckKind->getCheckKind();
+            }
+        }
 
         switch ($checkStatus) {
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY:
@@ -248,7 +256,9 @@ class VeqtaController extends AbstractController
         }
 
         $savePath = $this->copyFile($request->get('file_name'));
-        $Dna->setFilePath($savePath);
+        $Dna->setFilePath($savePath)
+            ->setCheckReturnDate(Carbon::now())
+            ->setDnaCheckCount($countCheckKind);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($Dna);
