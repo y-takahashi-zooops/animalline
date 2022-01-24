@@ -322,6 +322,7 @@ class AdoptionQueryService
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = cp.BreedsType')
             ->leftJoin('Customize\Entity\ConservationContactHeader', 'cch', 'WITH', 'cch.Pet = cp.id')
             ->where('cp.Conservation = :conservation')
+            ->andWhere('cp.is_delete = 0')
             ->setParameter('conservation', $conservation)
             ->andWhere($qb->expr()->notIn('cp.id', $status))
             ->orderBy('cch.last_message_date', 'ASC')
