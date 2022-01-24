@@ -550,10 +550,10 @@ class BreederPetController extends AbstractController
      *
      * @Route("/breeder/member/pets/edit/{id}/delete", name="breeder_pets_delete", methods={"GET"})
      */
-    public function breeder_pets_delete(Request $request, BreederPets $breederPet)
+    public function breeder_pets_delete(BreederPets $breederPet)
     {
-        $breederPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
-        $breederPet->setIsDelete(1);
+        $breederPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE)
+            ->setIsDelete(1);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($breederPet);

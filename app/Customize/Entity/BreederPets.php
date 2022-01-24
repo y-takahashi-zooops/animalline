@@ -711,7 +711,7 @@ class BreederPets
         return $this->is_delete;
     }
 
-    public function setIsDelete(?string $is_delete)
+    public function setIsDelete(?int $is_delete)
     {
         $this->is_delete = $is_delete;
 

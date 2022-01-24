@@ -409,10 +409,10 @@ class AdoptionPetController extends AbstractController
      *
      * @Route("/adoption/member/pets/edit/{id}/delete", name="adoption_pets_delete", methods={"GET"})
      */
-    public function adoption_pets_delete(Request $request, ConservationPets $conservationPet)
+    public function adoption_pets_delete(ConservationPets $conservationPet)
     {
-        $conservationPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
-        $conservationPet->setIsDelete(1);
+        $conservationPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE)
+            ->setIsDelete(1);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($conservationPet);
