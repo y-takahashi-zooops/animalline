@@ -59,8 +59,9 @@
         </div>
     </div>
 
-    {#
+    
      {% if user.is_breeder == 1 %}
+        {#
         <a id="information"></a>
         <div style="margin: 2rem 0 0 0;padding:0 1rem 0 1rem; background-color:#eee8aa">お知らせ<br />DNA検体の送付について</div>
         <div style="background-color:#f5f5dc;padding:1rem 1rem 1rem 1rem;">
@@ -76,14 +77,14 @@
         <br />
         今後ともAnimallineを宜しくお願い致します。<br />
         </div>
-
+        #}
          <div class="row">
             <div class="col-lg-8 col-md-12" style="margin: 5rem auto 0 auto;">
                 <img src="{{ asset('assets/img/reg/pet_regist_info.png') }}" alt="ペット情報掲載までの流れ"/>
             </div>
         </div>
     {% endif %}
-    #}
+    
 </div>
 {% endblock %}
 {% block stylesheet %}
