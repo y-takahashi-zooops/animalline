@@ -144,6 +144,10 @@ class AnilineEntryController extends AbstractController
     {
         $returnPath = $request->get("ReturnPath");
 
+        if($returnPath == ""){
+            $returnPath = "homepage";
+        }
+
         if($returnPath == "breeder_mypage"){
             $prefix = "breeder";
             $regist_type = 1;
@@ -234,7 +238,7 @@ class AnilineEntryController extends AbstractController
 
                     // 仮会員設定が有効な場合は、確認メールを送信し完了画面表示.
                     if ($activateFlg) {
-                        $activateUrl = $this->generateUrl('entry_activate', ['secret_key' => $Customer->getSecretKey(),'returnPath' => $request->get("ReturnPath")], UrlGeneratorInterface::ABSOLUTE_URL);
+                        $activateUrl = $this->generateUrl('entry_activate', ['secret_key' => $Customer->getSecretKey(),'returnPath' => $returnPath], UrlGeneratorInterface::ABSOLUTE_URL);
 
                         // メール送信
                         $this->mailService->sendCustomerConfirmMail($Customer, $activateUrl);
@@ -255,7 +259,7 @@ class AnilineEntryController extends AbstractController
                         return $this->redirectToRoute('entry_activate', [
                             'secret_key' => $Customer->getSecretKey(),
                             'qtyInCart' => $qtyInCart,
-                            'returnPath' => $request->get("ReturnPath"),
+                            'returnPath' => $returnPath,
                             'prefix' => $prefix,
                         ]);
 
@@ -264,6 +268,7 @@ class AnilineEntryController extends AbstractController
         }
 
         return [
+            'returnPath' => $returnPath,
             'form' => $form->createView(),
             'request' => $request,
             'prefix' => $prefix,
@@ -308,10 +313,13 @@ class AnilineEntryController extends AbstractController
      * 会員のアクティベート（本会員化）を行う.
      *
      * @Route("/entry/activate/{secret_key}/{returnPath}/{qtyInCart}", name="entry_activate")
+     * @Route("/entry/activate/{secret_key}/", name="entry_activate_noret")
      * @Template("Entry/activate.twig")
      */
-    public function activate(Request $request, $secret_key, $returnPath, $qtyInCart = null)
+    public function activate(Request $request, $secret_key, $returnPath = null, $qtyInCart = null)
     {
+        if(!$returnPath){$returnPath = "homepage";}
+
         if($returnPath == "breeder_mypage"){
             $prefix = "breeder";
         }
