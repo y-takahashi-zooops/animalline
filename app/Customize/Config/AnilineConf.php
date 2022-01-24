@@ -120,7 +120,7 @@ final class AnilineConf
     const ANILINE_EXAMINATION_STATUS_NOT_CHECK = 1;     // 審査中
     const ANILINE_EXAMINATION_STATUS_CHECK_OK = 2;      // 審査OK
     const ANILINE_EXAMINATION_STATUS_CHECK_NG = 3;      // 審査NG
-    const EXAMINATION_STATUS_CUSTOMER_DELETED = 4;
+    const EXAMINATION_STATUS_CUSTOMER_DELETED = 4;      //取消済
 
     // 審査結果(breeder_examination_info)
     const ANILINE_EXAMINATION_RESULT_NOT_DECISION = 0;  // 審査決定前
@@ -203,7 +203,4 @@ final class AnilineConf
     const NEW_MESSAGE = 1;
 
     const ANILINE_PET_IS_DELETE_TRUE = 1;
-
-    const ANILINE_IS_BREEDER = 1;
-    const ANILINE_IS_ADOPTION = 1;
 }

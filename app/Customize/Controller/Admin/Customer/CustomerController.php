@@ -284,37 +284,35 @@ class CustomerController extends AbstractController
         try {
             if ($Customer->getStatus()->getId() == CustomerStatus::PROVISIONAL) {
                 $this->entityManager->remove($Customer);
-                $this->entityManager->flush($Customer);
             } else {
-                $entityManager = $this->getDoctrine()->getManager();
                 $status = $this->customerStatusRepository->find(CustomerStatus::WITHDRAWING);
                 $Customer->setStatus($status);
-                $entityManager->persist($Customer);
+                $this->entityManager->persist($Customer);
 
-                if ($Customer->getIsBreeder() == AnilineConf::ANILINE_IS_BREEDER) {
-                    $breeder = $this->breedersRepository->find($Customer->getId());
+                if ($breeder = $this->breedersRepository->find($Customer->getId())) {
                     $breeder->setExaminationStatus(AnilineConf::EXAMINATION_STATUS_CUSTOMER_DELETED);
                     $breederPets = $this->breederPetsRepository->findBy(['Breeder' => $breeder]);
                     foreach ($breederPets as $breederPet) {
-                        $breederPet->setIsDelete(AnilineConf::ANILINE_PET_IS_DELETE_TRUE);
-                        $entityManager->persist($breederPet);
+                        $breederPet->setIsDelete(AnilineConf::ANILINE_PET_IS_DELETE_TRUE)
+                            ->setIsActive(false);
+                        $this->entityManager->persist($breederPet);
                     }
-                    $entityManager->persist($breeder);
+                    $this->entityManager->persist($breeder);
                 }
 
-                if ($Customer->getIsConservation() == AnilineConf::ANILINE_IS_ADOPTION) {
-                    $conservation = $this->conservationsRepository->find($Customer->getId());
+                if ($conservation = $this->conservationsRepository->find($Customer->getId())) {
                     $conservation->setExaminationStatus(AnilineConf::EXAMINATION_STATUS_CUSTOMER_DELETED);
                     $conservationPets = $this->conservationPetsRepository->findBy(['Conservation' => $conservation]);
                     foreach ($conservationPets as $conservationPet) {
-                        $conservationPet->setIsDelete(AnilineConf::ANILINE_PET_IS_DELETE_TRUE);
-                        $entityManager->persist($conservationPet);
+                        $conservationPet->setIsDelete(AnilineConf::ANILINE_PET_IS_DELETE_TRUE)
+                            ->setIsActive(false);
+                        $this->entityManager->persist($conservationPet);
                     }
-                    $entityManager->persist($conservation);
+                    $this->entityManager->persist($conservation);
                 }
-
-                $entityManager->flush();
             }
+
+            $this->entityManager->flush();
             $this->addSuccess('admin.common.delete_complete', 'admin');
         } catch (ForeignKeyConstraintViolationException $e) {
             log_error('会員削除失敗', [$e], 'admin');
