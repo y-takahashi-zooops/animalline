@@ -13,15 +13,22 @@
 
 namespace Customize\Controller\Admin\Customer;
 
+use Customize\Config\AnilineConf;
+use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\BreedersRepository;
+use Customize\Repository\ConservationPetsRepository;
+use Customize\Repository\ConservationsRepository;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\QueryBuilder;
 use Eccube\Common\Constant;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\Master\CsvType;
+use Eccube\Entity\Master\CustomerStatus;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Admin\SearchCustomerType;
 use Eccube\Repository\CustomerRepository;
+use Eccube\Repository\Master\CustomerStatusRepository;
 use Eccube\Repository\Master\PageMaxRepository;
 use Eccube\Repository\Master\PrefRepository;
 use Eccube\Repository\Master\SexRepository;
@@ -69,13 +76,43 @@ class CustomerController extends AbstractController
      */
     protected $customerRepository;
 
+    /**
+     * @var BreedersRepository
+     */
+    protected $breedersRepository;
+
+    /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
+     * @var ConservationPetsRepository
+     */
+    protected $conservationPetsRepository;
+
+    /**
+     * @var BreederPetsRepository
+     */
+    protected $breederPetsRepository;
+
+    /**
+     * @var CustomerStatusRepository
+     */
+    protected $customerStatusRepository;
+
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
         SexRepository $sexRepository,
         PrefRepository $prefRepository,
         MailService $mailService,
-        CsvExportService $csvExportService
+        CsvExportService $csvExportService,
+        BreedersRepository $breedersRepository,
+        ConservationsRepository $conservationsRepository,
+        ConservationPetsRepository $conservationPetsRepository,
+        BreederPetsRepository $breederPetsRepository,
+        CustomerStatusRepository $customerStatusRepository
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -83,6 +120,11 @@ class CustomerController extends AbstractController
         $this->prefRepository = $prefRepository;
         $this->mailService = $mailService;
         $this->csvExportService = $csvExportService;
+        $this->breedersRepository = $breedersRepository;
+        $this->conservationsRepository = $conservationsRepository;
+        $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->breederPetsRepository = $breederPetsRepository;
+        $this->customerStatusRepository = $customerStatusRepository;
     }
 
     /**
@@ -239,15 +281,45 @@ class CustomerController extends AbstractController
             return $this->redirect($this->generateUrl('admin_customer_page',
                     ['page_no' => $page_no]).'?resume='.Constant::ENABLED);
         }
-
         try {
-            $this->entityManager->remove($Customer);
-            $this->entityManager->flush($Customer);
+            if ($Customer->getStatus()->getId() == CustomerStatus::PROVISIONAL) {
+                $this->entityManager->remove($Customer);
+                $this->entityManager->flush($Customer);
+            } else {
+                $entityManager = $this->getDoctrine()->getManager();
+                $status = $this->customerStatusRepository->find(CustomerStatus::WITHDRAWING);
+                $Customer->setStatus($status);
+                $entityManager->persist($Customer);
+
+                if ($Customer->getIsBreeder() == AnilineConf::ANILINE_IS_BREEDER) {
+                    $breeder = $this->breedersRepository->find($Customer->getId());
+                    $breeder->setExaminationStatus(AnilineConf::EXAMINATION_STATUS_CUSTOMER_DELETED);
+                    $breederPets = $this->breederPetsRepository->findBy(['Breeder' => $breeder]);
+                    foreach ($breederPets as $breederPet) {
+                        $breederPet->setIsDelete(AnilineConf::ANILINE_PET_IS_DELETE_TRUE);
+                        $entityManager->persist($breederPet);
+                    }
+                    $entityManager->persist($breeder);
+                }
+
+                if ($Customer->getIsConservation() == AnilineConf::ANILINE_IS_ADOPTION) {
+                    $conservation = $this->conservationsRepository->find($Customer->getId());
+                    $conservation->setExaminationStatus(AnilineConf::EXAMINATION_STATUS_CUSTOMER_DELETED);
+                    $conservationPets = $this->conservationPetsRepository->findBy(['Conservation' => $conservation]);
+                    foreach ($conservationPets as $conservationPet) {
+                        $conservationPet->setIsDelete(AnilineConf::ANILINE_PET_IS_DELETE_TRUE);
+                        $entityManager->persist($conservationPet);
+                    }
+                    $entityManager->persist($conservation);
+                }
+
+                $entityManager->flush();
+            }
             $this->addSuccess('admin.common.delete_complete', 'admin');
         } catch (ForeignKeyConstraintViolationException $e) {
             log_error('会員削除失敗', [$e], 'admin');
 
-            $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $Customer->getName01().' '.$Customer->getName02()]);
+            $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $Customer->getName01() . ' ' . $Customer->getName02()]);
             $this->addError($message, 'admin');
         }
 
@@ -262,7 +334,7 @@ class CustomerController extends AbstractController
         $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_DELETE_COMPLETE, $event);
 
         return $this->redirect($this->generateUrl('admin_customer_page',
-                ['page_no' => $page_no]).'?resume='.Constant::ENABLED);
+                ['page_no' => $page_no]) . '?resume=' . Constant::ENABLED);
     }
 
     /**
