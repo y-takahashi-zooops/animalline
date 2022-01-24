@@ -201,6 +201,4 @@ final class AnilineConf
     const MESSAGE_MEMBER = 2;
 
     const NEW_MESSAGE = 1;
-
-    const ANILINE_PET_IS_DELETE_TRUE = 1;
 }

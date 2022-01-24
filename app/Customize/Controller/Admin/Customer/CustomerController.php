@@ -293,8 +293,8 @@ class CustomerController extends AbstractController
                     $breeder->setExaminationStatus(AnilineConf::EXAMINATION_STATUS_CUSTOMER_DELETED);
                     $breederPets = $this->breederPetsRepository->findBy(['Breeder' => $breeder]);
                     foreach ($breederPets as $breederPet) {
-                        $breederPet->setIsDelete(AnilineConf::ANILINE_PET_IS_DELETE_TRUE)
-                            ->setIsActive(false);
+                        $breederPet->setIsDelete(true)
+                            ->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
                         $this->entityManager->persist($breederPet);
                     }
                     $this->entityManager->persist($breeder);
@@ -304,8 +304,8 @@ class CustomerController extends AbstractController
                     $conservation->setExaminationStatus(AnilineConf::EXAMINATION_STATUS_CUSTOMER_DELETED);
                     $conservationPets = $this->conservationPetsRepository->findBy(['Conservation' => $conservation]);
                     foreach ($conservationPets as $conservationPet) {
-                        $conservationPet->setIsDelete(AnilineConf::ANILINE_PET_IS_DELETE_TRUE)
-                            ->setIsActive(false);
+                        $conservationPet->setIsDelete(true)
+                            ->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
                         $this->entityManager->persist($conservationPet);
                     }
                     $this->entityManager->persist($conservation);
