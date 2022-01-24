@@ -318,7 +318,10 @@
                     <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status" data-is-active="{{ pet.isActive }}">このペットを非公開にする</button>
                 {% endif %}
 
-                <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-delete-pet" data-is-active="{{ pet.isActive }}">このペットの情報を削除する</button>
+                {% if not pet.isDelete %}
+                    <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-delete-pet"
+                        data-is-active="{{ pet.isActive }}">このペットの情報を削除する</button>
+                {% endif %}
             {% endif %}
         </div>
         <div class="col-md-4"></div>
