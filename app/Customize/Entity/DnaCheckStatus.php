@@ -70,6 +70,11 @@ class DnaCheckStatus
     private $check_return_date;
 
     /**
+     * @ORM\Column(name="dna_check_count ", type="smallint", nullable=true)
+     */
+    private $dna_check_count ;
+
+    /**
      * @ORM\Column(name="create_date", type="datetime", nullable=true)
      */
     private $create_date;
@@ -198,6 +203,18 @@ class DnaCheckStatus
     public function setCheckReturnDate(?\DateTime $check_return_date): self
     {
         $this->check_return_date = $check_return_date;
+
+        return $this;
+    }
+
+    public function getDnaCheckCount(): ?int
+    {
+        return $this->dna_check_count;
+    }
+
+    public function setDnaCheckCount(?int $dna_check_count): self
+    {
+        $this->dna_check_count = $dna_check_count;
 
         return $this;
     }
