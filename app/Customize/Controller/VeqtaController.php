@@ -232,7 +232,7 @@ class VeqtaController extends AbstractController
             throw new NotFoundHttpException();
         }
         $dnaCheckKinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $Pet->getBreedsType()]);
-        $countCheckKind = null;
+        $countCheckKind = 0;
         if ($dnaCheckKinds) {
             foreach ($dnaCheckKinds as $dnaCheckKind) {
                 $countCheckKind += $dnaCheckKind->getCheckKind();
