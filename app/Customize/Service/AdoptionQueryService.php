@@ -207,9 +207,10 @@ class AdoptionQueryService
      */
     public function searchAdoptionsResult($request, $petKind): array
     {
-        $query = $this->conservationsRepository->createQueryBuilder('c')
-            ->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'c.id = cp.Conservation')
+        $query = $this->conservationsRepository->createQueryBuilder('c');
+        $query->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'c.id = cp.Conservation')
             ->where('c.handling_pet_kind in (:kinds)')
+            ->andWhere($query->expr()->notIn('c.examination_status', 4))
             ->setParameter('kinds', [
                 AnilineConf::ANILINE_PET_KIND_DOG_CAT,
                 $petKind
