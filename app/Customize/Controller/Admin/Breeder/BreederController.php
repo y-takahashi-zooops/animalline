@@ -209,6 +209,7 @@ class BreederController extends AbstractController
         $breederstatus[1] = "未審査";
         $breederstatus[2] = "審査済（許可）";
         $breederstatus[3] = "審査済（拒否）";
+        $breederstatus[4] = "取消済";
 
         return $this->render('@admin/Breeder/index.twig', [
             'breeders' => $breeders,
