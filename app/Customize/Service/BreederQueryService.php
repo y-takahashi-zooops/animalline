@@ -203,9 +203,10 @@ class BreederQueryService
      */
     public function searchBreedersResult($request, int $petKind): array
     {
-        $query = $this->breedersRepository->createQueryBuilder('b')
-            ->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.Breeder')
+        $query = $this->breedersRepository->createQueryBuilder('b');
+        $query->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.Breeder')
             ->where('b.handling_pet_kind in (:kinds)')
+            ->andWhere($query->expr()->notIn('b.examination_status', 4))
             ->setParameter('kinds', [
                 AnilineConf::ANILINE_PET_KIND_DOG_CAT,
                 $petKind
