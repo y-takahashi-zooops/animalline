@@ -95,7 +95,7 @@ class AdoptionQueryService
             ->andWhere('p.pet_kind = :pet_kind')
             ->setParameter('pet_kind', $petKind);
 
-            /*
+        /*
             ->andWhere('p.release_date <= :to')
             ->andWhere('p.release_date >= :from')
             ->setParameter(':to', $date_now)
@@ -186,7 +186,7 @@ class AdoptionQueryService
             $query->andWhere('p.release_date >= :fromDate')
                 ->andWhere('p.release_date <= :toDate')
                 ->setParameter('fromDate', Carbon::now()->subMonth()->toDateString())
-                ->setParameter('toDate',Carbon::now()->toDateString());
+                ->setParameter('toDate', Carbon::now()->toDateString());
         }
 
         if ($request->get('featured_pet')) {
@@ -210,7 +210,7 @@ class AdoptionQueryService
         $query = $this->conservationsRepository->createQueryBuilder('c');
         $query->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'c.id = cp.Conservation')
             ->where('c.handling_pet_kind in (:kinds)')
-            ->andWhere($query->expr()->notIn('c.examination_status', 4))
+            ->andWhere($query->expr()->notIn('c.examination_status', AnilineConf::EXAMINATION_STATUS_CUSTOMER_DELETED))
             ->setParameter('kinds', [
                 AnilineConf::ANILINE_PET_KIND_DOG_CAT,
                 $petKind

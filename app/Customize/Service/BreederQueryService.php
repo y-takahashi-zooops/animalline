@@ -91,7 +91,7 @@ class BreederQueryService
             ->setParameter('pet_kind', $petKind)
             ->orderBy('p.update_date', 'desc')
             ->setMaxResults(16);
-            /*
+        /*
             ->andWhere('p.release_date <= :to')
             ->andWhere('p.release_date >= :from')
             ->setParameter(':to', $date_now)
@@ -206,7 +206,7 @@ class BreederQueryService
         $query = $this->breedersRepository->createQueryBuilder('b');
         $query->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.Breeder')
             ->where('b.handling_pet_kind in (:kinds)')
-            ->andWhere($query->expr()->notIn('b.examination_status', 4))
+            ->andWhere($query->expr()->notIn('b.examination_status', AnilineConf::EXAMINATION_STATUS_CUSTOMER_DELETED))
             ->setParameter('kinds', [
                 AnilineConf::ANILINE_PET_KIND_DOG_CAT,
                 $petKind

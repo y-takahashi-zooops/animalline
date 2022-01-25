@@ -239,7 +239,7 @@ class CustomerController extends AbstractController
 
         $activateUrl = $this->generateUrl(
             'entry_activate',
-            ['secret_key' => $Customer->getSecretKey(),'returnPath' => "breeder_mypage"],
+            ['secret_key' => $Customer->getSecretKey(), 'returnPath' => "breeder_mypage"],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
@@ -278,11 +278,13 @@ class CustomerController extends AbstractController
         if (!$Customer) {
             $this->deleteMessage();
 
-            return $this->redirect($this->generateUrl('admin_customer_page',
-                    ['page_no' => $page_no]).'?resume='.Constant::ENABLED);
+            return $this->redirect($this->generateUrl(
+                'admin_customer_page',
+                ['page_no' => $page_no]
+            ) . '?resume=' . Constant::ENABLED);
         }
         try {
-            if ($Customer->getStatus()->getId() == CustomerStatus::PROVISIONAL) {
+            if ($Customer->getStatus()->getId() === CustomerStatus::PROVISIONAL) {
                 $this->entityManager->remove($Customer);
             } else {
                 $status = $this->customerStatusRepository->find(CustomerStatus::WITHDRAWING);
@@ -331,8 +333,10 @@ class CustomerController extends AbstractController
         );
         $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_DELETE_COMPLETE, $event);
 
-        return $this->redirect($this->generateUrl('admin_customer_page',
-                ['page_no' => $page_no]) . '?resume=' . Constant::ENABLED);
+        return $this->redirect($this->generateUrl(
+            'admin_customer_page',
+            ['page_no' => $page_no]
+        ) . '?resume=' . Constant::ENABLED);
     }
 
     /**
@@ -401,9 +405,9 @@ class CustomerController extends AbstractController
         });
 
         $now = new \DateTime();
-        $filename = 'customer_'.$now->format('YmdHis').'.csv';
+        $filename = 'customer_' . $now->format('YmdHis') . '.csv';
         $response->headers->set('Content-Type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
 
         $response->send();
 
