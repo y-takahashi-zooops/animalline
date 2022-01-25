@@ -235,7 +235,7 @@ class VeqtaController extends AbstractController
         $countCheckKind = 0;
         if ($dnaCheckKinds) {
             foreach ($dnaCheckKinds as $dnaCheckKind) {
-                $countCheckKind += $dnaCheckKind->getCheckKind();
+                $countCheckKind += $dnaCheckKind->getCheckKind() ?? 0;
             }
         }
 
