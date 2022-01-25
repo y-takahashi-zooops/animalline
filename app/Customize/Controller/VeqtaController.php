@@ -231,8 +231,7 @@ class VeqtaController extends AbstractController
         if (!$Pet) {
             throw new NotFoundHttpException();
         }
-        $dnaCheckKinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $Pet->getBreedsType()]);
-        $countCheckKind = $dnaCheckKinds ? count($dnaCheckKinds) : 0;
+        $countCheckKind = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $Pet->getBreedsType()])) ;
 
         switch ($checkStatus) {
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY:
