@@ -261,18 +261,19 @@ class DnaQueryService
     /**
      * @param int $month
      * @param int $year
+     * @param int $day
      *
      * @return object[]
      */
-    public function findByDate($year, $month)
+    public function findByDate($year, $month, $day)
     {
-        $startDate = new \DateTimeImmutable("$year-$month-01T00:00:00");
-        $endDate = $startDate->modify('last day of this month')->setTime(23, 59, 59);
+        $startDate = new \DateTimeImmutable("$year-$month-$day 00:00:00");
+        $endDate = new \DateTimeImmutable("$year-$month-$day 23:59:59");
         $qb = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->join('Customize\Entity\DnaCheckStatusHeader', 'dnah', 'WITH', 'dna.DnaHeader = dnah.id')
             ->join('Customize\Entity\Breeders', 'b', 'WITH', 'dnah.register_id = b.id')
             ->where('dna.site_type = :site')
-            ->andWhere('dna.update_date BETWEEN :start AND :end')
+            ->andWhere('dna.check_return_date BETWEEN :start AND :end')
             ->andWhere('dna.check_status = :check_status')
             ->setParameter('site', AnilineConf::SITE_CATEGORY_BREEDER)
             ->setParameter('start', $startDate)

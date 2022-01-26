@@ -27,7 +27,7 @@ file that was distributed with this source code.
     <div class="c-outsideBlock mb-4">
         <form id='search_form' method="get" action="{{ url('admin_breeder_dna_check_list') }}">
             <div class="c-outsideBlock__contents">
-                <div class="ec-select">
+                <div class="ec-select pb-2">
                     <div id="instock_list_order_date" class="form-inline">
                         <select class="form-control" id="instock_list_order_date_year" name="order_date_year">
                             {% for i in 2016..2036 %}
@@ -37,6 +37,11 @@ file that was distributed with this source code.
                         <select class="form-control" id="instock_list_order_date_month" name="order_date_month">
                             {% for i in 1..12 %}
                                 <option value={{ i }} {% if params.order_date_month is defined and params.order_date_month == i %} selected{% endif %}>{{ i }}</option>
+                            {% endfor %}
+                        </select><span>&nbsp;/&nbsp;</span>
+                        <select class="form-control" id="instock_list_order_date_day" name="order_date_day">
+                            {% for i in 1..31 %}
+                                <option value={{ i }} {% if params.order_date_day is defined and params.order_date_day == i %} selected{% endif %}>{{ i }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -67,7 +72,7 @@ file that was distributed with this source code.
                                 <td class="align-middle"></td>
                                 <td class="align-middle">{{ breederName[key] }}</td>
                                 <td class="align-middle">{{ arrayBreeder[key] }}</td>
-                                <td class="align-middle">{{ countPet[key] }}</td>
+                                <td class="align-middle">{{ arrCount[key] }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

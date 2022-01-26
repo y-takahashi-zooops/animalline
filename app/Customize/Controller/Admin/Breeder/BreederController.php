@@ -209,6 +209,7 @@ class BreederController extends AbstractController
         $breederstatus[1] = "未審査";
         $breederstatus[2] = "審査済（許可）";
         $breederstatus[3] = "審査済（拒否）";
+        $breederstatus[4] = "取消済";
 
         return $this->render('@admin/Breeder/index.twig', [
             'breeders' => $breeders,
@@ -264,41 +265,33 @@ class BreederController extends AbstractController
     public function dnaCheckList(Request $request)
     {
         $arrayBreeder = [];
-        $countPet = [];
-        $count = [];
+        $dnaCheckCount = [];
         $arrBreeder = [];
         $breederName = [];
-        $arrPet = [];
+        $arrCount = [];
         if ($request->get('order_date_year')) {
-            $dnaCheckStatus = $this->dnaQueryService->findByDate($request->get('order_date_year'), $request->get('order_date_month'));
+            $dnaCheckStatus = $this->dnaQueryService->findByDate($request->get('order_date_year'), $request->get('order_date_month'), $request->get('order_date_day'));
             foreach ($dnaCheckStatus as $item) {
                 $arrBreeder[] = $item['breeder_id'];
-                if ($item['pet_id']) {
-                    $arrPet[] = $item['pet_id'];
-                    $pet = $this->breederPetsRepository->find($item['pet_id']);
-                    $count[$item['pet_id']] = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $pet->getBreedsType()]));
+                if (array_key_exists($item['breeder_id'], $arrCount)) {
+                    $arrCount[$item['breeder_id']] += $item[0]->getDnaCheckCount();
+                } else {
+                    $arrCount[$item['breeder_id']] = $item[0]->getDnaCheckCount() ?? 0;
                 }
             }
-            $arrayPet = array_count_values($arrPet);
+
             $arrayBreeder = array_count_values($arrBreeder);
             foreach ($arrayBreeder as $key => $amount) {
-                $countPet[$key] = 0;
+                $dnaCheckCount[$key] = 0;
                 $breeder = $this->breedersRepository->find($key);
                 $breederName[$key] = $breeder->getBreederName();
-                foreach ($arrayPet as $petId => $value) {
-                    $pet = $this->breederPetsRepository->find($petId);
-                    $breederId = $pet->getBreeder()->getId();
-                    if ($breederId == $key) {
-                        $countPet[$key] = $countPet[$key] + $count[$petId] * $value;
-                    }
-                }
             }
         }
 
         return [
             'breederName' => $breederName,
             'arrayBreeder' => $arrayBreeder,
-            'countPet' => $countPet
+            'arrCount' => $arrCount
         ];
     }
 

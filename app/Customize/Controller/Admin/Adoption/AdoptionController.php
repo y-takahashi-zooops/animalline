@@ -126,6 +126,7 @@ class AdoptionController extends AbstractController
         $adoptionstatus[1] = "未審査";
         $adoptionstatus[2] = "審査済（許可）";
         $adoptionstatus[3] = "審査済（拒否）";
+        $adoptionstatus[4] = "取消済";
 
         return $this->render('@admin/Adoption/index.twig', [
             'conservations' => $conservations,

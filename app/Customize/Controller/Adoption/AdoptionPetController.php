@@ -405,6 +405,23 @@ class AdoptionPetController extends AbstractController
     }
 
     /**
+     * ペットの状態を削除する
+     *
+     * @Route("/adoption/member/pets/edit/{id}/delete", name="adoption_pets_delete", methods={"GET"})
+     */
+    public function adoption_pets_delete(ConservationPets $conservationPet)
+    {
+        $conservationPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE)
+            ->setIsDelete(1);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($conservationPet);
+        $em->flush();
+
+        return $this->redirectToRoute('adoption_pet_list');
+    }
+
+    /**
      * Copy image and retrieve new url of the copy
      *
      * @param string $imageUrl
