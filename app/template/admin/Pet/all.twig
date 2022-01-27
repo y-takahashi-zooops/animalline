@@ -250,7 +250,7 @@ file that was distributed with this source code.
                                             </a>
                                         </div>
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
-                                            {% if breederPet.bp_is_active == 0 %}
+                                            {% if breederPet.bp_is_delete == 0 and breederPet.bp_is_active == 0 %}
                                                 <a class="btn btn-ec-actionIcon"
                                                     href="{{ url('admin_pet_change_public_status', {'id': breederPet.bp_id, 'site_kind': 1}) }}">
                                                     <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
@@ -313,7 +313,7 @@ file that was distributed with this source code.
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="公開ステータス変更">
-                                                {% if conservationPet.cp_is_active == 0 %}
+                                                {% if conservationPet.cp_is_delete == 0 and conservationPet.cp_is_active == 0 %}
                                                 <a class="btn btn-ec-actionIcon" href="{{ url('admin_pet_change_public_status', {'id': conservationPet.cp_id, 'site_kind': 2}) }}">
                                                     <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>

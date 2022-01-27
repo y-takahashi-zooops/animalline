@@ -5,10 +5,14 @@
 
 ＤＮＡ検査が完了し、下記ペットの情報が公開されました。
 
+{% if data.site_kind == 1%}
 生体番号　　 ： {{ data.pet_code }}
+{% endif %}
 犬種・猫種 　： {{ data.pet_breeds }}
 生年月日　　 ： {{ data.pet_birthday }}
+{% if data.site_kind == 1%}
 バンドカラー ： {{ data.pet_bandcolor }}
+{% endif %}
 
 ↓↓　マイページのペット情報はこちらです。
     サイトに掲載しない場合は"サイトに掲載しない"を押してください。

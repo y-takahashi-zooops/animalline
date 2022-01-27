@@ -340,35 +340,39 @@ class PetController extends AbstractController
 
         $breeds = $this->breedsRepository->find($Pet->getBreedsType());
 
-        switch($Pet->getBandColor()){
-        case AnilineConf::ANILINE_BAND_COLOR_RED:
-            $color = "赤";
-            break;
-        case AnilineConf::ANILINE_BAND_COLOR_BLUE:
-            $color = "青";
-            break;
-        case AnilineConf::ANILINE_BAND_COLOR_GREEN:
-            $color = "緑";
-            break;
-        case AnilineConf::ANILINE_BAND_COLOR_YELLOW:
-            $color = "黄色";
-            break;
-        case AnilineConf::ANILINE_BAND_COLOR_PINK:
-            $color = "ピンク";
-            break;
-        case AnilineConf::ANILINE_BAND_COLOR_ORANGE:
-            $color = "オレンジ";
-            break;
+        if ($siteKind == AnilineConf::ANILINE_SITE_TYPE_BREEDER) {
+            switch($Pet->getBandColor()){
+                case AnilineConf::ANILINE_BAND_COLOR_RED:
+                    $color = "赤";
+                    break;
+                case AnilineConf::ANILINE_BAND_COLOR_BLUE:
+                    $color = "青";
+                    break;
+                case AnilineConf::ANILINE_BAND_COLOR_GREEN:
+                    $color = "緑";
+                    break;
+                case AnilineConf::ANILINE_BAND_COLOR_YELLOW:
+                    $color = "黄色";
+                    break;
+                case AnilineConf::ANILINE_BAND_COLOR_PINK:
+                    $color = "ピンク";
+                    break;
+                case AnilineConf::ANILINE_BAND_COLOR_ORANGE:
+                    $color = "オレンジ";
+                    break;
+                default:
+                    $color = "";
+            }
         }
 
         $data = [
             'name' => "{$Customer->getName01()} {$Customer->getName02()}",
             'examination_comment' => "<span id='ex-comment'>{$comment}</span>",
             'pet_id' =>  $Pet->getId(),
-            'pet_code' =>  $Pet->getPetCode(),
+            'pet_code' =>  $siteKind == AnilineConf::ANILINE_SITE_TYPE_BREEDER ? $Pet->getPetCode() : '',
             'pet_breeds' =>  $breeds->getBreedsName(),
-            'pet_birthday' =>  $Pet->getPetBirthday()->format("Y年m月d日"),
-            'pet_bandcolor' =>  $color,
+            'pet_birthday' =>  $Pet->getPetBirthday() ? $Pet->getPetBirthday()->format("Y年m月d日") : '',
+            'pet_bandcolor' =>  $siteKind == AnilineConf::ANILINE_SITE_TYPE_BREEDER ? $color : '',
             'site_kind' => $siteKind,
         ];
 
