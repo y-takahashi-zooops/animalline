@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ExportBenefitShippingSchedule extends Command
+class BreederRemindMail extends Command
 {
     protected static $defaultName = 'eccube:customize:breeder-remind-mail';
 
