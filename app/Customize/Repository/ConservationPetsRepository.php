@@ -165,11 +165,10 @@ class ConservationPetsRepository extends ServiceEntityRepository
                 ->andWhere("cp.update_date <= '$end_datetime'");
         }
 
-        return $qb->leftJoin('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'cp.id = dna.pet_id')
-            ->andWhere($qb->expr()->notIn('cp.id', $status))
+        return $qb->andWhere($qb->expr()->notIn('cp.id', $status))
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'cp.BreedsType = b.id')
             ->leftJoin('Customize\Entity\Conservations', 'c', 'WITH', 'c.id = cp.Conservation')
-            ->select('cp', 'dna', 'b.breeds_name', 'c.owner_name')
+            ->select('cp', 'b.breeds_name', 'c.owner_name')
             ->orderBy('cp.' . $order['field'], $order['direction'])
             ->getQuery()
             ->getScalarResult();
