@@ -5,14 +5,18 @@
 
 ＤＮＡ検査が完了し、下記ペットの情報が公開されました。
 
+{% if data.site_kind == constant('Customize\\Config\\AnilineConf::ANILINE_SITE_TYPE_BREEDER') %}
 生体番号　　 ： {{ data.pet_code }}
+{% endif %}
 犬種・猫種 　： {{ data.pet_breeds }}
 生年月日　　 ： {{ data.pet_birthday }}
+{% if data.site_kind == constant('Customize\\Config\\AnilineConf::ANILINE_SITE_TYPE_BREEDER' %}
 バンドカラー ： {{ data.pet_bandcolor }}
+{% endif %}
 
 ↓↓　マイページのペット情報はこちらです。
     サイトに掲載しない場合は"サイトに掲載しない"を押してください。
-{% if data.site_kind == 1 %}
+{% if data.site_kind == constant('Customize\\Config\\AnilineConf::ANILINE_SITE_TYPE_BREEDER' %}
 {{ url("breeder_pets_edit",{'id' : data.pet_id}) }}
 {% else %}
 {{ url("adoption_pets_edit",{'id' : data.pet_id}) }}

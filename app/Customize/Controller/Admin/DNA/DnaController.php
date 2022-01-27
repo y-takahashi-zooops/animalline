@@ -242,15 +242,24 @@ class DnaController extends AbstractController
         if ($request->get('check_return_date_to')) {
             $criteria['check_return_date_to'] = $request->get('check_return_date_to');
         }
-
+        $isDelete = [];
         $results = $this->dnaQueryService->filterDnaAdmin($criteria);
+        foreach ($results as $result) {
+            $isDelete[$result['dna_id']] = null;
+            if ($result['pet_id']) {
+                $pet = $this->breederPetsRepository->find($result['pet_id']);
+                $isDelete[$result['dna_id']] = $pet->getIsDelete();
+            }
+        }
+
         $dnas = $paginator->paginate(
             $results,
             $request->query->getInt('page', 1),
             $request->query->getInt('item', 50)
         );
         return [
-            'dnas' => $dnas
+            'dnas' => $dnas,
+            'isDelete' => $isDelete
         ];
     }
 
