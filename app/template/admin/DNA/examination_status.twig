@@ -233,6 +233,7 @@ file that was distributed with this source code.
                                                 data-placement="top" title="公開ステータス変更">
                                                 <a class="btn btn-ec-actionIcon" {{
                                                     dna.check_status==constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED')
+                                                    and isDelete[dna.dna_id] == false
                                                     ? 'onclick=changeStatus(' ~dna.dna_id~')' : 'disabled' }}>
                                                     <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
