@@ -10,6 +10,7 @@ use Customize\Service\MailService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Repository\CustomerRepository;
+use Eccube\Repository\Master\CustomerStatusRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -50,6 +51,11 @@ class BreederRemindMail extends Command
     protected $customerRepository;
 
     /**
+     * @var CustomerStatusRepository
+     */
+    protected $customerStatusRepository;
+
+    /**
      * @var MailService
      */
     protected $mailService;
@@ -62,6 +68,7 @@ class BreederRemindMail extends Command
      * @param BreederPetsRepository $breederPetsRepository
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      * @param CustomerRepository $customerRepository
+     * @param CustomerStatusRepository $customerStatusRepository
      * @param MailService $mailService
      */
     public function __construct(
@@ -70,6 +77,7 @@ class BreederRemindMail extends Command
         BreederPetsRepository $breederPetsRepository,
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
         CustomerRepository $customerRepository,
+        CustomerStatusRepository $customerStatusRepository,
         MailService $mailService
     ) {
         parent::__construct();
@@ -78,6 +86,7 @@ class BreederRemindMail extends Command
         $this->breederPetsRepository = $breederPetsRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->customerRepository = $customerRepository;
+        $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
     }
 
@@ -93,27 +102,52 @@ class BreederRemindMail extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $status = $this->customerStatusRepository->find(2);
+
+        $customers = $this->customerRepository->findBy(['regist_type' => 1,'Status' => $status]);
+
+        $base_time = new DateTime("-3days");
+        echo $base_time->format('Y-m-d H:i:s')."\n";
+
+        //会員登録後ブリーダー未申請
+        foreach ($customers as $customer) {
+            $Breeder = $this->breedersRepository->find($customer->getId());
+
+            if(!$Breeder){
+                if($base_time > $customer->getCreateDate()){
+                    //$this->mailService->sendBreederRemindRegist($customer);
+
+                    echo "ブリーダー未申請".$customer->getEmail()."\n";
+                }
+            }
+        }
+
         $Breeders = $this->breedersRepository->findBy(['examination_status' => AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK]);
 
+        $base_time = new DateTime("-7days");
+        echo $base_time->format('Y-m-d H:i:s')."\n";
+
         foreach ($Breeders as $Breeder) {
-            $Customer = $this->customerRepository->find($Breeder->getId());
-            $data = ['name' => $Breeder->getBreederName()];
+            if($base_time > $Breeder->getCreateDate()){
+                $Customer = $this->customerRepository->find($Breeder->getId());
+                $data = ['name' => $Breeder->getBreederName()];
 
-            $isBreederDay = $Breeder->getCreateDate()->format('Y-m-d') === (new DateTime('now -14days'))->format('Y-m-d');
-            $hasDna = !!$this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $Breeder->getId()]);
-            if ($isBreederDay && !$hasDna) {
-                echo "Mail DNA.\n";
-                $this->mailService->sendBreederRemindDna($Customer->getEmail(), $data);
+                $hasDna = $this->dnaCheckStatusHeaderRepository->findBy(['site_type' => 1, 'register_id' => $Breeder->getId()]);
+                if (!$hasDna) {
+                    echo "Mail DNA.".$Customer->getEmail()."\n";
+                    //$this->mailService->sendBreederRemindDna($Customer);
+                }
             }
-
+            /*
             $Pet = $this->breederPetsRepository->findOneBy(['Breeder' => $Breeder], ['create_date' => 'DESC']);
             $isPetDay = $Pet && $Pet->getCreateDate()->format('Y-m-d') === (new DateTime('now -1month'))->format('Y-m-d');
             if ($isPetDay) {
                 echo "Mail pet.\n";
                 $this->mailService->sendBreederRemindPet($Customer->getEmail(), $data);
             }
+            */
         }
-
+        
         echo "Breeder remind mail handled.\n";
     }
 }
