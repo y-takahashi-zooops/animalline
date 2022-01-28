@@ -115,9 +115,9 @@ class BreederRemindMail extends Command
 
             if(!$Breeder){
                 if($base_time > $customer->getCreateDate()){
-                    //$this->mailService->sendBreederRemindRegist($customer);
-
                     echo "ブリーダー未申請".$customer->getEmail()."(".$customer->getId().")\n";
+                    $this->mailService->sendBreederRemindRegist($customer);
+                    sleep(1);
                 }
             }
         }
@@ -134,8 +134,9 @@ class BreederRemindMail extends Command
 
                 $hasDna = $this->dnaCheckStatusHeaderRepository->findBy(['site_type' => 1, 'register_id' => $Breeder->getId()]);
                 if (!$hasDna) {
-                    echo "Mail DNA.".$Customer->getEmail()."(".$Breeder->getId().")\n";
-                    //$this->mailService->sendBreederRemindDna($Customer);
+                    echo "DNA未請求".$Customer->getEmail()."(".$Breeder->getId().")\n";
+                    $this->mailService->sendBreederRemindDna($Customer);
+                    sleep(1);
                 }
             }
             /*
