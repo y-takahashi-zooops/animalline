@@ -1426,7 +1426,7 @@ class MailService
      */
     public function sendBreederRemindDna($email, $data)
     {
-        $body = $this->twig->render('Mail/breeder_remind_dna.twig', [
+        $body = $this->twig->render('Mail/Breeder/breeder_remind_dna.twig', [
             'BaseInfo' => $this->BaseInfo,
             'data' => $data
         ]);
@@ -1453,7 +1453,7 @@ class MailService
      */
     public function sendBreederRemindPet($email, $data)
     {
-        $body = $this->twig->render('Mail/breeder_remind_pet.twig', [
+        $body = $this->twig->render('Mail/Breeder/breeder_remind_pet.twig', [
             'BaseInfo' => $this->BaseInfo,
             'data' => $data
         ]);

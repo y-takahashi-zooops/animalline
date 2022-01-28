@@ -1,6 +1,6 @@
 <?php
 
-namespace Customize\Command;
+namespace Customize\Command\Mail;
 
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetsRepository;
@@ -10,7 +10,6 @@ use Customize\Service\MailService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Repository\CustomerRepository;
-use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -61,6 +60,9 @@ class BreederRemindMail extends Command
      * @param EntityManagerInterface $entityManager
      * @param BreedersRepository $breedersRepository
      * @param BreederPetsRepository $breederPetsRepository
+     * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+     * @param CustomerRepository $customerRepository
+     * @param MailService $mailService
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -100,14 +102,14 @@ class BreederRemindMail extends Command
             $isBreederDay = $Breeder->getCreateDate()->format('Y-m-d') === (new DateTime('now -14days'))->format('Y-m-d');
             $hasDna = !!$this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $Breeder->getId()]);
             if ($isBreederDay && !$hasDna) {
-                echo 'Mail DNA.';
+                echo "Mail DNA.\n";
                 $this->mailService->sendBreederRemindDna($Customer->getEmail(), $data);
             }
 
             $Pet = $this->breederPetsRepository->findOneBy(['Breeder' => $Breeder], ['create_date' => 'DESC']);
             $isPetDay = $Pet && $Pet->getCreateDate()->format('Y-m-d') === (new DateTime('now -1month'))->format('Y-m-d');
             if ($isPetDay) {
-                echo 'Mail pet.';
+                echo "Mail pet.\n";
                 $this->mailService->sendBreederRemindPet($Customer->getEmail(), $data);
             }
         }
