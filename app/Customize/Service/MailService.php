@@ -1416,4 +1416,58 @@ class MailService
 
         return $this->mailer->send($message, $failures);
     }
+
+    /**
+     * Breeder remind DNA.
+     *
+     * @param $email
+     * @param $data
+     * @return int
+     */
+    public function sendBreederRemindDna($email, $data)
+    {
+        $body = $this->twig->render('Mail/Breeder/breeder_remind_dna.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'data' => $data
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] DNA検査キット請求')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$email])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
+
+    /**
+     * Breeder remind pet.
+     *
+     * @param $email
+     * @param $data
+     * @return int
+     */
+    public function sendBreederRemindPet($email, $data)
+    {
+        $body = $this->twig->render('Mail/Breeder/breeder_remind_pet.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'data' => $data
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] 最終のペット登録日からの時間経過')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$email])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
 }
