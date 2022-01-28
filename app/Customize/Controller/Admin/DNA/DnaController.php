@@ -198,7 +198,7 @@ class DnaController extends AbstractController
             } else {
                 $isCheckUnit = false;
                 foreach ($dnaHeaders as $dnaHeader) {
-                    if ($dnaHeader->getKitUnit() < 6) {
+                    if ($dnaHeader->getKitUnit() < AnilineConf::ANILINE_KIT_UNIT) {
                         $isCheckUnit = true;
                         $newDna->setDnaHeader($dnaHeader);
                         $dnaHeader->setKitUnit($dnaHeader->getKitUnit() + 1);
