@@ -185,24 +185,19 @@ class DnaController extends AbstractController
         if ($request->get('dna-id') && $request->isMethod('POST')) {
             $dna = $this->dnaCheckStatusRepository->find((int)$request->get('dna-id'));
             $oldDnaHeader = $dna->getDnaHeader();
-            $dnaHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $oldDnaHeader->getRegisterId()]);
-            $checkStatus = false;
-            foreach ($dnaHeaders as $dnaHeader) {
-                if ($dnaHeader->getShippingStatus() === AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT) {
-                    $checkStatus = true;
-                }
-            }
-
+            $dnaHeader = $this->dnaCheckStatusHeaderRepository->findOneBy(['register_id' => $oldDnaHeader->getRegisterId(), 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT]);
             $em = $this->getDoctrine()->getManager();
             $newDna = clone $dna;
-            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING);
-            if (!$checkStatus) {
+            if (!$dnaHeader) {
                 $newDnaHeader = clone $oldDnaHeader;
                 $newDnaHeader->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT);
                 $em->persist($newDnaHeader);
                 $em->flush();
                 $newDna->setDnaHeader($newDnaHeader);
+            } else {
+                $newDna->setDnaHeader($dnaHeader);
             }
+            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING);
             $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
             $em->persist($newDna);
             $em->persist($dna);
