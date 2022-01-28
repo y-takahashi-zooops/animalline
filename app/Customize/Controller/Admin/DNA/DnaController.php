@@ -10,6 +10,7 @@ use Customize\Repository\ConservationPetsRepository;
 use Customize\Entity\DnaCheckStatus;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\DnaCheckKindsRepository;
+use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Controller\AbstractController;
@@ -56,6 +57,11 @@ class DnaController extends AbstractController
     protected $breedsRepository;
 
     /**
+     * @var DnaCheckStatusHeaderRepository
+     */
+    protected $dnaCheckStatusHeaderRepository;
+
+    /**
      * DnaController constructor
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
@@ -63,14 +69,16 @@ class DnaController extends AbstractController
      * @param ConservationPetsRepository $conservationPetsRepository
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
      * @param BreedsRepository $breedsRepository
+     * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      */
     public function __construct(
-        DnaQueryService            $dnaQueryService,
-        DnaCheckStatusRepository   $dnaCheckStatusRepository,
-        BreederPetsRepository      $breederPetsRepository,
-        ConservationPetsRepository $conservationPetsRepository,
-        DnaCheckKindsRepository    $dnaCheckKindsRepository,
-        BreedsRepository           $breedsRepository
+        DnaQueryService                $dnaQueryService,
+        DnaCheckStatusRepository       $dnaCheckStatusRepository,
+        BreederPetsRepository          $breederPetsRepository,
+        ConservationPetsRepository     $conservationPetsRepository,
+        DnaCheckKindsRepository        $dnaCheckKindsRepository,
+        BreedsRepository               $breedsRepository,
+        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
     ) {
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
@@ -78,6 +86,7 @@ class DnaController extends AbstractController
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
         $this->breedsRepository = $breedsRepository;
+        $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
     }
 
     /**
@@ -175,11 +184,23 @@ class DnaController extends AbstractController
     {
         if ($request->get('dna-id') && $request->isMethod('POST')) {
             $dna = $this->dnaCheckStatusRepository->find((int)$request->get('dna-id'));
-            $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
-            $newDna = clone $dna;
-            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING);
+            $oldDnaHeader = $dna->getDnaHeader();
+            $dnaHeader = $this->dnaCheckStatusHeaderRepository->findOneBy(['register_id' => $oldDnaHeader->getRegisterId(), 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT]);
             $em = $this->getDoctrine()->getManager();
+            $newDna = clone $dna;
+            if (!$dnaHeader) {
+                $newDnaHeader = clone $oldDnaHeader;
+                $newDnaHeader->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT);
+                $em->persist($newDnaHeader);
+                $em->flush();
+                $newDna->setDnaHeader($newDnaHeader);
+            } else {
+                $newDna->setDnaHeader($dnaHeader);
+            }
+            $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING);
+            $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
             $em->persist($newDna);
+            $em->persist($dna);
             $em->flush();
 
             return $this->redirectToRoute('admin_dna_examination_status');
