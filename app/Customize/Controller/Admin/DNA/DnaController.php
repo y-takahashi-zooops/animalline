@@ -185,17 +185,36 @@ class DnaController extends AbstractController
         if ($request->get('dna-id') && $request->isMethod('POST')) {
             $dna = $this->dnaCheckStatusRepository->find((int)$request->get('dna-id'));
             $oldDnaHeader = $dna->getDnaHeader();
-            $dnaHeader = $this->dnaCheckStatusHeaderRepository->findOneBy(['register_id' => $oldDnaHeader->getRegisterId(), 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT]);
+            $dnaHeaders = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $oldDnaHeader->getRegisterId(), 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT]);
             $em = $this->getDoctrine()->getManager();
             $newDna = clone $dna;
-            if (!$dnaHeader) {
+            if (!$dnaHeaders) {
                 $newDnaHeader = clone $oldDnaHeader;
                 $newDnaHeader->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT);
+                $newDnaHeader->setKitUnit(1);
                 $em->persist($newDnaHeader);
                 $em->flush();
                 $newDna->setDnaHeader($newDnaHeader);
             } else {
-                $newDna->setDnaHeader($dnaHeader);
+                $isCheckUnit = false;
+                foreach ($dnaHeaders as $dnaHeader) {
+                    if ($dnaHeader->getKitUnit() < 6) {
+                        $isCheckUnit = true;
+                        $newDna->setDnaHeader($dnaHeader);
+                        $dnaHeader->setKitUnit($dnaHeader->getKitUnit() + 1);
+                        $em->persist($dnaHeader);
+                        break;
+                    }
+                }
+
+                if (!$isCheckUnit) {
+                    $newDnaHeader = clone $oldDnaHeader;
+                    $newDnaHeader->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT);
+                    $newDnaHeader->setKitUnit(1);
+                    $em->persist($newDnaHeader);
+                    $em->flush();
+                    $newDna->setDnaHeader($newDnaHeader);
+                }
             }
             $newDna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_SHIPPING);
             $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT);
