@@ -1,6 +1,6 @@
 <?php
 
-namespace Customize\Command\Mail;
+namespace Customize\Command;
 
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreederPetsRepository;
@@ -89,9 +89,6 @@ class BreederRemindMail extends Command
         $this->io = new SymfonyStyle($input, $output);
     }
 
-    /**
-     * @throws Exception
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $Breeders = $this->breedersRepository->findBy(['examination_status' => AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK]);
@@ -103,18 +100,18 @@ class BreederRemindMail extends Command
             $isBreederDay = $Breeder->getCreateDate()->format('Y-m-d') === (new DateTime('now -14days'))->format('Y-m-d');
             $hasDna = !!$this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $Breeder->getId()]);
             if ($isBreederDay && !$hasDna) {
-                // mail dna
+                echo 'Mail DNA.';
                 $this->mailService->sendBreederRemindDna($Customer->getEmail(), $data);
             }
 
             $Pet = $this->breederPetsRepository->findOneBy(['Breeder' => $Breeder], ['create_date' => 'DESC']);
-            $isPetDay = $Pet->getCreateDate()->format('Y-m-d') === (new DateTime('now -1month'))->format('Y-m-d');
+            $isPetDay = $Pet && $Pet->getCreateDate()->format('Y-m-d') === (new DateTime('now -1month'))->format('Y-m-d');
             if ($isPetDay) {
-                // mail pet
+                echo 'Mail pet.';
                 $this->mailService->sendBreederRemindPet($Customer->getEmail(), $data);
             }
         }
 
-        echo "breeder remind mail handled.\n";
+        echo "Breeder remind mail handled.\n";
     }
 }
