@@ -201,4 +201,6 @@ final class AnilineConf
     const MESSAGE_MEMBER = 2;
 
     const NEW_MESSAGE = 1;
+
+    const ANILINE_KIT_UNIT = 6;
 }
