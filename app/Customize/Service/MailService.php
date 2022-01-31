@@ -1416,4 +1416,84 @@ class MailService
 
         return $this->mailer->send($message, $failures);
     }
+
+    /**
+     * Breeder remind pet.
+     *
+     * @param $email
+     * @param $data
+     * @return int
+     */
+    public function sendBreederRemindPet($email, $data)
+    {
+        $body = $this->twig->render('Mail/Breeder/breeder_remind_pet.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'data' => $data
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] 最終のペット登録日からの時間経過')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$email])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
+
+    /**
+     * リマインドメール（会員登録後ブリーダー未申請）
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @return int
+     */
+    public function sendBreederRemindRegist(\Eccube\Entity\Customer $Customer)
+    {
+        $body = $this->twig->render('Mail/Breeder/breeder_remind_regist.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'customer' => $Customer
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] ブリーダー情報登録のお願い')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
+
+    /**
+     * リマインドメール（DNAキット未請求）
+     *
+     * @param $email
+     * @param $data
+     * @return int
+     */
+    public function sendBreederRemindDna(\Eccube\Entity\Customer $Customer)
+    {
+        $body = $this->twig->render('Mail/Breeder/breeder_remind_dna.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'customer' => $Customer
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] DNA検査のお願い')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
 }
