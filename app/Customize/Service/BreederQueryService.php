@@ -206,7 +206,7 @@ class BreederQueryService
         $query = $this->breedersRepository->createQueryBuilder('b');
         $query->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.Breeder')
             ->where('b.handling_pet_kind in (:kinds)')
-            ->andWhere($query->expr()->notIn('b.examination_status', AnilineConf::EXAMINATION_STATUS_CUSTOMER_DELETED))
+            ->andWhere($query->expr()->In('b.examination_status', AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK))
             ->setParameter('kinds', [
                 AnilineConf::ANILINE_PET_KIND_DOG_CAT,
                 $petKind
