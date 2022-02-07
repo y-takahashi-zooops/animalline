@@ -274,7 +274,7 @@ class DnaQueryService
             ->join('Customize\Entity\Breeders', 'b', 'WITH', 'dnah.register_id = b.id')
             ->where('dna.site_type = :site')
             ->andWhere('dna.check_return_date BETWEEN :start AND :end')
-            ->andWhere('dna.check_status = :check_status')
+            //->andWhere('dna.check_status = :check_status')
             ->setParameter('site', AnilineConf::SITE_CATEGORY_BREEDER)
             ->setParameter('start', $startDate)
             ->setParameter('end', $endDate)
