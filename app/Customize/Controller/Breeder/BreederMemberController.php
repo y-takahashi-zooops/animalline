@@ -281,6 +281,7 @@ class BreederMemberController extends AbstractController
             $breederPetinfoTemplate->setBreeder($breederData);
             $entityManager->persist($breederPetinfoTemplate);
             $entityManager->flush();
+            
             return $this->redirectToRoute($return_path);
         }
 

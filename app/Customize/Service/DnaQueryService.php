@@ -278,7 +278,7 @@ class DnaQueryService
             ->setParameter('site', AnilineConf::SITE_CATEGORY_BREEDER)
             ->setParameter('start', $startDate)
             ->setParameter('end', $endDate)
-            ->setParameter('check_status', 9)
+            //->setParameter('check_status', 9)
             ->select('dna, b.id as breeder_id, dna.pet_id');
 
         return $qb->getQuery()->getResult();
