@@ -20,7 +20,7 @@ use Customize\Service\ProductStockService;
 
 class ExportShippingSchedule extends Command
 {
-    protected static $defaultName = 'eccube:customize:wms-shipping-schedule';
+    protected static $defaultName = 'eccube:customize:wms-shipping-schedule2';
 
     /**
      * @var EntityManagerInterface
@@ -113,7 +113,7 @@ class ExportShippingSchedule extends Command
             'part_number_code_2', 'commission', 'handling flight_type', 'destination_classification', 'slip_output_order'
         ];
 
-        $qb = $this->dnaCheckStatusHeaderRepository->createQueryBuilder('dnah');
+        $qb = $this->orderItemRepository->createQueryBuilder('oa');
         $qb->select(
             'dnah.id as dna_header_id',
             'dnah.kit_unit',

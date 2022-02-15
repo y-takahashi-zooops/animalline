@@ -25,12 +25,12 @@ class ShippingScheduleHeader
     private $id;
 
     /**
-     * @ORM\Column(name="shipping_date_schedule", type="date", nullable=false)
+     * @ORM\Column(name="shipping_date_schedule", type="date", nullable=true)
      */
     private $shipping_date_schedule;
 
     /**
-     * @ORM\Column(name="arrival_date_schedule", type="date", nullable=false)
+     * @ORM\Column(name="arrival_date_schedule", type="date", nullable=true)
      */
     private $arrival_date_schedule;
 

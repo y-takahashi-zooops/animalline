@@ -164,6 +164,8 @@ class ExportRelease extends Command
 
                         // 着荷時刻を佐川用コードに変換
                         $shippingDeliveryTime = $shipping->getShippingDeliveryTime();
+
+                        $shippingDeliveryTimeCode = "";
                         if ($shippingDeliveryTime == "午前") {
                             $shippingDeliveryTimeCode = "01";
                         } elseif ($shippingDeliveryTime == "12:00～14:00") {
@@ -178,8 +180,6 @@ class ExportRelease extends Command
 
                         $shippingScheduleHeader
                             ->setShipping($shipping)
-                            ->setShippingDateSchedule($shipping->getShippingDate())
-                            ->setArrivalDateSchedule($shipping->getShippingDeliveryDate())
                             ->setArrivalTimeCodeSchedule($shippingDeliveryTimeCode)
                             ->setCustomerName($shipping->getName01() . $shipping->getName02())
                             ->setCustomerZip($shipping->getPostalCode())
@@ -198,6 +198,14 @@ class ExportRelease extends Command
                             ))
                             ->setWmsSendDate($now)
                             ->setIsCancel(0);
+                        
+                        if($shipping->getShippingDeliveryDate() != null){
+                            $shippingScheduleHeader->setArrivalDateSchedule($shipping->getShippingDeliveryDate());
+                        }
+
+                        if($shipping->getShippingDate() != null){
+                            $shippingScheduleHeader->setShippingDateSchedule($shipping->getShippingDate());
+                        }
                         $em->persist($shippingScheduleHeader);
                         $em->flush();
 
@@ -280,10 +288,15 @@ class ExportRelease extends Command
                             foreach ($fieldSorted as $value) {
                                 array_push($sorted, $recordCsv[$value]);
                             }
-                            $sorted[1] = $sorted[1]->format('Y-m-d H:i:s');
-                            $sorted[2] = $sorted[2]->format('Y-m-d H:i:s');
+                            if($sorted[1] != null){
+                                $sorted[1] = $sorted[1]->format('Y-m-d H:i:s');
+                            }
+                            if($sorted[2] != null){
+                                $sorted[2] = $sorted[2]->format('Y-m-d H:i:s');
+                            }
                             array_push($result, $sorted);
                         }
+var_dump($result);
                         foreach ($result as $item) {
                             fputcsv($csvh, $item, $d, $e);
                         }
