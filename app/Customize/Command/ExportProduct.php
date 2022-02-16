@@ -136,7 +136,8 @@ class ExportProduct extends Command
                 $supplier = $this->supplierRepository->findOneBy(['id' => $record['supplier_code']]);
                 $product = $this->productRepository->find($record['id']);
 
-                $record['supplier_code'] = $supplier->getSupplierCode();
+                //$record['supplier_code'] = $supplier->getSupplierCode();
+                $record['supplier_code'] = "0003";
 
                 if (strlen($record['jan_code']) == 13) {
                     $record['productCode'] = $record['jan_code'];
