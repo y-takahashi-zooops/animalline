@@ -10,10 +10,12 @@ use Customize\Entity\WmsSyncInfo;
 use Customize\Repository\ShippingScheduleHeaderRepository;
 use Customize\Repository\ShippingScheduleRepository;
 use Customize\Repository\WmsSyncInfoRepository;
+use Customize\Repository\SupplierRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Eccube\Repository\ShippingRepository;
 use Eccube\Repository\OrderItemRepository;
+use Eccube\Repository\OrderRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -59,6 +61,17 @@ class ExportRelease extends Command
     protected $orderItemRepository;
 
     /**
+     * @var OrderRepository
+     */
+    protected $orderRepository;
+
+    /**
+     * @var SupplierRepository
+     */
+    protected $supplierRepository;
+
+
+    /**
      * ExportRelease constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -67,6 +80,8 @@ class ExportRelease extends Command
      * @param ShippingScheduleRepository $shippingScheduleRepository
      * @param ShippingRepository $shippingRepository
      * @param OrderItemRepository $orderItemRepository
+     * @param OrderRepository $orderRepository
+     * @param SupplierRepository $supplierRepository
      */
     public function __construct(
         EntityManagerInterface           $entityManager,
@@ -74,7 +89,9 @@ class ExportRelease extends Command
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
         ShippingScheduleRepository       $shippingScheduleRepository,
         ShippingRepository               $shippingRepository,
-        OrderItemRepository              $orderItemRepository
+        OrderItemRepository              $orderItemRepository,
+        OrderRepository                  $orderRepository,
+        SupplierRepository               $supplierRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -83,6 +100,8 @@ class ExportRelease extends Command
         $this->shippingScheduleRepository = $shippingScheduleRepository;
         $this->shippingRepository = $shippingRepository;
         $this->orderItemRepository = $orderItemRepository;
+        $this->orderRepository = $orderRepository;
+        $this->supplierRepository = $supplierRepository;
     }
 
     protected function configure()
@@ -121,46 +140,35 @@ class ExportRelease extends Command
 
         $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_SCHEDULED_SHIPMENT], ['sync_date' => 'DESC']);
 
-        $query = $this->shippingRepository->createQueryBuilder('s');
-        $query->where('s.update_date <= :to')
-            ->setParameters(['to' => $now]);
-        if ($syncInfo) $query = $query->andWhere('s.update_date >= :from')
+        $query = $this->orderRepository->createQueryBuilder('o');
+        if ($syncInfo) $query = $query->andWhere('o.create_date >= :from')
             ->setParameter('from', $syncInfo->getSyncDate());
-        $query = $query->getQuery()->getArrayResult();
-        $arr = array_column($query, 'id');
+
+        $orders = $query->getQuery()->getResult();
 
         $filename = 'SHUSJI_' . $now->format('Ymd_His') . '.csv';
-        $queryShipping = $this->shippingScheduleHeaderRepository->createQueryBuilder('ssh')
-            ->innerJoin('ssh.Shipping', 's')
-            ->where('s.update_date <= :to')
-            ->setParameters(['to' => $now]);
-        if ($syncInfo) $queryShipping = $queryShipping->andWhere('s.update_date >= :from')
-            ->setParameter('from', $syncInfo->getSyncDate());
-        $records = $queryShipping->getQuery()->getArrayResult();
-        $arrId = array_column($queryShipping->select('s.id')->getQuery()->getArrayResult(), 'id');
-        $arrDiff = array_diff($arr, $arrId);
-        $wms = new WmsSyncInfo();
-        $isShipping = false;
-        if ($records) {
-            $isShipping = true;
-        }
-        if ($arrDiff) {
-            $queryNotInHeaders = $this->shippingRepository->createQueryBuilder('s');
-            $queryNotInHeaders->andWhere('s.id in (:arr)')
-                ->setParameter('arr', $arrDiff);
-            $queryNotInHeaders = $queryNotInHeaders->getQuery()->getArrayResult();
-            try {
-                $csvPath = $dir . $filename;
-                $csvh = fopen($csvPath, 'w+') or die("Can't open file");
-                $d = ','; // this is the default but i like to be explicit
-                $e = '"'; // this is the default but i like to be explicit
+        $csvPath = $dir . $filename;
+        
+        try {
+            //csvオープン
+            $csvPath = $dir . $filename;
+            $csvh = fopen($csvPath, 'w+') or die("Can't open file");
 
-                foreach ($queryNotInHeaders as $queryNotInHeader) {
-                    $shipping = $this->shippingRepository->find($queryNotInHeader['id']);
-                    $order = $shipping->getOrder();
-                    $orderItem = $this->orderItemRepository->findOneBy(['Shipping' => $shipping]);
-                    if ($orderItem) {
-                        $shippingScheduleHeader = new ShippingScheduleHeader();
+            $i = 1;
+            foreach ($orders as $order) {
+                var_dump($order->getId());
+                
+                $order_items = $this->orderItemRepository->findBy(array("Order" => $order));
+
+                foreach ($order_items as $order_item) {
+                    var_dump($order_item->getId());
+
+                    $shipping = $order_item->getShipping();
+                    $pc = $order_item->getProductClass();
+                    
+                    if($pc != null){
+                        $product = $order_item->getProduct();
+                        //$supplier =  $this->supplierRepository->find($pc->getSupplierCode());
 
                         // 着荷時刻を佐川用コードに変換
                         $shippingDeliveryTime = $shipping->getShippingDeliveryTime();
@@ -168,157 +176,119 @@ class ExportRelease extends Command
                         $shippingDeliveryTimeCode = "";
                         if ($shippingDeliveryTime == "午前") {
                             $shippingDeliveryTimeCode = "01";
-                        } elseif ($shippingDeliveryTime == "12:00～14:00") {
+                        } elseif ($shippingDeliveryTime == "12時～14時") {
                             $shippingDeliveryTimeCode = "12";
-                        } elseif ($shippingDeliveryTime == "14:00～16:00") {
+                        } elseif ($shippingDeliveryTime == "14時～16時") {
                             $shippingDeliveryTimeCode = "14";
-                        } elseif ($shippingDeliveryTime == "16:00～18:00") {
+                        } elseif ($shippingDeliveryTime == "16時～18時") {
                             $shippingDeliveryTimeCode = "16";
-                        } elseif ($shippingDeliveryTime == "18:00～21:00") {
+                        } elseif ($shippingDeliveryTime == "18時～21時") {
                             $shippingDeliveryTimeCode = "04";
                         }
 
-                        $shippingScheduleHeader
-                            ->setShipping($shipping)
-                            ->setArrivalTimeCodeSchedule($shippingDeliveryTimeCode)
-                            ->setCustomerName($shipping->getName01() . $shipping->getName02())
-                            ->setCustomerZip($shipping->getPostalCode())
-                            ->setCustomerAddress($shipping->getAddr01() . $shipping->getAddr02())
-                            ->setCustomerTel($shipping->getPhoneNumber())
-                            ->setTotalPrice($order->getSubTotal())
-                            ->setDiscountedPrice($order->getDiscount())
-                            ->setTaxPrice($order->getTax())
-                            ->setPostagePrice($order->getDeliveryFeeTotal())
-                            ->setTotalWeight(
-                                $orderItem->getProductClass()
-                                    ->getProduct()->getItemWeight()
-                            )
-                            ->setShippingUnits(round(
-                                (float)$orderItem->getProductClass()->getProduct()->getItemWeight() / 20
-                            ))
-                            ->setWmsSendDate($now)
-                            ->setIsCancel(0);
-                        
+                        $recordCsv['shippingInstructionNo'] = $this->generateZeroFillStr($order_item->getOrderId(), 6);
+                        $recordCsv['expectedShippingDate'] = date("Ymd");;
                         if($shipping->getShippingDeliveryDate() != null){
-                            $shippingScheduleHeader->setArrivalDateSchedule($shipping->getShippingDeliveryDate());
+                            $recordCsv['expectedArrivalDate'] = $shipping->getShippingDeliveryDate()->format("Ymd");
                         }
-
-                        if($shipping->getShippingDate() != null){
-                            $shippingScheduleHeader->setShippingDateSchedule($shipping->getShippingDate());
+                        $recordCsv['arrivalTime'] = $shippingDeliveryTimeCode;
+                        $recordCsv['storeCode'] = "";
+                        $recordCsv['warehouseCode'] = $pc->getStockCode();
+                        $recordCsv['saleCategory'] = '0';
+                        $recordCsv['multiplicationRate'] = null;
+                        $recordCsv['slipType'] = '0';
+                        if($pc->getJanCode() != ""){
+                            $recordCsv['productNumberCode'] = $pc->getJanCode();
                         }
-                        $em->persist($shippingScheduleHeader);
-                        $em->flush();
+                        else{
+                            $recordCsv['productNumberCode'] = $pc->getCode();
+                        }
+                        $recordCsv['colorCode'] = "9999";
+                        $recordCsv['sizeCode'] = '1';
+                        $recordCsv['JAN_code'] = $pc->getJanCode();
+                        $recordCsv['numberOfShippingInstructions'] = $order_item->getQuantity();
+                        $recordCsv['retailPrice'] = intval($order_item->getPrice());
+                        $recordCsv['deliveryUnitPrice'] = intval($order_item->getPrice());
+                        $recordCsv['shippingCompanyCode'] = "000002";
+                        $recordCsv['remarks'] = null;
+                        $recordCsv['deliveryName'] = $shipping->getName01().$shipping->getName02();
+                        $recordCsv['deliveryPostalCode'] =  substr($shipping->getPostalCode(),0,3) . "-" . substr($shipping->getPostalCode(),3);;
+                        $recordCsv['deliveryAddress'] = $shipping->getPref()->getName().$shipping->getAddr01().$shipping->getAddr02();
+                        $recordCsv['deliveryPhoneNumber'] = $shipping->getPhoneNumber();
+                        $recordCsv['detailsRemarks'] = null;
+                        $recordCsv['businessUnitName'] = null;
+                        $recordCsv['areaName'] = null;
+                        $recordCsv['destinationCode'] = null;
+                        $recordCsv['areaCode'] = null;
+                        $recordCsv['BBDATE'] = null;
+                        $recordCsv['deliveryDestinationClassification'] = '1';
+                        $recordCsv['totalProductPrice'] = intval($order->getPaymentTotal());
+                        $recordCsv['discountAmount'] = null;
+                        $recordCsv['consumptionTax'] = intval($order->getTax());
+                        $recordCsv['postage'] = ceil($order->getDeliveryFeeTotal() / 1.1);
+                        $recordCsv['coupon'] = null;
+                        $recordCsv['grossWeight'] = 1;
+                        $recordCsv['numberOfUnits'] = 1;
+                        $recordCsv['paymentMethodClassification'] = '0';
+                        $recordCsv['remark_2'] = null;
+                        $recordCsv['remark_3'] = null;
+                        $recordCsv['salesDestinationClassification'] = '01';
+                        $recordCsv['partNumberCode_2'] = null;
+                        $recordCsv['commission'] = null;
+                        $recordCsv['handlingFlightTypes'] = '000';
+                        $recordCsv['destinationClassification'] = '1';
+                        $recordCsv['slipOutputOrder'] = $this->generateZeroFillStr($i, 6);;
 
-                        $shippingSchedule = new ShippingSchedule();
-
-                        $shippingSchedule->setWarehouseCode('00000')
-                            ->setItemCode01($orderItem->getProductClass()->getCode())
-                            ->setJanCode($orderItem->getProductClass()->getCode())
-                            ->setQuantity($orderItem->getQuantity())
-                            ->setStanderdPrice($orderItem->getPrice())
-                            ->setSellingPrice($orderItem->getPrice())
-                            ->setShippingScheduleHeader($shippingScheduleHeader)
-                            ->setOrderDetail($orderItem)
-                            ->setProductClass($orderItem->getProductClass());
-
-                        $em->persist($shippingSchedule);
-                        $em->flush();
                         $sorted = [];
-                        $queryCsv = $this->shippingScheduleRepository->createQueryBuilder('ss');
-                        $queryCsv->select(
-                            'IDENTITY(ssh.Shipping) as shippingInstructionNo',
-                            'ssh.shipping_date_schedule as expectedShippingDate',
-                            'ssh.arrival_date_schedule as expectedArrivalDate',
-                            'ssh.arrival_time_code_schedule as arrivalTime',
-                            'ss.warehouse_code as warehouseCode',
-                            'ss.item_code_01 as productNumberCode',
-                            'ss.item_code_02 as colorCode',
-                            'pc.jan_code as JAN_code',
-                            'ss.quantity as numberOfShippingInstructions',
-                            'ss.standerd_price as retailPrice',
-                            'ss.selling_price as deliveryUnitPrice',
-                            'ssh.customer_name as deliveryName',
-                            'ssh.customer_zip as deliveryPostalCode',
-                            'ssh.customer_address as deliveryAddress',
-                            'ssh.customer_tel as deliveryPhoneNumber',
-                            'ssh.total_price as totalProductPrice',
-                            'ssh.discounted_price as discountAmount',
-                            'ssh.tax_price as consumptionTax',
-                            'ssh.postage_price as postage',
-                            'ssh.total_weight as grossWeight',
-                            'ssh.shipping_units as numberOfUnits',
-                            'ss.item_code_01 as partNumberCode_2',
-                            'IDENTITY(ssh.Shipping) as slipOutputOrder'
-                        )
-                            ->innerJoin('ss.ShippingScheduleHeader', 'ssh')
-                            ->leftJoin('ssh.Shipping', 's')
-                            ->leftJoin('ss.ProductClass', 'pc')
-                            ->where('ssh.Shipping = :shipping')
-                            ->andWhere('s.update_date <= :to')
-                            ->setParameters(['to' => $now, 'shipping' => $shipping]);
-                        if ($syncInfo) $queryCsv = $queryCsv->andWhere('s.update_date >= :from')
-                            ->setParameter('from', $syncInfo->getSyncDate());
-                        $queryCsv = $queryCsv->orderBy('s.update_date', 'DESC');
-                        $recordCsvs = $queryCsv->getQuery()->getArrayResult();
-                        $result = [];
-                        foreach ($recordCsvs as $recordCsv) {
-                            $recordCsv['storeCode'] = null;
-                            $recordCsv['saleCategory'] = '0';
-                            $recordCsv['multiplicationRate'] = null;
-                            $recordCsv['slipType'] = '0';
-                            $recordCsv['sizeCode'] = '1';
-                            $recordCsv['shippingCompanyCode'] = '000002';
-                            $recordCsv['remarks'] = null;
-                            $recordCsv['detailsRemarks'] = null;
-                            $recordCsv['businessUnitName'] = null;
-                            $recordCsv['areaName'] = null;
-                            $recordCsv['destinationCode'] = null;
-                            $recordCsv['areaCode'] = null;
-                            $recordCsv['BBDATE'] = null;
-                            $recordCsv['deliveryDestinationClassification'] = '1';
-                            $recordCsv['coupon'] = null;
-                            $recordCsv['paymentMethodClassification'] = '0';
-                            $recordCsv['remark_2'] = null;
-                            $recordCsv['remark_3'] = null;
-                            $recordCsv['salesDestinationClassification'] = '01';
-                            $recordCsv['commission'] = null;
-                            $recordCsv['handlingFlightTypes'] = '000';
-                            $recordCsv['destinationClassification'] = '1';
-                            $sorted = [];
-                            foreach ($fieldSorted as $value) {
-                                array_push($sorted, $recordCsv[$value]);
-                            }
-                            if($sorted[1] != null){
-                                $sorted[1] = $sorted[1]->format('Y-m-d H:i:s');
-                            }
-                            if($sorted[2] != null){
-                                $sorted[2] = $sorted[2]->format('Y-m-d H:i:s');
-                            }
-                            array_push($result, $sorted);
+                        
+                        $row = null;
+                        foreach ($fieldSorted as $col) {
+                            $row[] = $recordCsv[$col] ?? null; // null for blank field
                         }
-var_dump($result);
-                        foreach ($result as $item) {
-                            fputcsv($csvh, $item, $d, $e);
-                        }
+
+                        var_dump($row);
+                        $i++;
+                        fputcsv($csvh, $row);
                     }
                 }
-                fclose($csvh);
-                echo 'Export succeeded.' . "\n";
-            } catch (Exception $e) {
-                $wms = new WmsSyncInfo();
-                $wms->setSyncResult(3)
-                    ->setSyncDate($now)
-                    ->setSyncLog($e->getMessage());
-                echo $e->getMessage();
             }
-        } else {
-            $isShipping = true;
+
+            fclose($csvh);
+            echo 'Export succeeded.' . "\n";
+        } catch (Exception $e) {
+            /*
+            $wms = new WmsSyncInfo();
+            $wms->setSyncResult(3)
+                ->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_SCHEDULED_SHIPMENT)
+                ->setSyncDate($now)
+                ->setSyncLog($e->getMessage());
+            echo $e->getMessage();
+            $em->persist($wms);
+            $em->flush();
+            */
+            print $e->getMessage();
+            return false;
         }
-        $wms->setSyncResult($isShipping ? 2 : 1)
-            ->setSyncLog($isShipping ? "alert" : null)
-            ->setSyncAction(4)
+        /*
+        $wms = new WmsSyncInfo();
+        $wms->setSyncResult(1)
+            ->setSyncLog("")
+            ->setSyncAction(AnilineConf::ANILINE_WMS_SYNC_ACTION_SCHEDULED_SHIPMENT)
             ->setSyncDate($now);
         $em->persist($wms);
         $em->flush();
+        */
+    }
+
+    /**
+     * Generate a string with zero filled from a number.
+     * @param int $num
+     * @param int $length (without prefix)
+     * @param string $prefix
+     * @return string
+     */
+    private function generateZeroFillStr(int $num, int $length = 5, string $prefix = ''): string
+    {
+        return  $prefix . str_pad($num, $length, '0', STR_PAD_LEFT);
     }
 }
