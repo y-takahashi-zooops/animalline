@@ -239,7 +239,7 @@ class ExportRelease extends Command
                         $recordCsv['remark_2'] = null;
                         $recordCsv['remark_3'] = null;
                         $recordCsv['salesDestinationClassification'] = '01';
-                        $recordCsv['partNumberCode_2'] = null;
+                        $recordCsv['partNumberCode_2'] = $pc->getCode();
                         $recordCsv['commission'] = null;
                         $recordCsv['handlingFlightTypes'] = '000';
                         $recordCsv['destinationClassification'] = '1';
