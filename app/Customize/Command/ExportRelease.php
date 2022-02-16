@@ -143,6 +143,7 @@ class ExportRelease extends Command
         $query = $this->orderRepository->createQueryBuilder('o');
         if ($syncInfo) $query = $query->andWhere('o.create_date >= :from')
             ->setParameter('from', $syncInfo->getSyncDate());
+        $query = $query->andWhere('o.order_date is not null');
 
         $orders = $query->getQuery()->getResult();
 
@@ -229,7 +230,12 @@ class ExportRelease extends Command
                         $recordCsv['coupon'] = null;
                         $recordCsv['grossWeight'] = 1;
                         $recordCsv['numberOfUnits'] = 1;
-                        $recordCsv['paymentMethodClassification'] = '0';
+                        if($order->getPaymentMethod() == "代金引換"){
+                            $recordCsv['paymentMethodClassification'] = '2';
+                        }
+                        else{
+                            $recordCsv['paymentMethodClassification'] = '0';
+                        }
                         $recordCsv['remark_2'] = null;
                         $recordCsv['remark_3'] = null;
                         $recordCsv['salesDestinationClassification'] = '01';
