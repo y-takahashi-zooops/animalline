@@ -230,7 +230,8 @@ class BreederController extends AbstractController
         $catHouse = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 2]);
 
         $petResults = $this->breederPetsRepository->findBy([
-            'Breeder' => $breeder
+            'Breeder' => $breeder,
+            'is_delete' => 0
         ]);
         $pets = $paginator->paginate(
             $petResults,
