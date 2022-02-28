@@ -148,7 +148,9 @@ class ExportInstockSchedule extends Command
             $record['BBDATE'] = null;
             $record['remarks'] = null;
             $record['stockDate'] = $record['stockDate']->format('Ymd');
-
+            if($record['jANCode'] != ""){
+                $record['productNumberCode'] = $record['jANCode'];
+            }
             $sorted = [];
             foreach ($fields as $value) {
                 $sorted[] = $record[$value];

@@ -79,6 +79,7 @@ class ExportBenefitShippingSchedule extends Command
         $qb = $this->benefitsStatusRepository->createQueryBuilder('bs');
         $qb->select(
             'bs.id as benefit_id',
+            'bs.pet_id',
             'bs.shipping_name',
             'bs.shipping_zip',
             'bs.shipping_pref',
