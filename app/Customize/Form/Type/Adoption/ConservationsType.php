@@ -227,6 +227,20 @@ class ConservationsType extends AbstractType
             ])
             ->add('ThumbnailLicensePathErrors', TextType::class, [
                 'mapped' => false,
+            ])
+            ->add('delivery_way_template', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => '引き渡し方法をご記入ください。',
+                    'rows' => 10
+                ],
+                'required' => false
+            ])
+            ->add('delivery_time_template', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => '備考をご記入ください。',
+                    'rows' => 10
+                ],
+                'required' => false,
             ]);
 
             //$builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
