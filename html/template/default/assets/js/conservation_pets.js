@@ -31,7 +31,7 @@ $(function () {
                     $('#conservation_pets_BreedsType').append(new Option(breed.name, breed.id));
                 });
                 if (isEdit) {
-                    $("#conservation_pets_BreedsType option[value="+breed.id+"]").prop("selected", true)
+                    $(`#conservation_pets_BreedsType option[value=${breed.id}]`).prop("selected", true)
                 }
             })
             .fail(function (err) {

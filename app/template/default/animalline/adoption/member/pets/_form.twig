@@ -224,8 +224,8 @@
     </div>
 
     {# ユーザー情報コピー用フィールド #}
-        <input hidden id="petInfoTemplate_delivery_way" value="{{ conservation.deliveryWayTemplate ?? '' }}">
-        <input hidden id="petInfoTemplate_delivery_time" value="{{ conservation.deliveryTimeTemplate ?? '' }}">
+        <input type="hidden" id="delivery_way" value="{{ conservation.deliveryWayTemplate ?? '' }}">
+        <input type="hidden" id="delivery_time" value="{{ conservation.deliveryTimeTemplate ?? '' }}">
     {# ユーザー情報コピー用フィールド #}
 
     <div class="row">
@@ -437,15 +437,15 @@
             $("#conservation_pets_image4").parent().parent().find('button').show();
         }
 
-        document.getElementById("btn_get_petinfo_template_delivery_way").onclick = function () {
+        $('#btn_get_petinfo_template_delivery_way').click(function () {
             // コピー配信方法
-            document.getElementById("conservation_pets_delivery_way").value = document.getElementById("petInfoTemplate_delivery_way").value
-        };
+            $('#conservation_pets_delivery_way').val($('#delivery_way').val());
+        });
 
-        document.getElementById("btn_get_petinfo_template_delivery_time").onclick = function () {
+        $('#btn_get_petinfo_template_delivery_time').click(function () {
             // コピー納期
-            document.getElementById("conservation_pets_delivery_time").value = document.getElementById("petInfoTemplate_delivery_time").value
-        };
+            $('#conservation_pets_delivery_time').val($('#delivery_time').val());
+        });
 
         $('#btn-change-status').on('click', function () {
         const modalMsg = $(this).data('is-active') ? 'ペット情報を非公開にしますか？' : 'ペット情報を公開しますか？';
