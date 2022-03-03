@@ -199,6 +199,9 @@
         <div class="col-md-3">
             {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span>
+            <br>
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1"
+                id="btn_get_petinfo_template_delivery_way">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.delivery_way, {'attr': {'rows': 5, 'placeholder' : '引き渡し方法をご記入ください。'}}) }}
@@ -210,12 +213,20 @@
         <div class="col-md-3">
             {{ form_label(form.delivery_time, '備考', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">上記項目以外のトライアル期間等を記載お願い致します。</span>
+            <br>
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1"
+                id="btn_get_petinfo_template_delivery_time">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.delivery_time) }}
             {{ form_errors(form.delivery_time) }}
         </div>
     </div>
+
+    {# ユーザー情報コピー用フィールド #}
+        <input hidden id="petInfoTemplate_delivery_way" value="{{ conservation.deliveryWayTemplate ?? '' }}">
+        <input hidden id="petInfoTemplate_delivery_time" value="{{ conservation.deliveryTimeTemplate ?? '' }}">
+    {# ユーザー情報コピー用フィールド #}
 
     <div class="row">
         <div class="col-md-4"></div>
@@ -425,6 +436,16 @@
         if ($('.conservation_pets_image4').val()) {
             $("#conservation_pets_image4").parent().parent().find('button').show();
         }
+
+        document.getElementById("btn_get_petinfo_template_delivery_way").onclick = function () {
+            // コピー配信方法
+            document.getElementById("conservation_pets_delivery_way").value = document.getElementById("petInfoTemplate_delivery_way").value
+        };
+
+        document.getElementById("btn_get_petinfo_template_delivery_time").onclick = function () {
+            // コピー納期
+            document.getElementById("conservation_pets_delivery_time").value = document.getElementById("petInfoTemplate_delivery_time").value
+        };
 
         $('#btn-change-status').on('click', function () {
         const modalMsg = $(this).data('is-active') ? 'ペット情報を非公開にしますか？' : 'ペット情報を公開しますか？';
