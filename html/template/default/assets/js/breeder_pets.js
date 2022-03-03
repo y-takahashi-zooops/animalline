@@ -30,7 +30,7 @@ $(function () {
             breeds.forEach(breed => {
                 $('#breeder_pets_breeds_type').append(new Option(breed.name, breed.id));
             });
-            $("#breeder_pets_breeds_type option[value="+breed+"]").prop("selected", true)
+            $("#breeder_pets_breeds_type option[value="+breed.id+"]").prop("selected", true)
         })
         .fail(function (err) {
             console.error(err);

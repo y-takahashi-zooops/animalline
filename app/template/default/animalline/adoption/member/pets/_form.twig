@@ -9,7 +9,7 @@
             <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
-            {{ form_widget(form.pet_kind, { 'attr': { 'onchange': 'petKindChange();' }}) }}
+            {{ form_widget(form.pet_kind) }}
             {{ form_errors(form.pet_kind) }}
         </div>
     </div>
