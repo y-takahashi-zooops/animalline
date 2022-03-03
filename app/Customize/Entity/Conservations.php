@@ -139,6 +139,16 @@ class Conservations
     private $license_thumbnail_path;
 
     /**
+     * @ORM\Column(name="delivery_way_template", type="text", nullable=true)
+     */
+    private $delivery_way_template;
+
+    /**
+     * @ORM\Column(name="delivery_time_template", type="text", nullable=true)
+     */
+    private $delivery_time_template;
+
+    /**
      * @ORM\OneToMany(targetEntity=ConservationPets::class, mappedBy="Conservation")
      */
     private $ConservationPets;
@@ -427,6 +437,30 @@ class Conservations
     public function setLicenseThumbnailPath(?string $license_thumbnail_path): self
     {
         $this->license_thumbnail_path = $license_thumbnail_path;
+
+        return $this;
+    }
+
+    public function getDeliveryWayTemplate(): ?string
+    {
+        return $this->delivery_way_template;
+    }
+
+    public function setDeliveryWayTemplate(?string $delivery_way_template): self
+    {
+        $this->delivery_way_template = $delivery_way_template;
+
+        return $this;
+    }
+
+    public function getDeliveryTimeTemplate(): ?string
+    {
+        return $this->delivery_time_template;
+    }
+
+    public function setDeliveryTimeTemplate(?string $delivery_time_template): self
+    {
+        $this->delivery_time_template = $delivery_time_template;
 
         return $this;
     }
