@@ -9,7 +9,7 @@
             <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
-            {{ form_widget(form.pet_kind, { 'attr': { 'onchange': 'petKindChange();' }}) }}
+            {{ form_widget(form.pet_kind) }}
             {{ form_errors(form.pet_kind) }}
         </div>
     </div>
@@ -487,19 +487,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
 <script>
-{# 犬・猫での表示切替 #}
-function petKindChange(){
-    if(document.getElementById('breeder_pets_pet_kind')){
-        id = document.getElementById('breeder_pets_pet_kind').value;
-        if( id == 1 ){
-            $('.cat-hidden').show();
-        } else if( id == 2 ) {
-            $('.cat-hidden').hide();
-        }  
-    }
-}
-window.onload = petKindChange;
-
 $("#pedigreeSelect").hide();
 if(breeder_pets_is_pedigree_0.checked){ 
     $("#pedigreeSelect").show();
