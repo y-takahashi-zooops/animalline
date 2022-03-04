@@ -13,6 +13,14 @@
             <div class="ec-editRole">
                 <div class="ec-off1Grid">
                     <div class="ec-off1Grid__cell">
+                        {% if isExistedBenefits %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>すでに登録済みです。
+                                <br>
+                                <a href={{ url('adoption_mypage') }}>TOPページへ</a>
+                            </div>
+                        {% endif %}
+
                         <form method="post" action="{{ url('adoption_benefits') }}">
                             {{ form_widget(form._token) }}
                             <div class="ec-borderedDefs">
@@ -84,7 +92,7 @@
                             <div class="ec-registerRole__actions">
                                 <div class="row">
                                     <div class="col-md-6 mx-auto">
-                                        <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">登録</button>
+                                        <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm" {{ isExistedBenefits ? 'disabled' : '' }}>登録</button>
                                     </div>
                                 </div>
                             </div>
