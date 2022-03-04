@@ -439,7 +439,7 @@ class BreederPetController extends AbstractController
      */
     public function breeder_pets_edit(Request $request, BreederPets $breederPet)
     {
-        $isCheckPetContract = !!$this->breederContactHeaderRepository->findOneBy(['Pet' => $breederPet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]);
+        $isCheckPetContract = !is_null($this->breederContactHeaderRepository->findOneBy(['Pet' => $breederPet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]));
 
         $user = $this->getUser();
         $breeder = $this->breedersRepository->find($user);

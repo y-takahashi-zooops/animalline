@@ -315,7 +315,7 @@ class AdoptionPetController extends AbstractController
      */
     public function adoption_pets_edit(Request $request, ConservationPets $conservationPet): Response
     {
-        $isCheckPetContract = !!$this->conservationContactHeaderRepository->findOneBy(['Pet' => $conservationPet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]);
+        $isCheckPetContract = !is_null($this->conservationContactHeaderRepository->findOneBy(['Pet' => $conservationPet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]));
 
         $image0 = $request->get('img0') ?? '';
         $image1 = $request->get('img1') ?? '';
