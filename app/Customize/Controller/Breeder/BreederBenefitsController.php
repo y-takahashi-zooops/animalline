@@ -74,8 +74,7 @@ class BreederBenefitsController extends AbstractController
             switch ($request->get('mode')) {
                 case 'confirm':
                     return $this->render('animalline/breeder/member/benefits_confirm.twig', [
-                        'form' => $form->createView(),
-                        'isExistedBenefits' => $isExistedBenefits
+                        'form' => $form->createView()
                     ]);
                 case 'complete':
                     $benefitsStatus->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)

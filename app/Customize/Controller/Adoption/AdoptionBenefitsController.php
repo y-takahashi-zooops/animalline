@@ -73,8 +73,7 @@ class AdoptionBenefitsController extends AbstractController
             switch ($request->get('mode')) {
                 case 'confirm':
                     return $this->render('animalline/adoption/member/benefits_confirm.twig', [
-                        'form' => $form->createView(),
-                        'isExistedBenefits' => $isExistedBenefits
+                        'form' => $form->createView()
                     ]);
 
                 case 'complete':
