@@ -315,6 +315,8 @@ class AdoptionPetController extends AbstractController
      */
     public function adoption_pets_edit(Request $request, ConservationPets $conservationPet): Response
     {
+        $isCheckPetContract = !is_null($this->conservationContactHeaderRepository->findOneBy(['Pet' => $conservationPet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]));
+
         $image0 = $request->get('img0') ?? '';
         $image1 = $request->get('img1') ?? '';
         $image2 = $request->get('img2') ?? '';
@@ -379,7 +381,8 @@ class AdoptionPetController extends AbstractController
             'image2' => $image2,
             'image3' => $image3,
             'image4' => $image4,
-            'conservation' => $conservationPet->getConservation()
+            'conservation' => $conservationPet->getConservation(),
+            'isCheckPetContract' => $isCheckPetContract
         ]);
     }
 
