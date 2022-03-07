@@ -254,6 +254,35 @@
 										</div>
 									</dd>
 								</dl>
+								<div class="mb-5">
+									<div style="border-bottom:1px dotted #ccc; margin-top: 4rem; padding-bottom: 1rem">
+										<h2 class="mt-1">ペット情報入力用テンプレート編集</h2>
+										<p>
+											このテンプレート項目への入力は必須ではありません。こちらで入力した内容を、ペット情報入力の際に引用できます。同じ内容を複数のペットへ入力する場合にご活用ください。</p>
+									</div>
+									<dl>
+										<dt>
+											{{ form_label(form.delivery_way_template, '引き渡し方法', { 'label_attr': {'class': 'ec-label' }}) }}
+										</dt>
+										<dd>
+											<div class="ec-birth{{ has_errors(form.delivery_way_template) ? ' error' }}">
+												{{ form_widget(form.delivery_way_template) }}
+												{{ form_errors(form.delivery_way_template) }}
+											</div>
+										</dd>
+									</dl>
+									<dl>
+										<dt>
+											{{ form_label(form.delivery_time_template, '備考', { 'label_attr': {'class': 'ec-label' }}) }}
+										</dt>
+										<dd>
+											<div class="ec-birth{{ has_errors(form.delivery_time_template) ? ' error' }}">
+												{{ form_widget(form.delivery_time_template) }}
+												{{ form_errors(form.delivery_time_template) }}
+											</div>
+										</dd>
+									</dl>
+								</div>
                             </div>
                         </div>
                         <div class="ec-registerRole__actions">

@@ -50,9 +50,11 @@ class AdoptionBenefitsController extends AbstractController
         $benefitsStatus = new BenefitsStatus;
         $contactHeaders = $this->conservationContactHeaderRepository->findBy(['Customer' => $user, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT], ['create_date'=>'ASC']);
 
+        $isExistedBenefits = true;
         foreach ($contactHeaders as $contactHeader) {
             $petBenefit = $this->benefitsStatusRepository->findOneBy(['site_type' => AnilineConf::SITE_CATEGORY_CONSERVATION, 'pet_id' => $contactHeader->getPet()->getId()]);
             if(!$petBenefit) {
+                $isExistedBenefits = false;
                 $benefitsStatus->setShippingName($user->getName01() . $user->getName02())
                     ->setPetId($contactHeader->getPet()->getId())
                     ->setShippingZip($user->getPostalCode())
@@ -71,7 +73,7 @@ class AdoptionBenefitsController extends AbstractController
             switch ($request->get('mode')) {
                 case 'confirm':
                     return $this->render('animalline/adoption/member/benefits_confirm.twig', [
-                        'form' => $form->createView(),
+                        'form' => $form->createView()
                     ]);
 
                 case 'complete':
@@ -94,7 +96,8 @@ class AdoptionBenefitsController extends AbstractController
         }
 
         return [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'isExistedBenefits' => $isExistedBenefits
         ];
     }
 

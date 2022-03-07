@@ -312,12 +312,6 @@ class AdoptionQueryService
      */
     public function getListPet($conservation)
     {
-        $status = $this->conservationPetsRepository->createQueryBuilder('cp2')
-            ->join('Customize\Entity\DnaCheckStatus', 'dna2', 'WITH', 'cp2.id = dna2.pet_id')
-            ->where('dna2.check_status = 8')
-            ->select('cp2.id')
-            ->getDQL();
-
         $qb = $this->conservationPetsRepository->createQueryBuilder('cp');
         return $qb
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = cp.BreedsType')
@@ -325,7 +319,6 @@ class AdoptionQueryService
             ->where('cp.Conservation = :conservation')
             ->andWhere('cp.is_delete = 0')
             ->setParameter('conservation', $conservation)
-            ->andWhere($qb->expr()->notIn('cp.id', $status))
             ->orderBy('cch.last_message_date', 'ASC')
             ->select('cp, cch.id as cch_id, cch.last_message_date as last_msg, b.breeds_name')
             ->getQuery()

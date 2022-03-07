@@ -9,7 +9,7 @@
             <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
-            {{ form_widget(form.pet_kind, { 'attr': { 'onchange': 'petKindChange();' }}) }}
+            {{ form_widget(form.pet_kind) }}
             {{ form_errors(form.pet_kind) }}
         </div>
     </div>
@@ -199,6 +199,9 @@
         <div class="col-md-3">
             {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">必須</span>
+            <br>
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1"
+                id="btn_get_petinfo_template_delivery_way">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.delivery_way, {'attr': {'rows': 5, 'placeholder' : '引き渡し方法をご記入ください。'}}) }}
@@ -210,6 +213,9 @@
         <div class="col-md-3">
             {{ form_label(form.delivery_time, '備考', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             <span class="ec-required">上記項目以外のトライアル期間等を記載お願い致します。</span>
+            <br>
+            <button type="button" class="btn btn-ec-regular btn-secondary mt-1 mb-1"
+                id="btn_get_petinfo_template_delivery_time">テンプレート使用</button>
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.delivery_time) }}
@@ -217,11 +223,15 @@
         </div>
     </div>
 
+    {# ユーザー情報コピー用フィールド #}
+        <input type="hidden" id="delivery_way" value="{{ conservation.deliveryWayTemplate ?? '' }}">
+        <input type="hidden" id="delivery_time" value="{{ conservation.deliveryTimeTemplate ?? '' }}">
+    {# ユーザー情報コピー用フィールド #}
+
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            
-            <button class="ec-blockBtn--action mt-4 mb-4">{{ '登録する' }}</button>
+            <button class="ec-blockBtn--action mt-4 mb-4" {{ isCheckPetContract ? 'disabled' : '' }}>{{ '登録する' }}</button>
             <a class="ec-blockBtn--cancel" href={{url('adoption_pet_list')}} style="color:white;">{{ '戻る' }}</a>
             {% if id %}
                 {% if pet.isActive == 0 and pet.dnaCheckResult == 1 %}
@@ -229,12 +239,12 @@
                         data-is-active="{{ pet.isActive }}">このペットを公開にする</button>
                 {% elseif pet.isActive == 1 %}
                     <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status"
-                        data-is-active="{{ pet.isActive }}">このペットを非公開にする</button>
+                        data-is-active="{{ pet.isActive }}" {{ isCheckPetContract ? 'disabled' : '' }}>このペットを非公開にする</button>
                 {% endif %}
             
                 {% if not pet.isDelete %}
                     <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-delete-pet"
-                        data-is-active="{{ pet.isActive }}">このペットの情報を削除する</button>
+                        data-is-active="{{ pet.isActive }}" {{ isCheckPetContract ? 'disabled' : '' }}>このペットの情報を削除する</button>
                 {% endif %}
             {% endif %}
         </div>
@@ -425,6 +435,16 @@
         if ($('.conservation_pets_image4').val()) {
             $("#conservation_pets_image4").parent().parent().find('button').show();
         }
+
+        $('#btn_get_petinfo_template_delivery_way').click(function () {
+            // コピー配信方法
+            $('#conservation_pets_delivery_way').val($('#delivery_way').val());
+        });
+
+        $('#btn_get_petinfo_template_delivery_time').click(function () {
+            // コピー納期
+            $('#conservation_pets_delivery_time').val($('#delivery_time').val());
+        });
 
         $('#btn-change-status').on('click', function () {
         const modalMsg = $(this).data('is-active') ? 'ペット情報を非公開にしますか？' : 'ペット情報を公開しますか？';

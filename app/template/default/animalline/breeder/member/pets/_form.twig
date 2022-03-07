@@ -9,7 +9,7 @@
             <span class="ec-required">必須</span>
         </div>
         <div class="col-md-8 ec-input ec-select">
-            {{ form_widget(form.pet_kind, { 'attr': { 'onchange': 'petKindChange();' }}) }}
+            {{ form_widget(form.pet_kind) }}
             {{ form_errors(form.pet_kind) }}
         </div>
     </div>
@@ -309,18 +309,18 @@
         <div class="col-md-4"></div>
         <div class="col-md-4">
            
-            <button class="ec-blockBtn--action mt-4 mb-4">{{ '登録する' }}</button>
+            <button class="ec-blockBtn--action mt-4 mb-4" {{ isCheckPetContract ? 'disabled' : '' }}>{{ '登録する' }}</button>
             <a class="ec-blockBtn--cancel" href={{url('breeder_pet_list')}} style="color:white;">{{ '戻る' }}</a>
              {% if id %}
                 {% if pet.isActive == 0 and pet.dnaCheckResult == 1 %}
                     <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status" data-is-active="{{ pet.isActive }}">このペットを公開にする</button>
                 {% elseif pet.isActive == 1 %}
-                    <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status" data-is-active="{{ pet.isActive }}">このペットを非公開にする</button>
+                    <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status" data-is-active="{{ pet.isActive }}" {{ isCheckPetContract ? 'disabled' : '' }}>このペットを非公開にする</button>
                 {% endif %}
 
                 {% if not pet.isDelete %}
                     <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-delete-pet"
-                        data-is-active="{{ pet.isActive }}">このペットの情報を削除する</button>
+                        data-is-active="{{ pet.isActive }}" {{ isCheckPetContract ? 'disabled' : '' }}>このペットの情報を削除する</button>
                 {% endif %}
             {% endif %}
         </div>
@@ -487,19 +487,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
 <script>
-{# 犬・猫での表示切替 #}
-function petKindChange(){
-    if(document.getElementById('breeder_pets_pet_kind')){
-        id = document.getElementById('breeder_pets_pet_kind').value;
-        if( id == 1 ){
-            $('.cat-hidden').show();
-        } else if( id == 2 ) {
-            $('.cat-hidden').hide();
-        }  
-    }
-}
-window.onload = petKindChange;
-
 $("#pedigreeSelect").hide();
 if(breeder_pets_is_pedigree_0.checked){ 
     $("#pedigreeSelect").show();

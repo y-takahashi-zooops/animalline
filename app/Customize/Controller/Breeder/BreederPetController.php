@@ -439,6 +439,8 @@ class BreederPetController extends AbstractController
      */
     public function breeder_pets_edit(Request $request, BreederPets $breederPet)
     {
+        $isCheckPetContract = !is_null($this->breederContactHeaderRepository->findOneBy(['Pet' => $breederPet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]));
+
         $user = $this->getUser();
         $breeder = $this->breedersRepository->find($user);
         if (!$breeder) {
@@ -518,7 +520,8 @@ class BreederPetController extends AbstractController
             'image1' => $image1,
             'image2' => $image2,
             'image3' => $image3,
-            'image4' => $image4
+            'image4' => $image4,
+            'isCheckPetContract' => $isCheckPetContract
         ];
     }
 
