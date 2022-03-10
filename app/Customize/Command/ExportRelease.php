@@ -223,10 +223,10 @@ class ExportRelease extends Command
                         $recordCsv['areaCode'] = null;
                         $recordCsv['BBDATE'] = null;
                         $recordCsv['deliveryDestinationClassification'] = '1';
-                        $recordCsv['totalProductPrice'] = intval($order->getPaymentTotal());
+                        $recordCsv['totalProductPrice'] = intval($order->getSubTotal());
                         $recordCsv['discountAmount'] = 0;
-                        $recordCsv['consumptionTax'] = intval($order->getTax());
-                        $recordCsv['postage'] = ceil($order->getDeliveryFeeTotal() / 1.1);
+                        $recordCsv['consumptionTax'] = 0;
+                        $recordCsv['postage'] = $order->getDeliveryFeeTotal();
                         $recordCsv['coupon'] = null;
                         $recordCsv['grossWeight'] = 1;
                         $recordCsv['numberOfUnits'] = 1;
