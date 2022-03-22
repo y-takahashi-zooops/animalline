@@ -1705,6 +1705,11 @@ BREEDER - ADOPTION
   background:#ef5350 url(../img/breeder-bnr-bg01.png) no-repeat center left /90px auto;
   padding:20px 0 20px 60px;
 }
+.breeder-column__side_bnr ul li.breeder-column__side_bnr_column a{
+  background:#6614a8 url(../img/breeder-bnr-bg02.png) no-repeat center left /90px auto;
+  padding:20px 0 20px 60px;
+}
+
 .breeder-column__side_bnr ul li.breeder-column__side_bnr_learning a{
   background:#fff url(../img/top-logo03.png) no-repeat center left 20px /60px auto;
   border:solid #54afe6 1px;
