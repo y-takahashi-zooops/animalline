@@ -293,6 +293,17 @@ class BreederController extends AbstractController
     }
 
     /**
+     * よくあるご質問
+     *
+     * @Route("/breeder/faq", name="breeder_faq")
+     * @Template("animalline/breeder/faq.twig")
+     */
+    public function faq(Request $request)
+    {
+        return['title' => 'よくあるご質問',];
+    }
+
+    /**
      * 会社概要.
      *
      * @Route("/breeder/company", name="breeder_company")

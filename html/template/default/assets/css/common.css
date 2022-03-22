@@ -4599,3 +4599,103 @@ CONTENTS後藤追加分
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
+
+
+
+
+
+
+#footer03 {
+  
+}
+ 
+#footer03 .inner-block {
+  padding: 10px 0;
+}
+ 
+#footer03 .nav {
+  margin: 1rem auto;
+}
+
+#footer03 .nav li a {
+  padding: 10px 0;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+}
+ 
+#footer03 .js-aco li a {
+  padding-left: 15px;
+}
+ 
+#footer03 .js-aco li a span {
+  position: relative;
+ 
+}
+ 
+#footer03 .js-aco li a span::before {
+  display: inline-block;
+  position: absolute;
+  content: '';
+  width: 10px;
+  height: 1px;
+  background-color: #ccc;
+  top: 0;
+  bottom: 0;
+  right: calc(100% + 5px);
+  margin: auto;
+}
+
+/* スマホ */
+@media only screen and (max-width: 640px) {
+  #footer03 .nav li {
+    width: 100%;
+    padding: 1rem 1rem;
+  }
+
+  #footer03 .nav .nav-child li {
+    border: 1px solid;
+  }
+}
+
+/* PC */
+@media only screen and (min-width: 641px) {
+  #footer03 .area {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+ 
+  #footer03 .nav {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    width: 800px;
+  }
+ 
+  #footer03 .nav li {
+    text-align: left;
+    padding: 2px 0;
+  }
+
+  #footer03 .nav li a {
+    font-size: 14px;
+    margin: 0;
+    text-align: left;
+  }
+ 
+  #footer03 .nav li a:hover {
+    opacity: 1;
+    color: #426904;
+  }
+}
+
