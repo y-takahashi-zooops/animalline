@@ -8,6 +8,9 @@ function htmlToCSV(html, filename) {
             row.push(cols[j].innerText);
         }
 
+        // skip empty result + browser trans
+        if (row[0] == '結果が０件です。' || row[0] == 'Method') continue;
+
         data.push(row.join(","));
     }
 
