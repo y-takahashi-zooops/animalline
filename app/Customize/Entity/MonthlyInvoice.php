@@ -66,6 +66,20 @@ class MonthlyInvoice
      */
     private $total_incentive;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
+     */
+    private $create_date;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
+     */
+    private $update_date;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -163,6 +177,34 @@ class MonthlyInvoice
     public function setTotalIncentive(?int $total_incentive): self
     {
         $this->total_incentive = $total_incentive;
+
+        return $this;
+    }
+
+    /**
+     * Set createDate.
+     *
+     * @param \DateTime $createDate
+     *
+     * @return Payment
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->create_date = $createDate;
+
+        return $this;
+    }
+
+    /**
+     * Set updateDate.
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Payment
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->update_date = $updateDate;
 
         return $this;
     }
