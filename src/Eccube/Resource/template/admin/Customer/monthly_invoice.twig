@@ -16,12 +16,19 @@
 {% endblock stylesheet %}
 
 {% block javascript %}
+    <script src="{{ asset('assets/js/csv.js') }}"></script>
     <script>
-        $(function () {
+        const CSV_FILE_NAME = 'monthly_invoices.csv';
+
+        $(function(){
             $(".month").val(parseInt('{{ month }}'));
             $(".year").val('{{ year }}');
             $(".type").val('{{ type }}');
-        })
+            $('#btn-csv-download').click(function () {
+                var html = document.querySelector("table").outerHTML;
+                htmlToCSV(html, CSV_FILE_NAME);
+            });
+        });
     </script>
 {% endblock javascript %}
 
@@ -50,7 +57,7 @@
         </div>
     </form>
     <div class="float-right">
-        <button>CSV Download</button>
+        <button id="btn-csv-download">CSV Download</button>
     </div>
     <table class="table">
         <thead class="thead-darkt">
