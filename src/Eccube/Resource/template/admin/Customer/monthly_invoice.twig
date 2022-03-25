@@ -4,6 +4,10 @@
 
 {% block title %}{% endblock %}
 {% block sub_title %}請求・支払一覧{% endblock %}
+{% set params = app.request.query.all %}
+{% set month = params.month is defined ? params.month : 'now'|date('m') %}
+{% set year = params.year is defined ? params.year : 'now'|date('Y') %}
+{% set type = params.type is defined ? params.type : 1 %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
@@ -12,30 +16,39 @@
 {% endblock stylesheet %}
 
 {% block javascript %}
+    <script>
+        $(function () {
+            $(".month").val(parseInt('{{ month }}'));
+            $(".year").val('{{ year }}');
+            $(".type").val('{{ type }}');
+        })
+    </script>
 {% endblock javascript %}
 
 {% block main %}
-    <div class="form-group">
-        <label for="sel1">処理日時</label>
-        <select class="col-1" id="sel1">
-            <option>2022</option>
-        </select>
-        <label>年</label>
-        <select class="col-1" id="sel1">
-            {% for i in range(1, 12) %}
-                <option>{{ i }}</option>
-            {% endfor %}
-        </select>
-        <label>月</label>
-    </div>
-    <div class="form-group">
-        <label for="sel1">サイト種別</label>
-        <select class="col-1" id="sel1">
-            <option>ブリーダー </option>
-            <option>保護団体</option>
-        </select>
-        <button type="submit">検索</button>
-    </div>
+    <form id="search" name="search" method="get" action="{{ url('admin_monthly_invoice') }}">
+        <div class="form-group">
+            <label for="sel1">処理日時</label>
+            <select class="col-1 year" name="year">
+                <option>2022</option>
+            </select>
+            <label>年</label>
+            <select class="col-1 month" name="month">
+                {% for i in range(1, 12) %}
+                    <option>{{ i }}</option>
+                {% endfor %}
+            </select>
+            <label>月</label>
+        </div>
+        <div class="form-group">
+            <label for="sel1">サイト種別</label>
+            <select class="col-1 type" name="type">
+                <option value="1">ブリーダー </option>
+                <option value="2">保護団体</option>
+            </select>
+            <button type="submit">検索</button>
+        </div>
+    </form>
     <div class="float-right">
         <button>CSV Download</button>
     </div>
@@ -51,14 +64,20 @@
         </tr>
         </thead>
         <tbody>
+        {% for monthlyInvoice in listMonthlyInvoice %}
         <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
+            <td>{{ monthlyInvoice.name01 }} {{ monthlyInvoice.name02 }}</td>
+            <td>{{ monthlyInvoice.monthlyInvoice.contract_count }}</td>
+            <td>{{ monthlyInvoice.monthlyInvoice.contract_commission }}</td>
+            <td>{{ monthlyInvoice.monthlyInvoice.ec_count }}</td>
+            <td>{{ monthlyInvoice.monthlyInvoice.ec_incentive }}</td>
+            <td>{{ monthlyInvoice.monthlyInvoice.total_incentive }}</td>
         </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">結果が０件です。</td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 {% endblock %}

@@ -18,6 +18,7 @@ use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
+use Customize\Service\CustomerQueryService;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\QueryBuilder;
 use Eccube\Common\Constant;
@@ -101,6 +102,11 @@ class CustomerController extends AbstractController
      */
     protected $customerStatusRepository;
 
+    /**
+     * @var CustomerQueryService
+     */
+    protected $customerQueryService;
+
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
@@ -112,7 +118,8 @@ class CustomerController extends AbstractController
         ConservationsRepository $conservationsRepository,
         ConservationPetsRepository $conservationPetsRepository,
         BreederPetsRepository $breederPetsRepository,
-        CustomerStatusRepository $customerStatusRepository
+        CustomerStatusRepository $customerStatusRepository,
+        CustomerQueryService $customerQueryService
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -125,6 +132,7 @@ class CustomerController extends AbstractController
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->customerStatusRepository = $customerStatusRepository;
+        $this->customerQueryService = $customerQueryService;
     }
 
     /**
@@ -420,8 +428,11 @@ class CustomerController extends AbstractController
      * @Route("/%eccube_admin_route%/monthly-invoice", name="admin_monthly_invoice")
      * @Template("@admin/Customer/monthly_invoice.twig")
      */
-    public function MonthlyInvoice()
+    public function MonthlyInvoice(Request $request)
     {
-
+        $listMonthlyInvoice = $this->customerQueryService->getMonthlyInvoice($request);
+        return [
+            'listMonthlyInvoice' => $listMonthlyInvoice
+        ];
     }
 }
