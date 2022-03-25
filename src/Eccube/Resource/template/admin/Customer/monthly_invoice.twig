@@ -1,0 +1,64 @@
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['customer', 'customer_master'] %}
+
+{% block title %}{% endblock %}
+{% block sub_title %}請求・支払一覧{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+    <style type="text/css">
+    </style>
+{% endblock stylesheet %}
+
+{% block javascript %}
+{% endblock javascript %}
+
+{% block main %}
+    <div class="form-group">
+        <label for="sel1">処理日時</label>
+        <select class="col-1" id="sel1">
+            <option>2022</option>
+        </select>
+        <label>年</label>
+        <select class="col-1" id="sel1">
+            {% for i in range(1, 12) %}
+                <option>{{ i }}</option>
+            {% endfor %}
+        </select>
+        <label>月</label>
+    </div>
+    <div class="form-group">
+        <label for="sel1">サイト種別</label>
+        <select class="col-1" id="sel1">
+            <option>ブリーダー </option>
+            <option>保護団体</option>
+        </select>
+        <button type="submit">検索</button>
+    </div>
+    <div class="float-right">
+        <button>CSV Download</button>
+    </div>
+    <table class="table">
+        <thead class="thead-darkt">
+        <tr>
+            <th>ブリーダー/保護団体名</th>
+            <th>成約件数</th>
+            <th>成約手数料</th>
+            <th>EC販売件数</th>
+            <th>ECインセンティブ</th>
+            <th>請求/支払額</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>John</td>
+            <td>Doe</td>
+            <td>john@example.com</td>
+            <td>John</td>
+            <td>Doe</td>
+            <td>john@example.com</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

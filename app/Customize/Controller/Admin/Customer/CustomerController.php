@@ -415,4 +415,13 @@ class CustomerController extends AbstractController
 
         return $response;
     }
+
+    /**
+     * @Route("/%eccube_admin_route%/monthly-invoice", name="admin_monthly_invoice")
+     * @Template("@admin/Customer/monthly_invoice.twig")
+     */
+    public function MonthlyInvoice()
+    {
+
+    }
 }

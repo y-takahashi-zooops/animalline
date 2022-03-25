@@ -48,6 +48,9 @@ parameters:
                 customer_edit:
                     name: admin.customer.customer_registration
                     url: admin_customer_new
+                monthly_invoice:
+                    name: admin.customer.monthly_invoice
+                    url: admin_monthly_invoice
         content:
             name: admin.content.contents_management
             icon: fa-file-text-o
