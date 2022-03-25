@@ -431,9 +431,8 @@ class CustomerController extends AbstractController
      */
     public function MonthlyInvoice(Request $request, PaginatorInterface $paginator)
     {
-        $listMonthlyInvoice = $this->customerQueryService->getMonthlyInvoice($request);
         $listMonthlyInvoice = $paginator->paginate(
-            $listMonthlyInvoice,
+            $this->customerQueryService->getMonthlyInvoice($request),
             $request->query->getInt('page', 1),
             $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE_ADMIN)
         );

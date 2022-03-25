@@ -186,7 +186,7 @@ class MonthlyInvoice
      *
      * @param \DateTime $createDate
      *
-     * @return Payment
+     * @return MonthlyInvoice
      */
     public function setCreateDate($createDate)
     {
@@ -200,7 +200,7 @@ class MonthlyInvoice
      *
      * @param \DateTime $updateDate
      *
-     * @return Payment
+     * @return MonthlyInvoice
      */
     public function setUpdateDate($updateDate)
     {

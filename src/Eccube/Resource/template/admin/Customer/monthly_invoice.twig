@@ -12,6 +12,9 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
     <style type="text/css">
+        label {
+            margin-bottom: 0;
+        }
     </style>
 {% endblock stylesheet %}
 
@@ -35,7 +38,7 @@
 {% block main %}
     <div class="pl-4 pr-4">
         <form id="search" name="search" method="get" action="{{ url('admin_monthly_invoice') }}">
-            <div class="row mr-0">
+            <div class="row mr-0 d-flex align-items-center">
                 <div class="col-1">
                     <label for="sel1">処理日時</label>
                 </div>
@@ -63,7 +66,7 @@
                 </div>
             </div>
         
-            <div class="row mr-0 mt-1">
+            <div class="row mr-0 mt-1 d-flex align-items-center">
                 <div class="col-1">
                     <label for="sel1">サイト種別</label>
                 </div>
