@@ -24,9 +24,6 @@
         const CSV_FILE_NAME = 'monthly_invoices.csv';
 
         $(function(){
-            $(".month").val(parseInt('{{ month }}'));
-            $(".year").val('{{ year }}');
-            $(".type").val('{{ type }}');
             $('#btn-csv-download').click(function () {
                 var html = document.querySelector("table").outerHTML;
                 htmlToCSV(html, CSV_FILE_NAME);
@@ -46,7 +43,7 @@
                 <div class="col-2">
                     <select class="year form-control" name="year">
                         {% for i in range(2016, 2036) %}
-                        <option value="{{ i }}">{{ i }}</option>
+                        <option {{ i == year ? 'selected' : '' }} value="{{ i }}">{{ i }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -57,7 +54,7 @@
                 <div class="col-2">
                     <select class="month form-control" name="month">
                         {% for i in range(1, 12) %}
-                        <option value="{{ i }}">{{ i }}</option>
+                        <option value="{{ i }}" {{ i == month ? 'selected' : '' }}>{{ i }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -72,8 +69,8 @@
                 </div>
                 <div class="col-2">
                     <select class="type  form-control" name="type">
-                        <option value="1">ブリーダー </option>
-                        <option value="2">保護団体</option>
+                        <option value="1" {{ type == 1 ? 'selected' : '' }}>ブリーダー </option>
+                        <option value="2" {{ type == 2 ? 'selected' : '' }}>保護団体</option>
                     </select>
                 </div>
                 <div class="col-4"></div>
