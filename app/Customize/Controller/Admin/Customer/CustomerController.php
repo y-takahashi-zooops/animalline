@@ -44,6 +44,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class CustomerController extends AbstractController
 {
@@ -428,9 +429,14 @@ class CustomerController extends AbstractController
      * @Route("/%eccube_admin_route%/monthly-invoice", name="admin_monthly_invoice")
      * @Template("@admin/Customer/monthly_invoice.twig")
      */
-    public function MonthlyInvoice(Request $request)
+    public function MonthlyInvoice(Request $request, PaginatorInterface $paginator)
     {
         $listMonthlyInvoice = $this->customerQueryService->getMonthlyInvoice($request);
+        $listMonthlyInvoice = $paginator->paginate(
+            $listMonthlyInvoice,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE_ADMIN)
+        );
         return [
             'listMonthlyInvoice' => $listMonthlyInvoice
         ];
