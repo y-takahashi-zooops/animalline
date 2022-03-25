@@ -2,8 +2,8 @@
 
 {% set menus = ['customer', 'monthly_invoice'] %}
 
-{% block title %}会員管理{% endblock %}
-{% block sub_title %}請求・支払一覧{% endblock %}
+{% block title %}請求・支払一覧{% endblock %}
+{% block sub_title %}会員管理{% endblock %}
 {% set params = app.request.query.all %}
 {% set month = params.month is defined ? params.month : 'now'|date('m') %}
 {% set year = params.year is defined ? params.year : 'now'|date('Y') %}
@@ -63,7 +63,7 @@
                 </div>
             </div>
         
-            <div class="row mr-0 mt-1 d-flex align-items-center justify-content-between">
+            <div class="row mr-0 mt-1 d-flex align-items-center">
                 <div class="col-1">
                     <label for="sel1">サイト種別</label>
                 </div>
@@ -73,7 +73,9 @@
                         <option value="2" {{ type == 2 ? 'selected' : '' }}>保護団体</option>
                     </select>
                 </div>
-                <div class="col-4"></div>
+            </div>
+
+            <div class="row mr-0 mt-2 d-flex align-items-center">
                 <div class="col">
                     <button type="submit" class="btn btn-ec-conversion px-5 ladda-button">検索</button>
                 </div>
@@ -103,11 +105,11 @@
                         {% for monthlyInvoice in listMonthlyInvoice %}
                         <tr>
                             <td>{{ monthlyInvoice.name01 }} {{ monthlyInvoice.name02 }}</td>
-                            <td>{{ monthlyInvoice.monthlyInvoice.contract_count }}</td>
-                            <td>{{ monthlyInvoice.monthlyInvoice.contract_commission }}</td>
-                            <td>{{ monthlyInvoice.monthlyInvoice.ec_count }}</td>
-                            <td>{{ monthlyInvoice.monthlyInvoice.ec_incentive }}</td>
-                            <td>{{ monthlyInvoice.monthlyInvoice.total_incentive }}</td>
+                            <td class="text-right">{{ monthlyInvoice.monthlyInvoice.contract_count }}</td>
+                            <td class="text-right">{{ monthlyInvoice.monthlyInvoice.contract_commission }}</td>
+                            <td class="text-right">{{ monthlyInvoice.monthlyInvoice.ec_count }}</td>
+                            <td class="text-right">{{ monthlyInvoice.monthlyInvoice.ec_incentive }}</td>
+                            <td class="text-right">{{ monthlyInvoice.monthlyInvoice.total_incentive }}</td>
                         </tr>
                         {% else %}
                         <tr>
