@@ -18,6 +18,7 @@ use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
+use Customize\Service\CustomerQueryService;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\QueryBuilder;
 use Eccube\Common\Constant;
@@ -43,6 +44,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class CustomerController extends AbstractController
 {
@@ -101,6 +103,11 @@ class CustomerController extends AbstractController
      */
     protected $customerStatusRepository;
 
+    /**
+     * @var CustomerQueryService
+     */
+    protected $customerQueryService;
+
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
@@ -112,7 +119,8 @@ class CustomerController extends AbstractController
         ConservationsRepository $conservationsRepository,
         ConservationPetsRepository $conservationPetsRepository,
         BreederPetsRepository $breederPetsRepository,
-        CustomerStatusRepository $customerStatusRepository
+        CustomerStatusRepository $customerStatusRepository,
+        CustomerQueryService $customerQueryService
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -125,6 +133,7 @@ class CustomerController extends AbstractController
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->customerStatusRepository = $customerStatusRepository;
+        $this->customerQueryService = $customerQueryService;
     }
 
     /**
@@ -414,5 +423,21 @@ class CustomerController extends AbstractController
         log_info('会員CSVファイル名', [$filename]);
 
         return $response;
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/monthly-invoice", name="admin_monthly_invoice")
+     * @Template("@admin/Customer/monthly_invoice.twig")
+     */
+    public function MonthlyInvoice(Request $request, PaginatorInterface $paginator)
+    {
+        $listMonthlyInvoice = $paginator->paginate(
+            $this->customerQueryService->getMonthlyInvoice($request),
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE_ADMIN)
+        );
+        return [
+            'listMonthlyInvoice' => $listMonthlyInvoice
+        ];
     }
 }

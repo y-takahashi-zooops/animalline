@@ -1,0 +1,128 @@
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['customer', 'monthly_invoice'] %}
+
+{% block title %}請求・支払一覧{% endblock %}
+{% block sub_title %}会員管理{% endblock %}
+{% set params = app.request.query.all %}
+{% set month = params.month is defined ? params.month : 'now'|date('m') %}
+{% set year = params.year is defined ? params.year : 'now'|date('Y') %}
+{% set type = params.type is defined ? params.type : 1 %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+    <style type="text/css">
+        label {
+            margin-bottom: 0;
+        }
+    </style>
+{% endblock stylesheet %}
+
+{% block javascript %}
+    <script src="{{ asset('assets/js/csv.js') }}"></script>
+    <script>
+        const CSV_FILE_NAME = 'monthly_invoices.csv';
+
+        $(function(){
+            $('#btn-csv-download').click(function () {
+                var html = document.querySelector("table").outerHTML;
+                htmlToCSV(html, CSV_FILE_NAME);
+            });
+        });
+    </script>
+{% endblock javascript %}
+
+{% block main %}
+    <div class="pl-4 pr-4">
+        <form id="search" name="search" method="get" action="{{ url('admin_monthly_invoice') }}">
+            <div class="row mr-0 d-flex align-items-center">
+                <div class="col-1">
+                    <label for="sel1">処理日時</label>
+                </div>
+        
+                <div class="col-2">
+                    <select class="year form-control" name="year">
+                        {% for i in range(2016, 2036) %}
+                        <option {{ i == year ? 'selected' : '' }} value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>年</label>
+                </div>
+        
+                <div class="col-2">
+                    <select class="month form-control" name="month">
+                        {% for i in range(1, 12) %}
+                        <option value="{{ i }}" {{ i == month ? 'selected' : '' }}>{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>月</label>
+                </div>
+            </div>
+        
+            <div class="row mr-0 mt-1 d-flex align-items-center">
+                <div class="col-1">
+                    <label for="sel1">サイト種別</label>
+                </div>
+                <div class="col-2">
+                    <select class="type  form-control" name="type">
+                        <option value="1" {{ type == 1 ? 'selected' : '' }}>ブリーダー </option>
+                        <option value="2" {{ type == 2 ? 'selected' : '' }}>保護団体</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mr-0 mt-2 d-flex align-items-center">
+                <div class="col">
+                    <button type="submit" class="btn btn-ec-conversion px-5 ladda-button">検索</button>
+                </div>
+            </div>
+        </form>
+        
+        <div class="float-right mt-2">
+            <button class="btn btn-ec-regular" id="btn-csv-download"><i
+                    class="fa fa-cloud-download mr-1 text-secondary"></i><span>CSVダウンロード</span></button>
+        </div>
+        <br><br>
+        
+        <div class="card rounded border-0 mt-2 mb-4 d-block">
+            <div class="card-body p-0">
+                <table class="table">
+                    <thead class="thead-darkt">
+                        <tr>
+                            <th>ブリーダー/保護団体名</th>
+                            <th>成約件数</th>
+                            <th>成約手数料</th>
+                            <th>EC販売件数</th>
+                            <th>ECインセンティブ</th>
+                            <th>請求/支払額</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for monthlyInvoice in listMonthlyInvoice %}
+                        <tr>
+                            <td>{{ monthlyInvoice.name01 }} {{ monthlyInvoice.name02 }}</td>
+                            <td class="text-right">{{ monthlyInvoice.monthlyInvoice.contract_count }}</td>
+                            <td class="text-right">{{ monthlyInvoice.monthlyInvoice.contract_commission }}</td>
+                            <td class="text-right">{{ monthlyInvoice.monthlyInvoice.ec_count }}</td>
+                            <td class="text-right">{{ monthlyInvoice.monthlyInvoice.ec_incentive }}</td>
+                            <td class="text-right">{{ monthlyInvoice.monthlyInvoice.total_incentive }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5">結果が０件です。</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="navigation float-right">
+            {{ knp_pagination_render(listMonthlyInvoice) }}
+        </div>
+    </div>
+{% endblock %}
