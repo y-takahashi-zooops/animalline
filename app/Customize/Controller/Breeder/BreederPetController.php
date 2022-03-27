@@ -284,6 +284,12 @@ class BreederPetController extends AbstractController
 
         $html_title = "ペット詳細 - " . $breederPet->getBreedsType()->getbreedsName();
 
+        //$maintitle = "犬・猫ブリーダー直販のアニマルライン";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => "#",'title' => $breederPet->getBreedsType()->getbreedsName())
+        );
+        
         return $this->render(
             'animalline/breeder/pet/detail.twig',
             [
@@ -296,7 +302,10 @@ class BreederPetController extends AbstractController
                 'isLoggedIn' => $isLoggedIn,
                 'breederExamInfo' => $breederExamInfo,
                 'pedigree' => $pedigree,
-                'is56DaysOld' => $is56DaysOld
+                'is56DaysOld' => $is56DaysOld,
+                'maintitle' => $html_title,
+                'breadcrumb' => $breadcrumb,
+                "description_add" => $breederPet->getBreedsType()->getbreedsName()
             ]
         );
     }

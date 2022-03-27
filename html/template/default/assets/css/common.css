@@ -1845,10 +1845,20 @@ BREEDER - ADOPTION
     margin: 0;
 }
 
+.header-h1 {
+  font-size: 20px;
+  text-align: center;
+}
+
 /*------------------
 Width <= 1280px
 ------------------*/
 @media screen and (max-width: 1280px) {
+  .header-h1 {
+    font-size: 12px;
+    text-align: center;
+  }
+  
 .breeder-mv__container{
   padding:0 40px;
 }
@@ -4704,3 +4714,51 @@ CONTENTS後藤追加分
   }
 }
 
+
+/* パンくず */
+.ani-breadcrumb {
+  margin:  10px 0 10px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ani-breadcrumb li {
+  display: inline-block;/*横に並ぶように*/
+  list-style: none;
+  font-weight: bold;/*太字*/
+}
+
+.ani-breadcrumb li:after {
+  /* ▶を表示*/
+  font-family: FontAwesome;
+  content: '\f0da';
+  padding: 0 0.3em;
+  color: #72a1f7;
+}
+
+.ani-breadcrumb li:last-child:after {
+  content: '';
+}
+
+.ani-breadcrumb li a {
+  display: inline-block;
+  padding: 0.2em 0.8em;
+  border-radius: 15px;
+  text-decoration: none;
+  color: #72a1f7;
+  background: #c6e2ff;
+  font-size: 0.9em;
+}
+
+.ani-breadcrumb li a:hover {
+  background: #c9dbfb;
+}
+
+.header-title {
+  background-color:rgb(255, 255, 255);
+}
+
+.header-title h1{
+  font-size: 20px;
+  color: #888;
+}

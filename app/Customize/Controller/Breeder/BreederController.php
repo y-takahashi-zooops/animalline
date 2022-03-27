@@ -158,6 +158,11 @@ class BreederController extends AbstractController
         $newPets = $this->breederQueryService->getPetNew($petKind);
         $favoritePets = $this->breederQueryService->getPetFeatured($petKind);
 
+        $maintitle = "犬・猫ブリーダー直販のアニマルライン";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP")
+        );
+
         return $this->render('animalline/breeder/index.twig', [
             'title' => 'ペット検索',
             'petKind' => $petKind,
@@ -165,6 +170,8 @@ class BreederController extends AbstractController
             'regions' => $regions,
             'newPets' => $newPets,
             'favoritePets' => $favoritePets,
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
         ]);
     }
 
@@ -300,7 +307,17 @@ class BreederController extends AbstractController
      */
     public function faq(Request $request)
     {
-        return['title' => 'よくあるご質問',];
+        $maintitle = "よくあるご質問";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => $this->generateUrl('breeder_faq'),'title' =>"よくあるご質問")
+        );
+
+        return[
+            'title' => 'よくあるご質問',
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
+        ];
     }
 
     /**
@@ -311,7 +328,96 @@ class BreederController extends AbstractController
      */
     public function company(Request $request)
     {
-        return['title' => '会社概要',];
+        $maintitle = "会社概要";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => $this->generateUrl('breeder_company'),'title' =>"会社概要")
+        );
+
+        return['title' => '会社概要',
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
+        ];
+    }
+
+    /**
+     * ご購入の流れ.
+     *
+     * @Route("/breeder/buyinfo", name="breeder_buyinfo")
+     * @Template("animalline/breeder/buyinfo.twig")
+     */
+    public function buyinfo(Request $request)
+    {
+        $maintitle = "ご購入の流れ";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => $this->generateUrl('breeder_buyinfo'),'title' =>"ご購入の流れ")
+        );
+
+        return['title' => 'ご購入の流れ',
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
+        ];
+    }
+
+    /**
+     * お引渡しの流れ.
+     *
+     * @Route("/breeder/transferinfo", name="breeder_transferinfo")
+     * @Template("animalline/breeder/transferinfo.twig")
+     */
+    public function transferinfo(Request $request)
+    {
+        $maintitle = "お引渡しの流れ";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => $this->generateUrl('breeder_transferinfo'),'title' =>"お引渡しの流れ")
+        );
+
+        return['title' => 'お引渡しの流れ',
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
+        ];
+    }
+
+    /**
+     * お迎え時の費用について.
+     *
+     * @Route("/breeder/costinfo", name="breeder_costinfo")
+     * @Template("animalline/breeder/costinfo.twig")
+     */
+    public function costinfo(Request $request)
+    {
+        $maintitle = "お迎え時の費用について";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => $this->generateUrl('breeder_costinfo'),'title' =>"お迎え時の費用について")
+        );
+
+        return['title' => 'お迎え時の費用について',
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
+        ];
+    }
+
+    /**
+     * 初めての方へ.
+     *
+     * @Route("/breeder/firstinfo", name="breeder_firstinfo")
+     * @Template("animalline/breeder/firstinfo.twig")
+     */
+    public function firstinfo(Request $request)
+    {
+        $maintitle = "初めての方へ";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => $this->generateUrl('breeder_firstinfo'),'title' =>"初めての方へ")
+        );
+
+        return['title' => '初めての方へ',
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
+        ];
     }
 
     /**

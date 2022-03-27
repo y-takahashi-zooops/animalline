@@ -1,4 +1,8 @@
 {% set title = title|default('') %}
+{% set maintitle = maintitle|default('') %}
+{% set breadcrumb = breadcrumb|default('') %}
+{% set description_add = description_add|default('') %}
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -14,7 +18,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>保護犬・猫の里親募集 アニマルライン | {{ title }}</title>
-    <meta name="description" content=" アニマルラインの保護犬・猫の里親募集のページです。一頭でも多くの保護犬猫が救われ、社会的な殺処分問題の解決につなげることを目指しています。">
+    <meta name="description" content=" アニマルラインの保護犬・猫の里親募集の{{ description_add }}ページです。一頭でも多くの保護犬猫が救われ、社会的な殺処分問題の解決につなげることを目指しています。">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
@@ -27,6 +31,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/base-style.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/common.css') }}">
+    <link rel="canonical" href=" {{ app.request.getUri }}">
     {% block stylesheet %}{% endblock %}
 </head>
 <body>
@@ -110,6 +115,20 @@
             </div>
         </header>
         <main role="main">
+            <div class="header-title">
+                <h1>{{ maintitle }}</h1>
+                <ol itemscope itemtype="http://schema.org/BreadcrumbList" class="ani-breadcrumb">
+                    {% set i = 1 %}
+                    {% for item in breadcrumb %}
+                        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                            <a itemprop="item" href=" {{ item.url }} ">
+                            <span itemprop="name"> {{ item.title }}</span></a>
+                            <meta itemprop="position" content="{{ i }}" />
+                        </li>
+                        {% set i = i + 1 %}
+                    {% endfor %}
+                </ol>
+            </div>
             {% block main %}{% endblock %}
             <div class="pageback">
                 <a href="#" onclick="history.back(-1);return false;"><i class="bi bi-arrow-return-left"></i></a>
@@ -119,20 +138,45 @@
                 <a href="#wrapper"><i class="bi bi-arrow-bar-up"></i></a>
             </div>
         </main>
-        <footer>
+        <footer id="footer03">
             <div class="inner">
-            <div class="footer-row">
-                
-                <div class="footer-link">
-                <!--<a href="{{url('adoption_company')}}">会社概要</a>｜
-                <a href="{{url('adoption_tradelaw')}}">特定商取引法に基づく表記</a>｜ -->
-                <a href="{{url('adoption_company')}}">会社概要</a>｜
-                <a href="{{url('adoption_policy')}}">プライバシーポリシー</a>
+                <div class="footer-row">
+                    <!--
+                    <div class="footer-link">
+                    <a href="{{url('adoption_company')}}">会社概要</a>｜
+                    <a href="{{url('adoption_tradelaw')}}">特定商取引法に基づく表記</a>｜ 
+                    <a href="{{url('adoption_company')}}">会社概要</a>｜
+                    <a href="{{url('adoption_policy')}}">プライバシーポリシー</a>
+                    </div>
+                    -->
+
+                    <ul class="nav">
+                        <li>
+                            <ul class="nav-child">
+                                <li><a href="{{url('adoption_top')}}"><span>Adoption検索TOP</span></a></li>
+                                <li><a href="{{url('adoption_search')}}"><span>保護団体検索</span></a></li>
+                                <li><a href="{{url('adoption_costinfo')}}"><span>お迎え時の費用について</span></a></li>
+                                <li><a href="{{ url('adoption_ani_contact') }}">お問い合わせ</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <ul class="nav-child">
+                                <li><a href="{{url('adoption_guide_dog')}}"><span>お迎えガイド</span></a></li>
+                                <li><a href="{{ url("ani_dctn_info") }}"><span>ペットの家庭教師</span></a></li>
+                                <li><a href="{{ url("homepage") }}"><span>アニマルラインショップ</span></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <ul class="nav-child">
+                                <li><a href="{{url('adoption_company')}}"><span>会社概要</span></a></li>
+                                <li><a href="{{url('adoption_policy')}}"><span>プライバシーポリシー</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="footer-logo"><a href="{{url('adoption_top')}}"><img src="{{ asset('assets/img/logo.png') }}" width="305" height="40" alt="Animalline"/></a></div>
             <div class="copyright"><small>Copyright © 2021 Animalline All Rights Reserved.</small></div>
-            </div>
         </footer>
     
         <div id="side-menu">

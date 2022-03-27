@@ -184,6 +184,13 @@ class AdoptionPetController extends AbstractController
         );
 
         $html_title = "ペット詳細 - ".$conservationPet->getBreedsType()->getbreedsName();
+        
+        //$maintitle = "犬・猫ブリーダー直販のアニマルライン";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"保護団体TOP"),
+            array('url' => "#",'title' => $conservationPet->getBreedsType()->getbreedsName())
+        );
+
         return $this->render(
             'animalline/adoption/pet/detail.twig',
             [
@@ -194,6 +201,8 @@ class AdoptionPetController extends AbstractController
                 'isFavorite' => $isFavorite,
                 'isLoggedIn' => $isLoggedIn,
                 'petKind' => $petKind,
+                'maintitle' => $html_title,
+                'breadcrumb' => $breadcrumb,
             ]
         );
     }

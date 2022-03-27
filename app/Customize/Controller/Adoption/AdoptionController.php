@@ -133,6 +133,12 @@ class AdoptionController extends AbstractController
         $newPets = $this->adoptionQueryService->getPetNew($petKind);
         $favoritePets = $this->adoptionQueryService->getPetFeatured($petKind);
 
+        
+        $maintitle = "保護犬・猫の里親募集 アニマルライン";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('adoption_top'),'title' =>"保護団体TOP")
+        );
+
         return $this->render('animalline/adoption/index.twig', [
             'title' => 'ペット検索',
             'petKind' => $petKind,
@@ -140,6 +146,8 @@ class AdoptionController extends AbstractController
             'regions' => $regions,
             'newPets' => $newPets,
             'favoritePets' => $favoritePets,
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
         ]);
     }
 
@@ -238,6 +246,26 @@ class AdoptionController extends AbstractController
         return['title' => '会社概要',];
     }
     
+    /**
+     * お迎え時の費用について.
+     *
+     * @Route("/adoption/costinfo", name="adoption_costinfo")
+     * @Template("animalline/adoption/costinfo.twig")
+     */
+    public function costinfo(Request $request)
+    {
+        $maintitle = "お迎え時の費用について";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('adoption_top'),'title' =>"保護団体TOP"),
+            array('url' => $this->generateUrl('adoption_costinfo'),'title' =>"お迎え時の費用について")
+        );
+
+        return['title' => 'お迎え時の費用について',
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
+        ];
+    }
+
     /**
      * 特定商取引法に基づく表記.
      *

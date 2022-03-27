@@ -1,0 +1,24 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/adoption/frame.twig' %}
+
+{% block main %}
+   <section id="breeder-column">
+        <section id="page-detail-content02" class="page-detail-content02_breeder">
+            <div class="page-detail-content02__body">
+                <article id="content03">
+                    <div class="text">
+                        <h3 class="color03">お迎え時の費用について</h3>
+                        <p>Animallineではお迎えの際に諸費用を頂いておりません。
+各保護団体様で、医療費や手術費用等の請求がある場合がございます。お気に入りのわんちゃん・ねこちゃんの詳細ページまたは、各保護団体様へのメッセージにてご確認をお願い致します。
+</p>
+                    </div>
+                    <figure><img src="{{ asset('assets/img/breeder/breeder-img03.jpg') }}" alt="健康面での安心・安全"/></figure>
+                </article>
+            </div>
+        </section>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/info/page.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/adoption-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

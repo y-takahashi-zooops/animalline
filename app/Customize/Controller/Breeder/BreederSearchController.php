@@ -63,6 +63,12 @@ class BreederSearchController extends AbstractController
     protected $prefRepository;
 
     /**
+     * @var BreedsRepository
+     */
+    protected $breedsRepository;
+    
+
+    /**
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
@@ -72,6 +78,7 @@ class BreederSearchController extends AbstractController
      * @param SendoffReasonRepository $sendoffReasonRepository
      * @param BreedersRepository $breedersRepository
      * @param BreederPetsRepository $breederPetsRepository
+     * @param BreedsRepository $breedsRepository
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
@@ -81,7 +88,8 @@ class BreederSearchController extends AbstractController
         SendoffReasonRepository   $sendoffReasonRepository,
         BreedersRepository        $breedersRepository,
         BreederPetsRepository     $breederPetsRepository,
-        PrefRepository            $prefRepository
+        PrefRepository            $prefRepository,
+        BreedsRepository          $breedsRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
@@ -91,6 +99,7 @@ class BreederSearchController extends AbstractController
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->prefRepository = $prefRepository;
+        $this->breedsRepository = $breedsRepository;
     }
 
     /**
@@ -109,11 +118,29 @@ class BreederSearchController extends AbstractController
         $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
 
+        $breredname = "";
+        if($request->get('breed_type')){
+            $breeds = $this->breedsRepository->find($request->get('breed_type'));
+            $breredname = $breeds->getBreedsName();
+        } 
+        
+        $maintitle = "ペット検索結果";
+        if($breredname != ""){
+            $maintitle .= "(".$breredname.")";
+        }
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => "#",'title' => $maintitle)
+        );
+
         return $this->render('animalline/breeder/pet/search_result.twig', [
             'pets' => $pets,
             'petKind' => $petKind,
             'breeds' => $breeds,
-            'regions' => $regions
+            'regions' => $regions,
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
+            "description_add" => $breredname
         ]);
     }
 
@@ -135,12 +162,20 @@ class BreederSearchController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
+        $maintitle = "ブリーダー検索";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => "#",'title' => "ブリーダー検索")
+        );
+
         return $this->render('animalline/breeder/breeder_search.twig', [
             'title' => 'ブリーダー検索',
             'breeders' => $breeders,
             'petKind' => $petKind,
             'breeds' => $breeds,
-            'regions' => $regions
+            'regions' => $regions,
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
         ]);
     }
 

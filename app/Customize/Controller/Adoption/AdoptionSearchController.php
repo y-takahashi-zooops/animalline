@@ -96,12 +96,30 @@ class AdoptionSearchController extends AbstractController
         $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
 
+        $breredname = "";
+        if($request->get('breed_type')){
+            $breeds = $this->breedsRepository->find($request->get('breed_type'));
+            $breredname = $breeds->getBreedsName();
+        } 
+
+        $maintitle = "ペット検索結果";
+        if($breredname != ""){
+            $maintitle .= "(".$breredname.")";
+        }
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => "#",'title' => $maintitle)
+        );
+
         return $this->render('animalline/adoption/pet/search_result.twig', [
             'title' => '保護犬・保護猫検索',
             'pets' => $pets,
             'petKind' => $petKind,
             'breeds' => $breeds,
-            'regions' => $regions
+            'regions' => $regions,
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
+            'description_add' => $breredname
         ]);
     }
 

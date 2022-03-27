@@ -1,0 +1,71 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+
+{% block main %}
+   <section id="breeder-column">
+        <div class="inner">
+            <div class="ec-role">
+                <section id="sec01" class="top_margin_xl" style="margin-top:3rem">
+                    <div class="innerImg">
+                    <img src="{{ asset('assets/img/reg/animalline_info_title.png') }}" alt="">
+                    </div>
+
+                    <div class="innerSBlue" style="text-align:center">
+                        <h2>ペットと人の絆に　安心・安全を！</h2>
+                         <p>「ブリーダーから購入する」「保護団体から譲受する」犬猫のペットオーナーになるための２つの異なるラインを、それぞれマッチングさせて運営する新しいプラットフォームです。<br /><br />
+                        アニマルライン最大の特徴は、登録する子犬・子猫、保護犬・保護猫すべての生体に対して遺伝病ＤＮＡ検査を実施し、ペットオーナーが安心して購入・譲受できる環境を整えることです。
+                        </p>
+                    </div>
+
+                    <div style="text-align:center">
+                        <h2>Animallineの特徴</h2>
+                        <div class="innerImg">
+                            <img src="{{ asset('assets/img/reg/dna_check.png') }}" style="margin-top:1rem"; alt="">
+                        </div>
+                    </div>
+                </section>
+
+                <section id="page-detail-content02" class="page-detail-content02_breeder">
+                    <h2 style="text-align:center;margin-bottom:2rem">ブリーダー直販のメリット</h2>
+                    <div class="page-detail-content02__body">
+                        <article class="rev" id="content02">
+                            <div class="text">
+                                <h3 class="color02">低価格での販売</h3>
+                                <p>中間業者や小売店における人件費や中間マージンが価格に上乗せされないため、良質な子犬をペットショップの価格よりも安価で購入することができます。</p>
+                            </div>
+                            <figure><img src="{{ asset('assets/img/breeder/breeder-img02.jpg') }}" alt="価格面での安心・安全"/></figure>
+                        </article>
+                        <article id="content03">
+                            <div class="text">
+                            <h3 class="color03">健康リスクの低減</h3>
+                            <p>流通段階で感染症にかかるリスクが無くなり、健康を害するリスクが低減されます。</p>
+                            </div>
+                            <figure><img src="{{ asset('assets/img/breeder/breeder-img03.jpg') }}" alt="健康面での安心・安全"/></figure>
+                        </article>
+                        <article class="rev" id="content02">
+                            <div class="text">
+                                <h3 class="color02">基本的なしつけ</h3>
+                                <p>トイレなどの基本的なしつけができているケースがあります。</p>
+                            </div>
+                            <figure><img src="{{ asset('assets/img/breeder/breeder-img02.jpg') }}" alt="価格面での安心・安全"/></figure>
+                        </article>
+                        <article id="content03">
+                            <div class="text">
+                            <h3 class="color03">社会性の成長</h3>
+                            <p>親犬や兄弟犬、誕生日が近い子犬などと一緒に育てられていますので、子犬に社会性が身についています。<br />
+                            店舗販売の場合、ショーケースに個々に入れられて展示されていますので、ブリーダーの元で成長した子犬とは社会性に大きな違いが出てきます。</p>
+                            </div>
+                            <figure><img src="{{ asset('assets/img/breeder/breeder-img03.jpg') }}" alt="健康面での安心・安全"/></figure>
+                        </article>
+                    </div>
+                </section>
+                
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/info/page.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
