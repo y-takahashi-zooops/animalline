@@ -396,4 +396,19 @@ class CustomerRepository extends AbstractRepository
 
         return $this->findBy($criteria);
     }
+
+    /**
+     * Get list customer has register not null
+     *
+     * @return null|Customer 見つからない場合はnullを返す.
+     */
+    public function getCustomer()
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->where('c.is_breeder = 1')
+            ->orWhere('c.is_conservation = 1');
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 }
