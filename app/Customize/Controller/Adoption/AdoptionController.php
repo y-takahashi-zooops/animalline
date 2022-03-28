@@ -267,6 +267,26 @@ class AdoptionController extends AbstractController
     }
 
     /**
+     * お引渡しの流れ.
+     *
+     * @Route("/breeder/transferinfo", name="adoption_transferinfo")
+     * @Template("animalline/adoption/transferinfo.twig")
+     */
+    public function transferinfo(Request $request)
+    {
+        $maintitle = "お引渡しの流れ";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('adoption_top'),'title' =>"保護団体TOP"),
+            array('url' => $this->generateUrl('adoption_transferinfo'),'title' =>"お引渡しの流れ")
+        );
+
+        return['title' => 'お引渡しの流れ',
+            'maintitle' => $maintitle,
+            'breadcrumb' => $breadcrumb,
+        ];
+    }
+
+    /**
      * 特定商取引法に基づく表記.
      *
      * @Route("/adoption/tradelaw", name="adoption_tradelaw")
