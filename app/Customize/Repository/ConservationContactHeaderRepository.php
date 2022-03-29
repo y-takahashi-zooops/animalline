@@ -70,7 +70,7 @@ class ConservationContactHeaderRepository extends ServiceEntityRepository
 
         $qb->where('ch.update_date >= :startDate')
             ->andWhere('ch.update_date <= :endDate')
-            ->andWhere('ch.contract_status = 2')
+            ->andWhere('ch.contract_status = ' . AnilineConf::CONTRACT_STATUS_CONTRACT)
             ->andWhere('ch.Conservation = :conservation')
             ->setParameters(['startDate' => $startDate, 'endDate' => $endDate, 'conservation' => $conservation]);
 

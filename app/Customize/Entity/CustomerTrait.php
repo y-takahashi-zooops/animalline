@@ -50,7 +50,7 @@ trait CustomerTrait
     }
 
     /**
-     * Get is_breeder.
+     * Get regist type.
      *
      * @return integer
      */
