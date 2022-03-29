@@ -102,17 +102,20 @@ class MonthlyInvoices extends Command
         $endDate = $startDate->modify('last day of this month')->setTime(23, 59, 59);
         $listUserNotCustomer = $this->customerRepository->getCustomer();
         foreach ($listUserNotCustomer as $user) {
-            $listData = [];
+            $listContract = [];
             if ($this->customerRepository->findBy(['register_id' => $user->getId()])) {
                 $listCustomer[$user->getId()] = $this->customerRepository->findBy(['register_id' => $user->getId()]);
                 foreach ($listCustomer[$user->getId()] as $customer) {
                     $contractCommission = 0;
                     $ecIncentive = 0;
-                    $listDataBreeder = $this->breederContactHeaderRepository->getContractHeaderAMonth($startDate, $endDate, $customer, $user->getId());
-                    $listDataConservation = $this->conservationContactHeaderRepository->getContractHeaderAMonth($startDate, $endDate, $customer, $user->getId());
+                    if ($user->getIsBreeder() == 1) {
+                        $listContract = $this->breederContactHeaderRepository->getContractHeaderAMonth($startDate, $endDate, $user);
+                    }
+                   if ($user->getIsConservation() == 1) {
+                       $listContract = $this->conservationContactHeaderRepository->getContractHeaderAMonth($startDate, $endDate, $user);
+                   }
                     $listOrder = $this->orderRepository->getOrderAMonthByCustomer($startDate, $endDate, $customer);
-                    $listData = array_merge($listDataBreeder, $listDataConservation);
-                    foreach ($listData as $item) {
+                    foreach ($listContract as $item) {
                         $pricePet = $item->getPet()->getPrice();
                         $contractCommission = $contractCommission + $pricePet * 0.15;
                     }
@@ -130,7 +133,7 @@ class MonthlyInvoices extends Command
             $monthlyInvoice->setCustomerId($user)
                 ->setSiteCategory($user->getIsBreeder() == 1 ? 1 : 2)
                 ->setYearmonth($yyyymm)
-                ->setContractCount(count($listData))
+                ->setContractCount(count($listContract))
                 ->setContractCommission($contractCommission)
                 ->setEcCount(count($listOrder))
                 ->setEcIncentive($ecIncentive)

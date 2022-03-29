@@ -61,20 +61,18 @@ class ConservationContactHeaderRepository extends ServiceEntityRepository
      *
      * @param $startDate
      * @param $endDate
-     * @param $customer
-     * @param $breeder
+     * @param $conservation
      * @return array
      */
-    public function getContractHeaderAMonth($startDate, $endDate, $customer, $conservation): array
+    public function getContractHeaderAMonth($startDate, $endDate, $conservation): array
     {
         $qb = $this->createQueryBuilder('ch');
 
         $qb->where('ch.update_date >= :startDate')
             ->andWhere('ch.update_date <= :endDate')
-            ->andWhere('ch.Customer = :customer')
             ->andWhere('ch.contract_status = 2')
-            ->setParameters(['startDate' => $startDate, 'endDate' => $endDate, 'customer' => $customer])
-            ->andWhere($qb->expr()->notIn('ch.Conservation', [$conservation]));
+            ->andWhere('ch.Conservation = :conservation')
+            ->setParameters(['startDate' => $startDate, 'endDate' => $endDate, 'conservation' => $conservation]);
 
         return $qb->getQuery()
             ->getResult();
