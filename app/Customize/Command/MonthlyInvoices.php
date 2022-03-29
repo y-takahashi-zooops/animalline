@@ -119,8 +119,8 @@ class MonthlyInvoices extends Command
 
                 foreach ($listOrder as $item) {
                     foreach ($item->getOrderItems() as $orderItem) {
-                        $productClass = $this->productClassRepository->find($orderItem->getProductClass);
-                        $ecIncentive += $orderItem->getPrice * ($productClass->getIncentiveRatio / 100);
+                        $productClass = $this->productClassRepository->find($orderItem->getProductClass());
+                        $ecIncentive += $orderItem->getPrice() * ($productClass->getIncentiveRatio() / 100);
                     }
                 }
             }
