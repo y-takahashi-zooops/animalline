@@ -94,43 +94,40 @@ class MonthlyInvoices extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $listOrder = [];
-        $contractCommission = 0;
-        $ecIncentive = 0;
         $yyyymm = $input->getArgument('yyyymm');
         $startDate = new \DateTimeImmutable($yyyymm . '01');
         $endDate = $startDate->modify('last day of this month')->setTime(23, 59, 59);
+
         $listUserNotCustomer = $this->customerRepository->getCustomer();
         foreach ($listUserNotCustomer as $user) {
-            $listContract = [];
-            if ($this->customerRepository->findBy(['register_id' => $user->getId()])) {
-                $listCustomer[$user->getId()] = $this->customerRepository->findBy(['register_id' => $user->getId()]);
-                foreach ($listCustomer[$user->getId()] as $customer) {
-                    $contractCommission = 0;
-                    $ecIncentive = 0;
-                    if ($user->getIsBreeder() == 1) {
-                        $listContract = $this->breederContactHeaderRepository->getContractHeaderAMonth($startDate, $endDate, $user);
-                    }
-                   if ($user->getIsConservation() == 1) {
-                       $listContract = $this->conservationContactHeaderRepository->getContractHeaderAMonth($startDate, $endDate, $user);
-                   }
-                    $listOrder = $this->orderRepository->getOrderAMonthByCustomer($startDate, $endDate, $customer);
-                    foreach ($listContract as $item) {
-                        $pricePet = $item->getPet()->getPrice();
-                        $contractCommission = $contractCommission + $pricePet * 0.15;
-                    }
-                    foreach ($listOrder as $item) {
-                        foreach ($item->getOrderItems() as $orderItem) {
-                            $productClass = $this->productClassRepository->find($orderItem->getProductClass);
-                            $ecIncentive = $ecIncentive + ($orderItem->getPrice * ($productClass->getIncentiveRatio/100));
-                        }
+            $listContract = $listOrder = [];
+            $contractCommission = $ecIncentive = 0;
+
+            $listContract = $user->getIsBreeder() ? $this->breederContactHeaderRepository->getContractHeaderAMonth($startDate, $endDate, $user) :
+                $this->conservationContactHeaderRepository->getContractHeaderAMonth($startDate, $endDate, $user);
+            foreach ($listContract as $item) {
+                $contractCommission += $item->getPet()->getPrice() * 0.15;
+            }
+
+            if ($customers = $this->customerRepository->findBy(['register_id' => $user->getId()])) {
+                foreach ($customers as $customer) {
+                    $listOrder = array_merge(
+                        $listOrder,
+                        $this->orderRepository->getOrderAMonthByCustomer($startDate, $endDate, $customer)
+                    );
+                }
+
+                foreach ($listOrder as $item) {
+                    foreach ($item->getOrderItems() as $orderItem) {
+                        $productClass = $this->productClassRepository->find($orderItem->getProductClass);
+                        $ecIncentive += $orderItem->getPrice * ($productClass->getIncentiveRatio / 100);
                     }
                 }
             }
 
             $em = $this->entityManager;
-            $monthlyInvoice = new MonthlyInvoice();
-            $monthlyInvoice->setCustomerId($user)
+            $monthlyInvoice = (new MonthlyInvoice)
+                ->setCustomer($user)
                 ->setSiteCategory($user->getIsBreeder() == 1 ? 1 : 2)
                 ->setYearmonth($yyyymm)
                 ->setContractCount(count($listContract))
@@ -141,7 +138,7 @@ class MonthlyInvoices extends Command
             $em->persist($monthlyInvoice);
             $em->flush();
         }
-        
+
         echo "Monthly invoices handled.\n";
     }
 }
