@@ -2,6 +2,7 @@
 
 namespace Customize\Command;
 
+use Customize\Config\AnilineConf;
 use Customize\Entity\MonthlyInvoice;
 use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\ConservationContactHeaderRepository;
@@ -103,10 +104,12 @@ class MonthlyInvoices extends Command
             $listContract = $listOrder = [];
             $contractCommission = $ecIncentive = 0;
 
-            $listContract = $user->getIsBreeder() ? $this->breederContactHeaderRepository->getContractHeaderAMonth($startDate, $endDate, $user) :
-                $this->conservationContactHeaderRepository->getContractHeaderAMonth($startDate, $endDate, $user);
+            $listContract = $user->getIsBreeder() ? $this->breederContactHeaderRepository
+                ->getContractHeaderAMonth($startDate, $endDate, $user) :
+                $this->conservationContactHeaderRepository
+                ->getContractHeaderAMonth($startDate, $endDate, $user);
             foreach ($listContract as $item) {
-                $contractCommission += $item->getPet()->getPrice() * 0.15;
+                $contractCommission += $item->getPet()->getPrice() * AnilineConf::COMMISSION_RATE;
             }
 
             if ($customers = $this->customerRepository->findBy(['register_id' => $user->getId()])) {
@@ -119,22 +122,22 @@ class MonthlyInvoices extends Command
 
                 foreach ($listOrder as $item) {
                     foreach ($item->getOrderItems() as $orderItem) {
-                        $productClass = $this->productClassRepository->find($orderItem->getProductClass());
-                        $ecIncentive += $orderItem->getPrice() * ($productClass->getIncentiveRatio() / 100);
+                        $ecIncentive += $orderItem->getPrice() * ($orderItem->getProductClass()->getIncentiveRatio() / 100);
                     }
                 }
             }
 
-            $em = $this->entityManager;
             $monthlyInvoice = (new MonthlyInvoice)
                 ->setCustomer($user)
-                ->setSiteCategory($user->getIsBreeder() == 1 ? 1 : 2)
+                ->setSiteCategory($user->getSiteType())
                 ->setYearmonth($yyyymm)
                 ->setContractCount(count($listContract))
                 ->setContractCommission($contractCommission)
                 ->setEcCount(count($listOrder))
                 ->setEcIncentive($ecIncentive)
                 ->setTotalIncentive($contractCommission - $ecIncentive);
+
+            $em = $this->entityManager;
             $em->persist($monthlyInvoice);
             $em->flush();
         }
