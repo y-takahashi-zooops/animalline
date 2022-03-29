@@ -189,6 +189,13 @@ class AdoptionMemberContactController extends AbstractController
             elseif ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $msgHeader->getConservationCheck() == 1) {
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setCustomerCheck(1);
+                $customer = $msgHeader->getCustomer();
+                if (!$customer->getRegisterId()) {
+                    $customer->setRegisterId($msgHeader->getConservation()->getId())
+                        ->setSiteType(AnilineConf::SITE_CATEGORY_CONSERVATION);
+                    $entityManager->persist($customer);
+                    $entityManager->flush();
+                }
 
                 $this->mailService->sendMailContractCompleteToShop($conservation, $msgHeader, 2);
                 $this->mailService->sendMailContractCompleteToUser($msgHeader->getCustomer(), $msgHeader, 2);
@@ -329,6 +336,13 @@ class AdoptionMemberContactController extends AbstractController
             elseif ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_WAITCONTRACT && $msgHeader->getCustomerCheck() == 1) {
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setConservationCheck(1);
+                $customer = $msgHeader->getCustomer();
+                if (!$customer->getRegisterId()) {
+                    $customer->setRegisterId($msgHeader->getConservation()->getId())
+                        ->setSiteType(AnilineConf::SITE_CATEGORY_CONSERVATION);
+                    $entityManager->persist($customer);
+                    $entityManager->flush();
+                }
 
                 $conservation = $this->customerRepository->find($msgHeader->getConservation()->getId());
                 $this->mailService->sendMailContractCompleteToUser($msgHeader->getCustomer(), $msgHeader, 2);
