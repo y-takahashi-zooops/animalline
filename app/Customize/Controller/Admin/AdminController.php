@@ -40,6 +40,10 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+
+use Customize\Repository\BreederPetsRepository;
+use Customize\Repository\ConservationPetsRepository;
+
 class AdminController extends AbstractController
 {
     /**
@@ -85,6 +89,13 @@ class AdminController extends AbstractController
     /** @var PluginApiService */
     protected $pluginApiService;
 
+    /** @var BreederPetsRepository */
+    protected $breederPetsRepository;
+
+    /** @var ConservationPetsRepository */
+    protected $conservationPetsRepository;
+
+
     /**
      * @var array 売り上げ状況用受注状況
      */
@@ -102,6 +113,8 @@ class AdminController extends AbstractController
      * @param CustomerRepository $custmerRepository
      * @param ProductRepository $productRepository
      * @param PluginApiService $pluginApiService
+     * @param BreederPetsRepository $breederPetsRepository
+     * @param ConservationPetsRepository $conservationPetsRepository
      */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
@@ -112,7 +125,9 @@ class AdminController extends AbstractController
         OrderStatusRepository $orderStatusRepository,
         CustomerRepository $custmerRepository,
         ProductRepository $productRepository,
-        PluginApiService $pluginApiService
+        PluginApiService $pluginApiService,
+        BreederPetsRepository $breederPetsRepository,
+        ConservationPetsRepository $conservationPetsRepository
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->helper = $helper;
@@ -123,6 +138,8 @@ class AdminController extends AbstractController
         $this->customerRepository = $custmerRepository;
         $this->productRepository = $productRepository;
         $this->pluginApiService = $pluginApiService;
+        $this->breederPetsRepository = $breederPetsRepository;
+        $this->conservationPetsRepository = $conservationPetsRepository;
     }
 
     /**
@@ -234,6 +251,13 @@ class AdminController extends AbstractController
         // 本会員数
         $countCustomers = $this->countCustomers();
 
+        //掲載中ペット数
+        $bpets = $this->breederPetsRepository->findBy(['is_active' => 1,'is_delete' => 0]);
+        $cpets = $this->conservationPetsRepository->findBy(['is_active' => 1,'is_delete' => 0]);
+
+        $bcount = sizeof($bpets);
+        $ccount = sizeof($cpets);
+
         $event = new EventArgs(
             [
                 'Orders' => $Orders,
@@ -243,7 +267,7 @@ class AdminController extends AbstractController
                 'salesYesterday' => $salesYesterday,
                 'countNonStockProducts' => $countNonStockProducts,
                 'countProducts' => $countProducts,
-                'countCustomers' => $countCustomers,
+                'countCustomers' => $countCustomers
             ],
             $request
         );
@@ -267,6 +291,8 @@ class AdminController extends AbstractController
             'countCustomers' => $countCustomers,
             'recommendedPlugins' => $recommendedPlugins,
             'is_danger_admin_url' => $is_danger_admin_url,
+            'bcount' => $bcount,
+            'ccount' => $ccount,
         ];
     }
 
