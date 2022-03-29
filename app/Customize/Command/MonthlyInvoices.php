@@ -9,7 +9,6 @@ use Customize\Repository\ConservationContactHeaderRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Repository\OrderRepository;
-use Eccube\Repository\ProductClassRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -51,11 +50,6 @@ class MonthlyInvoices extends Command
     protected $orderRepository;
 
     /**
-     * @var ProductClassRepository
-     */
-    protected $productClassRepository;
-
-    /**
      * Monthly invoices constructor.
      * 
      * @param EntityManagerInterface $entityManager
@@ -63,15 +57,13 @@ class MonthlyInvoices extends Command
      * @param BreederContactHeaderRepository $breederContactHeaderRepository
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      * @param OrderRepository $orderRepository
-     * @param ProductClassRepository $productClassRepository
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         CustomerRepository $customerRepository,
         BreederContactHeaderRepository $breederContactHeaderRepository,
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
-        OrderRepository $orderRepository,
-        ProductClassRepository $productClassRepository
+        OrderRepository $orderRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -79,7 +71,6 @@ class MonthlyInvoices extends Command
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->orderRepository = $orderRepository;
-        $this->productClassRepository = $productClassRepository;
     }
 
     protected function configure()
@@ -122,7 +113,8 @@ class MonthlyInvoices extends Command
 
                 foreach ($listOrder as $item) {
                     foreach ($item->getOrderItems() as $orderItem) {
-                        $ecIncentive += $orderItem->getPrice() * 0.01 * ($orderItem->getProductClass() ? $orderItem->getProductClass()->getIncentiveRatio() : 0);
+                        $ecIncentive += $orderItem->getPrice() * 0.01 *
+                            ($orderItem->getProductClass() ? $orderItem->getProductClass()->getIncentiveRatio() : 0);
                     }
                 }
             }
