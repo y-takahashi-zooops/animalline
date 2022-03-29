@@ -122,7 +122,7 @@ class MonthlyInvoices extends Command
 
                 foreach ($listOrder as $item) {
                     foreach ($item->getOrderItems() as $orderItem) {
-                        $ecIncentive += $orderItem->getPrice() * ($orderItem->getProductClass()->getIncentiveRatio() / 100);
+                        $ecIncentive += $orderItem->getPrice() * 0.01 * ($orderItem->getProductClass() ? $orderItem->getProductClass()->getIncentiveRatio() : 0);
                     }
                 }
             }
