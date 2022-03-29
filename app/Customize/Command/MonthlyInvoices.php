@@ -129,7 +129,7 @@ class MonthlyInvoices extends Command
 
             $monthlyInvoice = (new MonthlyInvoice)
                 ->setCustomer($user)
-                ->setSiteCategory($user->getSiteType())
+                ->setSiteCategory($user->getIsBreeder() ?: AnilineConf::ANILINE_SITE_TYPE_ADOPTION)
                 ->setYearmonth($yyyymm)
                 ->setContractCount(count($listContract))
                 ->setContractCommission($contractCommission)
