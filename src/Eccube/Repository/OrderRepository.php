@@ -426,4 +426,23 @@ class OrderRepository extends AbstractRepository
         $Customer->setFirstBuyDate($FirstOrder->getOrderDate());
         $Customer->setLastBuyDate($LastOrder->getOrderDate());
     }
+
+    /**
+     * Get order a month by customer
+     *
+     * @param $startDate
+     * @param $endDate
+     * @param $customer
+     * @return int|mixed|string
+     */
+    public function getOrderAMonthByCustomer($startDate, $endDate, $customer)
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.Customer = :customer')
+            ->andWhere('o.update_date >= :startDate')
+            ->andWhere('o.update_date <= :endDate')
+            ->setParameters(['startDate' => $startDate, 'endDate' => $endDate, 'customer' => $customer])
+            ->getQuery()
+            ->getResult();
+    }
 }

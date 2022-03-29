@@ -288,6 +288,13 @@ class BreederMemberContactController extends AbstractController
                         case AnilineConf::CONTRACT_STATUS_WAITCONTRACT:
                             if ($msgHeader->getBreederCheck() == 1) {
                                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT);
+                                $customer = $msgHeader->getCustomer();
+                                if (!$customer->getRegisterId()) {
+                                    $customer->setRegisterId($msgHeader->getBreeder()->getId())
+                                        ->setSiteType(AnilineConf::SITE_CATEGORY_BREEDER);
+                                    $entityManager->persist($customer);
+                                    $entityManager->flush();
+                                }
 
                                 $this->mailService->sendMailContractCompleteToShop($breeder_base, $msgHeader, 1);
                                 $this->mailService->sendMailContractCompleteToUser($msgHeader->getCustomer(), $msgHeader, 1);
@@ -436,7 +443,13 @@ class BreederMemberContactController extends AbstractController
                 //成約確認待ちの場合は成約完了なので、両者にメールを送信する。
                 $msgHeader->setContractStatus(AnilineConf::CONTRACT_STATUS_CONTRACT)
                     ->setBreederCheck(1);
-                
+                $customer = $msgHeader->getCustomer();
+                if (!$customer->getRegisterId()) {
+                    $customer->setRegisterId($msgHeader->getBreeder()->getId())
+                        ->setSiteType(AnilineConf::SITE_CATEGORY_BREEDER);
+                    $entityManager->persist($customer);
+                    $entityManager->flush();
+                }
                 $this->mailService->sendMailContractCompleteToUser($msgHeader->getCustomer(),$msgHeader, 1);
                 $this->mailService->sendMailContractCompleteToShop($breeder_base, $msgHeader, 1);
 

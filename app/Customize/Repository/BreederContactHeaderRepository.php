@@ -55,4 +55,26 @@ class BreederContactHeaderRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Get contact header a month
+     *
+     * @param $startDate
+     * @param $endDate
+     * @param $breeder
+     * @return array
+     */
+    public function getContractHeaderAMonth($startDate, $endDate, $breeder): array
+    {
+        $qb = $this->createQueryBuilder('ch');
+
+        $qb->where('ch.update_date >= :startDate')
+            ->andWhere('ch.update_date <= :endDate')
+            ->andWhere('ch.contract_status = 2')
+            ->andWhere('ch.Breeder = :breeder')
+            ->setParameters(['startDate' => $startDate, 'endDate' => $endDate, 'breeder' => $breeder]);
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 }

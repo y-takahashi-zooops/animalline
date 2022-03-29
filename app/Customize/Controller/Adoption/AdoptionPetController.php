@@ -298,7 +298,8 @@ class AdoptionPetController extends AbstractController
             'image2' => $image2,
             'image3' => $image3,
             'image4' => $image4,
-            'conservation' => $conservation
+            'conservation' => $conservation,
+            'isCheckPetContract' => false
         ]);
     }
 
