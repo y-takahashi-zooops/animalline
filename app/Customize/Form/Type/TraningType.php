@@ -39,6 +39,7 @@ class TraningType extends AbstractType
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
+                'data' => new \DateTime(),
                 'constraints' => [
                     new Assert\NotBlank(),
                 ]
@@ -50,6 +51,7 @@ class TraningType extends AbstractType
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
+                'data' => new \DateTime(),
                 'constraints' => [
                     new Assert\NotBlank(),
                 ]
