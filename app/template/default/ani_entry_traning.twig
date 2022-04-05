@@ -1,0 +1,209 @@
+{% set site_type = 'common' %}
+{% extends 'ani_frame.twig' %}
+
+{% block main %}
+    <div class="page-inner">
+        <div class="inner">
+            <div class="ec-contactRole">
+                <div class="ec-off1Grid">
+                    <div class="ec-off1Grid__cell">
+                        <form method="post" action="{{ url('ani_entry_traning') }}" class="h-adr" novalidate>
+                            {{ form_widget(form._token) }}
+                            <div class="ec-borderedDefs">
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.name, '氏名', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.name) ? ' error' }}">
+                                            {{ form_widget(form.name) }}
+                                            {{ form_errors(form.name) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.address, '住所', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.address) ? ' error' }}">
+                                            {{ form_widget(form.address) }}
+                                            {{ form_errors(form.address) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.dog_breed, '犬種', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.dog_breed) ? ' error' }}">
+                                            {{ form_widget(form.dog_breed) }}
+                                            {{ form_errors(form.dog_breed) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.birthday, '誕生日', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.birthday) ? ' error' }}">
+                                            {{ form_widget(form.birthday) }}
+                                            {{ form_errors(form.birthday) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.desired_date, '希望日', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-birth{{ has_errors(form.desired_date) ? ' error' }} date">
+                                            {{ form_widget(form.desired_date.year) }}&nbsp;/&nbsp;
+                                            {{ form_widget(form.desired_date.month) }}&nbsp;/&nbsp;
+                                            {{ form_widget(form.desired_date.day) }}
+                                            {{ form_errors(form.desired_date) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.is_sensitive_sound, '音に対して敏感ですか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.is_sensitive_sound) ? ' error' }}">
+                                            {{ form_widget(form.is_sensitive_sound) }}
+                                            {{ form_errors(form.is_sensitive_sound) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.is_touch_body, '体を触られることに抵抗はありますか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.is_touch_body) ? ' error' }}">
+                                            {{ form_widget(form.is_touch_body) }}
+                                            {{ form_errors(form.is_touch_body) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.is_interact_people, '人と関わることが好きか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <label>（スキンシップや遊びなど）</label>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.is_interact_people) ? ' error' }}">
+                                            {{ form_widget(form.is_interact_people) }}
+                                            {{ form_errors(form.is_interact_people) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.is_change_attitude, '接する相手によって態度を変えるタイプか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.is_change_attitude) ? ' error' }}">
+                                            {{ form_widget(form.is_change_attitude) }}
+                                            {{ form_errors(form.is_change_attitude) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.behavior_other_animals, '他の動物に対しての行動', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.behavior_other_animals) ? ' error' }}">
+                                            {{ form_widget(form.behavior_other_animals) }}
+                                            {{ form_errors(form.behavior_other_animals) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.is_wary, '見知らぬものや人への警戒心', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.is_wary) ? ' error' }}">
+                                            {{ form_widget(form.is_wary) }}
+                                            {{ form_errors(form.is_wary) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.is_attack, '攻撃しようとするか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.is_attack) ? ' error' }}">
+                                            {{ form_widget(form.is_attack) }}
+                                            {{ form_errors(form.is_attack) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.is_like_food, 'フードやオヤツが好きか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.is_like_food) ? ' error' }}">
+                                            {{ form_widget(form.is_like_food) }}
+                                            {{ form_errors(form.is_like_food) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.is_unfamiliar, '慣れないところに行ったときや見慣れない人や物への反応', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.is_unfamiliar) ? ' error' }}">
+                                            {{ form_widget(form.is_unfamiliar) }}
+                                            {{ form_errors(form.is_unfamiliar) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.is_smell_or_approach, '目に入った物や人に対してにおいを嗅いだり近づこうとするか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.is_smell_or_approach) ? ' error' }}">
+                                            {{ form_widget(form.is_smell_or_approach) }}
+                                            {{ form_errors(form.is_smell_or_approach) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="ec-RegisterRole__actions">
+                                <div class="ec-off4Grid">
+                                    <div class="ec-off4Grid__cell">
+                                        <button type="submit" class="basic-btn btn-primary" name="mode" value="confirm">
+                                            {{ '申し込み'|trans }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheet %}
+    <style>
+        dl dd{
+            margin-left: 20px;
+        }
+        #ani_traning_desired_date_year{
+            margin-left: 0px;
+        }
+    </style>
+{% endblock %}
+{% block javascript %}
+{% endblock %}

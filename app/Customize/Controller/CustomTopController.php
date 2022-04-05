@@ -14,6 +14,7 @@
 namespace Customize\Controller;
 
 use Carbon\Carbon;
+use Customize\Form\Type\TraningType;
 use Eccube\Controller\AbstractController;
 use Eccube\Repository\NewsRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -289,5 +290,20 @@ class CustomTopController extends AbstractController
         return [];
     }
 
+    /**
+     * Entry Traning
+     *
+     * @Route("/tr/entry", name="ani_entry_traning")
+     * @Template("ani_entry_traning.twig")
+     */
+    public function animallineEntryTraning(Request $request)
+    {
+        $builder = $this->formFactory->createBuilder(TraningType::class);
+        $form = $builder->getForm();
+        $form->handleRequest($request);
 
+        return [
+            'form' => $form->createView()
+        ];
+    }
 }
