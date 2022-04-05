@@ -1496,4 +1496,29 @@ class MailService
 
         return $this->mailer->send($message, $failures);
     }
+
+    /**
+     * Send mail notify to admin when a seminar is registered.
+     *
+     * @param array $registeredData
+     *
+     * @return int
+     */
+    public function sendNotifyReceiveSeminarRegistered(array $registeredData): int
+    {
+        $body = $this->twig->render('Mail/Seminar/receive_registered.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'registeredData' => $registeredData
+        ]);
+        $message = (new \Swift_Message())
+            ->setSubject('オンラインセミナーへの参加申し込み')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04())
+            ->setBody($body);
+
+        return $this->mailer->send($message);
+    }
 }

@@ -15,6 +15,7 @@ namespace Customize\Controller;
 
 use Carbon\Carbon;
 use Customize\Form\Type\TraningType;
+use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;
 use Eccube\Repository\NewsRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -49,16 +50,23 @@ class CustomTopController extends AbstractController
      */
     protected $categoryRepository;
 
+    /**
+     * @var MailService
+     */
+    private $mailService;
+
     public function __construct(
         NewsRepository $NewsRepository,
         ProductRepository $productRepository,
         CategoryRepository $categoryRepository,
-        ProductListOrderByRepository $productListOrderByRepository
+        ProductListOrderByRepository $productListOrderByRepository,
+        MailService $mailService
     ) {
         $this->NewsRepository = $NewsRepository;
         $this->productListOrderByRepository = $productListOrderByRepository;
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->mailService = $mailService;
     }
     /**
      * @Route("/ec", name="homepage")
@@ -301,6 +309,13 @@ class CustomTopController extends AbstractController
         $builder = $this->formFactory->createBuilder(TraningType::class);
         $form = $builder->getForm();
         $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $this->mailService->sendNotifyReceiveSeminarRegistered($data);
+
+            return $this->redirectToRoute('ani_traning');
+        }
 
         return [
             'form' => $form->createView()

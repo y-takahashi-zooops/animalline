@@ -1,0 +1,53 @@
+{% autoescape false %}
+氏名
+{{ registeredData.name }}
+
+住所
+{{ registeredData.address }}
+
+犬種
+{{ registeredData.dog_breed }}
+
+誕生日
+{{ registeredData.birthday.format('Y-m-d') }}
+
+希望日
+{{ registeredData.desired_date.format('Y-m-d') }}
+
+音に対して敏感ですか
+{{ registeredData.is_sensitive_sound == 0 ? '敏感' :
+registeredData.is_sensitive_sound == 1 ? '普通' : '鈍感' }}
+
+体を触られることに抵抗はありますか
+{{ registeredData.is_touch_body == 0 ? '敏感' :
+registeredData.is_touch_body == 1 ? '特定の部位だけ' : '鈍感' }}
+
+人と関わることが好きか （スキンシップや遊びなど）
+{{ registeredData.is_interact_people == 0 ? '好き' :
+registeredData.is_interact_people == 1 ? '普通' : '嫌い' }}
+
+接する相手によって態度を変えるタイプか
+{{ registeredData.is_change_attitude == 0 ? '変える' : '変えない' }}
+
+他の動物に対しての行動
+{{ registeredData.behavior_other_animals == 0 ? '気にする' :
+registeredData.behavior_other_animals == 1 ? '普通' : '気にしない （気にするが過剰ではない）' }}
+
+見知らぬものや人への警戒心
+{{ registeredData.is_wary == 0 ? '警戒をする' :
+registeredData.is_wary == 1 ? '普通' : 'しない' }}
+
+攻撃しようとするか
+{{ registeredData.is_attack == 0 ? 'する' : 'しない' }}
+
+フードやオヤツが好きか
+{{ registeredData.is_like_food == 0 ? '好き' :
+registeredData.is_like_food == 1 ? '普通' : '好きではない' }}
+
+慣れないところに行ったときや見慣れない人や物への反応
+{{ registeredData.is_unfamiliar == 0 ? '慣れやすい' :
+registeredData.is_unfamiliar == 1 ? '普通' : '慣れるまで時間がかかる' }}
+
+目に入った物や人に対してにおいを嗅いだり近づこうとするか
+{{ registeredData.is_smell_or_approach == 0 ? 'する' : 'しない' }}
+{% endautoescape %}
