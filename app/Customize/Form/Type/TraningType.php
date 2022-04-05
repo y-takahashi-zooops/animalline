@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class TraningType extends AbstractType
 {
@@ -14,24 +15,44 @@ class TraningType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'required' => false
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('address', TextType::class, [
-                'required' => false
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('dog_breed', TextType::class, [
-                'required' => false
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
-            ->add('birthday', TextType::class, [
-                'required' => false
-            ])
-            ->add('desired_date', DateType::class, [
-                'required' => false,
+            ->add('birthday', DateType::class, [
+                'required' => true,
                 'input' => 'datetime',
                 'years' => range(date('Y'), 1990),
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
+            ])
+            ->add('desired_date', DateType::class, [
+                'required' => true,
+                'input' => 'datetime',
+                'years' => range(date('Y'), 1990),
+                'widget' => 'choice',
+                'format' => 'yyyy/MM/dd',
+                'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('is_sensitive_sound', ChoiceType::class, [
                 'choices' =>
@@ -40,8 +61,11 @@ class TraningType extends AbstractType
                         '普通' => 1,
                         '鈍感' => 2
                     ],
-                'required' => false,
-                'placeholder' => 'common.select'
+                'required' => true,
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('is_touch_body', ChoiceType::class, [
                 'choices' =>
@@ -50,8 +74,11 @@ class TraningType extends AbstractType
                         '特定の部位だけ' => 1,
                         '鈍感' => 2
                     ],
-                'required' => false,
-                'placeholder' => 'common.select'
+                'required' => true,
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('is_interact_people', ChoiceType::class, [
                 'choices' =>
@@ -60,8 +87,11 @@ class TraningType extends AbstractType
                         '普通' => 1,
                         '嫌い' => 2
                     ],
-                'required' => false,
-                'placeholder' => 'common.select'
+                'required' => true,
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('is_change_attitude', ChoiceType::class, [
                 'choices' =>
@@ -69,8 +99,11 @@ class TraningType extends AbstractType
                         '変える' => 0,
                         '変えない' => 1
                     ],
-                'required' => false,
-                'placeholder' => 'common.select'
+                'required' => true,
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('behavior_other_animals', ChoiceType::class, [
                 'choices' =>
@@ -79,8 +112,11 @@ class TraningType extends AbstractType
                         '普通' => 1,
                         '気にしない （気にするが過剰ではない）' => 2
                     ],
-                'required' => false,
-                'placeholder' => 'common.select'
+                'required' => true,
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('is_wary', ChoiceType::class, [
                 'choices' =>
@@ -89,8 +125,11 @@ class TraningType extends AbstractType
                         '普通' => 1,
                         'しない' => 2,
                     ],
-                'required' => false,
-                'placeholder' => 'common.select'
+                'required' => true,
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('is_attack', ChoiceType::class, [
                 'choices' =>
@@ -98,8 +137,11 @@ class TraningType extends AbstractType
                         'する' => 0,
                         'しない' => 1
                     ],
-                'required' => false,
-                'placeholder' => 'common.select'
+                'required' => true,
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('is_like_food', ChoiceType::class, [
                 'choices' =>
@@ -108,8 +150,11 @@ class TraningType extends AbstractType
                         '普通' => 1,
                         '好きではない' => 2
                     ],
-                'required' => false,
-                'placeholder' => 'common.select'
+                'required' => true,
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('is_unfamiliar', ChoiceType::class, [
                 'choices' =>
@@ -118,8 +163,11 @@ class TraningType extends AbstractType
                         '普通' => 1,
                         '慣れるまで時間がかかる' => 2
                     ],
-                'required' => false,
-                'placeholder' => 'common.select'
+                'required' => true,
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('is_smell_or_approach', ChoiceType::class, [
                 'choices' =>
@@ -127,8 +175,11 @@ class TraningType extends AbstractType
                         'する' => 0,
                         'しない' => 1
                     ],
-                'required' => false,
-                'placeholder' => 'common.select'
+                'required' => true,
+                'placeholder' => 'common.select',
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ]);
     }
     public function getBlockPrefix()

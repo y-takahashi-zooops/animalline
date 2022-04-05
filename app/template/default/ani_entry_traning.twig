@@ -12,7 +12,12 @@
                             <div class="ec-borderedDefs">
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.name, '氏名', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            氏名
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.name) ? ' error' }}">
@@ -23,7 +28,12 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.address, '住所', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            住所
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.address) ? ' error' }}">
@@ -34,7 +44,12 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.dog_breed, '犬種', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            犬種
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.dog_breed) ? ' error' }}">
@@ -45,18 +60,30 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.birthday, '誕生日', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            誕生日
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-input{{ has_errors(form.birthday) ? ' error' }}">
-                                            {{ form_widget(form.birthday) }}
+                                        <div class="ec-birth{{ has_errors(form.birthday) ? ' error' }} date">
+                                            {{ form_widget(form.birthday.year) }} /
+                                            {{ form_widget(form.birthday.month) }}&nbsp;/&nbsp;
+                                            {{ form_widget(form.birthday.day) }}
                                             {{ form_errors(form.birthday) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.desired_date, '希望日', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            希望日
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-birth{{ has_errors(form.desired_date) ? ' error' }} date">
@@ -69,7 +96,12 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.is_sensitive_sound, '音に対して敏感ですか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            音に対して敏感ですか
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.is_sensitive_sound) ? ' error' }}">
@@ -80,7 +112,12 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.is_touch_body, '体を触られることに抵抗はありますか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            体を触られることに抵抗はありますか
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.is_touch_body) ? ' error' }}">
@@ -91,8 +128,13 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.is_interact_people, '人と関わることが好きか', { 'label_attr': { 'class': 'ec-label' }}) }}
-                                        <label>（スキンシップや遊びなど）</label>
+                                        <div class="d-inline-block">
+                                            人と関わることが好きか
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                            <label>（スキンシップや遊びなど）</label>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.is_interact_people) ? ' error' }}">
@@ -103,7 +145,12 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.is_change_attitude, '接する相手によって態度を変えるタイプか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            接する相手によって態度を変えるタイプか
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.is_change_attitude) ? ' error' }}">
@@ -114,7 +161,12 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.behavior_other_animals, '他の動物に対しての行動', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            他の動物に対しての行動
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.behavior_other_animals) ? ' error' }}">
@@ -125,7 +177,12 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.is_wary, '見知らぬものや人への警戒心', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            見知らぬものや人への警戒心
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.is_wary) ? ' error' }}">
@@ -136,7 +193,12 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.is_attack, '攻撃しようとするか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            攻撃しようとするか
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.is_attack) ? ' error' }}">
@@ -147,7 +209,12 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.is_like_food, 'フードやオヤツが好きか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            フードやオヤツが好きか
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.is_like_food) ? ' error' }}">
@@ -158,7 +225,12 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.is_unfamiliar, '慣れないところに行ったときや見慣れない人や物への反応', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            慣れないところに行ったときや見慣れない人や物への反応
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.is_unfamiliar) ? ' error' }}">
@@ -169,7 +241,12 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.is_smell_or_approach, '目に入った物や人に対してにおいを嗅いだり近づこうとするか', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <div class="d-inline-block">
+                                            目に入った物や人に対してにおいを嗅いだり近づこうとするか
+                                            <span class="badge badge-primary ml-1">
+                                                {{ 'admin.common.required'|trans }}
+                                            </span>
+                                        </div>
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.is_smell_or_approach) ? ' error' }}">
@@ -199,8 +276,12 @@
     <style>
         dl dd{
             margin-left: 20px;
+            padding-top: 14px !important;
         }
         #ani_traning_desired_date_year{
+            margin-left: 0px;
+        }
+        #ani_traning_birthday_year{
             margin-left: 0px;
         }
     </style>
