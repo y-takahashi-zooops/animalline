@@ -5,221 +5,224 @@
     <div class="page-inner">
         <div class="inner">
             <div class="ec-contactRole">
+                <div class="ec-pageHeader">
+                    <h1>{{ 'オンラインしつけセミナー参加申し込み'|trans }}</h1>
+                </div>
                 <div class="ec-off1Grid">
                     <div class="ec-off1Grid__cell">
                         <form method="post" action="{{ url('ani_entry_traning') }}" class="h-adr" novalidate>
                             {{ form_widget(form._token) }}
                             <div class="ec-borderedDefs">
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold"> 氏名 </label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-input{{ has_errors(form.name) ? ' error' }}">
+                                        <div class="ec-input">
                                             {{ form_widget(form.name) }}
                                             {{ form_errors(form.name) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">住所</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-input{{ has_errors(form.address) ? ' error' }}">
+                                        <div class="ec-input">
                                             {{ form_widget(form.address) }}
                                             {{ form_errors(form.address) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">犬種</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-input{{ has_errors(form.dog_breed) ? ' error' }}">
+                                        <div class="ec-input">
                                             {{ form_widget(form.dog_breed) }}
                                             {{ form_errors(form.dog_breed) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">誕生日</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-birth{{ has_errors(form.birthday) ? ' error' }} date">
+                                        <div class="ec-birth date">
                                             {{ form_widget(form.birthday.year) }} /
-                                            {{ form_widget(form.birthday.month) }}&nbsp;/&nbsp;
+                                            {{ form_widget(form.birthday.month) }} /
                                             {{ form_widget(form.birthday.day) }}
                                             {{ form_errors(form.birthday) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">希望日</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-birth{{ has_errors(form.desired_date) ? ' error' }} date">
-                                            {{ form_widget(form.desired_date.year) }}&nbsp;/&nbsp;
-                                            {{ form_widget(form.desired_date.month) }}&nbsp;/&nbsp;
+                                        <div class="ec-birth date">
+                                            {{ form_widget(form.desired_date.year) }} /
+                                            {{ form_widget(form.desired_date.month) }} /
                                             {{ form_widget(form.desired_date.day) }}
                                             {{ form_errors(form.desired_date) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">音に対して敏感ですか</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-select{{ has_errors(form.is_sensitive_sound) ? ' error' }}">
+                                        <div class="ec-select">
                                             {{ form_widget(form.is_sensitive_sound) }}
                                             {{ form_errors(form.is_sensitive_sound) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">体を触られることに抵抗はありますか</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-select{{ has_errors(form.is_touch_body) ? ' error' }}">
+                                        <div class="ec-select">
                                             {{ form_widget(form.is_touch_body) }}
                                             {{ form_errors(form.is_touch_body) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">人と関わることが好きか</label>
                                             <span class="ec-required">必須</span>
-                                            <label class="font-weight-bold">（スキンシップや遊びなど）</label>
+                                            <label class="ec-required">スキンシップや遊びなど</label>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-select{{ has_errors(form.is_interact_people) ? ' error' }}">
+                                        <div class="ec-select">
                                             {{ form_widget(form.is_interact_people) }}
                                             {{ form_errors(form.is_interact_people) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">接する相手によって態度を変えるタイプか</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-select{{ has_errors(form.is_change_attitude) ? ' error' }}">
+                                        <div class="ec-select">
                                             {{ form_widget(form.is_change_attitude) }}
                                             {{ form_errors(form.is_change_attitude) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">他の動物に対しての行動</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-select{{ has_errors(form.behavior_other_animals) ? ' error' }}">
+                                        <div class="ec-select">
                                             {{ form_widget(form.behavior_other_animals) }}
                                             {{ form_errors(form.behavior_other_animals) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">見知らぬものや人への警戒心</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-select{{ has_errors(form.is_wary) ? ' error' }}">
+                                        <div class="ec-select">
                                             {{ form_widget(form.is_wary) }}
                                             {{ form_errors(form.is_wary) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">攻撃しようとするか</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-select{{ has_errors(form.is_attack) ? ' error' }}">
+                                        <div class="ec-select">
                                             {{ form_widget(form.is_attack) }}
                                             {{ form_errors(form.is_attack) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
                                             <label class="font-weight-bold">フードやオヤツが好きか</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-select{{ has_errors(form.is_like_food) ? ' error' }}">
+                                        <div class="ec-select">
                                             {{ form_widget(form.is_like_food) }}
                                             {{ form_errors(form.is_like_food) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
-                                            <label class="font-weight-bold">慣れないところに行ったときや見慣れない人や物への反応</label>
+                                            <label class="font-weight-bold d-inline">慣れないところに行ったときや見慣れない人や物への反応</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-select{{ has_errors(form.is_unfamiliar) ? ' error' }}">
+                                        <div class="ec-select">
                                             {{ form_widget(form.is_unfamiliar) }}
                                             {{ form_errors(form.is_unfamiliar) }}
                                         </div>
                                     </dd>
                                 </dl>
                                 <dl>
-                                    <dt>
+                                    <dt class="col-4">
                                         <div class="d-inline-block">
-                                            <label class="font-weight-bold">目に入った物や人に対してにおいを嗅いだり近づこうとするか</label>
+                                            <label class="font-weight-bold d-inline">目に入った物や人に対してにおいを嗅いだり近づこうとするか</label>
                                             <span class="ec-required">必須</span>
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-select{{ has_errors(form.is_smell_or_approach) ? ' error' }}">
+                                        <div class="ec-select">
                                             {{ form_widget(form.is_smell_or_approach) }}
                                             {{ form_errors(form.is_smell_or_approach) }}
                                         </div>
@@ -229,7 +232,7 @@
                             <div class="ec-RegisterRole__actions">
                                 <div class="ec-off4Grid">
                                     <div class="ec-off4Grid__cell">
-                                        <button type="submit" class="basic-btn btn-primary" name="mode" value="confirm">
+                                        <button type="submit" class="ec-blockBtn--action mt-4 mb-4" name="mode" value="confirm">
                                             {{ '申し込み'|trans }}
                                         </button>
                                     </div>
