@@ -1517,7 +1517,7 @@ class MailService
             ->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04())
-            ->setBody($body);
+            ->setBody($body, 'text/html');
 
         return $this->mailer->send($message);
     }
