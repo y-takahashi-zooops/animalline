@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class TraningType extends AbstractType
+class TrainingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -35,11 +35,10 @@ class TraningType extends AbstractType
             ->add('birthday', DateType::class, [
                 'required' => true,
                 'input' => 'datetime',
-                'years' => range(date('Y'), 2050),
+                'years' => range(1990, date('Y')),
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
-                'data' => new \DateTime(),
                 'constraints' => [
                     new Assert\NotBlank(),
                 ]
@@ -51,7 +50,6 @@ class TraningType extends AbstractType
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
-                'data' => new \DateTime(),
                 'constraints' => [
                     new Assert\NotBlank(),
                 ]
@@ -187,6 +185,6 @@ class TraningType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'ani_traning';
+        return 'ani_training';
     }
 }
