@@ -13,7 +13,7 @@
 
 namespace Customize\Controller;
 
-use Customize\Form\Type\TraningType;
+use Customize\Form\Type\TrainingType;
 use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;
 use Eccube\Repository\NewsRepository;
@@ -120,10 +120,10 @@ class CustomTopController extends AbstractController
     }
 
     /**
-     * @Route("/tr", name="ani_traning")
-     * @Template("ani_traning.twig")
+     * @Route("/tr", name="ani_training")
+     * @Template("ani_training.twig")
      */
-    public function animalline_traning()
+    public function animalline_training()
     {   
         /*
         $customer = $this->getUser();
@@ -139,14 +139,14 @@ class CustomTopController extends AbstractController
     }
 
     /**
-     * Entry Traning
+     * Entry Training
      *
-     * @Route("/tr/entry", name="ani_entry_traning")
-     * @Template("ani_entry_traning.twig")
+     * @Route("/tr/entry", name="ani_entry_training")
+     * @Template("ani_entry_training.twig")
      */
-    public function animallineEntryTraning(Request $request)
+    public function animallineEntryTraining(Request $request)
     {
-        $builder = $this->formFactory->createBuilder(TraningType::class);
+        $builder = $this->formFactory->createBuilder(TrainingType::class);
         $form = $builder->getForm();
         $form->handleRequest($request);
 
@@ -154,7 +154,7 @@ class CustomTopController extends AbstractController
             $data = $form->getData();
             $this->mailService->sendNotifyReceiveSeminarRegistered($data);
 
-            return $this->redirectToRoute('ani_traning');
+            return $this->redirectToRoute('ani_training');
         }
 
         return [
