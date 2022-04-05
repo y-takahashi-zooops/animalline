@@ -269,7 +269,7 @@ class AdoptionController extends AbstractController
     /**
      * お引渡しの流れ.
      *
-     * @Route("/breeder/transferinfo", name="adoption_transferinfo")
+     * @Route("/adoption/transferinfo", name="adoption_transferinfo")
      * @Template("animalline/adoption/transferinfo.twig")
      */
     public function transferinfo(Request $request)
