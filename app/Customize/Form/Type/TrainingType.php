@@ -35,7 +35,7 @@ class TrainingType extends AbstractType
             ->add('birthday', DateType::class, [
                 'required' => true,
                 'input' => 'datetime',
-                'years' => range(1990, date('Y')),
+                'years' => range( date('Y'), 1990),
                 'widget' => 'choice',
                 'format' => 'yyyy/MM/dd',
                 'placeholder' => ['year' => '----', 'month' => '--', 'day' => '--'],
