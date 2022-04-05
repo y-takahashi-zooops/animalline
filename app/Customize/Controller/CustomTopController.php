@@ -13,7 +13,6 @@
 
 namespace Customize\Controller;
 
-use Carbon\Carbon;
 use Customize\Form\Type\TraningType;
 use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;
@@ -137,6 +136,30 @@ class CustomTopController extends AbstractController
         $title = "成約特典について";
 
         return ['title'  => $title];
+    }
+
+    /**
+     * Entry Traning
+     *
+     * @Route("/tr/entry", name="ani_entry_traning")
+     * @Template("ani_entry_traning.twig")
+     */
+    public function animallineEntryTraning(Request $request)
+    {
+        $builder = $this->formFactory->createBuilder(TraningType::class);
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $this->mailService->sendNotifyReceiveSeminarRegistered($data);
+
+            return $this->redirectToRoute('ani_traning');
+        }
+
+        return [
+            'form' => $form->createView()
+        ];
     }
 
     /**
@@ -296,29 +319,5 @@ class CustomTopController extends AbstractController
      */
     public function ec_nutro(){
         return [];
-    }
-
-    /**
-     * Entry Traning
-     *
-     * @Route("/tr/entry", name="ani_entry_traning")
-     * @Template("ani_entry_traning.twig")
-     */
-    public function animallineEntryTraning(Request $request)
-    {
-        $builder = $this->formFactory->createBuilder(TraningType::class);
-        $form = $builder->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $this->mailService->sendNotifyReceiveSeminarRegistered($data);
-
-            return $this->redirectToRoute('ani_traning');
-        }
-
-        return [
-            'form' => $form->createView()
-        ];
     }
 }
