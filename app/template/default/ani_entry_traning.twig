@@ -63,7 +63,7 @@
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-birth date">
+                                        <div class="ec-birth{{ has_errors(form.birthday) ? ' error' }} date">
                                             {{ form_widget(form.birthday.year) }} /
                                             {{ form_widget(form.birthday.month) }} /
                                             {{ form_widget(form.birthday.day) }}
@@ -79,7 +79,7 @@
                                         </div>
                                     </dt>
                                     <dd>
-                                        <div class="ec-birth date">
+                                        <div class="ec-birth{{ has_errors(form.desired_date) ? ' error' }} date">
                                             {{ form_widget(form.desired_date.year) }} /
                                             {{ form_widget(form.desired_date.month) }} /
                                             {{ form_widget(form.desired_date.day) }}
