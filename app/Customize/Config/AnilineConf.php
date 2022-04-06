@@ -160,6 +160,8 @@ final class AnilineConf
 
     const ANILINE_WMS_WITH_TAX = 1.1;
 
+    const COMMISSION_RATE = 0.15;
+
     const ANILINE_SITE_TYPE_BREEDER = 1; // ブリーダー
     const ANILINE_SITE_TYPE_ADOPTION = 2; // 保護団体
 

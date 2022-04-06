@@ -13,7 +13,8 @@
 
 namespace Customize\Controller;
 
-use Carbon\Carbon;
+use Customize\Form\Type\TrainingType;
+use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;
 use Eccube\Repository\NewsRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -48,16 +49,23 @@ class CustomTopController extends AbstractController
      */
     protected $categoryRepository;
 
+    /**
+     * @var MailService
+     */
+    private $mailService;
+
     public function __construct(
         NewsRepository $NewsRepository,
         ProductRepository $productRepository,
         CategoryRepository $categoryRepository,
-        ProductListOrderByRepository $productListOrderByRepository
+        ProductListOrderByRepository $productListOrderByRepository,
+        MailService $mailService
     ) {
         $this->NewsRepository = $NewsRepository;
         $this->productListOrderByRepository = $productListOrderByRepository;
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->mailService = $mailService;
     }
     /**
      * @Route("/ec", name="homepage")
@@ -112,10 +120,10 @@ class CustomTopController extends AbstractController
     }
 
     /**
-     * @Route("/tr", name="ani_traning")
-     * @Template("ani_traning.twig")
+     * @Route("/tr", name="ani_training")
+     * @Template("ani_training.twig")
      */
-    public function animalline_traning()
+    public function animalline_training()
     {   
         /*
         $customer = $this->getUser();
@@ -128,6 +136,30 @@ class CustomTopController extends AbstractController
         $title = "成約特典について";
 
         return ['title'  => $title];
+    }
+
+    /**
+     * Entry Training
+     *
+     * @Route("/tr/entry", name="ani_entry_training")
+     * @Template("ani_entry_training.twig")
+     */
+    public function animallineEntryTraining(Request $request)
+    {
+        $builder = $this->formFactory->createBuilder(TrainingType::class);
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $this->mailService->sendNotifyReceiveSeminarRegistered($data);
+
+            return $this->redirectToRoute('ani_training');
+        }
+
+        return [
+            'form' => $form->createView()
+        ];
     }
 
     /**
@@ -288,6 +320,4 @@ class CustomTopController extends AbstractController
     public function ec_nutro(){
         return [];
     }
-
-
 }

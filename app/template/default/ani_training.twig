@@ -1,0 +1,60 @@
+{% set site_type = 'common' %}
+{% extends 'ani_frame.twig' %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/dna/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/dna/page.css') }}">
+    <style>
+        #trainer-content06 a{
+            margin:0 0 40px;
+            color:#fff;
+            font-size:20px;
+            letter-spacing:.1em;
+            padding:10px 40px;
+            display:inline-block;
+            border:solid #fff 1px;
+            border-radius:10px;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="page-inner">
+        <section id="trainer-content05">
+            <div class="trainer-content05__title">
+                <h3><img src="{{ asset('assets/img/trainer/trainer-title04.png') }}" alt="成約特典あり。オンラインしつけセミナー"/></h3>
+                <p><span>アニマルラインでマッチング</span><br>
+                    <span>ご成約されたオーナー様がご参加いただけます</span></p>
+            </div>
+            <div class="trainer-content05__body">
+                <div class="seminar">
+                    <dl>
+                        <dt>セミナー内容</dt>
+                        <dd><i class="bi bi-check-circle"></i>社会化期とは</dd>
+                        <dd><i class="bi bi-check-circle"></i>トイレを教えるときのポイント</dd>
+                        <dd><i class="bi bi-check-circle"></i>噛んできたときの対処法</dd>
+                        <dd><i class="bi bi-check-circle"></i>お散歩に連れて行くタイミング</dd>
+                    </dl>
+                    <p>など</p>
+                </div>
+                <h4>オンラインしつけセミナーでは、<br>
+                    子犬を飼う際の基本をレクチャーいたします</h4>
+            </div>
+        </section>
+
+        <section id="trainer-content06">
+            <div class="inner">
+                <div class="trainer-content06__title">
+                    <a href="{{ url('ani_entry_training') }}">申し込みはこちら</a>
+                    <br><br><br>
+                    <p>ご不明点はお気軽にご連絡ください。</p>
+                    <p>TEL: 03-5969-9718</p>
+                    <p>E-Mail: info@animalline.jp</p>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+{% block javascript %}{% endblock %}
+
+    

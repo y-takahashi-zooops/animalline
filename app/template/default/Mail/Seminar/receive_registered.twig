@@ -1,0 +1,74 @@
+{% autoescape false %}
+※本メールは自動配信メールです。<br>
+「オンラインしつけセミナー参加申し込み」よりご確認をお願い致します。
+<br><br>
+
+<b>氏名</b><br>
+{{ registeredData.name }}
+<br><br>
+
+<b>住所</b><br>
+{{ registeredData.address }}
+<br><br>
+
+<b>犬種</b><br>
+{{ registeredData.dog_breed }}
+<br><br>
+
+<b>誕生日</b><br>
+{{ registeredData.birthday.format('Y-m-d') }}
+<br><br>
+
+<b>希望日</b><br>
+{{ registeredData.desired_date.format('Y-m-d') }}
+<br><br>
+
+<b>音に対して敏感ですか</b><br>
+{{ registeredData.is_sensitive_sound == 0 ? '敏感' :
+registeredData.is_sensitive_sound == 1 ? '普通' : '鈍感' }}
+<br><br>
+
+<b>体を触られることに抵抗はありますか</b><br>
+{{ registeredData.is_touch_body == 0 ? '敏感' :
+registeredData.is_touch_body == 1 ? '特定の部位だけ' : '鈍感' }}
+<br><br>
+
+<b>人と関わることが好きか （スキンシップや遊びなど）</b><br>
+{{ registeredData.is_interact_people == 0 ? '好き' :
+registeredData.is_interact_people == 1 ? '普通' : '嫌い' }}
+<br><br>
+
+<b>接する相手によって態度を変えるタイプか</b><br>
+{{ registeredData.is_change_attitude == 0 ? '変える' : '変えない' }}
+<br><br>
+
+<b>他の動物に対しての行動</b><br>
+{{ registeredData.behavior_other_animals == 0 ? '気にする' :
+registeredData.behavior_other_animals == 1 ? '普通' : '気にしない （気にするが過剰ではない）' }}
+<br><br>
+
+<b>見知らぬものや人への警戒心</b><br>
+{{ registeredData.is_wary == 0 ? '警戒をする' :
+registeredData.is_wary == 1 ? '普通' : 'しない' }}
+<br><br>
+
+<b>攻撃しようとするか</b><br>
+{{ registeredData.is_attack == 0 ? 'する' : 'しない' }}
+<br><br>
+
+<b>フードやオヤツが好きか</b><br>
+{{ registeredData.is_like_food == 0 ? '好き' :
+registeredData.is_like_food == 1 ? '普通' : '好きではない' }}
+<br><br>
+
+<b>慣れないところに行ったときや見慣れない人や物への反応</b><br>
+{{ registeredData.is_unfamiliar == 0 ? '慣れやすい' :
+registeredData.is_unfamiliar == 1 ? '普通' : '慣れるまで時間がかかる' }}
+<br><br>
+
+<b>目に入った物や人に対してにおいを嗅いだり近づこうとするか</b><br>
+{{ registeredData.is_smell_or_approach == 0 ? 'する' : 'しない' }}
+<br><br>
+
+今後ともAnimallineを宜しくお願い致します。
+{% endautoescape %}

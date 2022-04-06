@@ -55,4 +55,26 @@ class ConservationContactHeaderRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Get contact header a month
+     *
+     * @param $startDate
+     * @param $endDate
+     * @param $conservation
+     * @return array
+     */
+    public function getContractHeaderAMonth($startDate, $endDate, $conservation): array
+    {
+        $qb = $this->createQueryBuilder('ch');
+
+        $qb->where('ch.update_date >= :startDate')
+            ->andWhere('ch.update_date <= :endDate')
+            ->andWhere('ch.contract_status = ' . AnilineConf::CONTRACT_STATUS_CONTRACT)
+            ->andWhere('ch.Conservation = :conservation')
+            ->setParameters(['startDate' => $startDate, 'endDate' => $endDate, 'conservation' => $conservation]);
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 }
