@@ -162,7 +162,8 @@ class BreederExaminationController extends AbstractController
 
             // breederの審査ステータスを変更
             if ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
-                $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK);
+                $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK)
+                    ->setIsActive(1);
             } elseif ($result == AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_NG) {
                 $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG);
             }
