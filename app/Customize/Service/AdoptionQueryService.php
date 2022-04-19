@@ -210,7 +210,7 @@ class AdoptionQueryService
         $query = $this->conservationsRepository->createQueryBuilder('c');
         $query->leftJoin('Customize\Entity\ConservationPets', 'cp', 'WITH', 'c.id = cp.Conservation')
             ->where('c.handling_pet_kind in (:kinds)')
-            ->andWhere('cp.is_active = :is_active' )
+            ->andWhere('c.is_active = :is_active' )
             ->setParameter('is_active', AnilineConf::IS_ACTIVE_PUBLIC)
             ->andWhere($query->expr()->notIn('c.examination_status', AnilineConf::EXAMINATION_STATUS_CUSTOMER_DELETED))
             ->setParameter('kinds', [
