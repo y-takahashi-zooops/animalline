@@ -242,6 +242,14 @@ class BreederController extends AbstractController
                 ->setThumbnailPath($thumbnailPath)
                 ->setLicenseThumbnailPath($licenseThumbnailPath);
             $entityManager = $this->getDoctrine()->getManager();
+
+            if ($request->get('breeders')['is_active'] == AnilineConf::IS_ACTIVE_PRIVATE) {
+                $breederPets = $this->breederPetsRepository->findBy(['Breeder' => $breederData]);
+                foreach ($breederPets as $breederPet) {
+                    $breederPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
+                    $entityManager->persist($breederPet);
+                }
+            }
             $entityManager->persist($breederData);
             $entityManager->flush();
             return $this->redirectToRoute('admin_breeder_list');

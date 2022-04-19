@@ -241,6 +241,13 @@ class ConservationsType extends AbstractType
                     'rows' => 10
                 ],
                 'required' => false,
+            ])
+            ->add('is_active', ChoiceType::class, [
+                'choices' =>
+                    [
+                        '公開' => AnilineConf::PUBLIC_FLAG_RELEASE,
+                        '非公開' => AnilineConf::PUBLIC_FLAG_PRIVATE,
+                    ],
             ]);
 
             //$builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
