@@ -312,7 +312,7 @@
             <button class="ec-blockBtn--action mt-4 mb-4" {{ isCheckPetContract ? 'disabled' : '' }}>{{ '登録する' }}</button>
             <a class="ec-blockBtn--cancel" href={{url('breeder_pet_list')}} style="color:white;">{{ '戻る' }}</a>
              {% if id %}
-                {% if pet.isActive == 0 and pet.dnaCheckResult == 1 %}
+                {% if pet.isActive == 0 and pet.dnaCheckResult == 1 and breeder.isActive == 1 %}
                     <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status" data-is-active="{{ pet.isActive }}">このペットを公開にする</button>
                 {% elseif pet.isActive == 1 %}
                     <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status" data-is-active="{{ pet.isActive }}" {{ isCheckPetContract ? 'disabled' : '' }}>このペットを非公開にする</button>
