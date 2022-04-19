@@ -19,7 +19,7 @@ use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Entity\Conservations;
 use Customize\Repository\ConservationPetImageRepository;
-use Customize\Form\Type\Adoption\ConservationsType;
+use Customize\Form\Type\Admin\ConservationsType;
 use Customize\Repository\ConservationBankAccountRepository;
 use Customize\Service\AdoptionQueryService;
 use Customize\Service\MailService;
