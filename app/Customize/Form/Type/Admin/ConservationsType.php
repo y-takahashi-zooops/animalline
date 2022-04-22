@@ -1,6 +1,6 @@
 <?php
 
-namespace Customize\Form\Type\Adoption;
+namespace Customize\Form\Type\Admin;
 
 use Customize\Config\AnilineConf;
 use Customize\Entity\Conservations;
@@ -12,9 +12,6 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -59,11 +56,11 @@ class ConservationsType extends AbstractType
             ])
             ->add('handling_pet_kind', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '犬・猫' => AnilineConf::ANILINE_PET_KIND_DOG_CAT,
-                        '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
-                        '猫' => AnilineConf::ANILINE_PET_KIND_CAT
-                    ],
+                [
+                    '犬・猫' => AnilineConf::ANILINE_PET_KIND_DOG_CAT,
+                    '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
+                    '猫' => AnilineConf::ANILINE_PET_KIND_CAT
+                ],
                 'required' => true,
                 'placeholder' => 'common.select',
                 'constraints' => [
@@ -208,13 +205,12 @@ class ConservationsType extends AbstractType
                 ]
             ])
             ->add('thumbnail_path', FileType::class, [
-                // 'required' => false,
-                'required' => true,
-                'mapped' => false
+                'mapped' => false,
+                'required' => false,
             ])
             ->add('license_thumbnail_path', FileType::class, [
                 'mapped' => false,
-                'required' => true
+                'required' => false
             ])
             ->add('license_no', TextType::class, [
                 'required' => false,
@@ -222,18 +218,12 @@ class ConservationsType extends AbstractType
                     'maxlength' => $this->eccubeConfig['eccube_stext_len'],
                 ],
             ])
-            ->add('ThumbnailPathErrors', TextType::class, [
-                'mapped' => false,
-            ])
-            ->add('ThumbnailLicensePathErrors', TextType::class, [
-                'mapped' => false,
-            ])
             ->add('delivery_way_template', TextareaType::class, [
                 'attr' => [
                     'placeholder' => '引き渡し方法をご記入ください。',
                     'rows' => 10
                 ],
-                'required' => false
+                'required' => false,
             ])
             ->add('delivery_time_template', TextareaType::class, [
                 'attr' => [
@@ -244,33 +234,17 @@ class ConservationsType extends AbstractType
             ])
             ->add('is_active', ChoiceType::class, [
                 'choices' =>
-                    [
-                        '公開' => AnilineConf::PUBLIC_FLAG_RELEASE,
-                        '非公開' => AnilineConf::PUBLIC_FLAG_PRIVATE,
-                    ],
+                [
+                    '公開' => AnilineConf::PUBLIC_FLAG_RELEASE,
+                    '非公開' => AnilineConf::PUBLIC_FLAG_PRIVATE,
+                ],
             ]);
-
-            //$builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePetHouseName']);
-            $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateThumbnail']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Conservations::class,
-            'adoption_img' => null,
-            'license_img' => null,
         ]);
-    }
-
-    public function validateThumbnail(FormEvent $event)
-    {
-        $form = $event->getForm();
-        if (!$event->getForm()->getConfig()->getOptions()['adoption_img']) {
-            $form['ThumbnailPathErrors']->addError(new FormError('プロフィール写真をアップロードください。'));
-        }
-        if (!$event->getForm()->getConfig()->getOptions()['license_img']) {
-            $form['ThumbnailLicensePathErrors']->addError(new FormError('動物取扱業登録証の画像をアップロードしてください。'));
-        }
     }
 }

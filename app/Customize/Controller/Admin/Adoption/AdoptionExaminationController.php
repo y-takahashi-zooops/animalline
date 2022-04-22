@@ -116,8 +116,9 @@ class AdoptionExaminationController extends AbstractController
 
             $data['examination_comment'] = $comment;
             if ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_OK) {
-                $this->mailService->sendAdoptionExaminationMailAccept($Customer, $data);
+                $conservation->setIsActive(1);
                 $Customer->setIsConservation(1);
+                $this->mailService->sendAdoptionExaminationMailAccept($Customer, $data);
             } elseif ($result === AnilineConf::ANILINE_EXAMINATION_STATUS_CHECK_NG) {
                 $this->mailService->sendAdoptionExaminationMailReject($Customer, $data);
             }

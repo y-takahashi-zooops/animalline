@@ -89,7 +89,7 @@ file that was distributed with this source code.
                             <div class="row">
                                 <div class="col-3">
                                     <div class="d-inline-block">
-                                        <span>画像</span>
+                                        <span>プロフィール画像</span>
                                     </div>
                                 </div>
                                 <div class="col-6 mb-2">
@@ -270,6 +270,54 @@ file that was distributed with this source code.
                                     {{ form_errors(form.pr_text) }}
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>動物取扱業登録証画像</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-2">
+                                    <img alt="license_thumbnail_path"
+                                        src="{{ (form.vars.value.licenseThumbnailPath | default('/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ '/noimage_plugin_list.png')) }}"
+                                        style="max-width: 200px">
+                                    {{ form_widget(form.license_thumbnail_path, { 'attr': { 'class': 'd-none' }}) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>登録証番号</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-2">
+                                    {{ form_widget(form.license_no) }}
+                                    {{ form_errors(form.license_no) }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>引き渡し方法</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-2">
+                                    {{ form_widget(form.delivery_way_template) }}
+                                    {{ form_errors(form.delivery_way_template) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="d-inline-block">
+                                        <span>備考</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-2">
+                                    {{ form_widget(form.delivery_time_template) }}
+                                    {{ form_errors(form.delivery_time_template) }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -288,6 +336,12 @@ file that was distributed with this source code.
                 </div>
                 <div class="col-6">
                     <div id="ex-conversion-action" class="row align-items-center justify-content-end">
+                        <div class="col-auto">
+                            <div class="ec-select{{ has_errors(form.is_active) ? ' error' }}">
+                                {{ form_widget(form.is_active) }}
+                                {{ form_errors(form.is_active) }}
+                            </div>
+                        </div>
                         <div class="col-auto">
                             <button class="btn btn-ec-conversion px-5"
                                     type="submit">{{ 'admin.common.registration'|trans }}</button>
