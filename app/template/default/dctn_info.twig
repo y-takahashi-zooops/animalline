@@ -4,6 +4,19 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/dna/common.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/dna/page.css') }}">
+
+    <style>
+        #trainer-content06 a{
+            margin:0 0 40px;
+            color:#fff;
+            font-size:20px;
+            letter-spacing:.1em;
+            padding:10px 40px;
+            display:inline-block;
+            border:solid #fff 1px;
+            border-radius:10px;
+        }
+    </style>
 {% endblock %}
 
 {% block main %}
@@ -94,6 +107,21 @@
     </section>
     
     <section id="trainer-content06">
+        <div class="inner">
+            <div class="trainer-content06__title">
+                <a href="{{ url('ani_entry_training') }}">申し込みはこちら</a>
+                <br>
+                <p>定期的に開催いたします。</p>
+                <br><br>
+                <p>ご不明点はお気軽にご連絡ください。</p>
+                <p>TEL: 03-5969-9718</p>
+                <p>E-Mail: info@animalline.jp</p>
+            </div>
+        </div>
+    </section>
+
+    {#
+    <section id="trainer-content06">
       <div class="inner">
         <div class="trainer-content06__title">
           <h3>開催日時</h3>
@@ -115,7 +143,8 @@
         </div>
       </div>
     </section>
-    
+    #}
+
     <section id="trainer-content07">
       <div class="inner">
         <div class="trainer-content07__title">
