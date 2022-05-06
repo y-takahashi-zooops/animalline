@@ -19,7 +19,7 @@ use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationsRepository;
 use Customize\Entity\Conservations;
 use Customize\Repository\ConservationPetImageRepository;
-use Customize\Form\Type\Adoption\ConservationsType;
+use Customize\Form\Type\Admin\ConservationsType;
 use Customize\Repository\ConservationBankAccountRepository;
 use Customize\Service\AdoptionQueryService;
 use Customize\Service\MailService;
@@ -149,6 +149,13 @@ class AdoptionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $conservation->setPref($conservation->getPrefId());
             $entityManager = $this->getDoctrine()->getManager();
+            if ($request->get('conservations')['is_active'] == AnilineConf::IS_ACTIVE_PRIVATE) {
+                $conservationPets = $this->conservationPetsRepository->findBy(['Conservation' => $conservation]);
+                foreach ($conservationPets as $conservationPet) {
+                    $conservationPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
+                    $entityManager->persist($conservationPet);
+                }
+            }
             $entityManager->persist($conservation);
             $entityManager->flush();
             return $this->redirectToRoute('admin_adoption_list');
