@@ -1,6 +1,33 @@
 <!doctype html>
 <html lang="{{ eccube_config.locale }}">
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# product: http://ogp.me/ns/product#">
+    <script async src="https://s.yimg.jp/images/listing/tool/cv/ytag.js"></script>
+    <script>
+    window.yjDataLayer = window.yjDataLayer || [];
+    function ytag() { yjDataLayer.push(arguments); }
+    ytag({"type":"ycl_cookie"});
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Ads: 10929084835 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10929084835"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'AW-10929084835');
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XS8V5VVPRP"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XS8V5VVPRP');
+    </script>
+
     {% block tagarea %}{% endblock %}
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -150,5 +177,19 @@
         {{ include('snippet.twig', { snippets: plugin_snippets }) }}
     {% endif %}
     <script src="{{ asset('assets/js/customize.js', 'user_data') }}"></script>
+
+    <script async src="https://s.yimg.jp/images/listing/tool/cv/ytag.js"></script>
+    <script>
+    window.yjDataLayer = window.yjDataLayer || [];
+    function ytag() { yjDataLayer.push(arguments); }
+    ytag({
+    "type":"yss_retargeting",
+    "config": {
+        "yahoo_ss_retargeting_id": "1001250419",
+        "yahoo_sstag_custom_params": {
+        }
+    }
+    });
+    </script>
 </body>
 </html>
