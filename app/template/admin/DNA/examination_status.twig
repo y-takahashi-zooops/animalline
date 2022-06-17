@@ -169,6 +169,7 @@ file that was distributed with this source code.
                                     <th class="border-top-0 pt-2 pb-2">画像</th>
                                     <th class="border-top-0 pt-2 pb-2">種別</th>
                                     <th class="border-top-0 pt-2 pb-2">犬種/猫種</th>
+                                    <th class="border-top-0 pt-2 pb-2 text-nowrap">検査機関</th>
                                     <th class="border-top-0 pt-2 pb-2 text-nowrap">検査ステータス</th>
                                     <th class="border-top-0 pt-2 pb-2">キット出荷</th>
                                     <th class="border-top-0 pt-2 pb-2">キット返送</th>
@@ -200,6 +201,8 @@ file that was distributed with this source code.
                                         dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')
                                         ? '猫' : '_' }}</td>
                                     <td class="align-middle">{{ dna.pet_id ? dna.breeds_name : '_' }}</td>
+                                    <td class="align-middle">{{ dna.labo_type == 1 ? 'Veqta' : 'ラボ' }}</td>
+
                                     <td class="align-middle">{{ check_status[dna.check_status] }}</td>
                                     <td class="align-middle">{{ dna.kit_shipping_date is empty ? '_' :
                                         dna.kit_shipping_date | date('Y/m/d') }}</td>

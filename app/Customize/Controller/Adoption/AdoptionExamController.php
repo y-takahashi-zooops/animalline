@@ -86,7 +86,7 @@ class AdoptionExamController extends AbstractController
 
             // 審査申請済であればSTEP5として審査中メッセージ
             $examination_status = $conservation->getExaminationStatus();
-            if ($examination_status == 1) {
+            if ($examination_status != 0) {
                 $step = 5;
             }
 
@@ -175,23 +175,26 @@ class AdoptionExamController extends AbstractController
 
         // 保護団体の審査ステータスを変更
         $conservation = $this->conservationsRepository->find($this->getUser());
-        $conservation->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK);
 
-        $entityManager->persist($conservation);
+        if($conservation->getExaminationStatus() == 0){
+            $conservation->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK);
 
-        // // 犬舎・猫舎両方のパターンがあるため配列で取得
-        // $conservationExaminationInfos = $this->conservationExaminationInfoRepository->findBy([
-        //     'Conservation' => $conservation,
-        // ]);
+            $entityManager->persist($conservation);
 
-        // // 審査情報のそれぞれの審査ステータスを変更
-        // foreach($conservationExaminationInfos as $conservationExaminationInfo){
-        //     $conservationExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_SUBMIT);  
-        //     $entityManager->persist($conservationExaminationInfo);
-        // }
+            // // 犬舎・猫舎両方のパターンがあるため配列で取得
+            // $conservationExaminationInfos = $this->conservationExaminationInfoRepository->findBy([
+            //     'Conservation' => $conservation,
+            // ]);
 
-        $entityManager->flush();
+            // // 審査情報のそれぞれの審査ステータスを変更
+            // foreach($conservationExaminationInfos as $conservationExaminationInfo){
+            //     $conservationExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_SUBMIT);  
+            //     $entityManager->persist($conservationExaminationInfo);
+            // }
 
+            $entityManager->flush();
+        }
+        
         return $this->redirectToRoute('adoption_examination');
     }
 }

@@ -179,7 +179,7 @@ class VeqtaController extends AbstractController
         $dnaCheckStatus = $this->dnaCheckStatusRepository->find($dnaId);
         if ($dnaCheckStatus) {
             $header = $this->dnaCheckStatusHeaderRepository->find($dnaCheckStatus->getDnaHeader());
-            if ($dnaCheckStatus->getCheckStatus() == 3) {
+            if ($dnaCheckStatus->getCheckStatus() == 3 && $header->getLaboType() == 1) {
                 $show = true;
                 $shippingName = $header->getShippingName();
                 if ($dnaCheckStatus->getPetId()) {
@@ -414,37 +414,39 @@ class VeqtaController extends AbstractController
         $siteType = $barcode[0];
         $dnaId = substr($barcode, 1);
 
+        $data['hasRecord'] = false;
         $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
         if ($Dna) {
-            if ($Dna->getSiteType() == AnilineConf::SITE_CATEGORY_BREEDER) {
-                $pet = $this->breederPetsRepository->find($Dna->getPetId());
-            } else {
-                $pet = $this->conservationPetsRepository->find($Dna->getPetId());
-            }
+            if($Dna->getDnaHeader()->getLaboType() == 1){
+                if ($Dna->getSiteType() == AnilineConf::SITE_CATEGORY_BREEDER) {
+                    $pet = $this->breederPetsRepository->find($Dna->getPetId());
+                } else {
+                    $pet = $this->conservationPetsRepository->find($Dna->getPetId());
+                }
 
-            $data['breed'] = $pet->getBreedsType() ? $pet->getBreedsType()->getBreedsName() : '';
-            $data['pet_birthday'] = $pet->getPetBirthday() ? $pet->getPetBirthday()->format('Y/m/d') : '';
-            if (!$pet->getPetKind()) {
-                $data['pet_kind'] = '';
-            } else {
-                $data['pet_kind'] = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫';
-            }
+                $data['breed'] = $pet->getBreedsType() ? $pet->getBreedsType()->getBreedsName() : '';
+                $data['pet_birthday'] = $pet->getPetBirthday() ? $pet->getPetBirthday()->format('Y/m/d') : '';
+                if (!$pet->getPetKind()) {
+                    $data['pet_kind'] = '';
+                } else {
+                    $data['pet_kind'] = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫';
+                }
 
-            $checkKinds = [];
-            foreach ($this->dnaCheckKindsRepository->findBy(
-                ['Breeds' => $pet->getBreedsType(), 'delete_flg' => 0],
-                ['update_date' => 'DESC', 'id' => 'DESC']
-            ) as $item) {
-                $itemArr = [];
-                $itemArr['id'] = $item->getId();
-                $itemArr['check_kind'] = $item->getCheckKind();
-                $checkKinds[] = $itemArr;
+                $checkKinds = [];
+                foreach ($this->dnaCheckKindsRepository->findBy(
+                    ['Breeds' => $pet->getBreedsType(), 'delete_flg' => 0],
+                    ['update_date' => 'DESC', 'id' => 'DESC']
+                ) as $item) {
+                    $itemArr = [];
+                    $itemArr['id'] = $item->getId();
+                    $itemArr['check_kind'] = $item->getCheckKind();
+                    $checkKinds[] = $itemArr;
+                }
+                $data['checkKind'] = $checkKinds;
+                $data['shippingName'] = $Dna->getDnaHeader()->getShippingName();
+                $data['hasRecord'] = $Dna->getCheckStatus() === AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING;
+                $data['hasRecord'] = true;
             }
-            $data['checkKind'] = $checkKinds;
-            $data['shippingName'] = $Dna->getDnaHeader()->getShippingName();
-            $data['hasRecord'] = $Dna->getCheckStatus() === AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING;
-        } else {
-            $data['hasRecord'] = false;
         }
         return new JsonResponse($data);
     }

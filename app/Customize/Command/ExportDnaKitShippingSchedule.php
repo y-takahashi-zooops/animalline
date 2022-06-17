@@ -135,6 +135,7 @@ class ExportDnaKitShippingSchedule extends Command
         )
             ->where('dnah.update_date <= :to')
             ->andWhere('dnah.shipping_status = :shipping_status')
+            ->andWhere('dnah.labo_type = 1')    //仮、ラボ用の商品IDが判明したら0以上で抽出
             ->setParameters([
                 'to' => $now,
                 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT

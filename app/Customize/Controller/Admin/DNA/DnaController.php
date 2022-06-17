@@ -323,4 +323,43 @@ class DnaController extends AbstractController
 
         return $response;
     }
+
+    /**
+     * DNA検査状況確認
+     *
+     * @Route("/%eccube_admin_route%/dna/examination_headers", name="admin_dna_examination_headers")
+     * @Template("@admin/DNA/examination_headers.twig")
+     */
+    public function examination_headers(PaginatorInterface $paginator, Request $request)
+    {
+        $results = $this->dnaCheckStatusHeaderRepository->findBy(["labo_type" => 0], array('id' => 'DESC'));
+
+        $headers = $paginator->paginate(
+            $results,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', 50)
+        );
+        return [
+            'headers' => $headers
+        ];
+    }
+
+    /**
+     * 検査機関設定実行
+     *
+     * @Route("/%eccube_admin_route%/dna/examination_headers/execute", name="admin_dna_examination_headers_execute")
+     *
+     */
+    public function admin_dna_examination_headers_execute(Request $request)
+    {
+        $id = $request->request->get("header-id");
+        $labo_type = $request->request->get("labo-type");
+
+        $header = $this->dnaCheckStatusHeaderRepository->find($id);
+        $header->setLaboType($labo_type);
+        $this->entityManager->persist($header);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('admin_dna_examination_headers');
+    }
 }

@@ -106,6 +106,11 @@ class DnaCheckStatusHeader
     private $update_date;
 
     /**
+     * @ORM\Column(name="labo_type", type="smallint", nullable=true, options={"default":0})
+     */
+    private $labo_type;
+
+    /**
      * @ORM\OneToMany(targetEntity=DnaCheckStatus::class, mappedBy="DnaHeader")
      */
     private $DnaCheckStatus;
@@ -114,6 +119,19 @@ class DnaCheckStatusHeader
     {
         $this->DnaCheckStatus = new ArrayCollection();
     }
+
+    public function getLaboType(): ?int
+    {
+        return $this->labo_type;
+    }
+
+    public function setLaboType(int $labo_type): self
+    {
+        $this->labo_type = $labo_type;
+
+        return $this;
+    }
+
 
     public function getDnaCheckStatus(): Collection
     {

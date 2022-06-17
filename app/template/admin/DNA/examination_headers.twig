@@ -1,0 +1,142 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['dna', 'dna_examination_headers'] %}
+{% set params = app.request.query.all %}
+
+{% block title %}{{ '検査機関設定'|trans }}{% endblock %}
+{% block sub_title %}{{ 'DNA検査'|trans }}{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('assets/css/tempusdominus-bootstrap-4.min.css', 'admin') }}">
+{% endblock stylesheet %}
+
+{% block main %}
+<div class="c-contentsArea__cols">
+    <div class="c-contentsArea__primaryCol">
+        <div class="c-primaryCol">
+            <form id="form_bulk" method="post" action="{{url('admin_dna_examination_headers_execute')}}">
+                <input type="hidden" name="header-id" value="">
+				<input type="hidden" name="labo-type" value="">
+
+                <div class="row justify-content-between mb-2">
+                    <div class="col-6">
+                        <div id="btn_bulk" class="d-none">
+                            <label class="mr-2">一括操作</label>
+                            <button class="btn btn-ec-regular mr-2 action-submit">検査キット再請求</button>
+                        </div>
+                    </div>
+                    <div class="col-5 text-right">
+                        <div class="d-inline-block mr-2">
+                            <div>
+                                <select class="custom-select" onchange="location = this.value;">
+                                    {% for i in range(10, 60, 10) %}
+                                    <option value="{{ url('admin_dna_examination_status',
+                                                params|merge({'item': i})) }}" {{ params.item is defined ?
+                                        (params.item==i ? 'selected' ) : (i==50 ? 'selected' ) }}>{{ i }}件
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded border-0 mb-4 d-block">
+                    <div class="card-body p-0">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th class="border-top-0 pt-2 pb-2">ID</th>
+                                    <th class="border-top-0 pt-2 pb-2">送付先</th>
+                                    <th class="border-top-0 pt-2 pb-2">住所</th>
+                                    <th class="border-top-0 pt-2 pb-2">TEL</th>
+									<th class="border-top-0 pt-2 pb-2">送付数量</th>
+									<th class="border-top-0 pt-2 pb-2"></th>
+									<th class="border-top-0 pt-2 pb-2"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for header in headers %}
+                                <tr>
+                                    <td class="align-middle">{{ header.id }}</td>
+                                    <td class="align-middle">{{ header.ShippingName }}</td>
+									<td class="align-middle">{{ header.ShippingPref }}{{ header.ShippingCity }}{{ header.ShippingAddress }}</td>
+									<td class="align-middle">{{ header.ShippingTel }}</td>
+									<td class="align-middle">{{ header.KitUnit }}</td>
+									<td class="align-middle"><button type="button" class="btn btn-ec-conversion" onclick="change(1,{{ header.id }})">Veqta</button></td>
+									<td class="align-middle"><button type="button" class="btn btn-ec-conversion" onclick="change(2,{{ header.id }})">ラボ</button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+					<div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog"
+                        aria-labelledby="confirm-modal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title font-weight-bold">
+                                        確認ダイアログ
+                                    </h5>
+                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body text-left">
+                                    <p class="text-left modal-message">検査機関を<span id="confirm-modal-label"></span>に設定しますか？</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-ec-sub" type="button" data-dismiss="modal">
+                                        いいえ
+                                    </button>
+                                    <button class="btn btn-ec-conversion" type="submit">
+                                        はい
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="navigation float-right">
+            {{ knp_pagination_render(headers) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+<script>
+    function change(labo_type,id) {
+        $('input[name=header-id]').val(id);
+		$('input[name=labo-type]').val(labo_type);
+		if(labo_type == 1){
+			$('#confirm-modal-label').text("Veqta");
+		}
+		else{
+			$('#confirm-modal-label').text("ラボ");
+		}
+        $('#confirm-modal').modal('show');
+    };
+    function changeStatus(id) {
+        $('input[name=change-status-id]').val(id);
+        $('#confirm-modal-status').modal('show');
+    };
+
+    $(".btn-ec-conversion").on('click', function () {
+        setTimeout(function () {
+            $('#confirm-modal').modal('hide');
+        }, 2000);
+    });
+</script>
+{% endblock %}

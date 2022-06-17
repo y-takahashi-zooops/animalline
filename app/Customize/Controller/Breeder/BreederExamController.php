@@ -130,7 +130,7 @@ class BreederExamController extends AbstractController
 
             // 審査申請済であればSTEP5として審査中メッセージ
             $examination_status = $breeder->getExaminationStatus();
-            if ($examination_status == 1) {
+            if ($examination_status != 0) {
                 $step = 5;
             }
 
@@ -217,22 +217,26 @@ class BreederExamController extends AbstractController
 
         // ブリーダーの審査ステータスを変更
         $breeder = $this->breedersRepository->find($this->getUser());
-        $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK);
 
-        $entityManager->persist($breeder);
+        //既に提出済みの場合は何もしない
+        if($breeder->getExaminationStatus() == 0){
+            $breeder->setExaminationStatus(AnilineConf::ANILINE_EXAMINATION_STATUS_NOT_CHECK);
 
-        // 犬舎・猫舎両方のパターンがあるため配列で取得
-        $breederExaminationInfos = $this->breederExaminationInfoRepository->findBy([
-            'Breeder' => $breeder,
-        ]);
+            $entityManager->persist($breeder);
 
-        // 審査情報のそれぞれの審査ステータスを変更
-        foreach ($breederExaminationInfos as $breederExaminationInfo) {
-            $breederExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_SUBMIT);
-            $entityManager->persist($breederExaminationInfo);
+            // 犬舎・猫舎両方のパターンがあるため配列で取得
+            $breederExaminationInfos = $this->breederExaminationInfoRepository->findBy([
+                'Breeder' => $breeder,
+            ]);
+
+            // 審査情報のそれぞれの審査ステータスを変更
+            foreach ($breederExaminationInfos as $breederExaminationInfo) {
+                $breederExaminationInfo->setInputStatus(AnilineConf::ANILINE_INPUT_STATUS_SUBMIT);
+                $entityManager->persist($breederExaminationInfo);
+            }
+
+            $entityManager->flush();
         }
-
-        $entityManager->flush();
 
         return $this->redirectToRoute('breeder_examination');
     }
