@@ -214,11 +214,13 @@ class BreederDnaCheck extends AbstractController
                 ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
                 ->setShippingPref($dnaCheckStatusHeader->getPrefShipping());
 
-                $shippingdate = new \DateTime();
-                if(intval(date("H")) >= 14){
-                    $shippingdate->modify('+1 days');
-                }
-                $dnaCheckStatusHeader->setKitShippingDate($shippingdate);
+            $shippingdate = new \DateTime();
+            if(intval(date("H")) >= 14){
+                $shippingdate->modify('+1 days');
+            }
+
+            $dnaCheckStatusHeader->setKitShippingDate($shippingdate);
+            $dnaCheckStatusHeader->setLaboType(0);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($dnaCheckStatusHeader);

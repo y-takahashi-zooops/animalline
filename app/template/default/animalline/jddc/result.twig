@@ -1,0 +1,172 @@
+{% extends 'animalline/veqta/frame.twig' %}
+
+{% block main %}
+    <section>
+        <div class="inner">
+            <div class="ec-pageHeader">
+                <h1>{{ '検査結果登録'|trans }}</h1>
+            </div>
+            <div class="ec-off1Grid">
+                <div class="ec-off1Grid__cell">
+                    <form method="POST" action="" enctype="multipart/form-data" id="form">
+                        <div class="ec-borderedDefs">
+                            <div class="mb-5">
+                                <dl>
+                                    <dt>
+                                        検体バーコード読み込み
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <input type="text" class="w-100" placeholder="123456" name="barcode" id="barcode" minlength="6" maxlength="6">
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        検体送付者名
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <input type="text" class="w-100" name="sender_name" id="sender_name" readonly>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        検査対象ペットの誕生日
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <input class="w-100" name="pet_birthday" id="pet_birthday" readonly>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        犬・猫種別
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <input type="text" class="w-100" name="pet_kind" id="pet_kind" readonly>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        犬種・猫種
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            <input type="text" class="w-100" name="pet_type" id="pet_type" readonly>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        検査結果
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select">
+                                            <select name="check_status" required>
+                                                <option value="">選択してください</option>
+                                                <option value="4">検体異常</option>
+                                                <option value="61">検査通過</option>
+                                                <option value="7">検査ＮＧ</option>
+                                            </select>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        検査結果PDF
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input">
+                                            {# <input type="file" accept=".pdf" name="file" id="file" required>(*.pdf)</input> #}
+                                            <input type="file" accept=".pdf" name="file" id="file" required>
+                                            <input type="hidden" name="file_name" value="" id="file_name">
+                                        </div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="ec-registerRole__actions">
+                            <div class="ec-off4Grid">
+                                <div class="ec-off4Grid__cell">
+                                    <button type="submit" class="btn btn-warning w-100 m-1" id="dnaTestResultRegist"
+                                        disabled>検査結果登録</button>
+                                    <a href="{{url('veqta_index')}}" class="btn btn-warning w-100 m-1">戻る</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $(function () {
+        $('#file').on('change', function () {
+            uploadFile();
+        });
+
+        $('#barcode').on('change', function () {
+            if ($(this).val().length == 6) {
+                callShippingName();
+            } else {
+                $('#name').val('')
+                $('#barcode').removeAttr('disabled');
+            }
+        });
+    });
+
+    function uploadFile() {
+        const form = $('#form')[0];
+
+        $.ajax({
+            url: "{{ url('upload_file') }}",
+            data: new FormData(form),
+            type: "post",
+            contentType: false,
+            processData: false,
+            cache: false,
+            dataType: "json"
+        })
+            .done(function (data) {
+                $('#file_name').val(data.file_name);
+            })
+            .fail(function (err) {
+                console.error(err);
+            });
+    }
+
+    function callShippingName() {
+        $.ajax({
+            url: "{{ url('read_barcode') }}",
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                'barcode': $('#barcode').val()
+            }
+        }).done(function ({ shippingName, hasRecord , breed, pet_birthday, pet_kind}) {
+            if (!hasRecord){
+                alert('データが存在しません。');
+                return;
+            } 
+            $('#sender_name').val(shippingName);
+            $('#pet_type').val(breed);
+            $('#pet_birthday').val(pet_birthday);
+            $('#pet_kind').val(pet_kind);
+            $('#dnaTestResultRegist').attr('disabled', !hasRecord);
+            
+        }).fail(function (err) {
+            $('#sender_name').text('');
+            $('#dnaTestResultRegist').attr('disabled', true);
+            console.error(err);
+        });
+    }
+</script>
+{% endblock %}

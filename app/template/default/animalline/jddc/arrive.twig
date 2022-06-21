@@ -1,0 +1,117 @@
+{% extends 'animalline/jddc/frame.twig' %}
+{% block javascript %}
+<script>
+    $(document).on('keyup', '#barcode', function() {
+    if ($(this).val().length == 6) {
+    $(this).prop('disabled', true);
+    $.ajax({
+    url: '{{ url('jddc_arrive_get_user') }}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'barcode': $('#barcode').val()
+            },
+        }).done(function (data) {
+            if(data.isDisable){
+                $('#name').val(data.shipping_name ?? '');
+                $('#pet-birthday').val(data.petBirthday ?? '');
+                $('#pet-type').val(data.petKind ?? '');
+                $('#breed').val(data.petType);
+                $('#input-hidden').val(data.dnaId);
+                $('#submit').removeAttr('disabled');
+            } else {
+                $('#submit').attr('disabled',true);
+                 alert('データが存在しません');
+            }
+            $('#barcode').removeAttr('disabled');
+        }).fail(function () {
+            console.log('search DNA failed.');
+            $('#barcode').removeAttr('disabled');
+        });
+    } else {
+        $('#name').text('')
+        $('#barcode').removeAttr('disabled');
+    }
+})
+</script>
+{% endblock %}
+{% block main %}
+<section>
+    <div class="inner">
+        <div class="ec-pageHeader">
+            <h1>{{ '検査キット到着確認'|trans }}</h1>
+        </div>
+        <div class="ec-off1Grid">
+            <div class="ec-off1Grid__cell">
+                <form method="POST" action="" enctype="multipart/form-data" id="form">
+                    <div class="ec-borderedDefs">
+                        <div class="mb-5">
+                            <dl>
+                                <dt>
+                                    検体バーコード読み込み
+                                </dt>
+                                <dd>
+                                    <div class="ec-input">
+                                        <input type="text" class="w-100" id="barcode" maxlength="6">
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    検体送付者名
+                                </dt>
+                                <dd>
+                                    <div class="ec-input">
+                                        <input type="text" class="w-100" name="name" id="name" readonly>
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    検査対象ペットの誕生日
+                                </dt>
+                                <dd>
+                                    <div class="ec-input">
+                                        <input type="text" class="w-100" name="pet-birthday" id="pet-birthday" readonly>
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    犬・猫種別
+                                </dt>
+                                <dd>
+                                    <div class="ec-input">
+                                        <input type="text" class="w-100" name="pet-type" id="pet-type" readonly>
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>
+                                    犬種・猫種
+                                </dt>
+                                <dd>
+                                    <div class="ec-input">
+                                        <input type="text" class="w-100" name="breed" id="breed" readonly>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="ec-registerRole__actions">
+                        <div class="ec-off4Grid">
+                            <div class="ec-off4Grid__cell">
+                                <form name="form-receive-kit" id="form-receive-kit" method="post">
+                                    <input type="hidden" name="dna-id" value="" id="input-hidden">
+                                    <button type="submit" class="btn btn-warning w-100 m-1" id="submit" disabled>キット受領処理</button>
+                                </form>
+                                <a href="{{ url('jddc_index') }}" class="btn btn-warning w-100 m-1">戻る</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

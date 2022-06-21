@@ -1,0 +1,70 @@
+{% extends 'animalline/jddc/frame.twig' %}
+{% set status = {3: 'キット到着前', 5: '検査中'} %}
+{% set params = app.request.query.all %}
+
+{% block main %}
+    <div class="main">
+        <div class="row">
+            <div class="main-container col-12">
+                <h1 class="mb-0">検査対象ペット一覧</h1>
+                <div class="ec-select float-right">
+                    <select name="filter_status" onchange="location.href = `?filter_status=${this.value}`">
+                        <option value="">全件</option>
+                        <option value="{{ constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED') }}" {{ params.filter_status is defined and params.filter_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED') ? 'selected' }}>
+                            キット到着待ち
+                        </option>
+                        <option value="{{ constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING') }}" {{ params.filter_status is defined and params.filter_status == constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING') ? 'selected' }}>
+                            検査中
+                        </option>
+                    </select>
+                </div>
+                <table class="table table-sm dna-table text-center responsive-table">
+                    <thead>
+                    <tr class="heading">
+                        <th class="border-top-0 pt-2 pb-2">No.</th>
+                        <th class="border-top-0 pt-2 pb-2">送付者名</th>
+                        <th class="border-top-0 pt-2 pb-2">犬・猫種別</th>
+                        <th class="border-top-0 pt-2 pb-2">犬種・猫種</th>
+                        <th class="border-top-0 pt-2 pb-2">生年月日</th>
+                        <th class="border-top-0 pt-2 pb-2">検査項目</th>
+                        <th class="border-top-0 pt-2 pb-2">検査ステータス</th>
+                        <th class="border-top-0 pt-2 pb-2">ペット情報登録日時</th>
+                        <th class="border-top-0 pt-2 pb-2">ステータス更新日</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for dna in dnas %}
+                        <tr>
+                            <td class="id"
+                                data-label="No">{{ (dna.site_type == constant('Customize\\Config\\AnilineConf::SITE_CATEGORY_BREEDER') ? '1' : '2') ~ "%05d"|format(dna.dna_id) }}</td>
+                            <td data-label="送付者名">{{ dna.shipping_name }}</td>
+                            <td data-label="犬・猫種別">{{ dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') ? '犬' : '猫' }}</td>
+                            <td data-label="犬種・猫種">{{ dna.breeds_name ?: '_' }}</td>
+                            <td data-label="生年月日">{{ dna.pet_birthday ? dna.pet_birthday | date('Y/m/d') : '_' }}</td>
+                            <td data-label="検査項目">{{ dna.check_kinds | join('<br>') | raw }}</td>
+                            <td data-label="検査ステータス	">{{ status[dna.check_status] }}</td>
+                            <td data-label="ペット情報登録日時">{{ dna.kit_pet_register_date ? dna.kit_pet_register_date | date('Y/m/d') : '_' }}</td>
+                            <td data-label="ステータス更新日">{{ dna.update_date ? dna.update_date | date('Y/m/d') : '_' }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">結果が０件です。</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="navigation float-right">
+                    {{ knp_pagination_render(dnas) }}
+                </div>
+                <div class="clearfix"></div>
+                <div class="ec-registerRole__actions">
+                    <div class="ec-off4Grid">
+                        <div class="ec-off4Grid__cell">
+                            <a href="{{ url('jddc_index') }}" class="btn btn-warning w-100 m-1">戻る</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

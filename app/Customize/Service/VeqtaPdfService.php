@@ -86,7 +86,7 @@ class VeqtaPdfService extends TcpdfFpdi
 
         $this->renderPetData($data['pet']);
 
-        $this->renderCheckKinds($data['check_kinds']);
+        //$this->renderCheckKinds($data['check_kinds']);
 
         return true;
     }

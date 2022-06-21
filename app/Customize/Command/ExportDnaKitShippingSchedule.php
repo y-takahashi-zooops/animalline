@@ -131,11 +131,12 @@ class ExportDnaKitShippingSchedule extends Command
             'dnah.shipping_pref',
             'dnah.shipping_city',
             'dnah.shipping_address',
-            'dnah.shipping_tel'
+            'dnah.shipping_tel',
+            'dnah.labo_type'
         )
             ->where('dnah.update_date <= :to')
             ->andWhere('dnah.shipping_status = :shipping_status')
-            ->andWhere('dnah.labo_type = 1')    //仮、ラボ用の商品IDが判明したら0以上で抽出
+            ->andWhere('dnah.labo_type > 0')    //仮、ラボ用の商品IDが判明したら0以上で抽出
             ->setParameters([
                 'to' => $now,
                 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT
@@ -169,13 +170,21 @@ class ExportDnaKitShippingSchedule extends Command
         $rows = [];
         $dnaHeaderIds = [];
 
-        $item_code = ["8790000","8790004","8790005","8790006"];
         foreach ($records as $record) {
+            if($record["labo_type"] == 2){
+                $item_code = ["8799009","8799008","8799007"];
+                $item_count = 3;
+            }
+            else{
+                $item_code = ["8790000","8790004","8790005","8790006"];
+                $item_count = 4;
+            }
+
             $dnaNo = $this->generateZeroFillStr($record['dna_header_id']);
             $nextDay = (new DateTime($now->toString() . ' +1 day'))->format('Ymd');
             
             $record['shipping_zip'] = substr($record['shipping_zip'],0,3) . "-" . substr($record['shipping_zip'],3);
-            for($i=0;$i<4;$i++){
+            for($i=0;$i<$item_count;$i++){
                 $record['delivery_instruction_no'] = $dnaNo;
                 $record['expected_shipping_date'] = date("Ymd");
                 $record['warehouse_code'] = '00001';
