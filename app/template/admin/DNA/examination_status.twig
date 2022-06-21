@@ -201,7 +201,15 @@ file that was distributed with this source code.
                                         dna.pet_kind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')
                                         ? '猫' : '_' }}</td>
                                     <td class="align-middle">{{ dna.pet_id ? dna.breeds_name : '_' }}</td>
-                                    <td class="align-middle">{{ dna.labo_type == 1 ? 'Veqta' : 'ラボ' }}</td>
+                                    <td class="align-middle">
+                                    {% if dna.labo_type == 1 %}
+                                        Veqta
+                                    {% elseif dna.labo_type == 2 %}
+                                        ラボ
+                                    {% else %}
+                                        未選択
+                                    {% endif %}
+                                   </td>
 
                                     <td class="align-middle">{{ check_status[dna.check_status] }}</td>
                                     <td class="align-middle">{{ dna.kit_shipping_date is empty ? '_' :
