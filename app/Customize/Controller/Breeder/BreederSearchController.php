@@ -120,8 +120,8 @@ class BreederSearchController extends AbstractController
 
         $breredname = "";
         if($request->get('breed_type')){
-            $breeds = $this->breedsRepository->find($request->get('breed_type'));
-            $breredname = $breeds->getBreedsName();
+            $now_breeds = $this->breedsRepository->find($request->get('breed_type'));
+            $breredname = $now_breeds->getBreedsName();
         } 
         
         $maintitle = "ペット検索結果";
