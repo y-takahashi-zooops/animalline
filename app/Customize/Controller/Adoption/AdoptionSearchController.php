@@ -107,7 +107,7 @@ class AdoptionSearchController extends AbstractController
             $maintitle .= "(".$breredname.")";
         }
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => $this->generateUrl('adoption_top'),'title' =>"保護団体TOP"),
             array('url' => "#",'title' => $maintitle)
         );
 
