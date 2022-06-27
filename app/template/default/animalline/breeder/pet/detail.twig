@@ -69,6 +69,17 @@
                             <div class="col-12 breeder_section_detail">
                                 <div class="row">
                                     <div class="col-12 col-md-4 contents_col_bold">
+                                        ペットID
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {{ breederPet.id ?? '' }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
                                         種類
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
@@ -124,6 +135,8 @@
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
                                         {% if breederPet.isPedigree == 1 %}
+                                            有
+                                            {#
                                             {% if breederExamInfo == null %}
                                                 無
                                             {% elseif breederExamInfo.pedigreeOrganization == 1 or breederExamInfo.pedigreeOrganization == 2 %}
@@ -131,6 +144,7 @@
                                             {% elseif breederExamInfo.pedigreeOrganization == 3 %}
                                                 有（ {{ breederExamInfo.pedigreeOrganizationOther ? breederExamInfo.pedigreeOrganizationOther : '_' }} ）
                                             {% endif %}
+                                            #}
                                         {% else %}
                                             無
                                         {% endif %}

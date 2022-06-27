@@ -39,44 +39,55 @@
         <ul>
             <li><a href="{{ url('breeder_pet_search_result', {'pet_kind': petKind, 'pet_new': 1}) }}"><i class="bi bi-caret-right-fill"></i>新着のペット</a></li>
             <li><a href="{{ url('breeder_pet_search_result', {'pet_kind': petKind, 'featured_pet': 1}) }}"><i class="bi bi-caret-right-fill"></i>注目のペット</a></li>
-            <li class="parent" style="color: #fff"><i class="bi bi-caret-right-fill"></i>人気の犬種
-                <ul>
-                <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 9, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>トイプードル</a></li>
-                <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 5, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>チワワ</a></li>
-                <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 8, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>ミニチュアダックス</a></li>
-                <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 11 ,'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>ポメラニアン</a></li>
-                <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 47, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>フレンチブルドッグ</a></li>
-                <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 40, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>柴</a></li>
-                </ul>
-            </li>
-            <li class="parent" style="color: #fff"><i class="bi bi-caret-right-fill"></i>サイズ
-                <ul>
-                    <li>
-                        <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
-                        'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_TINNY')}) }}">
-                            <i class="bi bi-chevron-right"></i>超小型犬
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
-                        'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_SMALL')}) }}">
-                            <i class="bi bi-chevron-right"></i>小型犬
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
-                        'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_MEDIUM')}) }}">
-                            <i class="bi bi-chevron-right"></i>中型犬
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
-                        'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_BIG')}) }}">
-                            <i class="bi bi-chevron-right"></i>大型犬
-                        </a>
-                    </li>
-                </ul>
-            </li>
+            {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+                <li class="parent" style="color: #fff"><i class="bi bi-caret-right-fill"></i>人気の犬種
+                    <ul>
+                    <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 9, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>トイプードル</a></li>
+                    <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 5, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>チワワ</a></li>
+                    <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 8, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>ミニチュアダックス</a></li>
+                    <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 11 ,'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>ポメラニアン</a></li>
+                    <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 47, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>フレンチブルドッグ</a></li>
+                    <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 40, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i class="bi bi-chevron-right"></i>柴</a></li>
+                    </ul>
+                </li>
+                <li class="parent" style="color: #fff"><i class="bi bi-caret-right-fill"></i>サイズ
+                    <ul>
+                        <li>
+                            <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
+                            'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_TINNY')}) }}">
+                                <i class="bi bi-chevron-right"></i>超小型犬
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
+                            'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_SMALL')}) }}">
+                                <i class="bi bi-chevron-right"></i>小型犬
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
+                            'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_MEDIUM')}) }}">
+                                <i class="bi bi-chevron-right"></i>中型犬
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG'),
+                            'size_code' : constant('Customize\\Config\\AnilineConf::ANILINE_DOG_SIZE_BIG')}) }}">
+                                <i class="bi bi-chevron-right"></i>大型犬
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            {% else %}
+                    <ul>
+                    <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 188, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i class="bi bi-chevron-right"></i>日本猫</a></li>
+                    <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 190, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i class="bi bi-chevron-right"></i>アメリカンショートヘア</a></li>
+                    <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 193, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i class="bi bi-chevron-right"></i>シャム</a></li>
+                    <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 191 ,'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i class="bi bi-chevron-right"></i>ペルシャ</a></li>
+                    <li><a href="{{ url('breeder_pet_search_result', {'breed_type' : 221, 'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i class="bi bi-chevron-right"></i>チンチラ</a></li>
+                    </ul>
+            {% endif %}  
+            
         </ul>
     </div>
     <div class="breeder-column__side_info">

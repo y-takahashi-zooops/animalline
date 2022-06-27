@@ -282,12 +282,13 @@ class BreederPetController extends AbstractController
             $is56DaysOld = $now->diffInDays($breederPet->getPetBirthday());
         }
 
-        $html_title = "ペット詳細 - " . $breederPet->getBreedsType()->getbreedsName();
+        $html_title = "ペット詳細 - " . $breederPet->getBreedsType()->getbreedsName() . "（".$breederPet->getPetBirthday()->format("Y年m月d日")."　".$breederPet->getCoatColor()."）";
 
         //$maintitle = "犬・猫ブリーダー直販のアニマルライン";
         $breadcrumb = array(
             array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
-            array('url' => "#",'title' => $breederPet->getBreedsType()->getbreedsName())
+            array('url' => "#",'title' => $breederPet->getBreedsType()->getbreedsName()),
+            array('url' => "#",'title' => "ペットID : ".$breederPet->getId())
         );
         
         return $this->render(
@@ -305,7 +306,7 @@ class BreederPetController extends AbstractController
                 'is56DaysOld' => $is56DaysOld,
                 'maintitle' => $html_title,
                 'breadcrumb' => $breadcrumb,
-                "description_add" => $breederPet->getBreedsType()->getbreedsName()
+                "description_add" => $breederPet->getBreedsType()->getbreedsName() . "（".$breederPet->getPetBirthday()->format("Y年m月d日")."　".$breederPet->getCoatColor()."）"
             ]
         );
     }
@@ -487,6 +488,7 @@ class BreederPetController extends AbstractController
                 $breederPet->setPedigreeCode('0');
             }
             */
+
             if ($form->isValid()) {
                 $petId = $breederPet->getId();
                 $img0 = $this->setImageSrc($request->get('img0'), $petId);

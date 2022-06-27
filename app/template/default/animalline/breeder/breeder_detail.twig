@@ -108,6 +108,33 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="breeder_section_header">
+                                    <i class="fas fa-paw"></i>
+                                    見学地情報
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            見学地住所
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ dogHouse.breederHousePref }}
+                                            {{ dogHouse.breederHouseCity }}
+                                            {{ dogHouse.breederHouseAddress }}
+                                            {{ dogHouse.breederHouseBuillding ?? '' }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            見学の方法
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            取り扱いペット詳細画面よりお問い合わせの上見学日程の調整を行ってください。
+                                        </div>
+                                    </div>
+                                </div>
+
                             {% endif %}
                             {% if breeder.handlingPetKind == 0 or breeder.handlingPetKind == 2 %}
                                 <div class="breeder_section_header">
@@ -134,6 +161,32 @@
                                             {{ catHouse.breederHouseCity }}
                                             {{ catHouse.breederHouseAddress }}
                                             {{ catHouse.breederHouseBuillding ?? '' }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="breeder_section_header">
+                                    <i class="fas fa-paw"></i>
+                                    見学地情報
+                                </div>
+                                <div class="col-12 breeder_section_detail">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            見学地住所
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            {{ catHouse.breederHousePref }}
+                                            {{ catHouse.breederHouseCity }}
+                                            {{ catHouse.breederHouseAddress }}
+                                            {{ catHouse.breederHouseBuillding ?? '' }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-4 contents_col_bold">
+                                            見学の方法
+                                        </div>
+                                        <div class="col-12 col-md-8 contents_col_normal">
+                                            取り扱いペット詳細画面よりお問い合わせの上見学日程の調整を行ってください。
                                         </div>
                                     </div>
                                 </div>
@@ -321,6 +374,63 @@
             </div>
         </div>
     </section>
+
+    <section id="breeder-column">
+        <section id="page-detail-content02" class="page-detail-content02_breeder">
+            わんちゃん・ねこちゃんのお迎えには必ず対面をしていただきます。動物愛護法の定めにより、直接犬舎などに行く必要があります。<br />
+            <div style="background-color: #dcedc8;margin:1rem 0;padding: 0.5rem 0.5rem"><h2>お迎えの手順</h2></div>
+
+
+            <div class="page-detail-content02__body">
+                <article id="content03">
+                    <div class="text">
+                        <h3 class="color03">1.探す</h3>
+                        <p>「犬を探す」「猫を探す」から条件を指定して検索し、お気に入りのわんちゃん・猫ちゃんを見つけましょう。</p>
+                    </div>
+                    <figure><img src="{{ asset('assets/img/breeder/breeder-img04.jpg') }}" alt="健康面での安心・安全"/></figure>
+                </article>
+
+                <article id="content03">
+                    <div class="text">
+                        <h3 class="color03">2. お問い合わせ</h3>
+                        <p>気になるわんちゃん・ねこちゃんが見つかったら、詳細ページからブリーダーへ問い合わせましょう。問い合わせをすると、マイページよりブリーダーから連絡が来ます。</p>
+                    </div>
+                    <figure><img src="{{ asset('assets/img/breeder/breeder-img05.jpg') }}" alt="健康面での安心・安全"/></figure>
+                </article>
+
+                <article id="content03">
+                    <div class="text">
+                        <h3 class="color03">3. 見学</h3>
+                        <p>動物愛護法の定めにより、直接犬舎などに行く必要があります。マイページより見学日時の予約をしましょう。</p>
+                    </div>
+                    <figure><img src="{{ asset('assets/img/breeder/breeder-img06.jpg') }}" alt="健康面での安心・安全"/></figure>
+                </article>
+
+                <article id="content03">
+                    <div class="text">
+                        <h3 class="color03">4. ご成約</h3>
+                        <p>見学後、わんちゃん・ねこちゃんを迎えることを決めたら、ブリーダーへ購入意思をお伝えください。その際、支払い方法や引き渡し日を確認しましょう。</p>
+                    </div>
+                    <figure><img src="{{ asset('assets/img/breeder/breeder-img07.jpg') }}" alt="健康面での安心・安全"/></figure>
+                </article>
+
+                <article id="content03">
+                    <div class="text">
+                        <h3 class="color03">5. 特典の申請</h3>
+                        <p>ご成約後、マイページよりプレミアムフード等をプレゼントする「ご成約特典」のお申し込みができます。</p>
+                    </div>
+                    <figure><img src="{{ asset('assets/img/breeder/breeder-img08.jpg') }}" alt="健康面での安心・安全"/></figure>
+                </article>
+
+                <article id="content03">
+                    <div class="text">
+                        <h3 class="color03">6. お迎え</h3>
+                        <p>ブリーダーとお約束の日時にわんちゃん・ねこちゃんをお迎えします。</p>
+                    </div>
+                    <figure><img src="{{ asset('assets/img/breeder/breeder-img09.jpg') }}" alt="健康面での安心・安全"/></figure>
+                </article>
+            </div>
+        </section>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">

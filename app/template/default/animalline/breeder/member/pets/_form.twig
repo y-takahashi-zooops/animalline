@@ -197,8 +197,8 @@
             {{ form_errors(form.is_pedigree) }}
         </div>
     </div>
-    <div id="pedigreeSelect">
-        <div class="row mb-3">
+    <div id="pedigreeSelect" style="display: none">
+        <div class="row mb-3" style="display: none">
             <div class="col-md-3">
             {{ form_label(form.Pedigree, '血統証団体', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
                 <span class="ec-required">必須</span>
@@ -501,7 +501,7 @@ $(document).ready(function() {
     $("input[name$='breeder_pets[is_pedigree]']").click(function() {
         var is_pedigree = $(this).val();
         if (is_pedigree == 1) {
-            $("#pedigreeSelect").show();
+            $("#pedigreeSelect").hide();
         } else if (is_pedigree == 0) {
             $("#pedigreeSelect").hide();
         }

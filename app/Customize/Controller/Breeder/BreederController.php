@@ -251,14 +251,23 @@ class BreederController extends AbstractController
         $evaluationCount = count($allEvaluations);
         $evaluations = $this->breederEvaluationsRepository->findBy(['Breeder' => $breeder, 'is_active' => 2], ['create_date' => 'DESC'], 3);
 
+        $html_title = "ブリーダー詳細 - " . $breeder->getBreederName();
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => "#",'title' => "ブリーダー詳細 : ".$breeder->getBreederName())
+        );
+
         return [
-            'title' => 'ブリーダー検索',
+            'title' => $html_title,
             'breeder' => $breeder,
             'dogHouse' => $dogHouse,
             'catHouse' => $catHouse,
             'pets' => $pets,
             'evaluations' => $evaluations,
             'evaluationCount' => $evaluationCount,
+            'maintitle' => $html_title,
+            'breadcrumb' => $breadcrumb,
+            "description_add" => $breeder->getBreederName()
         ];
 
         /*

@@ -6,7 +6,7 @@ $(function () {
         getDataByPetKind(this);
     });
 
-    $('#breeder_pets_pet_kind').trigger('change');
+    //$('#breeder_pets_pet_kind').trigger('change');
 
     function getDataByPetKind(petKindSelect) {
         let breed = null;
