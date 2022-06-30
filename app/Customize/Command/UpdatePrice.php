@@ -132,7 +132,7 @@ class UpdatePrice extends Command
         $em->getConfiguration()->setSQLLogger(null);
         $em->getConnection()->beginTransaction();
 
-        $csvpath = "var/item20211227.csv";
+        $csvpath = "var/tmp/price.csv";
 
         // ファイルが指定されていれば続行
         if ($csvpath) {
@@ -143,21 +143,22 @@ class UpdatePrice extends Command
             }
 
             log_info('商品価格CSV取込開始');
+            $data = fgetcsv($fp);
 
             // CSVファイルの登録処理
             while (($data = fgetcsv($fp)) !== FALSE) {
                 if($data[0] != ""){
                     $totalCnt++;
 
-                    $ProductClass = $this->productClassRepository->findOneby(['code' => $data[0]]);
+                    $ProductClass = $this->productClassRepository->findOneby(['code' => $data[1]]);
                     $Product = $ProductClass->getProduct();
 
-                    print($data[0]." : Price ".$ProductClass->getPrice01()." ==> ".$data[1]);
-                    print($data[0]." : Cost ".$ProductClass->getItemCost()." ==> ".$data[2]);
+                    print($data[0]." : Price ".$ProductClass->getPrice01()." ==> ".$data[5]);
+                    print($data[0]." : Cost ".$ProductClass->getItemCost()." ==> ".$data[6]);
 
-                    $ProductClass->setPrice01(intval($data[1]));
-                    $ProductClass->setPrice02(intval($data[1]));
-                    $ProductClass->setItemCost(intval($data[2]));
+                    $ProductClass->setPrice01(intval($data[5]));
+                    $ProductClass->setPrice02(intval($data[5]));
+                    $ProductClass->setItemCost(intval($data[6]));
 
                     $em->persist($ProductClass);
 
