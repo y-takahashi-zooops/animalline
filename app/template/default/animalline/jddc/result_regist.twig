@@ -119,6 +119,7 @@
             $('#sender_name').val(data['shippingName']);
             $('#breed_name').val(data['breed']);
             $('#dnaTestResultRegist').attr('disabled', !data['checkKind']?.length);
+            $('#check_result_kinds').html('');
             data['checkKind'].forEach(el => {
             $('#check_result_kinds').append(` <dl style="display: flex; align-items: center;">
                                             <dt style="word-break: break-word; padding-top: 0; width: 70%;">
