@@ -171,6 +171,7 @@ file that was distributed with this source code.
                                     <th class="border-top-0 pt-2 pb-2">犬種/猫種</th>
                                     <th class="border-top-0 pt-2 pb-2 text-nowrap">検査機関</th>
                                     <th class="border-top-0 pt-2 pb-2 text-nowrap">検査ステータス</th>
+                                    <th class="border-top-0 pt-2 pb-2 text-nowrap">公開状態</th>
                                     <th class="border-top-0 pt-2 pb-2">キット出荷</th>
                                     <th class="border-top-0 pt-2 pb-2">キット返送</th>
                                     <th class="border-top-0 pt-2 pb-2">結果受信</th>
@@ -212,6 +213,7 @@ file that was distributed with this source code.
                                    </td>
 
                                     <td class="align-middle">{{ check_status[dna.check_status] }}</td>
+                                    <td class="align-middle">{% if dna.is_active == 1 %}公開{% else %}非公開{% endif %}</td>
                                     <td class="align-middle">{{ dna.kit_shipping_date is empty ? '_' :
                                         dna.kit_shipping_date | date('Y/m/d') }}</td>
                                     <td class="align-middle">{{ dna.kit_return_date is empty ? '_' : dna.kit_return_date
@@ -243,7 +245,7 @@ file that was distributed with this source code.
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                 data-placement="top" title="公開ステータス変更">
                                                 <a class="btn btn-ec-actionIcon" {{
-                                                    dna.check_status==constant('Customize\\Config\\AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED')
+                                                    dna.pet_id is not null
                                                     and isDelete[dna.dna_id] == false
                                                     ? 'onclick=changeStatus(' ~dna.dna_id~')' : 'disabled' }}>
                                                     <i class="fa fa-eye fa-lg text-secondary" aria-hidden="true"></i>

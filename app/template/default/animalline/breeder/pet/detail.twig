@@ -11,6 +11,7 @@
                         <div class="breeder-column__main_section_title">
                             <h2 class="float-left mb-3">
                                 {{ breederPet.breedsType.breedsName ?? '' }}
+                                {% if breederPet.dnaCheckResult == 0 %}【DNA検査中】{% endif %}
                             </h2>
                             <div class="col-md-3 col-12 float-right btn-like mb-3 {{ isFavorite ? "red-heart" : "" }}"
                                  data-id="{{ breederPet.id }}" data-login="{{ isLoggedIn }}">

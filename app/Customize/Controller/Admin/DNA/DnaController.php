@@ -227,7 +227,7 @@ class DnaController extends AbstractController
 
         if ($request->get('change-status-id') && $request->isMethod('POST')) {
             $dna = $this->dnaCheckStatusRepository->find($request->get('change-status-id'));
-            $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PUBLIC);
+            //$dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PUBLIC);
             if ($dna->getSiteType() == AnilineConf::ANILINE_SITE_TYPE_BREEDER) {
                 $pet = $this->breederPetsRepository->find($dna->getPetId());
                 $pet->setIsActive(AnilineConf::ANILINE_IS_ACTIVE_PUBLIC)
