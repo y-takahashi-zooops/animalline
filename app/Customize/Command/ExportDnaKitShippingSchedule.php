@@ -172,7 +172,7 @@ class ExportDnaKitShippingSchedule extends Command
 
         foreach ($records as $record) {
             if($record["labo_type"] == 2){
-                $item_code = ["8799009","8799008","8799007"];
+                $item_code = ["8799009","8799008","8790005","8790006"];
                 $item_count = 3;
             }
             else{
