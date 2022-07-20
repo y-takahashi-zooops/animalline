@@ -1,0 +1,833 @@
+{% set site_type = 'common' %}
+{% set base_template = 'animalline/breeder/frame.twig' %}
+{% extends base_template %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/dna/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/dna/page.css') }}">
+
+    <style>
+      .dnapetlist{
+        font-size: 20px;
+        width: 100%;
+        border-collapse: collapse;
+        border: solid #ddd 1px;
+      }
+
+      .dnapetlist th{
+        background: #ddd;
+        color: #686868;
+        text-align: center;
+        border: solid #fff 1px;
+        padding: 5px 5px 5px 5px;
+        width: 40px;
+      }
+
+      .dnapetlist td{
+        background: #FFF;
+        padding: 5px 5px 5px 5px;
+        border: solid #ddd 1px;
+      }
+    </style>
+{% endblock %}
+
+{% block main %}
+   <div class="page-inner page-inner_dna">
+    
+    
+    <section id="dna-content07">
+      <!--div class="inner"-->
+        <div class="dna-content07__title">
+          <h2>代表的な検査項目</h2>
+
+          <h4>弊社で行なう遺伝病DNA検査項目の一覧です。Animallineにてわんちゃん・ねこちゃんのご成約後、ご希望がある場合に検査結果をPDFにてお渡しします。</h4>
+
+        </div>
+        <div class="dna-content07__body">
+          <article>
+            <h3>犬</h3>
+            <div class="list">
+              <p>PRA 進行性網膜萎縮症<span>分類：眼</span></p>
+              <table>
+                <tr>
+                  <th>疾患<br>概要</th>
+                  <td>徐々に視力が低下して失明に至る遺伝性疾患の総称です。<br><br>
+                  【prcd、CORD1、rcd3の違い】<br>
+                  最初に罹患する網膜の光受容体である視細細胞により異なります。
+                  また罹患細胞の異常によっても異なります。</td>
+                </tr>
+                  <th>発症<br>年齢</th>
+                  <td>cord1-PRAの発症時期は幅広く平均5歳です。prcd-PRAの発症時期は5～8歳です。</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>GM1 ガングリオシドーシス<span>分類：神経</span></p>
+              <table>
+                <tr>
+                  <th>疾患<br>概要</th>
+                  <td>酵素の正常な働きができないことにより発症する先天性代謝異常疾患です。</td>
+                </tr>
+                  <th>発症<br>年齢</th>
+                  <td>生後5，6カ月齢で発症します。</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>DM 変性性脊髄症<span>分類：神経</span></p>
+              <table>
+                <tr>
+                  <th>疾患<br>概要</th>
+                  <td>脊髄の神経細胞が変性することにより機能障害が表れ、最初に四肢が動かなくなり、最終的には呼吸麻痺で死亡する神経疾患の一つです。</td>
+                </tr>
+                  <th>発症<br>年齢</th>
+                  <td>大型犬は平均9歳、コーギーは平均11歳（8～14歳）で発症します。</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>CL セロイドリポフスチン症<span>分類：神経</span></p>
+              <table>
+                <tr>
+                  <th>疾患<br>概要</th>
+                  <td>主に運動、知的、視力障害などの症状を表し、症状が進行すると死に至る病気です。</td>
+                </tr>
+                  <th>発症<br>年齢</th>
+                  <td>1～2歳で発症します。</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>vWD フォンヴィレブランド病<span>分類：血液</span></p>
+              <table>
+                <tr>
+                  <th>疾患<br>概要</th>
+                  <td>止血に必要なフォンヴィレブランド因子の量的な低下または欠損、質的な異常により止血異常を起こす疾患です。死産、新生児の死亡、断尾・断耳などで出血延長、採血後の皮下出血が起こります。</td>
+                </tr>
+                  <th>発症<br>年齢</th>
+                  <td>重度の場合は３～6カ月齢で発症します。</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>TNS 遺伝性好中球減少症<span>分類：血液</span></p>
+              <table>
+                <tr>
+                  <th>疾患<br>概要</th>
+                  <td>血中の好中球が減少するために感染症にかかりやすく、生後間もない時期に死亡することが多い疾患です。</td>
+                </tr>
+                  <th>発症<br>年齢</th>
+                  <td>6週齢から発現します。</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>HUU 高尿酸尿症</p>
+              <table>
+                <tr>
+                  <th>疾患<br>概要</th>
+                  <td>尿酸再吸収の機能が低下することで、尿中に多量の尿酸を排出する疾患です。</td>
+                </tr>
+                  <th>発症<br>年齢</th>
+                  <td>成犬になってから平均4～6歳齢です。</td>
+                </tr>
+              </table>
+            </div>
+          </article>
+          <article>
+            <h3>猫</h3>
+            <div class="list">
+              <p>PKD 多発性嚢胞腎<span>分類：泌尿器</span></p>
+              <table>
+                <tr>
+                  <th>疾患<br>概要</th>
+                  <td>腎臓に嚢胞ができる疾患です。進行していくと腎機能が低下していきます。</td>
+                </tr>
+                  <th>発症<br>年齢</th>
+                  <td>4歳以上から平均７歳齢です。</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>PK-Def ピルビン酸キナーゼ欠損症<span>分類：神経</span></p>
+              <table>
+                <tr>
+                  <th>疾患<br>概要</th>
+                  <td>赤血球寿命が短縮し、生後2～3ヶ月の頃に貧血を発症します。病状が進行すると元気・食欲が低下する疾患です。</td>
+                </tr>
+                  <th>発症<br>年齢</th>
+                  <td>貧血は2，3カ月から始まるが、臨床症状は５,6カ月～3歳以前です。</td>
+                </tr>
+              </table>
+            </div>
+            <div class="list">
+              <p>OCD 骨軟骨異形成<span>分類：骨格系</span></p>
+              <table>
+                <tr>
+                  <th>疾患<br>概要</th>
+                  <td>前足や後ろ足の足首に骨瘤ができる病気です。</td>
+                </tr>
+                  <th>発症<br>年齢</th>
+                  <td>X線検査による骨異形成はホモ変異で7週齢、ヘテロ変異で6カ月齢から診断可能</td>
+                </tr>
+              </table>
+            </div>
+          </article>
+        </div>
+      <!--/div-->
+    </section>
+
+    <section id="dna-content07" style="margin-top: 2rem">
+      <!--div class="inner"-->
+        <div class="dna-content07__title">
+          <h2>検査犬種・猫種</h2>
+
+          <h4>弊社で行なう遺伝病DNA検査の犬種・猫種一覧です。<br />
+それぞれの犬種・猫種に対し適切な検査項目を弊社で選択して検査を実施します。<br />
+Animallineにてご成約後にお渡しする検査結果のPDFには、検査項目ごとの結果が表記されます。
+</h4>
+
+        </div>
+        <div class="dna-content07__body">
+          <article>
+            <h3>犬</h3>
+            <table class="dnapetlist">
+              <!-- あ -->
+              <tr>
+                <th rowspan="6">あ</th>
+                <td>アイリッシュ・セター</td>
+              </tr>
+              <tr>
+                <td>アイリッシュ・テリア</td>
+              </tr>
+              <tr>
+                <td>秋田</td>
+              </tr>
+              <tr>
+                <td>アフガン・ハウンド</td>
+              </tr>
+              <tr>
+                <td>アメリカン・コッカー・スパニエル</td>
+              </tr>
+              <tr>
+                <td>アメリカン・スタッフォードシャー・テリア</td>
+              </tr>
+
+              <!-- い -->
+              <tr>
+                <th rowspan="3">い</th>
+                <td>イタリアングレイハウンド</td>
+              </tr>
+              <tr>
+                <td>イングリッシュ・コッカー・スパニエル</td>
+              </tr>
+              <tr>
+                <td>イングリッシュ・スプリンガー・スパニエル</td>
+              </tr>
+
+              <!-- う -->
+              <tr>
+                <th rowspan="4">う</th>
+                <td>ウィペット</td>
+              </tr>
+              <tr>
+                <td>ウエスト・ハイランド・ホワイト・テリア</td>
+              </tr>
+              <tr>
+                <td>ウェルシュ・コーギー・カーディガン</td>
+              </tr>
+              <tr>
+                <td>ウェルシュ・コーギー・ペンブローク</td>
+              </tr>
+
+              <!-- え -->
+              <tr>
+                <th>え</th>
+                <td>エアデール・テリア</td>
+              </tr>
+
+              <!-- お -->
+              <tr>
+                <th rowspan="3">お</th>
+                <td>オーストラリアン・キャトル・ドッグ</td>
+              </tr>
+              <tr>
+                <td>オーストラリアン・シェパード</td>
+              </tr>
+              <tr>
+                <td>オールド・イングリッシュ・シープドッグ</td>
+              </tr>
+              
+              <!-- か -->
+              <tr>
+                <th rowspan="2">か</th>
+                <td>甲斐</td>
+              </tr>
+              <tr>
+                <td>カニンヘン・ダックスフント</td>
+              </tr>
+              
+              <!-- き -->
+              <tr>
+                <th rowspan="2">き</th>
+                <td>キャバリア・キング・チャールズ・スパニエル</td>
+              </tr>
+              <tr>
+                <td>紀州</td>
+              </tr>
+
+              <!-- く -->
+              <tr>
+                <th rowspan="3">く</th>
+                <td>クランバー・スパニエル</td>
+              </tr>
+              <tr>
+                <td>グレート・デーン</td>
+              </tr>
+              <tr>
+                <td>グレート・ピレニーズ</td>
+              </tr>
+
+              <!-- け -->
+              <tr>
+                <th rowspan="2">け</th>
+                <td>ケアーン・テリア</td>
+              </tr>
+              <tr>
+                <td>ケリー・ブルー・テリア</td>
+              </tr>
+
+              <!-- こ -->
+              <tr>
+                <th rowspan="2">こ</th>
+                <td>ゴールデン・レトリーバー</td>
+              </tr>
+              <tr>
+                <td>コトン・ド・テュレアール</td>
+              </tr>
+
+              <!-- さ -->
+              <tr>
+                <th rowspan="3">さ</th>
+                <td>雑種</td>
+              </tr>
+              <tr>
+                <td>サモエド</td>
+              </tr>
+              <tr>
+                <td>サルーキ</td>
+              </tr>
+
+              <!-- し -->
+              <tr>
+                <th rowspan="8">し</th>
+                <td>シーズー</td>
+              </tr>
+              <tr>
+                <td>シェットランド・シープドッグ</td>
+              </tr>
+              <tr>
+                <td>柴</td>
+              </tr>
+              <tr>
+                <td>シベリアン・ハスキー</td>
+              </tr>
+              <tr>
+                <td>ジャーマン・シェパード・ドッグ</td>
+              </tr>
+              <tr>
+                <td>ジャーマン・SH・ポインター</td>
+              </tr>
+              <tr>
+                <td>ジャック・ラッセル・テリア</td>
+              </tr>
+              <tr>
+                <td>サルーキ</td>
+              </tr>
+
+              <!-- す -->
+              <tr>
+                <th rowspan="5">す</th>
+                <td>スコティッシュ・テリア</td>
+              </tr>
+              <tr>
+                <td>スタッフォードシャー・ブル・テリア</td>
+              </tr>
+              <tr>
+                <td>スタンダード・ダックスフント</td>
+              </tr>
+              <tr>
+                <td>スタンダード・プードル</td>
+              </tr>
+              <tr>
+                <td>スムース・コリー</td>
+              </tr>
+
+              <!-- せ -->
+              <tr>
+                <th>せ</th>
+                <td>セントバーナード</td>
+              </tr>
+
+              <!-- た -->
+              <tr>
+                <th rowspan="2">た</th>
+                <td>ダルメシアン</td>
+              </tr>
+              <tr>
+                <td>ダンディ・ディンモント・テリア</td>
+              </tr>
+
+              <!-- ち -->
+              <tr>
+                <th rowspan="5">ち</th>
+                <td>チベタン・スパニエル</td>
+              </tr>
+              <tr>
+                <td>チャイニーズ・クレステッド</td>
+              </tr>
+              <tr>
+                <td>チャウチャウ</td>
+              </tr>
+              <tr>
+                <td>チワワ</td>
+              </tr>
+              <tr>
+                <td>狆</td>
+              </tr>
+
+              <!-- と -->
+              <tr>
+                <th rowspan="3">と</th>
+                <td>トイ・プードル</td>
+              </tr>
+              <tr>
+                <td>トイ・マンチェスター・テリア</td>
+              </tr>
+              <tr>
+                <td>ドーベルマン</td>
+              </tr>
+
+              <!-- に -->
+              <tr>
+                <th rowspan="3">に</th>
+                <td>日本スピッツ</td>
+              </tr>
+              <tr>
+                <td>日本テリア</td>
+              </tr>
+              <tr>
+                <td>ニューファンドランド</td>
+              </tr>
+
+              <!-- の -->
+              <tr>
+                <th rowspan="2">の</th>
+                <td>ノーフォークテリア</td>
+              </tr>
+              <tr>
+                <td>ノバ・スコシア・ダック・トーリング・レトリーバー</td>
+              </tr>
+
+              <!-- は -->
+              <tr>
+                <th rowspan="6">は</th>
+                <td>パーソン・ラッセル・テリア</td>
+              </tr>
+              <tr>
+                <td>バーニーズマウンテンドッグ</td>
+              </tr>
+              <tr>
+                <td>パグ</td>
+              </tr>
+              <tr>
+                <td>バセット・ハウンド</td>
+              </tr>
+              <tr>
+                <td>バセンジー</td>
+              </tr>
+              <tr>
+                <td>パピヨン</td>
+              </tr>
+
+              <!-- ひ -->
+              <tr>
+                <th rowspan="3">ひ</th>
+                <td>ビアデッド・コリー</td>
+              </tr>
+              <tr>
+                <td>ビーグル</td>
+              </tr>
+              <tr>
+                <td>ビションフリーゼ</td>
+              </tr>
+
+              <!-- ふ -->
+              <tr>
+                <th rowspan="8">ふ</th>
+                <td>プーリー</td>
+              </tr>
+              <tr>
+                <td>プチ・バセット・グリフォン・バンデーン</td>
+              </tr>
+              <tr>
+                <td>プチ・ブラバンソン</td>
+              </tr>
+              <tr>
+                <td>フラットコーテッド・レトリーバー</td>
+              </tr>
+              <tr>
+                <td>ブリアード</td>
+              </tr>
+              <tr>
+                <td>ブリュッセルグリフォン</td>
+              </tr>
+              <tr>
+                <td>ブルドッグ</td>
+              </tr>
+              <tr>
+                <td>フレンチ・ブルドッグ</td>
+              </tr>
+
+              <!-- へ -->
+              <tr>
+                <th rowspan="3">へ</th>
+                <td>ペキニーズ</td>
+              </tr>
+              <tr>
+                <td>ベドリントン・テリア</td>
+              </tr>
+              <tr>
+                <td>ベルジアン・グリフォン</td>
+              </tr>
+
+              <!-- ほ -->
+              <tr>
+                <th rowspan="9">ほ</th>
+                <td>ボーダー・コリー</td>
+              </tr>
+              <tr>
+                <td>ポーチュギース・ウォーター・ドッグ</td>
+              </tr>
+              <tr>
+                <td>ボクサー</td>
+              </tr>
+              <tr>
+                <td>ボストン・テリア</td>
+              </tr>
+              <tr>
+                <td>北海道</td>
+              </tr>
+              <tr>
+                <td>ポメラニアン</td>
+              </tr>
+              <tr>
+                <td>ボルゾイ</td>
+              </tr>
+              <tr>
+                <td>ボロニーズ</td>
+              </tr>
+              <tr>
+                <td>ホワイトスイス・シェパード</td>
+              </tr>
+
+              <!-- ま -->
+              <tr>
+                <th>ま</th>
+                <td>マルチーズ</td>
+              </tr>
+
+              <!-- み -->
+              <tr>
+                <th rowspan="6">み</th>
+                <td>ミディアム・プードル</td>
+              </tr>
+              <tr>
+                <td>ミニチュア・シュナウザー</td>
+              </tr>
+              <tr>
+                <td>ミニチュア・ダックスフント</td>
+              </tr>
+              <tr>
+                <td>ミニチュア・ピンシャー</td>
+              </tr>
+              <tr>
+                <td>ミニチュア・プードル</td>
+              </tr>
+              <tr>
+                <td>ミニチュア・ブル・テリア</td>
+              </tr>
+
+              <!-- よ -->
+              <tr>
+                <th>よ</th>
+                <td>ヨークシャー・テリア</td>
+              </tr>
+
+              <!-- ら -->
+              <tr>
+                <th rowspan="3">ら</th>
+                <td>ラサ・アプソ</td>
+              </tr>
+              <tr>
+                <td>ラフ・コリー</td>
+              </tr>
+              <tr>
+                <td>ラブラドール・レトリーバー</td>
+              </tr>
+
+              <!-- れ -->
+              <tr>
+                <th>れ</th>
+                <td>レークランド・テリア</td>
+              </tr>
+
+              <!-- ろ -->
+              <tr>
+                <th>ろ</th>
+                <td>ロットワイラー</td>
+              </tr>
+
+              <!-- わ -->
+              <tr>
+                <th rowspan="2">わ</th>
+                <td>ワイアー・フォックス・テリア</td>
+              </tr>
+              <tr>
+                <td>ワイマラナー</td>
+              </tr>
+
+
+            </table>
+          </article>
+
+          <article>
+            <h3>猫</h3>
+            
+            <table class="dnapetlist">
+              <!-- あ -->
+              <tr>
+                <th rowspan="3">あ</th>
+                <td>アビシニアン</td>
+              </tr>
+              <tr>
+                <td>アメリカンカール</td>
+              </tr>
+              <tr>
+                <td>アメリカン・ショートヘア</td>
+              </tr>
+
+              <!-- え -->
+              <tr>
+                <th rowspan="3">え</th>
+                <td>エキゾチック・ショートヘア</td>
+              </tr>
+              <tr>
+                <td>エキゾチック・ロングヘア</td>
+              </tr>
+              <tr>
+                <td>エジプシャン・マウ</td>
+              </tr>
+
+              <!-- お -->
+              <tr>
+                <th rowspan="2">お</th>
+                <td>オシキャット</td>
+              </tr>
+              <tr>
+                <td>オリエンタル・ショートヘア</td>
+              </tr>
+
+              <!-- き -->
+              <tr>
+                <th>き</th>
+                <td>キンカロー</td>
+              </tr>
+
+              <!-- こ -->
+              <tr>
+                <th rowspan="2">こ</th>
+                <td>コーニッシュレックス</td>
+              </tr>
+              <tr>
+                <td>コラット</td>
+              </tr>
+
+              <!-- さ -->
+              <tr>
+                <th rowspan="4">さ</th>
+                <td>サイアミーズ</td>
+              </tr>
+              <tr>
+                <td>サイベリアン</td>
+              </tr>
+              <tr>
+                <td>雑種猫</td>
+              </tr>
+              <tr>
+                <td>サバンナ</td>
+              </tr>
+
+              <!-- し -->
+              <tr>
+                <th rowspan="4">し</th>
+                <td>ジャパニーズ・ボブテイル</td>
+              </tr>
+              <tr>
+                <td>シャム</td>
+              </tr>
+              <tr>
+                <td>シャルトリュー</td>
+              </tr>
+              <tr>
+                <td>シンガプーラ</td>
+              </tr>
+
+              <!-- す -->
+              <tr>
+                <th rowspan="4">す</th>
+                <td>スクーカム</td>
+              </tr>
+              <tr>
+                <td>スコティッシュ・フォールド</td>
+              </tr>
+              <tr>
+                <td>スノーシュー</td>
+              </tr>
+              <tr>
+                <td>スフィンクス</td>
+              </tr>
+
+              <!-- せ -->
+              <tr>
+                <th>せ</th>
+                <td>セルカークレックス</td>
+              </tr>
+
+              <!-- そ -->
+              <tr>
+                <th>そ</th>
+                <td>ソマリ</td>
+              </tr>
+
+              <!-- ち -->
+              <tr>
+                <th>ち</th>
+                <td>チンチラ・ペルシャ</td>
+              </tr>
+
+              <!-- て -->
+              <tr>
+                <th>て</th>
+                <td>デボン・レックス</td>
+              </tr>
+
+              <!-- と -->
+              <tr>
+                <th rowspan="2">と</th>
+                <td>トイガー</td>
+              </tr>
+              <tr>
+                <td>トンキニーズ</td>
+              </tr>
+        
+              <!-- の -->
+              <tr>
+                <th>の</th>
+                <td>ノルウェージャンフォレストキャット</td>
+              </tr>
+
+              <!-- は -->
+              <tr>
+                <th rowspan="4">は</th>
+                <td>バーマン</td>
+              </tr>
+              <tr>
+                <td>バーミーズ</td>
+              </tr>
+              <tr>
+                <td>バーミラ</td>
+              </tr>
+              <tr>
+                <td>バンビーノ</td>
+              </tr>
+
+              <!-- ひ -->
+              <tr>
+                <th>ひ</th>
+                <td>ヒマラヤン</td>
+              </tr>
+
+              <!-- ふ -->
+              <tr>
+                <th rowspan="2">ふ</th>
+                <td>ブリティッシュ・ショートヘア</td>
+              </tr>
+              <tr>
+                <td>ブリティッシュ・ロングヘア</td>
+              </tr>
+        
+              <!-- へ -->
+              <tr>
+                <th rowspan="2">へ</th>
+                <td>ペルシャ</td>
+              </tr>
+              <tr>
+                <td>ベンガル</td>
+              </tr>
+
+              <!-- ほ -->
+              <tr>
+                <th>ほ</th>
+                <td>ボンベイ</td>
+              </tr>
+
+              <!-- ま -->
+              <tr>
+                <th>ま</th>
+                <td>マンチカン</td>
+              </tr>
+
+              <!-- み -->
+              <tr>
+                <th>み</th>
+                <td>ミヌエット</td>
+              </tr>
+
+              <!-- め -->
+              <tr>
+                <th>め</th>
+                <td>メインクーン</td>
+              </tr>
+
+              <!-- ら -->
+              <tr>
+                <th rowspan="4">ら</th>
+                <td>ラガマフィン</td>
+              </tr>
+              <tr>
+                <td>ラグドール</td>
+              </tr>
+              <tr>
+                <td>ラパーマ</td>
+              </tr>
+              <tr>
+                <td>ラムキン</td>
+              </tr>
+
+              <!-- ろ -->
+              <tr>
+                <th>ろ</th>
+                <td>ロシアンブルー</td>
+              </tr>
+            </table>
+
+          </article>
+        </div>
+      <!--/div-->
+    </section>
+    </div>
+{% endblock %}
+{% block javascript %}{% endblock %}
+
+    

@@ -6,11 +6,24 @@
                     <i class="bi bi-search"></i>ブリーダー検索はこちら
                 </a>
             </li>
+            
+            <li class="breeder-dnainfo__side_bnr_breeder">
+                <a href="{{url('breeder_dnainfo')}}">
+                    <i class="bi bi-file-earmark-medical"></i>遺伝子検査に関して
+                </a>
+            </li>
+            <li class="breeder-dnacheck__side_bnr_breeder">
+                <a href="{{url('breeder_dnacheck')}}">
+                    <i class="bi bi-clipboard-check"></i>DNA検査項目一覧
+                </a>
+            </li>
+
             <li class="breeder-column__side_bnr_ec">
                 <a href="{{ url('homepage') }}">
                     <i class="bi bi-cart3"></i>ECショップはこちら
                 </a>
             </li>
+
             <li class="breeder-column__side_bnr_guide">
             {% if petKind %}
                 {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}

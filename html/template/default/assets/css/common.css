@@ -1695,6 +1695,14 @@ BREEDER - ADOPTION
 .breeder-column__side_bnr ul li a:hover{
   opacity:.8;
 }
+
+.breeder-column__side_bnr ul li.breeder-dnainfo__side_bnr_breeder a{
+  background-color:#0ba384;
+}
+.breeder-column__side_bnr ul li.breeder-dnacheck__side_bnr_breeder a{
+  background-color:#045144;
+}
+
 .breeder-column__side_bnr ul li.breeder-column__side_bnr_breeder a{
   background-color:#0068b7;
 }

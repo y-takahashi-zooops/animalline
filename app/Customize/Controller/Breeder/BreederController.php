@@ -542,4 +542,27 @@ class BreederController extends AbstractController
             'form' => $form->createView(),
         ];
     }
+
+    /**
+     * DNA検査について
+     *
+     * @Route("/breeder/dnainfo", name="breeder_dnainfo")
+     * @Template("animalline/breeder/dnainfo.twig")
+     */
+    public function dnainfo(Request $request)
+    {
+        return;
+    }
+
+    /**
+     * DNA検査項目
+     *
+     * @Route("/breeder/dnacheck", name="breeder_dnacheck")
+     * @Template("animalline/breeder/dnacheck.twig")
+     */
+    public function dnacheck(Request $request)
+    {
+        return;
+    }
+
 }
