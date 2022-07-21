@@ -1521,4 +1521,30 @@ class MailService
 
         return $this->mailer->send($message);
     }
+
+    /**
+     * ブリーダー一斉メール
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @return int
+     */
+    public function sendAllBreederMail(\Eccube\Entity\Customer $Customer)
+    {
+        $body = $this->twig->render('Mail/Breeder/breeder_all.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'customer' => $Customer
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] ペットの掲載につきまして')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
+
 }
