@@ -1536,12 +1536,13 @@ class MailService
         ]);
 
         $message = (new \Swift_Message())
-            ->setSubject('[' . $this->BaseInfo->getShopName() . '] ペットの掲載につきまして')
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] アンケートのお願い【謝礼あり】')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Customer->getEmail()])
+            ->setTo(["r.sato0301@gmail.com"])
+            //->setTo([$Customer->getEmail()])
             ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04());
-
+            ->setReturnPath($this->BaseInfo->getEmail04())
+            ->attach(\Swift_Attachment::fromPath('/var/www/animalline/var/enquete20220722.pdf')->setFilename('アンケート.pdf')->setContentType('application/pdf'));
         $message->setBody($body);
 
         return $this->mailer->send($message, $failures);
