@@ -105,7 +105,7 @@ class BreederBatchMailTest extends Command
         $status = $this->customerStatusRepository->find(2);
 
        
-        $customer = $this->customerRepository->findOneBy(['id' => 91,'Status' => $status]);
+        $customer = $this->customerRepository->findOneBy(['id' => 93,'Status' => $status]);
 
         if(!$customer){
             echo "顧客無効:".$breeder->getBreederName()."\n";
