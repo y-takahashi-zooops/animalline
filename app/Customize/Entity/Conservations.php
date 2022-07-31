@@ -178,6 +178,11 @@ class Conservations
      */
     private $BankAccounts;
 
+    /**
+     * @ORM\Column(name="view_count", type="smallint", options={"default" = 0})
+     */
+    private $view_count;
+
     public function __construct()
     {
         $this->ConservationPets = new ArrayCollection();
@@ -186,6 +191,18 @@ class Conservations
         $this->BankAccounts = new ArrayCollection();
     }
 
+    public function getViewCount(): ?int
+    {
+        return $this->view_count;
+    }
+
+    public function setViewCount(?int $view_count): self
+    {
+        $this->view_count = $view_count;
+
+        return $this;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

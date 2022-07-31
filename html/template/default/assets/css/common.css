@@ -1300,7 +1300,7 @@ BREEDER - ADOPTION
   color:#f08200;
 }
 .breeder-mv__text_btn ul li i{
-  font-size:24px;
+  font-size:16px;
   font-style:normal;
   font-weight:300;
   display:block;
@@ -1385,7 +1385,7 @@ BREEDER - ADOPTION
 .breeder-mv__search_title h2{
   color:#539b34;
   font-weight:500;
-  font-size:48px;
+  font-size:32px;
 }
 .breeder-mv__search_dog .breeder-mv__search_title:before{
   background:url(../img/breeder-icon-search-dog.png) no-repeat center /contain;
@@ -1682,7 +1682,7 @@ BREEDER - ADOPTION
   position:relative;
   border-radius:8px;
   overflow:hidden;
-  color:#fff;
+  color:rgb(16, 1, 103);
   font-size:18px;
   text-align:center;
   padding:20px 0 20px 20px;
@@ -1696,25 +1696,29 @@ BREEDER - ADOPTION
   opacity:.8;
 }
 
+.breeder-column__side_bnr ul li.breeder-column__side_bnr_breeder a{
+  background-color:#B3DEF2;
+}
 .breeder-column__side_bnr ul li.breeder-dnainfo__side_bnr_breeder a{
-  background-color:#0ba384;
+  background-color:#C0D8F1;
 }
 .breeder-column__side_bnr ul li.breeder-dnacheck__side_bnr_breeder a{
-  background-color:#045144;
-}
-
-.breeder-column__side_bnr ul li.breeder-column__side_bnr_breeder a{
-  background-color:#0068b7;
+  background-color:#C8E2FB;
 }
 .breeder-column__side_bnr ul li.breeder-column__side_bnr_ec a{
-  background-color:#f08200;
+  background-color:#C4EFFF;
 }
 .breeder-column__side_bnr ul li.breeder-column__side_bnr_guide a{
-  background:#ef5350 url(../img/breeder-bnr-bg01.png) no-repeat center left /90px auto;
+  background:#C9FAFC url(../img/breeder-bnr-bg01.png) no-repeat center left /90px auto;
   padding:20px 0 20px 60px;
 }
+.breeder-column__side_bnr ul li.breeder-column__side_bnr_guide_cat a{
+  background:#CAFBED url(../img/breeder-bnr-bg03.png) no-repeat center left /90px auto;
+  padding:20px 0 20px 60px;
+}
+
 .breeder-column__side_bnr ul li.breeder-column__side_bnr_column a{
-  background:#6614a8 url(../img/breeder-bnr-bg02.png) no-repeat center left /90px auto;
+  background:#E4F4DF url(../img/breeder-bnr-bg02.png) no-repeat center left /90px auto;
   padding:20px 0 20px 60px;
 }
 
@@ -1970,7 +1974,7 @@ Width <= 640px
 ------------------*/
 @media screen and (max-width: 640px) {
 .breeder-mv__search_title h2 {
-    font-size: 36px;
+    font-size: 32px;
 }
 .breeder-mv__search_bottom {
   display: block;
@@ -2001,7 +2005,7 @@ Width <= 480px
     padding: 0 20px;
 }
 .breeder-mv__text_btn ul li i {
-    font-size: 20px;
+    font-size: 12px;
     padding: 40px 0 10px;
     background-position: center top 10px;
     background-size: 30px auto;
@@ -2018,7 +2022,7 @@ Width <= 480px
     height: 32px;
 }
 .breeder-mv__search_title h2 {
-    font-size: 30px;
+    font-size: 20px;
 }
 .breeder-mv__text {
     padding: 40px 0 20px;

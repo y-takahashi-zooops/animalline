@@ -149,6 +149,19 @@
 								</dl>
 								<dl>
 									<dt>
+										{{ form_label(form.breeding_pets, '飼育犬種・猫種', { 'label_attr': { 'class': 'ec-label' }}) }}
+										<p style="font-size:14px;color:#DE5D50;">例：柴犬、ポメラニアン、チワワ</p>
+									</dt>
+									<dd>
+										<div class="ec-input{{ has_errors(form.breeding_pets) ? ' error' }}">
+											{{ form_widget(form.breeding_pets ,  { 'attr': { 'placeholder': '飼育している犬種・猫種を入力してください。' }}) }}
+											{{ form_errors(form.breeding_pets) }}
+										</div>
+									</dd>
+								</dl>
+
+								<dl>
+									<dt>
 										{{ form_label(form.pr_text, '自己PR', { 'label_attr': { 'class': 'ec-label' }}) }}
 									</dt>
 									<dd>

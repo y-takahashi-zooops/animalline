@@ -10,11 +10,11 @@
             <div class="breeder-mv__text_btn">
               <ul>
                 {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-                    <li class="breeder-mv__text_btn_dog"><span><i>犬を探す</i></span></li>
-                    <li class="breeder-mv__text_btn_cat"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>猫を探す</i></a></li>
+                    <li class="breeder-mv__text_btn_dog"><span><i>ワンちゃんを探そう</i></span></li>
+                    <li class="breeder-mv__text_btn_cat"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>ネコちゃんを探そう</i></a></li>
                 {% else %}
-                    <li class="breeder-mv__text_btn_dog"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>犬を探す</i></a></li>
-                    <li class="breeder-mv__text_btn_cat"><span><i>猫を探す</i></span></li>
+                    <li class="breeder-mv__text_btn_dog"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>ワンちゃんを探そう</i></a></li>
+                    <li class="breeder-mv__text_btn_cat"><span><i>ネコちゃんを探そう</i></span></li>
                 {% endif %}
               </ul>
             </div>
@@ -27,11 +27,11 @@
             {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
               <div class="breeder-mv__search_wrap breeder-mv__search_dog">
                 <div class="breeder-mv__search_title">
-                  <h2>犬を探す</h2>
+                  <h2>ワンちゃんを探そう</h2>
             {% else %}
               <div class="breeder-mv__search_wrap breeder-mv__search_cat">
                 <div class="breeder-mv__search_title">
-                  <h2>猫を探す</h2>
+                  <h2>ネコちゃんを探そう</h2>
             {% endif %}
           </div>
               <div class="breeder-mv__search_body">
@@ -102,11 +102,8 @@
         <div class="breeder-column-row">
           <div class="breeder-column__main">
             <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
-            <div class="breeder-column__main_section_title" style="display: none">
+            <div class="breeder-column__main_section_title">
               <h3>新着のペット</h3>
-              <div class="breeder-column__main_section_title_btn">
-                <a href="{{ url('breeder_pet_search_result', {'pet_kind': petKind, 'pet_new': 1}) }}"><i class="bi bi-list"></i>一覧へ</a>
-              </div>
             </div>
               <div class="breeder-column__main_section_body">
                 <ul>
@@ -228,7 +225,7 @@
                         <p>柴</p>
                         </a>
                     </li>
-              </ul>
+                  </ul>
                 {% else %}
                   <div class="breeder-column__main_section" id="breeder-column__main_section_dog_popular">
                     <div class="breeder-column__main_section_title">

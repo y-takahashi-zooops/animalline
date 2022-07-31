@@ -164,11 +164,28 @@ class ConservationPets
      */
     private $is_delete = 0;
 
+    /**
+     * @ORM\Column(name="view_count", type="smallint", options={"default" = 0})
+     */
+    private $view_count;
+
     public function __construct()
     {
         $this->ConservationPetImages = new ArrayCollection();
     }
 
+    public function getViewCount(): ?int
+    {
+        return $this->view_count;
+    }
+
+    public function setViewCount(?int $view_count): self
+    {
+        $this->view_count = $view_count;
+
+        return $this;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

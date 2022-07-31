@@ -291,6 +291,11 @@ class BreederPetController extends AbstractController
             array('url' => "#",'title' => "ペットID : ".$breederPet->getId())
         );
         
+        $entityManager = $this->getDoctrine()->getManager();
+        $breederPet->setViewCount(intval($breederPet->getViewCount() + 1));
+        $entityManager->persist($breederPet);
+        $entityManager->flush();
+
         return $this->render(
             'animalline/breeder/pet/detail.twig',
             [

@@ -216,6 +216,11 @@ class AdoptionController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
+        $entityManager = $this->getDoctrine()->getManager();
+        $conservation->setViewCount(intval($conservation->getViewCount() + 1));
+        $entityManager->persist($conservation);
+        $entityManager->flush();
+
         return[
             'title' => '保護団体検索',
             'conservation' => $conservation,

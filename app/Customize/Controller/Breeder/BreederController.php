@@ -258,6 +258,11 @@ class BreederController extends AbstractController
             array('url' => "#",'title' => "「".$breeder->getLicenseHouseName()."」".$breeder->getBreederName()."ブリーダー")
         );
 
+        $entityManager = $this->getDoctrine()->getManager();
+        $breeder->setViewCount(intval($breeder->getViewCount() + 1));
+        $entityManager->persist($breeder);
+        $entityManager->flush();
+
         return [
             'title' => $html_title,
             'breeder' => $breeder,

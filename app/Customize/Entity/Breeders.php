@@ -216,6 +216,16 @@ class Breeders
      */
     private $breederPetinfoTemplate;
 
+    /**
+     * @ORM\Column(name="view_count", type="smallint", options={"default" = 0})
+     */
+    private $view_count;
+
+    /**
+     * @ORM\Column(name="breeding_pets", type="text", nullable=true)
+     */
+    private $breeding_pets;
+
     public function __construct()
     {
         $this->BreederPets = new ArrayCollection();
@@ -224,6 +234,31 @@ class Breeders
         $this->BankAccounts = new ArrayCollection();
         $this->BreederHouses = new ArrayCollection();
     }
+
+    public function getViewCount(): ?int
+    {
+        return $this->view_count;
+    }
+
+    public function setViewCount(?int $view_count): self
+    {
+        $this->view_count = $view_count;
+
+        return $this;
+    }
+
+    public function getBreedingPets(): ?string
+    {
+        return $this->breeding_pets;
+    }
+
+    public function setBreedingPets(?string $breeding_pets): self
+    {
+        $this->breeding_pets = $breeding_pets;
+
+        return $this;
+    }
+
 
     public function getId(): ?int
     {

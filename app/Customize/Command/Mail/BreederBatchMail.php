@@ -114,7 +114,9 @@ class BreederBatchMail extends Command
             }
             else{
                 echo "メール送信：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
-                $this->mailService->sendAllBreederMail($customer);
+                if(!$this->mailService->sendAllBreederMail($customer)){
+                    echo "メール送信失敗\n";
+                }
                 sleep(1);
             }
         }

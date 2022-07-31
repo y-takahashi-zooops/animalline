@@ -9,11 +9,11 @@
             <div class="breeder-mv__text_btn">
               <ul>
                 {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-                  <li class="breeder-mv__text_btn_dog"><span><i>犬を探す</i></span></li>
-                    <li class="breeder-mv__text_btn_cat"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>猫を探す</i></a></li>
+                  <li class="breeder-mv__text_btn_dog"><span><i>ワンちゃんを探そう</i></span></li>
+                    <li class="breeder-mv__text_btn_cat"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>ネコちゃんを探そう</i></a></li>
                 {% else %}
-                    <li class="breeder-mv__text_btn_dog"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>犬を探す</i></a></li>
-                  <li class="breeder-mv__text_btn_cat"><span><i>猫を探す</i></span></li>
+                    <li class="breeder-mv__text_btn_dog"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>ワンちゃんを探そう</i></a></li>
+                  <li class="breeder-mv__text_btn_cat"><span><i>ネコちゃんを探そう</i></span></li>
                 {% endif %}
               </ul>
             </div>
@@ -25,9 +25,9 @@
             <div class="breeder-mv__search_wrap breeder-mv__search_dog">
               <div class="breeder-mv__search_title">
                 {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-                  <h2>犬を探す</h2>
+                  <h2>ワンちゃんを探そう</h2>
                 {% else %}
-                  <h2>猫を探す</h2>
+                  <h2>ネコちゃんを探そう</h2>
                 {% endif %}
               </div>
               <div class="breeder-mv__search_body">
@@ -123,6 +123,126 @@
               <div class="navigation">
                 {{ knp_pagination_render(pets) }}
               </div>
+
+
+              <section id="page-detail-content01">
+                <div>
+                  {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+                    {% if breedType == 9 %}
+                      <div class="breeder-column__main_section_title">
+                        <h3>コラム</h3>
+                      </div>
+                      <ul>
+                        <li><a href="https://animalline.jp/contents/toypoodle_features/" target="_blank">トイプードルの特徴は？性格や飼いやすさ・注意が必要な病気</a></li>
+                        <li><a href="https://animalline.jp/contents/puppy_discipline/" target="_blank">子犬のしつけを始めるタイミングとは？しつける際の注意点も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/easytokeep_dog/" target="_blank">飼いやすい犬の種類とは？初心者向け犬種の特徴も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/dog_allergies/" target="_blank">犬アレルギーの原因・症状とは？確認方法や対処法も紹介</a></li>
+                      </ul>
+                    {% endif %}
+
+                    {% if breedType == 5 %}
+                      <div class="breeder-column__main_section_title">
+                        <h3>コラム</h3>
+                      </div>
+                      <ul>
+                        <li><a href="https://animalline.jp/contents/puppy_discipline/" target="_blank">子犬のしつけを始めるタイミングとは？しつける際の注意点も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/dog_allergies/" target="_blank">犬アレルギーの原因・症状とは？確認方法や対処法も紹介</a></li>
+                      </ul>
+                    {% endif %}
+
+                    {% if breedType == 8 %}
+                      <div class="breeder-column__main_section_title">
+                        <h3>コラム</h3>
+                      </div>
+                      <ul>
+                        <li><a href="https://animalline.jp/contents/puppy_discipline/" target="_blank">子犬のしつけを始めるタイミングとは？しつける際の注意点も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/dog_allergies/" target="_blank">犬アレルギーの原因・症状とは？確認方法や対処法も紹介</a></li>
+                      </ul>
+                    {% endif %}
+
+                    {% if breedType == 11 %}
+                      <div class="breeder-column__main_section_title">
+                        <h3>コラム</h3>
+                      </div>
+                      <ul>
+                        <li><a href="https://animalline.jp/contents/easytokeep_dog/" target="_blank">飼いやすい犬の種類とは？初心者向け犬種の特徴も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/puppy_discipline/" target="_blank">子犬のしつけを始めるタイミングとは？しつける際の注意点も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/dog_allergies/" target="_blank">犬アレルギーの原因・症状とは？確認方法や対処法も紹介</a></li>
+                      </ul>
+                    {% endif %}
+
+                    {% if breedType == 47 %}
+                      <div class="breeder-column__main_section_title">
+                        <h3>コラム</h3>
+                      </div>
+                      <ul>
+                        <li><a href="https://animalline.jp/contents/french_bulldog_features/" target="_blank">フレンチブルドッグの特徴は？性格や人気の毛色・飼い方のポイント</a></li>
+                        <li><a href="https://animalline.jp/contents/easytokeep_dog/" target="_blank">飼いやすい犬の種類とは？初心者向け犬種の特徴も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/puppy_discipline/" target="_blank">子犬のしつけを始めるタイミングとは？しつける際の注意点も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/dog_allergies/" target="_blank">犬アレルギーの原因・症状とは？確認方法や対処法も紹介</a></li>
+                      </ul>
+                    {% endif %}
+
+                    {% if breedType == 40 %}
+                      <div class="breeder-column__main_section_title">
+                        <h3>コラム</h3>
+                      </div>
+                      <ul>
+                        <li><a href="https://animalline.jp/contents/shiba_inu_features/" target="_blank">柴犬の特徴は？性格から飼い方のコツ・注意すべき病気・歴史まで</a></li>
+                        <li><a href="https://animalline.jp/contents/puppy_discipline/" target="_blank">子犬のしつけを始めるタイミングとは？しつける際の注意点も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/dog_allergies/" target="_blank">犬アレルギーの原因・症状とは？確認方法や対処法も紹介</a></li>
+                      </ul>
+                    {% endif %}
+                    
+                    {% if sizeCode == 1 %}
+                      <div class="breeder-column__main_section_title">
+                        <h3>コラム</h3>
+                      </div>
+                      <ul>
+                        <li><a href="https://animalline.jp/contents/toypoodle_features/" target="_blank">トイプードルの特徴は？性格や飼いやすさ・注意が必要な病気</a></li>
+                        <li><a href="https://animalline.jp/contents/easytokeep_dog/" target="_blank">飼いやすい犬の種類とは？初心者向け犬種の特徴も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/puppy_discipline/" target="_blank">子犬のしつけを始めるタイミングとは？しつける際の注意点も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/dog_allergies/" target="_blank">犬アレルギーの原因・症状とは？確認方法や対処法も紹介</a></li>
+                      </ul>
+                    {% endif %}
+
+                    {% if sizeCode == 2 %}
+                      <div class="breeder-column__main_section_title">
+                        <h3>コラム</h3>
+                      </div>
+                      <ul>
+                        <li><a href="https://animalline.jp/contents/french_bulldog_features/" target="_blank">フレンチブルドッグの特徴は？性格や人気の毛色・飼い方のポイント</a></li>
+                        <li><a href="https://animalline.jp/contents/shiba_inu_features/" target="_blank">柴犬の特徴は？性格から飼い方のコツ・注意すべき病気・歴史まで</a></li>
+                        <li><a href="https://animalline.jp/contents/easytokeep_dog/" target="_blank">飼いやすい犬の種類とは？初心者向け犬種の特徴も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/puppy_discipline/" target="_blank">子犬のしつけを始めるタイミングとは？しつける際の注意点も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/dog_allergies/" target="_blank">犬アレルギーの原因・症状とは？確認方法や対処法も紹介</a></li>
+                      </ul>
+                    {% endif %}
+
+                    {% if sizeCode == 3 %}
+                      <div class="breeder-column__main_section_title">
+                        <h3>コラム</h3>
+                      </div>
+                      <ul>
+                        <li><a href="https://animalline.jp/contents/puppy_discipline/" target="_blank">子犬のしつけを始めるタイミングとは？しつける際の注意点も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/dog_allergies/" target="_blank">犬アレルギーの原因・症状とは？確認方法や対処法も紹介</a></li>
+                      </ul>
+                    {% endif %}
+
+                    {% if sizeCode == 4 %}
+                      <div class="breeder-column__main_section_title">
+                        <h3>コラム</h3>
+                      </div>
+                      <ul>
+                        <li><a href="https://animalline.jp/contents/puppy_discipline/" target="_blank">子犬のしつけを始めるタイミングとは？しつける際の注意点も解説</a></li>
+                        <li><a href="https://animalline.jp/contents/dog_allergies/" target="_blank">犬アレルギーの原因・症状とは？確認方法や対処法も紹介</a></li>
+                      </ul>
+                    {% endif %}
+
+                  {% endif %}
+                </div>
+              </section>
+              
             </div>
           </div>
           {{ include('animalline/breeder/side.twig') }}

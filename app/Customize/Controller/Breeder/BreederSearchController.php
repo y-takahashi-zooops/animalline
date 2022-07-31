@@ -119,13 +119,22 @@ class BreederSearchController extends AbstractController
         $regions = $this->prefRepository->findAll();
 
         $breredname = "";
-        if($request->get('breed_type')){
-            $now_breeds = $this->breedsRepository->find($request->get('breed_type'));
+        $breedtype = $request->get('breed_type');
+        $sizecode = $request->get('size_code');
+        if($breedtype){
+            $now_breeds = $this->breedsRepository->find($breedtype);
             $breredname = $now_breeds->getBreedsName();
         } 
         
+        $title = "ペット検索結果";
         $maintitle = "ペット検索結果";
         if($breredname != ""){
+            if($petKind == 1){
+                $title = $breredname."の子犬一覧";
+            }
+            else{
+                $title = $breredname."の子猫一覧";
+            }
             $maintitle .= "(".$breredname.")";
         }
         $breadcrumb = array(
@@ -136,8 +145,11 @@ class BreederSearchController extends AbstractController
         return $this->render('animalline/breeder/pet/search_result.twig', [
             'pets' => $pets,
             'petKind' => $petKind,
+            'breedType' => $breedtype,
+            'sizeCode' => $sizecode,
             'breeds' => $breeds,
             'regions' => $regions,
+            'title' => $title,
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
             "description_add" => $breredname

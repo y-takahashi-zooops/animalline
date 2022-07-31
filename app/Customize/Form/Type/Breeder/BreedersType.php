@@ -191,6 +191,13 @@ class BreedersType extends AbstractType
                 ],
                 'trim' => true,
             ])
+            ->add('breeding_pets', TextareaType::class, [
+                // 'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank()
+                ],
+            ])
             ->add('pr_text', TextareaType::class, [
                 // 'required' => false,
                 'required' => true,

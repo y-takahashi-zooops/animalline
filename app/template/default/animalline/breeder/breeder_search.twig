@@ -11,21 +11,21 @@
                         <ul>
                             {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
                                 <li class="breeder-mv__text_btn_dog">
-                                    <span><i>犬を飼育</i></span>
+                                    <span><i>ワンちゃんを飼育</i></span>
                                 </li>
                                 <li class="breeder-mv__text_btn_cat">
                                     <a href="{{ url('breeder_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}">
-                                        <i>猫を飼育</i>
+                                        <i>ネコちゃんを飼育</i>
                                     </a>
                                 </li>
                             {% else %}
                                 <li class="breeder-mv__text_btn_dog">
                                     <a href="{{ url('breeder_search', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}">
-                                        <i>犬を飼育</i>
+                                        <i>ワンちゃんを飼育</i>
                                     </a>
                                 </li>
                                 <li class="breeder-mv__text_btn_cat">
-                                    <span><i>猫を飼育</i></span>
+                                    <span><i>ネコちゃんを飼育</i></span>
                                 </li>
                             {% endif %}
                         </ul>

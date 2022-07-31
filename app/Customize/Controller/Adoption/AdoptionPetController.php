@@ -191,6 +191,11 @@ class AdoptionPetController extends AbstractController
             array('url' => "#",'title' => $conservationPet->getBreedsType()->getbreedsName())
         );
 
+        $entityManager = $this->getDoctrine()->getManager();
+        $conservationPet->setViewCount(intval($conservationPet->getViewCount() + 1));
+        $entityManager->persist($conservationPet);
+        $entityManager->flush();
+
         return $this->render(
             'animalline/adoption/pet/detail.twig',
             [
