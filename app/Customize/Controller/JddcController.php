@@ -329,8 +329,9 @@ class JddcController extends AbstractController
 
         if ($siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER) {
             $arrData = [];
-            $arrData['breeder_name'] = $Pet->getBreeder()->getBreederName();
+            $arrData['breeder_name'] = $request->get('barcode');
             $arrData['pet'] = $Pet;
+            $arrData['result'] = $Dna->getCheckStatus();
             $checkDetails = [];
             foreach ($Dna->getCheckStatusDetails() as $item) {
                 $itemArr = [];
@@ -339,13 +340,14 @@ class JddcController extends AbstractController
                 $checkDetails[] = $itemArr;
             }
             $arrData['check_kinds'] = $checkDetails;
+            
             $veqtaPdfService->makePdf($arrData);
 
             $pdfDnaDir = 'var/pdf/dna';
             if (!file_exists($pdfDnaDir) && !mkdir($pdfDnaDir, 0777, true)) {
                 throw new Exception('Failed to create folder.');
             }
-            $pdfPath = $pdfDnaDir . '/VeqtaGeneticTestingReport_' . $Dna->getId() . '.pdf';
+            $pdfPath = $pdfDnaDir . '/JddcDNAReport_' . $Dna->getId() . '.pdf';
             try {
                 $veqtaPdfService->Output($_SERVER['DOCUMENT_ROOT'] . $pdfPath, 'F');
             } catch (Exception $e) {
@@ -354,6 +356,7 @@ class JddcController extends AbstractController
 
             $Dna->setFilePath($pdfPath);
         }
+        
         $entityManager->persist($Dna);
         $entityManager->flush();
 

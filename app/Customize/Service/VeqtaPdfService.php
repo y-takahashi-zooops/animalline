@@ -86,7 +86,17 @@ class VeqtaPdfService extends TcpdfFpdi
 
         $this->renderPetData($data['pet']);
 
-        //$this->renderCheckKinds($data['check_kinds']);
+        if($data['result'] == 6){
+            $this->lfText(20, 230, "上記、検査項目において検出する遺伝子変異が原因となる発症リスクはありません。", 10);
+        }
+        if($data['result'] == 4){
+            $this->lfText(20, 230, "検体異常です", 10);
+        }
+        if($data['result'] == 7){
+            $this->lfText(20, 230, "上記、検査項目において検出する遺伝子変異が原因となる発症リスクがございます。", 10);
+        }
+
+        $this->renderCheckKinds($data['check_kinds']);
 
         return true;
     }
@@ -119,7 +129,7 @@ class VeqtaPdfService extends TcpdfFpdi
      */
     protected function renderBreederName($data)
     {
-        $this->lfText(30, 117, $data, 12);
+        $this->lfText(85, 107, $data, 10);
     }
 
     /**
@@ -130,12 +140,13 @@ class VeqtaPdfService extends TcpdfFpdi
      */
     protected function renderPetData($data)
     {
-        $this->lfText(80, 130, $data->getBreedsType()->getBreedsName(), 10);
-        $this->lfText(80, 140, '不要', 10);
-        $this->lfText(80, 151, $data->getPetBirthday()->format('Y年m月d日'), 10);
-        $this->lfText(80, 162, $data->getPetSex() == 1 ? '男の子' : '女の子', 10);
-        $this->lfText(80, 172, $data->getPedigreeCode(), 10);
-        $this->lfText(80, 183, $data->getMicrochipCode(), 10);
+        $this->lfText(85, 120, $data->getBreedsType()->getBreedsName(), 10);
+        //$this->lfText(80, 140, '不要', 10);
+        $this->lfText(85, 133, $data->getPetBirthday()->format('Y年m月d日'), 10);
+        $this->lfText(85, 146, $data->getPetSex() == 1 ? '男の子' : '女の子', 10);
+
+        //$this->lfText(80, 172, $data->getPedigreeCode(), 10);
+        //$this->lfText(80, 183, $data->getMicrochipCode(), 10);
     }
 
     /**
@@ -146,8 +157,8 @@ class VeqtaPdfService extends TcpdfFpdi
      */
     protected function renderCheckKinds(array $rows): bool
     {
-        $fromX = 36;
-        $fromY = 202;
+        $fromX = 20;
+        $fromY = 164;
         // 検査結果
         $CHECK_RESULTS = [
             1 => 'クリア',
@@ -156,6 +167,10 @@ class VeqtaPdfService extends TcpdfFpdi
         ];
 
         foreach ($rows as $row) {
+            $this->lfTextWhite($fromX, $fromY, $row['check_kind_name'], 10);
+            $this->lfText($fromX + 81, $fromY, $CHECK_RESULTS[$row['check_kind_result']] ?? '', 10);
+            $fromY += 17;
+            /*
             if (strlen($row['check_kind_name']) > 32) {
                 $this->lfText($fromX, $fromY, substr($row['check_kind_name'], 0, 32), 8);
                 $this->lfText($fromX, $fromY + 4, substr($row['check_kind_name'], 32), 8);
@@ -164,6 +179,7 @@ class VeqtaPdfService extends TcpdfFpdi
             }
             $this->lfText($fromX + 92, $fromY + 2, $CHECK_RESULTS[$row['check_kind_result']] ?? '', 8);
             $fromY += 18;
+            */
         }
 
         return true;
@@ -185,6 +201,30 @@ class VeqtaPdfService extends TcpdfFpdi
         $bakFontSize = $this->FontSizePt;
 
         $this->SetFont('', $style, $size);
+        $this->SetTextColor(0,0,0);
+        $this->Text($x + $this->baseOffsetX, $y + $this->baseOffsetY, $text);
+
+        // 復元
+        $this->SetFont('', $bakFontStyle, $bakFontSize);
+    }
+
+    /**
+     * PDFへのテキスト書き込み
+     *
+     * @param int $x X座標
+     * @param int $y Y座標
+     * @param string $text テキスト
+     * @param int $size フォントサイズ
+     * @param string $style フォントスタイル
+     */
+    protected function lfTextWhite($x, $y, $text, $size = 0, $style = '')
+    {
+        // 退避
+        $bakFontStyle = $this->FontStyle;
+        $bakFontSize = $this->FontSizePt;
+
+        $this->SetFont('', $style, $size);
+        $this->SetTextColor(255,255,255);
         $this->Text($x + $this->baseOffsetX, $y + $this->baseOffsetY, $text);
 
         // 復元
