@@ -4801,6 +4801,14 @@ CONTENTS後藤追加分
     max-width: 100%;
     width: 100%;
     display:block;
+    font-size: 12px;
+  }
+  .cashback table {
+    font-size: 16px;
+  }
+
+  .cashback tbody {
+    max-width: 100%;
   }
   .cashback tr {
     max-width: 100%;
