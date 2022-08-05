@@ -4774,3 +4774,49 @@ CONTENTS後藤追加分
   font-size: 20px;
   color: #888;
 }
+
+.cashback {
+  min-width: 100%;
+  border: solid #000;
+  width: 100%;
+}
+.cashback tr {
+  border: solid #000;
+}
+
+.cashback th {
+  padding: 1rem;
+  background-color: #004274;
+  color: #FFF;
+  width: 40%;
+}
+
+.cashback td {
+  padding: 1rem;
+  width: 60%;
+}
+
+@media only screen and (max-width: 640px) {
+  .cashback {
+    max-width: 100%;
+    width: 100%;
+    display:block;
+  }
+  .cashback tr {
+    max-width: 100%;
+    width: 100%;
+    display:block;
+  }
+  
+  .cashback th {
+    max-width: 100%;
+    width: 100%;
+    display:block;
+  }
+  
+  .cashback td {
+    max-width: 100%;
+    width: 100%;
+    display:block;
+  }
+}
