@@ -246,6 +246,7 @@ class BreederMemberController extends AbstractController
         if (!$breederData) {
             $breederData = new Breeders;
             $breederData->setId($user->getId());
+            $breederData->setViewCount(0);
         }
 
         $thumbnail_path = $request->get('thumbnail_path') ?: $breederData->getThumbnailPath();

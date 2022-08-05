@@ -253,6 +253,7 @@ class AdoptionPetController extends AbstractController
             $bd = new DateTime('now');
             $conservationPet->setPetBirthday($bd);
             $conservationPet->setFutureWait(0);
+            $conservationPet->setViewCount(0);
             $entityManager->persist($conservationPet);
             $entityManager->flush();
             $petId = $conservationPet->getId();
