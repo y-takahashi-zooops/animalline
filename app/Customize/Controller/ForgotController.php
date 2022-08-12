@@ -84,6 +84,9 @@ class ForgotController extends AbstractController
         }
 
         $return_path = $request->get("ReturnPath");
+        if($return_path == ""){
+            $return_path = "homepage";
+        }
 
         if(preg_match("/^adoption/",$return_path)){
             $prefix = "adoption";
@@ -189,7 +192,7 @@ class ForgotController extends AbstractController
      * @Route("/forgot/reset/{reset_key}/{return_path}", name="forgot_reset")
      * @Template("Forgot/reset.twig")
      */
-    public function reset(Request $request, $reset_key,$return_path)
+    public function reset(Request $request, $reset_key,$return_path = '')
     {
         if ($this->isGranted('ROLE_USER')) {
             throw new HttpException\NotFoundHttpException();
