@@ -127,12 +127,25 @@ class ProductInstockController extends AbstractController
                 'orderDateDay' => $request->get('order_date_day')
             ];
 
+            $orderDate2 = [
+                'orderDateYear' => $request->get('order_date_year2'),
+                'orderDateMonth' => $request->get('order_date_month2'),
+                'orderDateDay' => $request->get('order_date_day2')
+            ];
+
             $scheduleDate = [
                 'scheduleDateYear' => $request->get('arrival_date_schedule_year'),
                 'scheduleDateMonth' => $request->get('arrival_date_schedule_month'),
                 'scheduleDateDay' => $request->get('arrival_date_schedule_day')
             ];
-            $instocks = $this->instockScheduleHeaderRepository->search($orderDate, $scheduleDate);
+
+            $scheduleDate2 = [
+                'scheduleDateYear' => $request->get('arrival_date_schedule_year2'),
+                'scheduleDateMonth' => $request->get('arrival_date_schedule_month2'),
+                'scheduleDateDay' => $request->get('arrival_date_schedule_day2')
+            ];
+
+            $instocks = $this->instockScheduleHeaderRepository->search($orderDate,$orderDate2,$scheduleDate,$scheduleDate2);
         }
         if ($instocks) {
             foreach ($instocks as $instock) {

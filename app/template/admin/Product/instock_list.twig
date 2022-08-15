@@ -40,44 +40,6 @@ file that was distributed with this source code.
             console.error(err);
         });
 });
-      $(document).on('change', '#instock_list_order_date_year', function(){
-        if (isNaN(parseInt($(this).val()))) {
-            $('#instock_list_order_date_month').val('')
-            $('#instock_list_order_date_day').val('')
-            $('#instock_list_order_date_month').attr('disabled', 'true')
-            $('#instock_list_order_date_day').attr('disabled', 'true')
-        } else {
-            $('#instock_list_order_date_month').removeAttr('disabled')
-        }
-      });
-      $(document).on('change', '#instock_list_order_date_month', function(){
-        if (isNaN(parseInt($(this).val()))) {
-            $('#instock_list_order_date_day').val('')
-            $('#instock_list_order_date_day').attr('disabled', 'true')
-        } else {
-            $('#instock_list_order_date_day').removeAttr('disabled')
-        }
-      });
-
-            $(document).on('change', '#instock_list_arrival_date_schedule_year', function(){
-        if (isNaN(parseInt($(this).val()))) {
-            $('#instock_list_arrival_date_schedule_month').val('')
-            $('#instock_list_arrival_date_schedule_day').val('')
-            $('#instock_list_arrival_date_schedule_month').attr('disabled', 'true')
-            $('#instock_list_arrival_date_schedule_day').attr('disabled', 'true')
-        } else {
-            $('#instock_list_arrival_date_schedule_month').removeAttr('disabled')
-        }
-       
-      });
-      $(document).on('change', '#instock_list_arrival_date_schedule_month', function(){
-        if (isNaN(parseInt($(this).val()))) {
-            $('#instock_list_arrival_date_schedule_day').val('')
-            $('#instock_list_arrival_date_schedule_day').attr('disabled', 'true')
-        } else {
-            $('#instock_list_arrival_date_schedule_day').removeAttr('disabled')
-        }
-      });
 
     function confirmSendWMS(){
         if(confirm('入荷データを送信しますか？')){
@@ -100,22 +62,39 @@ file that was distributed with this source code.
                             <div id="instock_list_order_date" class="form-inline">
                                 <select class="form-control" id="instock_list_order_date_year" name="order_date_year">
                                     <option value="">----</option>
-                                    {% for i in 2016..2036 %}
+                                    {% for i in 2021..2022 %}
                                         <option value={{ i }} {% if params.order_date_year is defined and params.order_date_year == i %} selected{% endif %}>{{ i }}</option>
                                     {% endfor %}
                                 </select><span>&nbsp;/&nbsp;</span>
-                                <select class="form-control" id="instock_list_order_date_month" name="order_date_month"
-                                        {{ params.order_date_month is not defined ? 'disabled' }}>
+                                <select class="form-control" id="instock_list_order_date_month" name="order_date_month">
                                     <option value="">--</option>
                                     {% for i in 1..12 %}
                                         <option value={{ i }} {% if params.order_date_month is defined and params.order_date_month == i %} selected{% endif %}>{{ i }}</option>
                                     {% endfor %}
                                 </select><span>&nbsp;/&nbsp;</span>
-                                <select class="form-control" id="instock_list_order_date_day" name="order_date_day"
-                                        {{ params.order_date_day is not defined ? 'disabled' }}>
+                                <select class="form-control" id="instock_list_order_date_day" name="order_date_day">
                                     <option value="">--</option>
                                     {% for i in 1..31 %}
                                         <option value={{ i }}  {% if params.order_date_day is defined and params.order_date_day == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                　～　
+                                <select class="form-control" id="instock_list_order_date_year" name="order_date_year2">
+                                    <option value="">----</option>
+                                    {% for i in 2021..2022 %}
+                                        <option value={{ i }} {% if params.order_date_year2 is defined and params.order_date_year2 == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_order_date_month" name="order_date_month2">
+                                    <option value="">--</option>
+                                    {% for i in 1..12 %}
+                                        <option value={{ i }} {% if params.order_date_month2 is defined and params.order_date_month2 == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_order_date_day" name="order_date_day2">
+                                    <option value="">--</option>
+                                    {% for i in 1..31 %}
+                                        <option value={{ i }}  {% if params.order_date_day2 is defined and params.order_date_day2 == i %} selected{% endif %}>{{ i }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -130,24 +109,41 @@ file that was distributed with this source code.
                                 <select class="form-control" id="instock_list_arrival_date_schedule_year"
                                         name="arrival_date_schedule_year">
                                     <option value="">----</option>
-                                    {% for i in 2016..2036 %}
+                                    {% for i in 2021..2022 %}
                                         <option value={{ i }}  {% if params.arrival_date_schedule_year is defined and params.arrival_date_schedule_year == i %} selected{% endif %}>{{ i }}</option>
                                     {% endfor %}
                                 </select><span>&nbsp;/&nbsp;</span>
                                 <select class="form-control" id="instock_list_arrival_date_schedule_month"
-                                        name="arrival_date_schedule_month"
-                                        {{ params.arrival_date_schedule_month is not defined ? 'disabled' }}>
+                                        name="arrival_date_schedule_month">
                                     <option value="">--</option>
                                     {% for i in 1..12 %}
                                         <option value={{ i }} {% if params.arrival_date_schedule_month is defined and params.arrival_date_schedule_month == i %} selected{% endif %}>{{ i }}</option>
                                     {% endfor %}
                                 </select><span>&nbsp;/&nbsp;</span>
                                 <select class="form-control" id="instock_list_arrival_date_schedule_day"
-                                        name="arrival_date_schedule_day"
-                                        {{ params.arrival_date_schedule_day is not defined ? 'disabled' }}>
+                                        name="arrival_date_schedule_day">
                                     <option value="">--</option>
                                     {% for i in 1..31 %}
                                         <option value={{ i }} {% if params.arrival_date_schedule_day is defined and params.arrival_date_schedule_day == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                　～　
+                                <select class="form-control" id="instock_list_arrival_date_schedule_year" name="arrival_date_schedule_year2">
+                                    <option value="">----</option>
+                                    {% for i in 2021..2022 %}
+                                        <option value={{ i }}  {% if params.arrival_date_schedule_year2 is defined and params.arrival_date_schedule_year2 == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_arrival_date_schedule_month" name="arrival_date_schedule_month2">
+                                    <option value="">--</option>
+                                    {% for i in 1..12 %}
+                                        <option value={{ i }} {% if params.arrival_date_schedule_month2 is defined and params.arrival_date_schedule_month2 == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_arrival_date_schedule_day" name="arrival_date_schedule_day2">
+                                    <option value="">--</option>
+                                    {% for i in 1..31 %}
+                                        <option value={{ i }} {% if params.arrival_date_schedule_day2 is defined and params.arrival_date_schedule_day2 == i %} selected{% endif %}>{{ i }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
