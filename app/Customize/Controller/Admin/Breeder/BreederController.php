@@ -278,7 +278,13 @@ class BreederController extends AbstractController
         $breederName = [];
         $arrCount = [];
         if ($request->get('order_date_year')) {
-            $dnaCheckStatus = $this->dnaQueryService->findByDate($request->get('order_date_year'), $request->get('order_date_month'), $request->get('order_date_day'));
+            $dnaCheckStatus = $this->dnaQueryService->findByDate(
+                $request->get('order_date_year'), $request->get('order_date_month'), $request->get('order_date_day'),
+                $request->get('order_date_year2'), $request->get('order_date_month2'), $request->get('order_date_day2'),
+                $request->get('dna_check_org')
+            );
+
+            /*
             foreach ($dnaCheckStatus as $item) {
                 $arrBreeder[] = $item['breeder_id'];
                 if (array_key_exists($item['breeder_id'], $arrCount)) {
@@ -294,12 +300,11 @@ class BreederController extends AbstractController
                 $breeder = $this->breedersRepository->find($key);
                 $breederName[$key] = $breeder->getBreederName();
             }
+            */
         }
 
         return [
-            'breederName' => $breederName,
-            'arrayBreeder' => $arrayBreeder,
-            'arrCount' => $arrCount
+            'dnaCheckStatus' => $dnaCheckStatus
         ];
     }
 

@@ -30,7 +30,7 @@ file that was distributed with this source code.
                 <div class="ec-select pb-2">
                     <div id="instock_list_order_date" class="form-inline">
                         <select class="form-control" id="instock_list_order_date_year" name="order_date_year">
-                            {% for i in 2016..2036 %}
+                            {% for i in 2021..2022 %}
                                 <option value={{ i }} {% if params.order_date_year is defined and params.order_date_year == i %} selected{% endif %}>{{ i }}</option>
                             {% endfor %}
                         </select><span>&nbsp;/&nbsp;</span>
@@ -44,7 +44,30 @@ file that was distributed with this source code.
                                 <option value={{ i }} {% if params.order_date_day is defined and params.order_date_day == i %} selected{% endif %}>{{ i }}</option>
                             {% endfor %}
                         </select>
+                        　～　
+                        <select class="form-control" id="instock_list_order_date_year" name="order_date_year2">
+                            {% for i in 2021..2022 %}
+                                <option value={{ i }} {% if params.order_date_year is defined and params.order_date_year2 == i %} selected{% endif %}>{{ i }}</option>
+                            {% endfor %}
+                        </select><span>&nbsp;/&nbsp;</span>
+                        <select class="form-control" id="instock_list_order_date_month" name="order_date_month2">
+                            {% for i in 1..12 %}
+                                <option value={{ i }} {% if params.order_date_month is defined and params.order_date_month2 == i %} selected{% endif %}>{{ i }}</option>
+                            {% endfor %}
+                        </select><span>&nbsp;/&nbsp;</span>
+                        <select class="form-control" id="instock_list_order_date_day" name="order_date_day2">
+                            {% for i in 1..31 %}
+                                <option value={{ i }} {% if params.order_date_day is defined and params.order_date_day2 == i %} selected{% endif %}>{{ i }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
+                </div>
+                <div class="ec-select pb-2">
+                    検査団体：<br />
+                    <select class="form-control" id="instock_list_organization" name="dna_check_org">
+                        <option value=1 {% if params.dna_check_org is defined and params.dna_check_org == 1 %} selected{% endif %}>VEQTA</option>
+                        <option value=2 {% if params.dna_check_org is defined and params.dna_check_org == 2 %} selected{% endif %}>ラボ</option>
+                    </select>
                 </div>
                 <button class="btn btn-ec-conversion px-5" id="search" type="submit">集計</button>
             </div>
@@ -60,19 +83,21 @@ file that was distributed with this source code.
                         <thead>
                             <tr>
                                 <th class="border-top-0 pt-2 pb-2"></th>
+                                <th class="border-top-0 pt-2 pb-2">検査完了日</th>
                                 <th class="border-top-0 pt-2 pb-2">ブリーダー名</th>
-                                <th class="border-top-0 pt-2 pb-2">検査頭数</th>
+                                <th class="border-top-0 pt-2 pb-2">検査ID</th>
                                 <th class="border-top-0 pt-2 pb-2">検査項目数</th>
                                 <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
                             </tr>
                         </thead>
                         <tbody>
-                        {% for key, value in arrayBreeder %}
+                        {% for status in dnaCheckStatus %}
                             <tr>
                                 <td class="align-middle"></td>
-                                <td class="align-middle">{{ breederName[key] }}</td>
-                                <td class="align-middle">{{ arrayBreeder[key] }}</td>
-                                <td class="align-middle">{{ arrCount[key] }}</td>
+                                <td class="align-middle">{{ status.result_date|date('Y/m/d') }}</td>
+                                <td class="align-middle">{{ status.name }}</td>
+                                <td class="align-middle">{{ status.stype }}{{ "%05d"|format(status.dnaid) }}</td>
+                                <td class="align-middle">{{ status.count }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

@@ -265,22 +265,24 @@ class DnaQueryService
      *
      * @return object[]
      */
-    public function findByDate($year, $month, $day)
+    public function findByDate($year, $month, $day,$year2, $month2, $day2,$dna_check_org)
     {
         $startDate = new \DateTimeImmutable("$year-$month-$day 00:00:00");
-        $endDate = new \DateTimeImmutable("$year-$month-$day 23:59:59");
+        $endDate = new \DateTimeImmutable("$year2-$month2-$day2 23:59:59");
         $qb = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->join('Customize\Entity\DnaCheckStatusHeader', 'dnah', 'WITH', 'dna.DnaHeader = dnah.id')
             ->join('Customize\Entity\Breeders', 'b', 'WITH', 'dnah.register_id = b.id')
             ->where('dna.site_type = :site')
             ->andWhere('dna.check_return_date BETWEEN :start AND :end')
+            ->andWhere('dnah.labo_type = :labo')
             //->andWhere('dna.check_status = :check_status')
             ->setParameter('site', AnilineConf::SITE_CATEGORY_BREEDER)
             ->setParameter('start', $startDate)
             ->setParameter('end', $endDate)
+            ->setParameter('labo', $dna_check_org)
             //->setParameter('check_status', 9)
-            ->select('dna, b.id as breeder_id, dna.pet_id');
-
+            ->select('dna.id as dnaid, dna.site_type as stype, dna.dna_check_count as count, dna.check_return_date as result_date, dnah.shipping_name as name, b.id as breeder_id, dna.pet_id')
+            ->orderBy("dna.check_return_date",  "ASC");
         return $qb->getQuery()->getResult();
     }
 }
