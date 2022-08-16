@@ -26,6 +26,25 @@ class BreederPetsRepository extends ServiceEntityRepository
      *
      * @return array
      */
+    public function findByUserFavorite($user,$site)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('pf.site_category = :site')
+            ->andWhere('pf.Customer = :user')
+            ->join('Customize\Entity\PetsFavorite', 'pf', 'WITH', 'pf.pet_id = a.id')
+            ->leftJoin('Customize\Entity\BreederContactHeader', 'bch', 'WITH', 'bch.Pet = a.id')
+            ->select('a, bch.contract_status')
+            ->setParameter('site', $site)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Get list favorite pet decrement
+     *
+     * @return array
+     */
     public function findByFavoriteCount(): array
     {
         return $this->createQueryBuilder('a')

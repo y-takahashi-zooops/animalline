@@ -94,7 +94,7 @@ class BreederFavoriteController extends AbstractController
      */
     public function favorite(PaginatorInterface $paginator, Request $request): ?Response
     {
-        $favoritePetResults = $this->breederPetsRepository->findByFavoriteCount();
+        $favoritePetResults = $this->breederPetsRepository->findByUserFavorite($this->getUser(),1);
         $favoritePets = $paginator->paginate(
             $favoritePetResults,
             $request->query->getInt('page', 1),
