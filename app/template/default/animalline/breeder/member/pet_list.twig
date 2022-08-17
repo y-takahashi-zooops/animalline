@@ -40,8 +40,17 @@
                                         <p style="color: #F00">
                                         {% if pet['bp_dna_check_result'] == 0 %}
                                         [DNA検査中]
+                                            {% if pet['bp_is_active'] == 2 %}
+                                                [掲載停止中]
+                                            {% else %}
+                                                [掲載中]
+                                            {% endif %}
                                         {% elseif pet['bp_dna_check_result'] == 1 %}
-                                        [掲載中]
+                                            {% if pet['bp_is_active'] == 2 %}
+                                                [掲載停止中]
+                                            {% else %}
+                                                [掲載中]
+                                            {% endif %}
                                         {% elseif pet['bp_dna_check_result'] == 2 %}
                                         [DNA検査NG]
                                         {% endif %}

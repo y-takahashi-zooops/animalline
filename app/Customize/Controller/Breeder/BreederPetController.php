@@ -553,11 +553,11 @@ class BreederPetController extends AbstractController
     public function breeder_pets_change_status(Request $request, BreederPets $breederPet)
     {
         $curStatus = $breederPet->getIsActive();
-        if ($curStatus === AnilineConf::IS_ACTIVE_PRIVATE) {
-            $breederPet->setIsActive(AnilineConf::IS_ACTIVE_PUBLIC);
+        if ($curStatus != 2) {
+            $breederPet->setIsActive(2);
             $breederPet->setReleaseDate(Carbon::now());
-        } elseif ($curStatus === AnilineConf::IS_ACTIVE_PUBLIC) {
-            $breederPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE);
+        } elseif ($curStatus == 2) {
+            $breederPet->setIsActive(1);
             $breederPet->setReleaseDate(null);
         }
 
