@@ -21,6 +21,7 @@ use Customize\Entity\DnaCheckStatusDetail;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
+use Customize\Repository\DnaCheckStatusDetailRepository;
 use Customize\Service\VeqtaPdfService;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -71,6 +72,12 @@ class JddcController extends AbstractController
     protected $dnaCheckKindsRepository;
 
     /**
+     * @var DnaCheckStatusDetailRepository
+     */
+    protected $dnaCheckStatusDetailRepository;
+    
+
+    /**
      * VeqtaController constructor.
      *
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
@@ -80,6 +87,7 @@ class JddcController extends AbstractController
      * @param JddcQueryService $jddcQueryService
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
      * @param MailService $mailService
+     * @param DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository
      */
 
     public function __construct(
@@ -89,7 +97,8 @@ class JddcController extends AbstractController
         DnaCheckStatusRepository       $dnaCheckStatusRepository,
         JddcQueryService               $jddcQueryService,
         DnaCheckKindsRepository        $dnaCheckKindsRepository,
-        MailService $mailService
+        MailService $mailService,
+        DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository
     ) {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -98,6 +107,7 @@ class JddcController extends AbstractController
         $this->jddcQueryService = $jddcQueryService;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
         $this->mailService = $mailService;
+        $this->dnaCheckStatusDetailRepository = $dnaCheckStatusDetailRepository;
     }
 
     /**
@@ -304,6 +314,8 @@ class JddcController extends AbstractController
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
                 $Dna->setCheckStatus($checkStatus);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
+
+                
                 break;
             default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
@@ -316,6 +328,10 @@ class JddcController extends AbstractController
             $checkStatus != AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY &&
             $dnaDetailData = $request->get('check_status')
         ) {
+            $lists = $this->dnaCheckStatusDetailRepository->findBy(['CheckStatus' => $Dna]);
+            foreach($lists as $list){
+                $entityManager->remove($list);
+            }
             for ($i = 0; $i < count($dnaDetailData['kind']); $i++) {
                 $DnaDetail = (new DnaCheckStatusDetail)
                     ->setCheckResult($dnaDetailData['status'][$dnaDetailData['kind'][$i]])

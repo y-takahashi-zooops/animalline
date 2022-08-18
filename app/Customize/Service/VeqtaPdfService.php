@@ -140,6 +140,14 @@ class VeqtaPdfService extends TcpdfFpdi
      */
     protected function renderPetData($data)
     {
+        $imgpath = "/var/www/animalline/html/upload/save_image".$data->getThumbnailPath();
+        if(file_exists($imgpath)){
+            $this->Image($imgpath, 
+                34, 50, 
+                42, 42, 
+                "", "", "", true, 300, "", false, false, 0, true, false, false);
+        }
+        
         $this->lfText(85, 120, $data->getBreedsType()->getBreedsName(), 10);
         //$this->lfText(80, 140, '不要', 10);
         $this->lfText(85, 133, $data->getPetBirthday()->format('Y年m月d日'), 10);
