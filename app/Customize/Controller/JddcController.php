@@ -22,6 +22,7 @@ use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\DnaCheckStatusRepository;
 use Customize\Repository\DnaCheckStatusDetailRepository;
+use Eccube\Repository\CustomerRepository;
 use Customize\Service\VeqtaPdfService;
 use Eccube\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -75,6 +76,11 @@ class JddcController extends AbstractController
      * @var DnaCheckStatusDetailRepository
      */
     protected $dnaCheckStatusDetailRepository;
+
+    /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
     
 
     /**
@@ -88,6 +94,7 @@ class JddcController extends AbstractController
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
      * @param MailService $mailService
      * @param DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository
+     * @param CustomerRepository $customerRepository
      */
 
     public function __construct(
@@ -98,7 +105,8 @@ class JddcController extends AbstractController
         JddcQueryService               $jddcQueryService,
         DnaCheckKindsRepository        $dnaCheckKindsRepository,
         MailService $mailService,
-        DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository
+        DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository,
+        CustomerRepository $customerRepository
     ) {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -108,6 +116,7 @@ class JddcController extends AbstractController
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
         $this->mailService = $mailService;
         $this->dnaCheckStatusDetailRepository = $dnaCheckStatusDetailRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -314,8 +323,13 @@ class JddcController extends AbstractController
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
                 $Dna->setCheckStatus($checkStatus);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
-
+                $Pet->setIsActive(2);
                 
+                //ＮＧの場合メールを送る
+                $dna_header = $Dna->getDnaHeader();
+                $customer_id = $dna_header->getRegisterId();
+                $Customer = $this->customerRepository->find($customer_id);
+                $this->mailService->sendDnaCheckNg($Customer);
                 break;
             default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);

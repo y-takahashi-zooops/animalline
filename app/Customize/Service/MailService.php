@@ -1365,6 +1365,34 @@ class MailService
     }
 
     /**
+     * DNA検査結果NGの際の通知メール送信
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @param $data
+     * @return int
+     */
+    public function sendDnaCheckNg(\Eccube\Entity\Customer $Customer)
+    {
+        $body = $this->twig->render('Mail/dna_check_ng.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'name' => $Customer->getName01()." ".$Customer->getName02()
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('['.$this->BaseInfo->getShopName().'] 検査結果通知')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
+
+
+    /**
      * ＶＥＱＴＡ検査結果通知メール送信
      *
      * @param \Eccube\Entity\Customer $Customer

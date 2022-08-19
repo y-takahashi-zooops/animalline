@@ -32,6 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Customize\Service\VeqtaQueryService;
 use Knp\Component\Pager\PaginatorInterface;
 use Customize\Service\MailService;
+use Eccube\Repository\CustomerRepository;
 
 class VeqtaController extends AbstractController
 {
@@ -71,6 +72,11 @@ class VeqtaController extends AbstractController
     protected $dnaCheckKindsRepository;
 
     /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
      * VeqtaController constructor.
      *
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
@@ -80,6 +86,7 @@ class VeqtaController extends AbstractController
      * @param VeqtaQueryService $veqtaQueryService
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
      * @param MailService $mailService
+     * @param CustomerRepository $customerRepository
      */
 
     public function __construct(
@@ -89,7 +96,8 @@ class VeqtaController extends AbstractController
         DnaCheckStatusRepository       $dnaCheckStatusRepository,
         VeqtaQueryService              $veqtaQueryService,
         DnaCheckKindsRepository        $dnaCheckKindsRepository,
-        MailService $mailService
+        MailService $mailService,
+        CustomerRepository $customerRepository
     ) {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -98,6 +106,7 @@ class VeqtaController extends AbstractController
         $this->veqtaQueryService = $veqtaQueryService;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
         $this->mailService = $mailService;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -241,7 +250,15 @@ class VeqtaController extends AbstractController
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
                 $Dna->setCheckStatus($checkStatus);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
+                $Pet->setIsActive(2);
                 $restext = "検査ＮＧ";
+
+                //ＮＧの場合メールを送る
+                $dna_header = $Dna->getDnaHeader();
+                $customer_id = $dna_header->getRegisterId();
+                $Customer = $this->customerRepository->find($customer_id);
+                $this->mailService->sendDnaCheckNg($Customer);
+
                 break;
             default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
