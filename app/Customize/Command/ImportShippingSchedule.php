@@ -177,6 +177,7 @@ var_dump($fileNames);
 
         // ファイル一覧取得ここまで
         foreach ($fileNames as $fileName) {
+var_dump($fileName);
             $csvpath = "var/tmp/wms/receive/" . $fileName;
 
             $fp = fopen($csvpath, 'r');
@@ -238,7 +239,7 @@ var_dump($fileNames);
                     $Shipping = $this->shippingRepository->findOneby(['Order' => $Order]);
                     $Shipping->setShippingDate($dateShipping);
                     $Shipping->setTrackingNumber($data[4]);
-                    
+
                     $em->persist($Shipping);
                     $em->persist($Order);
                     $em->flush();
