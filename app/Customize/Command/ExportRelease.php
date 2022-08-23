@@ -20,6 +20,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Eccube\Repository\Master\OrderStatusRepository;
+use Eccube\Entity\Master\OrderStatus;
 
 class ExportRelease extends Command
 {
@@ -69,6 +71,11 @@ class ExportRelease extends Command
      * @var SupplierRepository
      */
     protected $supplierRepository;
+    
+    /**
+     * @var OrderStatusRepository
+     */
+    protected $orderStatusRepository;
 
 
     /**
@@ -82,6 +89,7 @@ class ExportRelease extends Command
      * @param OrderItemRepository $orderItemRepository
      * @param OrderRepository $orderRepository
      * @param SupplierRepository $supplierRepository
+     * @param OrderStatusRepository $orderStatusRepository
      */
     public function __construct(
         EntityManagerInterface           $entityManager,
@@ -91,7 +99,8 @@ class ExportRelease extends Command
         ShippingRepository               $shippingRepository,
         OrderItemRepository              $orderItemRepository,
         OrderRepository                  $orderRepository,
-        SupplierRepository               $supplierRepository
+        SupplierRepository               $supplierRepository,
+        OrderStatusRepository $orderStatusRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -102,6 +111,7 @@ class ExportRelease extends Command
         $this->orderItemRepository = $orderItemRepository;
         $this->orderRepository = $orderRepository;
         $this->supplierRepository = $supplierRepository;
+        $this->orderStatusRepository = $orderStatusRepository;
     }
 
     protected function configure()
@@ -138,18 +148,23 @@ class ExportRelease extends Command
 
         $now = Carbon::now();
 
-        $syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_SCHEDULED_SHIPMENT], ['sync_date' => 'DESC']);
+        //$syncInfo = $this->wmsSyncInfoRepository->findOneBy(['sync_action' => AnilineConf::ANILINE_WMS_SYNC_ACTION_SCHEDULED_SHIPMENT], ['sync_date' => 'DESC']);
 
-        $query = $this->orderRepository->createQueryBuilder('o');
-        if ($syncInfo) $query = $query->andWhere('o.create_date >= :from')
-            ->setParameter('from', $syncInfo->getSyncDate());
-        $query = $query->andWhere('o.order_date is not null');
+        //ステータステーブル準備
+        $OrderStatusProgress = $this->orderStatusRepository->find(OrderStatus::IN_PROGRESS);
+        $OrderStatusNew = $this->orderStatusRepository->find(OrderStatus::NEW);
+        $OrderStatusPaid = $this->orderStatusRepository->find(OrderStatus::PAID);
+
+        $query = $this->orderRepository->createQueryBuilder('o')
+            ->andWhere('(o.OrderStatus = :new or o.OrderStatus = :paid) and o.order_date is not null')
+            ->setParameter('new', $OrderStatusNew)
+            ->setParameter('paid', $OrderStatusPaid);
 
         $orders = $query->getQuery()->getResult();
 
         $filename = 'SHUSJI_' . $now->format('Ymd_His') . '.csv';
         $csvPath = $dir . $filename;
-        
+
         try {
             //csvオープン
             $csvPath = $dir . $filename;
@@ -159,7 +174,12 @@ class ExportRelease extends Command
             foreach ($orders as $order) {
                 var_dump($order->getId());
                 
-                $order_items = $this->orderItemRepository->findBy(array("Order" => $order));
+                $order_items = $this->orderItemRepository->findBy(array("Order" => $order, 'OrderItemType' => 1));
+
+                //銀行振り込みで入金済ではない場合スキップ
+                if(is_null($order->getPaymentDate()) AND $order->getPAymentMethod() == "銀行振込"){
+                    continue;
+                }
 
                 foreach ($order_items as $order_item) {
                     var_dump($order_item->getId());
@@ -257,6 +277,10 @@ class ExportRelease extends Command
                         fputcsv($csvh, $row);
                     }
                 }
+                //ステータスを処理中にする
+                $order->setOrderStatus($OrderStatusProgress);
+                $this->entityManager->persist($order);
+                $this->entityManager->flush();
             }
 
             fclose($csvh);

@@ -19,6 +19,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Customize\Config\AnilineConf;
 use Customize\Service\MailService;
 use Customize\Service\ProductStockService;
+use Eccube\Repository\Master\OrderStatusRepository;
+use Eccube\Repository\OrderRepository;
+use Eccube\Entity\Master\OrderStatus;
+use Eccube\Repository\ShippingRepository;
 
 class ImportShippingSchedule extends Command
 {
@@ -70,6 +74,21 @@ class ImportShippingSchedule extends Command
     protected $productStockService;
 
     /**
+     * @var OrderRepository
+     */
+    protected $orderRepository;
+
+    /**
+     * @var OrderStatusRepository
+     */
+    protected $orderStatusRepository;
+
+    /**
+     * @var ShippingRepository
+     */
+    protected $shippingRepository;
+
+    /**
      * Import shipping schedule constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -79,6 +98,9 @@ class ImportShippingSchedule extends Command
      * @param CustomerRepository $customerRepository
      * @param MailService $mailService
      * @param ProductStockService $productStockService
+     * @param OrderRepository $orderRepository
+     * @param OrderStatusRepository $orderStatusRepository
+     * @param ShippingRepository $shippingRepository
      */
     public function __construct(
         EntityManagerInterface           $entityManager,
@@ -87,7 +109,10 @@ class ImportShippingSchedule extends Command
         DnaCheckStatusHeaderRepository       $dnaCheckStatusHeaderRepository,
         CustomerRepository       $customerRepository,
         MailService       $mailService,
-        ProductStockService       $productStockService
+        ProductStockService       $productStockService,
+        OrderRepository                  $orderRepository,
+        OrderStatusRepository $orderStatusRepository,
+        ShippingRepository $shippingRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -97,6 +122,9 @@ class ImportShippingSchedule extends Command
         $this->customerRepository = $customerRepository;
         $this->mailService = $mailService;
         $this->productStockService = $productStockService;
+        $this->orderRepository = $orderRepository;
+        $this->orderStatusRepository = $orderStatusRepository;
+        $this->shippingRepository = $shippingRepository;
     }
 
     protected function configure()
@@ -145,6 +173,8 @@ var_dump($fileNames);
             return;
         }
 
+        $OrderStatusDeliverd = $this->orderStatusRepository->find(OrderStatus::DELIVERED);
+
         // ファイル一覧取得ここまで
         foreach ($fileNames as $fileName) {
             $csvpath = "var/tmp/wms/receive/" . $fileName;
@@ -174,9 +204,16 @@ var_dump($fileNames);
                     $em->flush();
 
                     $data = ["name" => $header->getShippingName()];
-                    $this->mailService->sendDnaKitSendComplete($customer->getEmail(),$data);
+                    //$this->mailService->sendDnaKitSendComplete($customer->getEmail(),$data);
                 }
-                else{
+                elseif(substr($data[0],0,1) == "6"){
+                    //成約特典実績
+                    /*
+                    $id = intval(substr($data[0],1));
+
+                    $Order = $this->orderRepository->find($id);
+                    $Order->setOrderStatus($OrderStatusDeliverd);
+
                     $dateShipping = new DateTime($data[1]);
                     $shippingHeader = $this->shippingScheduleHeaderRepository->find($data[0]);
                     if (!$shippingHeader) {
@@ -184,7 +221,26 @@ var_dump($fileNames);
                     }
                     $shippingHeader->setShippingDate($dateShipping)
                         ->setWmsShipNo($data[4]);
+
+                    $em->persist($Order);
                     $em->persist($shippingHeader);
+                    $em->flush();
+                    */
+                }
+                else{
+                    $id = intval(substr($data[0],1));
+                    $dateShipping = DateTime::createFromFormat("Ymd", $data[2]);
+                    
+
+                    $Order = $this->orderRepository->find($id);
+                    $Order->setOrderStatus($OrderStatusDeliverd);
+
+                    $Shipping = $this->shippingRepository->findOneby(['Order' => $Order]);
+                    $Shipping->setShippingDate($dateShipping);
+                    $Shipping->setTrackingNumber($data[4]);
+                    
+                    $em->persist($Shipping);
+                    $em->persist($Order);
                     $em->flush();
                 }
             }
