@@ -242,10 +242,18 @@ class VeqtaController extends AbstractController
         }
         $countCheckKind = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $Pet->getBreedsType()])) ;
 
+        //メール送信準備
+        $dna_header = $Dna->getDnaHeader();
+        $customer_id = $dna_header->getRegisterId();
+        $Customer = $this->customerRepository->find($customer_id);
+
         switch ($checkStatus) {
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY:
                 $Dna->setCheckStatus($checkStatus);
                 $restext = "検体異常";
+
+                $this->mailService->sendDnaCheckRetry($Customer,$Dna);
+
                 break;
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
                 $Dna->setCheckStatus($checkStatus);
@@ -253,17 +261,15 @@ class VeqtaController extends AbstractController
                 $Pet->setIsActive(2);
                 $restext = "検査ＮＧ";
 
-                //ＮＧの場合メールを送る
-                $dna_header = $Dna->getDnaHeader();
-                $customer_id = $dna_header->getRegisterId();
-                $Customer = $this->customerRepository->find($customer_id);
-                $this->mailService->sendDnaCheckNg($Customer);
+                $this->mailService->sendDnaCheckNg($Customer,$Dna);
 
                 break;
             default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
                 $restext = "検査通過";
+
+                $this->mailService->sendDnaCheckOk($Customer,$Dna);
         }
 
         $savePath = $this->copyFile($request->get('file_name'));
@@ -276,13 +282,14 @@ class VeqtaController extends AbstractController
         $entityManager->persist($Pet);
         $entityManager->flush();
 
+        /*
         $data["barcode"] = $barcode;
         $data["name"] = $request->get("sender_name");
         $data["pet_type"] = $request->get("pet_type");
         $data["result"] = $restext;
 
         $this->mailService->sendVeqtaResuletToAdmin($data);
-
+        */
         return $this->redirectToRoute('veqta_result');
     }
 

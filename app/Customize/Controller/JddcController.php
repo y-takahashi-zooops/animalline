@@ -316,9 +316,16 @@ class JddcController extends AbstractController
             throw new NotFoundHttpException();
         }
 
+        //メール送信準備
+        $dna_header = $Dna->getDnaHeader();
+        $customer_id = $dna_header->getRegisterId();
+        $Customer = $this->customerRepository->find($customer_id);
+
         switch ($checkStatus) {
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY:
                 $Dna->setCheckStatus($checkStatus);
+
+                $this->mailService->sendDnaCheckRetry($Customer,$Dna);
                 break;
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
                 $Dna->setCheckStatus($checkStatus);
@@ -326,14 +333,13 @@ class JddcController extends AbstractController
                 $Pet->setIsActive(2);
                 
                 //ＮＧの場合メールを送る
-                $dna_header = $Dna->getDnaHeader();
-                $customer_id = $dna_header->getRegisterId();
-                $Customer = $this->customerRepository->find($customer_id);
-                $this->mailService->sendDnaCheckNg($Customer);
+                $this->mailService->sendDnaCheckNg($Customer,$Dna);
                 break;
             default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
+
+                $this->mailService->sendDnaCheckOk($Customer,$Dna);
         }
 
         $entityManager = $this->getDoctrine()->getManager();
