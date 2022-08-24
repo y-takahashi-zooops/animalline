@@ -205,7 +205,7 @@ var_dump($fileName);
                     $em->flush();
 
                     $data = ["name" => $header->getShippingName()];
-                    //$this->mailService->sendDnaKitSendComplete($customer->getEmail(),$data);
+                    $this->mailService->sendDnaKitSendComplete($customer->getEmail(),$data);
                 }
                 elseif(substr($data[0],0,1) == "6"){
                     //成約特典実績
