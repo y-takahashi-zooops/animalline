@@ -48,6 +48,65 @@ class DnaCheckStatusHeaderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('petCount1', IntegerType::class, [
+                'required' => false,
+                'mapped' => false
+            ])
+            ->add('petCount2', IntegerType::class, [
+                'required' => false,
+                'mapped' => false
+            ])
+            ->add('petCount3', IntegerType::class, [
+                'required' => false,
+                'mapped' => false
+            ])
+            ->add('petCount4', IntegerType::class, [
+                'required' => false,
+                'mapped' => false
+            ])
+            ->add('petCount5', IntegerType::class, [
+                'required' => false,
+                'mapped' => false
+            ])
+            ->add('petCount6', IntegerType::class, [
+                'required' => false,
+                'mapped' => false
+            ])
+            ->add('petBirth1', DateType::class, [
+                'required' => false,
+                'mapped' => false,
+                'years' => range(date('Y'), 2020),
+            ])
+            ->add('petBirth1', DateType::class, [
+                'required' => false,
+                'mapped' => false,
+                'years' => range(date('Y'), 2020),
+            ])
+            ->add('petBirth2', DateType::class, [
+                'required' => false,
+                'mapped' => false,
+                'years' => range(date('Y'), 2020),
+            ])
+            ->add('petBirth3', DateType::class, [
+                'required' => false,
+                'mapped' => false,
+                'years' => range(date('Y'), 2020),
+            ])
+            ->add('petBirth4', DateType::class, [
+                'required' => false,
+                'mapped' => false,
+                'years' => range(date('Y'), 2020),
+            ])
+            ->add('petBirth5', DateType::class, [
+                'required' => false,
+                'mapped' => false,
+                'years' => range(date('Y'), 2020),
+            ])
+            ->add('petBirth6', DateType::class, [
+                'required' => false,
+                'mapped' => false,
+                'years' => range(date('Y'), 2020),
+            ])
             ->add('birth', DateType::class, [
                 'data' => new \DateTime(),
                 'years' => range(date('Y'), 1990),

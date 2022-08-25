@@ -237,7 +237,11 @@ class BreederDnaCheck extends AbstractController
             return $this->redirect($this->generateUrl('breeder_examination_kit'));
         }
 
+        $formData = $request->request->get('dna_check_status_header');
+        dump($formData);
+        $param = $formData;
         return [
+            'request' => $param,
             'form' => $form->createView(),
             'breeder' => $breeder,
             'breederHouseCat' => $breederHouseCat,

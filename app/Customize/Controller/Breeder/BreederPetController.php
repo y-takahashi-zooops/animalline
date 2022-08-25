@@ -371,7 +371,7 @@ class BreederPetController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $breeder = $this->breedersRepository->find($breederId);
             $breederPet->setBreeder($breeder);
-            $breederPet->setIsActive(0);
+            $breederPet->setIsActive(1);
             $breederPet->setDnaCheckResult(0);
             $breederPet->setViewCount(0);
             $entityManager->persist($breederPet);
@@ -425,7 +425,13 @@ class BreederPetController extends AbstractController
             //return $this->render('animalline/breeder/member/pets/notification.twig');
         }
 
+        $is_error = false;
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $is_error = true;
+        }
+
         return $this->render('animalline/breeder/member/pets/new.twig', [
+            'is_error' => $is_error,
             'form' => $form->createView(),
             'petInfoTemplate' => $petInfoTemplate,
             'image0' => $image0,
@@ -529,7 +535,13 @@ class BreederPetController extends AbstractController
             }
         }
 
+        $is_error = false;
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $is_error = true;
+        }
+
         return [
+            'is_error' => $is_error,
             'breeder_pet' => $breederPet,
             'breeder' => $breederPet->getBreeder(),
             'pet_mages' => $petImages,
@@ -553,10 +565,10 @@ class BreederPetController extends AbstractController
     public function breeder_pets_change_status(Request $request, BreederPets $breederPet)
     {
         $curStatus = $breederPet->getIsActive();
-        if ($curStatus != 2) {
+        if ($curStatus == 1) {
             $breederPet->setIsActive(2);
             $breederPet->setReleaseDate(Carbon::now());
-        } elseif ($curStatus == 2) {
+        } else {
             $breederPet->setIsActive(1);
             $breederPet->setReleaseDate(null);
         }

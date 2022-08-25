@@ -215,12 +215,29 @@ class BreederPets
      */
     private $view_count;
 
+    /**
+     * @ORM\Column(name="is_contract",type="smallint", nullable=true, options={"default" = 0})
+     */
+    private $is_contract = 0;
+
     public function __construct()
     {
         $this->BreederPetImages = new ArrayCollection();
         $this->PetsFavorites = new ArrayCollection();
         $this->BreederContactHeader = new ArrayCollection();
         $this->BreederEvaluations = new ArrayCollection();
+    }
+
+    public function getIsContract(): ?int
+    {
+        return $this->is_contract;
+    }
+
+    public function setIsContract(?int $is_contract): self
+    {
+        $this->is_contract = $is_contract;
+
+        return $this;
     }
 
     public function getViewCount(): ?int

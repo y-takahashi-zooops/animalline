@@ -161,7 +161,13 @@
                   {% for pet in newPets %}
                     <li>
                       <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
-                        {% if pet.dnaCheckResult == 0 %}
+                        {% if pet.isContract == 1 %}
+                        <div class="tags">
+                          <ul>
+                              <li class="tag_new"><span>成約済</span></li>
+                          </ul>
+                        </div>
+                        {% elseif pet.dnaCheckResult == 0 %}
                         <div class="tags">
                           <ul>
                               <li class="tag_new"><span>検査中</span></li>

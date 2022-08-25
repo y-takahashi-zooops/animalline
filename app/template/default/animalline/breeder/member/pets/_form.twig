@@ -1,6 +1,10 @@
 {% set id = app.request.get('id') %}
 {% set pet = form.vars.data %}
 
+{% if is_error %}
+<div style="text-align: center; color: #F00; padding: 2rem 2rem;margin:1rem 1rem; border:solid"><h3>入力内容にエラーがありました。エラー内容を確認してください。</h3></div>
+{% endif %}
+
 {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 {{ form_row(form._token) }}
     <div class="row mb-3">
@@ -312,10 +316,10 @@
             <button class="ec-blockBtn--action mt-4 mb-4" {{ isCheckPetContract ? 'disabled' : '' }}>{{ '登録する' }}</button>
             <a class="ec-blockBtn--cancel" href={{url('breeder_pet_list')}} style="color:white;">{{ '戻る' }}</a>
              {% if id %}
-                {% if pet.isActive == 2 %}
-                    <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status" data-is-active="{{ pet.isActive }}">このペットを公開にする</button>
-                {% elseif pet.isActive != 2 %}
+                {% if pet.isActive == 1 %}
                     <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status" data-is-active="{{ pet.isActive }}" {{ isCheckPetContract ? 'disabled' : '' }}>このペットを非公開にする</button>
+                {% else %}
+                    <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-change-status" data-is-active="{{ pet.isActive }}">このペットを公開にする</button>
                 {% endif %}
 
                 {% if not pet.isDelete %}
