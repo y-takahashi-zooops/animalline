@@ -587,8 +587,7 @@ class BreederPetController extends AbstractController
      */
     public function breeder_pets_delete(BreederPets $breederPet)
     {
-        $breederPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE)
-            ->setIsDelete(1);
+        $breederPet->setIsDelete(1);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($breederPet);

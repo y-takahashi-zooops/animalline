@@ -11,8 +11,9 @@
                         <div class="breeder-column__main_section_title">
                             <h2 class="float-left mb-3">
                                 {{ breederPet.breedsType.breedsName ?? '' }}
-                                {% if breederPet.dnaCheckResult == 0 %}【DNA検査中】{% endif %}
-                                {% if breederPet.isContract %}【成約済】{% endif %}
+                                {% if breederPet.isContract or breederPet.isDelete %}【成約済】
+                                {% elseif breederPet.dnaCheckResult == 0 %}【DNA検査中】{% endif %}
+                                
                             </h2>
                             <div class="col-md-3 col-12 float-right btn-like mb-3 {{ isFavorite ? "red-heart" : "" }}"
                                  data-id="{{ breederPet.id }}" data-login="{{ isLoggedIn }}">
@@ -218,7 +219,7 @@
                                     </div>
                                 </div>
                             </div>
-                            {% if not breederPet.getIsContract() %}
+                            {% if not breederPet.getIsContract() and not breederPet.getIsDelete() %}
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12 contents_col_normal">
@@ -317,7 +318,7 @@
                                 </div>
                             </div>
 
-                            {% if not breederPet.getIsContract() %}
+                            {% if not breederPet.getIsContract() and not breederPet.getIsDelete() %}
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12">

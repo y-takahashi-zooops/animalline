@@ -239,7 +239,7 @@ class BreederController extends AbstractController
         $petResults = $this->breederPetsRepository->findBy([
             'Breeder' => $breeder,
             'is_active' => 1,
-            'is_delete' => 0
+            //'is_delete' => 0
         ]);
         $pets = $paginator->paginate(
             $petResults,
