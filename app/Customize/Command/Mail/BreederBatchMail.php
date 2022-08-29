@@ -114,7 +114,7 @@ class BreederBatchMail extends Command
                 echo "ブリーダー無効:".$breeder->getBreederName()."\n";
             }
             else{
-                if($customer->getId() in $lists8){
+                if(in_array($customer->getId(),$lists)){
                     echo "対象メール送信：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
                 }
                 else{
