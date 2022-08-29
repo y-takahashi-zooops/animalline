@@ -1637,7 +1637,7 @@ class MailService
      * @param \Eccube\Entity\Customer $Customer
      * @return int
      */
-    public function sendAllBreederMai2(\Eccube\Entity\Customer $Customer)
+    public function sendAllBreederMail2(\Eccube\Entity\Customer $Customer)
     {
         $body = $this->twig->render('Mail/Breeder/breeder_all.twig', [
             'BaseInfo' => $this->BaseInfo,
