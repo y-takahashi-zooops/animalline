@@ -106,6 +106,7 @@ class BreederBatchMail extends Command
 
         $breeders = $this->breedersRepository->findBy(['is_active' => 1]);
 
+        $lists = [252,253,255,256,259,261,263,265,267,268,272,275,276,277,279,280,281,284,285,286,270,288,164,292,296,299,249,301,302,303,304,174,305,310,260,314,293,319,320,312,322,309,313,323,325,326,334,335,336,338,329,340,341,343];
         foreach ($breeders as $breeder) {
             $customer = $this->customerRepository->findOneBy(['id' => $breeder->getId(),'Status' => $status]);
 
@@ -113,10 +114,19 @@ class BreederBatchMail extends Command
                 echo "ブリーダー無効:".$breeder->getBreederName()."\n";
             }
             else{
-                echo "メール送信：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
+                if($customer->getId() in $lists8){
+                    echo "対象メール送信：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
+                }
+                else{
+                    echo "非対象メール送信：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
+                }
+                
+
+                /*
                 if(!$this->mailService->sendAllBreederMail($customer)){
                     echo "メール送信失敗\n";
                 }
+                */
                 sleep(1);
             }
         }
