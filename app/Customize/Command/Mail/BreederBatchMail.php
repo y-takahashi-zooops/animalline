@@ -116,9 +116,17 @@ class BreederBatchMail extends Command
             else{
                 if(in_array($customer->getId(),$lists)){
                     echo "対象メール送信：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
+
+                    if(!$this->mailService->sendAllBreederMail2($customer)){
+                        echo "メール送信失敗\n";
+                    }
                 }
                 else{
                     echo "非対象メール送信：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
+
+                    if(!$this->mailService->sendAllBreederMail($customer)){
+                        echo "メール送信失敗\n";
+                    }
                 }
                 
 
