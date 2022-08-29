@@ -1620,12 +1620,37 @@ class MailService
         ]);
 
         $message = (new \Swift_Message())
-            ->setSubject('[' . $this->BaseInfo->getShopName() . '] アンケートのお願い【謝礼あり】')
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] 秋のキャンペーンのご案内')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04())
-            ->attach(\Swift_Attachment::fromPath('/var/www/animalline/var/enquete20220722.pdf')->setFilename('アンケート.pdf')->setContentType('application/pdf'));
+            ->attach(\Swift_Attachment::fromPath('/var/www/animalline/var/campaign20220830_all.pdf')->setFilename('秋のキャンペーンのご案内.pdf')->setContentType('application/pdf'));
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
+
+    /**
+     * ブリーダー一斉メール
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @return int
+     */
+    public function sendAllBreederMai2(\Eccube\Entity\Customer $Customer)
+    {
+        $body = $this->twig->render('Mail/Breeder/breeder_all.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'customer' => $Customer
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] 秋のキャンペーンのご案内')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04())
+            ->attach(\Swift_Attachment::fromPath('/var/www/animalline/var/campaign20220830_register.pdf')->setFilename('秋のキャンペーンのご案内.pdf')->setContentType('application/pdf'));
         $message->setBody($body);
 
         return $this->mailer->send($message, $failures);
