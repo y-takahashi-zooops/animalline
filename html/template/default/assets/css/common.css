@@ -1527,14 +1527,18 @@ BREEDER - ADOPTION
   font-weight:500;
 }
 .breeder-column__main_section_body .tags ul li.tag_new span{
-  background-color:#ef5350;
+  background-color:#437d2a;
 }
 .breeder-column__main_section_body .tags ul li.tag_recommend span{
-  background-color:#f08200;
+  background-color:#ff0000;
 }
 .breeder-column__main_section_body .tags ul li.tag_popular span{
-  background-color:#539b34;
+  background-color:#304ef8;
 }
+.breeder-column__main_section_body .tags ul li.tag_contract span{
+  background-color:#f08200;
+}
+
 .breeder-column__main_section_body ul li figure{
   width:100%;
   height:200px;

@@ -320,7 +320,7 @@
                                     {% if pet.isContract == 1 or pet.isDelete == 1 %}
                                     <div class="tags">
                                     <ul>
-                                        <li class="tag_new"><span>成約済</span></li>
+                                        <li class="tag_contract"><span>成約済</span></li>
                                     </ul>
                                     </div>
                                     {% elseif pet.dnaCheckResult == 0 %}
@@ -330,7 +330,7 @@
                                     </ul>
                                     </div>
                                     {% endif %}
-                                    
+
                                     <figure>
                                         <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                              class="card-img-top" alt="Pet-image">
