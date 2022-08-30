@@ -243,6 +243,8 @@ var_dump($fileName);
                     $em->persist($Shipping);
                     $em->persist($Order);
                     $em->flush();
+
+                    $this->mailService->sendShippingNotifyMail($Shipping);
                 }
             }
             try {
