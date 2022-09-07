@@ -241,7 +241,7 @@ class BreederDnaCheck extends AbstractController
         }
 
         $formData = $request->request->get('dna_check_status_header');
-        dump($formData);
+        //dump($formData);
         $param = $formData;
         return [
             'request' => $param,
