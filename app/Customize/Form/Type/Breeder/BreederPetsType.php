@@ -22,6 +22,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints as Assert;
 use Customize\Config\AnilineConf;
 use Customize\Repository\BreedersRepository;
+use Customize\Repository\BreedsRepository;
 use Symfony\Component\Security\Core\User\User;
 
 class BreederPetsType extends AbstractType
@@ -31,26 +32,24 @@ class BreederPetsType extends AbstractType
      * @var BreedersRepository
      */
     protected $breedersRepository;
+    
+    /**
+     * @var BreedsRepository
+     */
+    protected $breedsRepository;
 
-    public function __construct(BreedersRepository $breedersRepository)
+    public function __construct(
+        BreedersRepository $breedersRepository,
+        BreedsRepository $breedsRepository
+    )
     {
         $this->breedersRepository = $breedersRepository;
+        $this->breedsRepository = $breedsRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('breeds_type', EntityType::class, [
-                'class' => 'Customize\Entity\Breeds',
-                'choice_label' => function (Breeds $breeds) {
-                    return $breeds->getBreedsName();
-                },
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-                'placeholder' => 'common.select'
-            ])
             ->add('pet_sex', ChoiceType::class, [
                 'choices' =>
                 [
@@ -255,24 +254,49 @@ class BreederPetsType extends AbstractType
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePedigree']);
 
         $customer = $options['customer'];
+        $handling_pet_kind = $options['pet_kind'];
+
         $breeder = $this->breedersRepository->find($customer);
-        $handling_pet_kind = $breeder->getHandlingPetKind();
+        //$handling_pet_kind = $breeder->getHandlingPetKind();
         $choices = [];
         if ($handling_pet_kind == 0) {
             $choices = [
                     '犬' => AnilineConf::ANILINE_PET_KIND_DOG,
                     '猫' => AnilineConf::ANILINE_PET_KIND_CAT
                 ];
+            
+            $br = $this->breedsRepository->createQueryBuilder('b')
+                    ->orderBy('b.sort_order', 'ASC');
         } elseif ($handling_pet_kind == 1) {
             $choices = ['犬' => AnilineConf::ANILINE_PET_KIND_DOG,];
+
+            $br = $this->breedsRepository->createQueryBuilder('b')
+                    ->where('b.pet_kind = 1')
+                    ->orderBy('b.sort_order', 'ASC');
         } elseif ($handling_pet_kind == 2) {
             $choices = ['猫' => AnilineConf::ANILINE_PET_KIND_CAT];
+
+            $br = $this->breedsRepository->createQueryBuilder('b')
+                    ->where('b.pet_kind = 2')
+                    ->orderBy('b.sort_order', 'ASC');
         }
 
         $builder
             ->add('pet_kind', ChoiceType::class, [
                 'choices' => $choices,
                 'required' => true,
+            ])
+            ->add('breeds_type', EntityType::class, [
+                'class' => 'Customize\Entity\Breeds',
+                'query_builder' => $br,
+                'choice_label' => function (Breeds $breeds) {
+                    return $breeds->getBreedsName();
+                },
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+                'placeholder' => 'common.select'
             ]);
     }
 
@@ -280,7 +304,8 @@ class BreederPetsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => BreederPets::class,
-            'customer' => null
+            'customer' => null,
+            'pet_kind' => null
         ]);
     }
 

@@ -202,9 +202,7 @@ class BreederDnaCheck extends AbstractController
         $DnaCheckStatusShipping = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $breeder, 'site_type' => AnilineConf::SITE_CATEGORY_BREEDER, 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_INSTRUCTING]);
         $DnaCheckStatusHeaderAccept = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $breeder, 'site_type' => AnilineConf::SITE_CATEGORY_BREEDER, 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT]);
         $DnaCheckStatus = array_merge($DnaCheckStatusShipping, $DnaCheckStatusHeaderAccept);
-        if (count($DnaCheckStatus) == 2) {
-            $isCheckStatus = true;
-        }
+        
         $form = $builder->getForm();
         $form->handleRequest($request);
         
@@ -237,6 +235,11 @@ class BreederDnaCheck extends AbstractController
             return $this->redirect($this->generateUrl('breeder_examination_kit'));
         }
 
+        //キット請求制限
+        if (count($DnaCheckStatus) == 4) {
+            return $this->render('animalline/breeder/member/kit_full.twig');
+        }
+
         $formData = $request->request->get('dna_check_status_header');
         dump($formData);
         $param = $formData;
@@ -245,8 +248,7 @@ class BreederDnaCheck extends AbstractController
             'form' => $form->createView(),
             'breeder' => $breeder,
             'breederHouseCat' => $breederHouseCat,
-            'breederHouseDog' => $breederHouseDog,
-            'isCheckStatus' => $isCheckStatus
+            'breederHouseDog' => $breederHouseDog
         ];
     }
 }

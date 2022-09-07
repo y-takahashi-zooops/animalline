@@ -319,9 +319,9 @@ class BreederPetController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/breeder/member/pets/new/{barcode}", name="breeder_pets_new", methods={"GET","POST"}, requirements={"barcode" = "^\d{6}$"})
+     * @Route("/breeder/member/pets/new/{barcode}/{kind}", name="breeder_pets_new", methods={"GET","POST"}, requirements={"barcode" = "^\d{6}$"})
      */
-    public function breeder_pets_new(Request $request, $barcode): Response
+    public function breeder_pets_new(Request $request, $barcode, $kind = 0): Response
     {
         $dnaId = substr($barcode, 1);
         if (!$Dna = $this->dnaCheckStatusRepository->find($dnaId)) {
@@ -330,16 +330,37 @@ class BreederPetController extends AbstractController
         $breederId = $Dna->getDnaHeader()->getRegisterId();
 
         $user = $this->getUser();
+        $breeder = $this->breedersRepository->find($user);
+
+        //ブリーダー審査通過チェック
         $is_breeder = $user->getIsBreeder();
         if ($is_breeder == 0) {
-            $breeder = $this->breedersRepository->find($breederId);
-
             return $this->render('animalline/breeder/member/examination_guidance.twig', [
                 'breeder' => $breeder
             ]);
         }
 
-        $breeder = $this->breedersRepository->find($user);
+        //ペット登録済チェック
+        if(!is_null($Dna->getPetId())){
+            return $this->render('animalline/breeder/member/already_regist.twig', [
+                'breeder' => $breeder
+            ]);
+        }
+
+        //犬・猫いずれかのみ取扱の場合は種別選択なし
+        $handling = $breeder->getHandlingPetKind();
+        if($kind == 0){
+            $kind = $handling;
+        }
+
+        //犬・猫両方取扱の場合は選択ページを表示
+        if($kind == 0){
+            return $this->render('animalline/breeder/member/kind_select.twig', [
+                'breeder' => $breeder,
+                'barcode' => $barcode
+            ]);
+        }
+
         if (!$breeder) {
             throw new NotFoundHttpException();
         }
@@ -358,7 +379,8 @@ class BreederPetController extends AbstractController
         // }
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
-            'customer' => $this->getUser()
+            'customer' => $this->getUser(),
+            'pet_kind' => $kind,
         ]);
         $form->handleRequest($request);
 

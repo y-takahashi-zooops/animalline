@@ -206,7 +206,7 @@ class DnaCheckStatusHeaderType extends AbstractType
                     ]),
                     new Assert\NotBlank(),
                     new Assert\LessThanOrEqual([
-                        'value' => 6
+                        'value' => 5
                     ])
                 ],
             ]);

@@ -1,0 +1,30 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+
+{% block main %}
+    <div class="ec-role">
+        <div class="ec-pageHeader">
+            <h1>登録するペット種別を選択してください。</h1>
+        </div>
+    </div>
+
+    <div class="ec-registerCompleteRole">
+        <div class="ec-off3Grid ec-text-ac">
+            <div class="ec-off3Grid__cell">
+                <div class="ec-reportHeading">
+                    <div class="top-content__container_text_btn_02"><a href="{{path('breeder_pets_new', {"barcode": barcode,'kind': 1})}}">ワンちゃんを登録</a></div>
+                    <div class="top-content__container_text_btn"><a href="{{path('breeder_pets_new', {"barcode": barcode,'kind': 2})}}">猫ちゃんを登録</a></div>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="ec-off2Grid">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}
+    
