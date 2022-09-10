@@ -1399,12 +1399,13 @@ class MailService
      * @param $data
      * @return int
      */
-    public function sendDnaCheckOk(\Eccube\Entity\Customer $Customer,$Dna)
+    public function sendDnaCheckOk(\Eccube\Entity\Customer $Customer,$Dna,$ResultText)
     {
         $body = $this->twig->render('Mail/dna_check_ok.twig', [
             'BaseInfo' => $this->BaseInfo,
             'name' => $Customer->getName01()." ".$Customer->getName02(),
-            'dna_id' => $Dna->getSiteType() . sprintf('%05d', $Dna->getId())
+            'dna_id' => $Dna->getSiteType() . sprintf('%05d', $Dna->getId()),
+            'result_text' => $ResultText
         ]);
 
         $message = (new \Swift_Message())

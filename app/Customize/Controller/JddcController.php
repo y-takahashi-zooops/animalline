@@ -339,7 +339,14 @@ class JddcController extends AbstractController
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
 
-                $this->mailService->sendDnaCheckOk($Customer,$Dna);
+                if($checkStatus == 61){
+                    $restext = "クリア";
+                }
+                else{
+                    $restext = "キャリア（劣性）";
+                }
+
+                $this->mailService->sendDnaCheckOk($Customer,$Dna,$restext);
         }
 
         $entityManager = $this->getDoctrine()->getManager();

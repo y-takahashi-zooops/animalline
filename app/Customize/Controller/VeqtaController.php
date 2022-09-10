@@ -267,9 +267,16 @@ class VeqtaController extends AbstractController
             default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
-                $restext = "検査通過";
 
-                $this->mailService->sendDnaCheckOk($Customer,$Dna);
+                if($checkStatus == 61){
+                    $restext = "クリア";
+                }
+                else{
+                    $restext = "キャリア（劣性）";
+                }
+                
+
+                $this->mailService->sendDnaCheckOk($Customer,$Dna,$restext);
         }
 
         $savePath = $this->copyFile($request->get('file_name'));
