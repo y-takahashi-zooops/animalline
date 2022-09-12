@@ -461,7 +461,8 @@ class BreederPetController extends AbstractController
             'image2' => $image2,
             'image3' => $image3,
             'image4' => $image4,
-            'isCheckPetContract' => false
+            'isCheckPetContract' => false,
+            'barcode' => $barcode
         ]);
     }
 

@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class BenefitsStatusType extends AbstractType
@@ -47,72 +48,83 @@ class BenefitsStatusType extends AbstractType
                 new Assert\NotBlank()
             ]
         ])
-            ->add('shipping_zip', TextType::class, [
-                'required' => true,
-                'constraints' => [
-                    new Assert\Type([
-                        'type' => 'numeric',
-                        'message' => 'form_error.numeric_only',
-                    ]),
-                    new Assert\Length([
-                        'max' => 7,
-                        'min' => 0
-                    ]),
-                    new Assert\NotBlank()
+        ->add('benefits_type', ChoiceType::class, [
+            'required' => true,
+            'choices' =>
+                [
+                    '子犬用' => 1,
+                    '子猫用' => 2,
+                    '成犬用' => 3,
+                    '成猫用' => 4,
                 ],
-                'attr' => [
-                    'class' => 'p-postal-code',
-                    'placeholder' => 'common.postal_code_sample',
-                ],
-                'trim' => true,
-            ])
-            ->add('Pref', PrefType::class, [
-                'attr' => ['class' => 'p-region-id'],
-                'constraints' => [
-                    new Assert\NotBlank()
-                ]
-            ])
-            ->add('shipping_city', TextType::class, [
-                'constraints' => [
-                    new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len'], 'min' => 0]),
-                    new Assert\NotBlank()
-                ],
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_city_len'],
-                    'class' => 'p-locality',
-                    'placeholder' => 'common.address_sample_01',
-                ],
-            ])
-            ->add('shipping_address', TextType::class, [
-                'constraints' => [
-                    new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len'], 'min' => 0]),
-                    new Assert\NotBlank()
-                ],
-                'attr' => [
-                    'maxlength' => $this->eccubeConfig['eccube_address1_len'],
-                    'class' => 'p-street-address p-extended-address',
-                    'placeholder' => 'common.address_sample_02',
-                ],
-            ])
-            ->add('shipping_tel', TextType::class, [
-                'required' => true,
-                'constraints' => [
-                    new Assert\Length([
-                        'max' => 11,
-                        'min' => 0
-                    ]),
-                    new Assert\Type([
-                        'type' => 'numeric',
-                        'message' => 'form_error.numeric_only',
-                    ]),
-                    new Assert\NotBlank()
-                ],
-                'attr' => [
-                    'placeholder' => 'common.phone_number_sample',
-                    'maxlength' => 11,
-                ],
-                'trim' => true,
-            ]);
+            'placeholder' => 'common.select'
+        ])
+        ->add('shipping_zip', TextType::class, [
+            'required' => true,
+            'constraints' => [
+                new Assert\Type([
+                    'type' => 'numeric',
+                    'message' => 'form_error.numeric_only',
+                ]),
+                new Assert\Length([
+                    'max' => 7,
+                    'min' => 0
+                ]),
+                new Assert\NotBlank()
+            ],
+            'attr' => [
+                'class' => 'p-postal-code',
+                'placeholder' => 'common.postal_code_sample',
+            ],
+            'trim' => true,
+        ])
+        ->add('Pref', PrefType::class, [
+            'attr' => ['class' => 'p-region-id'],
+            'constraints' => [
+                new Assert\NotBlank()
+            ]
+        ])
+        ->add('shipping_city', TextType::class, [
+            'constraints' => [
+                new Assert\Length(['max' => $this->eccubeConfig['eccube_city_len'], 'min' => 0]),
+                new Assert\NotBlank()
+            ],
+            'attr' => [
+                'maxlength' => $this->eccubeConfig['eccube_city_len'],
+                'class' => 'p-locality',
+                'placeholder' => 'common.address_sample_01',
+            ],
+        ])
+        ->add('shipping_address', TextType::class, [
+            'constraints' => [
+                new Assert\Length(['max' => $this->eccubeConfig['eccube_address1_len'], 'min' => 0]),
+                new Assert\NotBlank()
+            ],
+            'attr' => [
+                'maxlength' => $this->eccubeConfig['eccube_address1_len'],
+                'class' => 'p-street-address p-extended-address',
+                'placeholder' => 'common.address_sample_02',
+            ],
+        ])
+        ->add('shipping_tel', TextType::class, [
+            'required' => true,
+            'constraints' => [
+                new Assert\Length([
+                    'max' => 11,
+                    'min' => 0
+                ]),
+                new Assert\Type([
+                    'type' => 'numeric',
+                    'message' => 'form_error.numeric_only',
+                ]),
+                new Assert\NotBlank()
+            ],
+            'attr' => [
+                'placeholder' => 'common.phone_number_sample',
+                'maxlength' => 11,
+            ],
+            'trim' => true,
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

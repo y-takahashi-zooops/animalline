@@ -264,6 +264,10 @@ class BreederMemberContactController extends AbstractController
                     if (!$pet) {
                         throw new HttpException\NotFoundHttpException();
                     }
+                    $pet->setIsContract(1);
+                    $entityManager->persist($pet);
+                    $entityManager->flush();
+
                     $breeder = $pet->getBreeder();
                     $avgEvaluation = $this->breederQueryService->calculateBreederRank($breeder->getId());
                     $breeder->setBreederRank($avgEvaluation);
@@ -353,6 +357,8 @@ class BreederMemberContactController extends AbstractController
      */
     public function all_breeder_message()
     {
+        return $this->redirectToRoute('breeder_pet_list');
+        /*
         $Breeder = $this->breedersRepository->find($this->getUser()->getId());
 
         $listMessages = $this->breederContactHeaderRepository->findBy(['Breeder' => $Breeder], ['last_message_date' => 'DESC']);
@@ -360,6 +366,7 @@ class BreederMemberContactController extends AbstractController
         return $this->render('animalline/breeder/member/all_breeder_message.twig', [
             'listMessages' => $listMessages
         ]);
+        */
     }
 
     /**
@@ -430,6 +437,10 @@ class BreederMemberContactController extends AbstractController
             $breeder = $pet->getBreeder();
 
             $breeder_base = $this->customerRepository->find($breeder->getId());
+
+            $pet->setIsContract(1);
+            $entityManager->persist($pet);
+            $entityManager->flush();
 
             if ($msgHeader->getContractStatus() == AnilineConf::CONTRACT_STATUS_UNDER_NEGOTIATION) {
                 //交渉中の場合は自身に成約フラグを立ててＰＯにメールを送る。

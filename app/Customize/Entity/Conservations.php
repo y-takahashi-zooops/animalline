@@ -183,6 +183,11 @@ class Conservations
      */
     private $view_count;
 
+    /**
+     * @ORM\Column(name="id_hash", type="string", length=255, nullable=true)
+     */
+    private $id_hash;
+
     public function __construct()
     {
         $this->ConservationPets = new ArrayCollection();
@@ -196,6 +201,19 @@ class Conservations
         return $this->view_count;
     }
 
+    public function getIdHash(): ?string
+    {
+        return $this->id_hash;
+    }
+
+    public function setIdHash(?int $id_hash): self
+    {
+        $this->id_hash = $id_hash;
+
+        return $this;
+    }
+
+    
     public function setViewCount(?int $view_count): self
     {
         $this->view_count = $view_count;

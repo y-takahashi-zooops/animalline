@@ -226,6 +226,11 @@ class Breeders
      */
     private $breeding_pets;
 
+    /**
+     * @ORM\Column(name="id_hash", type="string", length=255, nullable=true)
+     */
+    private $id_hash;
+
     public function __construct()
     {
         $this->BreederPets = new ArrayCollection();
@@ -233,6 +238,18 @@ class Breeders
         $this->BreederExaminationInfos = new ArrayCollection();
         $this->BankAccounts = new ArrayCollection();
         $this->BreederHouses = new ArrayCollection();
+    }
+
+    public function getIdHash(): ?string
+    {
+        return $this->id_hash;
+    }
+
+    public function setIdHash(?int $id_hash): self
+    {
+        $this->id_hash = $id_hash;
+
+        return $this;
     }
 
     public function getViewCount(): ?int

@@ -39,6 +39,20 @@
                                         </div>
                                     </dd>
                                 </dl>
+
+                                <dl>
+                                    <dt>
+                                        <span class="mr-2">成約特典種別</span>
+                                        <span class="ec-required">必須</span>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.benefits_type) ? ' error' }}">
+                                            {{ form_widget(form.benefits_type) }}
+                                            {{ form_errors(form.benefits_type) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+
                                 <dl>
                                     <dt>
                                         <span class="mr-2">住所<span>

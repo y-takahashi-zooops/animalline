@@ -119,6 +119,10 @@ file that was distributed with this source code.
                                         class="{{ column == 'examination_status' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                         href="{{ url('admin_breeder_list', params|merge({'field': 'examination_status', 'direction': direction})) }}">ステータス</a>
                                 </th>
+                                <th class="border-top-0 pt-2 pb-2"><a
+                                        class="{{ column == 'id_hash' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
+                                        href="{{ url('admin_breeder_list', params|merge({'field': 'examination_status', 'direction': direction})) }}">連携用キー</a>
+                                </th>
                                 <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
                             </tr>
                         </thead>
@@ -137,6 +141,9 @@ file that was distributed with this source code.
                                 <td class="align-middle">{{ breeder.updateDate|date('Y/m/d H:i') }}</td>
                                 <td class="align-middle">
                                     {{ breederstatus[breeder.ExaminationStatus] }}
+                                </td>
+                                <td class="align-middle">
+                                    {{ breeder.IdHash }}
                                 </td>
                                 <td class="align-middle pr-3" colspan="3">
                                     <div class="text-right">

@@ -88,6 +88,11 @@ class BenefitsStatus
     private $benefits_shipping_date;
 
     /**
+     * @ORM\Column(name="benefits_type", type="smallint", nullable=false)
+     */
+    private $benefits_type;
+
+    /**
      * @ORM\Column(name="benefits_shipping_operation_date", type="datetime", nullable=true)
      */
     private $benefits_shipping_operation_date;
@@ -105,6 +110,18 @@ class BenefitsStatus
      * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
     private $update_date;
+
+    public function getBenefitsType(): ?int
+    {
+        return $this->benefits_type;
+    }
+
+    public function setBenefitsType(int $benefits_type): self
+    {
+        $this->benefits_type = $benefits_type;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
