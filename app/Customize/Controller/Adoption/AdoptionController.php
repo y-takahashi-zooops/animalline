@@ -9,10 +9,12 @@ use Customize\Repository\ConservationPetImageRepository;
 use Eccube\Repository\Master\PrefRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
+use Customize\Entity\AffiliateStatus;
 use Customize\Repository\ConservationsRepository;
 use Customize\Repository\ConservationsHousesRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
+use Customize\Repository\AffiliateStatusRepository;
 use Eccube\Controller\AbstractController;
 use Eccube\Event\EccubeEvents;
 use Knp\Component\Pager\PaginatorInterface;
@@ -66,6 +68,10 @@ class AdoptionController extends AbstractController
      */
     protected $prefRepository;
 
+    /**
+     * @var AffiliateStatusRepository
+     */
+    protected $affiliateStatusRepository;
 
     /**
      * @var MailService
@@ -84,6 +90,7 @@ class AdoptionController extends AbstractController
      * @param ConservationsRepository $conservationsRepository
      * @param ConservationsHousesRepository $conservationsHousesRepository
      * @param MailService $mailService
+     * @param AffiliateStatusRepository $affiliateStatusRepository
      */
     public function __construct(
         ConservationPetsRepository     $conservationPetsRepository,
@@ -94,7 +101,8 @@ class AdoptionController extends AbstractController
         PrefRepository                 $prefRepository,
         ConservationsRepository        $conservationsRepository,
         ConservationsHousesRepository  $conservationsHousesRepository,
-        MailService                    $mailService
+        MailService                    $mailService,
+        AffiliateStatusRepository $affiliateStatusRepository
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
@@ -105,6 +113,7 @@ class AdoptionController extends AbstractController
         $this->conservationsRepository = $conservationsRepository;
         $this->conservationsHousesRepository = $conservationsHousesRepository;
         $this->mailService = $mailService;
+        $this->affiliateStatusRepository = $affiliateStatusRepository;
     }
 
 
@@ -138,6 +147,26 @@ class AdoptionController extends AbstractController
         $breadcrumb = array(
             array('url' => $this->generateUrl('adoption_top'),'title' =>"保護団体TOP")
         );
+
+        //紹介コード付きアクセスの場合
+        $rid = $request->get('RID');
+        if($rid != ""){
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $session = $request->getSession();
+            $sessid = $session->getId();
+
+            $affiliate = $this->affiliateStatusRepository->findOneBy(array("campaign_id" => 2,"session_id" => $sessid));
+
+            if(!$affiliate){
+                $affiliate = new AffiliateStatus();
+            }
+            $affiliate->setAffiliateKey($rid);
+            $affiliate->setCampaignId(2);
+            $affiliate->setSessionId($sessid);
+            $entityManager->persist($affiliate);
+            $entityManager->flush();
+        }
 
         return $this->render('animalline/adoption/index.twig', [
             'title' => 'ペット検索',

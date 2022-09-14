@@ -36,6 +36,22 @@ trait CustomerTrait
     public $register_id;
 
     /**
+     * @ORM\Column(name="relation_id", type="integer", nullable=true, options={"default" : 0})
+     */
+    public $relation_id;
+
+    public function setRelationId($relation_id)
+    {
+        $this->relation_id = $relation_id;
+
+        return $this;
+    }
+    public function getRelationId()
+    {
+        return $this->relation_id;
+    }
+
+    /**
      * Set regist_type.
      *
      * @param string $regist_type

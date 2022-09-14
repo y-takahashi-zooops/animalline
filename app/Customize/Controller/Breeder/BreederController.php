@@ -6,9 +6,11 @@ use Customize\Config\AnilineConf;
 use Customize\Service\BreederQueryService;
 use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\SendoffReasonRepository;
+use Customize\Repository\AffiliateStatusRepository;
 use Eccube\Repository\Master\PrefRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
+use Customize\Entity\AffiliateStatus;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\BreedersRepository;
@@ -85,6 +87,12 @@ class BreederController extends AbstractController
     protected $breederEvaluationsRepository;
 
     /**
+     * @var AffiliateStatusRepository
+     */
+    protected $affiliateStatusRepository;
+
+    
+    /**
      * @var MailService
      */
     protected $mailService;
@@ -103,6 +111,7 @@ class BreederController extends AbstractController
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
      * @param BreederEvaluationsRepository $breederEvaluationsRepository
      * @param MailService $mailService
+     * @param AffiliateStatusRepository $affiliateStatusRepository
      */
     public function __construct(
         BreederContactsRepository $breederContactsRepository,
@@ -116,7 +125,8 @@ class BreederController extends AbstractController
         PrefRepository            $prefRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         BreederEvaluationsRepository $breederEvaluationsRepository,
-        MailService                      $mailService
+        MailService                      $mailService,
+        AffiliateStatusRepository $affiliateStatusRepository
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederPetImageRepository = $breederPetImageRepository;
@@ -130,6 +140,7 @@ class BreederController extends AbstractController
         $this->breederExaminationInfoRepository = $breederExaminationInfoRepository;
         $this->breederEvaluationsRepository = $breederEvaluationsRepository;
         $this->mailService = $mailService;
+        $this->affiliateStatusRepository = $affiliateStatusRepository;
     }
 
 
@@ -162,6 +173,29 @@ class BreederController extends AbstractController
         $breadcrumb = array(
             array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP")
         );
+
+        //紹介コード付きアクセスの場合
+        $rid = $request->get('RID');
+        if($rid != ""){
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $session = $request->getSession();
+            $sessid = $session->getId();
+
+            $affiliate = $this->affiliateStatusRepository->findOneBy(array("campaign_id" => 1,"session_id" => $sessid));
+
+            if(!$affiliate){
+                $affiliate = new AffiliateStatus();
+            }
+            $affiliate->setAffiliateKey($rid);
+            $affiliate->setCampaignId(1);
+            $affiliate->setSessionId($sessid);
+            $entityManager->persist($affiliate);
+            $entityManager->flush();
+        }
+        
+
+        var_dump($sessid);
 
         return $this->render('animalline/breeder/index.twig', [
             'title' => 'ペット検索',

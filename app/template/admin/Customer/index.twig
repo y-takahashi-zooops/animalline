@@ -337,6 +337,7 @@ file that was distributed with this source code.
                                         <th class="border-top-0 pt-2 pb-3">{{ 'admin.common.phone_number'|trans }}</th>
                                         <th class="border-top-0 pt-2 pb-3">{{ 'admin.common.mail_address'|trans }}</th>
                                         <th class="border-top-0 pt-2 pb-3">入会経路</th>
+                                        <th class="border-top-0 pt-2 pb-3">関連ID</th>
                                         <th class="border-top-0 pt-2 pb-3">&nbsp;</th>
                                         <th class="border-top-0 pt-2 pb-3 pr-3">&nbsp;</th>
                                     </tr>
@@ -367,6 +368,7 @@ file that was distributed with this source code.
                                                 {% endif %}    
                                             {% endif %}
                                             </td>
+                                            <td class="align-middle">{{ Customer.RelationId }}</td>
                                             <td class="align-middle"></td>
                                             <td class="align-middle pr-3">
                                                 <div class="text-right">

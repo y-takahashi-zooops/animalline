@@ -21,7 +21,10 @@ use Eccube\Event\EventArgs;
 use Customize\Form\Type\Front\EntryType;
 use Eccube\Repository\BaseInfoRepository;
 use Eccube\Repository\CustomerRepository;
+use Customize\Repository\BreedersRepository;
+use Customize\Repository\ConservationsRepository;
 use Eccube\Repository\Master\CustomerStatusRepository;
+use Customize\Repository\AffiliateStatusRepository;
 use Customize\Service\MailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,6 +81,21 @@ class AnilineEntryController extends AbstractController
     protected $cartService;
 
     /**
+     * @var AffiliateStatusRepository
+     */
+    protected $affiliateStatusRepository;
+    
+    /**
+     * @var BreedersRepository
+     */
+    protected $breedersRepository;
+
+    /**
+     * @var ConservationsRepository
+     */
+    protected $conservationsRepository;
+
+    /**
      * EntryController constructor.
      *
      * @param CartService $cartService
@@ -88,6 +106,9 @@ class AnilineEntryController extends AbstractController
      * @param EncoderFactoryInterface $encoderFactory
      * @param ValidatorInterface $validatorInterface
      * @param TokenStorageInterface $tokenStorage
+     * @param AffiliateStatusRepository $affiliateStatusRepository
+     * @param BreedersRepository $breedersRepository
+     * @param ConservationsRepository $conservationsRepository
      */
     public function __construct(
         CartService $cartService,
@@ -97,7 +118,10 @@ class AnilineEntryController extends AbstractController
         CustomerRepository $customerRepository,
         EncoderFactoryInterface $encoderFactory,
         ValidatorInterface $validatorInterface,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        AffiliateStatusRepository $affiliateStatusRepository,
+        BreedersRepository $breedersRepository,
+        ConservationsRepository $conservationsRepository
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
@@ -107,6 +131,9 @@ class AnilineEntryController extends AbstractController
         $this->recursiveValidator = $validatorInterface;
         $this->tokenStorage = $tokenStorage;
         $this->cartService = $cartService;
+        $this->affiliateStatusRepository = $affiliateStatusRepository;
+        $this->breedersRepository = $breedersRepository;
+        $this->conservationsRepository = $conservationsRepository;
     }
 
     /**
@@ -205,6 +232,39 @@ class AnilineEntryController extends AbstractController
                 case 'complete':
                     log_info('会員登録開始');
 
+                    //ブリーダー・保護団体紹介チェック
+                    $session = $request->getSession();
+                    $sessid = $session->getId();
+                    $rid = 0;
+
+                    log_info("【キャンペーン】チェック開始 sessid=".$sessid);
+
+                    $affiliate = $this->affiliateStatusRepository->findOneBy(array("session_id" => $sessid,"campaign_id" => array(1,2)),array('create_date' => 'DESC'));
+
+                    if($affiliate){
+                        $cid = $affiliate->getCampaignId();
+                        $id_hash = $affiliate->getAffiliateKey();
+                        if($cid == 1){
+                            //ブリーダー
+                            $breeder = $this->breedersRepository->findOneBy(array("id_hash" => $id_hash));
+                            if($breeder){
+                                $rid = $breeder->getId();
+                            }
+                            else{
+                                log_info("【キャンペーン】関連ブリーダーが見つかりません。sessid=".$sessid."  hash=".$id_hash);
+                            }
+                        } elseif($cid == 2){
+                            //保護団体
+                            $conservation = $this->conservationsRepository->findOneBy(array("id_hash" => $id_hash));
+                            if($conservation){
+                                $rid = $conservation->getId();
+                            }
+                            else{
+                                log_info("【キャンペーン】関連保護団体が見つかりません。sessid=".$sessid."  hash=".$id_hash);
+                            }
+                        }
+                    }
+
                     $encoder = $this->encoderFactory->getEncoder($Customer);
                     $salt = $encoder->createSalt();
                     $password = $encoder->encodePassword($Customer->getPassword(), $salt);
@@ -217,7 +277,8 @@ class AnilineEntryController extends AbstractController
                         ->setPoint(0)
                         ->setIsBreeder(0)
                         ->setRegistType($regist_type)
-                        ->setIsConservation(0);
+                        ->setIsConservation(0)
+                        ->setRelationId($rid);
 
                     $this->entityManager->persist($Customer);
                     $this->entityManager->flush();
