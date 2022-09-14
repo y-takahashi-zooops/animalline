@@ -400,6 +400,7 @@ class JddcController extends AbstractController
 
             $Dna->setFilePath($pdfPath);
             $Dna->setCheckReturnDate(Carbon::now());
+            $Dna->setDnaCheckCount($countCheckKind);
         }
         
         $entityManager->persist($Dna);
