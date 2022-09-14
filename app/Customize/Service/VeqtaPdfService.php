@@ -148,6 +148,8 @@ class VeqtaPdfService extends TcpdfFpdi
                 "", "", "", true, 300, "", false, false, 0, true, false, false);
         }
         
+        $this->lfText(160, 35.5, date('Y年m月d日'), 10);
+
         $this->lfText(85, 120, $data->getBreedsType()->getBreedsName(), 10);
         //$this->lfText(80, 140, '不要', 10);
         $this->lfText(85, 133, $data->getPetBirthday()->format('Y年m月d日'), 10);
