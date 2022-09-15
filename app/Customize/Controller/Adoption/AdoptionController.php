@@ -26,6 +26,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Eccube\Event\EventArgs;
 use Eccube\Form\Type\Front\ContactType;
 use Customize\Service\MailService;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class AdoptionController extends AbstractController
 {
@@ -149,12 +151,19 @@ class AdoptionController extends AbstractController
         );
 
         //紹介コード付きアクセスの場合
+        $response = new Response();
         $rid = $request->get('RID');
         if($rid != ""){
+            $sessid = $request->cookies->get('rid_key');
+            if($sessid == ""){
+                $sessid = uniqid();
+                $response->headers->setCookie(new Cookie('rid_key',$sessid));
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
 
-            $session = $request->getSession();
-            $sessid = $session->getId();
+            //$session = $request->getSession();
+            //$sessid = $session->getId();
 
             $affiliate = $this->affiliateStatusRepository->findOneBy(array("campaign_id" => 2,"session_id" => $sessid));
 
@@ -177,7 +186,7 @@ class AdoptionController extends AbstractController
             'favoritePets' => $favoritePets,
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
-        ]);
+        ],$response);
     }
 
     /**

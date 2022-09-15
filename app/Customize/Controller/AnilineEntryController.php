@@ -37,6 +37,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Eccube\Service\CartService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class AnilineEntryController extends AbstractController
 {
@@ -233,34 +235,37 @@ class AnilineEntryController extends AbstractController
                     log_info('会員登録開始');
 
                     //ブリーダー・保護団体紹介チェック
-                    $session = $request->getSession();
-                    $sessid = $session->getId();
+                    $sessid = $request->cookies->get('rid_key');
+                    //$session = $request->getSession();
+                    //$sessid = $session->getId();
                     $rid = 0;
 
                     log_info("【キャンペーン】チェック開始 sessid=".$sessid);
 
-                    $affiliate = $this->affiliateStatusRepository->findOneBy(array("session_id" => $sessid,"campaign_id" => array(1,2)),array('create_date' => 'DESC'));
+                    if($sessid != ""){
+                        $affiliate = $this->affiliateStatusRepository->findOneBy(array("session_id" => $sessid,"campaign_id" => array(1,2)),array('create_date' => 'DESC'));
 
-                    if($affiliate){
-                        $cid = $affiliate->getCampaignId();
-                        $id_hash = $affiliate->getAffiliateKey();
-                        if($cid == 1){
-                            //ブリーダー
-                            $breeder = $this->breedersRepository->findOneBy(array("id_hash" => $id_hash));
-                            if($breeder){
-                                $rid = $breeder->getId();
-                            }
-                            else{
-                                log_info("【キャンペーン】関連ブリーダーが見つかりません。sessid=".$sessid."  hash=".$id_hash);
-                            }
-                        } elseif($cid == 2){
-                            //保護団体
-                            $conservation = $this->conservationsRepository->findOneBy(array("id_hash" => $id_hash));
-                            if($conservation){
-                                $rid = $conservation->getId();
-                            }
-                            else{
-                                log_info("【キャンペーン】関連保護団体が見つかりません。sessid=".$sessid."  hash=".$id_hash);
+                        if($affiliate) {
+                            $cid = $affiliate->getCampaignId();
+                            $id_hash = $affiliate->getAffiliateKey();
+                            if($cid == 1){
+                                //ブリーダー
+                                $breeder = $this->breedersRepository->findOneBy(array("id_hash" => $id_hash));
+                                if($breeder){
+                                    $rid = $breeder->getId();
+                                }
+                                else{
+                                    log_info("【キャンペーン】関連ブリーダーが見つかりません。sessid=".$sessid."  hash=".$id_hash);
+                                }
+                            } elseif($cid == 2){
+                                //保護団体
+                                $conservation = $this->conservationsRepository->findOneBy(array("id_hash" => $id_hash));
+                                if($conservation){
+                                    $rid = $conservation->getId();
+                                }
+                                else{
+                                    log_info("【キャンペーン】関連保護団体が見つかりません。sessid=".$sessid."  hash=".$id_hash);
+                                }
                             }
                         }
                     }
