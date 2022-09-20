@@ -148,6 +148,13 @@ class BreederDnaCheck extends AbstractController
      */
     public function breeder_examination_kit(Request $request, PaginatorInterface $paginator)
     {
+        $user = $this->getUser();
+
+        //ブリーダーでない場合はTOPにリダイレクト
+        if($user->getIsBreeder() != 1){
+            return $this->redirect($this->generateUrl('breeder_top'));
+        }
+        
         $isAll = $request->get('is_all') ?? false;
         $registerId = $this->getUser();
 
@@ -193,10 +200,17 @@ class BreederDnaCheck extends AbstractController
      */
     public function breeder_examination_kit_new(Request $request)
     {
+        $user = $this->getUser();
+
+        //ブリーダーでない場合はTOPにリダイレクト
+        if($user->getIsBreeder() != 1){
+            return $this->redirect($this->generateUrl('breeder_top'));
+        }
+
         $isCheckStatus = false;
         $dnaCheckStatusHeader = new DnaCheckStatusHeader();
         $builder = $this->formFactory->createBuilder(DnaCheckStatusHeaderType::class, $dnaCheckStatusHeader);
-        $breeder = $this->breedersRepository->find($this->getUser()->getId());
+        $breeder = $this->breedersRepository->find($user->getId());
         $breederHouseCat = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $breederHouseDog = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
         $DnaCheckStatusShipping = $this->dnaCheckStatusHeaderRepository->findBy(['register_id' => $breeder, 'site_type' => AnilineConf::SITE_CATEGORY_BREEDER, 'shipping_status' => AnilineConf::ANILINE_SHIPPING_STATUS_INSTRUCTING]);
