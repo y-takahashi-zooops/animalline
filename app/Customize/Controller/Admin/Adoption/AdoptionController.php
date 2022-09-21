@@ -30,6 +30,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdoptionController extends AbstractController
 {
@@ -180,5 +181,51 @@ class AdoptionController extends AbstractController
         return [
             'BankAccount' => $BankAccount
         ];
+    }
+
+    /**
+     * CSVダウンロード
+     *
+     * @Route("/%eccube_admin_route%/adoption/get_csvlist", name="admin_adoption_get_csvlist")
+     * 
+     */
+    public function getCsvList(Request $request)
+    {
+        $filename = 'adoptions_'.(new \DateTime())->format('YmdHis').'.csv';
+        $filePath = 'var/adoptions.csv';
+        
+        $response = new StreamedResponse();
+
+        $response->setCallback(function () use ($request) {
+            $fp = fopen('php://output', 'w');
+
+            $headers = mb_convert_encoding("id,保護団体名,電話番号,メールアドレス,郵便番号,住所\r\n","SJIS");
+            fputs($fp,$headers);
+
+            $adoptions = $this->conservationsRepository->findAll();
+            
+            foreach($adoptions as $adoption){
+                $row = array();
+                $customer = $this->customerRepository->find($adoption->getId());
+
+                $rows = $adoption->getId().",";
+                $row[] =  mb_convert_encoding($adoption->getOrganizationName(),"SJIS");
+                $row[] =  mb_convert_encoding("'".$adoption->getTel(),"SJIS");
+                $row[] =  mb_convert_encoding($customer->getEmail(),"SJIS");
+                $row[] =  mb_convert_encoding($adoption->getZip(),"SJIS");
+                $row[] =  mb_convert_encoding($adoption->getPref().$adoption->getCity().$adoption->getAddress(),"SJIS");
+
+                fputcsv($fp,$row);
+            }
+            
+            fclose($fp);
+        });
+
+        $response->headers->set('Content-Type', 'application/octet-stream');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+
+        $response->send();
+
+        return $response;
     }
 }

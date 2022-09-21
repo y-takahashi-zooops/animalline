@@ -374,36 +374,43 @@ class BreederController extends AbstractController
      * @Route("/%eccube_admin_route%/breeder/get_csvlist", name="admin_breeder_get_csvlist")
      * 
      */
-    public function getCsvList(Request $request): array
+    public function getCsvList(Request $request)
     {
         $filename = 'breeders_'.(new \DateTime())->format('YmdHis').'.csv';
         $filePath = 'var/breeders.csv';
         
-        $fp = fopen($filePath,"w");
-        //$headers = mb_convert_encoding("id,ブリーダー名,犬舎名,電話番号,メールアドレス,住所\r\n","SJIS");
-        $headers = mb_convert_encoding("id,ブリーダー名\r\n","SJIS");
-        fputs($fp,$headers);
-        
-        $breeders = $this->breedersRepository->findAll();
-        
-        foreach($breeders as $breeder){
-            $row = array();
-            $row[] = $breeder->getId();
-            $row[] =  mb_convert_encoding($breeder->getBreederName(),"SJIS");
+        $response = new StreamedResponse();
 
-            fputcsv($fp,$row);
-        }
+        $response->setCallback(function () use ($request) {
+            $fp = fopen('php://output', 'w');
 
-        fclose($fp);
+            $headers = mb_convert_encoding("id,ブリーダー名,犬舎/猫舎名,電話番号,メールアドレス,郵便番号,住所\r\n","SJIS");
+            fputs($fp,$headers);
 
-        // CSVをダウンロード
-        header('Content-Type: application/force-download');
-        header('Content-Length: ' . filesize($filePath));
-        header('Content-disposition: attachment; filename=' . $filename);
+            $breeders = $this->breedersRepository->findAll();
+            foreach($breeders as $breeder){
+                $row = array();
+                $customer = $this->customerRepository->find($breeder->getId());
 
-        $content = file_get_contents($filePath);
-        echo $content;
+                $row[] = $breeder->getId();
+                $row[] =  mb_convert_encoding($breeder->getBreederName(),"SJIS");
+                $row[] =  mb_convert_encoding($breeder->getLicenseHouseName(),"SJIS");
+                $row[] =  mb_convert_encoding("'".$breeder->getBreederTel(),"SJIS");
+                $row[] =  mb_convert_encoding($customer->getEmail(),"SJIS");
+                $row[] =  mb_convert_encoding($breeder->getBreederZip(),"SJIS");
+                $row[] =  mb_convert_encoding($breeder->getBreederPref().$breeder->getBreederCity().$breeder->getBreederAddress(),"SJIS");
 
-        return $this->redirectToRoute('admin_breeder_list');
+                fputcsv($fp,$row);
+            }
+
+            fclose($fp);
+        });
+
+        $response->headers->set('Content-Type', 'application/octet-stream');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+
+        $response->send();
+
+        return $response;
     }
 }
