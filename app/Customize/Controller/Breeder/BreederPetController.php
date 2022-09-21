@@ -496,9 +496,12 @@ class BreederPetController extends AbstractController
         $petInfoTemplate = $this->breederPetinfoTemplateRepository->findOneBy([
             'Breeder' => $breeder
         ]);
+
+        /*
         if (!$petInfoTemplate) {
             throw new NotFoundHttpException();
         }
+        */
 
         $image0 = $request->get('img0') ?? '';
         $image1 = $request->get('img1') ?? '';

@@ -34,6 +34,7 @@ use Customize\Repository\BreederEvaluationsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Customize\Service\MailService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BreederController extends AbstractController
 {
@@ -365,5 +366,44 @@ class BreederController extends AbstractController
         return [
             'BankAccount' => $BankAccount
         ];
+    }
+
+    /**
+     * CSVダウンロード
+     *
+     * @Route("/%eccube_admin_route%/breeder/get_csvlist", name="admin_breeder_get_csvlist")
+     * 
+     */
+    public function getCsvList(Request $request): array
+    {
+        $filename = 'breeders_'.(new \DateTime())->format('YmdHis').'.csv';
+        $filePath = 'var/breeders.csv';
+        
+        $fp = fopen($filePath,"w");
+        //$headers = mb_convert_encoding("id,ブリーダー名,犬舎名,電話番号,メールアドレス,住所\r\n","SJIS");
+        $headers = mb_convert_encoding("id,ブリーダー名\r\n","SJIS");
+        fputs($fp,$headers);
+        
+        $breeders = $this->breedersRepository->findAll();
+        
+        foreach($breeders as $breeder){
+            $row = array();
+            $row[] = $breeder->getId();
+            $row[] =  mb_convert_encoding($breeder->getBreederName(),"SJIS");
+
+            fputcsv($fp,$row);
+        }
+
+        fclose($fp);
+
+        // CSVをダウンロード
+        header('Content-Type: application/force-download');
+        header('Content-Length: ' . filesize($filePath));
+        header('Content-disposition: attachment; filename=' . $filename);
+
+        $content = file_get_contents($filePath);
+        echo $content;
+
+        return $this->redirectToRoute('admin_breeder_list');
     }
 }
