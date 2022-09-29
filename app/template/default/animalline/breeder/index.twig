@@ -69,7 +69,11 @@
                           </ul>
                         </div>
                         -->
-                        <figure><img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}" alt="{{ pet.getBreedsType().getBreedsName() ?? '' }}"/></figure>
+                        {% if pet.thumbnailPath == "" %}
+                          <figure><img src="{{ '/html/template/default/assets/img/noimage.png' }}" alt="{{ pet.getBreedsType().getBreedsName() ?? '' }}"/></figure>
+                        {% else %}
+                          <figure><img src="{{'/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ pet.thumbnailPath }}" alt="{{ pet.getBreedsType().getBreedsName() ?? '' }}"/></figure>
+                        {% endif %}
                         <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
                         <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
                         <div class="type">
