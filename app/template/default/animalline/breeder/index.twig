@@ -3,150 +3,36 @@
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
-    <div class="col-lg-6 col-md-12" style="margin:auto;margin-bottom: 10px;">
-      <a href="#cashback"><img src="{{ asset('assets/img/cashback.png') }}" /></a>
-    </div>
-    
-    <section id="breeder-mv">
-      <div class="inner">
-        <div class="breeder-mv__container">
-          <div class="breeder-mv__text">
-            <div class="breeder-mv__text_btn">
+    <div class="page-inner">
+      <section id="page-mv__breeder_detail" class="page-mv_detail">
+          <div class="wrap">
+            <div class="text">
+              <h2><img src="{{ asset('assets/img/breeder/mv-logo.png') }}" alt="Animalline Breeder"/></h2>
+              <p><img src="{{ asset('assets/img/breeder/mv-copy.png') }}" alt="3つの安心・安全"/></p>
               <ul>
-                {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-                    <li class="breeder-mv__text_btn_dog"><span><i>ワンちゃんを探そう</i></span></li>
-                    <li class="breeder-mv__text_btn_cat"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>ネコちゃんを探そう</i></a></li>
-                {% else %}
-                    <li class="breeder-mv__text_btn_dog"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>ワンちゃんを探そう</i></a></li>
-                    <li class="breeder-mv__text_btn_cat"><span><i>ネコちゃんを探そう</i></span></li>
-                {% endif %}
+                <li><a href="#content01"><img src="{{ asset('assets/img/breeder/mv-img02.png') }}" alt="健康面"/></a></li>
+                <li><a href="#content02"><img src="{{ asset('assets/img/breeder/mv-img03.png') }}" alt="価格面"/></a></li>
+                <li><a href="#content03"><img src="{{ asset('assets/img/breeder/mv-img01.png') }}" alt="生活面"/></a></li>
               </ul>
             </div>
-            <h2></h2>
-            <div class="breeder-mv__text_logo"><img src="{{ asset('assets/img/breeder-mv-logo.png') }}" alt="Animalline Breeder"/></div>
-            <p>ペットとつながる信頼の絆</p>
-            
           </div>
-          <div class="breeder-mv__search">
-            {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-              <div class="breeder-mv__search_wrap breeder-mv__search_dog">
-                <div class="breeder-mv__search_title">
-                  <h2>ワンちゃんを探そう</h2>
-            {% else %}
-              <div class="breeder-mv__search_wrap breeder-mv__search_cat">
-                <div class="breeder-mv__search_title">
-                  <h2>ネコちゃんを探そう</h2>
-            {% endif %}
-          </div>
-              <div class="breeder-mv__search_body">
-                <form action="{{ url('breeder_pet_search_result') }}" method="get">
-                  <input type="hidden" name="pet_kind" value="{{ petKind }}">
-                  <div class="breeder-mv__search_top">
-                    <div class="select-container">
-                      <select class="form_dropdown w-100" id="formControlSelect1" name="breed_type">
-                        <option value="">種類</option>
-                        {% for breed in breeds %}
-                            <option value="{{ breed.id }}">{{ breed.breedsName }}</option>
-                        {% endfor %}
-                      </select>
-                    </div>
-                  </div>
-                  <div class="breeder-mv__search_bottom">
-                    <div class="breeder-mv__search_bottom_w50">
-                      <div class="select-container">
-                        <select class="form_dropdown w-100" id="formControlSelect2" name="gender">
-                          <option value="">性別</option>
-                          <option value="1">男の子</option>
-                          <option value="2">女の子</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="breeder-mv__search_bottom_w50">
-                      <div class="select-container">
-                        <select class="form_dropdown w-100" id="formControlSelect3" name="region">
-                            <option value="">都道府県</option>
-                            {% for region in regions %}
-                                <option value="{{ region.id }}">{{ region.name }}</option>
-                            {% endfor %}
-                        </select>
-                      </div>
-                      <label><input type="checkbox" name="adjacent" value="1" class="mr-1">隣の都道府県も検索</label>
-                    </div>
-                  </div>
-                  <div class="breeder-mv__search_btn">
-                    <button><i class="bi bi-check2-square"></i>この条件で検索する</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-        </div>
-        <div class="inner">
-          <div style="text-align: center">
-            <img src="{{ asset('assets/img/top_tokuten.jpg') }}" />
-          </div>
+      </section>
+    </div>
+    <div class="col-lg-6 col-md-12" style="margin:auto;margin-bottom: 10px;margin-top:20px">
+      <a href="#cashback"><img src="{{ asset('assets/img/cashback.png') }}" /></a>
+    </div>
 
-          <div style="font-size:25px; text-align: center">
-            <現在掲載中のペットに関して>
-          </div>
-          <div style="font-size:20px;padding: 20px;text-align: center">
-          
-現在Animallineに掲載中のわんちゃん・ネコちゃんのうち「検査中」と記載のある子は、検査が終わっておりません。<br />
-ブリーダー様へお問い合わせは可能ですが、<strong style="color:#F00;font-size:22px">ご成約は検査が終了し、結果に問題がない場合に可能</strong>となります。
-          </div>
-          <a id="cashback"></a>
-          <div style="font-size:20px;padding: 20px" class="cashback">
-            <img src="{{ asset('assets/img/cashback_title.png') }}" />
-            <table class="">
-              <tr>
-                <th class="">キャンペーン期間</th>
-                <td class="">2022年8月1日（月）～2022年12月31日（土）</td>
-              </tr>
-              <tr>
-                <th class="">賞品</th>
-                <td class="">成約代金キャッシュバック（5万円）</td>
-              </tr>
-              <tr>
-                <th class="">応募資格・応募方法</th>
-                <td class="">Animalline Breederにてご成約後、成約特典申請をマイページからしていただいた方。</td>
-              </tr>
-              <tr>
-                <th class="">抽選・発表方法</th>
-                <td class="">Animallineにご登録の電話番号またはメールアドレス宛にご連絡</td>
-              </tr>
-              <tr>
-                <th class="">キャッシュバックお振込み時期</th>
-                <td class="">各月末締め、翌月末お振込み　※振込先の情報を頂いた月の翌月末</td>
-              </tr>
-              <tr>
-                <th class="">その他</th>
-                <td class="">・キャンペーンに当選された方にのみ当選結果をご連絡いたします。<br />
-・当選結果に記載された当社指定のメールアドレス宛に、キャッシュバックの振込先の情報をご連絡ください。当選結果到着から2週間以内にご連絡がない場合当選を無効といたします。<br />
-・当選権利の譲渡はできません。<br />
-・成約特典の申請はオーナー様、ブリーダー様双方より必要となります。<br />
-・ご応募は日本国内にお住まいの方に限らせていただきます。<br />
-・当キャンペーンは都合により予告なく中止、終了、延長する場合がございます。
-                </td>
-              </tr>
-
-              <tr>
-                <th class="">個人情報の取り扱いについて</th>
-                <td class="">・お客様から取得した個人情報は、本キャンペーンの当選者選定、当選通知、本人確認、お問合せ対応、本キャンペーンに関するお知らせ、Animallineからのお知らせ配信のために利用し、お客様の同意なく上記以外の目的で利用・第三者提供はいたしません。<br />
-・その他の個人情報の取扱いに関しては、Animalline個人情報保護方針（<a href="https://animalline.jp/breeder/policy" target="_blank">https://animalline.jp/breeder/policy</a>）をご参照下さい。
-
-                </td>
-              </tr>
-            </table>
-          </div>
-
-        </div>
-      </div>
-
-      
-    </section>
-    <h1 style="display:none"> 犬・猫ブリーダー直販のアニマルライン</h1>
+    <div class="breeder-mv__text_btn">
+      <ul>
+        {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+            <li class="breeder-mv__text_btn_dog"><span><i>ワンちゃんを探そう</i></span></li>
+            <li class="breeder-mv__text_btn_cat"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>ネコちゃんを探そう</i></a></li>
+        {% else %}
+            <li class="breeder-mv__text_btn_dog"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>ワンちゃんを探そう</i></a></li>
+            <li class="breeder-mv__text_btn_cat"><span><i>ネコちゃんを探そう</i></span></li>
+        {% endif %}
+      </ul>
+    </div>
 
     <section id="breeder-column" class="breeder-column_dog">
       <div class="inner">
@@ -199,6 +85,9 @@
                     <span class="mb-2">掲載準備中！</span>
                   {% endfor %}
                 </ul>
+              </div>
+              <div class="navigation">
+                {{ knp_pagination_render(newPets) }}
               </div>
             </div>
             {#
@@ -381,22 +270,86 @@
       </div>
     </section>
 
-    <!-- ここからinfo結合 -->
-    <div class="page-inner">
-      <section id="page-mv__breeder_detail" class="page-mv_detail">
-          <div class="wrap">
-            <div class="text">
-              <h2><img src="{{ asset('assets/img/breeder/mv-logo.png') }}" alt="Animalline Breeder"/></h2>
-              <p><img src="{{ asset('assets/img/breeder/mv-copy.png') }}" alt="3つの安心・安全"/></p>
+    <!-- 検索画面 -->
+    <section id="breeder-mv">
+      <div class="inner">
+        <div class="breeder-mv__container">
+          <div class="breeder-mv__text">
+            <div class="breeder-mv__text_btn">
               <ul>
-                <li><a href="#content01"><img src="{{ asset('assets/img/breeder/mv-img02.png') }}" alt="健康面"/></a></li>
-                <li><a href="#content02"><img src="{{ asset('assets/img/breeder/mv-img03.png') }}" alt="価格面"/></a></li>
-                <li><a href="#content03"><img src="{{ asset('assets/img/breeder/mv-img01.png') }}" alt="生活面"/></a></li>
+                {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+                    <li class="breeder-mv__text_btn_dog"><span><i>ワンちゃんを探そう</i></span></li>
+                    <li class="breeder-mv__text_btn_cat"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}"><i>ネコちゃんを探そう</i></a></li>
+                {% else %}
+                    <li class="breeder-mv__text_btn_dog"><a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}"><i>ワンちゃんを探そう</i></a></li>
+                    <li class="breeder-mv__text_btn_cat"><span><i>ネコちゃんを探そう</i></span></li>
+                {% endif %}
               </ul>
             </div>
+            <h2></h2>
+            <div class="breeder-mv__text_logo"><img src="{{ asset('assets/img/breeder-mv-logo.png') }}" alt="Animalline Breeder"/></div>
+            <p>ペットとつながる信頼の絆</p>  
           </div>
-      </section>
+          <div class="breeder-mv__search">
+            {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+              <div class="breeder-mv__search_wrap breeder-mv__search_dog">
+            {% else %}
+              <div class="breeder-mv__search_wrap breeder-mv__search_cat">
+            {% endif %}
+            <div class="breeder-mv__search_title">
+              {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
+                <h2>ワンちゃんを探そう</h2>
+              {% else %}
+                <h2>ネコちゃんを探そう</h2>
+              {% endif %}
+            </div>
+            <div class="breeder-mv__search_body">
+              <form action="{{ url('breeder_pet_search_result') }}" method="get">
+                <input type="hidden" name="pet_kind" value="{{ petKind }}">
+                <div class="breeder-mv__search_top">
+                  <div class="select-container">
+                    <select class="form_dropdown w-100" id="formControlSelect1" name="breed_type">
+                      <option value="">種類</option>
+                      {% for breed in breeds %}
+                        <option value="{{ breed.id }}">{{ breed.breedsName }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="breeder-mv__search_bottom">
+                  <div class="breeder-mv__search_bottom_w50">
+                    <div class="select-container">
+                      <select class="form_dropdown w-100" id="formControlSelect2" name="gender">
+                        <option value="">性別</option>
+                        <option value="1">男の子</option>
+                        <option value="2">女の子</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="breeder-mv__search_bottom_w50">
+                    <div class="select-container">
+                      <select class="form_dropdown w-100" id="formControlSelect3" name="region">
+                        <option value="">都道府県</option>
+                        {% for region in regions %}
+                          <option value="{{ region.id }}">{{ region.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <label><input type="checkbox" name="adjacent" value="1" class="mr-1">隣の都道府県も検索</label>
+                  </div>
+                </div>
+                <div class="breeder-mv__search_btn">
+                  <button><i class="bi bi-check2-square"></i>この条件で検索する</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- ここからinfo結合 -->
+    <div class="page-inner">
       <section id="page-detail-content01">
         <div class="page-detail-content01__title"><h3><img src="{{ asset('assets/img/breeder/title01.png') }}" alt="アニマルラインとは"/></h3>
         </div>
@@ -501,8 +454,64 @@
         </div>
       </section>
     </div>
-
     <!-- ここまで -->
+    <!-- 特典 -->
+    <section id="breeder-column">
+      <div class="inner">
+        <div style="text-align: center">
+          <img src="{{ asset('assets/img/top_tokuten.jpg') }}" />
+        </div>
+        <div style="font-size:25px; text-align: center">
+          <現在掲載中のペットに関して>
+        </div>
+        <div style="font-size:20px;padding: 20px;text-align: center">  
+現在Animallineに掲載中のわんちゃん・ネコちゃんのうち「検査中」と記載のある子は、検査が終わっておりません。<br />
+ブリーダー様へお問い合わせは可能ですが、<strong style="color:#F00;font-size:22px">ご成約は検査が終了し、結果に問題がない場合に可能</strong>となります。
+        </div>
+        <a id="cashback"></a>
+        <div style="font-size:20px;padding: 20px" class="cashback">
+          <img src="{{ asset('assets/img/cashback_title.png') }}" />
+          <table class="">
+            <tr>
+              <th class="">キャンペーン期間</th>
+              <td class="">2022年8月1日（月）～2022年12月31日（土）</td>
+            </tr>
+            <tr>
+              <th class="">賞品</th>
+              <td class="">成約代金キャッシュバック（5万円）</td>
+            </tr>
+            <tr>
+              <th class="">応募資格・応募方法</th>
+              <td class="">Animalline Breederにてご成約後、成約特典申請をマイページからしていただいた方。</td>
+            </tr>
+            <tr>
+              <th class="">抽選・発表方法</th>
+              <td class="">Animallineにご登録の電話番号またはメールアドレス宛にご連絡</td>
+            </tr>
+            <tr>
+              <th class="">キャッシュバックお振込み時期</th>
+              <td class="">各月末締め、翌月末お振込み　※振込先の情報を頂いた月の翌月末</td>
+            </tr>
+            <tr>
+              <th class="">その他</th>
+              <td class="">・キャンペーンに当選された方にのみ当選結果をご連絡いたします。<br />
+・当選結果に記載された当社指定のメールアドレス宛に、キャッシュバックの振込先の情報をご連絡ください。当選結果到着から2週間以内にご連絡がない場合当選を無効といたします。<br />
+・当選権利の譲渡はできません。<br />
+・成約特典の申請はオーナー様、ブリーダー様双方より必要となります。<br />
+・ご応募は日本国内にお住まいの方に限らせていただきます。<br />
+・当キャンペーンは都合により予告なく中止、終了、延長する場合がございます。
+              </td>
+            </tr>
+            <tr>
+              <th class="">個人情報の取り扱いについて</th>
+              <td class="">・お客様から取得した個人情報は、本キャンペーンの当選者選定、当選通知、本人確認、お問合せ対応、本キャンペーンに関するお知らせ、Animallineからのお知らせ配信のために利用し、お客様の同意なく上記以外の目的で利用・第三者提供はいたしません。<br />
+・その他の個人情報の取扱いに関しては、Animalline個人情報保護方針（<a href="https://animalline.jp/breeder/policy" target="_blank">https://animalline.jp/breeder/policy</a>）をご参照下さい。
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </section>
 
     <section id="breeder-footer">
       <div class="inner">

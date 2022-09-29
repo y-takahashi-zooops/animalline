@@ -32,6 +32,7 @@ use Customize\Service\MailService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 
+
 class BreederController extends AbstractController
 {
     /**
@@ -163,7 +164,7 @@ class BreederController extends AbstractController
      * @Route("/breeder/", name="breeder_top")
      * @Template("animalline/breeder/index.twig")
      */
-    public function breeder_index(Request $request)
+    public function breeder_index(Request $request,PaginatorInterface $paginator)
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
         $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
@@ -203,12 +204,18 @@ class BreederController extends AbstractController
             $entityManager->flush();
         }
         
+        $pets = $paginator->paginate(
+            $newPets,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
         return $this->render('animalline/breeder/index.twig', [
             'title' => 'ペット検索',
             'petKind' => $petKind,
             'breeds' => $breeds,
             'regions' => $regions,
-            'newPets' => $newPets,
+            'newPets' => $pets,
             'favoritePets' => $favoritePets,
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,

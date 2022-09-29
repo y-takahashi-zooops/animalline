@@ -90,8 +90,10 @@ class BreederQueryService
             ->setParameter('is_active', 1)
             ->andWhere('p.pet_kind = :pet_kind')
             ->setParameter('pet_kind', $petKind)
-            ->orderBy('p.update_date', 'desc')
-            ->setMaxResults(16);
+            ->orderBy('p.is_delete', 'asc')
+            ->addOrderBy('p.dna_check_result', 'desc');
+            
+            //->setMaxResults(16);
         /*
             ->andWhere('p.release_date <= :to')
             ->andWhere('p.release_date >= :from')
