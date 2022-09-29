@@ -283,11 +283,26 @@ class BreederController extends AbstractController
         $dogHouse = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 1]);
         $catHouse = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 2]);
 
-        $petResults = $this->breederPetsRepository->findBy([
-            'Breeder' => $breeder,
-            'is_active' => 1,
-            //'is_delete' => 0
-        ]);
+        $find_cond["Breeder"] = $breeder;
+        $find_cond["is_active"] = 1;
+
+        //販売中
+        if($request->query->get('filter_status') == 2){
+            $find_cond["is_delete"] = 0;
+            $find_cond["dna_check_result"] = 1;
+        }
+        //検査中
+        if($request->query->get('filter_status') == 3){
+            $find_cond["dna_check_result"] = 0;
+        }
+        //成約済み
+        if($request->query->get('filter_status') == 4){
+            $find_cond["is_delete"] = 1;
+            //$find_cond["is_contract"] = 1;
+        }
+
+        $petResults = $this->breederPetsRepository->findBy($find_cond);
+
         $pets = $paginator->paginate(
             $petResults,
             $request->query->getInt('page', 1),
@@ -320,7 +335,8 @@ class BreederController extends AbstractController
             'evaluationCount' => $evaluationCount,
             'maintitle' => $html_title,
             'breadcrumb' => $breadcrumb,
-            "description_add" => $breeder->getBreederName()."ブリーダー"
+            "description_add" => $breeder->getBreederName()."ブリーダー",
+            "filter_status" => $request->query->get('filter_status')
         ];
 
         /*

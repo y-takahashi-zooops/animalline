@@ -309,6 +309,21 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="ec-select" style="margin-top: 10px" id="pets">
+                    <select name="filter_status" onchange="location.href = `?filter_status=${this.value+'#pets'}`">
+                        <option value="1">全件</option>
+                        <option value="2" {{ filter_status == 2 ? 'selected' }}>
+                            販売中
+                        </option>
+                        <option value="3" {{ filter_status == 3 ? 'selected' }}>
+                            検査中
+                        </option>
+                        <option value="4" {{ filter_status == 4 ? 'selected' }}>
+                            成約済
+                        </option>
+                    </select>
+                </div>
                 <div class="breeder-column__main_section_title">
                     <h3>このブリーダーが扱うペット一覧</h3>
                 </div>
