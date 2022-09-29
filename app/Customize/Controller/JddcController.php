@@ -133,6 +133,35 @@ class JddcController extends AbstractController
     /**
      * Pet list
      *
+     * @Route("/jddc/complete_list", name="jddc_complete_list")
+     * @Template("animalline/jddc/complete_list.twig")
+     */
+    public function complete_list(Request $request, PaginatorInterface $paginator): array
+    {
+        $dnasResult = $this->jddcQueryService->completePetList();
+        $dnas = $paginator->paginate(
+            $dnasResult,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE)
+        );
+
+        // get check kinds
+        foreach ($dnas as $idx => $dna) {
+            $kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $dna['breeds_id']]);
+            $dna['check_kinds'] = array_map(function ($item) {
+                return $item->getCheckKind();
+            }, $kinds);
+            $dnas[$idx] = $dna;
+        }
+
+        return compact(
+            'dnas'
+        );
+    }
+
+    /**
+     * Pet list
+     *
      * @Route("/jddc/pet_list", name="jddc_pet_list")
      * @Template("animalline/jddc/pet_list.twig")
      */
@@ -223,72 +252,6 @@ class JddcController extends AbstractController
     }
 
     /**
-     * Dna result regist.
-     * ※差し替え予定
-     * @Route("/jddc/result", name="jddc_result")
-     * @Template("animalline/jddc/result.twig")
-     * @throws Exception
-     */
-    public function result(Request $request)
-    {
-        if (!$request->isMethod('POST')) {
-            return [];
-        }
-
-        $barcode = $request->get('barcode');
-        $checkStatus = $request->get('check_status');
-        $siteType = $barcode[0];
-        $dnaId = substr($barcode, 1);
-
-        $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
-        if (!$Dna) {
-            throw new NotFoundHttpException();
-        }
-        $Pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
-            $this->breederPetsRepository->find($Dna->getPetId()) :
-            $this->conservationPetsRepository->find($Dna->getPetId());
-        if (!$Pet) {
-            throw new NotFoundHttpException();
-        }
-        $countCheckKind = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $Pet->getBreedsType()])) ;
-
-        switch ($checkStatus) {
-            case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY:
-                $Dna->setCheckStatus($checkStatus);
-                $restext = "検体異常";
-                break;
-            case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
-                $Dna->setCheckStatus($checkStatus);
-                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
-                $restext = "検査ＮＧ";
-                break;
-            default: // 61: クリア, 62: キャリア.
-                $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
-                $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
-                $restext = "検査通過";
-        }
-
-        $savePath = $this->copyFile($request->get('file_name'));
-        $Dna->setFilePath($savePath)
-            ->setCheckReturnDate(Carbon::now())
-            ->setDnaCheckCount($countCheckKind);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($Dna);
-        $entityManager->persist($Pet);
-        $entityManager->flush();
-
-        $data["barcode"] = $barcode;
-        $data["name"] = $request->get("sender_name");
-        $data["pet_type"] = $request->get("pet_type");
-        $data["result"] = $restext;
-
-        $this->mailService->sendVeqtaResuletToAdmin($data);
-
-        return $this->redirectToRoute('jddc_result');
-    }
-
-    /**
      * DNA検査結果登録.
      * @Route("/jddc/result_regist", name="jddc_result_regist")
      * @Template("animalline/jddc/result_regist.twig")
@@ -317,6 +280,15 @@ class JddcController extends AbstractController
         }
         $countCheckKind = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $Pet->getBreedsType()]));
         
+        //更新の時は前の登録データ削除（フラグを立ててメールを送らない）
+        $entityManager = $this->getDoctrine()->getManager();
+        $lists = $this->dnaCheckStatusDetailRepository->findBy(['CheckStatus' => $Dna]);
+        $is_sendmail = true;
+        foreach($lists as $list){
+            $entityManager->remove($list);
+            $is_sendmail = false;
+        }
+
         //メール送信準備
         $dna_header = $Dna->getDnaHeader();
         $customer_id = $dna_header->getRegisterId();
@@ -326,15 +298,27 @@ class JddcController extends AbstractController
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY:
                 $Dna->setCheckStatus($checkStatus);
 
-                $this->mailService->sendDnaCheckRetry($Customer,$Dna);
+                if($is_sendmail){
+                    $this->mailService->sendDnaCheckRetry($Customer,$Dna);
+                }
                 break;
             case AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG:
-                $Dna->setCheckStatus($checkStatus);
+            case 63:
+                $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG);
                 $Pet->setDnaCheckResult(AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
                 $Pet->setIsActive(2);
                 
+                if($checkStatus == 63){
+                    $restext = "キャリア（優性）";
+                }
+                else{
+                    $restext = "アフェクテッド";
+                }
+
                 //ＮＧの場合メールを送る
-                $this->mailService->sendDnaCheckNg($Customer,$Dna);
+                if($is_sendmail){
+                    $this->mailService->sendDnaCheckNg($Customer,$Dna,$restext);
+                }
                 break;
             default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
@@ -347,19 +331,15 @@ class JddcController extends AbstractController
                     $restext = "キャリア（劣性）";
                 }
 
-                $this->mailService->sendDnaCheckOk($Customer,$Dna,$restext);
+                if($is_sendmail){
+                    $this->mailService->sendDnaCheckOk($Customer,$Dna,$restext);
+                }
         }
-
-        $entityManager = $this->getDoctrine()->getManager();
 
         if (
             $checkStatus != AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY &&
             $dnaDetailData = $request->get('check_status')
         ) {
-            $lists = $this->dnaCheckStatusDetailRepository->findBy(['CheckStatus' => $Dna]);
-            foreach($lists as $list){
-                $entityManager->remove($list);
-            }
             for ($i = 0; $i < count($dnaDetailData['kind']); $i++) {
                 $DnaDetail = (new DnaCheckStatusDetail)
                     ->setCheckResult($dnaDetailData['status'][$dnaDetailData['kind'][$i]])

@@ -88,4 +88,31 @@ class JddcQueryService
 
         return $totalResult;
     }
+
+    /**
+     * Filter Pet List.
+     *
+     * @param $filter_status
+     * @return array
+     */
+    public function completePetList(): array
+    {
+        $status = [AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED, AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG];
+        
+        $queryBreeder = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
+            ->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'dna.pet_id = bp.id')
+            ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
+            ->leftJoin('Customize\Entity\DnaCheckStatusHeader', 'dnah', 'WITH', 'dna.DnaHeader = dnah.id')
+            ->where('dna.check_status IN (:status)')
+            ->andWhere('dna.site_type = :site_type')
+            ->andWhere('dnah.labo_type = 2')
+            ->setParameter('site_type', AnilineConf::ANILINE_SITE_TYPE_BREEDER)
+            ->setParameter('status', $status)
+            ->select('dna.id as dna_id, dna.site_type, b.pet_kind, b.id as breeds_id, b.breeds_name, bp.pet_birthday, dna.check_status, dna.kit_pet_register_date, dna.check_return_date, dnah.shipping_name')
+            ->orderBy('dna.check_return_date', 'desc');
+        $resultBreeder = $queryBreeder->getQuery()->getArrayResult();
+
+        return $resultBreeder;
+    }
+
 }

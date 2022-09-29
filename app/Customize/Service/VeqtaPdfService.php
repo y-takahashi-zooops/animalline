@@ -172,8 +172,9 @@ class VeqtaPdfService extends TcpdfFpdi
         // 検査結果
         $CHECK_RESULTS = [
             1 => 'クリア',
-            2 => 'キャリア',
-            3 => 'アフェクテッド'
+            2 => 'キャリア／劣勢',
+            3 => 'アフェクテッド',
+            4 => 'キャリア／優性'
         ];
 
         foreach ($rows as $row) {
