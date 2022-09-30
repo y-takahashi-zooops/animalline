@@ -155,10 +155,10 @@ class AdoptionController extends AbstractController
         $rid = $request->get('RID');
         if($rid != ""){
             $sessid = $request->cookies->get('rid_key');
-            if($sessid == ""){
+            //if($sessid == ""){
                 $sessid = uniqid();
                 $response->headers->setCookie(new Cookie('rid_key',$sessid));
-            }
+            //}
 
             $entityManager = $this->getDoctrine()->getManager();
 
@@ -167,9 +167,9 @@ class AdoptionController extends AbstractController
 
             $affiliate = $this->affiliateStatusRepository->findOneBy(array("campaign_id" => 2,"session_id" => $sessid));
 
-            if(!$affiliate){
+            //if(!$affiliate){
                 $affiliate = new AffiliateStatus();
-            }
+            //}
             $affiliate->setAffiliateKey($rid);
             $affiliate->setCampaignId(2);
             $affiliate->setSessionId($sessid);
