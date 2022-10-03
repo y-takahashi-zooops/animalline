@@ -299,7 +299,9 @@ class CustomTopController extends AbstractController
      */
     public function breeder_guide_dog()
     {
-        return [];
+        $title = "お迎えガイド（犬編）";
+
+        return ['title'  => $title];
     }
 
     /**
@@ -308,7 +310,9 @@ class CustomTopController extends AbstractController
      */
     public function breeder_guide_cat()
     {
-        return [];
+        $title = "お迎えガイド（猫編）";
+
+        return ['title'  => $title];
     }
 
     /**

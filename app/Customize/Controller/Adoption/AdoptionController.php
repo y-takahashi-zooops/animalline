@@ -204,7 +204,9 @@ class AdoptionController extends AbstractController
      */
     public function adoption_guide_dog()
     {
-        return [];
+        $title = "お迎えガイド（犬編）";
+
+        return ['title'  => $title];
     }
 
     /**
@@ -213,7 +215,9 @@ class AdoptionController extends AbstractController
      */
     public function adoption_guide_cat()
     {
-        return [];
+        $title = "お迎えガイド（猫編）";
+
+        return ['title'  => $title];
     }
 
     /**
@@ -348,7 +352,9 @@ class AdoptionController extends AbstractController
      */
     public function policy(Request $request)
     {
-        return;
+        $title = "個人情報保護方針";
+
+        return ['title'  => $title];
     }
     
     /**
@@ -436,7 +442,10 @@ class AdoptionController extends AbstractController
             }
         }
 
+        $title = "お問い合わせ";
+
         return [
+            'title'  => $title,
             'form' => $form->createView(),
         ];
     }

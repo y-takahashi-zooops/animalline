@@ -182,10 +182,10 @@ class BreederController extends AbstractController
         $rid = $request->get('RID');
         if($rid != ""){
             $sessid = $request->cookies->get('rid_key');
-            if($sessid == ""){
+            //if($sessid == ""){
                 $sessid = uniqid();
                 $response->headers->setCookie(new Cookie('rid_key',$sessid));
-            }
+            //}
 
             $entityManager = $this->getDoctrine()->getManager();
 
@@ -194,9 +194,9 @@ class BreederController extends AbstractController
 
             $affiliate = $this->affiliateStatusRepository->findOneBy(array("campaign_id" => 1,"session_id" => $sessid));
 
-            if(!$affiliate){
+            //if(!$affiliate){
                 $affiliate = new AffiliateStatus();
-            }
+            //}
             $affiliate->setAffiliateKey($rid);
             $affiliate->setCampaignId(1);
             $affiliate->setSessionId($sessid);
@@ -518,7 +518,11 @@ class BreederController extends AbstractController
      */
     public function policy(Request $request)
     {
-        return;
+        $maintitle = "個人情報保護方針";
+
+        return[
+            'title' => $maintitle,
+        ];
     }
 
     /**
@@ -606,7 +610,10 @@ class BreederController extends AbstractController
             }
         }
 
+        $maintitle = "お問い合わせ";
+
         return [
+            'title' => $maintitle,
             'form' => $form->createView(),
         ];
     }
@@ -619,7 +626,11 @@ class BreederController extends AbstractController
      */
     public function dnainfo(Request $request)
     {
-        return;
+        $maintitle = "遺伝子検査";
+
+        return[
+            'title' => $maintitle,
+        ];
     }
 
     /**
@@ -630,7 +641,11 @@ class BreederController extends AbstractController
      */
     public function dnacheck(Request $request)
     {
-        return;
+        $maintitle = "代表的な検査項目";
+
+        return[
+            'title' => $maintitle,
+        ];
     }
 
 }
