@@ -187,6 +187,12 @@ file that was distributed with this source code.
                                                 <i class="fas fa-landmark fa-lg text-secondary" aria-hidden="true"></i>
                                             </a>
                                         </div>
+                                        <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="検査キット請求">
+                                            <a class="btn btn-ec-actionIcon" href="#"
+                                                {% if breeder.IsActive == 1 %} onClick='window.open("{{ url('breeder_examination_kit_new', {'breeder_id': breeder.id}) }}")' {% else %} disabled {% endif %}>
+                                                <i class="fas fa-regular fa-vial text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>

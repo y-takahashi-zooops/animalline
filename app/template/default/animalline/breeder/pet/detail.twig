@@ -212,6 +212,7 @@
                                     </div>
                                 </div>
                             </div>
+                            {% if not breederPet.getIsContract() and not breederPet.getIsDelete() %}
                             <div class="breeder_section_header">
                                 <i class="fas fa-paw"></i>
                                 金額
@@ -223,7 +224,6 @@
                                     </div>
                                 </div>
                             </div>
-                            {% if not breederPet.getIsContract() and not breederPet.getIsDelete() %}
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12 contents_col_normal">

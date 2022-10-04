@@ -245,7 +245,7 @@ file that was distributed with this source code.
                                             </a>
                                         </div>
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
-                                            <a class="btn btn-ec-actionIcon" id="edit" href="{{ url('admin_breeder_pet_edit', {'id': breederPet.bp_id}) }}">
+                                            <a class="btn btn-ec-actionIcon" id="edit" href="#" onclick="window.open('{{ url('breeder_pets_edit', {'id': breederPet.bp_id,'breeder_id': breederPet.id}) }}')" targer='_blank'>
                                                 <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
                                             </a>
                                         </div>
@@ -307,8 +307,7 @@ file that was distributed with this source code.
                                                 </a>
                                             </div>
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="ペット情報編集">
-                                                <a class="btn btn-ec-actionIcon" id="edit"
-                                                   href="{{ url('admin_adoption_pet_edit', {'id': conservationPet.cp_id}) }}">
+                                                <a class="btn btn-ec-actionIcon" id="edit" href="#" onclick="window.open('{{ url('adoption_pets_edit', {'id': conservationPet.cp_id,'conservation_id': conservationPet.id}) }}')" targer='_blank'>
                                                     <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>

@@ -324,4 +324,14 @@ class CustomTopController extends AbstractController
     public function ec_nutro(){
         return [];
     }
+
+    /**
+     * Windowを閉じる
+     * 
+     * @Route("/close_window", name="close_window")
+     * @Template("close_window.twig")
+     */
+    public function close_window(){
+        return [];
+    }
 }

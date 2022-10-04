@@ -279,6 +279,12 @@ class BreederMemberController extends AbstractController
                 ->setLicenseThumbnailPath($license_thumbnail_path);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($breederData);
+
+            if($breederData->getIdHash() == ""){
+                $breederData->setIdHash(md5($breederData->getId()));
+                $entityManager->persist($breederData);
+            }
+
             $breederPetinfoTemplate->setBreeder($breederData);
             $entityManager->persist($breederPetinfoTemplate);
             $entityManager->flush();

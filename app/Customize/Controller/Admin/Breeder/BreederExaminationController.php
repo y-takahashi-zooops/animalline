@@ -172,6 +172,7 @@ class BreederExaminationController extends AbstractController
             if ($result === AnilineConf::ANILINE_EXAMINATION_RESULT_DECISION_OK) {
                 $this->mailService->sendBreederExaminationMailAccept($Customer, $data);
                 $Customer->setIsBreeder(1);
+                $Customer->setRelationId($Customer->getId());
             } else {
                 $this->mailService->sendBreederExaminationMailReject($Customer, $data);
             }

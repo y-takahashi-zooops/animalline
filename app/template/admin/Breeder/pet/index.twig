@@ -136,8 +136,7 @@ file that was distributed with this source code.
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                  data-placement="top" title="ペット情報編集">
-                                                <a class="btn btn-ec-actionIcon"
-                                                   href="{{ url('admin_breeder_pet_edit', {'id': pet.Id}) }}">
+                                                <a class="btn btn-ec-actionIcon" id="edit" href="#" onclick="window.open('{{ url('breeder_pets_edit', {'id': pet.id,'breeder_id': pet.breeder.id}) }}')" targer='_blank'>
                                                     <i class="fa fa-edit fa-lg text-secondary" aria-hidden="true"></i>
                                                 </a>
                                             </div>

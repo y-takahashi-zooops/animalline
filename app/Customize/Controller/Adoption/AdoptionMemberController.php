@@ -247,6 +247,12 @@ class AdoptionMemberController extends AbstractController
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($conservation);
+
+            if($conservation->getIdHash() == ""){
+                $conservation->setIdHash(md5($conservation->getId()));
+                $entityManager->persist($conservation);
+            }
+
             $entityManager->flush();
             return $this->redirectToRoute($return_path);
         }

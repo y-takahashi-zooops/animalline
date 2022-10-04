@@ -319,17 +319,34 @@ class BreederPetController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/breeder/member/pets/new/{barcode}/{kind}", name="breeder_pets_new", methods={"GET","POST"}, requirements={"barcode" = "^\d{6}$"})
+     * @Route("/breeder/member/pets/new/{barcode}/{kind}/{breeder_id}", name="breeder_pets_new", methods={"GET","POST"}, requirements={"barcode" = "^\d{6}$"})
      */
-    public function breeder_pets_new(Request $request, $barcode, $kind = 0): Response
+    public function breeder_pets_new(Request $request, $barcode, $kind = 0,$breeder_id = ""): Response
     {
+        if($breeder_id != ""){
+            //breeder_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
+            $user = $this->getUser();
+            if($user->getId() == 91 || $user->getId() == 236){
+                $user = $this->customerRepository->find($breeder_id);
+
+                if(!$user){
+                    throw new NotFoundHttpException();
+                }
+            }
+            else{
+                throw new NotFoundHttpException();
+            }
+        }
+        else{
+            //breeder_id指定がない場合はログイン中ユーザーとして処理
+            $user = $this->getUser();
+        }
+
         $dnaId = substr($barcode, 1);
         if (!$Dna = $this->dnaCheckStatusRepository->find($dnaId)) {
             throw new NotFoundHttpException();
         }
         $breederId = $Dna->getDnaHeader()->getRegisterId();
-
-        $user = $this->getUser();
         $breeder = $this->breedersRepository->find($user);
 
         //ブリーダー審査通過チェック
@@ -357,7 +374,8 @@ class BreederPetController extends AbstractController
         if($kind == 0){
             return $this->render('animalline/breeder/member/kind_select.twig', [
                 'breeder' => $breeder,
-                'barcode' => $barcode
+                'barcode' => $barcode,
+                'breeder_id' => $breeder_id
             ]);
         }
 
@@ -379,7 +397,7 @@ class BreederPetController extends AbstractController
         // }
         $breederPet = new BreederPets();
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
-            'customer' => $this->getUser(),
+            'customer' => $user,
             'pet_kind' => $kind,
         ]);
         $form->handleRequest($request);
@@ -443,7 +461,12 @@ class BreederPetController extends AbstractController
             $entityManager->persist($Dna);
             $entityManager->flush();
 
-            return $this->redirectToRoute('breeder_newpet_complete');
+            if($breeder_id != ""){
+                return $this->redirectToRoute('close_window');
+            }
+            else{
+                return $this->redirectToRoute('breeder_newpet_complete');
+            }
             //return $this->render('animalline/breeder/member/pets/notification.twig');
         }
 
@@ -481,14 +504,32 @@ class BreederPetController extends AbstractController
     /**
      * ペット情報編集
      *
-     * @Route("/breeder/member/pets/edit/{id}", name="breeder_pets_edit", methods={"GET","POST"})
+     * @Route("/breeder/member/pets/edit/{id}/{breeder_id}", name="breeder_pets_edit", methods={"GET","POST"})
      * @Template("animalline/breeder/member/pets/edit.twig")
      */
-    public function breeder_pets_edit(Request $request, BreederPets $breederPet)
+    public function breeder_pets_edit(Request $request, BreederPets $breederPet,string $breeder_id = "")
     {
         $isCheckPetContract = !is_null($this->breederContactHeaderRepository->findOneBy(['Pet' => $breederPet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]));
 
-        $user = $this->getUser();
+        if($breeder_id != ""){
+            //breeder_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
+            $user = $this->getUser();
+            if($user->getId() == 91 || $user->getId() == 236){
+                $user = $this->customerRepository->find($breeder_id);
+
+                if(!$user){
+                    throw new NotFoundHttpException();
+                }
+            }
+            else{
+                throw new NotFoundHttpException();
+            }
+        }
+        else{
+            //breeder_id指定がない場合はログイン中ユーザーとして処理
+            $user = $this->getUser();
+        }
+
         $breeder = $this->breedersRepository->find($user);
         if (!$breeder) {
             throw new NotFoundHttpException();
@@ -510,7 +551,7 @@ class BreederPetController extends AbstractController
         $image4 = $request->get('img4') ?? '';
 
         $form = $this->createForm(BreederPetsType::class, $breederPet, [
-            'customer' => $this->getUser()
+            'customer' => $user
         ]);
         $breederPetImages = $this->breederPetImageRepository->findBy(
             ['BreederPets' => $breederPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
@@ -543,7 +584,14 @@ class BreederPetController extends AbstractController
                 }
                 $entityManager->flush();
 
-                return $this->redirectToRoute('breeder_pet_list');
+                if($breeder_id != ""){
+                    //管理画面からの場合はWindowを閉じる
+                    return $this->redirectToRoute('close_window');
+                }
+                else{
+                    return $this->redirectToRoute('breeder_pet_list');
+                }
+                
             }
         }
         $petImages = [];

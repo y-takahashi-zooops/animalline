@@ -187,7 +187,7 @@ class BreederPetsRepository extends ServiceEntityRepository
             ->andWhere($qb->expr()->notIn('bp.id', $status))
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
             ->leftJoin('Customize\Entity\Breeders', 'bd', 'WITH', 'bd.id = bp.Breeder')
-            ->select('bp', 'dna', 'b.breeds_name', 'bd.breeder_name')
+            ->select('bp', 'dna', 'b.breeds_name', 'bd.breeder_name','bd.id')
             ->orderBy('bp.' . $order['field'], $order['direction'])
             ->getQuery()
             ->getScalarResult();

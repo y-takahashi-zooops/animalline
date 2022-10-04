@@ -206,7 +206,7 @@ class Conservations
         return $this->id_hash;
     }
 
-    public function setIdHash(?int $id_hash): self
+    public function setIdHash(?string $id_hash): self
     {
         $this->id_hash = $id_hash;
 

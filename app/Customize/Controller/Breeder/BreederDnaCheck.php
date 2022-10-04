@@ -195,12 +195,29 @@ class BreederDnaCheck extends AbstractController
      *
      * 検査キット請求
      *
-     * @Route("/breeder/member/dna_kit/new", name="breeder_examination_kit_new", methods={"GET","POST"})
+     * @Route("/breeder/member/dna_kit/new/{breeder_id}", name="breeder_examination_kit_new", methods={"GET","POST"})
      * @Template("animalline/breeder/member/examination_kit_form.twig")
      */
-    public function breeder_examination_kit_new(Request $request)
+    public function breeder_examination_kit_new(Request $request,string $breeder_id = "")
     {
-        $user = $this->getUser();
+        if($breeder_id != ""){
+            //breeder_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
+            $user = $this->getUser();
+            if($user->getId() == 91 || $user->getId() == 236){
+                $user = $this->customerRepository->find($breeder_id);
+
+                if(!$user){
+                    throw new NotFoundHttpException();
+                }
+            }
+            else{
+                throw new NotFoundHttpException();
+            }
+        }
+        else{
+            //breeder_id指定がない場合はログイン中ユーザーとして処理
+            $user = $this->getUser();
+        }
 
         //ブリーダーでない場合はTOPにリダイレクト
         if($user->getIsBreeder() != 1){
@@ -208,8 +225,9 @@ class BreederDnaCheck extends AbstractController
         }
 
         $isCheckStatus = false;
-        $dnaCheckStatusHeader = new DnaCheckStatusHeader();
-        $builder = $this->formFactory->createBuilder(DnaCheckStatusHeaderType::class, $dnaCheckStatusHeader);
+
+        $InputHeaderData = new DnaCheckStatusHeader();
+        $builder = $this->formFactory->createBuilder(DnaCheckStatusHeaderType::class, $InputHeaderData);
         $breeder = $this->breedersRepository->find($user->getId());
         $breederHouseCat = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_CAT]);
         $breederHouseDog = $this->breederHouseRepository->findOneBy(['Breeder' => $breeder, 'pet_type' => AnilineConf::ANILINE_PET_KIND_DOG]);
@@ -219,39 +237,69 @@ class BreederDnaCheck extends AbstractController
         
         $form = $builder->getForm();
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $dnaCheckStatusHeader->setRegisterId($this->getUser()->getId())
-                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
-                ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
-                ->setShippingPref($dnaCheckStatusHeader->getPrefShipping());
-
-            $shippingdate = new \DateTime();
-            if(intval(date("H")) >= 14){
-                $shippingdate->modify('+1 days');
+            //キット請求制限
+            $total_kit = 0;
+            foreach($DnaCheckStatus as $kit) {
+                $total_kit = $total_kit + $kit->getKitUnit();
             }
-
-            $dnaCheckStatusHeader->setKitShippingDate($shippingdate);
-            $dnaCheckStatusHeader->setLaboType(0);
+            $total_kit = $total_kit + $InputHeaderData->getKitUnit();
+            if($total_kit > 20){
+                return $this->render('animalline/breeder/member/kit_full.twig');
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($dnaCheckStatusHeader);
+            $kitUnit = $InputHeaderData->getKitUnit();
+
+            //明細登録用カウンタ
+            $kits_count = $kitUnit;
+
+            //ヘッダ追加用ループ
+            for($i=1;$i<=ceil($kitUnit/5);$i++){
+                $dnaCheckStatusHeader = new DnaCheckStatusHeader();
+                $dnaCheckStatusHeader->setRegisterId($user->getId())
+                ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER)
+                ->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_ACCEPT)
+                ->setShippingPref($InputHeaderData->getPrefShipping())
+                ->setPrefShipping($InputHeaderData->getPrefShipping())
+                ->setShippingName($InputHeaderData->getShippingName())
+                ->setShippingZip($InputHeaderData->getShippingZip())
+                ->setShippingCity($InputHeaderData->getShippingCity())
+                ->setShippingAddress($InputHeaderData->getShippingAddress())
+                ->setShippingTel($InputHeaderData->getShippingTel());
+
+                $shippingdate = new \DateTime();
+                if(intval(date("H")) >= 14){
+                    $shippingdate->modify('+1 days');
+                }
+                $dnaCheckStatusHeader->setKitShippingDate($shippingdate);
+                $dnaCheckStatusHeader->setLaboType(0);
+
+                for ($j=1;$j<=5;$j++) {
+                    $Dna = (new DnaCheckStatus)
+                        ->setDnaHeader($dnaCheckStatusHeader)
+                        ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER);
+                    $entityManager->persist($Dna);
+
+                    //明細を全て追加したらループ脱出
+                    $kits_count--;
+                    if($kits_count == 0){break;}
+                }
+                //Breakせずにループが抜けた場合何故か6になる？
+                if($j==6){$j=5;}
+
+                $dnaCheckStatusHeader->setKitUnit($j);
+                $entityManager->persist($dnaCheckStatusHeader);
+            }   
             $entityManager->flush();
 
-            $kitUnit = $dnaCheckStatusHeader->getKitUnit();
-            for ($i = 0; $i < $kitUnit; $i++) {
-                $Dna = (new DnaCheckStatus)
-                    ->setDnaHeader($dnaCheckStatusHeader)
-                    ->setSiteType(AnilineConf::ANILINE_SITE_TYPE_BREEDER);
-                $entityManager->persist($Dna);
+            if($breeder_id != ""){
+                return $this->redirect($this->generateUrl('close_window'));
             }
-            $entityManager->flush();
-            return $this->redirect($this->generateUrl('breeder_examination_kit'));
-        }
-
-        //キット請求制限
-        if (count($DnaCheckStatus) == 4) {
-            return $this->render('animalline/breeder/member/kit_full.twig');
+            else{
+                return $this->redirect($this->generateUrl('breeder_examination_kit'));
+            }
         }
 
         $formData = $request->request->get('dna_check_status_header');

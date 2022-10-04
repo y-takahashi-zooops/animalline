@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
+use Eccube\Repository\CustomerRepository;
 
 class AdoptionPetController extends AbstractController
 {
@@ -73,6 +74,11 @@ class AdoptionPetController extends AbstractController
     protected $adoptionQueryService;
 
     /**
+     * @var CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
      * ConservationController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
@@ -83,6 +89,7 @@ class AdoptionPetController extends AbstractController
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      * @param AdoptionQueryService $adoptionQueryService
      * @param ConservationContactsRepository $conservationContactsRepository
+     * @param CustomerRepository $customerRepository
      */
     public function __construct(
         ConservationPetsRepository          $conservationPetsRepository,
@@ -93,7 +100,8 @@ class AdoptionPetController extends AbstractController
         DnaCheckStatusHeaderRepository      $dnaCheckStatusHeaderRepository,
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
         AdoptionQueryService                $adoptionQueryService,
-        ConservationContactsRepository      $conservationContactsRepository
+        ConservationContactsRepository      $conservationContactsRepository,
+        CustomerRepository      $customerRepository
     )
     {
         $this->conservationPetsRepository = $conservationPetsRepository;
@@ -105,6 +113,7 @@ class AdoptionPetController extends AbstractController
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->adoptionQueryService = $adoptionQueryService;
         $this->conservationContactsRepository = $conservationContactsRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -324,13 +333,32 @@ class AdoptionPetController extends AbstractController
     /**
      * ペット情報編集
      *
-     * @Route("/adoption/member/pets/edit/{id}", name="adoption_pets_edit", methods={"GET","POST"})
+     * @Route("/adoption/member/pets/edit/{id}/{conservation_id}", name="adoption_pets_edit", methods={"GET","POST"})
      * @param Request $request
      * @param ConservationPets $conservationPet
      * @return Response
      */
-    public function adoption_pets_edit(Request $request, ConservationPets $conservationPet): Response
+    public function adoption_pets_edit(Request $request, ConservationPets $conservationPet, string $conservation_id = ""): Response
     {
+        if($conservation_id != ""){
+            //breeder_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
+            $user = $this->getUser();
+            if($user->getId() == 91 || $user->getId() == 236){
+                $user = $this->customerRepository->find($conservation_id);
+
+                if(!$user){
+                    throw new NotFoundHttpException();
+                }
+            }
+            else{
+                throw new NotFoundHttpException();
+            }
+        }
+        else{
+            //breeder_id指定がない場合はログイン中ユーザーとして処理
+            $user = $this->getUser();
+        }
+
         $isCheckPetContract = !is_null($this->conservationContactHeaderRepository->findOneBy(['Pet' => $conservationPet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]));
 
         $image0 = $request->get('img0') ?? '';
@@ -340,7 +368,7 @@ class AdoptionPetController extends AbstractController
         $image4 = $request->get('img4') ?? '';
 
         $form = $this->createForm(ConservationPetsType::class, $conservationPet, [
-            'customer' => $this->getUser()
+            'customer' => $user
         ]);
         $conservationPetImages = $this->conservationPetImageRepository->findBy(
             ['ConservationPet' => $conservationPet, 'image_type' => AnilineConf::PET_PHOTO_TYPE_IMAGE],
@@ -368,7 +396,13 @@ class AdoptionPetController extends AbstractController
                 }
                 $entityManager->flush();
 
-                return $this->redirectToRoute('adoption_pet_list');
+                if($conservation_id != ""){
+                    //管理画面からの場合はWindowを閉じる
+                    return $this->redirectToRoute('close_window');
+                }
+                else{
+                    return $this->redirectToRoute('adoption_pet_list');
+                }
             }
         }
 
