@@ -334,4 +334,5 @@ class CustomTopController extends AbstractController
     public function close_window(){
         return [];
     }
+    
 }

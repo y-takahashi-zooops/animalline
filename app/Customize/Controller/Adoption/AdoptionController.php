@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Eccube\Event\EventArgs;
-use Eccube\Form\Type\Front\ContactType;
+use Customize\Form\Type\Front\ContactType;
 use Customize\Service\MailService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -409,6 +409,23 @@ class AdoptionController extends AbstractController
         $form = $builder->getForm();
         $form->handleRequest($request);
 
+        $newFilename = $request->get("newFilename");
+        if ($form->isSubmitted()) {
+            $brochureFile = $form->get('files')->getData();
+            
+            if($brochureFile){
+                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = 'contact-'.uniqid().'.'.$brochureFile->guessExtension();
+
+                $brochureFile->move(
+                    "var/tmp/contact/",
+                    $newFilename
+                );
+
+                $builder->setData(["files" => "var/tmp/contact/".$newFilename]);
+            }
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
@@ -417,6 +434,7 @@ class AdoptionController extends AbstractController
 
                     return $this->render('animalline/adoption/ani_contact_confirm.twig', [
                         'form' => $form->createView(),
+                        "newFilename" => $newFilename
                     ]);
 
                 case 'complete':
@@ -435,7 +453,7 @@ class AdoptionController extends AbstractController
                     $data = $event->getArgument('data');
 
                     // メール送信
-                    $this->mailService->sendContactMail($data);
+                    $this->mailService->sendContactMail($data,$newFilename);
 
                     // return $this->redirect($this->generateUrl('contact_complete'));
                     return $this->render('animalline/adoption/ani_contact_complete.twig');
@@ -447,6 +465,7 @@ class AdoptionController extends AbstractController
         return [
             'title'  => $title,
             'form' => $form->createView(),
+            "newFilename" => $newFilename
         ];
     }
 }

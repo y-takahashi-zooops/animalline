@@ -95,7 +95,7 @@ class JddcQueryService
      * @param $filter_status
      * @return array
      */
-    public function completePetList(): array
+    public function completePetList($from,$to): array
     {
         $status = [AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED, AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG];
         
@@ -110,6 +110,15 @@ class JddcQueryService
             ->setParameter('status', $status)
             ->select('dna.id as dna_id, dna.site_type, b.pet_kind, b.id as breeds_id, b.breeds_name, bp.pet_birthday, dna.check_status, dna.kit_pet_register_date, dna.check_return_date, dnah.shipping_name')
             ->orderBy('dna.check_return_date', 'desc');
+
+        if($from != ""){
+            $queryBreeder->andWhere("dna.check_return_date >= :from")
+                ->setParameter('from', $from);
+        }
+        if($to != ""){
+            $queryBreeder->andWhere("dna.check_return_date <= :to")
+                ->setParameter('to', $to);
+        }
         $resultBreeder = $queryBreeder->getQuery()->getArrayResult();
 
         return $resultBreeder;

@@ -281,7 +281,7 @@ class DnaQueryService
             ->setParameter('end', $endDate)
             ->setParameter('labo', $dna_check_org)
             //->setParameter('check_status', 9)
-            ->select('dna.id as dnaid, dna.site_type as stype, dna.dna_check_count as count, dna.check_return_date as result_date, dnah.shipping_name as name, b.id as breeder_id, dna.pet_id')
+            ->select('dna.id as dnaid, dna.site_type as stype, dna.dna_check_count as count, dna.check_return_date as result_date, dnah.shipping_name as name, b.id as breeder_id, dna.pet_id as pet_id')
             ->orderBy("dna.check_return_date",  "ASC");
         return $qb->getQuery()->getResult();
     }

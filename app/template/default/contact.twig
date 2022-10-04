@@ -7,11 +7,11 @@
                 <div class="ec-off1Grid">
                     <div class="ec-off1Grid__cell">
                     {% if site_type == 'breeder' %}
-                        <form method="post" action="{{ url('breeder_ani_contact') }}" class="h-adr" novalidate>
+                        <form method="post" action="{{ url('breeder_ani_contact') }}" class="h-adr" enctype="multipart/form-data" novalidate>
                     {% elseif site_type == 'adoption' %}
-                        <form method="post" action="{{ url('adoption_ani_contact') }}" class="h-adr" novalidate>
+                        <form method="post" action="{{ url('adoption_ani_contact') }}" class="h-adr" enctype="multipart/form-data" novalidate>
                     {% else %}
-                        <form method="post" action="{{ url('contact') }}" class="h-adr" novalidate>
+                        <form method="post" action="{{ url('contact') }}" class="h-adr" enctype="multipart/form-data" novalidate>
                     {% endif %}
                             <span class="p-country-name" style="display:none;">Japan</span>
                             {{ form_widget(form._token) }}
@@ -109,6 +109,23 @@
                                             {{ form_errors(form.contents) }}
                                         </div>
                                         {# <p>{{ 'ご注文に関するお問い合わせには、必ず「ご注文番号」をご記入くださいますようお願いいたします。'|trans }}</p> #}
+                                    </dd>
+                                </dl>
+
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.files, '添付ファイル', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div>
+                                            {% if(newFilename) %}
+                                                送信ファイルあり
+                                                <input type="hidden" name="newFilename" value="{{ newFilename }}" />
+                                            {% else %}
+                                                {{ form_widget(form.files) }}
+                                                {{ form_errors(form.files) }}
+                                            {% endif %}
+                                        </div>
                                     </dd>
                                 </dl>
                                 {# エンティティ拡張の自動出力 #}

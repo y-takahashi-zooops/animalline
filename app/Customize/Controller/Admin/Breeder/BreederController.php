@@ -287,16 +287,41 @@ class BreederController extends AbstractController
                 $request->get('dna_check_org')
             );
 
-            /*
+            $pet_kind = $request->get('pet_kind');
+            $BreedsType = $request->get('BreedsType');
+
+            //集計結果からペット情報参照
+            $arrResult = [];
+
+            $fp = fopen("var/tmp/dna_check_list.csv","w");
+
             foreach ($dnaCheckStatus as $item) {
-                $arrBreeder[] = $item['breeder_id'];
-                if (array_key_exists($item['breeder_id'], $arrCount)) {
-                    $arrCount[$item['breeder_id']] += $item[0]->getDnaCheckCount();
-                } else {
-                    $arrCount[$item['breeder_id']] = $item[0]->getDnaCheckCount() ?? 0;
+                $pet = $this->breederPetsRepository->find($item["pet_id"]);
+                $breeds = $pet->getBreedsType();
+
+                if(!$BreedsType || $breeds->getId() == $BreedsType){
+                    $arritem = [
+                        "result_date" => $item["result_date"]->format("Y/m/d"),
+                        "name" => $item["name"],
+                        "barcode" => $item["stype"].sprintf("%05d",$item["dnaid"]),
+                        "breeds_name" => $breeds->getBreedsName(),
+                        "count" => $item["count"],
+                    ];
+                    $arrResult[] = $arritem;
+
+                    $arrcsv = [
+                        "result_date" => $item["result_date"]->format("Y/m/d"),
+                        "name" => mb_convert_encoding($item["name"],"SJIS"),
+                        "barcode" => $item["stype"].sprintf("%05d",$item["dnaid"]),
+                        "breeds_name" => mb_convert_encoding($breeds->getBreedsName(),"SJIS"),
+                        "count" => $item["count"],
+                    ];
+
+                    fputcsv($fp,$arrcsv);
                 }
             }
-
+            fclose($fp);
+            /*
             $arrayBreeder = array_count_values($arrBreeder);
             foreach ($arrayBreeder as $key => $amount) {
                 $dnaCheckCount[$key] = 0;
@@ -305,10 +330,49 @@ class BreederController extends AbstractController
             }
             */
         }
-
+        
         return [
-            'dnaCheckStatus' => $dnaCheckStatus
+            'dnaCheckStatus' => $arrResult,
+            'pet_kind' => $pet_kind,
+            'BreedsType' => $BreedsType,
         ];
+    }
+
+    /**
+     * 登録内容編集ブリーダー管理
+     * @Route("/%eccube_admin_route%/breeder/dna_check/csv_get", name="admin_breeder_dna_check_csv_get")
+     */
+    public function dnaCheckCsvGet(Request $request)
+    {
+        $filename = 'dna_check_list_'.(new \DateTime())->format('YmdHis').'.csv';
+        
+        $response = new StreamedResponse();
+
+        $response->setCallback(function () use ($request) {
+            $filePath = 'var/tmp/dna_check_list.csv';
+
+            $fp = fopen('php://output', 'w');
+            $fp2 = fopen($filePath , 'r');
+
+            
+            $headers = mb_convert_encoding("検査完了日,ブリーダー名,検査ID,犬種／猫種,	検査項目数\r\n","SJIS");
+            fputs($fp,$headers);
+            
+            while(!feof($fp2)){
+                $row = fgets($fp2);
+                fputs($fp,$row);
+            }
+            
+            fclose($fp);
+            fclose($fp2);
+        });
+
+        $response->headers->set('Content-Type', 'application/octet-stream');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+
+        $response->send();
+
+        return $response;
     }
 
     /**

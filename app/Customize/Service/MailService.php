@@ -296,7 +296,7 @@ class MailService
      *
      * @param $formData お問い合わせ内容
      */
-    public function sendContactMail($formData)
+    public function sendContactMail($formData,$attachFile)
     {
         log_info('お問い合わせ受付メール送信開始');
 
@@ -315,6 +315,10 @@ class MailService
             ->setBcc($this->BaseInfo->getEmail02())
             ->setReplyTo($this->BaseInfo->getEmail02())
             ->setReturnPath($this->BaseInfo->getEmail04());
+
+        if($attachFile){
+            $message->attach(\Swift_Attachment::fromPath("var/tmp/contact/".$attachFile)->setFilename($attachFile));
+        }
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());

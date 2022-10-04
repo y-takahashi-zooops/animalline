@@ -21,6 +21,46 @@ file that was distributed with this source code.
 {% endblock stylesheet %}
 
 {% block javascript %}
+<script>
+    $(document).ready( function() {
+        $('#pet_kind').val({{ pet_kind }});
+        $('#pet_kind').change();
+    });
+    
+    $('#pet_kind').on('change', function () {
+        getDataByPetKind(this);
+    });
+
+    function getDataByPetKind(petKindSelect) {
+        let breed = color = null;
+        const isEdit = !!$('#form-edit').length;
+        if (isEdit) {
+            breed = $('#BreedsType').val();
+        }
+
+        $.ajax({
+            type: 'get',
+            url: '/pet_data_by_pet_kind',
+            dataType: 'json',
+            data: {
+                pet_kind: petKindSelect.value
+            }
+        })
+            .done(function (data) {
+                const { breeds } = data;
+                $('#BreedsType').empty();
+                $('#BreedsType').append(new Option('選択してください', ''));
+                breeds.forEach(breed => {
+                    $('#BreedsType').append(new Option(breed.name, breed.id));
+                });
+                
+                $('#BreedsType').val({{ BreedsType }});
+            })
+            .fail(function (err) {
+                console.error(err);
+            });
+    }
+</script>
 {% endblock javascript %}
 
 {% block main %}
@@ -69,11 +109,30 @@ file that was distributed with this source code.
                         <option value=2 {% if params.dna_check_org is defined and params.dna_check_org == 2 %} selected{% endif %}>ラボ</option>
                     </select>
                 </div>
+
+                <div class="ec-select pb-2">
+                    種別：<br />
+                    <select class="form-control" id="pet_kind" name="pet_kind">
+                        <option value=0>--</option>
+                        <option value=1>犬</option>
+                        <option value=2>猫</option>
+                    </select>
+                </div>
+
+                <div class="ec-select pb-2">
+                    犬種／猫種：<br />
+                    <select class="form-control" id="BreedsType" name="BreedsType">
+                        <option value=0 {% if params.BreedsType is defined and params.BreedsType == 0 %} selected{% endif %}>--</option>
+                    </select>
+                </div>
                 <button class="btn btn-ec-conversion px-5" id="search" type="submit">集計</button>
             </div>
         </form>
     </div>
 
+<div style="text-align:right;margin:20px">
+<a href="{{ url("admin_breeder_dna_check_csv_get") }}">一覧CSVダウンロード</a>
+</div>
 <div class="c-contentsArea__cols">
     <div class="c-contentsArea__primaryCol">
         <div class="c-primaryCol">
@@ -86,6 +145,7 @@ file that was distributed with this source code.
                                 <th class="border-top-0 pt-2 pb-2">検査完了日</th>
                                 <th class="border-top-0 pt-2 pb-2">ブリーダー名</th>
                                 <th class="border-top-0 pt-2 pb-2">検査ID</th>
+                                <th class="border-top-0 pt-2 pb-2">犬種／猫種</th>
                                 <th class="border-top-0 pt-2 pb-2">検査項目数</th>
                                 <th class="border-top-0 pt-2 pb-2 pr-3" colspan="3"></th>
                             </tr>
@@ -94,9 +154,10 @@ file that was distributed with this source code.
                         {% for status in dnaCheckStatus %}
                             <tr>
                                 <td class="align-middle"></td>
-                                <td class="align-middle">{{ status.result_date|date('Y/m/d') }}</td>
+                                <td class="align-middle">{{ status.result_date }}</td>
                                 <td class="align-middle">{{ status.name }}</td>
-                                <td class="align-middle">{{ status.stype }}{{ "%05d"|format(status.dnaid) }}</td>
+                                <td class="align-middle">{{ status.barcode }}</td>
+                                <td class="align-middle">{{ status.breeds_name }}</td>
                                 <td class="align-middle">{{ status.count }}</td>
                             </tr>
                         {% endfor %}

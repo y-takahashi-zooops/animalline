@@ -138,7 +138,10 @@ class JddcController extends AbstractController
      */
     public function complete_list(Request $request, PaginatorInterface $paginator): array
     {
-        $dnasResult = $this->jddcQueryService->completePetList();
+        $from = $request->get("create_date_from");
+        $to = $request->get("create_date_to");
+
+        $dnasResult = $this->jddcQueryService->completePetList($from,$to);
         $dnas = $paginator->paginate(
             $dnasResult,
             $request->query->getInt('page', 1),
