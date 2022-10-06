@@ -348,9 +348,9 @@ class BreederQueryService
             ->where('bp.Breeder = :breeder')
             ->setParameter('breeder', $breeder)
             //->andWhere($qb->expr()->notIn('bp.id', $status))
-            ->andWhere('bp.is_delete = 0')
+            //->andWhere('bp.is_delete = 0')
             ->orderBy('bch.last_message_date', 'ASC')
-            ->select('bp, bch.id as bch_id, bch.last_message_date as last_msg,bch.contract_status, b.breeds_name')
+            ->select('bp, bch.id as bch_id, bch.last_message_date as last_msg,bch.contract_status, b.breeds_name, bp.is_delete')
             ->getQuery()
             ->getScalarResult();
     }

@@ -24,7 +24,7 @@
                     {% for pet in pets %}
                         <tr>
                             <td class="image">
-                                {% if pet['contract_status'] > 0 %}
+                                {% if pet['contract_status'] > 0 or pet['is_delete'] == 1 %}
                                         <figure>
                                             <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet['bp_thumbnail_path'] | default('/noimage_plugin_list.png')) }}"
                                                 class="card-img-top" alt="Pet-image">

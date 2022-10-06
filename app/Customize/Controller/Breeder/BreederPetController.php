@@ -634,7 +634,7 @@ class BreederPetController extends AbstractController
     /**
      * ペットの状態を変更する
      *
-     * @Route("/breeder/member/pets/edit/{id}/change_status", name="breeder_pets_edit_change_status", methods={"GET"})
+     * @Route("/breeder/member/pets/edit/{id}/change_status/execute", name="breeder_pets_edit_change_status", methods={"GET"})
      */
     public function breeder_pets_change_status(Request $request, BreederPets $breederPet)
     {
@@ -657,7 +657,7 @@ class BreederPetController extends AbstractController
     /**
      * ペットの状態を削除する
      *
-     * @Route("/breeder/member/pets/edit/{id}/delete", name="breeder_pets_delete", methods={"GET"})
+     * @Route("/breeder/member/pets/edit/{id}/delete/execute", name="breeder_pets_delete", methods={"GET"})
      */
     public function breeder_pets_delete(BreederPets $breederPet)
     {
