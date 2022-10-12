@@ -17,9 +17,11 @@
                 <table>
                     <tr>
                         <th></th>
+                        <th>検体番号</th>
                         <th>犬種/猫種</th>
-                        <th>登録日時</th>
-                        <th></th>
+                        <th>誕生日</th>
+                        <th>金額</th>
+                        <th>お問い合わせ</th>
                     </tr>
                     {% for pet in pets %}
                         <tr>
@@ -58,6 +60,8 @@
                                     </a>
                                 {% endif %}
                             </td>
+                            <td class="time">{{ pet['bp_pet_code'] }}</td>
+
                             <td class="name">
                                 {% if pet['contract_status'] > 0 %}
                                     {{ pet['breeds_name'] ?? '' }}
@@ -67,7 +71,9 @@
                                     </a>
                                 {% endif %}
                             </td>
-                            <td class="time">{{ pet['bp_create_date']|date('Y/m/d H:i') }}</td>
+                            <td class="time">{{ pet['bp_pet_birthday']|date('Y/m/d H:i') }}</td>
+                            <td class="time">{{ pet['bp_price']|number_format(0) }}円</td>
+                            
                             <td class="receive">
                                 {% if pet['bch_id'] %}
                                     <a href="{{ url('breeder_breeder_message', {'id':pet['bch_id']}) }}">

@@ -105,12 +105,25 @@
         </footer>
     
         <div id="side-menu">
+            <!--
             <div class="side-menu__count">
                 <div class="header-count__dogs"><span>子犬掲載数</span><strong><i>2,652</i>頭</strong></div>
                 <div class="header-count__breeders"><span>ブリーダー数</span><strong><i>2,562</i>人</strong></div>
             </div>
+            -->
             <div class="side-menu__list">
-               
+               <ul>
+                    <li class="logout">
+                        <a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}" class="btn">
+                        <span>Animalline Breeder</span>
+                        </a>
+                    </li>
+                    <li class="logout">
+                        <a href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}" class="btn">
+                        <span>Animalline Adoption</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
