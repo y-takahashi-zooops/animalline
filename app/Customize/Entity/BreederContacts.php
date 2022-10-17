@@ -66,6 +66,11 @@ class BreederContacts
      */
     private $is_delete = 0;
 
+    /**
+     * @ORM\Column(name="image_file", type="string", length=255, nullable=true)
+     */
+    private $image_file;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -115,6 +120,18 @@ class BreederContacts
     public function setSendDate(\DateTimeInterface $send_date): self
     {
         $this->send_date = $send_date;
+
+        return $this;
+    }
+
+    public function getImageFile(): ?string
+    {
+        return $this->image_file;
+    }
+
+    public function setImageFile(?string $image_file): self
+    {
+        $this->image_file = $image_file;
 
         return $this;
     }

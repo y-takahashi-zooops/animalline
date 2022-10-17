@@ -82,6 +82,11 @@ class ContactType extends AbstractType
                 'constraints' => [
                     new Assert\File([
                         'maxSize' => '2m',
+                    ]),
+                    new \Symfony\Component\Validator\Constraints\File([
+                        'mimeTypes' => [
+                            'image/*',
+                        ]
                     ])
                 ],
                 'data_class' => null

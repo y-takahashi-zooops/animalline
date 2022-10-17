@@ -12,7 +12,7 @@
                 </div>
                 <div class="ec-off1Grid">
                     <div class="ec-off1Grid__cell">
-                        <form method="post" action="{{ url('breeder_contact', {'pet_id': id}) }}" class="h-adr" novalidate>
+                        <form method="post" action="{{ url('breeder_contact', {'pet_id': id}) }}" class="h-adr" enctype="multipart/form-data" novalidate>
                             <span class="p-country-name" style="display:none;">
                                 Japan
                             </span>
@@ -52,6 +52,22 @@
                                         <div class="ec-input{{ has_errors(form.booking_request) ? ' error' }}">
                                             {{ form_widget(form.booking_request) }}
                                             {{ form_errors(form.booking_request) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.files, '添付ファイル', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div>
+                                            {% if(newFilename) %}
+                                                送信ファイルあり
+                                                <input type="hidden" name="newFilename" value="{{ newFilename }}" />
+                                            {% else %}
+                                                {{ form_widget(form.files, { 'attr': { 'accept': 'image/*' }}) }}
+                                                {{ form_errors(form.files) }}
+                                            {% endif %}
                                         </div>
                                     </dd>
                                 </dl>

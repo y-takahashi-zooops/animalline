@@ -4,7 +4,6 @@
 /contents/
 /var/
 /vendor/
-/html/upload/temp_image/
-/html/upload/save_image/
+/html/upload
 /app/DoctrineMigrations/
 bin/.phpunit

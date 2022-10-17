@@ -18,7 +18,7 @@
             <h1>マイページ</h1>
             <div class="mypage-menu_list">
                 <ul>
-                    {% if user.regist_type == 0 %}
+                    {% if user.is_breeder == 0 %}
                     
                         <li><a href="{{url('breeder_favorite')}}"><i class="bi bi-heart"></i>お気に入り一覧</a>{# <span class="budge">123</span> #}</li>
                         <li><a href="{{url('breeder_all_message')}}"><i class="bi bi-chat-right-quote-fill"></i>取引メッセージ</a>{% if customer_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li>

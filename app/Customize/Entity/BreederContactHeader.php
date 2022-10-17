@@ -123,6 +123,11 @@ class BreederContactHeader
      */
     private $BreederContacts;
 
+    /**
+     * @ORM\Column(name="image_file", type="string", length=255, nullable=true)
+     */
+    private $image_file;
+
     public function __construct()
     {
         $this->BreederContacts = new ArrayCollection();
@@ -141,6 +146,18 @@ class BreederContactHeader
     public function setCustomer(Customer $customer): self
     {
         $this->Customer = $customer;
+
+        return $this;
+    }
+
+    public function getImageFile(): ?string
+    {
+        return $this->image_file;
+    }
+
+    public function setImageFile(?string $image_file): self
+    {
+        $this->image_file = $image_file;
 
         return $this;
     }

@@ -52,6 +52,17 @@
                                         </div>
                                     </dd>
                                 </dl>
+                                {% if(newFilename) %}
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.booking_request, '添付画像', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <img src="/html/upload/contact/{{ newFilename }}" style="width : 30vw" >
+                                        <input type="hidden" name="newFilename" value="{{ newFilename }}" />
+                                    </dd>
+                                </dl>
+                                {% endif %}
                                 {# エンティティ拡張の自動出力 #}
                                 {% for f in form if f.vars.eccube_form_options.auto_render %}
                                     {% if f.vars.eccube_form_options.form_theme %}
