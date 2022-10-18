@@ -61,8 +61,12 @@
                             <div class="ml-3">
                                 <h3 class="mb-2" style="border-bottom: 1px dotted #cd8362;">{{ message.contactTitle }}</h3>
                                 <h5 class="mb-2 font-weight-400">{{ message.contactDescription|nl2br }}</h5>
-                                {% if message.contactType == 2 %}
+                                
                                 <h5 class="mb-2 font-weight-400">{{ message.bookingRequest }}</h5>
+                                {% if(message.imageFile) %}
+                                <div class="ml-3">
+                                    <img src="/html/upload/contact/{{ message.imageFile }}" style="width : 30vw" >
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
@@ -78,6 +82,11 @@
                                 <div class="chatting">
                                     <div class="message message-right">
                                         {{ listMessage.isDelete == constant('Customize\\Config\\AnilineConf::ANILINE_MESSAGE_DELETED') ? 'このメッセージは削除されました' : listMessage.contactDescription|nl2br }}
+                                        {% if(listMessage.imageFile) %}
+                                            <div class="ml-3">
+                                                <img src="/html/upload/contact/{{ listMessage.imageFile }}" style="width : 30vw" >
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 {# <div class="icon">
@@ -99,6 +108,11 @@
                                 <div class="chatting">
                                     <div class="message message-left">
                                         {{ listMessage.isDelete == constant('Customize\\Config\\AnilineConf::ANILINE_MESSAGE_DELETED') ? 'このメッセージは削除されました' : listMessage.contactDescription|nl2br }}
+                                        {% if(listMessage.imageFile) %}
+                                            <div class="ml-3">
+                                                <img src="/html/upload/contact/{{ listMessage.imageFile }}" style="width : 30vw" >
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <h6 class="text-right">
@@ -113,9 +127,10 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="py-3">
-                                    <form action="{{ url('adoption_adoption_message', {'id': message.id}) }}" method="post" name="adoption-msg-form">
+                                    <form action="{{ url('adoption_adoption_message', {'id': message.id}) }}" method="post" name="adoption-msg-form" enctype="multipart/form-data">
                                         <textarea {{ params.isScroll is defined ? 'autofocus' }} aria-label="dialog-chat" class="col-12 p-2" rows="5" name="reply_message"
                                             placeholder="返信メッセージ"></textarea>
+                                        <input type="file" id="breeder_contact_files" name="files" accept="image/*" class="form-control-file">
                                         <button type="submit" class="ec-blockBtn--cancel mt-2 mb-4">返信メッセージ送信</button>
                                         犬舎／猫舎見学後、下のボタンを押してください。<br />
                                         ・譲渡が成立した場合は“取引成約”ボタンを押してください<br />

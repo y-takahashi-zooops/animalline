@@ -134,11 +134,24 @@ class AdoptionMemberContactController extends AbstractController
         $reasonCancel = $request->get('reason');
         $replyMessage = $request->get('reply_message');
         if ($replyMessage) {
+            //受信ファイル処理
+            $brochureFile = $_FILES['files']['tmp_name'];
+
+            $newFilename = "";
+            if($brochureFile){
+                $newFilename = 'pcontact-'.uniqid().'.'.pathinfo($_FILES['files']['name'], PATHINFO_EXTENSION);
+                if(!file_exists("html/upload/contact/")){
+                    mkdir("html/upload/contact/");
+                }
+                copy($brochureFile,"html/upload/contact/".$newFilename);
+            }
+
             $conservationContact = (new ConservationContacts())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
                 ->setContactDescription($replyMessage)
                 ->setSendDate(Carbon::now())
                 ->setIsReading(0)
+                ->setImageFile($newFilename)
                 ->setConservationContactHeader($msgHeader);
 
             $msgHeader->setConservationNewMsg(1)
@@ -286,11 +299,23 @@ class AdoptionMemberContactController extends AbstractController
         $reasonCancel = $request->get('reason');
         $replyMessage = $request->get('reply_message');
         if ($replyMessage) {
+            //受信ファイル処理
+            $brochureFile = $_FILES['files']['tmp_name'];
+            $newFilename = "";
+            if($brochureFile){
+                $newFilename = 'pcontact-'.uniqid().'.'.pathinfo($_FILES['files']['name'], PATHINFO_EXTENSION);
+                if(!file_exists("html/upload/contact/")){
+                    mkdir("html/upload/contact/");
+                }
+                copy($brochureFile,"html/upload/contact/".$newFilename);
+            }
+
             $conservationContact = (new ConservationContacts())
                 ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
                 ->setContactDescription($replyMessage)
                 ->setSendDate(Carbon::now())
                 ->setIsReading(0)
+                ->setImageFile($newFilename)
                 ->setConservationContactHeader($msgHeader);
 
             $msgHeader->setCustomerNewMsg(1)
@@ -417,6 +442,22 @@ class AdoptionMemberContactController extends AbstractController
         $form = $builder->getForm();
         $form->handleRequest($request);
 
+        //受信ファイル処理
+        $newFilename = $request->get("newFilename");
+        $brochureFile = $form->get('files')->getData();
+                    
+        if($brochureFile){
+            $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = 'pcontact-'.uniqid().'.'.$brochureFile->guessExtension();
+
+            $brochureFile->move(
+                "html/upload/contact/",
+                $newFilename
+            );
+
+            $builder->setData(["files" => "html/upload/contact/".$newFilename]);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
@@ -424,7 +465,8 @@ class AdoptionMemberContactController extends AbstractController
                         'animalline/adoption/contact_confirm.twig',
                         [
                             'form' => $form->createView(),
-                            'id' => $id
+                            'id' => $id,
+                            'newFilename' => $newFilename
                         ]
                     );
 
@@ -436,6 +478,7 @@ class AdoptionMemberContactController extends AbstractController
                         ->setConservation($pet->getConservation())
                         ->setCustomer($this->getUser())
                         ->setContactTitle($arr[$request->get('conservation_contact')['contact_type'] - 1])
+                        ->setImageFile($newFilename)
                         ->setLastMessageDate(Carbon::now());
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($contact);
@@ -456,7 +499,8 @@ class AdoptionMemberContactController extends AbstractController
             'id' => $id,
             'isSelf' => $isSelf,
             'isSold' => $isSold,
-            'isContacted' => $isContacted
+            'isContacted' => $isContacted,
+            'newFilename' => $newFilename
         ];
     }
 

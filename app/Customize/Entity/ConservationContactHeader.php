@@ -125,6 +125,11 @@ class ConservationContactHeader
      */
     private $ConservationContacts;
 
+    /**
+     * @ORM\Column(name="image_file", type="string", length=255, nullable=true)
+     */
+    private $image_file;
+    
     public function __construct()
     {
         $this->ConservationContacts = new ArrayCollection();
@@ -315,6 +320,18 @@ class ConservationContactHeader
         return $this;
     }
 
+    public function getImageFile(): ?string
+    {
+        return $this->image_file;
+    }
+
+    public function setImageFile(?string $image_file): self
+    {
+        $this->image_file = $image_file;
+
+        return $this;
+    }
+    
     /**
      * @return Collection|ConservationContacts[]
      */

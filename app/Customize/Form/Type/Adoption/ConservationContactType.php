@@ -19,6 +19,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -56,10 +57,29 @@ class ConservationContactType extends AbstractType
                 'expanded' => false,
             ])
             ->add('contact_description', TextareaType::class, [
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
             ])
             ->add('booking_request', TextareaType::class, [
                 'required' => false,
+            ])
+            ->add('files', FileType::class, [
+                'label' => '添付ファイル',
+                'required' => false,
+                'constraints' => [
+                    new Assert\File([
+                        'maxSize' => '2m',
+                    ]),
+                    new \Symfony\Component\Validator\Constraints\File([
+                        'mimeTypes' => [
+                            'image/*',
+                        ]
+                    ])
+                ],
+                'mapped' => false,
+                'data_class' => null
             ]);
     }
 
