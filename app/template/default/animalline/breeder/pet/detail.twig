@@ -65,10 +65,16 @@
                                 <div class="m-2 p-2"></div>
                             {% endif %}
                             {# <div class="row"> #}
+                        
+                            {% if breederPet.movieFile %}
+                                <div class="pet-movie">
+                                    <video src="/html/upload/movie/{{ breederPet.movieFile }}" controls></video>
+                                </div>
+                            {% endif %}
+
                             <div style="text-align: right">
                                 このページの閲覧数：{{ breederPet.ViewCount }}
                             </div>
-
                             <div class="breeder_section_header">
                                 <i class="fas fa-paw"></i>
                                 基本情報

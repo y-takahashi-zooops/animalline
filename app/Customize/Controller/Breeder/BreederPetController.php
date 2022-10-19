@@ -12,6 +12,7 @@ use Customize\Service\BreederQueryService;
 use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Form\Type\Breeder\BreederPetsType;
+use Customize\Form\Type\Breeder\BreederPetMovieType;
 use Customize\Entity\BreederHouse;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\PetsFavoriteRepository;
@@ -220,6 +221,51 @@ class BreederPetController extends AbstractController
                 'pets' => $arrayPets,
             ]
         );
+    }
+
+    /**
+     * 動画投稿
+     *
+     * @Route("/breeder/member/movie_upload/{pet_id}", name="movie_upload", requirements={"pet_id" = "\d+"})
+     * @Template("animalline/breeder/member/movie_upload.twig")
+     */
+    public function movie_upload(Request $request,$pet_id)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $pet = $this->breederPetsRepository->find($pet_id);
+        if (!$pet) {
+            throw new HttpException\NotFoundHttpException();
+        }
+
+        $builder = $this->formFactory->createBuilder(BreederPetMovieType::class);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        $thumbnail_path = $request->get('thumbnail_path') ?? '';
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            //受信ファイル処理
+            $brochureFile = $form->get('movie_file')->getData();
+                        
+            if($brochureFile){
+                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = 'pmovie-'.uniqid().'.'.$brochureFile->guessExtension();
+
+                $brochureFile->move(
+                    "html/upload/movie/",
+                    $newFilename
+                );
+
+                $pet->setMovieFile($newFilename);
+                $entityManager->persist($pet);
+                $entityManager->flush();
+            }
+        }
+
+        return ['pet' => $pet,'form' => $form->createView()];
     }
 
     /**

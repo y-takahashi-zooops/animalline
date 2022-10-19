@@ -396,6 +396,11 @@ SIDE MENU
   color:#fff;
 }
 
+.pet-movie {
+  width:60%;
+  margin: auto;
+}
+
 /*------------------
 Width <= 1280px
 ------------------*/
@@ -457,6 +462,11 @@ header .header-right{
 .footer-logo{
   margin:0 0 40px;
 }
+.pet-movie {
+  width:100%;
+  margin: auto;
+}
+
 }
 
 /*------------------

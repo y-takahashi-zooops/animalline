@@ -1,0 +1,92 @@
+{% set site_type = 'breeder' %}
+{% set params = app.request.query.all %}
+{% extends 'animalline/breeder/frame.twig' %}
+
+{% block main %}
+    <section id="breeder-column">
+        <div class="inner">
+            <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
+                <div class="breeder-column__main_section_title">
+                    <h2>動画アップロード</h2>
+                </div>
+                <div class="breeder-column__main_section_body">
+                    <div class="breeder_section_header">
+                        <i class="fas fa-paw"></i>
+                        ペット情報
+                    </div>
+                    <div class="row mb-4 mt-4">
+                        <div class="col-md-3 col-sm-4">
+                            <a target="_blank" class="w-100" href="{{ url('breeder_pet_detail', {'id': pet.Id}) }}">
+                                <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (message.getPet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                    class="w-100 mb-4 mb-sm-0" alt="...">
+                            </a>
+                        </div>
+                        <div class="col-sm-8">
+                            <h3 class="font-weight-500 color-gray-500 mb-4">{{ pet.BreedsType.breedsName ?? '' }}</h3>
+                            <div class="d-flex mb-2">
+                                <h6>誕生日：{{ pet.petBirthday|date('Y年m月d日') }}生</h6>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <h6>色：{{ pet.getCoatColor() ?? '' }}</h6>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <h6>性別：{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</h6>
+                            </div>
+                            <div class="d-flex mb-2">
+                                <h6>価格：{{ pet.price }}円</h6>
+                            </div>
+                            <a target="_blank" href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
+                                <h4 class="color-breeder d-inline-block">ペット詳細ページへ</h4>
+                            </a>
+                        </div>
+                    </div>
+                    {% if pet.movieFile %}
+                        <div class="pet-movie">
+                            現在掲載中の動画
+                            <video src="/html/upload/movie/{{ pet.movieFile }}" controls></video>
+                        </div>
+                    {% endif %}
+                    {# 返信欄・ボタン #}
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="py-3">
+
+                                <form action="{{ url('movie_upload', {'pet_id': pet.id}) }}" method="post" name="breeder-msg-form" enctype="multipart/form-data">
+                                    {{ form_rest(form) }}
+                                    <button type="submit" class="ec-blockBtn--action mt-2 mb-4">動画アップロード</button>
+                                </form>
+                            </div>
+                        </div>
+                        <a href="{{ url('breeder_pet_list') }}" class="ec-blockBtn--cancel mt-2 mb-4">戻る</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <style>
+        .delete {
+            color: red;
+            cursor: pointer;
+        }
+        @media (max-width: 576px) {
+            .flex-sm-column {
+                -ms-flex-direction: column !important;
+                flex-direction: column !important;
+            }
+        }
+        .d-flex>button {
+            flex: 0 0 49%;
+        }
+    </style>
+{% endblock %}
+{% block javascript %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+</script>
+{% endblock %}

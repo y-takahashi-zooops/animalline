@@ -181,9 +181,9 @@ class BreederMemberController extends AbstractController
             $customer_newmsg = 1;
         }
 
-        $breefer_newmsg = 0;
+        $breeder_newmsg = 0;
         if ($this->breederContactHeaderRepository->findBy(["Breeder" => $user, "breeder_new_msg" => 1])) {
-            $breefer_newmsg = 1;
+            $breeder_newmsg = 1;
         }
 
         $contactHeaders = $this->breederContactHeaderRepository->findBy(["Customer" => $user, "contract_status" => AnilineConf::CONTRACT_STATUS_CONTRACT]);
@@ -197,8 +197,8 @@ class BreederMemberController extends AbstractController
             'pets' => $pets,
             'user' => $this->getUser(),
             'customer_newmsg' => $customer_newmsg,
-            'breeder_newmsg' => $breefer_newmsg,
-            'canBenefits' => $canBenefits,
+            'breeder_newmsg' => $breeder_newmsg,
+            'canBenefits' => $canBenefits
         ]);
     }
 

@@ -21,6 +21,7 @@
                         <th>犬種/猫種</th>
                         <th>誕生日</th>
                         <th>金額</th>
+                        <th>動画</th>
                         <th>お問い合わせ</th>
                     </tr>
                     {% for pet in pets %}
@@ -74,6 +75,19 @@
                             <td class="time">{{ pet['bp_pet_birthday']|date('Y/m/d H:i') }}</td>
                             <td class="time">{{ pet['bp_price']|number_format(0) }}円</td>
                             
+                            <td class="time">
+                                    {% if pet['movie_file'] %}
+                                        <a href="{{ url('movie_upload', {'pet_id': pet['bp_id']}) }}" class="btn btn-primary">
+                                        動画更新
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ url('movie_upload', {'pet_id': pet['bp_id']}) }}" class="btn btn-success">
+                                        動画追加
+                                        </a>
+                                    {% endif %}
+                                
+                            </td>
+
                             <td class="receive">
                                 {% if pet['bch_id'] %}
                                     <a href="{{ url('breeder_breeder_message', {'id':pet['bch_id']}) }}">

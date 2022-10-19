@@ -220,6 +220,11 @@ class BreederPets
      */
     private $is_contract = 0;
 
+    /**
+     * @ORM\Column(name="movie_file", type="string", length=255, nullable=true)
+     */
+    private $movie_file;
+
     public function __construct()
     {
         $this->BreederPetImages = new ArrayCollection();
@@ -469,6 +474,18 @@ class BreederPets
     public function setThumbnailPath(?string $thumbnail_path): self
     {
         $this->thumbnail_path = $thumbnail_path;
+
+        return $this;
+    }
+
+    public function getMovieFile(): ?string
+    {
+        return $this->movie_file;
+    }
+
+    public function setMovieFile(?string $movie_file): self
+    {
+        $this->movie_file = $movie_file;
 
         return $this;
     }

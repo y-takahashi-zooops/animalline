@@ -601,6 +601,22 @@ Width <= 980px
         height:160px;
     }
 
+    .mypage-service_list__table_body table th{
+        display:none;
+    }
+
+    .mypage-service_list__table_body table td{
+        display: block;
+        width: 100%;
+        border-bottom:none;
+    }
+
+    .mypage-service_list__table_body table tr{
+        border-bottom:solid #ddd 1px;
+    }
+
+
+
 }
 
 /*------------------
@@ -618,7 +634,6 @@ Width <= 768px
 Width <= 640px
 ------------------*/
 @media screen and (max-width: 640px) {
-
     .breadcrumbs ul li{
         font-size:12px;
     }
