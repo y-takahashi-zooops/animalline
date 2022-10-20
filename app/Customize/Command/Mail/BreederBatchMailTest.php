@@ -112,7 +112,7 @@ class BreederBatchMailTest extends Command
         }
         else{
             echo "メール送信：".$customer->getEmail()."(".$customer->getId().")".$customer->getName01().$customer->getName02()."\n";
-            $this->mailService->sendAllBreederMail($customer);
+            //$this->mailService->sendAllBreederMail($customer);
             sleep(1);
             $this->mailService->sendAllBreederMail2($customer);
         }

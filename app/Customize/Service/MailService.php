@@ -1620,6 +1620,7 @@ class MailService
      */
     public function sendAllBreederMail(\Eccube\Entity\Customer $Customer)
     {
+        /*
         $body = $this->twig->render('Mail/Breeder/breeder_all.twig', [
             'BaseInfo' => $this->BaseInfo,
             'customer' => $Customer
@@ -1635,6 +1636,7 @@ class MailService
         $message->setBody($body);
 
         return $this->mailer->send($message, $failures);
+        */
     }
 
     /**
