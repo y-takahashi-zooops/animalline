@@ -1653,13 +1653,12 @@ class MailService
         ]);
 
         $message = (new \Swift_Message())
-            ->setSubject('【Animalline】切迫フードのご紹介について')
+            ->setSubject('【Animalline】切迫フードのご紹介について２')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04())
-            ->attach(\Swift_Attachment::fromPath('/var/www/animalline/var/campaign20221020_01.pdf')->setFilename('ご紹介フードについて.pdf')->setContentType('application/pdf'))
-            ->attach(\Swift_Attachment::fromPath('/var/www/animalline/var/campaign20221020_02.pdf')->setFilename('切迫キブル パッケージシール.pdf')->setContentType('application/pdf'));
+            ->attach(\Swift_Attachment::fromPath('/var/www/animalline/var/campaign20221025.pdf')->setFilename('ご紹介フードについて2.pdf')->setContentType('application/pdf'));
             
         $message->setBody($body);
 
