@@ -191,10 +191,15 @@ class BreederQueryService
                 ->setParameter(':from', $time_new);
         }
 
+        $query->orderBy('p.is_delete', 'asc')
+            ->addOrderBy('p.dna_check_result', 'desc')
+            ->addOrderBy('p.thumbnail_path', 'desc');
+
+        /*
         if ($request->get('featured_pet')) {
             $query->orderBy('p.favorite_count', 'DESC');
         }
-
+        */
         return $query->addOrderBy('p.release_date', 'DESC')
             ->getQuery()
             ->getResult();
@@ -350,7 +355,8 @@ class BreederQueryService
             ->setParameter('breeder', $breeder)
             //->andWhere($qb->expr()->notIn('bp.id', $status))
             //->andWhere('bp.is_delete = 0')
-            ->orderBy('bch.last_message_date', 'ASC')
+            ->orderBy('bp.is_delete', 'DESC')
+            ->addOrderBy('bch.last_message_date', 'ASC')
             ->select('bp, bch.id as bch_id, bch.last_message_date as last_msg,bch.contract_status, b.breeds_name, bp.is_delete, bp.movie_file')
             ->getQuery()
             ->getScalarResult();

@@ -57,7 +57,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/base-style.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/common.css') }}?v=20220801">
+    <link rel="stylesheet" href="{{ asset('assets/css/common.css') }}?v=20221028">
     <link rel="canonical" href=" {{ app.request.getUri }}">
     {% block stylesheet %}{% endblock %}
 </head>
@@ -142,6 +142,31 @@
             </div>
         </header>
         <main role="main">
+            <div class="header-navi">
+            　<ul>
+            　　<li>
+                    <a href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}" class="btn">
+                    <span>犬を探す</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}" class="btn">
+                    <span>猫を探す</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{url('adoption_search')}}" class="btn">
+                    <span>保護団体を探す</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{url('adoption_guide_dog')}}" class="btn">
+                    <span>お迎えガイド</span>
+                    </a>
+                </li>
+            　</ul>
+            </div>
+
             <div class="header-title">
                 <h1>{{ maintitle }}</h1>
                 <ol itemscope itemtype="http://schema.org/BreadcrumbList" class="ani-breadcrumb">
@@ -217,6 +242,26 @@
             #}
             <div class="side-menu__list">
                 <ul>
+                    <li class="logout">
+                        <a href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}" class="btn">
+                        <span>犬を探す</span>
+                        </a>
+                    </li>
+                    <li class="logout">
+                        <a href="{{ url('adoption_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}" class="btn">
+                        <span>猫を探す</span>
+                        </a>
+                    </li>
+                    <li class="logout">
+                        <a href="{{url('adoption_search')}}" class="btn">
+                        <span>保護団体を探す</span>
+                        </a>
+                    </li>
+                    <li class="logout">
+                        <a href="{{url('adoption_guide_dog')}}" class="btn">
+                        <span>お迎えガイド</span>
+                        </a>
+                    </li>
                     {% if is_granted('ROLE_USER') %}
                         <li class="logout">
                             <a href="{{url('logout')}}" class="btn">

@@ -61,9 +61,9 @@
                                     </a>
                                 {% endif %}
                             </td>
-                            <td class="time">{{ pet['bp_pet_code'] }}</td>
+                            <td class="time" data-label="検体番号">{{ pet['bp_pet_code'] }}</td>
 
-                            <td class="name">
+                            <td class="name" data-label="犬種/猫種">
                                 {% if pet['contract_status'] > 0 %}
                                     {{ pet['breeds_name'] ?? '' }}
                                 {% else %}
@@ -72,8 +72,8 @@
                                     </a>
                                 {% endif %}
                             </td>
-                            <td class="time">{{ pet['bp_pet_birthday']|date('Y/m/d H:i') }}</td>
-                            <td class="time">{{ pet['bp_price']|number_format(0) }}円</td>
+                            <td class="time" data-label="誕生日">{{ pet['bp_pet_birthday']|date('Y/m/d H:i') }}</td>
+                            <td class="time" data-label="金額">{{ pet['bp_price']|number_format(0) }}円</td>
                             
                             <td class="time">
                                     {% if pet['movie_file'] %}
@@ -129,6 +129,6 @@
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/mypage.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/mypage.css') }}?v=20221028">
 {% endblock %}
 {% block javascript %}{% endblock %}

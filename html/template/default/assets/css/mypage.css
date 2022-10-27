@@ -609,11 +609,23 @@ Width <= 980px
         display: block;
         width: 100%;
         border-bottom:none;
+        padding: 2px;
     }
 
     .mypage-service_list__table_body table tr{
         border-bottom:solid #ddd 1px;
     }
+
+    .mypage-service_list__table_body table td:before{
+        content: attr(data-label);
+        font-size: .7rem;
+        font-weight:bold;
+        color: rgb(242, 132, 54);
+        display: block;
+      }
+      .mypage-service_list__table_body table{
+        border-bottom: solid 1px #ccc;
+      }
 
 
 

@@ -77,4 +77,15 @@
         <li><a href="{{ url('adoption_policy') }}"><i class="bi bi-shield-check"></i>プライバシーポリシー</a></li>
         </ul>
     </div>  
+
+    {% if rssfeed is defined %}
+    <div class="rss-feed">
+        <div class="rss-feed_title"><h3 style="color: #fff">最新コラム</h3></div>
+        <ul>
+        {% for feed in rssfeed %}
+            <li><a href="{{feed.link}}" target="_blank">{{feed.title}}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
 </div>

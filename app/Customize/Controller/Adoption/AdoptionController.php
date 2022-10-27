@@ -177,6 +177,30 @@ class AdoptionController extends AbstractController
             $entityManager->flush();
         }
 
+        //RSS
+        $url = "https://animalline.jp/contents/feed/";
+        $xml = file_get_contents($url);
+        $obj = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA);
+        $i = 0;
+        foreach ($obj->channel->item as $val) {
+            $skip=false;
+            foreach($val->category as $cat){
+                if($cat == "ブリーダー"){
+                    $skip=true;
+                }
+            }
+            if(!$skip){
+                if ($i < 5){
+                    $rssfeed[$i]['title'] = $val->title;
+                    $rssfeed[$i]['link'] = $val->link;
+                    $rssfeed[$i]['date'] = $val->pubDate;
+                    $rssfeed[$i]['description'] = $val->description;
+                    $rssfeed[$i]['category'] = $val->category;
+                }
+                $i++;
+            }
+        }
+
         return $this->render('animalline/adoption/index.twig', [
             'title' => 'ペット検索',
             'petKind' => $petKind,
@@ -186,6 +210,7 @@ class AdoptionController extends AbstractController
             'favoritePets' => $favoritePets,
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
+            'rssfeed' => $rssfeed
         ],$response);
     }
 

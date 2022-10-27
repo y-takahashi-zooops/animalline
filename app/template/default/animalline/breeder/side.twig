@@ -114,5 +114,16 @@
         <li><a href="{{ url('breeder_user_terms') }}"><i class="bi bi-file-text"></i>利用規約</a></li>
         <li><a href="{{ url('breeder_policy') }}"><i class="bi bi-shield-check"></i>プライバシーポリシー</a></li>
         </ul>
-    </div>  
+    </div> 
+
+    {% if rssfeed is defined %}
+    <div class="rss-feed">
+        <div class="rss-feed_title"><h3 style="color: #fff">最新コラム</h3></div>
+        <ul>
+        {% for feed in rssfeed %}
+            <li><a href="{{feed.link}}" target="_blank">{{feed.title}}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
 </div>
