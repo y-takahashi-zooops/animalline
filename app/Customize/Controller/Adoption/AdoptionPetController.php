@@ -258,7 +258,6 @@ class AdoptionPetController extends AbstractController
             $conservationPet->setConservation($conservation);
             $conservationPet->setDnaCheckResult(0);
             $conservationPet->setIsActive($conservation->getIsActive());
-            $conservationPet->setPrice(0);
             $bd = new DateTime('now');
             $conservationPet->setPetBirthday($bd);
             $conservationPet->setFutureWait(0);
@@ -376,6 +375,7 @@ class AdoptionPetController extends AbstractController
         );
 
         $request->request->set('thumbnail_path', $conservationPet->getThumbnailPath() ? '/' . AnilineConf::ANILINE_IMAGE_URL_BASE . $conservationPet->getThumbnailPath() : '');
+
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $request->request->set('thumbnail_path', $image0);

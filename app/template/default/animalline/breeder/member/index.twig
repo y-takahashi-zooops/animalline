@@ -22,7 +22,7 @@
                     
                         <li><a href="{{url('breeder_favorite')}}"><i class="bi bi-heart"></i>お気に入り一覧</a>{# <span class="budge">123</span> #}</li>
                         <li><a href="{{url('breeder_all_message')}}"><i class="bi bi-chat-right-quote-fill"></i>取引メッセージ</a
-                        {% if canBenefits %}<li><a href="{{url('breeder_benefits')}}"><i class="bi bi-gift-fill"></i>ご成約特典</a></li>{% endif %}>{% if customer_new_msg == 1 %}<span class="budge">New!</span>{% endif %}</li>
+                        {% if canBenefits %}<li><a href="{{url('breeder_benefits')}}"><i class="bi bi-gift-fill"></i>ご成約特典</a></li>{% endif %}>{% if customer_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li>
                     
                     {% endif %}
                     {% if user.is_breeder == 0 and user.regist_type == 1 %}

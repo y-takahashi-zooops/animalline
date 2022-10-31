@@ -145,9 +145,19 @@ class ConservationPets
     private $thumbnail_path;
 
     /**
-     * @ORM\Column(name="price", type="integer")
+     * @ORM\Column(name="price", type="integer", nullable=true)
      */
     private $price;
+
+    /**
+     * @ORM\Column(name="price_comment", type="string", length=255, nullable=true)
+     */
+    private $price_comment;
+
+    /**
+     * @ORM\Column(name="reason_comment", type="string", length=255, nullable=true)
+     */
+    private $reason_comment;
 
     /**
      * @ORM\OneToMany(targetEntity=ConservationPetImage::class, mappedBy="ConservationPet", orphanRemoval=true)
@@ -311,6 +321,31 @@ class ConservationPets
         return $this;
     }
 
+    public function getPriceComment(): ?string
+    {
+        return $this->price_comment;
+    }
+
+    public function setPriceComment(?string $price_comment): self
+    {
+        $this->price_comment = $price_comment;
+
+        return $this;
+    }
+
+    public function getReasonComment(): ?string
+    {
+        return $this->reason_comment;
+    }
+
+    public function setReasonComment(?string $reason_comment): self
+    {
+        $this->reason_comment = $reason_comment;
+
+        return $this;
+    }
+
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -465,7 +500,7 @@ class ConservationPets
         return $this->price;
     }
 
-    public function setPrice(int $price): self
+    public function setPrice(?int $price): self
     {
         $this->price = $price;
 

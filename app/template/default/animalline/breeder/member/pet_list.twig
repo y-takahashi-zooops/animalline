@@ -72,20 +72,21 @@
                                     </a>
                                 {% endif %}
                             </td>
-                            <td class="time" data-label="誕生日">{{ pet['bp_pet_birthday']|date('Y/m/d H:i') }}</td>
+                            <td class="time" data-label="誕生日">{{ pet['bp_pet_birthday']|date('Y/m/d') }}</td>
                             <td class="time" data-label="金額">{{ pet['bp_price']|number_format(0) }}円</td>
                             
                             <td class="time">
-                                    {% if pet['movie_file'] %}
-                                        <a href="{{ url('movie_upload', {'pet_id': pet['bp_id']}) }}" class="btn btn-primary">
-                                        動画更新
-                                        </a>
-                                    {% else %}
-                                        <a href="{{ url('movie_upload', {'pet_id': pet['bp_id']}) }}" class="btn btn-success">
-                                        動画追加
-                                        </a>
+                                    {% if pet['contract_status'] == 0 and pet['is_delete'] != 1 %}
+                                        {% if pet['movie_file'] %}
+                                            <a href="{{ url('movie_upload', {'pet_id': pet['bp_id']}) }}" class="btn btn-primary">
+                                            動画更新
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url('movie_upload', {'pet_id': pet['bp_id']}) }}" class="btn btn-success">
+                                            動画追加
+                                            </a>
+                                        {% endif %}
                                     {% endif %}
-                                
                             </td>
 
                             <td class="receive">

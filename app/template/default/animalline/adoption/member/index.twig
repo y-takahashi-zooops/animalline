@@ -44,12 +44,13 @@
             </div>
         </div>
     </div>
-
-<div class="row">
-    <div class="col-lg-8 col-md-12" style="margin: 5rem auto 0 auto;">
-        <img src="{{ asset('assets/img/reg/adoption_pet_regist_info.png') }}" alt="ペットの家庭教師"/>
+    {% if user.isConservation == 1 %}
+    <div class="row">
+        <div class="col-lg-8 col-md-12" style="margin: 5rem auto 0 auto;">
+            <img src="{{ asset('assets/img/reg/adoption_pet_regist_info.png') }}" alt="ペットの家庭教師"/>
+        </div>
     </div>
-</div>
+    {% endif %}
 </div>
 {% endblock %}
 {% block stylesheet %}

@@ -216,7 +216,30 @@ class ConservationPetsType extends AbstractType
             ])
             ->add('ImagePathErrors', TextType::class, [
                 'mapped' => false,
-            ]);;
+            ])
+            ->add('price_comment', TextareaType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 255,
+                    ]),
+                    //new Assert\NotBlank(),
+                ],
+            ])
+            ->add('reason_comment', TextareaType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Assert\Length([
+                        'max' => 255,
+                    ]),
+                    //new Assert\NotBlank(),
+                ],
+            ])
+            ->add('price', IntegerType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
+            ]);
         /*
         ->add('is_active', ChoiceType::class, [
             'choices' =>

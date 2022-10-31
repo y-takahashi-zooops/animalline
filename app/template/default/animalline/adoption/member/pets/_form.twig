@@ -91,6 +91,16 @@
 
     <div class="row mb-3">
         <div class="col-md-3">
+            {{ form_label(form.name, '募集の経緯', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        </div>
+        <div class="col-md-8 ec-input ec-select">
+            {{ form_widget(form.reason_comment) }}
+            {{ form_errors(form.reason_comment) }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
             {{ form_label(form.name, '仮名・特徴', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
         </div>
         <div class="col-md-8 ec-input ec-select">
@@ -171,6 +181,32 @@
         <div class="col-md-8 ec-input ec-select">
             {{ form_widget(form.is_senior) }}
             {{ form_errors(form.is_senior) }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+        {{ form_label(form.price, 'お迎え費用', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        <span class="ec-required">必須</span>  
+        </div>
+        <div class="col-md-8 col-lg-4">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">￥ </span>
+                </div>
+                {{ form_widget(form.price) }}
+                {{ form_errors(form.price) }}
+                </div>
+        </div>
+    </div>    
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            {{ form_label(form.name, '費用詳細', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
+        </div>
+        <div class="col-md-8 ec-input ec-select">
+            {{ form_widget(form.price_comment) }}
+            {{ form_errors(form.price_comment) }}
         </div>
     </div>
 
