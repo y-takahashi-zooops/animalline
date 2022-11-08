@@ -35,7 +35,7 @@
                     <li><a href="{{ url('adoption_change') }}"><i class="bi bi-pencil-fill"></i>会員情報編集<br /><p>メールアドレス・パスワード変更の方はこちら</p></a></li>
                         
                     {% if user.isConservation == 1 %}
-                        <li><a href="{{url('adoption_baseinfo',{'return_path': "adoption_mypage"})}}"><i class="bi bi-pencil-fill"></i>基本情報編集<br /><p>　</p></a></li>
+                        <li><a href="{{url('adoption_baseinfo',{'return_path': "adoption_mypage"})}}"><i class="bi bi-pencil-fill"></i>基本情報編集<br /><p>引き渡し方法等の共通テンプレート編集はこちら</p></a></li>
                         <li><a href="{{path('adoption_house_info',{'pet_type': 1 ,'return_path': "adoption_mypage"})}}"><i class="bi bi-pencil-fill"></i>情報編集<br /><p>　</p></a></li>
                         <li><a href="{{url('adoption_bank_regist')}}"><i class="bi bi-pencil-fill"></i>口座登録<br /><p>弊社からの寄付金振込先をこちらご登録ください。</p></a></li>
                         

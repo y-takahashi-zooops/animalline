@@ -75,17 +75,19 @@
                                     </div>
                                 </div>
                             </div>
+                            {% if conservationPet.reasonComment %}
                             <div class="col-12 breeder_section_detail">
                                 <div class="row">
                                     <div class="col-12 col-md-4 contents_col_bold">
                                         募集の経緯
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ conservationPet.reason_comment ?? '' }}
+                                        {{ conservationPet.reasonComment ?? '' }}
                                     </div>
                                 </div>
                             </div>
-
+                            {% endif %}
+                            
                             <div class="col-12 breeder_section_detail">
                                 <div class="row">
                                     <div class="col-12 col-md-4 contents_col_bold">
