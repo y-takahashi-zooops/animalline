@@ -1653,7 +1653,7 @@ class MailService
         ]);
 
         $message = (new \Swift_Message())
-            ->setSubject('【Animalline/重要】検査キット廃棄のお願い')
+            ->setSubject('【Animalline/重要】メール誤送信のお詫び')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
             ->setReplyTo($this->BaseInfo->getEmail03())
