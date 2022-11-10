@@ -31,6 +31,18 @@
                                     </dl>
                                     <dl>
                                         <dt>
+                                            <span class="mr-2">成約特典種別</span>
+                                            <span class="ec-required">必須</span>
+                                        </dt>
+                                        <dd>
+                                            <div class="ec-input{{ has_errors(form.benefits_type) ? ' error' }}">
+                                                {{ form.benefits_type.vars.choices[form.benefits_type.vars.data].label }}
+                                                {{ form_widget(form.benefits_type, { 'attr': {'class': 'hidden'} }) }}
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>
                                             <span class="mr-2">住所</span>
                                             <span class="ec-required">必須</span>
                                         </dt>
