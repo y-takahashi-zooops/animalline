@@ -246,7 +246,7 @@ class JddcController extends AbstractController
         $data = [
             'shipping_name' => $shippingName,
             'isDisable' => $show,
-            'dnaId' => number_format($dnaId),
+            'dnaId' => intval($dnaId),
             'petBirthday' => $petBirthday,
             'petKind' => $petKind,
             'petType' => $petType
