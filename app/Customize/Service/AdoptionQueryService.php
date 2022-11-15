@@ -90,8 +90,7 @@ class AdoptionQueryService
         $time_new = Carbon::now()->subMonth()->toDateString();
 
         $query = $this->conservationPetsRepository->createQueryBuilder('p')
-            ->where('p.is_active = :release_status')
-            ->setParameter('release_status', 1)
+            ->where('p.is_active > 0')
             ->andWhere('p.pet_kind = :pet_kind')
             ->setParameter('pet_kind', $petKind);
 
@@ -102,7 +101,8 @@ class AdoptionQueryService
             ->setParameter(':from', $time_new);
             */
 
-        return $query->addOrderBy('p.update_date', 'DESC')
+        return $query->addOrderBy('p.is_active', 'ASC')
+            ->addOrderBy('p.update_date', 'DESC')
             ->setMaxResults(16)
             ->getQuery()
             ->getResult();
@@ -138,8 +138,7 @@ class AdoptionQueryService
     {
         $query = $this->conservationPetsRepository->createQueryBuilder('p')
             ->join('p.Conservation', 'c')
-            ->where('p.is_active = :release_status')
-            ->setParameter('release_status', AnilineConf::IS_ACTIVE_PUBLIC);
+            ->where('p.is_active != 0');
 
         if ($request->get('pet_kind')) {
             $query->andWhere('p.pet_kind = :pet_kind')
@@ -189,8 +188,10 @@ class AdoptionQueryService
                 ->setParameter('toDate', Carbon::now()->toDateString());
         }
 
+        $query->addOrderBy('p.is_active', 'ASC');
+
         if ($request->get('featured_pet')) {
-            $query->orderBy('p.favorite_count', 'DESC');
+            $query->addOrderBy('p.favorite_count', 'DESC');
         }
 
         return $query->addOrderBy('p.release_date', 'DESC')
@@ -312,18 +313,56 @@ class AdoptionQueryService
     /**
      * list breeder pets
      */
-    public function getListPet($conservation)
+    public function getListPet($conservation,$petlist_view)
     {
         $qb = $this->conservationPetsRepository->createQueryBuilder('cp');
-        return $qb
-            ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = cp.BreedsType')
+
+        $qb->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'b.id = cp.BreedsType')
             ->leftJoin('Customize\Entity\ConservationContactHeader', 'cch', 'WITH', 'cch.Pet = cp.id')
-            ->where('cp.Conservation = :conservation')
-            ->andWhere('cp.is_delete = 0')
-            ->setParameter('conservation', $conservation)
+            ->where('cp.Conservation = :conservation');
+        if($petlist_view == 1){
+            $qb->andWhere('cp.is_active = 1');
+        }
+        elseif($petlist_view == 2){
+            $qb->andWhere('cp.is_active = 2');
+        }
+        elseif($petlist_view == 3){
+            $qb->andWhere('cp.is_active = 3');
+        }
+        else{
+            $qb->andWhere('cp.is_active = 0');
+        }
+        $qb->setParameter('conservation', $conservation)
             ->orderBy('cch.last_message_date', 'ASC')
-            ->select('cp, cch.id as cch_id, cch.last_message_date as last_msg, b.breeds_name')
+            ->select('cp, cch.id as cch_id, cch.last_message_date as last_msg, b.breeds_name');
+
+        return $qb->getQuery()->getScalarResult();
+    }
+
+    /**
+     * list breeder pets
+     */
+    public function searchPetsByConservation($conservation)
+    {
+        $date_now = Carbon::now()->toDateString();
+        $time_new = Carbon::now()->subMonth()->toDateString();
+
+        $query = $this->conservationPetsRepository->createQueryBuilder('p')
+            ->where('p.is_active > 0')
+            ->andWhere('p.Conservation = :conservation')
+            ->setParameter('conservation', $conservation);
+
+        /*
+            ->andWhere('p.release_date <= :to')
+            ->andWhere('p.release_date >= :from')
+            ->setParameter(':to', $date_now)
+            ->setParameter(':from', $time_new);
+            */
+
+        return $query->addOrderBy('p.is_active', 'ASC')
+            ->addOrderBy('p.update_date', 'DESC')
+            ->setMaxResults(16)
             ->getQuery()
-            ->getScalarResult();
+            ->getResult();
     }
 }

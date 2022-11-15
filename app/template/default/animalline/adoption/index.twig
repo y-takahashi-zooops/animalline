@@ -98,15 +98,20 @@
                   {% for pet in newPets %}
                     <li>
                       <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
-                        <!--
                         <div class="tags">
                           <ul>
-                            <li class="tag_new"><span>New</span></li>
-                            <li class="tag_recommend"><span>注目</span></li>
-                            <li class="tag_popular"><span>人気</span></li>
+                            {% if pet.isActive == 1 %}
+                              <li class="tag_new"><span>募集中</span></li>
+                            {% endif %}
+                            {% if pet.isActive == 2 %}
+                              <li class="tag_recommend"><span>ﾄﾗｲｱﾙ中</span></li>
+                            {% endif %}
+                            {% if pet.isActive == 3 %}
+                              <li class="tag_popular"><span>譲渡決定</span></li>
+                            {% endif %}
                           </ul>
                         </div>
-                        -->
+                        
                         <figure><img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath ?? '/noimage_plugin_list.png') }}" alt="{{ pet.getBreedsType().getBreedsName() ?? '' }}"/></figure>
                         <h4>{{ pet.name }}</h4>
                         <div>{{ pet.breedsType.breedsName }}</div>
