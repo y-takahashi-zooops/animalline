@@ -116,6 +116,19 @@
                         {% for pet in pets %}
                             <li>
                                 <a href="{{ url('adoption_pet_detail', {'id': pet.id}) }}">
+                                    <div class="tags">
+                                        <ul>
+                                            {% if pet.isActive == 1 %}
+                                            <li class="tag_new"><span>募集中</span></li>
+                                            {% endif %}
+                                            {% if pet.isActive == 2 %}
+                                            <li class="tag_recommend"><span>ﾄﾗｲｱﾙ中</span></li>
+                                            {% endif %}
+                                            {% if pet.isActive == 3 %}
+                                            <li class="tag_popular"><span>譲渡決定</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
                                     <figure>
                                         <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
                                              class="card-img-top" alt="Pet-image">

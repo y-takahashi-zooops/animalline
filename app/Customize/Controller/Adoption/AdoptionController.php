@@ -273,10 +273,14 @@ class AdoptionController extends AbstractController
         $dogHouse = $this->conservationsHousesRepository->findOneBy(["Conservation" => $conservation, "pet_type" => 1]);
         $catHouse = $this->conservationsHousesRepository->findOneBy(["Conservation" => $conservation, "pet_type" => 2]);
 
+        /*
         $petResults = $this->conservationPetsRepository->findBy([
             'Conservation' => $conservation,
             'is_active' => AnilineConf::IS_ACTIVE_PUBLIC
         ]);
+        */
+        $petResults = $this->adoptionQueryService->searchPetsByConservation($conservation);
+
         $pets = $paginator->paginate(
             $petResults,
             $request->query->getInt('page', 1),

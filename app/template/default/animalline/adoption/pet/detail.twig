@@ -235,6 +235,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            {% if conservationPet.isActive != 3 %}
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12 contents_col_normal">
@@ -250,7 +252,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            {% endif %}
                             <div class="mb-4 mt-4">
                                 <div class="breeder_section_header">
                                     {# <i class="fas fa-paw"></i> #}
@@ -328,6 +330,7 @@
                                 </div>
                             </div>
 
+                            {% if conservationPet.isActive != 3 %}
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12 contents_col_normal">
@@ -343,6 +346,8 @@
                                     </div>
                                 </div>
                             </div>
+                            {% endif %}
+
                             <div class="col-12 contents_col_normal mt-4 mb-4 pl-4 pr-4"
                                  style="background:#f7f5f0; border:1px solid #dcdfe1; border-radius: 3px;">
                                 当サイトでは里親様に最も信頼される保護犬猫譲渡サイトを目指して、<br>

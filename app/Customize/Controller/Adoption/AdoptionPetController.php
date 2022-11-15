@@ -124,8 +124,11 @@ class AdoptionPetController extends AbstractController
      */
     public function adoption_pet_list(PaginatorInterface $paginator, Request $request)
     {
+        $petlist_view = $request->get("petlist_view");
+        if(!$petlist_view){$petlist_view = 1;}
+
         $arrayPets = [];
-        $pets = $this->adoptionQueryService->getListPet($this->getUser());
+        $pets = $this->adoptionQueryService->getListPet($this->getUser(),$petlist_view);
 
         foreach ($pets as $key => $pet) {
             $pet['check'] = false;
@@ -155,6 +158,7 @@ class AdoptionPetController extends AbstractController
             [
                 'conservation' => $this->getUser(),
                 'pets' => $arrayPets,
+                'petlist_view' => $petlist_view,
             ]
         );
     }
@@ -359,8 +363,59 @@ class AdoptionPetController extends AbstractController
      */
     public function adoption_pets_delete(ConservationPets $conservationPet)
     {
-        $conservationPet->setIsActive(AnilineConf::IS_ACTIVE_PRIVATE)
-            ->setIsDelete(1);
+        //非公開にセットする
+        $conservationPet->setIsActive(0);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($conservationPet);
+        $em->flush();
+
+        return $this->redirectToRoute('adoption_pet_list');
+    }
+
+    /**
+     * ペットの状態をトライアル中する
+     *
+     * @Route("/adoption/member/pets/{id}/status1", name="adoption_pets_status-1", methods={"GET"})
+     */
+    public function adoption_pets_status1(ConservationPets $conservationPet)
+    {
+        //非公開にセットする
+        $conservationPet->setIsActive(1);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($conservationPet);
+        $em->flush();
+
+        return $this->redirectToRoute('adoption_pet_list');
+    }
+
+    /**
+     * ペットの状態をトライアル中する
+     *
+     * @Route("/adoption/member/pets/{id}/status2", name="adoption_pets_status-2", methods={"GET"})
+     */
+    public function adoption_pets_status2(ConservationPets $conservationPet)
+    {
+        //非公開にセットする
+        $conservationPet->setIsActive(2);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($conservationPet);
+        $em->flush();
+
+        return $this->redirectToRoute('adoption_pet_list');
+    }
+
+    /**
+     * ペットの状態をトライアル中する
+     *
+     * @Route("/adoption/member/pets/{id}/status3", name="adoption_pets_status-3", methods={"GET"})
+     */
+    public function adoption_pets_status3(ConservationPets $conservationPet)
+    {
+        //非公開にセットする
+        $conservationPet->setIsActive(3);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($conservationPet);

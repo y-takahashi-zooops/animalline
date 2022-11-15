@@ -112,11 +112,11 @@ class ExportBenefitShippingSchedule extends Command
         $benefitsStatusIds = [];
 
         // 商品コードは一時的にダミー
-        $item_code = ["8790000", "8790004", "8790005"];
+        $item_code = ["9899002"];
         foreach ($records as $record) {
             $benefitsNo = $this->generateZeroFillStr($record['benefit_id']);
             $record['shipping_zip'] = substr($record['shipping_zip'],0,3) . "-" . substr($record['shipping_zip'],3);
-            for ($i = 0; $i < 3; $i++) {
+            for ($i = 0; $i < 1; $i++) {
                 $record['delivery_instruction_no'] = $benefitsNo;
                 $record['expected_shipping_date'] = date("Ymd");
                 $record['warehouse_code'] = '00001';
