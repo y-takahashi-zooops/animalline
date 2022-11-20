@@ -92,7 +92,9 @@ class BreederQueryService
             ->setParameter('pet_kind', $petKind)
             ->orderBy('p.is_delete', 'asc')
             ->addOrderBy('p.dna_check_result', 'desc')
+            ->addOrderBy('p.create_date', 'desc')
             ->addOrderBy('p.thumbnail_path', 'desc');
+            
             
             //->setMaxResults(16);
         /*
