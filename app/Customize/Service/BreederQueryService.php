@@ -141,9 +141,24 @@ class BreederQueryService
 
         $query = $this->breederPetsRepository->createQueryBuilder('p')
             ->join('p.Breeder', 'c')
+            ->join('p.BreedsType', 'bt')
+            ->join('c.PrefBreeder', 'pref')
             ->where('p.is_active = :is_active')
             //->andWhere('p.is_delete = 0')
             ->setParameter('is_active', 1);
+
+        //犬種・猫種を選んだ場合（indexから4種）
+        if($request->get('pet_breed')){
+            $query->andWhere('bt.id in (:pet_breed)')
+                ->setParameter('pet_breed', $request->get('pet_breed'));
+        }
+        //---------------
+        //犬種・猫種を選んだ場合（indexから4種）
+        if($request->get('pet_breed_area')){
+            $query->andWhere('pref.id in (:pet_breed_area)')
+                ->setParameter('pet_breed_area', $request->get('pet_breed_area'));
+        }
+        //---------------
 
         if ($request->get('pet_kind')) {
             $query->andWhere('p.pet_kind = :pet_kind')
@@ -223,7 +238,18 @@ class BreederQueryService
             ->setParameter('kinds', [
                 AnilineConf::ANILINE_PET_KIND_DOG_CAT,
                 $petKind
-            ]);
+            ])
+            ->innerJoin('Customize\Entity\BreederHouse', 'bh', 'WITH', 'b.id = bh.Breeder');
+
+        if ($request->get('pet_breed-area')) {
+            $query->andWhere('bh.BreederHousePrefId in (:pref)')
+                ->setParameter('pref', $request->get('pet_breed-area'));
+        }
+        if ($request->get('pet_breed')) {
+            $query->andWhere('bp.BreedsType in (:breeds_type)')
+                ->setParameter('breeds_type', $request->get('pet_breed'));
+        }
+
 
         if ($request->get('breed_type')) {
             $query->andWhere('bp.BreedsType = :breeds_type')
@@ -231,8 +257,7 @@ class BreederQueryService
         }
 
         if ($request->get('region')) {
-            $query->innerJoin('Customize\Entity\BreederHouse', 'bh', 'WITH', 'b.id = bh.Breeder')
-                ->andWhere('bh.BreederHousePrefId = :pref')
+            $query->andWhere('bh.BreederHousePrefId = :pref')
                 ->setParameter('pref', $request->get('region'));
             if ($request->get('adjacent')) {
                 $queryHouse = $this->prefAdjacentRepository->createQueryBuilder('pa')
@@ -363,4 +388,95 @@ class BreederQueryService
             ->getQuery()
             ->getScalarResult();
     }
+
+    /**
+     * Retrive breeder pets
+     *
+     * @param Object $request
+     * @return array
+     */
+    public function getActivePrefs($pet_kind): array
+    {
+        $query = $this->breederPetsRepository->createQueryBuilder('bp')
+            ->join('bp.Breeder', 'b')
+            ->join('b.PrefBreeder', 'p')
+            ->where('bp.is_active = 1')
+            ->andWhere('bp.pet_kind = :pk')
+            ->select("distinct p.name,p.id")
+            ->orderBy('p.id', 'asc')
+            ->setParameter('pk', $pet_kind);
+           
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * Retrive breeder pets
+     *
+     * @param Object $request
+     * @return array
+     */
+    public function getBreedsByPref(array $prefs,$pet_kind): array
+    {
+        $query = $this->breederPetsRepository->createQueryBuilder('bp')
+            ->join('bp.Breeder', 'b')
+            ->join('bp.BreedsType', 'bt')
+            ->join('b.PrefBreeder', 'p')
+            ->where('bp.is_active = 1')
+            ->andWhere('bp.pet_kind in (:pk)')
+            ->andWhere('p.id in (:ids)')
+            ->setParameter('ids', $prefs)
+            ->setParameter('pk', $pet_kind)
+            ->select("distinct bt.breeds_name,bt.id")
+            ->orderBy('bt.sort_order', 'asc');
+           
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * Retrive breeder pets
+     *
+     * @param Object $request
+     * @return array
+     */
+    public function getBreedsBySize(array $size): array
+    {
+        $query = $this->breederPetsRepository->createQueryBuilder('bp')
+            ->join('bp.Breeder', 'b')
+            ->join('bp.BreedsType', 'bt')
+            ->join('b.PrefBreeder', 'p')
+            ->where('bp.is_active = 1')
+            ->andWhere('bp.pet_kind = 1')
+            ->andWhere('bt.size_code in (:ids)')
+            ->setParameter('ids', $size)
+            ->select("distinct bt.breeds_name,bt.id")
+            ->orderBy('bt.sort_order', 'asc');
+           
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * Retrive breeder pets
+     *
+     * @param Object $request
+     * @return array
+     */
+    public function getPrefByBreeds($breeds,$pet_kind): array
+    {
+        $query = $this->breederPetsRepository->createQueryBuilder('bp')
+            ->join('bp.Breeder', 'b')
+            ->join('b.PrefBreeder', 'p')
+            ->join('bp.BreedsType', 'bt')
+            ->where('bp.is_active = 1')
+            ->andWhere('bp.pet_kind = :pk')
+            ->andWhere('bt.id in (:breeds)')
+            ->select("distinct p.name,p.id")
+            ->orderBy('p.id', 'asc')
+            ->setParameter('pk', $pet_kind)
+            ->setParameter('breeds', $breeds);
+           
+        return $query->getQuery()->getResult();
+    }
+
+    
+    
 }
