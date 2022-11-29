@@ -159,6 +159,10 @@ class BreederQueryService
                 ->setParameter('pet_breed_area', $request->get('pet_breed_area'));
         }
         //---------------
+        if ($request->get('dog_size')) {
+            $query->andWhere('bt.size_code in (:size_code)')
+                ->setParameter('size_code', $request->get('dog_size'));
+        }
 
         if ($request->get('pet_kind')) {
             $query->andWhere('p.pet_kind = :pet_kind')
@@ -249,8 +253,7 @@ class BreederQueryService
             $query->andWhere('bp.BreedsType in (:breeds_type)')
                 ->setParameter('breeds_type', $request->get('pet_breed'));
         }
-
-
+        
         if ($request->get('breed_type')) {
             $query->andWhere('bp.BreedsType = :breeds_type')
                 ->setParameter('breeds_type', $request->get('breed_type'));
