@@ -139,9 +139,11 @@ class ExportProduct extends Command
                 //$record['supplier_code'] = $supplier->getSupplierCode();
                 $record['supplier_code'] = "0003";
 
+                /*
                 if (strlen($record['jan_code']) == 13) {
                     $record['productCode'] = $record['jan_code'];
                 }
+                */
                 $record['quantity_box'] = 1;
 
                 $record['year'] = '99';

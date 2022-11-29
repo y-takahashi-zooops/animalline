@@ -107,7 +107,7 @@ class BreederBatchMail extends Command
         $breeders = $this->breedersRepository->findBy(['is_active' => 1]);
 
         //$lists = [281,261,192,253,126,69,199,99,272,215,112,187,335,255,70,319,111,172,116,167,260,124,50,127,212,228,138,141,164,168,122,161,285,101,160,186,276,275,174,190,173,286,146,133,340,343,351,359,368,372,410,388,404,391,417,233,75,277,193,175,115,371];
-        $lists = [37,45,69,116,124,160,115,153,181,112,187,186,193,106,157,138,170,218,100,107,146,222,175,229,101,102,238,130,202,133,235,195,263,277,275,279,164,299,301,302,296,249,286,293,319,260,48,322,267,276,312,320,336,341,340,326,255,323,236,366,371,330,384,404,417,206,190,292,388,429,428,385,270,430,159,314,368];
+        $lists = [48,50,51,52];
         foreach ($breeders as $breeder) {
             $customer = $this->customerRepository->findOneBy(['id' => $breeder->getId(),'Status' => $status]);
 
@@ -115,14 +115,14 @@ class BreederBatchMail extends Command
                 echo "ブリーダー無効:".$breeder->getBreederName()."\n";
             }
             else{
-                //if(in_array($customer->getId(),$lists)){
+                if(!in_array($customer->getId(),$lists)){
                     echo "対象メール送信：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
 
                     if(!$this->mailService->sendAllBreederMail2($customer)){
                         echo "メール送信失敗\n";
                     }
-                //}
-                //else{
+                }
+                else{
                     echo "メール送信しない：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
                     //echo "非対象メール送信：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
                     /*
@@ -130,7 +130,7 @@ class BreederBatchMail extends Command
                         echo "メール送信失敗\n";
                     }
                     */
-                //}
+                }
                 
 
                 /*

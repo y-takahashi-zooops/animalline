@@ -223,7 +223,7 @@ class BreederController extends AbstractController
                 }
             }
             if(!$skip){
-                if ($i < 5){
+                if ($i < 4){
                     $rssfeed[$i]['title'] = $val->title;
                     $rssfeed[$i]['link'] = $val->link;
                     $rssfeed[$i]['date'] = $val->pubDate;
@@ -234,6 +234,25 @@ class BreederController extends AbstractController
             }
         }
 
+        //犬の都道府県
+        $prefs_dog = $this->breederQueryService->getActivePrefs(1);
+        $pref_ids_dog = [];
+        foreach ($prefs_dog as $pref) {
+            $pref_ids_dog[] = $pref["id"];
+            $pref_name_dog[$pref["id"]] = $pref["name"];
+        }
+
+        //猫の都道府県
+        $prefs_cat = $this->breederQueryService->getActivePrefs(2);
+        $pref_ids_cat = [];
+        foreach ($prefs_cat as $pref) {
+            $pref_ids_cat[] = $pref["id"];
+            $pref_name_cat[$pref["id"]] = $pref["name"];
+        }
+        
+        //猫種
+        $breeds_cat = $this->breederQueryService->getBreedsHavePet(2);
+
         return $this->render('animalline/breeder/index.twig', [
             'title' => 'ペット検索',
             'petKind' => $petKind,
@@ -243,10 +262,69 @@ class BreederController extends AbstractController
             'favoritePets' => $favoritePets,
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
-            'rssfeed' => $rssfeed
+            'rssfeed' => $rssfeed,
+            'pref_name_dog' => $pref_name_dog,
+            'pref_ids_dog' => $pref_ids_dog,
+            'pref_name_cat' => $pref_name_cat,
+            'pref_ids_cat' => $pref_ids_cat,
+            'breeds_cat' => $breeds_cat
         ],$response);
     }
 
+    /**
+     * @Route("/breeder/ajax/get_breeds_by_pref", name="breeder_ajax_get_breeds_by_pref")
+     */
+    public function breeder_ajax_get_breeds_by_pref(Request $request): JsonResponse
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw new BadRequestHttpException();
+        }
+
+        $json = file_get_contents('php://input');
+
+        $params = json_decode($json);
+
+        $breeds = $this->breederQueryService->getBreedsByPref($params->prefs,$params->pet_kind);
+
+        return new JsonResponse($breeds);
+    }
+
+    /**
+     * @Route("/breeder/ajax/get_breeds_by_size", name="breeder_ajax_get_breeds_by_size")
+     */
+    public function breeder_ajax_get_breeds_by_size(Request $request): JsonResponse
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw new BadRequestHttpException();
+        }
+
+        $json = file_get_contents('php://input');
+
+        $params = json_decode($json);
+
+        $breeds = $this->breederQueryService->getBreedsBySize($params->size);
+
+        return new JsonResponse($breeds);
+    }
+
+    /**
+     * @Route("/breeder/ajax/get_pref_by_breeds", name="breeder_ajax_get_pref_by_breeds")
+     */
+    public function breeder_ajax_get_pref_by_breeds(Request $request): JsonResponse
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw new BadRequestHttpException();
+        }
+
+        $json = file_get_contents('php://input');
+
+        $params = json_decode($json);
+
+        $breeds = $this->breederQueryService->getPrefByBreeds($params->breeds,$params->pet_kind);
+
+        return new JsonResponse($breeds);
+    }
+    
     /**
      * @Route("/breeder/info", name="breeder_info")
      * @Template("animalline/breeder/info.twig")

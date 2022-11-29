@@ -1,0 +1,1218 @@
+@charset "UTF-8";
+body,
+button {
+  margin: 0 auto;
+  font-family: fot-tsukuardgothic-std, "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic, "游ゴシック", "Yu Gothic", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+img {
+  width: 100%;
+  vertical-align: bottom;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+dl,
+dt,
+dd {
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+.hidden-phone {
+  display: none !important;
+}
+.flex {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.flex-column {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.float-l {
+  float: left;
+}
+
+.float-r {
+  float: right;
+}
+
+.mizuki_fv-bg {
+  width: 100%;
+  height: 620px;
+  position: relative;
+  background-image: url(../img-mizuki/fv-sp.png);
+  background-size: cover;
+  background-position: 70%;
+  background-repeat: no-repeat;
+}
+.mizuki_fv h1 {
+  position: absolute;
+  top: 5%;
+  left: 10%;
+  font-size: 25px;
+  line-height: 2.04;
+  text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff, -2px 2px 0 #fff, 2px -2px 0 #fff, 0px 2px 0 #fff, -2px 0 #fff, -2px 0 0 #fff, 2px 0 0 #fff;
+}
+.mizuki_fv p {
+  position: absolute;
+  bottom: 20%;
+  right: 5%;
+  font-size: 14px;
+  line-height: 1.8571428571;
+  font-weight: bold;
+}
+.mizuki_fv .mizuki_about_dna-test {
+  width: 100%;
+  position: absolute;
+  bottom: -5%;
+  left: 0;
+  text-align: center;
+}
+.mizuki_fv-text_outer {
+  width: 100%;
+  height: 100px;
+  background-image: url(../img-mizuki/text-outer+deco.png);
+  background-size: 360px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+.mizuki_fv-text_outer p {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  position: absolute;
+  top: 39%;
+  left: 51%;
+  text-align: center;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  font-size: 13px;
+  line-height: 1.7692307692;
+}
+.mizuki_fv-text_outer span {
+  padding-right: 0.5rem;
+  font-size: 18px;
+  line-height: 1.7777777778;
+}
+.mizuki_fv a {
+  display: inline-block;
+  position: absolute;
+  bottom: -25%;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  font-size: 12px;
+  line-height: 1.6666666667;
+  border-bottom: 1px solid #000;
+}
+
+.mizuki_search {
+  padding-top: 8rem;
+}
+.mizuki_search-dogs, .mizuki_search-cats {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 340px;
+}
+.mizuki_search-dogs_title, .mizuki_search-cats_title {
+  position: relative;
+}
+.mizuki_search-dogs_title-decoration, .mizuki_search-cats_title-decoration {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+}
+.mizuki_search-dogs-button, .mizuki_search-cats-button {
+  margin: 0 auto;
+  border-radius: 24px;
+}
+.mizuki_search-dogs-button_list, .mizuki_search-cats-button_list {
+  padding: 2rem 0;
+}
+.mizuki_search-dogs-button_list-item, .mizuki_search-cats-button_list-item {
+  margin: 0 auto;
+  width: 90%;
+  background-color: #fff;
+  border-radius: 13px;
+}
+.mizuki_search-dogs-button_list-item:nth-child(2), .mizuki_search-cats-button_list-item:nth-child(2) {
+  margin: 1rem auto;
+}
+.mizuki_search-dogs-button_list-item a, .mizuki_search-cats-button_list-item a {
+  padding-left: 18%;
+  width: -webkit-fill-available;
+  display: inline-block;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  font-size: 18px;
+  line-height: 2.5;
+}
+.mizuki_search-dogs-button_list-item a::before, .mizuki_search-cats-button_list-item a::before {
+  margin-right: 10px;
+  content: "";
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  background-image: url(../img-mizuki/magnifying-glass.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: text-top;
+}
+.mizuki_search-dogs-button_list-item:hover, .mizuki_search-cats-button_list-item:hover {
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+}
+.mizuki_search-dogs h3 {
+  color: #429137;
+}
+.mizuki_search-dogs_title-decoration {
+  width: 63px;
+  height: 63px;
+}
+.mizuki_search-dogs-button {
+  background-color: #429137;
+}
+.mizuki_search-cats {
+  padding-top: 3rem;
+}
+.mizuki_search-cats h3 {
+  color: #29abe2;
+}
+.mizuki_search-cats_title-decoration {
+  width: 50px;
+  height: 57px;
+  top: 25%;
+}
+.mizuki_search-cats-button {
+  background-color: #29abe2;
+}
+.mizuki_search h3 {
+  margin-left: 15%;
+  margin-bottom: 0.2rem;
+  padding: 0.3rem 2rem;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  border: 1px solid #000;
+  border-radius: 25px;
+}
+
+#mizuki_modal-bleeder_dogs.active,
+#mizuki_modal-breed_dogs.active,
+#mizuki_modal-area_dogs.active,
+#mizuki_modal-bleeder_cats.active,
+#mizuki_modal-breed_cats.active,
+#mizuki_modal-area_cats.active {
+  display: inherit;
+}
+
+.mizuki_modal ::-webkit-scrollbar {
+  display: none;
+}
+.mizuki_modal-bg {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+.mizuki_modal-outer {
+  margin: 0 auto;
+  width: 90%;
+  height: 100vh; /* Fallback */
+  height: calc(var(--vh, 1vh) * 80);
+  padding-top: 1rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 24px;
+  -webkit-box-shadow: 0px 0px 4px rgba(132, 132, 132, 0.75);
+          box-shadow: 0px 0px 4px rgba(132, 132, 132, 0.75);
+  overflow-y: scroll;
+}
+.mizuki_modal-outer-dogs ::-webkit-scrollbar-track {
+  background: #dbead9;
+}
+.mizuki_modal-outer-dogs ::-webkit-scrollbar-thumb {
+  background: #429137;
+}
+.mizuki_modal-outer-dogs ::-webkit-scrollbar {
+  display: inherit;
+  width: 10px;
+}
+.mizuki_modal-outer-cats ::-webkit-scrollbar-track {
+  background: #d9e7ea;
+}
+.mizuki_modal-outer-cats ::-webkit-scrollbar-thumb {
+  background: #29abe2;
+}
+.mizuki_modal-outer-cats ::-webkit-scrollbar {
+  display: inherit;
+  width: 10px;
+}
+.mizuki_modal-container {
+  margin: 0 auto;
+  width: 95%;
+  height: 90%;
+}
+.mizuki_modal-close {
+  width: 40px;
+  height: 40px;
+  position: fixed;
+  top: 10px;
+  right: 15px;
+  z-index: 999;
+  background-color: transparent;
+  border: none;
+}
+.mizuki_modal-close span {
+  position: absolute;
+  display: inline-block;
+  width: 30px;
+  height: 4px;
+  top: 45%;
+  left: 15%;
+  border-radius: 2px;
+  background-color: #000;
+}
+.mizuki_modal-close span:nth-child(1) {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+.mizuki_modal-close span:nth-child(2) {
+  -webkit-transform: rotate(135deg);
+          transform: rotate(135deg);
+}
+.mizuki_modal_title {
+  margin: 0 auto;
+  position: relative;
+}
+.mizuki_modal_title h3 {
+  padding-left: 100px;
+  font-size: 18px;
+  line-height: 2;
+}
+.mizuki_modal_title-dogs h3 {
+  padding-bottom: 0.3rem;
+  color: #429137;
+  border-bottom: 5px solid #429137;
+}
+.mizuki_modal_title-cats h3 {
+  padding-bottom: 0.3rem;
+  color: #29abe2;
+  border-bottom: 5px solid #29abe2;
+}
+.mizuki_modal_title-decoration {
+  position: absolute;
+  top: -15%;
+  left: 3%;
+}
+.mizuki_modal_title-decoration-dogs {
+  width: 63px;
+  height: 63px;
+}
+.mizuki_modal_title-decoration-cats {
+  top: 3%;
+  width: 50px;
+  height: 57px;
+}
+.mizuki_modal h4 {
+  margin-top: 1rem;
+  margin-left: 3%;
+  font-size: 18px;
+  line-height: 2.2222222222;
+}
+.mizuki_modal h4::before {
+  margin-right: 10px;
+  content: "";
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-image: url(../img-mizuki/magnifying-glass.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: text-top;
+}
+.mizuki_modal h5 {
+  font-size: 14px;
+  line-height: 2.5714285714;
+}
+.mizuki_modal-form {
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 2.25;
+  max-width: 900px;
+}
+.mizuki_modal-form .flex {
+  display: block;
+  -webkit-box-align: start;
+  -webkit-align-items: flex-start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+.mizuki_modal-form_size, .mizuki_modal-form_breed, .mizuki_modal-form_area {
+  max-width: 500px;
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  padding-bottom: 1rem;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.mizuki_modal-form_size input[type=checkbox], .mizuki_modal-form_breed input[type=checkbox], .mizuki_modal-form_area input[type=checkbox] {
+  display: none;
+}
+.mizuki_modal-form_size-checkbox, .mizuki_modal-form_breed-checkbox, .mizuki_modal-form_area-checkbox {
+  display: inline-block;
+  position: relative;
+  margin-left: 10px;
+  padding: 7px 0 7px 30px;
+  cursor: pointer;
+  overflow-wrap: break-word;
+  word-break: initial;
+  font-size: 16px;
+  line-height: 1.625;
+}
+.mizuki_modal-form_size-checkbox::before, .mizuki_modal-form_breed-checkbox::before, .mizuki_modal-form_area-checkbox::before {
+  width: 16px; /* チェックボックスの幅 */
+  height: 16px; /* チェックボックスの高さ */
+  left: 5px;
+  border: 1px solid #ccc; /* チェックボックスの枠 */
+  margin-top: -8px;
+}
+.mizuki_modal-form_size-checkbox::before, .mizuki_modal-form_size-checkbox::after, .mizuki_modal-form_breed-checkbox::before, .mizuki_modal-form_breed-checkbox::after, .mizuki_modal-form_area-checkbox::before, .mizuki_modal-form_area-checkbox::after {
+  position: absolute;
+  content: "";
+  top: 50%;
+}
+.mizuki_modal-form_size-checkbox::after, .mizuki_modal-form_breed-checkbox::after, .mizuki_modal-form_area-checkbox::after {
+  position: absolute;
+  width: 5px;
+  height: 9px;
+  top: 50%;
+  left: 10px;
+  border-right: 2px solid #000; /* チェックマークの色 */
+  border-bottom: 3px solid #000; /* チェックマークの色 */
+  content: "";
+  margin-top: -7px;
+  opacity: 0;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+.mizuki_modal-form_size input[type=checkbox]:checked + .mizuki_modal-form_size-checkbox::after,
+.mizuki_modal-form_size input[type=checkbox]:checked + .mizuki_modal-form_breed-checkbox::after,
+.mizuki_modal-form_size input[type=checkbox]:checked + .mizuki_modal-form_area-checkbox::after, .mizuki_modal-form_breed input[type=checkbox]:checked + .mizuki_modal-form_size-checkbox::after,
+.mizuki_modal-form_breed input[type=checkbox]:checked + .mizuki_modal-form_breed-checkbox::after,
+.mizuki_modal-form_breed input[type=checkbox]:checked + .mizuki_modal-form_area-checkbox::after, .mizuki_modal-form_area input[type=checkbox]:checked + .mizuki_modal-form_size-checkbox::after,
+.mizuki_modal-form_area input[type=checkbox]:checked + .mizuki_modal-form_breed-checkbox::after,
+.mizuki_modal-form_area input[type=checkbox]:checked + .mizuki_modal-form_area-checkbox::after {
+  opacity: 1;
+}
+.mizuki_modal-form_size-dogs {
+  margin: 0 auto;
+  width: 85%;
+  height: 300px;
+}
+.mizuki_modal-form_breed-dogs, .mizuki_modal-form_breed-cats {
+  margin: 0 auto;
+  margin-top: -1px;
+  width: 85%;
+  height: 300px;
+  overflow-y: scroll;
+}
+.mizuki_modal-form_area {
+  margin: 0 auto;
+  width: 85%;
+  height: 300px;
+  overflow-y: scroll;
+}
+
+.mizuki_modal-bleeder_dogs .mizuki_modal-form_area,
+.mizuki_modal-bleeder_dogs .mizuki_modal-form_breed {
+  padding-top: 1rem;
+}
+
+.mizuki_search-dogs-button_area::before,
+.mizuki_search-dogs-button_breed::before,
+.mizuki_search-cats-button_area::before,
+.mizuki_search-cats-button_breed::before {
+  margin-right: 10px;
+  content: "";
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  background-image: url(../img-mizuki/magnifying-glass.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: text-bottom;
+}
+
+.mizuki_modal-form_area-hokkaidou-touhoku,
+.mizuki_modal-form_area-kantou-koushinetsu,
+.mizuki_modal-form_area-tyubu-hokuriku,
+.mizuki_modal-form_area-kinki,
+.mizuki_modal-form_area-chugoku-shikoku,
+.mizuki_modal-form_area-kyushu-okinawa {
+  padding-bottom: 1rem;
+  width: 100%;
+}
+.mizuki_modal-form_area-hokkaidou-touhoku h6,
+.mizuki_modal-form_area-kantou-koushinetsu h6,
+.mizuki_modal-form_area-tyubu-hokuriku h6,
+.mizuki_modal-form_area-kinki h6,
+.mizuki_modal-form_area-chugoku-shikoku h6,
+.mizuki_modal-form_area-kyushu-okinawa h6 {
+  margin-right: 55%;
+  margin-left: 10px;
+  padding-bottom: 0.2rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.modaal-container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 900px;
+}
+
+.separate-line {
+  padding: 0.5rem 0;
+  text-align: center;
+}
+
+.down-arrow-sp {
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+.down-arrow-pc {
+  width: auto;
+  height: 210px;
+}
+
+.mizuki_search-button_footer {
+  margin: 0 auto;
+  padding: 1rem 0 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.mizuki_search-button_list-item_modal button {
+  width: -webkit-fill-available;
+  display: inline-block;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  line-height: 2.8571428571;
+}
+.mizuki_search-button_list-item_modal button::before {
+  content: "";
+  display: inline-block;
+  width: 23px;
+  height: 23px;
+  background-image: url(../img-mizuki/magnifying-glass.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: text-top;
+}
+
+.mizuki_search-button_confirm {
+  text-align: center;
+}
+.mizuki_search-button_confirm-submit {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  width: 60%;
+  color: #fff;
+  border: 1px solid #ccc;
+  background-color: #e57900;
+}
+.mizuki_search-button_confirm-cancel {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  width: 35%;
+  background-color: transparent;
+  border: 1px solid #ccc;
+}
+
+.mizuki_dog-cat_column {
+  margin: 0 auto;
+  padding-top: 5rem;
+  width: 95%;
+  max-width: 800px;
+}
+.mizuki_dog-cat_column-title-sp {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 450px;
+}
+.mizuki_dog-cat_column-item {
+  margin: 0 auto;
+  margin-top: 1rem;
+  max-width: 340px;
+  font-size: 16px;
+  line-height: 1.5625;
+  text-align: start;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+.mizuki_dog-cat_column-item-image {
+  width: 25%;
+}
+.mizuki_dog-cat_column-item-text {
+  padding: 1rem 2rem 1rem 1rem;
+  width: 75%;
+}
+.mizuki_dog-cat_column-item:hover {
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+}
+.mizuki_dog-cat_column-page {
+  margin: 0 auto;
+  padding-top: 2rem;
+  max-width: 450px;
+  text-align: start;
+  background-image: url(../img-mizuki/btn_wan-nyan_bg.png);
+  background-repeat: no-repeat;
+  background-position: 100% 75%;
+  background-size: 400px;
+}
+.mizuki_dog-cat_column-page_button {
+  margin-right: 10px;
+  padding: 1.5rem 2rem;
+  font-size: 15px;
+  line-height: 1.7333333333;
+  color: #fff;
+  background-color: #429137;
+  border-radius: 10px;
+}
+.mizuki_dog-cat_column-page_button:hover {
+  opacity: 0.9;
+}
+
+.mizuki_advantage {
+  margin-top: 5rem;
+  background-color: #dbead9;
+}
+.mizuki_advantage-title-sp {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 450px;
+}
+.mizuki_advantage-title-pc {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 800px;
+}
+.mizuki_advantage-outer {
+  margin: 0 auto;
+  padding: 2rem 0;
+  width: 95%;
+  text-align: center;
+}
+.mizuki_advantage-item {
+  margin: 0 auto;
+  padding-top: 2rem;
+  width: 80%;
+  max-width: 400px;
+}
+.mizuki_advantage-item-pc {
+  width: 100%;
+  max-width: 1200px;
+  position: relative;
+}
+.mizuki_advantage-item-pc a {
+  width: 34.5%;
+  position: absolute;
+  top: 8%;
+  left: -3px;
+}
+.mizuki_advantage h6 {
+  font-size: 22px;
+  line-height: 1.3636363636;
+}
+.mizuki_advantage-down-arrow {
+  display: inherit;
+  height: 50px;
+  text-align: right;
+  position: relative;
+  background-image: url(../img-mizuki/accordion-decoration-down.png);
+  background-repeat: no-repeat;
+  background-size: 90%;
+  background-position: 50%;
+}
+.mizuki_advantage-down-arrow p {
+  position: absolute;
+  top: 35%;
+  right: 19%;
+  font-size: 11px;
+  line-height: 1.7272727273;
+}
+.mizuki_advantage-down-arrow.open {
+  display: none;
+}
+.mizuki_advantage-detail {
+  display: none;
+}
+.mizuki_advantage-top-arrow {
+  display: none;
+  height: 50px;
+  background-image: url(../img-mizuki/accordion-decoration-top.png);
+  background-repeat: no-repeat;
+  background-size: 90%;
+  background-position: 50%;
+}
+.mizuki_advantage-top-arrow.open {
+  display: inherit;
+}
+
+.point-tag {
+  width: 230px;
+  position: absolute;
+  top: 0;
+  left: -6%;
+}
+
+.mizuki_dna-test {
+  margin: 0 auto;
+  margin-top: 5rem;
+  width: 95%;
+  max-width: 800px;
+}
+.mizuki_dna-test-title-sp {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 450px;
+}
+.mizuki_dna-test_faq {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 400px;
+}
+.mizuki_dna-test_faq-outer {
+  margin-top: 2rem;
+  padding: 2rem 0;
+  border: 1px solid #000;
+}
+.mizuki_dna-test_faq-outer:nth-of-type(2) .mizuki_dna-test_faq-question span {
+  background-image: url(../img-mizuki/dna-icon02.png);
+}
+.mizuki_dna-test_faq-outer:nth-of-type(3) .mizuki_dna-test_faq-question span {
+  background-image: url(../img-mizuki/dna-icon03.png);
+}
+.mizuki_dna-test_faq-question {
+  padding-left: 3rem;
+  position: relative;
+  text-align: start;
+  font-size: 16px;
+  line-height: 1.6875;
+  font-weight: 500;
+  cursor: pointer;
+}
+.mizuki_dna-test_faq-question span {
+  width: 35px;
+  height: 35px;
+  display: inline-block;
+  background-image: url(../img-mizuki/dna-icon01.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: 58%;
+  left: 2.5%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+.mizuki_dna-test_faq-question::before, .mizuki_dna-test_faq-question::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  width: 50px;
+  height: 1px;
+  background-color: #333;
+  top: 50%;
+  right: 5%;
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+}
+.mizuki_dna-test_faq-question::before {
+  -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+}
+.mizuki_dna-test_faq-question::after {
+  -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
+.mizuki_dna-test_faq-question.active::before {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+.mizuki_dna-test_faq-question.active::after {
+  -webkit-transform: rotate(135deg);
+          transform: rotate(135deg);
+}
+.mizuki_dna-test_faq-answer {
+  display: none;
+  margin: 0 auto;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  width: 90%;
+  border-top: 1px solid #ccc;
+  font-size: 16px;
+  line-height: 1.625;
+}
+.mizuki_dna-test_faq-answer.active {
+  display: inherit;
+}
+
+.mizuki_present {
+  margin-top: 5rem;
+}
+.mizuki_present-title-sp {
+  margin: 0 auto;
+  width: 90%;
+  max-width: 450px;
+}
+.mizuki_present-title-pc {
+  margin: 0 auto;
+  width: 90%;
+  max-width: 800px;
+}
+.mizuki_present-sp, .mizuki_present-pc {
+  margin-top: 2rem;
+  background-color: #dbead9;
+}
+.mizuki_present-sp {
+  text-align: center;
+}
+.mizuki_present-sp img {
+  padding: 2rem 0;
+  width: 90%;
+  max-width: 400px;
+}
+.mizuki_present-pc {
+  text-align: center;
+}
+.mizuki_present-pc img {
+  padding: 2rem 0;
+  width: 90%;
+  max-width: 800px;
+}
+
+.mizuki_insurance {
+  margin: 0 auto;
+  padding-top: 1rem;
+  width: 90%;
+  max-width: 400px;
+}
+
+.mizuki_caution {
+  margin: 0 auto;
+  padding-top: 4rem;
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+}
+.mizuki_caution h6 {
+  font-size: 20px;
+  line-height: 1.6;
+}
+.mizuki_caution p {
+  font-size: 16px;
+  line-height: 1.625;
+}
+.mizuki_caution span {
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 1.6666666667;
+}
+
+.mizuki_campaign {
+  margin: 0 auto;
+  padding-top: 5rem;
+  width: 90%;
+  max-width: 800px;
+}
+.mizuki_campaign-detail {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  border-collapse: separate;
+}
+.mizuki_campaign-detail tr {
+  flex-direction: row!important;
+  margin-top: -1px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid #000;
+  font-weight: bold;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.mizuki_campaign-detail th {
+  padding: 0.5rem;
+  color: #fff;
+  background-color: #429137;
+}
+.mizuki_campaign-detail td {
+  padding: 1rem 0.5rem;
+}
+
+@media (max-width: 801px) {
+  .mizuki_campaign-detail tr {
+    flex-direction: column!important;
+  }
+}
+
+@media (min-width: 801px) {
+  .visible-phone {
+    display: none !important;
+  }
+  .hidden-phone {
+    display: inherit !important;
+    position: relative;
+  }
+  .mizuki_fv-bg {
+    background-image: url(../img-mizuki/fv-pc.png);
+    background-size: cover;
+  }
+  .mizuki_fv h1 {
+    width: 450px;
+    top: 20%;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+  }
+  .mizuki_fv h1 span {
+    margin-left: 15%;
+  }
+  .mizuki_fv p {
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+    font-size: 20px;
+    line-height: 2.05;
+  }
+  .mizuki_fv .mizuki_about_dna-test {
+    bottom: -40px;
+  }
+  .mizuki_fv-text_outer {
+    background-size: 450px;
+  }
+  .mizuki_fv-text_outer p {
+    top: 6%;
+    left: 51%;
+    font-size: 20px;
+    line-height: 1.8;
+  }
+  .mizuki_fv-text_outer span {
+    font-size: 24px;
+    line-height: 1.3333333333;
+  }
+  .mizuki_fv a {
+    font-size: 14px;
+    line-height: 1.5714285714;
+  }
+  .mizuki_search-dogs, .mizuki_search-cats {
+    max-width: 900px;
+  }
+  .mizuki_search-dogs_title-decoration, .mizuki_search-cats_title-decoration {
+    left: 7%;
+  }
+  .mizuki_search-dogs-button, .mizuki_search-cats-button {
+    margin: 0 auto;
+    width: 90%;
+    max-width: 900px;
+  }
+  .mizuki_search-dogs-button_list, .mizuki_search-cats-button_list {
+    padding: 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .mizuki_search-dogs-button_list-item, .mizuki_search-cats-button_list-item {
+    width: 30%;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+  }
+  .mizuki_search-dogs-button_list-item a, .mizuki_search-cats-button_list-item a {
+    padding-left: 10px;
+  }
+  .mizuki_search-dogs-button_list-item a::before, .mizuki_search-cats-button_list-item a::before {
+    margin-right: 0;
+  }
+  .mizuki_search h3 {
+    margin-left: 11%;
+  }
+  .mizuki_modal-outer {
+    max-width: 1200px;
+    height: 100vh; /* Fallback */
+    height: calc(var(--vh, 1vh) * 80);
+  }
+  .mizuki_modal-close {
+    top: 7px;
+    right: 30px;
+  }
+  .mizuki_modal h4 {
+    font-size: 21px;
+    line-height: 2.1428571429;
+  }
+  .mizuki_modal h5 {
+    font-size: 15px;
+    line-height: 2.6666666667;
+  }
+  .mizuki_modal-form {
+    height: 90%;
+    max-height: 700px;
+  }
+  .mizuki_modal-form .flex {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 90%;
+  }
+  .mizuki_modal-form_size, .mizuki_modal-form_breed, .mizuki_modal-form_area {
+    max-width: 800px;
+  }
+  .mizuki_modal-form_size-checkbox, .mizuki_modal-form_breed-checkbox, .mizuki_modal-form_area-checkbox {
+    margin-left: 0;
+  }
+  .mizuki_modal-form_size-dogs {
+    margin-right: 0;
+    height: 90%;
+    width: 30%;
+  }
+  .mizuki_modal-form_breed-dogs, .mizuki_modal-form_breed-cats {
+    margin-top: 0;
+    margin-left: -1px;
+    width: 100%;
+    height: 90%;
+  }
+  .mizuki_modal-form_area {
+    width: 100%;
+    height: 90%;
+    -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+  }
+  .mizuki_modal-form_l {
+    width: 65%;
+    height: 100%;
+  }
+  .mizuki_modal-form_l > .flex {
+    height: 100%;
+  }
+  .mizuki_modal-form_r {
+    width: 30%;
+    height: 100%;
+  }
+  .mizuki_modal-bleeder_dogs .mizuki_modal-form_breed-dogs {
+    width: 100%;
+  }
+  .mizuki_search-dogs-button_area::before,
+.mizuki_search-dogs-button_breed::before,
+.mizuki_search-cats-button_area::before,
+.mizuki_search-cats-button_breed::before {
+    margin-right: 0;
+  }
+  .mizuki_modal-form_area-hokkaidou-touhoku,
+.mizuki_modal-form_area-kantou-koushinetsu,
+.mizuki_modal-form_area-tyubu-hokuriku,
+.mizuki_modal-form_area-kinki,
+.mizuki_modal-form_area-chugoku-shikoku,
+.mizuki_modal-form_area-kyushu-okinawa {
+    padding-bottom: 0;
+    width: 33%;
+  }
+  .mizuki_modal-form_area-hokkaidou-touhoku h6,
+.mizuki_modal-form_area-kantou-koushinetsu h6,
+.mizuki_modal-form_area-tyubu-hokuriku h6,
+.mizuki_modal-form_area-kinki h6,
+.mizuki_modal-form_area-chugoku-shikoku h6,
+.mizuki_modal-form_area-kyushu-okinawa h6 {
+    margin-left: 0;
+    margin-right: 30%;
+  }
+  .mizuki_modal-form_area-kinki,
+.mizuki_modal-form_area-chugoku-shikoku,
+.mizuki_modal-form_area-kyushu-okinawa {
+    margin-top: 3rem;
+  }
+  .separate-line {
+    margin: auto 0;
+    padding: 0 0.5rem;
+    width: auto;
+  }
+  .mizuki_search-button_footer {
+    max-width: 900px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .mizuki_search-button_list-item_modal button {
+    padding-left: 10px;
+  }
+  .mizuki_search-button_list-item_modal button::before {
+    margin-right: 0;
+  }
+  .mizuki_search-button_confirm {
+    width: 50%;
+  }
+  .mizuki_dog-cat_column-container {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+  .mizuki_dog-cat_column-item {
+    width: 40%;
+  }
+  .mizuki_dog-cat_column-page {
+    margin: 0;
+    padding-top: 4rem;
+    max-width: none;
+    background-size: 600px;
+    background-position: 100% 85%;
+  }
+  .mizuki_dog-cat_column-page_button {
+    font-size: 18px;
+    line-height: 1.4444444444;
+  }
+  .mizuki_dna-test_faq {
+    max-width: 800px;
+  }
+  .mizuki_dna-test_faq-outer:nth-of-type(3) .mizuki_dna-test_faq-question br {
+    display: none;
+  }
+  .mizuki_dna-test_faq-question {
+    padding-left: 6rem;
+    font-size: 22px;
+    line-height: 1.4545454545;
+  }
+  .mizuki_dna-test_faq-question span {
+    width: 50px;
+    height: 50px;
+    left: 5%;
+  }
+  .mizuki_dna-test_faq-answer {
+    font-size: 18px;
+    line-height: 1.5555555556;
+  }
+  .mizuki_insurance {
+    max-width: 800px;
+  }
+  .mizuki_caution h6 {
+    font-size: 28px;
+    line-height: 1.2857142857;
+  }
+  .mizuki_caution p {
+    font-size: 20px;
+    line-height: 1.6;
+  }
+  .mizuki_caution span {
+    font-size: 24px;
+    line-height: 1.3333333333;
+  }
+  .mizuki_campaign-detail tr {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-align: stretch;
+    -webkit-align-items: stretch;
+        -ms-flex-align: stretch;
+            align-items: stretch;
+  }
+  .mizuki_campaign-detail th {
+    width: 40%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .mizuki_campaign-detail td {
+    width: 60%;
+  }
+}
+@media (min-width: 1200px) {
+  .mizuki_advantage-item-pc a {
+    top: 9%;
+  }
+}
+/*# sourceMappingURL=style.css.map */

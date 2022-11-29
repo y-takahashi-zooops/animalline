@@ -246,11 +246,27 @@ class CustomerController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        $activateUrl = $this->generateUrl(
-            'entry_activate',
-            ['secret_key' => $Customer->getSecretKey(), 'returnPath' => "breeder_mypage"],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        if($Customer->getRegistType() == 1){
+            $activateUrl = $this->generateUrl(
+                'entry_activate',
+                ['secret_key' => $Customer->getSecretKey(), 'returnPath' => "breeder_mypage"],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
+        elseif($Customer->getRegistType() == 2){
+            $activateUrl = $this->generateUrl(
+                'entry_activate',
+                ['secret_key' => $Customer->getSecretKey(), 'returnPath' => "adoption_mypage"],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
+        else{
+            $activateUrl = $this->generateUrl(
+                'entry_activate',
+                ['secret_key' => $Customer->getSecretKey(), 'returnPath' => "homepage"],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
 
         // メール送信
         $this->mailService->sendAdminCustomerConfirmMail($Customer, $activateUrl);
