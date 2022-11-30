@@ -29,6 +29,7 @@ use Eccube\Repository\ProductClassRepository;
 use Eccube\Repository\CategoryRepository;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\DnaCheckKindsEcRepository;
+use Customize\Entity\DnaCheckKindsEc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Eccube\Controller\ProductController as BaseProductController;
 use Eccube\Service\CartService;
@@ -135,6 +136,13 @@ class DnaEcController extends BaseProductController
      */
     public function dna_ec()
     {
+        $customer = $this->getUser();
+
+        if(!$customer){
+            $this->setLoginTargetPath('dna_ec_top');
+            return $this->redirectToRoute("mypage_login");
+        }
+
         $breeds = $this->breedsRepository->findAll();
 
         return [
@@ -190,7 +198,8 @@ class DnaEcController extends BaseProductController
         */
         
         $addCartData = $form->getData();
-
+        
+        $this->cartService->clear();
         $this->cartService->addProduct(
             $addCartData['product_class_id'],
             $addCartData['quantity'],
@@ -225,12 +234,21 @@ class DnaEcController extends BaseProductController
      */
     public function dna_ec_getpet($id)
     {
-        $breeds = $this->breedsRepository->findBy(["pet_kind" => $id],["sort_order" => "ASC"]);
+        //$breeds = $this->breedsRepository->findBy(["pet_kind" => $id],["sort_order" => "ASC"]);
+        $breeds = $this->breedsRepository->createQueryBuilder('b')
+            ->where('EXISTS (SELECT d.id FROM Customize\Entity\DnaCheckKindsEc d WHERE d.Breeds = b)')
+            ->andWhere('b.pet_kind = :pet_kind')
+            ->setParameter('pet_kind', $id)
+            ->orderBy('b.sort_order', 'asc')
+            ->getQuery()->getResult();
+
+        //var_dump($breeds);
 
         $responce = [];
         foreach($breeds as $breed){
             $responce[] = ["id" => $breed->getId(),"breeds_name" => $breed->getBreedsName()];
         }
+        //return [];
         return new JsonResponse($responce);
     }
 

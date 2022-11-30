@@ -1,4 +1,4 @@
-{% extends 'animalline/breeder/frame.twig' %}
+{% extends 'default_frame.twig' %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/index.css?ver=211102_2') }}">
@@ -8,8 +8,13 @@
     <main role="main" id="container" style="width:100vw">
         <div id="contents" class="inner">
             <div style="margin:20px;text-align:center">
-			    <h1>ＤＮＡ検査の販売</h1>
-                ここに説明が入ります。
+			    <h1>有料DNA検査お申込みフォーム</h1>
+
+                <div style="font-size: 20px;margin: 3rem 1rem 3rem 1rem">こちらではワンちゃん・ネコちゃんの遺伝子検査を申し込むことができます。<br />
+                犬種/猫種を選んでいただくと、Animallineで推奨している検査項目が表示されます。<br />
+                ご希望に応じて検査項目は変更ができます。</div>
+
+
             </div>
 
             <div class="ec-off1Grid">
@@ -92,6 +97,44 @@
         });
 
         $("#pet_kind").change(function() {
+            items = {
+                0 : {
+                    "product" : 0,
+                    "product_class" : 0,
+                    "price" : 0
+                },
+                1 : {
+                    "product" : 3065,
+                    "product_class" : 2438,
+                    "price" : 1100
+                },
+                2 : {
+                    "product" : 3066,
+                    "product_class" : 2439,
+                    "price" : 2200
+                },
+                3 : {
+                    "product" : 3067,
+                    "product_class" : 2440,
+                    "price" : 3300
+                },
+                4 : {
+                    "product" : 3068,
+                    "product_class" : 2441,
+                    "price" : 4400
+                },
+                5 : {
+                    "product" : 3069,
+                    "product_class" : 2442,
+                    "price" : 5500
+                },
+                6 : {
+                    "product" : 3070,
+                    "product_class" : 2443,
+                    "price" : 6600
+                }
+            };
+
             $.ajax({
                 type: 'get',
                 url: '/ec/dna/get_dna_kinds/'+$('#pet_kind').val(),
@@ -123,10 +166,12 @@
                                 check_cnt++;
                             }
                         }
-
                         
-                        $("#price").html("検査料金（税込）： " + (check_cnt * 1000).toString() + "円");
-
+                        
+                        $("#price").html("検査料金（税込）： " + items[check_cnt]["price"].toString() + "円");
+                        $("#product_id").val = items[check_cnt]["product"];
+                        $("#ProductClass").val(items[check_cnt]["product_class"]);
+                        
                         if(check_cnt == 0){
                             $("#buy_exec").prop('disabled',true)
                         }
@@ -138,7 +183,9 @@
                     counts++;
                 }
                 
-                $("#price").html("検査料金（税込）： " + (counts * 1000).toString() + "円");
+                $("#product_id").val = items[counts]["product"];
+                $("#ProductClass").val(items[counts]["product_class"]);
+                $("#price").html("検査料金（税込）： " + items[counts]["price"].toString() + "円");
                 
                 if(counts == 0){
                     $("#buy_exec").prop('disabled',true)
