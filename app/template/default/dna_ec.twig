@@ -49,6 +49,14 @@
                     <div id="price" style="margin-bottom:30px">
                         検査料金（税込）： 0円
                     </div>
+
+                    <input type="hidden" id="order_type" name="order_type" value="normal" />
+                    <input type="hidden" id="product_id" name="product_id" value="3065" />
+                    <input type="hidden" id="ProductClass" name="ProductClass" value="2438" />
+                    <input type="hidden" id="normal_quantity" name="normal_quantity" value="1" />
+                    <input type="hidden" id="quantity" name="quantity" value="1" />
+                    <input type="hidden" id="is_repeat" name="is_repeat" />
+                    <input type="hidden" id="repeat_span" name="repeat_span" /><input type="hidden" id="span_unit" name="span_unit" />
                     <input type="hidden" name="{{ constant('Eccube\\Common\\Constant::TOKEN_NAME') }}" value="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
                     <button type="submit" id="buy_exec" class="ec-blockBtn--action" name="mode" value="confirm" disabled>購入手続きへ</form>
                 </div>
@@ -116,6 +124,7 @@
                             }
                         }
 
+                        
                         $("#price").html("検査料金（税込）： " + (check_cnt * 1000).toString() + "円");
 
                         if(check_cnt == 0){

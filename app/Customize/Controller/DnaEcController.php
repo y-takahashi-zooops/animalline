@@ -30,14 +30,15 @@ use Eccube\Repository\CategoryRepository;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\DnaCheckKindsEcRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use Eccube\Controller\ProductController as BaseProductController;
 use Eccube\Service\CartService;
+use Eccube\Form\Type\AddCartType;
 use Eccube\Repository\CartItemRepository;
 use Eccube\Repository\CartRepository;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 
-class DnaEcController extends AbstractController
+class DnaEcController extends BaseProductController
 {
     /**
      * @var NewsRepository
@@ -146,6 +147,7 @@ class DnaEcController extends AbstractController
      */
     public function dna_buy(Request $request)
     {
+        //検査数チェック
         $cnt = 0;
         for($i=1;$i<=6;$i++){
             if($request->get("check_kind_".$i) == "1"){
@@ -153,22 +155,51 @@ class DnaEcController extends AbstractController
             }
         }
 
+        $Product = $this->productRepository->find($request->get("product_id"));
+        $Product_class = $this->productClassRepository->find($request->get("ProductClass"));
+
+        $builder = $this->formFactory->createNamedBuilder(
+            '',
+            AddCartType::class,
+            null,
+            [
+                'product' => $Product,
+                'id_add_product_id' => false,
+            ]
+        );
+
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+                'Product' => $Product,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_PRODUCT_CART_ADD_INITIALIZE, $event);
+
+        /* @var $form \Symfony\Component\Form\FormInterface */
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        //入力チェック
         /*
-        $cartItem = $this->cartItemRepository->findOneBy(['Cart' => $this->cartService->getCarts(),'ProductClass' => $addCartData['product_class_id']]);
-        if ($cartItem) {
-            // 同商品がカートに存在したらカートに追加させない
-            return;
+        if (!$form->isValid()) {
+            var_dump($form->getErrors());
+            throw new NotFoundHttpException();
         }
         */
+        
+        $addCartData = $form->getData();
 
-        $product = $this->productClassRepository->findOneBy(["code" => "A001"]);
-var_dump($product->getId());
-        if(!$this->cartService->addProduct($product,1)){
-            throw new HttpException\NotFoundHttpException();
-            return;
-        }
+        $this->cartService->addProduct(
+            $addCartData['product_class_id'],
+            $addCartData['quantity'],
+            $addCartData['is_repeat'],
+            $addCartData['repeat_span'],
+            $addCartData['span_unit']
+        );
+
         // 明細の正規化
-        /*
         $Carts = $this->cartService->getCarts();
         foreach ($Carts as $Cart) {
             $result = $this->purchaseFlow->validate($Cart, new PurchaseContext($Cart, $this->getUser()));
@@ -183,9 +214,8 @@ var_dump($product->getId());
                 $errorMessages[] = $warning->getMessage();
             }
         }
-        
+
         $this->cartService->save();
-        */
 
         return $this->redirect($this->generateUrl('cart'));
     }
