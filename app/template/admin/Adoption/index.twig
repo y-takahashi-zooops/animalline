@@ -157,6 +157,15 @@ file that was distributed with this source code.
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true"
+                                                data-placement="top" title="ペット情報登録">
+                                                <a class="btn btn-ec-actionIcon" 
+                                                    onclick="window.open('{{ url('adoption_pets_new', {'conservation_id': conservation.id}) }}')"
+                                                >
+                                                    <i class="fa fa-paw fa-lg text-secondary" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+
+                                            <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                                  data-placement="top" title="登録内容編集">
                                                 <a class="btn btn-ec-actionIcon"
                                                    href="{{ url('admin_adoption_edit', {'id': conservation.id}) }}">

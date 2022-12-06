@@ -228,11 +228,29 @@ class AdoptionPetController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/adoption/member/pets/new", name="adoption_pets_new", methods={"GET","POST"})
+     * @Route("/adoption/member/pets/new/{conservation_id}", name="adoption_pets_new", methods={"GET","POST"})
      */
-    public function adoption_pets_new(Request $request): Response
+    public function adoption_pets_new(Request $request,$conservation_id = ""): Response
     {
-        $user = $this->getUser();
+        if($conservation_id != ""){
+            //conservation_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
+            $user = $this->getUser();
+            if($user->getId() == 91 || $user->getId() == 236){
+                $user = $this->customerRepository->find($conservation_id);
+
+                if(!$user){
+                    throw new NotFoundHttpException();
+                }
+            }
+            else{
+                throw new NotFoundHttpException();
+            }
+        }
+        else{
+            //conservation_id指定がない場合はログイン中ユーザーとして処理
+            $user = $this->getUser();
+        }
+        
         $is_conservation = $user->getIsConservation();
         $conservation = $this->conservationsRepository->find($user);
         if ($is_conservation == 0) {
@@ -306,7 +324,12 @@ class AdoptionPetController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('adoption_pet_list');
+            if($conservation_id != ""){
+                return $this->redirectToRoute('close_window');
+            }
+            else{
+                return $this->redirectToRoute('adoption_pet_list');
+            }
         }
 
         return $this->render('animalline/adoption/member/pets/new.twig', [

@@ -1,0 +1,401 @@
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['customer', 'admin_zooops_sendmail_send'] %}
+
+{% block title %}
+    一斉メール送信
+{% endblock %}
+{% block sub_title %}
+    会員管理
+{% endblock %}
+
+{% block stylesheet %}{% endblock stylesheet %}
+
+{% block javascript %}
+    <script>
+	// テンプレート選択時
+	$('#admin_search_distination_template_selector').change(function () {
+		var id = $(this).val()
+		if (id != 0) { // テンプレートが選択されていないときは送信ボタン、プレビューボタンはdisable
+			document.getElementById('bulkSendMail').removeAttribute("disabled");
+			document.getElementById('preview').removeAttribute("disabled");
+		} else {
+			document.getElementById('bulkSendMail').setAttribute("disabled", true);
+			document.getElementById('preview').setAttribute("disabled", true);
+		}
+	});
+
+	// テンプレート読み込み部分はプレビューダイアログを開くまではhide
+	$('.mail_template').hide();
+
+	// モーダルダイアログ表示時
+	$('.previewDiaDisp').on('click', function () {
+		$.ajax({
+			url: '{{ url('admin_zooops_sendmail_preview') }}',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				'id': $('#admin_search_distination_template_selector').val()
+			}
+		}).done(function (data) {// 正常時
+			// 選択されたテンプレートを読み込み表示
+			$('.mail_template').show();
+			$('.mail_title').html(data.template_name);
+			$('.mail-detail').html(data.template_detail);
+		}).fail(function () { // エラー時
+			alert('テンプレートデータの取得に失敗しました。');
+		});
+	});
+
+	// 送信ボタン押下時
+	$('#bulkChange').on('click', function () {
+		$.ajax({
+			url: '{{ url('admin_zooops_sendmail_csv') }}',
+			type: 'POST',
+            data: {
+				'id': $('#admin_search_distination_template_selector').val()
+			}
+		})
+	});
+
+	// モーダルダイアログ消去時
+	$('.previewDiaClose').on('click', function () { 
+		// 読み込んだ内容をリセット
+		$('.mail_template').hide();
+		$('.mail_title').html("");
+		$('.mail-detail').html("");
+	});
+
+    // 閉じるボタン押下時
+    $('#bulkChangeComplete').on('click', function() {
+        location.href = '{{ url('admin_zooops_sendmail_send', { 'resume': 1 }) }}';
+    });
+	</script>
+    {{ include('@admin/Order/sendmailModal_js.twig') }}
+{% endblock javascript %}
+
+{% block main %}
+    {# 検索エリア #}
+    <div class="c-outsideBlock mb-4">
+        <form id='search_form' method="post" action="">
+            {{ form_widget(searchForm._token) }}
+            <div class="c-outsideBlock__contents">
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <div class="form-row mb-2">
+                            <div class="col-10">
+                                <label class="col-form-label">
+                                    {{ 'admin.product.category'|trans }}
+                                </label>
+                                {{ form_widget(searchForm.category_id) }}
+                                {{ form_errors(searchForm.category_id) }}
+                            </div>
+                        </div>
+                        <div class="form-row mb-2">
+                            <div class="col-10">
+                                <p class="col-form-label">
+                                    {{ 'admin.product.name'|trans }}
+                                </p>
+                                {{ form_widget(searchForm.product_name) }}
+                                {{ form_errors(searchForm.product_name) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-2">
+                            <label class="col-form-label">
+                                {{ 'admin.order.last_buy_date'|trans }}
+                            </label>
+                            <div class="form-row align-items-center">
+                                <div class="col">
+                                    {{ form_widget(searchForm.buy_date_start) }}
+                                    {{ form_errors(searchForm.buy_date_start) }}
+                                </div>
+                                <div class="col-auto text-center">
+                                    <span>
+                                        {{ 'admin.common.separator__range'|trans }}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    {{ form_widget(searchForm.buy_date_end) }}
+                                    {{ form_errors(searchForm.buy_date_end) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="col-form-label">
+                                {{ 'admin.order.purchase_price'|trans }}
+                            </label>
+                            <div class="form-row align-items-center">
+                                <div class="col">
+                                    {{ form_widget(searchForm.buy_total_start) }}
+                                    {{ form_errors(searchForm.buy_total_start) }}
+                                </div>
+                                <div class="col-auto">
+                                    <span>
+                                        {{ 'admin.common.separator__range'|trans }}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    {{ form_widget(searchForm.buy_total_end) }}
+                                    {{ form_errors(searchForm.buy_total_end) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="col-form-label">
+                                {{ 'admin.order.purchase_count'|trans }}
+                            </label>
+                            <div class="form-row align-items-center">
+                                <div class="col">
+                                    {{ form_widget(searchForm.buy_times_start) }}
+                                    {{ form_errors(searchForm.buy_times_start) }}
+                                </div>
+                                <div class="col-auto">
+                                    <span>
+                                        {{ 'admin.common.separator__range'|trans }}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    {{ form_widget(searchForm.buy_times_end) }}
+                                    {{ form_errors(searchForm.buy_times_end) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="c-outsideBlock__contents mb-4">
+                <button class="btn btn-ec-conversion px-5" name="search" type="submit">
+                    {{ 'admin.common.search'|trans }}
+                </button>
+                {% if pagination %}
+                    <span class="font-weight-bold ml-2">
+                        {{ 'admin.common.search_result'|trans({"%count%":pagination.totalItemCount})|raw }}
+                    </span>
+                {% endif %}
+            </div>
+            <div class="c-outsideBlock__contents">
+                {{ include('@admin/search_items.twig', { 'form': searchForm }, ignore_missing = true) }}
+            </div>
+        </form>
+    </div>
+
+    {# テンプレート選択エリア #}
+    <div class="c-outsideBlock">
+        <div class="c-outsideBlock__contents">
+            <div class="form-row mb-2">
+                <label class="col-form-label">
+                    テンプレート選択
+                </label>
+            </div>
+            <div class="form-row mb-2">
+                <div class="col-3">
+                    {{ form_widget(searchForm.template_selector) }}
+                    {{ form_errors(searchForm.template_selector) }}
+                </div>
+                {# プレビューボタン #}
+                <div class="col-auto">
+                    <button id="preview" class="btn btn-block btn-ec-regular previewDiaDisp" data-toggle="modal" data-target="#PreviewModal" disabled>
+                        {{ 'admin.setting.shop.mail.preview'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#  件数表示 #}
+    <div class="col-12 text-right">
+        <div class="d-inline-block">
+            <select class="custom-select" onchange="location = this.value;">
+                {% for pageMax in pageMaxis %}
+                    <option {% if pageMax.name == page_count %} selected="" {% endif %} value="{{ path('admin_zooops_sendmail_send_page', {'page_no': 1, 'page_count': pageMax.name}) }}">
+                        {{ 'admin.common.count'|trans({ '%count%': pageMax.name }) }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    {# 定期購入一覧 #}
+    <div class="c-outsideBlock__contents pb-5">
+        {% if pagination and pagination.totalItemCount %}
+            <div class="card rounded border-0 mt-2 mb-2 d-block">
+                <div class="card-body p-0">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0 pt-2 pb-2 text-center">
+                                    会員ID
+                                </th>
+                                <th class="border-top-0 pt-2 pb-2 text-center">
+                                    テンプレート選択
+                                </th>
+                                <th class="border-top-0 pt-2 pb-2 text-center">
+                                    都道府県
+                                </th>
+                                <th class="border-top-0 pt-2 pb-2 text-center">
+                                    性別
+                                </th>
+                                <th class="border-top-0 pt-2 pb-2 text-center">
+                                    最終購入日
+                                </th>
+                                <th class="border-top-0 pt-2 pb-2 text-center">
+                                    購入件数
+                                </th>
+                            </tr>
+                        </thead>
+
+                        {# DBのデータをテーブル形式で表示 #}
+                        <tbody>
+                            {% for customer in pagination %}
+                                <tr style="height:40px;">
+                                    <td class="align-middle text-center">
+                                        {{ customer.id }}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        {{ customer.name01 }}
+                                        {{ customer.name02 }}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        {{ customer.pref }}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        {{ customer.sex }}
+                                    </td>
+                                    {# 購入履歴がない場合はハイフン表示にする #}
+                                    <td class="align-middle text-center">
+                                        {% if customer.last_buy_date %}
+                                            {{ customer.last_buy_date|date('Y/m/d') }}
+                                        {% else %}
+                                            －
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        {{ customer.buy_times }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        {% else %}
+            {# 検索結果0件の場合はメッセージを表示 #}
+            <div class="card rounded border-0 mt-4">
+                <div class="card-body p-4">
+                    <div class="text-center text-muted mb-4 h5">
+                        {{ 'admin.common.search_no_result'|trans }}
+                    </div>
+                    <div class="text-center text-muted">
+                        {{ 'admin.common.search_try_change_condition'|trans }}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {# ページネーション #}
+        <div class="row justify-content-md-center mb-4">
+            {% if pagination.totalItemCount > 0 %}
+                {% include "@admin/pager.twig" with { 'pages' : pagination.paginationData, 'routes' : 'admin_zooops_sendmail_send_page' } %}
+            {% endif %}
+        </div>
+    </div>
+
+    {# 画面下部固定領域 #}
+    <div class="c-conversionArea" id="aside_column">
+        <div class="c-conversionArea__container">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-6">
+                    <div class="c-conversionArea__leftBlockItem"></div>
+                </div>
+                {# 送信ボタン #}
+                <div class="col-6">
+                    <div id="ex-conversion-action" class="row align-items-center justify-content-end">
+                        <div class="col-auto">
+                            <button class="btn btn-ec-conversion px-5 previewDiaDisp" id="bulkSendMail" name="send" type="button" data-type="mail_all" data-preview-notify-mail-url="admin_zooops_sendmail_preview" disabled>
+                                {{ 'admin.common.send'|trans }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- メール送信確認モーダル(js) -->
+    <div class="modal fade" id="sentUpdateModal" tabindex="-1" role="dialog" aria-labelledby="sentUpdateModal" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold"></h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="previewDiaClose">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-message"></p>
+                    <ul id="bulkErrors"></ul>
+                    <div id="bulk-options">
+                        <div>
+                            <div class="d-inline-block" data-toggle="collapse" href="#viewEmail" aria-expanded="false" aria-controls="viewEmail">
+                                <a>
+                                    <i class="fa fa-plus-square-o font-weight-bold mr-1"></i>
+                                    <span class="font-weight-bold">
+                                        {{ 'admin.order.bulk_action__confirm_view_mail_body'|trans }}
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="collapse bg-light p-4 ec-collapse bg-ec-formGray" id="viewEmail" style="word-wrap: break-word; word-break:break-all">
+                                <div class="mail_template">
+                                    {{ include('@admin/mail_template_sm.twig') }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress" style="display: none">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-ec-sub previewDiaClose" type="button" data-dismiss="modal">
+                        {{ 'admin.common.cancel'|trans }}
+                    </button>
+                    <button id="bulkChange" name="bulkChange" class="btn btn-ec-conversion" type="button"></button>
+                    <button id="bulkChangeComplete" name="bulkChangeComplete" class="btn btn-ec-regular previewDiaClose" style="display: none" type="button">
+                        {{ 'admin.common.close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+    <!-- プレビューダイアログ -->
+    <div class="modal fade" id="PreviewModal" tabindex="-1" role="dialog" aria-labelledby="PreviewModal" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold">
+                        {{ 'admin.content.layout_preview'|trans }}
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="previewDiaClose">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="bg-light p-4 ec-collapse bg-ec-formGray" id="viewEmail" style="word-wrap: break-word; word-break:break-all">
+                        <div class="mail_template">
+                            {{ include('@admin/mail_template_sm.twig') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-ec-sub previewDiaClose" data-dismiss="modal">
+                        {{ 'common.close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
