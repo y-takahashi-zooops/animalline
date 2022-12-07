@@ -126,7 +126,7 @@ class BreederBatchMail extends Command
                     }
                 }
                 else{
-                    echo "メール送信しない：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
+                    echo "メール送信しない：".$customer->getEmail()."(".$customer->getId().")".$customer->getName01().$customer->getName02()."\n";
                     //echo "非対象メール送信：".$customer->getEmail()."(".$customer->getId().")".$breeder->getBreederName()."\n";
                     /*
                     if(!$this->mailService->sendAllBreederMail($customer)){
