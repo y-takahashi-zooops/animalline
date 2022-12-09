@@ -91,9 +91,9 @@ class BreederQueryService
             ->andWhere('p.pet_kind = :pet_kind')
             ->setParameter('pet_kind', $petKind)
             ->orderBy('p.is_delete', 'asc')
+            ->addOrderBy('p.is_contract', 'asc')
             ->addOrderBy('p.dna_check_result', 'desc')
-            ->addOrderBy('p.create_date', 'desc')
-            ->addOrderBy('p.thumbnail_path', 'desc');
+            ->addOrderBy('p.create_date', 'desc');
             
             
             //->setMaxResults(16);
