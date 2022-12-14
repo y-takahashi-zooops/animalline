@@ -66,10 +66,12 @@ final class AnilineConf
     // 公開フラグ
     const IS_ACTIVE_PRIVATE = 0;
     const IS_ACTIVE_PUBLIC = 1;
-    const IS_ACTIVE_NO_PUBLIC = 2;
+    const IS_ACTIVE_TRIAL = 2;
+    const IS_ACTIVE_NO_PUBLIC = 3;
     const IS_ACTIVES = [
         self::IS_ACTIVE_PRIVATE => '非公開',
         self::IS_ACTIVE_PUBLIC => '公開',
+        self::IS_ACTIVE_TRIAL => 'トライアル中',
         self::IS_ACTIVE_NO_PUBLIC => '公開不可'
     ];
 

@@ -179,6 +179,11 @@ class ConservationPets
      */
     private $view_count;
 
+    /**
+     * @ORM\Column(name="movie_file", type="string", length=255, nullable=true)
+     */
+    private $movie_file;
+
     public function __construct()
     {
         $this->ConservationPetImages = new ArrayCollection();
@@ -463,6 +468,18 @@ class ConservationPets
     public function setReleaseDate(?\DateTimeInterface $release_date): self
     {
         $this->release_date = $release_date;
+
+        return $this;
+    }
+
+    public function getMovieFile(): ?string
+    {
+        return $this->movie_file;
+    }
+
+    public function setMovieFile(?string $movie_file): self
+    {
+        $this->movie_file = $movie_file;
 
         return $this;
     }

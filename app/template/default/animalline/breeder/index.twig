@@ -123,6 +123,7 @@
                 <div class="flex">
                   <div class="flex-column mizuki_modal-form_l">
                     <h5>見学したい地域を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="breed-area-check-all" value="1" type="checkbox" />全都道府県</div>
                     <div class="flex">
                       <ul class="mizuki_modal-form_area mizuki_modal-form_area-dogs flex">
                         <li class="mizuki_modal-form_area-hokkaidou-touhoku">
@@ -200,7 +201,7 @@
                             <h6>九州・沖縄</h6>
                             {% for i in 40..47 %}
                               {% if i in pref_ids_dog %}
-                              <li">
+                              <li>
                                 <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
                                 <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog[i] }}</label>
                               </li>
@@ -268,7 +269,9 @@
                 <div class="flex">
                   <div class="flex-column mizuki_modal-form_l">
                     <h5>犬種を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="dog-breed-check-all" value="1" type="checkbox" />全犬種</div>
                     <div class="flex">
+                      {#
                       <ul class="mizuki_modal-form_size mizuki_modal-form_size-dogs">
                         <li>
                           <input id="dog_size-xs" type="checkbox" name="dog_size[]" value="1" />
@@ -287,10 +290,16 @@
                           <label class="mizuki_modal-form_size-checkbox mizuki_modal-form_size-dogs-checkbox" for="dog_size-l">大型犬</label>
                         </li>
                       </ul>
+                      #}
                       <ul class="mizuki_modal-form_breed mizuki_modal-form_breed-dogs">
                         <!-- ここに犬種を書き込む -->
                         <div id="breeder_breeds_by_size">
-                      
+                          {% for breeds in breeds_dog %}
+                            <li>
+                              <input id="dog-breeds-{{ breeds.id }}" type="checkbox" name="pet_breed[]" value="{{ breeds.id }}" />
+                              <label class="mizuki_modal-form_breed-checkbox mizuki_modal-form_breed-dogs-checkbox" for="dog-breeds-{{ breeds.id }}">{{ breeds.breedsName }}</label>
+                            </li>
+                          {% endfor %}
                         </div>
                       </ul>
                     </div>
@@ -375,6 +384,7 @@
                 <div class="flex">
                   <div class="flex-column mizuki_modal-form_l">
                     <h5>見学したい地域を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="dog-area-check-all" value="1" type="checkbox" />全都道府県</div>
                     <div class="flex">
                       <ul class="mizuki_modal-form_area mizuki_modal-form_area-dogs flex">
                         <li class="mizuki_modal-form_area-hokkaidou-touhoku">
@@ -452,7 +462,7 @@
                             <h6>九州・沖縄</h6>
                             {% for i in 40..47 %}
                               {% if i in pref_ids_dog %}
-                              <li">
+                              <li>
                                 <input id="dog-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
                                 <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="dog-area-{{ i }}">{{ pref_name_dog[i] }}</label>
                               </li>
@@ -545,6 +555,7 @@
                 <div class="flex">
                   <div class="flex-column mizuki_modal-form_l">
                     <h5>見学したい地域を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="cat-breed-area-check-all" value="1" type="checkbox" />全都道府県</div>
                     <div class="flex">
                       <ul
                         class="mizuki_modal-form_area mizuki_modal-form_area-cats flex"
@@ -624,7 +635,7 @@
                             <h6>九州・沖縄</h6>
                             {% for i in 40..47 %}
                               {% if i in pref_ids_cat %}
-                              <li">
+                              <li>
                                 <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
                                 <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat[i] }}</label>
                               </li>
@@ -709,6 +720,7 @@
                 <div class="flex">
                   <div class="flex-column mizuki_modal-form_l">
                     <h5>猫種を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="cat-breed-check-all" value="1" type="checkbox" />全猫種</div>
                     <div class="flex">
                       <ul
                         class="mizuki_modal-form_breed mizuki_modal-form_breed-cats"
@@ -803,6 +815,7 @@
                 <div class="flex">
                   <div class="flex-column mizuki_modal-form_l">
                     <h5>見学したい地域を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="cat-area-check-all" value="1" type="checkbox" />全都道府県</div>
                     <div class="flex">
                       <ul
                         class="mizuki_modal-form_area mizuki_modal-form_area-cats flex"
@@ -882,7 +895,7 @@
                             <h6>九州・沖縄</h6>
                             {% for i in 40..47 %}
                               {% if i in pref_ids_cat %}
-                              <li">
+                              <li>
                                 <input id="cat-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
                                 <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="cat-area-{{ i }}">{{ pref_name_cat[i] }}</label>
                               </li>
@@ -1475,7 +1488,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/info/page.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?var=20221214">
 {% endblock %}
 
 {% block javascript %}
@@ -1529,5 +1542,5 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Modaal/0.4.4/js/modaal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <script src="{{ asset('assets/js-mizuki/common.js') }}"></script>
+    <script src="{{ asset('assets/js-mizuki/common.js') }}?var=20221214"></script>
 {% endblock %}

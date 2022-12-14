@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Repository\CustomerRepository;
+use Customize\Form\Type\Breeder\BreederPetMovieType;
 
 class AdoptionPetController extends AbstractController
 {
@@ -621,5 +622,50 @@ class AdoptionPetController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
         return compact('barCodes');
+    }
+
+    /**
+     * 動画投稿
+     *
+     * @Route("/adoption/member/movie_upload/{pet_id}", name="adoption_movie_upload", requirements={"pet_id" = "\d+"})
+     * @Template("animalline/adoption/member/movie_upload.twig")
+     */
+    public function movie_upload(Request $request,$pet_id)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $pet = $this->conservationPetsRepository->find($pet_id);
+        if (!$pet) {
+            throw new HttpException\NotFoundHttpException();
+        }
+
+        $builder = $this->formFactory->createBuilder(BreederPetMovieType::class);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        $thumbnail_path = $request->get('thumbnail_path') ?? '';
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            //受信ファイル処理
+            $brochureFile = $form->get('movie_file')->getData();
+                        
+            if($brochureFile){
+                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = 'pmovie-'.uniqid().'.'.$brochureFile->guessExtension();
+
+                $brochureFile->move(
+                    "html/upload/movie/",
+                    $newFilename
+                );
+
+                $pet->setMovieFile($newFilename);
+                $entityManager->persist($pet);
+                $entityManager->flush();
+            }
+        }
+
+        return ['pet' => $pet,'form' => $form->createView()];
     }
 }

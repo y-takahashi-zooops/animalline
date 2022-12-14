@@ -57,7 +57,7 @@ $(".mizuki_search-button_confirm-cancel").on("click", function () {
 });
 
 //ブリーダー検索
-$("input[id^=breed-area-dog-]").on("click", function () {
+$("input[id^=breed-area-dog-]").on("change", function () {
   var prefs = [];
 
   $("input[id^=breed-area-dog-]").each(function(i,elem) {
@@ -91,7 +91,7 @@ $("input[id^=breed-area-dog-]").on("click", function () {
 });
 
 //猫
-$("input[id^=breed-area-cat-]").on("click", function () {
+$("input[id^=breed-area-cat-]").on("change", function () {
   var prefs = [];
 
   $("input[id^=breed-area-cat-]").each(function(i,elem) {
@@ -198,8 +198,86 @@ $("input[id^=dog_size-]").on("click", function () {
   });
 });
 
+//ブリーダー全都道府県
+$("#breed-area-check-all").on("click", function () {
+  //alert(this.checked);
+
+  $("input[id^=breed-area-dog-]").prop("checked",this.checked).trigger("change");
+});
+
+//わんちゃん全犬種
+$("#dog-breed-check-all").on("click", function () {
+  //alert(this.checked);
+
+  $("input[id^=dog-breeds-]").prop("checked",this.checked).trigger("change");
+});
+
+//わんちゃん全都道府県
+$("#dog-area-check-all").on("click", function () {
+  //alert(this.checked);
+
+  $("input[id^=dog-area-]").prop("checked",this.checked).trigger("change");
+});
+
+//ねこちゃん全都道府県
+$("#cat-area-check-all").on("click", function () {
+  //alert(this.checked);
+
+  $("input[id^=cat-area-]").prop("checked",this.checked).trigger("change");
+});
+
+//猫ブリーダー全都道府県
+$("#cat-breed-area-check-all").on("click", function () {
+  //alert(this.checked);
+
+  $("input[id^=breed-area-cat-]").prop("checked",this.checked).trigger("change");
+});
+
+//ねこちゃん全犬種
+$("#cat-breed-check-all").on("click", function () {
+  //alert(this.checked);
+
+  $("input[id^=cat-breeds-]").prop("checked",this.checked).trigger("change");
+});
+
+//犬種から都道府県
+$("input[id^=dog-breeds-]").on("change", function () {
+  //alert("GO");
+
+  var breeds = [];
+
+  $("input[id^=dog-breeds-]").each(function(i,elem) {
+    if($(elem).prop('checked')) {
+      breeds.push($(elem).val());
+    }
+  });
+
+  var param = {"breeds" : breeds,"pet_kind": 1};
+  var json_size = JSON.stringify(param);
+
+  $.ajax({
+    method: "POST",
+    url: "/breeder/ajax/get_pref_by_breeds",
+    data: json_size,
+    contentType: "application/json"
+  }).done(function (data, textStatus, jqXHR) {
+    var data_stringify = JSON.stringify(data);
+    var data_json = JSON.parse(data_stringify);
+
+    var breeds_html = "";
+    Object.keys(data_json).forEach(function (key){
+      breeds_html += '<li>\n';
+      breeds_html += '<input id="dog_breed_area-'+data_json[key].id+'" value="'+data_json[key].id+'" name="pet_breed_area[]" type="checkbox"/>\n';
+      breeds_html += '<label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="dog_breed_area-'+data_json[key].id+'">'+data_json[key].name+'</label>\n';
+      breeds_html += '</li>\n';
+    });
+    //alert(breeds_html);
+    $("#dog_pref_by_breeds").html(breeds_html);
+  });
+});
+
 //猫種から都道府県
-$("input[id^=cat-breeds-]").on("click", function () {
+$("input[id^=cat-breeds-]").on("change", function () {
   //alert("GO");
 
   var breeds = [];
@@ -235,7 +313,7 @@ $("input[id^=cat-breeds-]").on("click", function () {
 
 //地域から探す
 //犬種検索
-$("input[id^=dog-area-]").on("click", function () {
+$("input[id^=dog-area-]").on("change", function () {
   var prefs = [];
 
   $("input[id^=dog-area-]").each(function(i,elem) {
@@ -269,7 +347,7 @@ $("input[id^=dog-area-]").on("click", function () {
 });
 
 //猫種検索
-$("input[id^=cat-area-]").on("click", function () {
+$("input[id^=cat-area-]").on("change", function () {
   var prefs = [];
 
   $("input[id^=cat-area-]").each(function(i,elem) {
