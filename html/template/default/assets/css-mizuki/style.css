@@ -382,6 +382,10 @@ a {
   font-size: 14px;
   line-height: 2.5714285714;
 }
+.mizuki-selectall{
+  margin-top: -37px;
+  margin-left: 160px;
+}
 .mizuki_modal-form {
   margin: 0 auto;
   font-size: 16px;
@@ -748,7 +752,7 @@ a {
   background-image: url(../img-mizuki/dna-icon03.png);
 }
 .mizuki_dna-test_faq-question {
-  padding-left: 3rem;
+  padding-left: 6rem;
   position: relative;
   text-align: start;
   font-size: 16px;

@@ -6,7 +6,7 @@ $(function () {
         getDataByPetKind(this);
     });
 
-    //$('#conservation_pets_pet_kind').trigger('change');
+    $('#conservation_pets_pet_kind').trigger('change');
 
     function getDataByPetKind(petKindSelect) {
         let breed = color = null;

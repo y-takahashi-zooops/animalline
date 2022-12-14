@@ -1653,14 +1653,47 @@ class MailService
         ]);
 
         $message = (new \Swift_Message())
-            ->setSubject('［アニマルライン］キャッシュバックキャンペーンのお知らせ')
+            ->setSubject('【Animalline】年末年始営業日のご案内')
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
             ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04())
-            ->attach(\Swift_Attachment::fromPath('/var/www/animalline/var/campaign20221125.pdf')->setFilename('12月配布チラシ.pdf')->setContentType('application/pdf'));
+            ->setReturnPath($this->BaseInfo->getEmail04());
+            //->attach(\Swift_Attachment::fromPath('/var/www/animalline/var/campaign20221125.pdf')->setFilename('12月配布チラシ.pdf')->setContentType('application/pdf'));
             
         $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
+
+    /**
+     * 一斉メール送信
+     *
+     * @param $data
+     * @return int
+     */
+    public function sendEmailForManyUser($email,$title,$detail,$name,$attach_file)
+    {
+        $body = $this->twig->render('Mail/for_many_user.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'detail' => $detail,
+            'name' => $name
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject($title)
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$email])
+            //->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+            if($attach_file){
+                $message->attach(\Swift_Attachment::fromPath('var/tmp/mail/'.$attach_file));
+            }
+
+        $message->setBody($body);
+
+        error_log("[".date("Y/m/d H:i:s")."]".$title." => ".$email."\n",3,"var/log/mail.log");
 
         return $this->mailer->send($message, $failures);
     }

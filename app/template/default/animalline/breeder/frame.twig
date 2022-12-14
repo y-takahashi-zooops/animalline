@@ -261,10 +261,11 @@
             <div class="side-menu__list">
                 <ul>
                     <li class="logout">
-                        <a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}" class="btn">
-                        <span>犬を探す</span>
+                        <a href="{{ url('breeder_top') }}#search" class="btn">
+                        <span>検索する</span>
                         </a>
                     </li>
+                    {#
                     <li class="logout">
                         <a href="{{ url('breeder_top', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}" class="btn">
                         <span>猫を探す</span>
@@ -275,6 +276,7 @@
                         <span>ブリーダーを探す</span>
                         </a>
                     </li>
+                    #}
                     <li class="logout">
                         <a href="{{url('breeder_faq')}}" class="btn">
                         <span>よくあるご質問</span>

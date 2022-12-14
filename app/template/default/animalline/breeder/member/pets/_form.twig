@@ -200,17 +200,17 @@
             {{ form_errors(form.is_pedigree) }}
         </div>
     </div>
-    <div id="pedigreeSelect" style="display: none">
-        <div class="row mb-3" style="display: none">
+    <div id="pedigreeDetail" style="display: none">
+        <div class="row mb-3">
             <div class="col-md-3">
-            {{ form_label(form.Pedigree, '血統証団体', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
-                <span class="ec-required">必須</span>
+            {{ form_label(form.Pedigree, '血統証の種類', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
             </div>
             <div class="col-md-8 ec-input ec-select">
-            {{ form_widget(form.Pedigree) }}
-            {{ form_errors(form.pedigreeErrors) }}
+            {{ form_widget(form.pedigree_detail) }}
+            {{ form_errors(form.pedigree_detail) }}
             </div>
         </div>
+        
         {#
         <div class="row mb-3">
             <div class="col-md-3">
@@ -247,14 +247,34 @@
     </div>
     <div class="row mb-3" id="vaccineDetail">
         <div class="col-md-3">
-            {{ form_label(form.vaccine_detail, 'ワクチン代情報', { 'label_attr': {'class': 'ec-label' }}) }}
-            <span class="ec-required">必須</span>  
+            {{ form_label(form.vaccine_detail, 'ワクチン代', { 'label_attr': {'class': 'ec-label' }}) }}
         </div>
         <div class="col-md-8 ec-input">
             {{ form_widget(form.vaccine_detail, {'attr': {'style': 'display:flex;'}}) }}
             {{ form_errors(form.vaccineDetailErrors) }}
         </div>
     </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            {{ form_label(form.include_vaccine_fee, 'マイクロチップの有無', { 'label_attr': {'class': 'ec-label'}}) }}
+            <span class="ec-required">必須</span>  
+        </div>
+        <div class="col-md-8 ec-radio">
+            {{ form_widget(form.is_microchip, {'attr': {'style': 'display:flex;'}}) }}
+            {{ form_errors(form.is_microchip) }}
+        </div>
+    </div>
+    <div class="row mb-3" id="microchipCode">
+        <div class="col-md-3">
+            {{ form_label(form.vaccine_detail, 'マイクロチップ代', { 'label_attr': {'class': 'ec-label' }}) }}
+        </div>
+        <div class="col-md-8 ec-input">
+            {{ form_widget(form.microchip_code, {'attr': {'style': 'display:flex;'}}) }}
+            {{ form_errors(form.microchip_code) }}
+        </div>
+    </div>
+
     <div class="row mb-3">
         <div class="col-md-3">
             {{ form_label(form.delivery_way, '引き渡し方法', { 'label_attr': {'class': 'ec-label', 'style' : 'padding: 0.375rem 0' }}) }}
@@ -496,8 +516,18 @@ if(breeder_pets_is_pedigree_0.checked){
 }
 
 $("#vaccineDetail").hide();
-if(breeder_pets_include_vaccine_fee_0.checked) {
+if(breeder_pets_include_vaccine_fee_1.checked) {
     $("#vaccineDetail").show();
+}
+
+$("#pedigreeDetail").hide();
+if(breeder_pets_is_pedigree_0.checked) {
+    $("#pedigreeDetail").show();
+}
+
+$("#microchipCode").hide();
+if(breeder_pets_is_microchip_1.checked) {
+    $("#microchipCode").show();
 }
 
 $(document).ready(function() {
@@ -513,9 +543,27 @@ $(document).ready(function() {
     $("input[name$='breeder_pets[include_vaccine_fee]']").click(function() {
         var include_vaccine_fee = $(this).val();
         if (include_vaccine_fee == 1) {
-            $("#vaccineDetail").show();
-        } else if (include_vaccine_fee == 0) {
             $("#vaccineDetail").hide();
+        } else if (include_vaccine_fee == 0) {
+            $("#vaccineDetail").show();
+        }
+    });
+
+    $("input[name$='breeder_pets[is_microchip]']").click(function() {
+        var is_microchip = $(this).val();
+        if (is_microchip == 1) {
+            $("#microchipCode").hide();
+        } else if (is_microchip == 0) {
+            $("#microchipCode").show();
+        }
+    });
+
+    $("input[name$='breeder_pets[is_pedigree]']").click(function() {
+        var is_pedigree = $(this).val();
+        if (is_pedigree == 0) {
+            $("#pedigreeDetail").hide();
+        } else if (is_pedigree == 1) {
+            $("#pedigreeDetail").show();
         }
     });
 

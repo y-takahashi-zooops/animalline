@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Repository\CustomerRepository;
+use Customize\Form\Type\Breeder\BreederPetMovieType;
 
 class AdoptionPetController extends AbstractController
 {
@@ -228,11 +229,29 @@ class AdoptionPetController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/adoption/member/pets/new", name="adoption_pets_new", methods={"GET","POST"})
+     * @Route("/adoption/member/pets/new/{conservation_id}", name="adoption_pets_new", methods={"GET","POST"})
      */
-    public function adoption_pets_new(Request $request): Response
+    public function adoption_pets_new(Request $request,$conservation_id = ""): Response
     {
-        $user = $this->getUser();
+        if($conservation_id != ""){
+            //conservation_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
+            $user = $this->getUser();
+            if($user->getId() == 91 || $user->getId() == 236){
+                $user = $this->customerRepository->find($conservation_id);
+
+                if(!$user){
+                    throw new NotFoundHttpException();
+                }
+            }
+            else{
+                throw new NotFoundHttpException();
+            }
+        }
+        else{
+            //conservation_id指定がない場合はログイン中ユーザーとして処理
+            $user = $this->getUser();
+        }
+        
         $is_conservation = $user->getIsConservation();
         $conservation = $this->conservationsRepository->find($user);
         if ($is_conservation == 0) {
@@ -306,7 +325,12 @@ class AdoptionPetController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('adoption_pet_list');
+            if($conservation_id != ""){
+                return $this->redirectToRoute('close_window');
+            }
+            else{
+                return $this->redirectToRoute('adoption_pet_list');
+            }
         }
 
         return $this->render('animalline/adoption/member/pets/new.twig', [
@@ -598,5 +622,50 @@ class AdoptionPetController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
         return compact('barCodes');
+    }
+
+    /**
+     * 動画投稿
+     *
+     * @Route("/adoption/member/movie_upload/{pet_id}", name="adoption_movie_upload", requirements={"pet_id" = "\d+"})
+     * @Template("animalline/adoption/member/movie_upload.twig")
+     */
+    public function movie_upload(Request $request,$pet_id)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $pet = $this->conservationPetsRepository->find($pet_id);
+        if (!$pet) {
+            throw new HttpException\NotFoundHttpException();
+        }
+
+        $builder = $this->formFactory->createBuilder(BreederPetMovieType::class);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        $thumbnail_path = $request->get('thumbnail_path') ?? '';
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            //受信ファイル処理
+            $brochureFile = $form->get('movie_file')->getData();
+                        
+            if($brochureFile){
+                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = 'pmovie-'.uniqid().'.'.$brochureFile->guessExtension();
+
+                $brochureFile->move(
+                    "html/upload/movie/",
+                    $newFilename
+                );
+
+                $pet->setMovieFile($newFilename);
+                $entityManager->persist($pet);
+                $entityManager->flush();
+            }
+        }
+
+        return ['pet' => $pet,'form' => $form->createView()];
     }
 }

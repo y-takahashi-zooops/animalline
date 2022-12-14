@@ -32,6 +32,7 @@
                     <th>犬種/猫種</th>
                     <th>仮名・特徴</th>
                     <th>年齢</th>
+                    <th>動画</th>
                     <th></th>
                 </tr>
                 {% for pet in pets %}
@@ -55,6 +56,19 @@
                         </td>
                         <td class="time">{{ pet['cp_name'] }}</td>
                         <td class="time">{{ pet['cp_pet_age'] }}</td>
+                        <td class="time">
+                                {% if pet['cp_is_active'] != 3 %}
+                                    {% if pet['cp_movie_file'] %}
+                                        <a href="{{ url('adoption_movie_upload', {'pet_id': pet['cp_id']}) }}" class="btn btn-primary">
+                                        動画更新
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ url('adoption_movie_upload', {'pet_id': pet['cp_id']}) }}" class="btn btn-success">
+                                        動画追加
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                        </td>
                         <td class="receive">
                             {% if pet['cch_id'] %}
                                 <a href="{{ url('adoption_adoption_message', {'id':pet['cch_id']}) }}">

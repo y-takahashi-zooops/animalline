@@ -253,6 +253,9 @@ class BreederController extends AbstractController
         //猫種
         $breeds_cat = $this->breederQueryService->getBreedsHavePet(2);
 
+        //犬種
+        $breeds_dog = $this->breederQueryService->getBreedsHavePet(1);
+
         return $this->render('animalline/breeder/index.twig', [
             'title' => 'ペット検索',
             'petKind' => $petKind,
@@ -267,7 +270,8 @@ class BreederController extends AbstractController
             'pref_ids_dog' => $pref_ids_dog,
             'pref_name_cat' => $pref_name_cat,
             'pref_ids_cat' => $pref_ids_cat,
-            'breeds_cat' => $breeds_cat
+            'breeds_cat' => $breeds_cat,
+            'breeds_dog' => $breeds_dog
         ],$response);
     }
 

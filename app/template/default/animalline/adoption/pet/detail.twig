@@ -204,10 +204,10 @@
                             <div class="col-12 breeder_section_detail">
                                 <div class="row">
                                     <div class="col-12 col-md-4 contents_col_bold">
-                                        お迎え費用
+                                        お迎え費用(税込） 
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ conservationPet.price ?? '' }}
+                                        {{ conservationPet.price | number_format }}円
                                     </div>
                                 </div>
                             </div>

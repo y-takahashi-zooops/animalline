@@ -411,4 +411,96 @@ class CustomerRepository extends AbstractRepository
         return $qb->getQuery()
             ->getResult();
     }
+
+    /**
+     * 検索処理(一斉メール送信用)
+     *
+     * @param  array $searchData
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getSearchData($searchData)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.Orders','o')
+            ->leftJoin('o.OrderItems', 'oi')
+            ->leftJoin('oi.Product', 'p')
+            ->leftJoin('p.ProductCategories', 'pct')
+            ->leftJoin('pct.Category', 'ca');
+
+       // カテゴリー
+       if (!empty($searchData['category_id']) && $searchData['category_id']) {
+           $Categories = $searchData['category_id']->getSelfAndDescendants();
+           if ($Categories) {
+               $qb
+                   ->andWhere($qb->expr()->in('pct.Category', ':Categories'))
+                   ->setParameter('Categories', $Categories);
+           }
+       }
+
+       // 商品名
+       if (!empty($searchData['product_name']) && $searchData['product_name']) {
+           $date = $searchData['product_name'];
+               $qb
+                   ->andWhere($qb->expr()->in('p.id', ':Products'))
+                   ->setParameter('Products', $date);
+       }
+
+        // 最終購入日(開始)
+        if (!empty($searchData['buy_date_start']) && $searchData['buy_date_start']) {
+            $date = $searchData['buy_date_start'];
+            $qb
+                ->andWhere('c.last_buy_date >= :buy_date_start')
+                ->setParameter('buy_date_start', $date);
+        }
+
+        // 最終購入日(終了)
+        if (!empty($searchData['buy_date_end']) && $searchData['buy_date_end']) {
+            $date = clone $searchData['buy_date_end'];
+            $date = $date
+                ->modify('+1 days');
+            $qb
+                ->andWhere('c.last_buy_date <= :buy_date_end')
+                ->setParameter('buy_date_end', $date);
+        }
+
+        // 購入金額(開始)
+        if (!empty($searchData['buy_total_start']) && $searchData['buy_total_start']) {
+            $date = $searchData['buy_total_start'];
+            $qb
+                ->andWhere('c.buy_total >= :buy_total_start')
+                ->setParameter('buy_total_start', $date);
+        }
+
+        // 購入金額(終了)
+        if (!empty($searchData['buy_total_end']) && $searchData['buy_total_end']) {
+            $date = $searchData['buy_total_end'];
+            $qb
+                ->andWhere('c.buy_total <= :buy_total_end')
+                ->setParameter('buy_total_end', $date);
+        }
+
+        // 購入回数(開始)
+        if (!empty($searchData['buy_times_start']) && $searchData['buy_times_start']) {
+            $date = $searchData['buy_times_start'];
+            $qb
+                ->andWhere('c.buy_times >= :buy_times_start')
+                ->setParameter('buy_times_start', $date);
+        }
+
+        // 購入回数(終了)
+        if (!empty($searchData['buy_times_end']) && $searchData['buy_times_end']) {
+            $date = $searchData['buy_times_end'];
+            $qb
+                ->andWhere('c.buy_times <= :buy_times_end')
+                ->setParameter('buy_times_end', $date);
+        }
+
+        $searchResult = $qb
+            ->getQuery()
+            ->getResult();
+
+        // 検索結果を返す
+        return $searchResult;
+    }
 }

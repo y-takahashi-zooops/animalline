@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DnaController extends AbstractController
 {
@@ -297,10 +298,67 @@ class DnaController extends AbstractController
             $request->query->getInt('page', 1),
             $request->query->getInt('item', 50)
         );
+
         return [
             'dnas' => $dnas,
             'isDelete' => $isDelete
         ];
+    }
+
+    /**
+     * CSVダウンロード
+     *
+     * @Route("/%eccube_admin_route%/dna/get_csvlist", name="admin_dna_get_csvlist")
+     * 
+     */
+    public function getCsvList(Request $request)
+    {
+        $filename = 'dna_statuslist_'.(new \DateTime())->format('YmdHis').'.csv';
+        $filePath = 'var/dna_statuslist.csv';
+        
+        $response = new StreamedResponse();
+
+        $response->setCallback(function () use ($request) {
+            $fp = fopen('php://output', 'w');
+
+            $headers = mb_convert_encoding("id,ブリーダー名,犬種・猫種,キット出荷日,結果受信日,検査機関\r\n","SJIS");
+            fputs($fp,$headers);
+            $criteria = [];
+
+            $dna_result = array("未決定","VEQTA","ラボ");
+            $results = $this->dnaQueryService->filterDnaAdmin($criteria);
+            foreach($results as $result){
+                $row = array();
+
+                $row[] = $result["dna_id"];
+                $row[] =  mb_convert_encoding($result["name01"]. " " .$result["name02"],"SJIS");
+                $row[] =  mb_convert_encoding($result["breeds_name"],"SJIS");
+                if($result["kit_shipping_date"]){
+                    $row[] =  mb_convert_encoding($result["kit_shipping_date"]->format('Y/m/d H:i:s'),"SJIS");
+                }
+                else{
+                    $row[] = "";
+                }
+                if($result["kit_return_date"]){
+                    $row[] =  mb_convert_encoding($result["kit_return_date"]->format('Y/m/d H:i:s'),"SJIS");
+                }
+                else{
+                    $row[] = "";
+                }
+                $row[] =  mb_convert_encoding($dna_result[$result["labo_type"]],"SJIS");
+                
+                fputcsv($fp,$row);
+            }
+
+            fclose($fp);
+        });
+
+        $response->headers->set('Content-Type', 'application/octet-stream');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+
+        $response->send();
+
+        return $response;
     }
 
     /**

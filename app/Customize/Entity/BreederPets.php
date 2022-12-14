@@ -106,6 +106,11 @@ class BreederPets
     private $vaccine_detail;
 
     /**
+     * @ORM\Column(name="pedigree_detail", type="string", length=128, nullable=true)
+     */
+    private $pedigree_detail;
+
+    /**
      * @ORM\Column(name="delivery_way", type="text", nullable=true)
      */
     private $delivery_way;
@@ -174,6 +179,11 @@ class BreederPets
      * @ORM\Column(name="microchip_code", type="string", length=20, nullable=true)
      */
     private $microchip_code;
+
+    /**
+     * @ORM\Column(name="is_microchip", type="smallint", options={"default" = 0})
+     */
+    private $is_microchip = 0;
 
     /**
      * @ORM\Column(name="is_active", type="smallint", options={"default" = 0})
@@ -442,6 +452,18 @@ class BreederPets
         return $this;
     }
 
+    public function getPedigreeDetail(): ?string
+    {
+        return $this->pedigree_detail;
+    }
+
+    public function setPedigreeDetail(?string $pedigree_detail): self
+    {
+        $this->pedigree_detail = $pedigree_detail;
+
+        return $this;
+    }
+
     public function getDeliveryWay(): ?string
     {
         return $this->delivery_way;
@@ -684,6 +706,19 @@ class BreederPets
 
         return $this;
     }
+
+    public function getIsMicrochip(): ?string
+    {
+        return $this->is_microchip;
+    }
+
+    public function setIsMicrochip(?string $is_microchip): self
+    {
+        $this->is_microchip = $is_microchip;
+
+        return $this;
+    }
+
 
     public function getIsActive(): ?int
     {

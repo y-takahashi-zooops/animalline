@@ -125,6 +125,16 @@ class BreederPetsType extends AbstractType
                     new Assert\NotBlank(),
                 ]
             ])
+            ->add('is_microchip', ChoiceType::class, [
+                'choices'  => [
+                    '代金に含む'   => '1',
+                    '代金に含まない' => '0',
+                ],
+                'expanded' => true,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ]
+            ])
             ->add('is_pedigree', ChoiceType::class, [
                 'choices'  => [
                     'あり'   => '1',
@@ -141,6 +151,12 @@ class BreederPetsType extends AbstractType
                     'placeholder' => 'フリー記入',
                 ],
             ])
+            ->add('pedigree_detail', TextType::class, [
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'フリー記入',
+                ],
+            ])
             ->add('Pedigree', EntityType::class, [
                 'class' => 'Customize\Entity\Pedigree',
                 'choice_label' => function (Pedigree $pedigree) {
@@ -152,10 +168,10 @@ class BreederPetsType extends AbstractType
             ->add('pedigree_code', IntegerType::class, [
                 'required' => false,
             ])
-            ->add('microchip_code', IntegerType::class, [
+            */
+            ->add('microchip_code', TextType::class, [
                 'required' => false,
             ])
-            */
             ->add('include_vaccine_fee', ChoiceType::class, [
                 'choices'  => [
                     '代金に含む'   => '1',
