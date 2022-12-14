@@ -61,6 +61,13 @@
                                 <div class="m-2 p-2"></div>
                             {% endif %}
                             {# <div class="row"> #}
+
+                            {% if conservationPet.movieFile %}
+                                <div class="pet-movie">
+                                    <video src="/html/upload/movie/{{ conservationPet.movieFile }}" controls></video>
+                                </div>
+                            {% endif %}
+
                             <div class="breeder_section_header">
                                 <i class="fas fa-paw"></i>
                                 基本情報
