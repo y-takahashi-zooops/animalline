@@ -89,7 +89,7 @@
                                         募集の経緯
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ conservationPet.reasonComment ?? '' }}
+                                        {{ conservationPet.reasonComment | nl2br  }}
                                     </div>
                                 </div>
                             </div>
@@ -225,7 +225,7 @@
                                         費用詳細
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ conservationPet.priceComment ?? '' }}
+                                        {{ conservationPet.priceComment | nl2br  }}
                                     </div>
                                 </div>
                             </div>

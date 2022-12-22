@@ -148,16 +148,10 @@
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
                                         {% if breederPet.isPedigree == 1 %}
-                                            有
-                                            {#
-                                            {% if breederExamInfo == null %}
-                                                無
-                                            {% elseif breederExamInfo.pedigreeOrganization == 1 or breederExamInfo.pedigreeOrganization == 2 %}
-                                                有（ {{ pedigree.pedigreeName ? pedigree.pedigreeName : '_' }} ）
-                                            {% elseif breederExamInfo.pedigreeOrganization == 3 %}
-                                                有（ {{ breederExamInfo.pedigreeOrganizationOther ? breederExamInfo.pedigreeOrganizationOther : '_' }} ）
+                                            あり
+                                            {% if breederPet.pedigreeDetail %}
+                                                ({{ breederPet.pedigreeDetail() }})
                                             {% endif %}
-                                            #}
                                         {% else %}
                                             無
                                         {% endif %}
@@ -184,6 +178,23 @@
                             <div class="col-12 breeder_section_detail">
                                 <div class="row">
                                     <div class="col-12 col-md-4 contents_col_bold">
+                                        マイクロチップの有無
+                                    </div>
+                                    <div class="col-12 col-md-8 contents_col_normal">
+                                        {% if breederPet.getIsMicrochip == 1 %}
+                                            代金に含む
+                                        {% else %}
+                                            代金に含まない
+                                            {%if breederPet.getmicrochipCode() != "" %}
+                                                （{{ breederPet.getmicrochipCode() }}）
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 col-md-4 contents_col_bold">
                                         {% if breederPet.getPetKind() == 1 %}
                                         成犬時予想体重
                                         {% else %}
@@ -196,16 +207,29 @@
                                 </div>
                             </div>
                             {% if is56DaysOld <= 56 and is56DaysOld >= 0 %}
-                                <div class="col-12 contents_col_normal mt-4 mb-4 pl-4 pr-4"
-                                    style="background:#f7f5f0; border:1px solid #dcdfe1; border-radius: 3px;">
-                                    <h6 class="text-align-center mb-2" style="color:#399634">
-                                        <i class="fas fa-info-circle"></i>
-                                        【生後56日を過ぎていない子犬の引き渡しについて】
-                                    </h6>
-                                    動物愛護法により、生後56日を過ぎていない子犬の引き渡しが禁止されています。<br>
-                                    この子犬はまだ生後56日を過ぎていませんので、すぐに引き渡しを行う事はできません。<br>
-                                    生後56日を過ぎていなくてもブリーダーの下で親犬や兄弟犬と共に飼養されている環境であれば購入検討のためにご見学することは可能です。<br>
-                                </div>
+                                {% if breederPet.getPetKind() == 1 %}
+                                    <div class="col-12 contents_col_normal mt-4 mb-4 pl-4 pr-4"
+                                        style="background:#f7f5f0; border:1px solid #dcdfe1; border-radius: 3px;">
+                                        <h6 class="text-align-center mb-2" style="color:#399634">
+                                            <i class="fas fa-info-circle"></i>
+                                            【生後56日を過ぎていない子犬の引き渡しについて】
+                                        </h6>
+                                        動物愛護法により、生後56日を過ぎていない子犬の引き渡しが禁止されています。<br>
+                                        この子犬はまだ生後56日を過ぎていませんので、すぐに引き渡しを行う事はできません。<br>
+                                        生後56日を過ぎていなくてもブリーダーの下で親犬や兄弟犬と共に飼養されている環境であれば購入検討のためにご見学することは可能です。<br>
+                                    </div>
+                                {% else %}
+                                    <div class="col-12 contents_col_normal mt-4 mb-4 pl-4 pr-4"
+                                        style="background:#f7f5f0; border:1px solid #dcdfe1; border-radius: 3px;">
+                                        <h6 class="text-align-center mb-2" style="color:#399634">
+                                            <i class="fas fa-info-circle"></i>
+                                            【生後56日を過ぎていない子猫の引き渡しについて】
+                                        </h6>
+                                        動物愛護法により、生後56日を過ぎていない子猫の引き渡しが禁止されています。<br>
+                                        この子猫はまだ生後56日を過ぎていませんので、すぐに引き渡しを行う事はできません。<br>
+                                        生後56日を過ぎていなくてもブリーダーの下で親猫や兄弟猫と共に飼養されている環境であれば購入検討のためにご見学することは可能です。<br>
+                                    </div>
+                                {% endif %}
                             {% endif %}
                             <div class="breeder_section_header">
                                 <i class="fas fa-paw"></i>
@@ -324,6 +348,30 @@
                                 <div class="row">
                                     <div class="col-12 contents_col_normal">
                                         {{ breederPet.getDeliveryWay() | nl2br }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="breeder_section_header_orange">
+                                <i class="fas fa-paw"></i>
+                                お支払方法
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 contents_col_normal">
+                                        {{ breederPet.getPaymentMethod() | nl2br }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="breeder_section_header_orange">
+                                <i class="fas fa-paw"></i>
+                                予約金
+                            </div>
+                            <div class="col-12 breeder_section_detail">
+                                <div class="row">
+                                    <div class="col-12 contents_col_normal">
+                                        {{ breederPet.getReservationFee() | nl2br }}
                                     </div>
                                 </div>
                             </div>
