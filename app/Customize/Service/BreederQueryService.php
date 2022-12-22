@@ -213,8 +213,9 @@ class BreederQueryService
         }
 
         $query->orderBy('p.is_delete', 'asc')
+            ->addOrderBy('p.is_contract', 'asc')
             ->addOrderBy('p.dna_check_result', 'desc')
-            ->addOrderBy('p.thumbnail_path', 'desc');
+            ->addOrderBy('p.create_date', 'desc');
 
         /*
         if ($request->get('featured_pet')) {

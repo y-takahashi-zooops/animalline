@@ -569,6 +569,9 @@ Width <= 768px
 Width <= 640px
 ------------------*/
 @media screen and (max-width: 640px) {
+body {
+  font-size: 14px;
+}
 header .header-count{
   display:none;
 }

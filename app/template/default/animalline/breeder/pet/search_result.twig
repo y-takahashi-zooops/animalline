@@ -119,7 +119,7 @@
                             <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
                             <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
                             <div class="type"><span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>{{ pet.coatColor}}</span></div>
-                            <div class="publish">掲載日：{{ pet.releaseDate|date('Y年m月d日') }}</div>
+                            <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
                             {% if pet.isContract != 1 and pet.isDelete != 1 %}
                               <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
                             {% endif %}

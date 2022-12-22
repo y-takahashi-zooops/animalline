@@ -136,7 +136,8 @@
                                     <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
                                     <div class="birthday">{{ pet.petAge }}</div>
                                     <div class="type">
-                                        <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>茶色</span>
+                                        <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span>
+                                        <span>{{ pet.coatColor}}</span>
                                     </div>
                                     <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
                                     <p>{{ pet.prComment|nl2br }}</p>

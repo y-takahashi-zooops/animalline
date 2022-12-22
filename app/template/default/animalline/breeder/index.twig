@@ -41,8 +41,11 @@
         </div>
       </section>
 
-      <section class="mizuki_search">
+      <section class="mizuki_search hidden-phone">
         <a href="#cashback"><img src="{{ '/html/template/default/assets/img/bn_cashback.png' }}" alt="キャッシュバックキャンペーン" style="padding: 0 8rem" /></a>
+      </section>
+      <section class="mizuki_search visible-phone">
+        <a href="#cashback"><img src="{{ '/html/template/default/assets/img/bn_cashback.png' }}" alt="キャッシュバックキャンペーン" style="padding: 0 2rem" /></a>
       </section>
 
       <section class="mizuki_search">
@@ -1059,7 +1062,7 @@
                           <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span>
                           <span>{{ pet.coatColor}}</span>
                         </div>
-                        <div class="publish">掲載日：{{ pet.releaseDate|date('Y年m月d日') }}</div>
+                        <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
                         {% if pet.isContract == 1 or pet.isDelete == 1 %}
                           <div class="price">---円（税込）</div>
                         {% else %}

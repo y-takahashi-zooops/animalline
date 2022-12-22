@@ -408,7 +408,7 @@ class BreederController extends AbstractController
             //$find_cond["is_contract"] = 1;
         }
 
-        $petResults = $this->breederPetsRepository->findBy($find_cond,["is_delete" => "ASC","is_contract" => "ASC","dna_check_result" => "DESC","thumbnail_path" => "DESC"]);
+        $petResults = $this->breederPetsRepository->findBy($find_cond,["is_delete" => "ASC","is_contract" => "ASC","dna_check_result" => "DESC","create_date" => "DESC"]);
 
         $pets = $paginator->paginate(
             $petResults,
