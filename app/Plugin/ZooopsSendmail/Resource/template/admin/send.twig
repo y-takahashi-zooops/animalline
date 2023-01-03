@@ -94,7 +94,7 @@
     $('.table input[type=checkbox]').prop('checked', true);
 
     function enableSendMail() {
-        $('#bulkSendMail').prop('disabled', $('.check-item:checked').length != 0) ?? false);
+        $('#bulkSendMail').prop('disabled', $('.check-item:checked').length != 0 ?? false);
     }
 
     enableSendMail();
