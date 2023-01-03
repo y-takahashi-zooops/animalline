@@ -42,10 +42,10 @@ class SendMailProcess
     public function csvExport($searchData,$template_title,$template_detail,$attach_file)
     {
         // ファイル名作成
-        $directorypath = 'var/tmp/mail/';
-        $now = new \DateTime();
-        $filename = 'mail_' . $now->format('YmdHis') . '.csv';
-        $csvpath = $directorypath . $filename;
+        // $directorypath = 'var/tmp/mail/';
+        // $now = new \DateTime();
+        // $filename = 'mail_' . $now->format('YmdHis') . '.csv';
+        // $csvpath = $directorypath . $filename;
 
         // フォルダがなければ作成する
         //if (!file_exists($directorypath)) {
@@ -62,8 +62,8 @@ class SendMailProcess
 
         //データ行挿入
         foreach ($qb as $customer) {
-            $name = $customer.getName01()."　".$customer.getName02();
-            $email = $customer.getEmail();
+            $name = $customer->getName01()."　".$customer->getName02();
+            $email = $customer->getEmail();
 
             $this->mailService->sendEmailForManyUser($email,$template_title,$template_detail,$name,$attach_file);
             /*

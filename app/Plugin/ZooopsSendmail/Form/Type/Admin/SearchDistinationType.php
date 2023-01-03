@@ -145,6 +145,23 @@ class SearchDistinationType extends AbstractType
                 'constraints' => [
                     new Assert\Length(['max' => $this->eccubeConfig['eccube_int_len']]),
                 ],
+            ])
+
+            // 入会経路
+            ->add('member_route', ChoiceType::class, [
+                'label' => 'admin.product.name',
+                'placeholder' => false,
+                'required' => true,
+                'multiple' => false,
+                'expanded' => false,
+                'choices' => [
+                    'ブリーダー（登録済）' => '1',
+                    'ブリーダー（未登録）' => '2',
+                    '保護団体（登録済）' => '3',
+                    '保護団体（未登録）' => '4',
+                    'ＥＣ' => '5',
+                ],
+                'empty_data' => '1',
             ]);
 
             $entity = $builder->getData();
