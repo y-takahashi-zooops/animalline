@@ -4757,6 +4757,21 @@ CONTENTS後藤追加分
   margin: auto;
 }
 
+.comment-box--sblue {
+  margin: 0 auto;
+  padding: 0.8rem 0.8rem 0.8rem 0.8rem;
+  margin-bottom: 1.5rem;
+  background-color: #D0E1EF;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  font-weight: 400;
+  font-size: 1.5em;
+}
+
+.font-size--default {
+  font-size: 14px;
+}
+
 /* スマホ */
 @media only screen and (max-width: 640px) {
   #footer03 .nav li {

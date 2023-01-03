@@ -1,0 +1,109 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+
+{% block main %}
+    <section id="breeder-column" class="breeder-column_dog">
+        <div class="inner">
+            <div class="ec-contactRole">
+                <div class="ec-pageHeader">
+                    <h1>
+                        {{ 'お問い合わせ'|trans }}
+                    </h1>
+                </div>
+                <div class="ec-off1Grid">
+                    <div class="ec-off1Grid__cell">
+                        <div class="comment-box--sblue">
+                            こちらのフォームからブリーダー様へお問い合わせができます。<br>
+                            <p class="mb-4">お気軽にお問い合わせください。</p>
+                            <p class="font-size--default">＜お問い合わせ例＞</p>
+                            <p class="font-size--default">・まだ掲載していない子犬はいますか？</p>
+                            <p class="font-size--default">・次回の掲載予定はいつ頃になりますか？</p>
+                            <p class="font-size--default">・〇色の毛色の子はいますか？</p>
+                            <p class="font-size--default mb-2">・次回掲載の子のおおよその販売金額はいくらですか？</p>
+                            <p class="font-size--default">※お問い合わせ後はマイページよりメッセージのやり取りができます。</p>
+                        </div>
+                        <form method="post" action="{{ url('breeder_nopet_contact') }}" class="h-adr" enctype="multipart/form-data" novalidate>
+                            <span class="p-country-name" style="display:none;">
+                                Japan
+                            </span>
+                            {{ form_widget(form._token) }}
+                            <div class="ec-borderedDefs">
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.contact_type, 'コンタクト内容タイトル', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-select{{ has_errors(form.contact_type) ? ' error' }}">
+                                            {{ form_widget(form.contact_type) }}
+                                            {{ form_errors(form.contact_type) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.contact_description, 'コンタクト内容本文', { 'label_attr': { 'class': 'ec-label' }}
+                                        ) }}
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-input{{ has_errors(form.contact_description) ? ' error' }}">
+                                            {{ form_widget(form.contact_description) }}
+                                            {{ form_errors(form.contact_description) }}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        {{ form_label(form.files, '添付ファイル', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                    </dt>
+                                    <dd>
+                                        <div>
+                                            {% if(newFilename) %}
+                                                送信ファイルあり
+                                                <input type="hidden" name="newFilename" value="{{ newFilename }}" />
+                                            {% else %}
+                                                {{ form_widget(form.files, { 'attr': { 'accept': 'image/*' }}) }}
+                                                {{ form_errors(form.files) }}
+                                            {% endif %}
+                                        </div>
+                                    </dd>
+                                </dl>
+                                {# エンティティ拡張の自動出力 #}
+                                {% for f in form if f.vars.eccube_form_options.auto_render %}
+                                    {% if f.vars.eccube_form_options.form_theme %}
+                                        {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                        {{ form_row(f) }}
+                                    {% else %}
+                                        <dl>
+                                            <dt>
+                                                {{ form_label(f) }}
+                                            </dt>
+                                            <dd>
+                                                <div class="{{ f.vars.eccube_form_options.style_class }}{{ has_errors(f) ? ' error' }}">
+                                                    {{ form_widget(f) }}
+                                                    {{ form_errors(f) }}
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="ec-RegisterRole__actions">
+                                <div class="ec-off4Grid">
+                                    <div class="ec-off4Grid__cell">
+                                        {# <button type="submit" class="ec-blockBtn--action" name="mode" value="confirm">{{ '確認ページへ'|trans }} #}
+                                        <button type="submit" class="basic-btn breeder-btn" name="mode" value="confirm">
+                                            {{ '確認ページへ'|trans }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}

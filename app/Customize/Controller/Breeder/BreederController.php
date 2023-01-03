@@ -11,6 +11,7 @@ use Eccube\Repository\Master\PrefRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
 use Customize\Entity\AffiliateStatus;
+use Customize\Form\Type\Breeder\BreederNoPetContactType;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\BreedersRepository;
@@ -773,4 +774,25 @@ class BreederController extends AbstractController
         ];
     }
 
+    /**
+     * 成約済みのペットの場合のお問い合わせ
+     *
+     * @Route("/breeder/nopet/ani_contact", name="breeder_nopet_contact")
+     * @Template("animalline/breeder/nopet_contact.twig")
+     */
+    public function ani_nopet_contact(Request $request)
+    {
+        $builder = $this->formFactory->createBuilder(BreederNoPetContactType::class);
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+        $newFilename = $request->get("newFilename");
+
+        $maintitle = "お問い合わせ";
+
+        return [
+            'title' => $maintitle,
+            'form' => $form->createView(),
+            "newFilename" => $newFilename
+        ];
+    }
 }
