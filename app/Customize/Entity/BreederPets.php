@@ -121,6 +121,11 @@ class BreederPets
     private $price;
 
     /**
+     * @ORM\Column(name="price_display", type="smallint", options={"default" = 1}, nullable=false)
+     */
+    private $price_display;
+
+    /**
      * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
      */
     private $thumbnail_path;
@@ -484,6 +489,18 @@ class BreederPets
     public function setPrice(?int $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getPriceDisplay(): ?int
+    {
+        return $this->price_display;
+    }
+
+    public function setPriceDisplay(?int $price): self
+    {
+        $this->price = $price_display;
 
         return $this;
     }
