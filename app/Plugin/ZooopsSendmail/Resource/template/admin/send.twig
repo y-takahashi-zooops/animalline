@@ -94,21 +94,13 @@
     $('.table input[type=checkbox]').prop('checked', true);
 
     function enableSendMail() {
-        if ($('.check-item:checked').length != 0) {
-        $('#bulkSendMail').prop('disabled', false);
-        } else {
-            $('#bulkSendMail').prop('disabled', true);
-        }
+        $('#bulkSendMail').prop('disabled', $('.check-item:checked').length != 0) ?? false);
     }
 
     enableSendMail();
 
     $('#trigger-check-all').on('click', function() {
-        if ($(this).prop('checked')) {
-            $('.check-item').prop('checked', true);
-        } else {
-            $('.check-item').prop('checked', false);
-        }
+        $('.check-item').prop('checked', $(this).prop('checked') ?? false);
 
         enableSendMail();
     });
