@@ -87,13 +87,13 @@ class VeqtaPdfService extends TcpdfFpdi
         $this->renderPetData($data['pet']);
 
         if($data['result'] == 6){
-            $this->lfText(20, 230, "上記、検査項目において検出する遺伝子変異が原因となる発症リスクはありません。", 10);
+            $this->lfText(20, 250, "上記、検査項目において検出する遺伝子変異が原因となる発症リスクはありません。", 10);
         }
         if($data['result'] == 4){
-            $this->lfText(20, 230, "検体異常です", 10);
+            $this->lfText(20, 250, "検体異常です", 10);
         }
         if($data['result'] == 7){
-            $this->lfText(20, 230, "上記、検査項目において検出する遺伝子変異が原因となる発症リスクがございます。", 10);
+            $this->lfText(20, 250, "上記、検査項目において検出する遺伝子変異が原因となる発症リスクがございます。", 10);
         }
 
         $this->renderCheckKinds($data['check_kinds']);
@@ -129,7 +129,7 @@ class VeqtaPdfService extends TcpdfFpdi
      */
     protected function renderBreederName($data)
     {
-        $this->lfText(85, 107, $data, 10);
+        $this->lfText(85, 103, $data, 10);
     }
 
     /**
@@ -142,18 +142,18 @@ class VeqtaPdfService extends TcpdfFpdi
     {
         $imgpath = "/var/www/animalline/html/upload/save_image".$data->getThumbnailPath();
         if(file_exists($imgpath)){
-            $this->Image($imgpath, 
-                34, 50, 
+            $this->Image($imgpath,
+                32.5, 43.5,
                 42, 42, 
                 "", "", "", true, 300, "", false, false, 0, true, false, false);
         }
         
-        $this->lfText(160, 35.5, date('Y年m月d日'), 10);
+        $this->lfText(160, 27.5, date('Y年m月d日'), 10);
 
-        $this->lfText(85, 120, $data->getBreedsType()->getBreedsName(), 10);
+        $this->lfText(85, 116, $data->getBreedsType()->getBreedsName(), 10);
         //$this->lfText(80, 140, '不要', 10);
-        $this->lfText(85, 133, $data->getPetBirthday()->format('Y年m月d日'), 10);
-        $this->lfText(85, 146, $data->getPetSex() == 1 ? '男の子' : '女の子', 10);
+        $this->lfText(85, 129, $data->getPetBirthday()->format('Y年m月d日'), 10);
+        $this->lfText(85, 142, $data->getPetSex() == 1 ? '男の子' : '女の子', 10);
 
         //$this->lfText(80, 172, $data->getPedigreeCode(), 10);
         //$this->lfText(80, 183, $data->getMicrochipCode(), 10);
@@ -168,19 +168,25 @@ class VeqtaPdfService extends TcpdfFpdi
     protected function renderCheckKinds(array $rows): bool
     {
         $fromX = 20;
-        $fromY = 164;
+        $fromY = 159;
         // 検査結果
         $CHECK_RESULTS = [
             1 => 'クリア',
-            2 => 'キャリア／劣性',
+            2 => 'キャリア',
             3 => 'アフェクテッド',
-            4 => 'キャリア／優性'
+            4 => 'キャリア'
+        ];
+
+        $carrier = [
+            2 => '劣性',
+            4 => '優性',
         ];
 
         foreach ($rows as $row) {
             $this->lfTextWhite($fromX, $fromY, $row['check_kind_name'], 10);
-            $this->lfText($fromX + 81, $fromY, $CHECK_RESULTS[$row['check_kind_result']] ?? '', 10);
-            $fromY += 17;
+            $this->lfText($fromX + 82, $fromY, $carrier[$row['check_kind_result']] ?? '', 10);
+            $this->lfText($fromX + 110, $fromY, $CHECK_RESULTS[$row['check_kind_result']] ?? '', 10);
+            $fromY += 13;
             /*
             if (strlen($row['check_kind_name']) > 32) {
                 $this->lfText($fromX, $fromY, substr($row['check_kind_name'], 0, 32), 8);
