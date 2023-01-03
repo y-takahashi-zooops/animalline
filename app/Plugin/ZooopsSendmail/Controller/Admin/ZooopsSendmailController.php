@@ -270,18 +270,20 @@ class ZooopsSendmailController extends AbstractController
             throw new BadRequestHttpException();
         }
 
-        $request->get("id");
+        $id = $request->get("id");
+
+        $customerIds = $request->get('customer_ids');
 
         // 設定したテンプレートIDの各要素を取得
         $template = $this->templateRepository->get($id);
         $template_title = $template->getTemplateName();
         $template_detail = $template->getTemplateDetail();
         $attach_file = $template->getTemplateAttach();
-
         $searchForm = $this->createForm(SearchDistinationType::class);
 
         $viewData = $this->session->get('eccube.admin.destination.search', []);
         $searchData = FormUtil::submitAndGetData($searchForm, $viewData);
+        $searchData['customer_ids'] = $customerIds;
 
         $this->sendMailProcess->csvExport($searchData,$template_title,$template_detail,$attach_file);
 

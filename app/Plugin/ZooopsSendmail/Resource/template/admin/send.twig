@@ -9,7 +9,20 @@
     会員管理
 {% endblock %}
 
-{% block stylesheet %}{% endblock stylesheet %}
+{% block stylesheet %}
+    <style>
+        .table-responsive {
+            max-height: 450px;
+        }
+
+        thead tr th {
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+    </style>
+{% endblock stylesheet %}
 
 {% block javascript %}
     <script>
@@ -49,11 +62,18 @@
 
 	// 送信ボタン押下時
 	$('#bulkChange').on('click', function () {
+        let customerIds = [];
+
+        $('.check-item:checked').each(function () {
+            customerIds.push($(this).data('customer-id'));
+        });
+
 		$.ajax({
 			url: '{{ url('admin_zooops_sendmail_csv') }}',
 			type: 'POST',
             data: {
-				'id': $('#admin_search_distination_template_selector').val()
+				'id': $('#admin_search_distination_template_selector').val(),
+                'customer_ids': customerIds
 			}
 		})
 	});
@@ -70,6 +90,39 @@
     $('#bulkChangeComplete').on('click', function() {
         location.href = '{{ url('admin_zooops_sendmail_send', { 'resume': 1 }) }}';
     });
+
+    $('.table input[type=checkbox]').prop('checked', true);
+
+    function enableSendMail() {
+        if ($('.check-item:checked').length != 0) {
+        $('#bulkSendMail').prop('disabled', false);
+        } else {
+            $('#bulkSendMail').prop('disabled', true);
+        }
+    }
+
+    enableSendMail();
+
+    $('#trigger-check-all').on('click', function() {
+        if ($(this).prop('checked')) {
+            $('.check-item').prop('checked', true);
+        } else {
+            $('.check-item').prop('checked', false);
+        }
+
+        enableSendMail();
+    });
+
+    $('.check-item').on('click', function() {
+        if (!$(this).is(':checked')) {
+            $('#trigger-check-all').prop('checked', false);
+        } else if ($('.check-item:not(:checked)').length == 0) {
+            $('#trigger-check-all').prop('checked', true);
+        }
+
+        enableSendMail();
+    });
+
 	</script>
     {{ include('@admin/Order/sendmailModal_js.twig') }}
 {% endblock javascript %}
@@ -98,6 +151,15 @@
                                 </p>
                                 {{ form_widget(searchForm.product_name) }}
                                 {{ form_errors(searchForm.product_name) }}
+                            </div>
+                        </div>
+                        <div class="form-row mb-2">
+                            <div class="col-10">
+                                <p class="col-form-label">
+                                    {{ 'admin.customer.member_route'|trans }}
+                                </p>
+                                {{ form_widget(searchForm.member_route) }}
+                                {{ form_errors(searchForm.member_route) }}
                             </div>
                         </div>
                     </div>
@@ -204,27 +266,17 @@
         </div>
     </div>
 
-    {#  件数表示 #}
-    <div class="col-12 text-right">
-        <div class="d-inline-block">
-            <select class="custom-select" onchange="location = this.value;">
-                {% for pageMax in pageMaxis %}
-                    <option {% if pageMax.name == page_count %} selected="" {% endif %} value="{{ path('admin_zooops_sendmail_send_page', {'page_no': 1, 'page_count': pageMax.name}) }}">
-                        {{ 'admin.common.count'|trans({ '%count%': pageMax.name }) }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
     {# 定期購入一覧 #}
     <div class="c-outsideBlock__contents pb-5">
         {% if pagination and pagination.totalItemCount %}
             <div class="card rounded border-0 mt-2 mb-2 d-block">
-                <div class="card-body p-0">
+                <div class="card-body p-0 table-responsive">
                     <table class="table table-sm">
                         <thead>
                             <tr>
+                                <th class="border-top-0 pl-3 pt-2 pb-2">
+                                    <input type="checkbox" name="filter" id="trigger-check-all">
+                                </th>
                                 <th class="border-top-0 pt-2 pb-2 text-center">
                                     会員ID
                                 </th>
@@ -250,6 +302,9 @@
                         <tbody>
                             {% for customer in pagination %}
                                 <tr style="height:40px;">
+                                    <td class="align-middle pl-3">
+                                        <input type="checkbox" name="ids[]" class="check-item" data-customer-id="{{ customer.id }}">
+                                    </td>
                                     <td class="align-middle text-center">
                                         {{ customer.id }}
                                     </td>
@@ -294,13 +349,6 @@
                 </div>
             </div>
         {% endif %}
-
-        {# ページネーション #}
-        <div class="row justify-content-md-center mb-4">
-            {% if pagination.totalItemCount > 0 %}
-                {% include "@admin/pager.twig" with { 'pages' : pagination.paginationData, 'routes' : 'admin_zooops_sendmail_send_page' } %}
-            {% endif %}
-        </div>
     </div>
 
     {# 画面下部固定領域 #}

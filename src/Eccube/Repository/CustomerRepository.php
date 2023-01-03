@@ -496,6 +496,40 @@ class CustomerRepository extends AbstractRepository
                 ->setParameter('buy_times_end', $date);
         }
 
+        if (!empty($searchData['member_route'])) {
+            switch ($searchData['member_route']) {
+                case 1:
+                    $qb->andWhere('c.regist_type = :regist_type')
+                        ->andWhere('c.is_breeder != 0')
+                        ->setParameter('regist_type', 1);
+                    break;
+                case 2:
+                    $qb->andWhere('c.regist_type = :regist_type')
+                        ->andWhere('c.is_breeder = 0')
+                        ->setParameter('regist_type', 1);
+                    break;
+                case 3:
+                    $qb->andWhere('c.regist_type = :regist_type')
+                        ->andWhere('c.is_conservation != 0')
+                        ->setParameter('regist_type', 2);
+                    break;
+                case 4:
+                    $qb->andWhere('c.regist_type = :regist_type')
+                        ->andWhere('c.is_conservation = 0')
+                        ->setParameter('regist_type', 2);
+                    break;
+                case 5:
+                    $qb->andWhere('c.regist_type = :regist_type')
+                        ->setParameter('regist_type', 0);
+                    break;
+            }
+        }
+        
+        if (!empty($searchData['customer_ids'])) {
+            $qb->andWhere('c.id IN (:customer_ids)')
+                ->setParameter('customer_ids', $searchData['customer_ids']);
+        }
+
         $searchResult = $qb
             ->getQuery()
             ->getResult();
