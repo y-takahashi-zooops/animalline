@@ -105,7 +105,9 @@
                                         種類
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ breederPet.breedsType.breedsName ?? '' }}
+                                        <a href="{{ path('breeder_pet_search_result', { 'breed_type': breederPet.breedsType.id }) }}">
+                                            {{ breederPet.breedsType.breedsName ?? '' }}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +117,9 @@
                                         性別
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ breederPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}
+                                        <a href="{{ path('breeder_pet_search_result', { 'gender': breederPet.petSex }) }}">
+                                            {{ breederPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -126,7 +130,9 @@
                                         見学地域
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        {{ breederHouse.breederHousePref ~ ' ' ~ breederHouse.breederHouseCity ?? '' }}
+                                        <a href="{{ path('breeder_pet_search_result', { 'region': breederHouse.breederHousePrefId.id }) }}">
+                                            {{ breederHouse.breederHousePref ~ ' ' ~ breederHouse.breederHouseCity ?? '' }}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
