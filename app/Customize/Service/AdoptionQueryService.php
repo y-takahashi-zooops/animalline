@@ -103,7 +103,7 @@ class AdoptionQueryService
 
         return $query->addOrderBy('p.is_active', 'ASC')
             ->addOrderBy('p.create_date', 'DESC')
-            ->setMaxResults(16)
+            ->setMaxResults(12)
             ->getQuery()
             ->getResult();
     }
