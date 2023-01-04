@@ -5,10 +5,12 @@ namespace Customize\Controller\Admin\DNA;
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\DnaCheckKinds;
+use Customize\Entity\DnaCheckKindsEc;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Entity\DnaCheckStatus;
 use Customize\Repository\BreedsRepository;
+use Customize\Repository\DnaCheckKindsEcRepository;
 use Customize\Repository\DnaCheckKindsRepository;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Customize\Repository\DnaCheckStatusRepository;
@@ -53,6 +55,11 @@ class DnaController extends AbstractController
     protected $dnaCheckKindsRepository;
 
     /**
+     * @var DnaCheckKindsEcRepository
+     */
+    protected $dnaCheckKindsEcRepository;
+
+    /**
      * @var BreedsRepository
      */
     protected $breedsRepository;
@@ -78,6 +85,7 @@ class DnaController extends AbstractController
         BreederPetsRepository          $breederPetsRepository,
         ConservationPetsRepository     $conservationPetsRepository,
         DnaCheckKindsRepository        $dnaCheckKindsRepository,
+        DnaCheckKindsEcRepository      $dnaCheckKindsEcRepository,
         BreedsRepository               $breedsRepository,
         DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
     ) {
@@ -86,6 +94,7 @@ class DnaController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
+        $this->dnaCheckKindsEcRepository = $dnaCheckKindsEcRepository;
         $this->breedsRepository = $breedsRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
     }
@@ -127,6 +136,49 @@ class DnaController extends AbstractController
         );
         return compact(
             'dna_check_kinds',
+            'petType',
+            'breeds',
+            'breedOptions'
+        );
+    }
+
+    /**
+     * DNA検査項目一覧
+     *
+     * @Route("/%eccube_admin_route%/dna/examination_items_ec", name="admin_dna_examination_items_ec")
+     * @Template("@admin/DNA/examination_items_ec.twig")
+     */
+    public function examination_items_ec(PaginatorInterface $paginator, Request $request)
+    {
+        $dna_check_kinds = [];
+        if ($request->isMethod('GET')) {
+            $petType = $request->get('pet_kind');
+            $breeds = $request->get('pet_breeds');
+        }
+        if ($request->isMethod('POST')) {
+            $petType = $request->get('petType');
+            $breeds = $request->get('breeds');
+            $dnaCheckKind = new DnaCheckKindsEc();
+            $breed = $this->breedsRepository->find($breeds);
+            $dnaCheckKind->setCheckKind($request->get('check_kind'))
+                ->setBreeds($breed)
+                ->setDeleteFlg(0);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($dnaCheckKind);
+            $em->flush();
+
+            return $this->redirectToRoute('admin_dna_examination_items_ec', ['pet_kind' => $petType, 'pet_breeds' => $breeds]);
+        }
+        $dna_check_kinds_ec = $this->dnaCheckKindsEcRepository->findBy(['Breeds' => $breeds], ['update_date' => 'DESC', 'id' => 'DESC']);
+        $breedOptions = $this->breedsRepository->findBy(['pet_kind' => $petType], ['sort_order' => 'ASC']);
+        $dna_check_kinds_ec = $paginator->paginate(
+            $dna_check_kinds_ec,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
+        return compact(
+            'dna_check_kinds_ec',
             'petType',
             'breeds',
             'breedOptions'

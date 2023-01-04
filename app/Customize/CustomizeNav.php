@@ -59,6 +59,10 @@ class CustomizeNav implements EccubeNav
 						'name' => '検査項目管理',
 						'url' => 'admin_dna_examination_items',
 					],
+					'dna_examination_items_ec' => [
+						'name' => '検査項目管理（有料）',
+						'url' => 'admin_dna_examination_items_ec',
+					],
 					'dna_examination_status' => [
 						'name' => '検査状況確認',
 						'url' => 'admin_dna_examination_status',
