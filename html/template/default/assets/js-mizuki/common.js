@@ -1,3 +1,4 @@
+
 $(".mizuki_search-dogs-button_bleeder").on("click", function () {
   $("*").removeClass("active");
   $("#mizuki_modal-bleeder_dogs").addClass("active");
@@ -432,4 +433,18 @@ jQuery(function () {
     jQuery(this).next().slideToggle(200);
     jQuery(this).toggleClass("active", 200);
   });
+});
+
+// 新着ペットタブ切り替え
+
+$(".mizuki_pet-info-tab_dog").on("click", function () {
+  $(".mizuki_pet-list_dog").addClass("active");
+  $(".mizuki_pet-info-tab").addClass("active");
+  $(".mizuki_pet-list_cat").removeClass("active");
+});
+
+$(".mizuki_pet-info-tab_cat").on("click", function () {
+  $(".mizuki_pet-list_cat").addClass("active");
+  $(".mizuki_pet-info-tab").removeClass("active");
+  $(".mizuki_pet-list_dog").removeClass("active");
 });

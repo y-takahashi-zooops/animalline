@@ -121,9 +121,14 @@ class BreederPets
     private $price;
 
     /**
-     * @ORM\Column(name="price_display", type="smallint", options={"default" = 1}, nullable=false)
+     * @ORM\Column(name="price_no_display", type="smallint", options={"default" = 0}, nullable=false)
      */
-    private $price_display;
+    private $price_no_display;
+
+    /**
+     * @ORM\Column(name="is_contact", type="smallint", options={"default" = 0}, nullable=false)
+     */
+    private $is_contact;
 
     /**
      * @ORM\Column(name="thumbnail_path", type="string", length=255, nullable=true)
@@ -493,14 +498,26 @@ class BreederPets
         return $this;
     }
 
-    public function getPriceDisplay(): ?int
+    public function getPriceNoDisplay(): ?int
     {
-        return $this->price_display;
+        return $this->price_no_display;
     }
 
-    public function setPriceDisplay(?int $price): self
+    public function setPriceNoDisplay(?int $price_no_display): self
     {
-        $this->price = $price_display;
+        $this->price_no_display = $price_no_display;
+
+        return $this;
+    }
+
+    public function getIsContact(): ?int
+    {
+        return $this->is_contact;
+    }
+
+    public function setIsContact(?int $is_contact): self
+    {
+        $this->is_contact = $is_contact;
 
         return $this;
     }

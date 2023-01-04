@@ -10,11 +10,15 @@ use Carbon\Carbon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\BreederContacts;
 use Customize\Entity\BreederContactHeader;
+use Customize\Entity\BreederNopetContactHeader;
+use Customize\Entity\BreederNopetContacts;
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederContactsRepository;
 use Customize\Repository\SendoffReasonRepository;
 use Customize\Repository\BreedersRepository;
+use Customize\Repository\BreederNopetContactHeaderRepository;
+use Customize\Repository\BreederNopetContactsRepository;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +29,7 @@ use Eccube\Event\EventArgs;
 use Customize\Form\Type\Breeder\BreederContactType;
 use Customize\Form\Type\Breeder\BreederEvaluationsType;
 use Customize\Service\MailService;
+use Customize\Form\Type\Breeder\BreederNoPetContactType;
 
 class BreederMemberContactController extends AbstractController
 {
@@ -38,6 +43,16 @@ class BreederMemberContactController extends AbstractController
      */
     protected $breederContactHeaderRepository;
 
+    /**
+     * @var BreederNopetContactHeaderRepository
+     */
+    protected $breederNopetContactHeaderRepository;
+
+    /**
+     * @var BreederNopetContactsRepository
+     */
+    protected $breederNopetContactsRepository;
+    
     /**
      * @var BreederContactsRepository
      */
@@ -86,6 +101,8 @@ class BreederMemberContactController extends AbstractController
      * @param BreederEvaluationsRepository $breederEvaluationsRepository
      * @param BreederQueryService $breederQueryService
      * @param MailService $mailService
+     * @param BreederNopetContactHeaderRepository $breederNopetContactHeaderRepository
+     * @param BreederNopetContactsRepository $breederNopetContactsRepository
      */
 
     public function __construct(
@@ -97,7 +114,9 @@ class BreederMemberContactController extends AbstractController
         CustomerRepository             $customerRepository,
         BreederEvaluationsRepository   $breederEvaluationsRepository,
         BreederQueryService            $breederQueryService,
-        MailService                    $mailService
+        MailService                    $mailService,
+        BreederNopetContactHeaderRepository $breederNopetContactHeaderRepository,
+        BreederNopetContactsRepository $breederNopetContactsRepository
     ) {
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederContactsRepository = $breederContactsRepository;
@@ -108,6 +127,8 @@ class BreederMemberContactController extends AbstractController
         $this->breederEvaluationsRepository = $breederEvaluationsRepository;
         $this->breederQueryService = $breederQueryService;
         $this->mailService = $mailService;
+        $this->breederNopetContactHeaderRepository = $breederNopetContactHeaderRepository;
+        $this->breederNopetContactsRepository = $breederNopetContactsRepository;
     }
 
     /**
@@ -655,5 +676,289 @@ class BreederMemberContactController extends AbstractController
         return $this->redirect($this->generateUrl('breeder_message', [
             'id' => $msgHeaderId
         ]));
+    }
+
+
+    /**
+     * お問い合わせ画面
+     *
+     * @Route("/breeder/member/nopet_contact/{breeder_id}", name="breeder_nopet_contact", requirements={"breeder_id" = "\d+"})
+     * @Template("/animalline/breeder/nopet_contact.twig")
+     */
+    public function nopet_contact(Request $request,$breeder_id)
+    {
+        $contact = new BreederNopetContactHeader();
+        $arrayLabel = ['問い合わせ', '見学希望'];
+
+        $builder = $this->formFactory->createBuilder(BreederNoPetContactType::class, $contact);
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+                'contact' => $contact
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+        $newFilename = $request->get("newFilename");
+
+        $maintitle = "お問い合わせ";
+        
+        //受信ファイル処理
+        $newFilename = $request->get("newFilename");
+        $brochureFile = $form->get('files')->getData();
+                    
+        if($brochureFile){
+            $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = 'pcontact-'.uniqid().'.'.$brochureFile->guessExtension();
+
+            $brochureFile->move(
+                "html/upload/contact/",
+                $newFilename
+            );
+
+            $builder->setData(["files" => "html/upload/contact/".$newFilename]);
+        }
+
+        $breeder = $this->breedersRepository->find($breeder_id);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            switch ($request->get('mode')) {
+                case 'confirm':
+                    return $this->render(
+                        'animalline/breeder/nopet_contact_confirm.twig',
+                        [
+                            'form' => $form->createView(),
+                            'newFilename' => $newFilename,
+                            "breeder" => $breeder
+                        ]
+                    );
+
+                case 'complete':
+                    $contact
+                        ->setSendDate(Carbon::now())
+                        ->setBreeder($breeder)
+                        ->setCustomer($this->getUser())
+                        ->setContactTitle($arrayLabel[$request->get('breeder_no_pet_contact')['contact_type'] - 1])
+                        ->setImageFile($newFilename)
+                        ->setLastMessageDate(Carbon::now());
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($contact);
+                    $entityManager->flush();
+                    $breederContact = new BreederContacts();
+                    
+                    $breeder_customer = $this->customerRepository->find($breeder->getId());
+                    $this->mailService->sendMailNopetContractAccept($breeder_customer, 1);
+
+                    return $this->redirectToRoute('breeder_nopet_contact_complete', ['breeder_id' => $breeder->getId()]);
+            }
+        }
+
+        if(!$form->get('files')->isValid()){
+            $newFilename = "";
+        }
+
+        return [
+            'title' => $maintitle,
+            'form' => $form->createView(),
+            "newFilename" => $newFilename,
+            "breeder" => $breeder
+        ];
+    }
+
+    /**
+     * お問い合わせ完了画面
+     *
+     * @Route("/breeder/member/nopet_contact/complete/{breeder_id}", name="breeder_nopet_contact_complete", requirements={"breeder_id" = "\d+"})
+     * @Template("/animalline/breeder/nopet_contact_complete.twig")
+     */
+    public function nopet_complete(Request $request, $breeder_id)
+    {
+        return $this->render(
+            'animalline/breeder/nopet_contact_complete.twig',
+            [
+                "breederId" => $breeder_id
+            ]
+        );
+    }
+
+    /**
+     * ユーザー側ブリーダー問い合わせ取引メッセージ一覧
+     *
+     * @Route("/breeder/member/nopet_all_message", name="nopet_all_message")
+     * @Template("animalline/breeder/member/nopet_all_message.twig")
+     */
+    public function nopet_all_message()
+    {
+        $listMessages = $this->breederNopetContactHeaderRepository->findBy(['Customer' => $this->getUser()], ['last_message_date' => 'DESC']);
+
+        return $this->render('animalline/breeder/member/nopet_all_message.twig', [
+            'listMessages' => $listMessages
+        ]);
+    }
+
+    /**
+     * ブリーダー側ペット問い合わせ取引メッセージ一覧
+     *
+     * @Route("/breeder/member/user_all_message/{pet_id}", name="user_all_message", requirements={"pet_id" = "\d+"})
+     * @Template("animalline/breeder/member/user_all_message.twig")
+     */
+    public function user_all_message($pet_id)
+    {
+        $pet = $this->breederPetsRepository->find($pet_id);
+
+        $listMessages = $this->breederContactHeaderRepository->findBy(['Pet' => $pet], ['last_message_date' => 'DESC']);
+
+        return $this->render('animalline/breeder/member/user_all_message.twig', [
+            'listMessages' => $listMessages
+        ]);
+    }
+
+    /**
+     * ブリーダー側ユーザー問い合わせ取引メッセージ一覧
+     *
+     * @Route("/breeder/member/nopet_user_all_message", name="nopet_user_all_message")
+     * @Template("animalline/breeder/member/nopet_user_all_message.twig")
+     */
+    public function nopet_user_all_message()
+    {
+        $breeder = $this->breedersRepository->find($this->getUser()->getId());
+        $listMessages = $this->breederNopetContactHeaderRepository->findBy(['Breeder' => $breeder], ['last_message_date' => 'DESC']);
+
+        return $this->render('animalline/breeder/member/nopet_user_all_message.twig', [
+            'listMessages' => $listMessages
+        ]);
+    }
+
+    /**
+     * ユーザー側取引メッセージ画面
+     *
+     * @Route("/breeder/member/nopet_message/{id}", name="nopet_breeder_message", requirements={"id" = "\d+"})
+     * @Template("animalline/breeder/member/nopet_message.twig")
+     */
+    public function nopet_message(Request $request, BreederNopetContactHeader $msgHeader)
+    {
+        $msgHeader->setCustomerNewMsg(0);
+        $lastMsg = $this->breederNopetContactsRepository->findBy(['breederNopetContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_MEMBER]);
+        $entityManager = $this->getDoctrine()->getManager();
+        foreach ($lastMsg as $item) {
+            $item->setIsReading(AnilineConf::ANILINE_READ);
+            $entityManager->persist($item);
+        }
+        $entityManager->persist($msgHeader);
+        $entityManager->flush();
+
+        $replyMessage = $request->get('reply_message');
+        if ($replyMessage) {
+            //受信ファイル処理
+            $brochureFile = $_FILES['files']['tmp_name'];
+
+            $newFilename = "";
+            if($brochureFile){
+                $newFilename = 'pcontact-'.uniqid().'.'.pathinfo($_FILES['files']['name'], PATHINFO_EXTENSION);
+                if(!file_exists("html/upload/contact/")){
+                    mkdir("html/upload/contact/");
+                }
+                copy($brochureFile,"html/upload/contact/".$newFilename);
+            }
+
+            $breederNopetContact = (new BreederNopetContacts())
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_USER)
+                ->setContactDescription($replyMessage)
+                ->setSendDate(Carbon::now())
+                ->setBreederNopetContactHeader($msgHeader)
+                ->setImageFile($newFilename)
+                ->setIsReading(AnilineConf::ANILINE_NOT_READING);
+
+            $msgHeader->setBreederNewMsg(1)
+                ->setLastMessageDate(Carbon::now());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($breederNopetContact);
+            $entityManager->persist($msgHeader);
+            $entityManager->flush();
+            $breeder = $this->customerRepository->find($msgHeader->getBreeder()->getId());
+            $this->mailService->sendMailNopetNoticeMsg($breeder, $breederNopetContact);
+
+            return $this->redirectToRoute('nopet_breeder_message', ['id' => $request->get('id'), 'isScroll' => true]);
+        }
+
+        $user = $this->getUser();
+        $Customer = $this->customerRepository->find($user);
+        $listMsg = $this->breederNopetContactsRepository->findBy(['breederNopetContactHeader' => $msgHeader], ['send_date' => 'ASC']);
+
+        return [
+            'Customer' => $Customer,
+            'breeder' => $msgHeader->getBreeder(),
+            'message' => $msgHeader,
+            'listMsg' => $listMsg
+        ];
+    }
+
+    /**
+     * ブリーダー側取引メッセージ画面
+     *
+     * @Route("/breeder/member/nopet_user_message/{id}", name="nopet_user_message", requirements={"id" = "\d+"})
+     * @Template("animalline/breeder/member/nopet_user_message.twig")
+     */
+    public function nopet_user_message(Request $request, BreederNopetContactHeader $msgHeader)
+    {
+        $msgHeader->setBreederNewMsg(0);
+        $lastMsg = $this->breederNopetContactsRepository->findBy(['breederNopetContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_USER]);
+        $entityManager = $this->getDoctrine()->getManager();
+        foreach ($lastMsg as $item) {
+            $item->setIsReading(AnilineConf::ANILINE_READ);
+            $entityManager->persist($item);
+        }
+        $entityManager->persist($msgHeader);
+        $entityManager->flush();
+
+        $isAcceptContract = $request->get('accept-contract');
+        $reasonCancel = $request->get('reason');
+        $replyMessage = $request->get('reply_message');
+        if ($replyMessage) {
+            //受信ファイル処理
+            $brochureFile = $_FILES['files']['tmp_name'];
+            $newFilename = "";
+            if($brochureFile){
+                $newFilename = 'pcontact-'.uniqid().'.'.pathinfo($_FILES['files']['name'], PATHINFO_EXTENSION);
+                if(!file_exists("html/upload/contact/")){
+                    mkdir("html/upload/contact/");
+                }
+                copy($brochureFile,"html/upload/contact/".$newFilename);
+            }
+
+            $breederNopetContact = (new BreederNopetContacts())
+                ->setMessageFrom(AnilineConf::MESSAGE_FROM_MEMBER)
+                ->setContactDescription($replyMessage)
+                ->setSendDate(Carbon::now())
+                ->setBreederNopetContactHeader($msgHeader)
+                ->setImageFile($newFilename)
+                ->setIsReading(AnilineConf::ANILINE_NOT_READING);
+
+            $msgHeader->setCustomerNewMsg(1)
+                ->setLastMessageDate(Carbon::now());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($breederNopetContact);
+            $entityManager->persist($msgHeader);
+            $entityManager->flush();
+            $this->mailService->sendMailNopetNoticeMsg($msgHeader->getCustomer(), $breederNopetContact);
+
+            return $this->redirectToRoute('nopet_user_message', ['id' => $request->get('id'), 'isScroll' => true]);
+        }
+        
+        $user = $this->getUser();
+        $Customer = $this->customerRepository->find($msgHeader->getCustomer());
+        $listMsg = $this->breederNopetContactsRepository->findBy(['breederNopetContactHeader' => $msgHeader], ['send_date' => 'ASC']);
+        
+        return [
+            'Customer' => $Customer,
+            'breeder' => $msgHeader->getBreeder(),
+            'message' => $msgHeader,
+            'listMsg' => $listMsg
+        ];
     }
 }

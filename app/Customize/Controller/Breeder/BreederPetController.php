@@ -458,6 +458,7 @@ class BreederPetController extends AbstractController
             $breeder = $this->breedersRepository->find($breederId);
             $breederPet->setBreeder($breeder);
             $breederPet->setIsActive(1);
+            $breederPet->setIsContact(0);
             $breederPet->setDnaCheckResult(0);
             $breederPet->setViewCount(0);
             $entityManager->persist($breederPet);

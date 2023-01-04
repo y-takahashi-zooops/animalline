@@ -151,10 +151,14 @@ class ZooopsSendmailController extends AbstractController
         // $templateForm = $this->createForm(MailTemplateType::class);
 
         // デフォルトのページカウントを50件に設定
+        /*
         $page_count = $this->session->get(
             'eccube.admin.destination.search.page_count',
             $this->eccubeConfig->get('eccube_default_page_count')
         );
+        */
+        //１ページで処理するように設定
+        $page_count = 999;
 
         // 現在選択されている表示件数を取得
         $page_count_param = (int) $request->get('page_count');

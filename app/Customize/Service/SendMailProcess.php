@@ -56,7 +56,7 @@ class SendMailProcess
         //touch($csvpath);
 
         // CSVファイルを開き編集
-        //$createCsvFile = fopen($csvpath, "w");
+        $createCsvFile = fopen("var/tmp/mail/sendlog".date("YmdHid").".csv", "w");
 
         $qb = $this->customerRepository->getSearchData($searchData);
 
@@ -66,6 +66,9 @@ class SendMailProcess
             $email = $customer->getEmail();
 
             $this->mailService->sendEmailForManyUser($email,$template_title,$template_detail,$name,$attach_file);
+            $line[0] = $email;
+            $line[1] = $customer->getName01()."　".$customer->getName02();
+            fputcsv($createCsvFile, $line);
             /*
             $data[] = [
                 'name' => $customer->getName01() . $customer->getName02(), // フルネーム
@@ -82,7 +85,7 @@ class SendMailProcess
         */
 
         // CSVファイルを閉じる
-        //fclose($createCsvFile);
+        fclose($createCsvFile);
 
         /*
         // パラメータ設定

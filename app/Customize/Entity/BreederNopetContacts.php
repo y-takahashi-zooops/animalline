@@ -22,10 +22,10 @@ class BreederNopetContacts
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=BreederContactHeader::class, inversedBy="BreederContacts")
+     * @ORM\ManyToOne(targetEntity=BreederNopetContactHeader::class, inversedBy="BreederNopetContacts")
      * @ORM\JoinColumn(name="header_id", nullable=false)
      */
-    private $BreederContactHeader;
+    private $breederNopetContactHeader;
 
     /**
      * @ORM\Column(name="message_from", type="smallint")
@@ -76,14 +76,14 @@ class BreederNopetContacts
         return $this->id;
     }
 
-    public function getBreederContactHeader(): ?BreederContactHeader
+    public function getBreederNopetContactHeader(): ?BreederNopetContactHeader
     {
-        return $this->BreederContactHeader;
+        return $this->breederNopetContactHeader;
     }
 
-    public function setBreederContactHeader(BreederContactHeader $BreederContactHeader): self
+    public function setBreederNopetContactHeader(BreederNopetContactHeader $breederNopetContactHeader): self
     {
-        $this->BreederContactHeader = $BreederContactHeader;
+        $this->breederNopetContactHeader = $breederNopetContactHeader;
 
         return $this;
     }

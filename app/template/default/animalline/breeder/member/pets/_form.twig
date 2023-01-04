@@ -326,6 +326,18 @@
                 {{ form_errors(form.price) }}
                 </div>
         </div>
+    </div>
+    
+    <div class="row mb-3">
+        <div class="col-md-3">
+        <span class="ec-required">サイト表示する際に価格を「応相談」または「見学／お問い合わせにてお問い合わせください」と表示する場合はチェックしてください。</span>  
+        </div>
+        <div class="col-md-8 col-lg-4">
+            <div class="input-group">
+                {{ form_widget(form.price_no_display) }}
+                {{ form_errors(form.price_no_display) }}
+            </div>
+        </div>
     </div>    
 
     <div class="row">

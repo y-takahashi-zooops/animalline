@@ -1,0 +1,78 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+{% set status = 3 %}
+
+{% block main %}
+    <div class="page-inner">
+        <div class="breadcrumbs">
+            <ul>
+                <li><a href="/">アニマルラインTOP</a></li>
+                <li><i class="bi bi-chevron-right"></i>マイページ</li>
+            </ul>
+        </div>
+    
+        <div id="mypage-menu">
+            <h1><i class="bi bi-chat-right-quote-fill"></i>ブリーダー問い合わせメッセージ</h1>
+        </div>
+    
+        <div class="mypage-service_list">
+            <div class="mypage-service_list__content">
+                <div class="mypage-service_list__content_body">
+                    <ul class="message" style="background: #FFF">
+                        {% for message in listMessages %}
+                            {% set status = null %}
+                            <li>
+                                <a href="{{ url('nopet_breeder_message', {'id': message.id}) }}">
+                                    <div class="image">
+                                        <figure>
+                                            <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ (message.breeder.thumbnailPath ?? '/noimage_plugin_list.png') }}" alt="{{ message.breeder.breederName ?? '' }}">
+                                        </figure>
+                                    </div>
+                                    <div class="text">
+                                        <div class="name">
+                                            <h3>{{ message.breeder.breederName ?? '' }}</h3>
+                                        </div>
+                                    </div>
+                                    <div class="receive">
+                                        <div class="receive-icon">
+                                            {% if (message.breederContacts|length==0) and (message.contractStatus is not constant('Customize\\Config\\AnilineConf::CONTRACT_STATUS_NONCONTRACT')) %}
+                                                <i class="bi bi-envelope"></i>
+                                            {% endif %}
+                                            {% for item in message.breederContacts %}
+                                                {% if item.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER') %}
+                                                {% set status = item.isReading %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if status == constant('Customize\\Config\\AnilineConf::RESPONSE_REPLIED') %}
+                                                <i class="bi bi-envelope-open"></i>
+                                            {% elseif (status is not null) and (status == constant('Customize\\Config\\AnilineConf::RESPONSE_UNREPLIED')) %}
+                                                <i class="bi bi-envelope"></i>
+                                                <span class="budge">1</span>
+                                            {% endif %}
+                                        </div>
+                                        <p>{{ message.lastMessageDate.format('Y/m/d H:i') ?? 'なし' }}</p>
+                                    </div>
+                                </a>
+                            </li>
+                        {% else %}
+                            結果が０件です。
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+        {#
+        <div class="mypage-footer">
+            <div class="polocy">
+                <figure><img src="/html/template/default/assets/img//mypage/privacy_d.gif" alt="プライバシーマーク" /></figure>
+                <p>〇〇〇〇は、個人情報の適切な管理をするプライバシーマーク付与事業者として認定されています。</p>
+            </div>
+        </div>
+        #}
+    </div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/mypage.css') }}">
+{% endblock %}

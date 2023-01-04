@@ -22,7 +22,7 @@
                             <p class="font-size--default mb-2">・次回掲載の子のおおよその販売金額はいくらですか？</p>
                             <p class="font-size--default">※お問い合わせ後はマイページよりメッセージのやり取りができます。</p>
                         </div>
-                        <form method="post" action="{{ url('breeder_nopet_contact') }}" class="h-adr" enctype="multipart/form-data" novalidate>
+                        <form method="post" action="{{ url('breeder_nopet_contact', {'breeder_id': breeder.id}) }}" class="h-adr" enctype="multipart/form-data" novalidate>
                             <span class="p-country-name" style="display:none;">
                                 Japan
                             </span>
@@ -62,7 +62,6 @@
                                                 <input type="hidden" name="newFilename" value="{{ newFilename }}" />
                                             {% else %}
                                                 {{ form_widget(form.files, { 'attr': { 'accept': 'image/*' }}) }}
-                                                {{ form_errors(form.files) }}
                                             {% endif %}
                                         </div>
                                     </dd>

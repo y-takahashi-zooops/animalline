@@ -1057,6 +1057,42 @@ class MailService
     }
 
     /**
+     * Send mail notify message.
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @param \Customize\Entity\BreederNopetContacts $data
+     * @return int
+     */
+    public function sendMailNopetNoticeMsg(\Eccube\Entity\Customer $Customer, $data)
+    {
+        if($data->getMessageFrom() == 1){
+            $breeder = $this->breedersRepository->find($Customer->getId());
+            $user_name = $breeder->getBreederName();
+        }
+        else{
+            $user_name = $Customer->getName01()."　".$Customer->getName02();
+        }
+
+        $body = $this->twig->render('Mail/nopet_message_contact.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'data' => $data,
+            'UserName' => $user_name
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] メッセージ受信通知')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        return $this->mailer->send($message, $failures);
+    }
+
+    /**
      * Send cancel contract mail.
      *
      * @param \Eccube\Entity\Customer $Customer
@@ -1313,6 +1349,43 @@ class MailService
         } else {
             $message->setBody($body);
         }
+
+        return $this->mailer->send($message, $failures);
+    }
+
+    /**
+     * 保護団体お問い合わせ受付（フロントページ・マイページ）
+     *
+     * @param \Eccube\Entity\Customer $Customer
+     * @param int $data
+     * @return int
+     */
+    public function sendMailNopetContractAccept(\Eccube\Entity\Customer $Customer, $site_type)
+    {
+        if($site_type == 1){
+            $breeder = $this->breedersRepository->find($Customer->getId());
+            $user_name = $breeder->getBreederName();
+        }
+        else{
+            $conservation = $this->conservationsRepository->find($Customer->getId());
+            $user_name = $conservation->getOrganizationName();
+        }
+
+        $body = $this->twig->render('Mail/mail_nopet_contract_accept.twig', [
+            'BaseInfo' => $this->BaseInfo,
+            'site_type' => $site_type,
+            'UserName' => $user_name
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('[' . $this->BaseInfo->getShopName() . '] メッセージ受信通知')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
 
         return $this->mailer->send($message, $failures);
     }

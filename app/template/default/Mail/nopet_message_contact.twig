@@ -1,0 +1,23 @@
+{% autoescape false %}
+※本メールは自動配信メールです。
+
+{{UserName}} 様
+
+{% if data.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_MEMBER') %}
+ブリーダーよりメッセージの返信が届きました。
+
+マイページの「ブリーダー問い合わせ」よりご確認をお願い致します。
+↓↓ブリーダー問い合わせページはこちら
+{{ url("nopet_all_message") }}
+
+今後ともAnimallineを宜しくお願い致します。
+{% else %}
+お客様よりメッセージの返信が届きました。
+
+マイページの「ユーザー問い合わせ」よりご確認をお願い致します。
+↓↓ユーザー問い合わせページはこちら
+{{ url("nopet_user_all_message") }}
+
+今後ともAnimallineを宜しくお願い致します。
+{% endif %}
+{% endautoescape %}

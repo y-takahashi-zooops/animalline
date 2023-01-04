@@ -91,7 +91,7 @@
 
                             <td class="receive">
                                 {% if pet['bch_id'] %}
-                                    <a href="{{ url('breeder_breeder_message', {'id':pet['bch_id']}) }}">
+                                    <a href="{{ url('user_all_message', {'pet_id':pet['bp_id']}) }}">
                                         <div class="receive-icon">
                                             {% if pet['check'] %}
                                                 <i class="bi bi-envelope"></i>

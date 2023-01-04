@@ -7,13 +7,15 @@
         <div class="inner">
             <div class="breeder-column-row">
                 <div class="breeder-column__main">
-                    <div class="comment-box--sblue">
-                        こちらのワンちゃんは成約済のためお問い合わせできません。
-                        <p class="mt-4">{{ breederPet.breeder.breederName }}ブリーダーに未掲載の子や、次回の出産予定を聞きたいなどお問い合わせをしたい方はこちら</p>
-                    </div>
-                    <div class="btn btn-breeder__inquiries">
-                        <a href="{{ url('breeder_nopet_contact') }}">{{ breederPet.breeder.breederName }}ブリーダーへのお問い合わせ</a>
-                    </div>
+                    {% if breederPet.isContract or breederPet.isDelete %}
+                        <div class="comment-box--sblue">
+                            こちらのワンちゃんは成約済のためお問い合わせできません。
+                            <p class="mt-4">{{ breederPet.breeder.breederName }}ブリーダーに未掲載の子や、次回の出産予定を聞きたいなどお問い合わせをしたい方はこちら</p>
+                        </div>
+                        <div class="btn btn-breeder__inquiries">
+                            <a href="{{ url('breeder_nopet_contact', {'breeder_id': breederPet.Breeder.id}) }}">{{ breederPet.breeder.breederName }}ブリーダーへのお問い合わせ</a>
+                        </div>
+                    {% endif %}
                     <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
                         <div class="breeder-column__main_section_title">
                             <h2 class="float-left mb-3">
@@ -257,7 +259,11 @@
                             <div class="col-12 breeder_section_detail">
                                 <div class="row">
                                     <div class="col-12 contents_col_price">
-                                        {{ breederPet.price|number_format(0) }}円（税込）
+                                        {% if breederPet.getPriceNoDisplay() %}
+                                            「この子の見学希望／お問い合わせ(無料)」にてお問い合わせください。
+                                        {% else %}
+                                            {{ breederPet.price|number_format(0) }}円（税込）
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

@@ -1,0 +1,34 @@
+{% set site_type = 'breeder' %}
+{% extends 'animalline/breeder/frame.twig' %}
+
+{% block main %}
+    <div class="ec-role">
+        <div class="ec-pageHeader">
+            <h1>お問い合わせ完了</h1>
+        </div>
+    </div>
+    <div class="ec-registerCompleteRole">
+        <div class="ec-offGrid ec-text-ac">
+            <div class="ec-offGrid__cell">
+                <div class="ec-reportHeading">
+                    <h2>
+                        お問い合わせの内容を送信しました<br/>
+                        ブリーダーからの返信があるまでお待ちください<br/>
+                    </h2>
+                </div>
+                <div class="m-2 p-2"></div>
+                <div class="ec-off2Grid">
+                    <div class="ec-off2Grid__cell">
+                        <a class="ec-blockBtn--action bg-breeder mb-4" href={{ url('breeder_detail', {breeder_id: breederId}) }}>
+                            {{ 'ブリーダー詳細ページへ'|trans }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+{% endblock %}
+{% block javascript %}{% endblock %}

@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 body,
 button {
   margin: 0 auto;
@@ -39,6 +40,7 @@ a {
 .hidden-phone {
   display: none !important;
 }
+
 .flex {
   display: -webkit-box;
   display: -webkit-flex;
@@ -46,12 +48,12 @@ a {
   display: flex;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   -webkit-box-align: center;
   -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 
 .flex-column {
@@ -62,8 +64,8 @@ a {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
 }
 
 .float-l {
@@ -83,6 +85,7 @@ a {
   background-position: 70%;
   background-repeat: no-repeat;
 }
+
 .mizuki_fv h1 {
   position: absolute;
   top: 5%;
@@ -91,6 +94,7 @@ a {
   line-height: 2.04;
   text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff, -2px 2px 0 #fff, 2px -2px 0 #fff, 0px 2px 0 #fff, -2px 0 #fff, -2px 0 0 #fff, 2px 0 0 #fff;
 }
+
 .mizuki_fv p {
   position: absolute;
   bottom: 20%;
@@ -99,6 +103,7 @@ a {
   line-height: 1.8571428571;
   font-weight: bold;
 }
+
 .mizuki_fv .mizuki_about_dna-test {
   width: 100%;
   position: absolute;
@@ -106,6 +111,7 @@ a {
   left: 0;
   text-align: center;
 }
+
 .mizuki_fv-text_outer {
   width: 100%;
   height: 100px;
@@ -114,6 +120,7 @@ a {
   background-repeat: no-repeat;
   background-position: 50%;
 }
+
 .mizuki_fv-text_outer p {
   width: -webkit-max-content;
   width: -moz-max-content;
@@ -123,22 +130,24 @@ a {
   left: 51%;
   text-align: center;
   -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   font-size: 13px;
   line-height: 1.7692307692;
 }
+
 .mizuki_fv-text_outer span {
   padding-right: 0.5rem;
   font-size: 18px;
   line-height: 1.7777777778;
 }
+
 .mizuki_fv a {
   display: inline-block;
   position: absolute;
   bottom: -25%;
   left: 50%;
   -webkit-transform: translateX(-50%);
-          transform: translateX(-50%);
+  transform: translateX(-50%);
   font-size: 12px;
   line-height: 1.6666666667;
   border-bottom: 1px solid #000;
@@ -147,36 +156,52 @@ a {
 .mizuki_search {
   padding-top: 8rem;
 }
-.mizuki_search-dogs, .mizuki_search-cats {
+
+.mizuki_search-dogs,
+.mizuki_search-cats {
   margin: 0 auto;
   width: 100%;
   max-width: 340px;
 }
-.mizuki_search-dogs_title, .mizuki_search-cats_title {
+
+.mizuki_search-dogs_title,
+.mizuki_search-cats_title {
   position: relative;
 }
-.mizuki_search-dogs_title-decoration, .mizuki_search-cats_title-decoration {
+
+.mizuki_search-dogs_title-decoration,
+.mizuki_search-cats_title-decoration {
   position: absolute;
   top: 10%;
   left: 5%;
 }
-.mizuki_search-dogs-button, .mizuki_search-cats-button {
+
+.mizuki_search-dogs-button,
+.mizuki_search-cats-button {
   margin: 0 auto;
   border-radius: 24px;
 }
-.mizuki_search-dogs-button_list, .mizuki_search-cats-button_list {
+
+.mizuki_search-dogs-button_list,
+.mizuki_search-cats-button_list {
   padding: 2rem 0;
 }
-.mizuki_search-dogs-button_list-item, .mizuki_search-cats-button_list-item {
+
+.mizuki_search-dogs-button_list-item,
+.mizuki_search-cats-button_list-item {
   margin: 0 auto;
   width: 90%;
   background-color: #fff;
   border-radius: 13px;
 }
-.mizuki_search-dogs-button_list-item:nth-child(2), .mizuki_search-cats-button_list-item:nth-child(2) {
+
+.mizuki_search-dogs-button_list-item:nth-child(2),
+.mizuki_search-cats-button_list-item:nth-child(2) {
   margin: 1rem auto;
 }
-.mizuki_search-dogs-button_list-item a, .mizuki_search-cats-button_list-item a {
+
+.mizuki_search-dogs-button_list-item a,
+.mizuki_search-cats-button_list-item a {
   padding-left: 18%;
   width: -webkit-fill-available;
   display: inline-block;
@@ -186,7 +211,9 @@ a {
   font-size: 18px;
   line-height: 2.5;
 }
-.mizuki_search-dogs-button_list-item a::before, .mizuki_search-cats-button_list-item a::before {
+
+.mizuki_search-dogs-button_list-item a::before,
+.mizuki_search-cats-button_list-item a::before {
   margin-right: 10px;
   content: "";
   display: inline-block;
@@ -197,34 +224,44 @@ a {
   background-repeat: no-repeat;
   vertical-align: text-top;
 }
-.mizuki_search-dogs-button_list-item:hover, .mizuki_search-cats-button_list-item:hover {
+
+.mizuki_search-dogs-button_list-item:hover,
+.mizuki_search-cats-button_list-item:hover {
   -webkit-transform: scale(1.05);
-          transform: scale(1.05);
+  transform: scale(1.05);
 }
+
 .mizuki_search-dogs h3 {
   color: #429137;
 }
+
 .mizuki_search-dogs_title-decoration {
   width: 63px;
   height: 63px;
 }
+
 .mizuki_search-dogs-button {
   background-color: #429137;
 }
+
 .mizuki_search-cats {
   padding-top: 3rem;
 }
+
 .mizuki_search-cats h3 {
   color: #29abe2;
 }
+
 .mizuki_search-cats_title-decoration {
   width: 50px;
   height: 57px;
   top: 25%;
 }
+
 .mizuki_search-cats-button {
   background-color: #29abe2;
 }
+
 .mizuki_search h3 {
   margin-left: 15%;
   margin-bottom: 0.2rem;
@@ -248,6 +285,7 @@ a {
 .mizuki_modal ::-webkit-scrollbar {
   display: none;
 }
+
 .mizuki_modal-bg {
   display: none;
   width: 100%;
@@ -258,48 +296,58 @@ a {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 99;
 }
+
 .mizuki_modal-outer {
   margin: 0 auto;
   width: 90%;
-  height: 100vh; /* Fallback */
+  height: 100vh;
+  /* Fallback */
   height: calc(var(--vh, 1vh) * 80);
   padding-top: 1rem;
   position: absolute;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   background-color: #fff;
   border-radius: 24px;
   -webkit-box-shadow: 0px 0px 4px rgba(132, 132, 132, 0.75);
-          box-shadow: 0px 0px 4px rgba(132, 132, 132, 0.75);
+  box-shadow: 0px 0px 4px rgba(132, 132, 132, 0.75);
   overflow-y: scroll;
 }
+
 .mizuki_modal-outer-dogs ::-webkit-scrollbar-track {
   background: #dbead9;
 }
+
 .mizuki_modal-outer-dogs ::-webkit-scrollbar-thumb {
   background: #429137;
 }
+
 .mizuki_modal-outer-dogs ::-webkit-scrollbar {
   display: inherit;
   width: 10px;
 }
+
 .mizuki_modal-outer-cats ::-webkit-scrollbar-track {
   background: #d9e7ea;
 }
+
 .mizuki_modal-outer-cats ::-webkit-scrollbar-thumb {
   background: #29abe2;
 }
+
 .mizuki_modal-outer-cats ::-webkit-scrollbar {
   display: inherit;
   width: 10px;
 }
+
 .mizuki_modal-container {
   margin: 0 auto;
   width: 95%;
   height: 90%;
 }
+
 .mizuki_modal-close {
   width: 40px;
   height: 40px;
@@ -310,6 +358,7 @@ a {
   background-color: transparent;
   border: none;
 }
+
 .mizuki_modal-close span {
   position: absolute;
   display: inline-block;
@@ -320,53 +369,64 @@ a {
   border-radius: 2px;
   background-color: #000;
 }
+
 .mizuki_modal-close span:nth-child(1) {
   -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
+  transform: rotate(45deg);
 }
+
 .mizuki_modal-close span:nth-child(2) {
   -webkit-transform: rotate(135deg);
-          transform: rotate(135deg);
+  transform: rotate(135deg);
 }
+
 .mizuki_modal_title {
   margin: 0 auto;
   position: relative;
 }
+
 .mizuki_modal_title h3 {
   padding-left: 100px;
   font-size: 18px;
   line-height: 2;
 }
+
 .mizuki_modal_title-dogs h3 {
   padding-bottom: 0.3rem;
   color: #429137;
   border-bottom: 5px solid #429137;
 }
+
 .mizuki_modal_title-cats h3 {
   padding-bottom: 0.3rem;
   color: #29abe2;
   border-bottom: 5px solid #29abe2;
 }
+
 .mizuki_modal_title-decoration {
   position: absolute;
   top: -15%;
   left: 3%;
 }
+
 .mizuki_modal_title-decoration-dogs {
   width: 63px;
   height: 63px;
 }
+
 .mizuki_modal_title-decoration-cats {
   top: 3%;
   width: 50px;
   height: 57px;
 }
+
 .mizuki_modal h4 {
   margin-top: 1rem;
   margin-left: 3%;
   font-size: 18px;
   line-height: 2.2222222222;
 }
+
 .mizuki_modal h4::before {
   margin-right: 10px;
   content: "";
@@ -378,39 +438,47 @@ a {
   background-repeat: no-repeat;
   vertical-align: text-top;
 }
+
 .mizuki_modal h5 {
   font-size: 14px;
   line-height: 2.5714285714;
 }
-.mizuki-selectall{
-  margin-top: -37px;
-  margin-left: 160px;
-}
+
 .mizuki_modal-form {
   margin: 0 auto;
   font-size: 16px;
   line-height: 2.25;
   max-width: 900px;
 }
+
 .mizuki_modal-form .flex {
   display: block;
   -webkit-box-align: start;
   -webkit-align-items: flex-start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  -ms-flex-align: start;
+  align-items: flex-start;
 }
-.mizuki_modal-form_size, .mizuki_modal-form_breed, .mizuki_modal-form_area {
+
+.mizuki_modal-form_size,
+.mizuki_modal-form_breed,
+.mizuki_modal-form_area {
   max-width: 500px;
   border: 1px solid #ccc;
   border-collapse: collapse;
   padding-bottom: 1rem;
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
-.mizuki_modal-form_size input[type=checkbox], .mizuki_modal-form_breed input[type=checkbox], .mizuki_modal-form_area input[type=checkbox] {
+
+.mizuki_modal-form_size input[type=checkbox],
+.mizuki_modal-form_breed input[type=checkbox],
+.mizuki_modal-form_area input[type=checkbox] {
   display: none;
 }
-.mizuki_modal-form_size-checkbox, .mizuki_modal-form_breed-checkbox, .mizuki_modal-form_area-checkbox {
+
+.mizuki_modal-form_size-checkbox,
+.mizuki_modal-form_breed-checkbox,
+.mizuki_modal-form_area-checkbox {
   display: inline-block;
   position: relative;
   margin-left: 10px;
@@ -421,53 +489,77 @@ a {
   font-size: 16px;
   line-height: 1.625;
 }
-.mizuki_modal-form_size-checkbox::before, .mizuki_modal-form_breed-checkbox::before, .mizuki_modal-form_area-checkbox::before {
-  width: 16px; /* チェックボックスの幅 */
-  height: 16px; /* チェックボックスの高さ */
+
+.mizuki_modal-form_size-checkbox::before,
+.mizuki_modal-form_breed-checkbox::before,
+.mizuki_modal-form_area-checkbox::before {
+  width: 16px;
+  /* チェックボックスの幅 */
+  height: 16px;
+  /* チェックボックスの高さ */
   left: 5px;
-  border: 1px solid #ccc; /* チェックボックスの枠 */
+  border: 1px solid #ccc;
+  /* チェックボックスの枠 */
   margin-top: -8px;
 }
-.mizuki_modal-form_size-checkbox::before, .mizuki_modal-form_size-checkbox::after, .mizuki_modal-form_breed-checkbox::before, .mizuki_modal-form_breed-checkbox::after, .mizuki_modal-form_area-checkbox::before, .mizuki_modal-form_area-checkbox::after {
+
+.mizuki_modal-form_size-checkbox::before,
+.mizuki_modal-form_size-checkbox::after,
+.mizuki_modal-form_breed-checkbox::before,
+.mizuki_modal-form_breed-checkbox::after,
+.mizuki_modal-form_area-checkbox::before,
+.mizuki_modal-form_area-checkbox::after {
   position: absolute;
   content: "";
   top: 50%;
 }
-.mizuki_modal-form_size-checkbox::after, .mizuki_modal-form_breed-checkbox::after, .mizuki_modal-form_area-checkbox::after {
+
+.mizuki_modal-form_size-checkbox::after,
+.mizuki_modal-form_breed-checkbox::after,
+.mizuki_modal-form_area-checkbox::after {
   position: absolute;
   width: 5px;
   height: 9px;
   top: 50%;
   left: 10px;
-  border-right: 2px solid #000; /* チェックマークの色 */
-  border-bottom: 3px solid #000; /* チェックマークの色 */
+  border-right: 2px solid #000;
+  /* チェックマークの色 */
+  border-bottom: 3px solid #000;
+  /* チェックマークの色 */
   content: "";
   margin-top: -7px;
   opacity: 0;
   -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
+  transform: rotate(45deg);
 }
-.mizuki_modal-form_size input[type=checkbox]:checked + .mizuki_modal-form_size-checkbox::after,
-.mizuki_modal-form_size input[type=checkbox]:checked + .mizuki_modal-form_breed-checkbox::after,
-.mizuki_modal-form_size input[type=checkbox]:checked + .mizuki_modal-form_area-checkbox::after, .mizuki_modal-form_breed input[type=checkbox]:checked + .mizuki_modal-form_size-checkbox::after,
-.mizuki_modal-form_breed input[type=checkbox]:checked + .mizuki_modal-form_breed-checkbox::after,
-.mizuki_modal-form_breed input[type=checkbox]:checked + .mizuki_modal-form_area-checkbox::after, .mizuki_modal-form_area input[type=checkbox]:checked + .mizuki_modal-form_size-checkbox::after,
-.mizuki_modal-form_area input[type=checkbox]:checked + .mizuki_modal-form_breed-checkbox::after,
-.mizuki_modal-form_area input[type=checkbox]:checked + .mizuki_modal-form_area-checkbox::after {
+
+.mizuki_modal-form_size input[type=checkbox]:checked+.mizuki_modal-form_size-checkbox::after,
+.mizuki_modal-form_size input[type=checkbox]:checked+.mizuki_modal-form_breed-checkbox::after,
+.mizuki_modal-form_size input[type=checkbox]:checked+.mizuki_modal-form_area-checkbox::after,
+.mizuki_modal-form_breed input[type=checkbox]:checked+.mizuki_modal-form_size-checkbox::after,
+.mizuki_modal-form_breed input[type=checkbox]:checked+.mizuki_modal-form_breed-checkbox::after,
+.mizuki_modal-form_breed input[type=checkbox]:checked+.mizuki_modal-form_area-checkbox::after,
+.mizuki_modal-form_area input[type=checkbox]:checked+.mizuki_modal-form_size-checkbox::after,
+.mizuki_modal-form_area input[type=checkbox]:checked+.mizuki_modal-form_breed-checkbox::after,
+.mizuki_modal-form_area input[type=checkbox]:checked+.mizuki_modal-form_area-checkbox::after {
   opacity: 1;
 }
+
 .mizuki_modal-form_size-dogs {
   margin: 0 auto;
   width: 85%;
   height: 300px;
 }
-.mizuki_modal-form_breed-dogs, .mizuki_modal-form_breed-cats {
+
+.mizuki_modal-form_breed-dogs,
+.mizuki_modal-form_breed-cats {
   margin: 0 auto;
   margin-top: -1px;
   width: 85%;
   height: 300px;
   overflow-y: scroll;
 }
+
 .mizuki_modal-form_area {
   margin: 0 auto;
   width: 85%;
@@ -504,6 +596,7 @@ a {
   padding-bottom: 1rem;
   width: 100%;
 }
+
 .mizuki_modal-form_area-hokkaidou-touhoku h6,
 .mizuki_modal-form_area-kantou-koushinetsu h6,
 .mizuki_modal-form_area-tyubu-hokuriku h6,
@@ -556,6 +649,7 @@ a {
   font-size: 14px;
   line-height: 2.8571428571;
 }
+
 .mizuki_search-button_list-item_modal button::before {
   content: "";
   display: inline-block;
@@ -570,6 +664,7 @@ a {
 .mizuki_search-button_confirm {
   text-align: center;
 }
+
 .mizuki_search-button_confirm-submit {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -578,6 +673,7 @@ a {
   border: 1px solid #ccc;
   background-color: #e57900;
 }
+
 .mizuki_search-button_confirm-cancel {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -592,11 +688,13 @@ a {
   width: 95%;
   max-width: 800px;
 }
+
 .mizuki_dog-cat_column-title-sp {
   margin: 0 auto;
   width: 100%;
   max-width: 450px;
 }
+
 .mizuki_dog-cat_column-item {
   margin: 0 auto;
   margin-top: 1rem;
@@ -607,17 +705,21 @@ a {
   border: 1px solid #ccc;
   border-radius: 10px;
 }
+
 .mizuki_dog-cat_column-item-image {
   width: 25%;
 }
+
 .mizuki_dog-cat_column-item-text {
   padding: 1rem 2rem 1rem 1rem;
   width: 75%;
 }
+
 .mizuki_dog-cat_column-item:hover {
   -webkit-transform: scale(1.05);
-          transform: scale(1.05);
+  transform: scale(1.05);
 }
+
 .mizuki_dog-cat_column-page {
   margin: 0 auto;
   padding-top: 2rem;
@@ -628,6 +730,7 @@ a {
   background-position: 100% 75%;
   background-size: 400px;
 }
+
 .mizuki_dog-cat_column-page_button {
   margin-right: 10px;
   padding: 1.5rem 2rem;
@@ -637,6 +740,7 @@ a {
   background-color: #429137;
   border-radius: 10px;
 }
+
 .mizuki_dog-cat_column-page_button:hover {
   opacity: 0.9;
 }
@@ -645,43 +749,51 @@ a {
   margin-top: 5rem;
   background-color: #dbead9;
 }
+
 .mizuki_advantage-title-sp {
   margin: 0 auto;
   width: 100%;
   max-width: 450px;
 }
+
 .mizuki_advantage-title-pc {
   margin: 0 auto;
   width: 100%;
   max-width: 800px;
 }
+
 .mizuki_advantage-outer {
   margin: 0 auto;
   padding: 2rem 0;
   width: 95%;
   text-align: center;
 }
+
 .mizuki_advantage-item {
   margin: 0 auto;
   padding-top: 2rem;
   width: 80%;
   max-width: 400px;
 }
+
 .mizuki_advantage-item-pc {
   width: 100%;
   max-width: 1200px;
   position: relative;
 }
+
 .mizuki_advantage-item-pc a {
   width: 34.5%;
   position: absolute;
   top: 8%;
   left: -3px;
 }
+
 .mizuki_advantage h6 {
   font-size: 22px;
   line-height: 1.3636363636;
 }
+
 .mizuki_advantage-down-arrow {
   display: inherit;
   height: 50px;
@@ -692,6 +804,7 @@ a {
   background-size: 90%;
   background-position: 50%;
 }
+
 .mizuki_advantage-down-arrow p {
   position: absolute;
   top: 35%;
@@ -699,12 +812,15 @@ a {
   font-size: 11px;
   line-height: 1.7272727273;
 }
+
 .mizuki_advantage-down-arrow.open {
   display: none;
 }
+
 .mizuki_advantage-detail {
   display: none;
 }
+
 .mizuki_advantage-top-arrow {
   display: none;
   height: 50px;
@@ -713,6 +829,7 @@ a {
   background-size: 90%;
   background-position: 50%;
 }
+
 .mizuki_advantage-top-arrow.open {
   display: inherit;
 }
@@ -730,29 +847,35 @@ a {
   width: 95%;
   max-width: 800px;
 }
+
 .mizuki_dna-test-title-sp {
   margin: 0 auto;
   width: 100%;
   max-width: 450px;
 }
+
 .mizuki_dna-test_faq {
   margin: 0 auto;
   width: 100%;
   max-width: 400px;
 }
+
 .mizuki_dna-test_faq-outer {
   margin-top: 2rem;
   padding: 2rem 0;
   border: 1px solid #000;
 }
+
 .mizuki_dna-test_faq-outer:nth-of-type(2) .mizuki_dna-test_faq-question span {
   background-image: url(../img-mizuki/dna-icon02.png);
 }
+
 .mizuki_dna-test_faq-outer:nth-of-type(3) .mizuki_dna-test_faq-question span {
   background-image: url(../img-mizuki/dna-icon03.png);
 }
+
 .mizuki_dna-test_faq-question {
-  padding-left: 6rem;
+  padding-left: 3rem;
   position: relative;
   text-align: start;
   font-size: 16px;
@@ -760,6 +883,7 @@ a {
   font-weight: 500;
   cursor: pointer;
 }
+
 .mizuki_dna-test_faq-question span {
   width: 35px;
   height: 35px;
@@ -771,9 +895,11 @@ a {
   top: 58%;
   left: 2.5%;
   -webkit-transform: translateY(-50%);
-          transform: translateY(-50%);
+  transform: translateY(-50%);
 }
-.mizuki_dna-test_faq-question::before, .mizuki_dna-test_faq-question::after {
+
+.mizuki_dna-test_faq-question::before,
+.mizuki_dna-test_faq-question::after {
   content: "";
   display: inline-block;
   position: absolute;
@@ -785,22 +911,27 @@ a {
   -webkit-transition: all 0.4s;
   transition: all 0.4s;
 }
+
 .mizuki_dna-test_faq-question::before {
   -webkit-transform: rotate(0deg);
-          transform: rotate(0deg);
+  transform: rotate(0deg);
 }
+
 .mizuki_dna-test_faq-question::after {
   -webkit-transform: rotate(90deg);
-          transform: rotate(90deg);
+  transform: rotate(90deg);
 }
+
 .mizuki_dna-test_faq-question.active::before {
   -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
+  transform: rotate(45deg);
 }
+
 .mizuki_dna-test_faq-question.active::after {
   -webkit-transform: rotate(135deg);
-          transform: rotate(135deg);
+  transform: rotate(135deg);
 }
+
 .mizuki_dna-test_faq-answer {
   display: none;
   margin: 0 auto;
@@ -811,6 +942,7 @@ a {
   font-size: 16px;
   line-height: 1.625;
 }
+
 .mizuki_dna-test_faq-answer.active {
   display: inherit;
 }
@@ -818,31 +950,39 @@ a {
 .mizuki_present {
   margin-top: 5rem;
 }
+
 .mizuki_present-title-sp {
   margin: 0 auto;
   width: 90%;
   max-width: 450px;
 }
+
 .mizuki_present-title-pc {
   margin: 0 auto;
   width: 90%;
   max-width: 800px;
 }
-.mizuki_present-sp, .mizuki_present-pc {
+
+.mizuki_present-sp,
+.mizuki_present-pc {
   margin-top: 2rem;
   background-color: #dbead9;
 }
+
 .mizuki_present-sp {
   text-align: center;
 }
+
 .mizuki_present-sp img {
   padding: 2rem 0;
   width: 90%;
   max-width: 400px;
 }
+
 .mizuki_present-pc {
   text-align: center;
 }
+
 .mizuki_present-pc img {
   padding: 2rem 0;
   width: 90%;
@@ -863,14 +1003,18 @@ a {
   max-width: 600px;
   text-align: center;
 }
+
 .mizuki_caution h6 {
   font-size: 20px;
   line-height: 1.6;
 }
+
 .mizuki_caution p {
+  text-align: left;
   font-size: 16px;
   line-height: 1.625;
 }
+
 .mizuki_caution span {
   font-weight: bold;
   font-size: 18px;
@@ -883,100 +1027,424 @@ a {
   width: 90%;
   max-width: 800px;
 }
+
 .mizuki_campaign-detail {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  border-collapse: separate;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
+
 .mizuki_campaign-detail tr {
-  flex-direction: row!important;
+  flex-direction: column!important;
   margin-top: -1px;
   width: 100%;
   text-align: left;
   border: 1px solid #000;
   font-weight: bold;
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
+
 .mizuki_campaign-detail th {
   padding: 0.5rem;
   color: #fff;
   background-color: #429137;
 }
+
 .mizuki_campaign-detail td {
   padding: 1rem 0.5rem;
 }
 
-@media (max-width: 801px) {
-  .mizuki_campaign-detail tr {
-    flex-direction: column!important;
-  }
+.mizuki_pet-info {
+  margin-top: 5rem;
 }
 
-@media (min-width: 801px) {
+.mizuki_pet-info-container {
+  margin: 0 auto;
+  width: 90%;
+  max-width: 400px;
+}
+
+.mizuki_pet-info-tab {
+  justify-content: space-between;
+  border-bottom: 7px solid #29abe2;
+}
+
+.mizuki_pet-info-tab.active {
+  border-bottom: 7px solid #429137;
+}
+
+.mizuki_pet-info-tab_dog {
+  color: #429137;
+  border: 1px solid #429137;
+}
+
+.mizuki_pet-info-tab_cat {
+  color: #29abe2;
+  border: 1px solid #29abe2;
+}
+
+.mizuki_pet-info-tab_dog,
+.mizuki_pet-info-tab_cat {
+  padding: .5rem .6rem;
+  width: 49%;
+  text-align: center;
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.mizuki_pet-list_dog,
+.mizuki_pet-list_cat {
+  margin: 2rem 0;
+  display: none;
+}
+
+.mizuki_pet-list_dog.active,
+.mizuki_pet-list_cat.active {
+  display: inherit;
+}
+
+.mizuki_pet-list {
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.mizuki_pet-list-item {
+  margin-top: .6rem;
+  width: 48%;
+  aspect-ratio: 1 / 1;
+}
+
+.mizuki_pet-list-item_dog {
+  border: 1px solid #429137;
+}
+
+.mizuki_pet-list-item_cat {
+  border: 1px solid #29abe2;
+}
+
+.pet-ranking_dog,
+.pet-ranking_cat {
+  padding-top: 4rem;
+}
+
+.pet-ranking-title {
+  padding: 1rem 1.3rem;
+  font-size: 18px;
+}
+
+.pet-ranking-title_dog {
+  color: #429137;
+  background-color: #AACDA5;
+}
+
+.pet-ranking-title_cat {
+  color: #29abe2;
+  background-color: #ABC9E5;
+}
+
+.pet-ranking-list {
+  margin-top: 3rem;
+  margin-left: 10px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.pet-ranking-list_item {
+  width: 28.5%;
+  position: relative;
+  align-items: center;
+}
+
+.pet-ranking-list_item-image {
+  background-size: cover;
+}
+
+.pet-ranking_dog .pet-ranking-list_item:nth-child(1) .pet-ranking-list_item-image {
+  background-image: url(../img-mizuki/toypudol.jpeg);
+  background-position: 47% 6%;
+  background-size: 200%;
+}
+
+.pet-ranking_dog .pet-ranking-list_item:nth-child(2) .pet-ranking-list_item-image {
+  background-image: url(../img-mizuki/tiwawa.jpg);
+  background-position: 56% 53%;
+  background-size: 200%;
+}
+
+.pet-ranking_dog .pet-ranking-list_item:nth-child(3) .pet-ranking-list_item-image {
+  background-image: url(../img-mizuki/shiba.jpeg);
+  background-position: 61% 45%;
+  background-size: 200%;
+}
+
+.pet-ranking_cat .pet-ranking-list_item:nth-child(1) .pet-ranking-list_item-image {
+  background-image: url(../img-mizuki/scotish-fold.jpg);
+  background-position: 100% 0%;
+  background-size: 120%;
+}
+
+.pet-ranking_cat .pet-ranking-list_item:nth-child(2) .pet-ranking-list_item-image {
+  background-image: url(../img-mizuki/mantikan.jpg);
+  background-position: 12% 6%;
+  background-size: 120%;
+}
+
+.pet-ranking_cat .pet-ranking-list_item:nth-child(3) .pet-ranking-list_item-image {
+  background-image: url(../img-mizuki/nolweyforestcat.jpg);
+  background-position: 47% 6%;
+  background-size: 120%;
+}
+
+.pet-ranking-list_item-tag {
+  width: 50%;
+  position: absolute;
+  top: -24%;
+  left: -20%;
+}
+
+
+.pet-ranking-list_item:nth-child(2) .pet-ranking-list_item-tag,
+.pet-ranking-list_item:nth-child(3) .pet-ranking-list_item-tag {
+  top: -10%;
+}
+
+
+.pet-ranking-list_item-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 15px;
+}
+
+.pet-ranking-list_item:nth-child(1) .pet-ranking-list_item-dog-image,
+.pet-ranking-list_item:nth-child(1) .pet-ranking-list_item-cat-image {
+  border: 1px solid yellow;
+}
+
+.pet-ranking-list_item-dog-image {
+  border: 1px solid #429137;
+}
+
+.pet-ranking-list_item-cat-image {
+  border: 1px solid #29abe2;
+}
+
+.pet-list_from-size_title,
+.pet-list_from-hair_title {
+  padding-bottom: .5rem;
+  font-size: 18px;
+}
+
+.pet-list_from-size_title {
+  color: #429137;
+}
+
+.pet-list_from-hair_title {
+  color: #29abe2;
+}
+
+.pet-list_from-size,
+.pet-list_from-hair {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.pet-list_from-size_list {
+  justify-content: space-between;
+}
+
+.pet-list_from-size_list-item {
+  width: 24%;
+  border: 1px solid #429137;
+  aspect-ratio: 1 / 1;
+}
+
+.pet-list_from-size_list-item:hover {
+  background-color: #AACDA5;
+}
+
+.pet-list_from-size_list-item_container {
+  height: 100%;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+
+
+.pet-list_from-size_list-item-xs {
+  width: 45%;
+}
+
+.pet-list_from-size_list-item-s {
+  width: 50%;
+}
+
+.pet-list_from-size_list-item-m {
+  width: 55%;
+}
+
+.pet-list_from-size_list-item-l {
+  width: 60%;
+}
+
+.pet-list_from-size_list-item-text {
+  line-height: 25px;
+}
+
+
+
+.pet-list_from-hair_list {
+  justify-content: space-between;
+}
+
+.pet-list_from-hair_list-item {
+  width: 49%;
+  border: 1px solid #29abe2;
+  aspect-ratio: 2 / 1;
+}
+
+.pet-list_from-hair_list-item:hover {
+  background-color: #ABC9E5;
+}
+
+.pet-list_from-hair_list-item_container {
+  height: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.pet-list_from-hair_list-item-long,
+.pet-list_from-hair_list-item-short {
+  width: 45%;
+}
+
+.pet-ranking-list_item-name {
+  font-size: 15px;
+  line-height: 22px;
+}
+
+.pet-ranking-list .pet-ranking-list_item-name {
+  margin-top: 7px;
+}
+
+.helpful-info {
+  margin-top: 5rem;
+  background-color: #dbead9;
+}
+
+.helpful-info_title-sp {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 450px;
+}
+
+.helpful-info_outer {
+  margin: 0 auto;
+  padding: 4rem 0;
+  width: 75%;
+  text-align: center;
+}
+
+.helpful-info-container {
+  margin: 0 auto;
+  margin-top: 0rem;
+  max-width: 400px;
+}
+
+.helpful-info_list-top-item,
+.helpful-info_list-bottom-item {
+  margin-top: 2rem;
+}
+
+.helpful-info_list-top-item:hover,
+.helpful-info_list-bottom-item:hover {
+  opacity: .6;
+}
+
+
+@media (min-width: 1001px) {
   .visible-phone {
     display: none !important;
   }
+
   .hidden-phone {
     display: inherit !important;
     position: relative;
   }
+
   .mizuki_fv-bg {
     background-image: url(../img-mizuki/fv-pc.png);
     background-size: cover;
   }
+
   .mizuki_fv h1 {
     width: 450px;
     top: 20%;
     left: 50%;
     -webkit-transform: translateX(-50%);
-            transform: translateX(-50%);
+    transform: translateX(-50%);
   }
+
   .mizuki_fv h1 span {
     margin-left: 15%;
   }
+
   .mizuki_fv p {
     width: -webkit-max-content;
     width: -moz-max-content;
     width: max-content;
     left: 50%;
     -webkit-transform: translateX(-50%);
-            transform: translateX(-50%);
+    transform: translateX(-50%);
     font-size: 20px;
     line-height: 2.05;
   }
+
   .mizuki_fv .mizuki_about_dna-test {
     bottom: -40px;
   }
+
   .mizuki_fv-text_outer {
     background-size: 450px;
   }
+
   .mizuki_fv-text_outer p {
     top: 6%;
     left: 51%;
     font-size: 20px;
     line-height: 1.8;
   }
+
   .mizuki_fv-text_outer span {
     font-size: 24px;
     line-height: 1.3333333333;
   }
+
   .mizuki_fv a {
     font-size: 14px;
     line-height: 1.5714285714;
   }
-  .mizuki_search-dogs, .mizuki_search-cats {
+
+  .mizuki_search-dogs,
+  .mizuki_search-cats {
     max-width: 900px;
   }
-  .mizuki_search-dogs_title-decoration, .mizuki_search-cats_title-decoration {
+
+  .mizuki_search-dogs_title-decoration,
+  .mizuki_search-cats_title-decoration {
     left: 7%;
   }
-  .mizuki_search-dogs-button, .mizuki_search-cats-button {
+
+  .mizuki_search-dogs-button,
+  .mizuki_search-cats-button {
     margin: 0 auto;
     width: 90%;
     max-width: 900px;
   }
-  .mizuki_search-dogs-button_list, .mizuki_search-cats-button_list {
+
+  .mizuki_search-dogs-button_list,
+  .mizuki_search-cats-button_list {
     padding: 0;
     display: -webkit-box;
     display: -webkit-flex;
@@ -984,45 +1452,59 @@ a {
     display: flex;
     -webkit-box-align: center;
     -webkit-align-items: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
   }
-  .mizuki_search-dogs-button_list-item, .mizuki_search-cats-button_list-item {
+
+  .mizuki_search-dogs-button_list-item,
+  .mizuki_search-cats-button_list-item {
     width: 30%;
     height: -webkit-fit-content;
     height: -moz-fit-content;
     height: fit-content;
   }
-  .mizuki_search-dogs-button_list-item a, .mizuki_search-cats-button_list-item a {
+
+  .mizuki_search-dogs-button_list-item a,
+  .mizuki_search-cats-button_list-item a {
     padding-left: 10px;
   }
-  .mizuki_search-dogs-button_list-item a::before, .mizuki_search-cats-button_list-item a::before {
+
+  .mizuki_search-dogs-button_list-item a::before,
+  .mizuki_search-cats-button_list-item a::before {
     margin-right: 0;
   }
+
   .mizuki_search h3 {
     margin-left: 11%;
   }
+
   .mizuki_modal-outer {
     max-width: 1200px;
-    height: 100vh; /* Fallback */
+    height: 100vh;
+    /* Fallback */
     height: calc(var(--vh, 1vh) * 80);
   }
+
   .mizuki_modal-close {
     top: 7px;
     right: 30px;
   }
+
   .mizuki_modal h4 {
     font-size: 21px;
     line-height: 2.1428571429;
   }
+
   .mizuki_modal h5 {
     font-size: 15px;
     line-height: 2.6666666667;
   }
+
   .mizuki_modal-form {
     height: 90%;
     max-height: 700px;
   }
+
   .mizuki_modal-form .flex {
     display: -webkit-box;
     display: -webkit-flex;
@@ -1030,78 +1512,98 @@ a {
     display: flex;
     height: 90%;
   }
-  .mizuki_modal-form_size, .mizuki_modal-form_breed, .mizuki_modal-form_area {
+
+  .mizuki_modal-form_size,
+  .mizuki_modal-form_breed,
+  .mizuki_modal-form_area {
     max-width: 800px;
   }
-  .mizuki_modal-form_size-checkbox, .mizuki_modal-form_breed-checkbox, .mizuki_modal-form_area-checkbox {
+
+  .mizuki_modal-form_size-checkbox,
+  .mizuki_modal-form_breed-checkbox,
+  .mizuki_modal-form_area-checkbox {
     margin-left: 0;
   }
+
   .mizuki_modal-form_size-dogs {
     margin-right: 0;
     height: 90%;
     width: 30%;
   }
-  .mizuki_modal-form_breed-dogs, .mizuki_modal-form_breed-cats {
+
+  .mizuki_modal-form_breed-dogs,
+  .mizuki_modal-form_breed-cats {
     margin-top: 0;
     margin-left: -1px;
     width: 100%;
     height: 90%;
   }
+
   .mizuki_modal-form_area {
     width: 100%;
     height: 90%;
     -webkit-flex-wrap: wrap;
-        -ms-flex-wrap: wrap;
-            flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
   }
+
   .mizuki_modal-form_l {
     width: 65%;
     height: 100%;
   }
-  .mizuki_modal-form_l > .flex {
+
+  .mizuki_modal-form_l>.flex {
     height: 100%;
   }
+
   .mizuki_modal-form_r {
     width: 30%;
     height: 100%;
   }
+
   .mizuki_modal-bleeder_dogs .mizuki_modal-form_breed-dogs {
     width: 100%;
   }
+
   .mizuki_search-dogs-button_area::before,
-.mizuki_search-dogs-button_breed::before,
-.mizuki_search-cats-button_area::before,
-.mizuki_search-cats-button_breed::before {
+  .mizuki_search-dogs-button_breed::before,
+  .mizuki_search-cats-button_area::before,
+  .mizuki_search-cats-button_breed::before {
     margin-right: 0;
   }
+
   .mizuki_modal-form_area-hokkaidou-touhoku,
-.mizuki_modal-form_area-kantou-koushinetsu,
-.mizuki_modal-form_area-tyubu-hokuriku,
-.mizuki_modal-form_area-kinki,
-.mizuki_modal-form_area-chugoku-shikoku,
-.mizuki_modal-form_area-kyushu-okinawa {
+  .mizuki_modal-form_area-kantou-koushinetsu,
+  .mizuki_modal-form_area-tyubu-hokuriku,
+  .mizuki_modal-form_area-kinki,
+  .mizuki_modal-form_area-chugoku-shikoku,
+  .mizuki_modal-form_area-kyushu-okinawa {
     padding-bottom: 0;
     width: 33%;
   }
+
   .mizuki_modal-form_area-hokkaidou-touhoku h6,
-.mizuki_modal-form_area-kantou-koushinetsu h6,
-.mizuki_modal-form_area-tyubu-hokuriku h6,
-.mizuki_modal-form_area-kinki h6,
-.mizuki_modal-form_area-chugoku-shikoku h6,
-.mizuki_modal-form_area-kyushu-okinawa h6 {
+  .mizuki_modal-form_area-kantou-koushinetsu h6,
+  .mizuki_modal-form_area-tyubu-hokuriku h6,
+  .mizuki_modal-form_area-kinki h6,
+  .mizuki_modal-form_area-chugoku-shikoku h6,
+  .mizuki_modal-form_area-kyushu-okinawa h6 {
     margin-left: 0;
     margin-right: 30%;
   }
+
   .mizuki_modal-form_area-kinki,
-.mizuki_modal-form_area-chugoku-shikoku,
-.mizuki_modal-form_area-kyushu-okinawa {
+  .mizuki_modal-form_area-chugoku-shikoku,
+  .mizuki_modal-form_area-kyushu-okinawa {
     margin-top: 3rem;
   }
+
   .separate-line {
     margin: auto 0;
     padding: 0 0.5rem;
     width: auto;
   }
+
   .mizuki_search-button_footer {
     max-width: 900px;
     display: -webkit-box;
@@ -1110,38 +1612,44 @@ a {
     display: flex;
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
     -webkit-box-align: center;
     -webkit-align-items: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
   }
+
   .mizuki_search-button_list-item_modal button {
     padding-left: 10px;
   }
+
   .mizuki_search-button_list-item_modal button::before {
     margin-right: 0;
   }
+
   .mizuki_search-button_confirm {
     width: 50%;
   }
+
   .mizuki_dog-cat_column-container {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
     -webkit-flex-wrap: wrap;
-        -ms-flex-wrap: wrap;
-            flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
   }
+
   .mizuki_dog-cat_column-item {
     width: 40%;
   }
+
   .mizuki_dog-cat_column-page {
     margin: 0;
     padding-top: 4rem;
@@ -1149,56 +1657,69 @@ a {
     background-size: 600px;
     background-position: 100% 85%;
   }
+
   .mizuki_dog-cat_column-page_button {
     font-size: 18px;
     line-height: 1.4444444444;
   }
+
   .mizuki_dna-test_faq {
     max-width: 800px;
   }
+
   .mizuki_dna-test_faq-outer:nth-of-type(3) .mizuki_dna-test_faq-question br {
     display: none;
   }
+
   .mizuki_dna-test_faq-question {
     padding-left: 6rem;
     font-size: 22px;
     line-height: 1.4545454545;
   }
+
   .mizuki_dna-test_faq-question span {
     width: 50px;
     height: 50px;
     left: 5%;
   }
+
   .mizuki_dna-test_faq-answer {
     font-size: 18px;
     line-height: 1.5555555556;
   }
+
   .mizuki_insurance {
     max-width: 800px;
   }
+
   .mizuki_caution h6 {
     font-size: 28px;
     line-height: 1.2857142857;
   }
+
   .mizuki_caution p {
     font-size: 20px;
     line-height: 1.6;
   }
+
   .mizuki_caution span {
     font-size: 24px;
     line-height: 1.3333333333;
   }
+
   .mizuki_campaign-detail tr {
+    flex-direction: row!important;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
     -webkit-flex-direction: row;
-        -ms-flex-direction: row;
-            flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
     -webkit-box-align: stretch;
     -webkit-align-items: stretch;
-        -ms-flex-align: stretch;
-            align-items: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
   }
+
   .mizuki_campaign-detail th {
     width: 40%;
     display: -webkit-box;
@@ -1207,16 +1728,184 @@ a {
     display: flex;
     -webkit-box-align: center;
     -webkit-align-items: center;
-        -ms-flex-align: center;
-            align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
   }
+
   .mizuki_campaign-detail td {
     width: 60%;
   }
+
+  .mizuki_pet-info-container {
+    max-width: 1200px;
+  }
+
+  .pet-info-dog,
+  .pet-info-cat {
+    width: 48%;
+  }
+
+  .pet-info-dog {
+    padding-right: 2%;
+    border-right: 1px solid #ccc;
+  }
+
+  .pet-info-cat {
+    padding-left: 2%;
+  }
+
+  .mizuki_pet-info-tab_dog,
+  .mizuki_pet-info-tab_cat {
+    padding-right: 0;
+    padding-left: 0;
+    width: auto;
+    border: none;
+    justify-content: space-between;
+    word-break: keep-all;
+    font-size: 18px;
+  }
+
+  .mizuki_pet-info-tab {
+    border: none;
+    align-items: baseline;
+  }
+
+  .mizuki_pet-info-tab_dog span,
+  .mizuki_pet-info-tab_cat span {
+    display: inline-block;
+    margin-left: 10px;
+    width: 100%;
+    height: 7px;
+  }
+
+  .mizuki_pet-info-tab_dog span {
+    background-color: #429137;
+  }
+
+  .mizuki_pet-info-tab_cat span {
+    background-color: #29abe2;
+  }
+
+  .mizuki_pet-list_dog,
+  .mizuki_pet-list_cat {
+    display: block;
+    margin-top: 0;
+  }
+
+  .mizuki_pet-list-item {
+    margin-top: .4rem;
+    width: 32%;
+  }
+
+  .pet-list_from-size,
+  .pet-list_from-hair {
+    margin-top: 2rem;
+  }
+
+  .pet-ranking-list {
+    margin: 3rem auto 0;
+    width: 90%;
+    max-width: 500px;
+    height: 200px;
+  }
+
+  .pet-ranking_dog,
+  .pet-ranking_cat {
+    padding-top: 0;
+    padding-bottom: 2rem;
+  }
+
+  .pet-ranking_dog {
+    border: 1px solid #AACDA5;
+  }
+
+  .pet-ranking_cat {
+    border: 1px solid #ABC9E5;
+  }
+
+  .pet-ranking-list_secondary {
+    margin: 0 auto;
+    margin-top: 1.5rem;
+    width: 90%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .pet-ranking-list_secondary-item {
+    width: 48%;
+    justify-content: flex-start;
+  }
+
+  .pet-ranking-list_secondary-item:nth-child(3),
+  .pet-ranking-list_secondary-item:nth-child(4) {
+    margin-top: 1.5rem;
+  }
+
+  .pet-ranking-list_secondary-item-tag {
+    width: 30px;
+    aspect-ratio: 1 / 1;
+  }
+
+  .pet-ranking-list_secondary .pet-ranking-list_item-name {
+    margin-left: 10px;
+  }
+
+
+  .mizuki_pet-info-tab.active {
+    border: none;
+  }
+
+
+  .helpful-info_title-pc {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .helpful-info_outer {
+    width: 90%;
+  }
+
+  .helpful-info-container {
+    margin-top: 4rem;
+    max-width: 1200px;
+  }
+
+  .helpful-info_list-top,
+  .helpful-info_list-bottom {
+    flex-direction: row !important;
+    justify-content: space-between;
+  }
+
+  .helpful-info_list-top-item,
+  .helpful-info_list-bottom-item {
+    margin-top: 0;
+  }
+
+  .helpful-info_list-top-item {
+    width: 32%;
+  }
+
+  .helpful-info_list-bottom {
+    margin-top: 3rem;
+  }
+
+  .helpful-info_list-bottom-item {
+    width: 49%;
+  }
+
 }
+
 @media (min-width: 1200px) {
   .mizuki_advantage-item-pc a {
     top: 9%;
   }
 }
+
+.mizuki-selectall{
+  margin-top: -37px;
+  margin-left: 160px;
+}
+
+
 /*# sourceMappingURL=style.css.map */

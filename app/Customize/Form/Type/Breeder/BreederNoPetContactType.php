@@ -51,8 +51,7 @@ class BreederNoPetContactType extends AbstractType
                 'choices' =>
                     [
                         '問い合わせ' => AnilineConf::CONTACT_TYPE_INQUIRY,
-                        '見学希望' => AnilineConf::CONTACT_TYPE_VISIT_REQUEST,
-                        '返信' => AnilineConf::CONTACT_TYPE_REPLY,
+                        '見学希望' => AnilineConf::CONTACT_TYPE_VISIT_REQUEST
                     ],
                 'required' => true,
                 'expanded' => false,
@@ -76,6 +75,8 @@ class BreederNoPetContactType extends AbstractType
                         ]
                     ])
                 ],
+                'mapped' => false,
+                'data_class' => null
             ]);
     }
 

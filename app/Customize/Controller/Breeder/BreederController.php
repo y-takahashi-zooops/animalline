@@ -11,7 +11,6 @@ use Eccube\Repository\Master\PrefRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\PetsFavorite;
 use Customize\Entity\AffiliateStatus;
-use Customize\Form\Type\Breeder\BreederNoPetContactType;
 use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\BreedersRepository;
@@ -170,7 +169,8 @@ class BreederController extends AbstractController
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
         $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
         $regions = $this->prefRepository->findAll();
-        $newPets = $this->breederQueryService->getPetNew($petKind);
+        $newDogs = $this->breederQueryService->getPetNew(AnilineConf::ANILINE_PET_KIND_DOG);
+        $newCats = $this->breederQueryService->getPetNew(AnilineConf::ANILINE_PET_KIND_CAT);
         $favoritePets = $this->breederQueryService->getPetFeatured($petKind);
 
         $maintitle = "犬・猫ブリーダー直販のアニマルライン";
@@ -205,10 +205,17 @@ class BreederController extends AbstractController
             $entityManager->flush();
         }
         
-        $pets = $paginator->paginate(
-            $newPets,
+        //最新の犬猫データ最大9件
+        $newDog = $paginator->paginate(
+            $newDogs,
             $request->query->getInt('page', 1),
-            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+            9
+        );
+
+        $newCat = $paginator->paginate(
+            $newCats,
+            $request->query->getInt('page', 1),
+            9
         );
 
         //RSS
@@ -262,7 +269,8 @@ class BreederController extends AbstractController
             'petKind' => $petKind,
             'breeds' => $breeds,
             'regions' => $regions,
-            'newPets' => $pets,
+            'newDog' => $newDog,
+            'newCat' => $newCat,
             'favoritePets' => $favoritePets,
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
@@ -771,28 +779,6 @@ class BreederController extends AbstractController
 
         return[
             'title' => $maintitle,
-        ];
-    }
-
-    /**
-     * 成約済みのペットの場合のお問い合わせ
-     *
-     * @Route("/breeder/nopet/ani_contact", name="breeder_nopet_contact")
-     * @Template("animalline/breeder/nopet_contact.twig")
-     */
-    public function ani_nopet_contact(Request $request)
-    {
-        $builder = $this->formFactory->createBuilder(BreederNoPetContactType::class);
-        $form = $builder->getForm();
-        $form->handleRequest($request);
-        $newFilename = $request->get("newFilename");
-
-        $maintitle = "お問い合わせ";
-
-        return [
-            'title' => $maintitle,
-            'form' => $form->createView(),
-            "newFilename" => $newFilename
         ];
     }
 }
