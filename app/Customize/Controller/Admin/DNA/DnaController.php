@@ -228,6 +228,25 @@ class DnaController extends AbstractController
     }
 
     /**
+     * Delete dna check kind ec by id
+     *
+     * @Route("/%eccube_admin_route%/dna/examination_items_ec/delete", name="admin_examination_items_ec_delete")
+     */
+    public function deleteExaminationItemEc(Request $request, DnaCheckKindsEcRepository $dnaCheckKindsEcRepository)
+    {
+        $id = $request->get('id');
+        if (!$id || !$DnaCheckKindEc = $dnaCheckKindsEcRepository->find($id)) {
+            return new JsonResponse(['isSuccess' => false], 404);
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $DnaCheckKindEc->setDeleteFlg(!$DnaCheckKindEc->getDeleteFlg());
+        $entityManager->flush();
+
+        return new JsonResponse(['isSuccess' => true]);
+    }
+
+    /**
      * DNA検査状況確認
      *
      * @Route("/%eccube_admin_route%/dna/examination_status", name="admin_dna_examination_status")

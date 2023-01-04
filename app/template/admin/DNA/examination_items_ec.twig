@@ -144,31 +144,31 @@ file that was distributed with this source code.
                                         <div class="col"><strong>ステータス</strong></div>
                                     </div>
                                 </li>
-                                {% for dna_check_kind in dna_check_kinds_ec %}
+                                {% for dna_check_kind_ec in dna_check_kinds_ec %}
                                     <li id="ex-class_name-2" class="list-group-item">
                                         <div class="row justify-content-around mode-view">
                                             <div class="col-6 d-flex align-items-center">
-                                                <span>{{ dna_check_kind.checkKind }}</span>
+                                                <span>{{ dna_check_kind_ec.checkKind }}</span>
                                             </div>
                                             <div class="col d-flex align-items-center">
-                                                <span>{{ dna_check_kind.deleteFlg == 0 ? '実施中' : '廃止' }}</span>
+                                                <span>{{ dna_check_kind_ec.deleteFlg == 0 ? '実施中' : '廃止' }}</span>
                                             </div>
                                             <div class="col-auto text-right">
-                                                {% if dna_check_kind.deleteFlg == 0 %}
+                                                {% if dna_check_kind_ec.deleteFlg == 0 %}
                                                     <div class="d-inline-block mr-2" data-tooltip="true"
                                                             data-placement="top"
                                                             title="廃止">
                                                         <a class="btn btn-ec-actionIcon ban"
-                                                            data-id="{{ dna_check_kind.id }}">
+                                                            data-id="{{ dna_check_kind_ec.id }}">
                                                             <i class="fa fa-ban fa-lg text-secondary"></i>
                                                         </a>
                                                     </div>
-                                                {% elseif dna_check_kind.deleteFlg == 1 %}
+                                                {% elseif dna_check_kind_ec.deleteFlg == 1 %}
                                                     <div class="d-inline-block mr-2" data-tooltip="true"
                                                             data-placement="top"
                                                             title="解除">
                                                         <a class="btn btn-ec-actionIcon lift"
-                                                            data-id="{{ dna_check_kind.id }}">
+                                                            data-id="{{ dna_check_kind_ec.id }}">
                                                             <i class="far fa-circle fa-lg text-secondary"></i>
                                                         </a>
                                                     </div>
@@ -319,7 +319,7 @@ file that was distributed with this source code.
 
     function deleteDnaCheckKind(id) {
         $.ajax({
-            url: '{{ url("admin_examination_items_delete") }}',
+            url: '{{ url("admin_examination_items_ec_delete") }}',
             type: 'post',
             dataType: 'json',
             data: {
@@ -334,7 +334,7 @@ file that was distributed with this source code.
 
                 $('#BanModal').modal('hide');
                 $('#LiftModal').modal('hide');
-                location.href = `/aniconfig/dna/examination_items?pet_kind=${$('#pet_kind').val()}&pet_breeds=${$('#breeds').val()}`;
+                location.href = `/aniconfig/dna/examination_items_ec?pet_kind=${$('#pet_kind').val()}&pet_breeds=${$('#breeds').val()}`;
             })
             .fail(function (err) {
                 console.error(err);
