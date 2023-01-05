@@ -42,13 +42,13 @@ file that was distributed with this source code.
                                 <label class="col-form-label">受付日時</label>
                                 <div class="form-row align-items-center">
                                     <div class="col">
-                                        <input type="date" id="create_date_from" name="create_date_from"
+                                        <input type="datetime-local" id="create_date_from" name="create_date_from"
                                                class="form-control"
                                                value="{{ params.create_date_from is defined ? params.create_date_from : '' }}"/>
                                     </div>
                                     <div class="col-auto text-center">〜</div>
                                     <div class="col">
-                                        <input type="date" id="create_date_to" name="create_date_to"
+                                        <input type="datetime-local" id="create_date_to" name="create_date_to"
                                                class="form-control"
                                                value="{{ params.create_date_to is defined ? params.create_date_to : '' }}"/>
                                     </div>

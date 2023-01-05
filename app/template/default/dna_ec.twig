@@ -3,21 +3,203 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/index.css?ver=211102_2') }}">
 {% endblock %}
-{% block javascript %}
-{# カレンダー表示用スクリプト #}
-<script>
-
-</script>
-
-{% endblock %}
 
 {% block main %}
     <main role="main" id="container" style="width:100vw">
-        <div id="contents">
+        <div id="contents" class="inner">
             <div style="margin:20px;text-align:center">
-			    <h1>ＤＮＡ検査の販売</h1>
-                ここに説明が入ります。
+			    <h1>有料DNA検査お申込みフォーム</h1>
+
+                <div style="font-size: 20px;margin: 3rem 1rem 3rem 1rem">こちらではワンちゃん・ネコちゃんの遺伝子検査を申し込むことができます。<br />
+                犬種/猫種を選んでいただくと、Animallineで推奨している検査項目が表示されます。<br />
+                ご希望に応じて検査項目は変更ができます。</div>
+
+
+            </div>
+
+            <div class="ec-off1Grid">
+				<div class="ec-off1Grid__cell">
+
+                    <form method="post" action="{{ url('dna_buy') }}" class="h-adr">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="ec-label required" for="conservations_is_organization">ペット種別</label>
+                            {# <span class="ec-required">必須</span> #}
+                        </div>
+                        <div class="col-md-8 ec-input ec-select">
+                            <select id="pet_type">
+                                <option value="0">選択してください</option>
+                                <option value="1">犬</option>
+                                <option value="2">猫</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="ec-label required" for="conservations_is_organization">犬種／猫種</label>
+                            {# <span class="ec-required">必須</span> #}
+                        </div>
+                        <div class="col-md-8 ec-input ec-select">
+                            <select id="pet_kind">
+                                <option value="0">選択してください</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="check_kinds">
+                        
+                    </div>
+
+                    <div id="price" style="margin-bottom:30px">
+                        検査料金（税込）： 0円
+                    </div>
+
+                    <input type="hidden" id="order_type" name="order_type" value="normal" />
+                    <input type="hidden" id="product_id" name="product_id" value="3065" />
+                    <input type="hidden" id="ProductClass" name="ProductClass" value="2438" />
+                    <input type="hidden" id="normal_quantity" name="normal_quantity" value="1" />
+                    <input type="hidden" id="quantity" name="quantity" value="1" />
+                    <input type="hidden" id="is_repeat" name="is_repeat" />
+                    <input type="hidden" id="repeat_span" name="repeat_span" /><input type="hidden" id="span_unit" name="span_unit" />
+                    <input type="hidden" name="{{ constant('Eccube\\Common\\Constant::TOKEN_NAME') }}" value="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
+                    <button type="submit" id="buy_exec" class="ec-blockBtn--action" name="mode" value="confirm" disabled>購入手続きへ</form>
+                </div>
             </div>
         </div><!-- contents -->
     </main><!-- container -->
+{% endblock %}
+
+{% block javascript %}
+{# フォーム制御 #}
+<script>
+    $(document).ready(function(){
+        $("#pet_type").change(function() {
+            $.ajax({
+                type: 'get',
+                url: '/ec/dna/get_pet_type/'+$('#pet_type').val(),
+                dataType: 'json'
+            })
+            .done(function(data) {
+                var data_stringify = JSON.stringify(data);
+                var data_json = JSON.parse(data_stringify);
+
+                $("#pet_kind").children().remove();
+                $("#pet_kind").append('<option selected value="0" selected>選択してください</option>');
+
+                for (let i = 0; i < data_json.length; ++i) {
+                    $("#pet_kind").append('<option value='+data_json[i]["id"]+'">'+data_json[i]["breeds_name"]+'</option>');
+                }
+            })
+            .fail(function() {
+                alert("取得失敗");
+            });
+        });
+
+        $("#pet_kind").change(function() {
+            items = {
+                0 : {
+                    "product" : 0,
+                    "product_class" : 0,
+                    "price" : 0
+                },
+                1 : {
+                    "product" : 3065,
+                    "product_class" : 2438,
+                    "price" : 4070
+                },
+                2 : {
+                    "product" : 3066,
+                    "product_class" : 2439,
+                    "price" : 8140
+                },
+                3 : {
+                    "product" : 3067,
+                    "product_class" : 2440,
+                    "price" : 12210
+                },
+                4 : {
+                    "product" : 3068,
+                    "product_class" : 2441,
+                    "price" : 16280
+                },
+                5 : {
+                    "product" : 3069,
+                    "product_class" : 2442,
+                    "price" : 20350
+                },
+                6 : {
+                    "product" : 3070,
+                    "product_class" : 2443,
+                    "price" : 24420
+                }
+            };
+
+            $.ajax({
+                type: 'get',
+                url: '/ec/dna/get_dna_kinds/'+$('#pet_kind').val(),
+                dataType: 'json'
+            })
+            .done(function(data) {
+                var data_stringify = JSON.stringify(data);
+                var data_json = JSON.parse(data_stringify);
+
+                $("#check_kinds").html("");
+
+                counts = 0;
+                for (let i = 0; i < data_json.length; ++i) {
+                    var addhtml = '<div class="row mb-3">';
+                    addhtml += '<div class="col-md-3">';
+                    addhtml += '<label class="ec-label required" for="conservations_is_organization">検査内容' + (i+1).toString() +'</label>';
+                    addhtml += '</div>';
+                    addhtml += '<div class="col-md-8 ec-checkbox">';
+                    addhtml += '<input type="checkbox" value="1" id="check_kind_' + (i+1).toString() + '" name="scales" checked>　' + data_json[i]["check_kind"];
+                    addhtml += '</div>';
+                    addhtml += '</div>';
+
+                    $("#check_kinds").append(addhtml);
+
+                    $("#check_kind_"+ (i+1).toString()).click(function() {
+                        check_cnt = 0;
+                        for(let j=1; j <= 6; j++){
+                            if($("#check_kind_"+ j.toString()).prop('checked')){
+                                check_cnt++;
+                            }
+                        }
+                        
+                        
+                        $("#price").html("検査料金（税込）： " + items[check_cnt]["price"].toString() + "円");
+                        $("#product_id").val = items[check_cnt]["product"];
+                        $("#ProductClass").val(items[check_cnt]["product_class"]);
+                        
+                        if(check_cnt == 0){
+                            $("#buy_exec").prop('disabled',true)
+                        }
+                        else{
+                            $("#buy_exec").prop('disabled',false)
+                        }
+                    });
+
+                    counts++;
+                }
+                
+                $("#product_id").val = items[counts]["product"];
+                $("#ProductClass").val(items[counts]["product_class"]);
+                $("#price").html("検査料金（税込）： " + items[counts]["price"].toString() + "円");
+                
+                if(counts == 0){
+                    $("#buy_exec").prop('disabled',true)
+                }
+                else{
+                    $("#buy_exec").prop('disabled',false)
+                }
+                
+            })
+            .fail(function() {
+                alert("取得失敗");
+            });
+        });
+    });
+</script>
+
 {% endblock %}
