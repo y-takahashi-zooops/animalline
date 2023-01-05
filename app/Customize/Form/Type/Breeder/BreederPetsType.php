@@ -25,6 +25,7 @@ use Customize\Config\AnilineConf;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\BreedsRepository;
 use Symfony\Component\Security\Core\User\User;
+use Customize\Form\DataTransformer\IntegerToBooleanTransformer;
 
 class BreederPetsType extends AbstractType
 {
@@ -268,6 +269,9 @@ class BreederPetsType extends AbstractType
             ->add('ImagePathErrors', TextType::class, [
                 'mapped' => false,
             ]);
+
+        $builder->get('price_no_display')->addModelTransformer(new IntegerToBooleanTransformer());
+
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validateVaccineDetail']);
         $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'validatePedigree']);
 
