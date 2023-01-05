@@ -209,7 +209,7 @@ class BreederPetController extends AbstractController
             $arrayPets[$pet['bp_id']] = $pet;
         }
         $arrayPets = $paginator->paginate(
-            array_reverse($arrayPets),
+            $arrayPets,
             $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
