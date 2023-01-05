@@ -618,6 +618,10 @@ class BreederMemberContactController extends AbstractController
                         ->setLastMessageDate(Carbon::now());
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($contact);
+
+                    $pet->setIsContact(1);
+                    $entityManager->persist($pet);
+
                     $entityManager->flush();
                     $breederContact = new BreederContacts();
                     $breeder = $this->customerRepository->find($contact->getBreeder()->getId());

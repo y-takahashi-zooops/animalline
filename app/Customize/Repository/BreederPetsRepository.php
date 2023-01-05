@@ -119,30 +119,17 @@ class BreederPetsRepository extends ServiceEntityRepository
                 ->setParameter('BreedsType', $criteria['breed_type']);
         }
         if (!empty($criteria['public_status']) && StringUtil::isNotBlank($criteria['public_status'])) {
+            //非公開
             if ($criteria['public_status'] == 1) {
                 $qb
                     ->andWhere($qb->expr()->in('bp.is_active', ':is_active'))
-                    ->setParameter('is_active', AnilineConf::ANILINE_IS_ACTIVE_PRIVATE);
+                    ->setParameter('is_active', array(0,2));
             }
+            //公開
             if ($criteria['public_status'] == 2) {
                 $qb
                     ->andWhere($qb->expr()->in('bp.is_active', ':is_active'))
-                    ->setParameter('is_active', AnilineConf::ANILINE_IS_ACTIVE_PUBLIC);
-            }
-            if ($criteria['public_status'] == 3) {
-                $qb
-                    ->andWhere($qb->expr()->in('bp.dna_check_result', ':dna_check_result'))
-                    ->setParameter('dna_check_result', AnilineConf::DNA_CHECK_RESULT_CHECKING);
-            }
-            if ($criteria['public_status'] == 4) {
-                $qb
-                    ->andWhere($qb->expr()->in('bp.dna_check_result', ':dna_check_result'))
-                    ->setParameter('dna_check_result', AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
-            }
-            if ($criteria['public_status'] == 5) {
-                $qb
-                    ->andWhere($qb->expr()->in('bp.dna_check_result', ':dna_check_result'))
-                    ->setParameter('dna_check_result', AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
+                    ->setParameter('is_active', 1);
             }
         }
         if (!empty($criteria['create_date']) && StringUtil::isNotBlank($criteria['create_date'])) {

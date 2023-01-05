@@ -21,7 +21,8 @@
                             <h2 class="float-left mb-3">
                                 {{ breederPet.breedsType.breedsName ?? '' }}
                                 {% if breederPet.isContract or breederPet.isDelete %}【成約済】
-                                {% elseif breederPet.dnaCheckResult == 0 %}【DNA検査中】{% endif %}
+                                {% elseif breederPet.dnaCheckResult == 0 %}【DNA検査中】
+                                {% elseif breederPet.isContact == 1 %}【商談中】{% endif %}
                                 
                             </h2>
                             <div class="col-md-3 col-12 float-right btn-like mb-3 {{ isFavorite ? "red-heart" : "" }}"

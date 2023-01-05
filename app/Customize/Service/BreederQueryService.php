@@ -387,6 +387,7 @@ class BreederQueryService
             //->andWhere($qb->expr()->notIn('bp.id', $status))
             //->andWhere('bp.is_delete = 0')
             ->orderBy('bp.is_delete', 'DESC')
+            ->addOrderBy('bp.is_contract', 'ASC')
             ->addOrderBy('bch.last_message_date', 'ASC')
             ->select('bp, bch.id as bch_id, bch.last_message_date as last_msg,bch.contract_status, b.breeds_name, bp.is_delete, bp.movie_file')
             ->getQuery()

@@ -98,27 +98,12 @@ class ConservationPetsRepository extends ServiceEntityRepository
             if ($criteria['public_status'] == 1) {
                 $qb
                     ->andWhere($qb->expr()->in('cp.is_active', ':release_status'))
-                    ->setParameter('release_status', AnilineConf::IS_ACTIVE_PRIVATE);
+                    ->setParameter('release_status', 0);
             }
             if ($criteria['public_status'] == 2) {
                 $qb
                     ->andWhere($qb->expr()->in('cp.is_active', ':release_status'))
-                    ->setParameter('release_status', AnilineConf::IS_ACTIVE_PUBLIC);
-            }
-            if ($criteria['public_status'] == 3) {
-                $qb
-                    ->andWhere($qb->expr()->in('cp.dna_check_result', ':dna_check_result'))
-                    ->setParameter('dna_check_result', AnilineConf::DNA_CHECK_RESULT_CHECKING);
-            }
-            if ($criteria['public_status'] == 4) {
-                $qb
-                    ->andWhere($qb->expr()->in('cp.dna_check_result', ':dna_check_result'))
-                    ->setParameter('dna_check_result', AnilineConf::DNA_CHECK_RESULT_CHECK_OK);
-            }
-            if ($criteria['public_status'] == 5) {
-                $qb
-                    ->andWhere($qb->expr()->in('cp.dna_check_result', ':dna_check_result'))
-                    ->setParameter('dna_check_result', AnilineConf::DNA_CHECK_RESULT_CHECK_NG);
+                    ->setParameter('release_status', array(1,2,3));
             }
         }
         if (!empty($criteria['create_date']) && StringUtil::isNotBlank($criteria['create_date'])) {

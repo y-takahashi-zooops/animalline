@@ -15,7 +15,6 @@ file that was distributed with this source code.
 
 {% set column = params.field is defined ? params.field : 'create_date' %}
 {% set ordering = params.direction is defined ? params.direction : 'DESC' %}
-{% set arr =['交渉中','成約確認待ち','成約済み', ''] %}
 
 {% block title %}{{ 'ペット情報管理'|trans }}{% endblock %}
 {% block sub_title %}{{ 'ペット管理'|trans }}{% endblock %}
@@ -155,8 +154,8 @@ file that was distributed with this source code.
                     <div class="col-6">
                         <label class="col-form-label">公開状況</label>
                         <select id="public_status" name="public_status" class="form-control">
-                            {% set publicStatuss = ['全て', '非公開', '公開', '未公開(DNA検査中)', '未公開(DNA検査済)', '未公開(DNA検査NG)'] %}
-                            {% for i in 0..5 %}
+                            {% set publicStatuss = ['全て', '非公開', '公開'] %}
+                            {% for i in 0..2 %}
                                 <option value="{{ i }}" {% if params.public_status is defined and params.public_status == i %} selected {% endif %}>{{ publicStatuss[i] }}</option>
                             {% endfor %}
                         </select>
@@ -200,7 +199,6 @@ file that was distributed with this source code.
                                             class="{{ column == 'update_date' ? ordering == 'ASC' ? 'icon-up' : 'icon-down' }}"
                                             href="{{ url('admin_pet_all', params|merge({'field': 'update_date', 'direction': direction})) }}">更新日</a>
                                 </th>
-                                <th class="border-top-0 pt-2 pb-2">成約状況</th>
                                 <th class="border-top-0 pt-2 pb-2">公開状況</th>
                             </tr>
                             </thead>
@@ -220,8 +218,21 @@ file that was distributed with this source code.
                                 <td class="align-middle">{{ breederPet.breeder_name }}</td>
                                 <td class="align-middle">{{ breederPet.bp_create_date|date('Y/m/d H:i') }}</td>
                                 <td class="align-middle">{{ breederPet.bp_update_date|date('Y/m/d H:i') }}</td>
-                                <td class="align-middle">{{ breederPet.contract_status is null ? '' : arr[breederPet.contract_status]}}</td>
-                                <td class="align-middle">{{ constant('Customize\\Config\\AnilineConf::IS_ACTIVES')[breederPet.bp_is_active] }}</td>
+                                <td class="align-middle">
+                                    {% if breederPet.bp_is_active == 1 %}
+                                        {{ constant('Customize\\Config\\AnilineConf::IS_ACTIVES')[breederPet.bp_is_active] }}
+                                        {% if breederPet.bp_is_delete == 1 %}
+                                            （成約済み）
+                                        {% else %}
+                                            {% if breederPet.bp_dna_check_result == 0 %}
+                                                （DNA検査中）
+                                            {% endif %}
+                                        {% endif %}
+                                        
+                                    {% else %}
+                                        非公開
+                                    {% endif %}
+                                </td>
                                 <td class="align-middle pr-3" colspan="3">
                                     <div class="text-right">
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="動画投稿">
@@ -298,8 +309,17 @@ file that was distributed with this source code.
                                     <td class="align-middle">{{ conservationPet.owner_name }}</td>
                                     <td class="align-middle">{{ conservationPet.cp_create_date|date('Y/m/d H:i') }}</td>
                                     <td class="align-middle">{{ conservationPet.cp_update_date|date('Y/m/d H:i') }}</td>
-                                    <td class="align-middle">{{ conservationPet.contract_status is null ? '' : arr[conservationPet.contract_status] }}</td>
-                                    <td class="align-middle">{{ constant('Customize\\Config\\AnilineConf::IS_ACTIVES')[conservationPet.cp_is_active] }}</td>
+                                    <td class="align-middle">
+                                        {% if conservationPet.cp_is_active == 1 %}
+                                            公開
+                                        {% elseif conservationPet.cp_is_active == 2 %}
+                                            公開（トライアル中）
+                                        {% elseif conservationPet.cp_is_active == 3 %}
+                                            公開（譲渡決定）
+                                        {% else %}
+                                            非公開
+                                        {% endif %}
+                                    </td>
                                     <td class="align-middle pr-3" colspan="3">
                                         <div class="text-right">
                                             <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="動画投稿">
