@@ -421,6 +421,25 @@ class BreederQueryService
      * @param Object $request
      * @return array
      */
+    public function getBreederPrefs($pet_kind): array
+    {
+        $query = $this->breedersRepository->createQueryBuilder('b')
+            ->join('b.PrefBreeder', 'p')
+            ->where('b.is_active = 1')
+            ->andWhere('b.handling_pet_kind in (:pk)')
+            ->select("distinct p.name,p.id")
+            ->orderBy('p.id', 'asc')
+            ->setParameter('pk', array($pet_kind -1,3));
+            
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * Retrive breeder pets
+     *
+     * @param Object $request
+     * @return array
+     */
     public function getBreedsByPref(array $prefs,$pet_kind): array
     {
         $query = $this->breederPetsRepository->createQueryBuilder('bp')

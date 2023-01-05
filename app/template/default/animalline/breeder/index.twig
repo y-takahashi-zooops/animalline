@@ -133,10 +133,10 @@
                           <ul>
                             <h6>北海道・東北</h6>
                             {% for i in 1..7 %}
-                              {% if i in pref_ids_dog %}
+                              {% if i in pref_ids_dog_breeder %}
                               <li>
                                 <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}
@@ -147,10 +147,10 @@
                           <ul>
                             <h6>関東・甲信越</h6>
                             {% for i in 8..15 %}
-                              {% if i in pref_ids_dog %}
+                              {% if i in pref_ids_dog_breeder %}
                               <li>
                                 <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}
@@ -161,10 +161,10 @@
                           <ul>
                             <h6>中部・北陸</h6>
                             {% for i in 16..23 %}
-                              {% if i in pref_ids_dog %}
+                              {% if i in pref_ids_dog_breeder %}
                               <li>
                                 <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}
@@ -175,10 +175,10 @@
                           <ul>
                             <h6>近畿</h6>
                             {% for i in 24..30 %}
-                              {% if i in pref_ids_dog %}
+                              {% if i in pref_ids_dog_breeder %}
                               <li>
                                 <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}
@@ -189,10 +189,10 @@
                           <ul>
                             <h6>中国・四国</h6>
                             {% for i in 31..39 %}
-                              {% if i in pref_ids_dog %}
+                              {% if i in pref_ids_dog_breeder %}
                               <li>
                                 <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}
@@ -203,10 +203,10 @@
                           <ul>
                             <h6>九州・沖縄</h6>
                             {% for i in 40..47 %}
-                              {% if i in pref_ids_dog %}
+                              {% if i in pref_ids_dog_breeder %}
                               <li>
                                 <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}
@@ -567,10 +567,10 @@
                           <ul>
                             <h6>北海道・東北</h6>
                             {% for i in 1..7 %}
-                              {% if i in pref_ids_cat %}
+                              {% if i in pref_ids_cat_breeder %}
                               <li>
                                 <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}
@@ -581,10 +581,10 @@
                           <ul>
                             <h6>関東・甲信越</h6>
                             {% for i in 8..15 %}
-                              {% if i in pref_ids_cat %}
+                              {% if i in pref_ids_cat_breeder %}
                               <li>
                                 <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}
@@ -595,10 +595,10 @@
                           <ul>
                             <h6>中部・北陸</h6>
                             {% for i in 16..23 %}
-                              {% if i in pref_ids_cat %}
+                              {% if i in pref_ids_cat_breeder %}
                               <li>
                                 <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}
@@ -609,10 +609,10 @@
                           <ul>
                             <h6>近畿</h6>
                             {% for i in 24..30 %}
-                              {% if i in pref_ids_cat %}
+                              {% if i in pref_ids_cat_breeder %}
                               <li>
                                 <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}
@@ -623,10 +623,10 @@
                           <ul>
                             <h6>中国・四国</h6>
                             {% for i in 31..39 %}
-                              {% if i in pref_ids_cat %}
+                              {% if i in pref_ids_cat_breeder %}
                               <li>
                                 <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}
@@ -637,10 +637,10 @@
                           <ul>
                             <h6>九州・沖縄</h6>
                             {% for i in 40..47 %}
-                              {% if i in pref_ids_cat %}
+                              {% if i in pref_ids_cat_breeder %}
                               <li>
                                 <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
-                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat[i] }}</label>
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
                               </li>
                               {% endif %}
                             {% endfor %}

@@ -250,6 +250,13 @@ class BreederController extends AbstractController
             $pref_name_dog[$pref["id"]] = $pref["name"];
         }
 
+        $prefs_dog_breeder = $this->breederQueryService->getBreederPrefs(1);
+        $pref_ids_dog_breeder = [];
+        foreach ($prefs_dog_breeder as $pref) {
+            $pref_ids_dog_breeder[] = $pref["id"];
+            $pref_name_dog_breeder[$pref["id"]] = $pref["name"];
+        }
+
         //猫の都道府県
         $prefs_cat = $this->breederQueryService->getActivePrefs(2);
         $pref_ids_cat = [];
@@ -258,6 +265,13 @@ class BreederController extends AbstractController
             $pref_name_cat[$pref["id"]] = $pref["name"];
         }
         
+        $prefs_cat_breeder = $this->breederQueryService->getBreederPrefs(2);
+        $pref_ids_cat_breeder = [];
+        foreach ($prefs_cat_breeder as $pref) {
+            $pref_ids_cat_breeder[] = $pref["id"];
+            $pref_name_cat_breeder[$pref["id"]] = $pref["name"];
+        }
+
         //猫種
         $breeds_cat = $this->breederQueryService->getBreedsHavePet(2);
 
@@ -280,7 +294,11 @@ class BreederController extends AbstractController
             'pref_name_cat' => $pref_name_cat,
             'pref_ids_cat' => $pref_ids_cat,
             'breeds_cat' => $breeds_cat,
-            'breeds_dog' => $breeds_dog
+            'breeds_dog' => $breeds_dog,
+            'pref_ids_cat_breeder' => $pref_ids_cat_breeder,
+            'pref_name_cat_breeder' => $pref_name_cat_breeder,
+            'pref_ids_dog_breeder' => $pref_ids_dog_breeder,
+            'pref_name_dog_breeder' => $pref_name_dog_breeder
         ],$response);
     }
 
