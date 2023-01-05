@@ -33,7 +33,7 @@
                                                 class="card-img-top" alt="Pet-image">
                                         </figure>
                                         <p style="color: #F00">[成約済み]</p>
-                                {% elseif pet['contract_status'] > 0 && pet['bp_is_contract'] == 0 %}
+                                {% elseif pet['contract_status'] > 0 and pet['bp_is_contract'] == 0 %}
                                         <figure>
                                                 <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet['bp_thumbnail_path'] | default('/noimage_plugin_list.png')) }}"
                                                     class="card-img-top" alt="Pet-image">
