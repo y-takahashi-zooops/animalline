@@ -30,6 +30,12 @@ use Eccube\Repository\CategoryRepository;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\DnaCheckKindsEcRepository;
 use Customize\Entity\DnaCheckKindsEc;
+use Customize\Entity\DnaSalesDetail;
+use Customize\Entity\DnaSalesHeader;
+use Customize\Entity\DnaSalesStatus;
+use Customize\Form\Type\DnaSalesType;
+use Customize\Repository\DnaSalesDetailRepository;
+use Customize\Repository\DnaSalesStatusRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Eccube\Controller\ProductController as BaseProductController;
 use Eccube\Service\CartService;
@@ -101,6 +107,11 @@ class DnaEcController extends BaseProductController
      */
     protected $purchaseFlow;
 
+    /**
+     * @var DnaSalesStatusRepository
+     */
+    protected $dnaSalesStatusRepository;
+
     public function __construct(
         NewsRepository $NewsRepository,
         ProductRepository $productRepository,
@@ -113,7 +124,8 @@ class DnaEcController extends BaseProductController
         CartService $cartService,
         CartItemRepository $cartItemRepository,
         CartRepository $cartRepository,
-        PurchaseFlow $cartPurchaseFlow
+        PurchaseFlow $cartPurchaseFlow,
+        DnaSalesStatusRepository $dnaSalesStatusRepository
     ) {
         $this->NewsRepository = $NewsRepository;
         $this->productListOrderByRepository = $productListOrderByRepository;
@@ -127,6 +139,7 @@ class DnaEcController extends BaseProductController
         $this->cartItemRepository = $cartItemRepository;
         $this->cartRepository = $cartRepository;
         $this->purchaseFlow = $cartPurchaseFlow;
+        $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
     }
 
 
@@ -136,6 +149,24 @@ class DnaEcController extends BaseProductController
      */
     public function dna_ec()
     {
+        $salesDetail = $this->dnaSalesStatusRepository->createQueryBuilder('ds')
+            ->innerJoin('Customize\Entity\DnaSalesHeader', 'dh', 'WITH', 'dh.id = ds.DnaSalesHeader')
+            ->where('dh.Customer = :customer_id')
+            ->select('')
+            ->setParameter('customer_id', $this->getUser()->getId())
+            ->getQuery()->getResult();
+
+            return compact(
+                'salesDetail'
+            );
+    }
+
+    /**
+     * @Route("/ec/dna_detail", name="dna_ec_detail")
+     * @Template("dna_ec_detail.twig")
+     */
+    public function dna_detail(Request $request)
+    {
         $customer = $this->getUser();
 
         if(!$customer){
@@ -144,10 +175,46 @@ class DnaEcController extends BaseProductController
         }
 
         $breeds = $this->breedsRepository->findAll();
+        $form = $this->createFormBuilder()->getForm();
+        $form->handleRequest($request);
 
-        return [
-            'breeds' => $breeds
-        ];
+        if ($request->isMethod('POST')) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $dnaSalesHeader = new DnaSalesHeader();
+            $dnaSalesHeader->setCustomer($customer);
+            $dnaSalesHeader->setTotalPrice($request->get('total_price'));
+            $dnaSalesHeader->setShippingStatus(0);
+            $dnaSalesHeader->setShippingCity('');
+            $entityManager->persist($dnaSalesHeader);
+            $entityManager->flush();
+
+            $dnaSalesStatus = new DnaSalesStatus();
+            $dnaSalesStatus->setDnaSalesHeader($dnaSalesHeader);
+            $dnaSalesStatus->setPetKind((int)$request->get('pet_kind'));
+            $dnaSalesStatus->setBreedsType($this->breedsRepository->find($request->get('pet_type')));
+            $dnaSalesStatus->setCheckStatus(0);
+
+            $entityManager->persist($dnaSalesStatus);
+            $entityManager->flush();
+
+            foreach ($request->get('status_detail') as $value) {
+                $dnaSalesDetail = new DnaSalesDetail();
+                $dnaSalesDetail->setDnaSalesStatus($dnaSalesStatus);
+                $dnaSalesDetail->setAlmDnaCheckKindsId($value);
+                $dnaSalesDetail->setCheckResult(1);
+                $entityManager->persist($dnaSalesDetail);
+                $entityManager->flush();
+            }
+
+            $entityManager->persist($dnaSalesDetail);
+            $entityManager->flush();
+        }
+
+        return $this->render('dna_ec_detail.twig', [
+            'form' => $form->createView(),
+            'breeds' => $breeds,
+        ]);
     }
 
     /**
