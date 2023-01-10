@@ -87,7 +87,7 @@ class DnaSalesStatus
         return $this->DnaSalesHeader;
     }
 
-    public function setHeaderId(?DnaSalesHeader $DnaSalesHeader): self
+    public function setDnaSalesHeader(?DnaSalesHeader $DnaSalesHeader): self
     {
         $this->DnaSalesHeader = $DnaSalesHeader;
 
