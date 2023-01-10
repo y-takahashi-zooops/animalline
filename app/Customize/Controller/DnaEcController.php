@@ -151,6 +151,26 @@ class DnaEcController extends BaseProductController
     }
 
     /**
+     * @Route("/ec/dna_detail", name="dna_ec_detail")
+     * @Template("dna_ec_detail.twig")
+     */
+    public function dna_detail()
+    {
+        $customer = $this->getUser();
+
+        if(!$customer){
+            $this->setLoginTargetPath('dna_ec_top');
+            return $this->redirectToRoute("mypage_login");
+        }
+
+        $breeds = $this->breedsRepository->findAll();
+
+        return [
+            'breeds' => $breeds
+        ];
+    }
+
+    /**
      * @Route("/ec/dna_buy", name="dna_buy")
      */
     public function dna_buy(Request $request)

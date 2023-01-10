@@ -1,0 +1,22 @@
+.ec-btn--blue {
+    background-color: #1343df;
+    color: white;
+}
+
+table, th, td {
+    border: 1px solid;
+}
+
+th, td {
+    text-align: center;
+    vertical-align: middle;
+    height: 35px;
+}
+
+.ec-dna-sales {
+    display: table;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+}
