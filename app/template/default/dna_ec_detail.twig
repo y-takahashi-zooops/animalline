@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block main %}
-    <main role="main" id="container" style="width:100vw; margin-top: 30px">
+    <main role="main" id="container" style="width:100vw; margin: 30px 0">
         <div id="contents" class="inner">
             <div class="ec-off1Grid">
 				<div class="ec-off1Grid__cell">
@@ -37,20 +37,19 @@
                             </div>
                         </div>
 
-                        <div id="check_kinds">
+                        <div id="check_kinds" class="row mb-3" style="display: flex; justify-content: center;">
                             
                         </div>
 
                         <div class="row mb-3" style="display: flex; justify-content: center; margin-bottom: 50px;" id="price">
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 検査料金（税込）： 0円
                             </div>
-                            <div class="col-md-3"></div>
                         </div>
 
                         <div class="row mb-3" style="display: flex; justify-content: center;">
-                            <button type="submit" id="addDnaSale" class="btn ec-btn--blue" style="margin-right: 30px; width: 150px;">追加</form>
-                            <button type="submit" id="back" class="btn ec-btn--blue" style="width: 150px;">一覧に戻る</form>
+                            <button type="submit" id="addDnaSale" class="btn ec-btn--blue" style="margin-right: 30px; width: 150px;">追加</button>
+                            <button type="submit" id="back" class="btn ec-btn--blue" style="width: 150px;">一覧に戻る</button>
                         </div>
 
                         <input type="hidden" id="order_type" name="order_type" value="normal" />
@@ -146,16 +145,16 @@
 
                 counts = 0;
                 for (let i = 0; i < data_json.length; ++i) {
-                    var addhtml = '<div class="row mb-3">';
-                    addhtml += '<div class="col-md-3">';
+                    var addhtml = '<div class="col-md-3">';
                     addhtml += '<label class="ec-label required" for="conservations_is_organization">検査内容' + (i+1).toString() +'</label>';
                     addhtml += '</div>';
-                    addhtml += '<div class="col-md-8 ec-checkbox">';
+                    addhtml += '<div class="col-md-3 ec-checkbox">';
                     addhtml += '<input type="checkbox" value="1" id="check_kind_' + (i+1).toString() + '" name="scales" checked>　' + data_json[i]["check_kind"];
                     addhtml += '</div>';
                     addhtml += '</div>';
 
                     $("#check_kinds").append(addhtml);
+                    $("#check_kinds").css('margin-bottom', '50px');
 
                     $("#check_kind_"+ (i+1).toString()).click(function() {
                         check_cnt = 0;
@@ -166,7 +165,7 @@
                         }
                         
                         
-                        $("#price").html("検査料金（税込）： " + items[check_cnt]["price"].toString() + "円");
+                        $("#price div").html("検査料金（税込）： " + items[check_cnt]["price"].toString() + "円");
                         $("#product_id").val = items[check_cnt]["product"];
                         $("#ProductClass").val(items[check_cnt]["product_class"]);
                         
@@ -183,7 +182,7 @@
                 
                 $("#product_id").val = items[counts]["product"];
                 $("#ProductClass").val(items[counts]["product_class"]);
-                $("#price").html("検査料金（税込）： " + items[counts]["price"].toString() + "円");
+                $("#price div").html("検査料金（税込）： " + items[counts]["price"].toString() + "円");
                 
                 if(counts == 0){
                     $("#buy_exec").prop('disabled',true)
