@@ -8,53 +8,49 @@
 {% block main %}
     <main role="main" id="container" style="width:100vw">
         <div id="contents" class="inner">
+            <div style="margin:20px;text-align:center">
+			    <h1>有料DNA検査お申込みフォーム</h1>
+
+                <div style="font-size: 20px;margin: 3rem 1rem 3rem 1rem">こちらではワンちゃん・ネコちゃんの遺伝子検査を申し込むことができます。<br />
+                犬種/猫種を選んでいただくと、Animallineで推奨している検査項目が表示されます。<br />
+                ご希望に応じて検査項目は変更ができます。</div>
+            </div>
+
+            <div style="margin:30px;text-align:center">
+                <a href="{{ url('dna_ec_detail') }}" class="btn ec-btn--blue">検査申し込み追加</a>
+            </div>
+
             <div class="ec-off1Grid">
 				<div class="ec-off1Grid__cell">
+
                     <form method="post" action="{{ url('dna_buy') }}" class="h-adr">
-                        <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label class="ec-label required" for="conservations_is_organization">ペット種別</label>
-                                {# <span class="ec-required">必須</span> #}
-                            </div>
-                            <div class="col-md-8 ec-input ec-select">
-                                <select id="pet_type">
-                                    <option value="0">選択してください</option>
-                                    <option value="1">犬</option>
-                                    <option value="2">猫</option>
-                                </select>
-                            </div>
-                        </div>
+                    <table class="ec-dna-sales">
+                        <tr>
+                            <th>犬種/猫種</th>
+                            <th>検査項目数</th>
+                            <th>金額（税込）</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>検査料金合計</td>
+                            <td></td>
+                        </tr>
+                    </table>
 
-                        <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label class="ec-label required" for="conservations_is_organization">犬種／猫種</label>
-                                {# <span class="ec-required">必須</span> #}
-                            </div>
-                            <div class="col-md-8 ec-input ec-select">
-                                <select id="pet_kind">
-                                    <option value="0">選択してください</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div id="check_kinds">
-                            
-                        </div>
-
-                        <div id="price" style="margin-bottom:30px">
-                            検査料金（税込）： 0円
-                        </div>
-
-                        <input type="hidden" id="order_type" name="order_type" value="normal" />
-                        <input type="hidden" id="product_id" name="product_id" value="3065" />
-                        <input type="hidden" id="ProductClass" name="ProductClass" value="2438" />
-                        <input type="hidden" id="normal_quantity" name="normal_quantity" value="1" />
-                        <input type="hidden" id="quantity" name="quantity" value="1" />
-                        <input type="hidden" id="is_repeat" name="is_repeat" />
-                        <input type="hidden" id="repeat_span" name="repeat_span" /><input type="hidden" id="span_unit" name="span_unit" />
-                        <input type="hidden" name="{{ constant('Eccube\\Common\\Constant::TOKEN_NAME') }}" value="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
-                        <button type="submit" id="buy_exec" class="ec-blockBtn--action" name="mode" value="confirm" disabled>購入手続きへ
-                    </form>
+                    <input type="hidden" id="order_type" name="order_type" value="normal" />
+                    <input type="hidden" id="product_id" name="product_id" value="3065" />
+                    <input type="hidden" id="ProductClass" name="ProductClass" value="2438" />
+                    <input type="hidden" id="normal_quantity" name="normal_quantity" value="1" />
+                    <input type="hidden" id="quantity" name="quantity" value="1" />
+                    <input type="hidden" id="is_repeat" name="is_repeat" />
+                    <input type="hidden" id="repeat_span" name="repeat_span" /><input type="hidden" id="span_unit" name="span_unit" />
+                    <input type="hidden" name="{{ constant('Eccube\\Common\\Constant::TOKEN_NAME') }}" value="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
+                    <button type="submit" id="buy_exec" class="ec-blockBtn--action" name="mode" value="confirm" disabled>購入手続きへ</form>
                 </div>
             </div>
         </div><!-- contents -->

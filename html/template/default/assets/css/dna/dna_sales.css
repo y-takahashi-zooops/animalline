@@ -3,8 +3,9 @@
     color: white;
 }
 
-table, th, td {
-    border: 1px solid;
+th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
 }
 
 th, td {
@@ -19,4 +20,9 @@ th, td {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 50px;
+}
+
+.ec-dna-sales tr:last-child td:first-child {
+    border-left-width: 0px;
+    border-bottom-width: 0px;
 }
