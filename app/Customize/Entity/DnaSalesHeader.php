@@ -4,6 +4,7 @@ namespace Customize\Entity;
 
 use Customize\Repository\DnaSalesHeaderRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Eccube\Entity\Customer;
 
 /**
  * @ORM\Table(name="ald_dna_sales_header")
@@ -22,9 +23,10 @@ class DnaSalesHeader
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity=Customer::class)
+     * @ORM\JoinColumn(name="customer_id", nullable=true)
      */
-    private $customer_id;
+    private $Customer;
 
     /**
      * @ORM\Column(type="smallint")
@@ -105,14 +107,14 @@ class DnaSalesHeader
         return $this->id;
     }
 
-    public function getCustomerId(): ?int
+    public function getCustomer(): ?Customer
     {
-        return $this->customer_id;
+        return $this->Customer;
     }
 
-    public function setCustomerId(int $customer_id): self
+    public function setCustomer(?Customer $Customer): self
     {
-        $this->customer_id = $customer_id;
+        $this->Customer = $Customer;
 
         return $this;
     }

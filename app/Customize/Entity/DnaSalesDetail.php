@@ -22,9 +22,10 @@ class DnaSalesDetail
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity=DnaSalesStatus::class, inversedBy="DnaSalesDetail")
+     * @ORM\JoinColumn(name="check_status_id", nullable=false)
      */
-    private $check_status_id;
+    private $DnaSalesStatus;
 
     /**
      * @ORM\Column(type="integer")
@@ -55,14 +56,14 @@ class DnaSalesDetail
         return $this->id;
     }
 
-    public function getCheckStatusId(): ?int
+    public function getDnaSalesStatus(): ?DnaSalesStatus
     {
-        return $this->check_status_id;
+        return $this->DnaSalesStatus;
     }
 
-    public function setCheckStatusId(int $check_status_id): self
+    public function setDnaSalesStatus(?DnaSalesStatus $DnaSalesStatus): self
     {
-        $this->check_status_id = $check_status_id;
+        $this->DnaSalesStatus = $DnaSalesStatus;
 
         return $this;
     }

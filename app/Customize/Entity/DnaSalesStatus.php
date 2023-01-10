@@ -22,9 +22,10 @@ class DnaSalesStatus
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity=DnaSalesHeader::class, inversedBy="DnaSalesStatus")
+     * @ORM\JoinColumn(name="header_id", nullable=false)
      */
-    private $header_id;
+    private $DnaSalesHeader;
 
     /**
      * @ORM\Column(type="integer")
@@ -32,9 +33,10 @@ class DnaSalesStatus
     private $pet_kind;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\Breeds", inversedBy="DnaSalesStatus")
+     * @ORM\JoinColumn(name="breeds_type", nullable=true)
      */
-    private $breeds_type;
+    private $BreedsType;
 
     /**
      * @ORM\Column(type="smallint", options={"default" : 0})
@@ -80,14 +82,14 @@ class DnaSalesStatus
         return $this->id;
     }
 
-    public function getHeaderId(): ?int
+    public function getDnaSalesHeader(): ?DnaSalesHeader
     {
-        return $this->header_id;
+        return $this->DnaSalesHeader;
     }
 
-    public function setHeaderId(int $header_id): self
+    public function setHeaderId(?DnaSalesHeader $DnaSalesHeader): self
     {
-        $this->header_id = $header_id;
+        $this->DnaSalesHeader = $DnaSalesHeader;
 
         return $this;
     }
@@ -104,14 +106,14 @@ class DnaSalesStatus
         return $this;
     }
 
-    public function getBreedsType(): ?int
+    public function getBreedsType(): ?Breeds
     {
-        return $this->breeds_type;
+        return $this->BreedsType;
     }
 
-    public function setBreedsType(int $breeds_type): self
+    public function setBreedsType(?Breeds $BreedsType): self
     {
-        $this->breeds_type = $breeds_type;
+        $this->BreedsType = $BreedsType;
 
         return $this;
     }
