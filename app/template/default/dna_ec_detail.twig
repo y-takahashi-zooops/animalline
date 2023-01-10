@@ -10,18 +10,15 @@
         <div id="contents" class="inner">
             <div class="ec-off1Grid">
 				<div class="ec-off1Grid__cell">
-                    <form method="post" action="{{ url('dna_buy') }}" class="h-adr">
+                    <form method="post" action="{{ url('dna_ec_detail') }}" class="h-adr">
                         <div class="row mb-3" style="display: flex; justify-content: center;">
                             <div class="col-md-3">
                                 <label class="ec-label required" for="conservations_is_organization">ペット種別</label>
                                 {# <span class="ec-required">必須</span> #}
                             </div>
                             <div class="col-md-3 ec-input ec-select">
-                                <select id="pet_type">
-                                    <option value="0">選択してください</option>
-                                    <option value="1">犬</option>
-                                    <option value="2">猫</option>
-                                </select>
+                                {{ form_widget(form.pet_type) }}
+                                {{ form_errors(form.pet_type) }}
                             </div>
                         </div>
 
@@ -31,9 +28,8 @@
                                 {# <span class="ec-required">必須</span> #}
                             </div>
                             <div class="col-md-3 ec-input ec-select">
-                                <select id="pet_kind">
-                                    <option value="0">選択してください</option>
-                                </select>
+                                {{ form_widget(form.pet_kind) }}
+                                {{ form_errors(form.pet_kind) }}
                             </div>
                         </div>
 
@@ -49,8 +45,8 @@
                         </div>
 
                         <div class="row mb-3" style="display: flex; justify-content: center;">
-                            <button type="submit" id="addDnaSale" class="btn ec-btn--blue" style="margin-right: 30px; width: 150px;">追加</form>
-                            <button type="submit" id="back" class="btn ec-btn--blue" style="width: 150px;">一覧に戻る</form>
+                            <button type="submit" id="addDnaSale" class="btn ec-btn--blue" style="margin-right: 30px; width: 150px;">追加</button>
+                            <a href="{{ url('dna_ec_top') }}" id="back" class="btn ec-btn--blue" style="width: 150px;">一覧に戻る</a>
                         </div>
 
                         <input type="hidden" id="order_type" name="order_type" value="normal" />
@@ -72,21 +68,21 @@
 {# フォーム制御 #}
 <script>
     $(document).ready(function(){
-        $("#pet_type").change(function() {
+        $("#dna_sales_pet_type").change(function() {
             $.ajax({
                 type: 'get',
-                url: '/ec/dna/get_pet_type/'+$('#pet_type').val(),
+                url: '/ec/dna/get_pet_type/'+$('#dna_sales_pet_type').val(),
                 dataType: 'json'
             })
             .done(function(data) {
                 var data_stringify = JSON.stringify(data);
                 var data_json = JSON.parse(data_stringify);
 
-                $("#pet_kind").children().remove();
-                $("#pet_kind").append('<option selected value="0" selected>選択してください</option>');
+                $("#dna_sales_pet_kind").children().remove();
+                $("#dna_sales_pet_kind").append('<option selected value="0" selected>選択してください</option>');
 
                 for (let i = 0; i < data_json.length; ++i) {
-                    $("#pet_kind").append('<option value='+data_json[i]["id"]+'">'+data_json[i]["breeds_name"]+'</option>');
+                    $("#dna_sales_pet_kind").append('<option value='+data_json[i]["id"]+'">'+data_json[i]["breeds_name"]+'</option>');
                 }
             })
             .fail(function() {
@@ -94,7 +90,7 @@
             });
         });
 
-        $("#pet_kind").change(function() {
+        $("#dna_sales_pet_kind").change(function() {
             items = {
                 0 : {
                     "product" : 0,
@@ -135,7 +131,7 @@
 
             $.ajax({
                 type: 'get',
-                url: '/ec/dna/get_dna_kinds/'+$('#pet_kind').val(),
+                url: '/ec/dna/get_dna_kinds/'+$('#dna_sales_pet_kind').val(),
                 dataType: 'json'
             })
             .done(function(data) {

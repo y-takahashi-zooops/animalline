@@ -61,21 +61,21 @@
 {# フォーム制御 #}
 <script>
     $(document).ready(function(){
-        $("#pet_type").change(function() {
+        $("#dna_sales_pet_type").change(function() {
             $.ajax({
                 type: 'get',
-                url: '/ec/dna/get_pet_type/'+$('#pet_type').val(),
+                url: '/ec/dna/get_pet_type/'+$('#dna_sales_pet_type').val(),
                 dataType: 'json'
             })
             .done(function(data) {
                 var data_stringify = JSON.stringify(data);
                 var data_json = JSON.parse(data_stringify);
 
-                $("#pet_kind").children().remove();
-                $("#pet_kind").append('<option selected value="0" selected>選択してください</option>');
+                $("#dna_sales_pet_kind").children().remove();
+                $("#dna_sales_pet_kind").append('<option selected value="0" selected>選択してください</option>');
 
                 for (let i = 0; i < data_json.length; ++i) {
-                    $("#pet_kind").append('<option value='+data_json[i]["id"]+'">'+data_json[i]["breeds_name"]+'</option>');
+                    $("#dna_sales_pet_kind").append('<option value='+data_json[i]["id"]+'">'+data_json[i]["breeds_name"]+'</option>');
                 }
             })
             .fail(function() {
@@ -83,7 +83,7 @@
             });
         });
 
-        $("#pet_kind").change(function() {
+        $("#dna_sales_pet_kind").change(function() {
             items = {
                 0 : {
                     "product" : 0,
@@ -124,7 +124,7 @@
 
             $.ajax({
                 type: 'get',
-                url: '/ec/dna/get_dna_kinds/'+$('#pet_kind').val(),
+                url: '/ec/dna/get_dna_kinds/'+$('#dna_sales_pet_kind').val(),
                 dataType: 'json'
             })
             .done(function(data) {

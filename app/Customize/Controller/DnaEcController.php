@@ -30,6 +30,8 @@ use Eccube\Repository\CategoryRepository;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\DnaCheckKindsEcRepository;
 use Customize\Entity\DnaCheckKindsEc;
+use Customize\Form\Type\DnaSalesType;
+use Customize\Repository\DnaSalesHeaderRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Eccube\Controller\ProductController as BaseProductController;
 use Eccube\Service\CartService;
@@ -101,6 +103,11 @@ class DnaEcController extends BaseProductController
      */
     protected $purchaseFlow;
 
+    /**
+     * @var DnaSalesHeaderRepository
+     */
+    protected $dnaSalesHeaderRepository;
+
     public function __construct(
         NewsRepository $NewsRepository,
         ProductRepository $productRepository,
@@ -113,7 +120,8 @@ class DnaEcController extends BaseProductController
         CartService $cartService,
         CartItemRepository $cartItemRepository,
         CartRepository $cartRepository,
-        PurchaseFlow $cartPurchaseFlow
+        PurchaseFlow $cartPurchaseFlow,
+        DnaSalesHeaderRepository $dnaSalesHeaderRepository
     ) {
         $this->NewsRepository = $NewsRepository;
         $this->productListOrderByRepository = $productListOrderByRepository;
@@ -127,6 +135,7 @@ class DnaEcController extends BaseProductController
         $this->cartItemRepository = $cartItemRepository;
         $this->cartRepository = $cartRepository;
         $this->purchaseFlow = $cartPurchaseFlow;
+        $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
     }
 
 
@@ -134,27 +143,41 @@ class DnaEcController extends BaseProductController
      * @Route("/ec/dna", name="dna_ec_top")
      * @Template("dna_ec.twig")
      */
-    public function dna_ec()
+    public function dna_ec(Request $request)
     {
-        $customer = $this->getUser();
+        // $customer = $this->getUser();
 
-        if(!$customer){
-            $this->setLoginTargetPath('dna_ec_top');
-            return $this->redirectToRoute("mypage_login");
-        }
+        // if(!$customer){
+        //     $this->setLoginTargetPath('dna_ec_top');
+        //     return $this->redirectToRoute("mypage_login");
+        // }
 
-        $breeds = $this->breedsRepository->findAll();
+        // $breeds = $this->breedsRepository->findAll();
+        // $form = $this->createForm(DnaSalesType::class);
+        // $form->handleRequest($request);
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     // var_dump(111111111111111111111); die;
+        // }
 
-        return [
-            'breeds' => $breeds
-        ];
+        // return $this->render('dna_ec.twig', [
+        //     'form' => $form->createView(),
+        //     'breeds' => $breeds,
+        // ]);
+
+        $salesHeader = $this->dnaSalesHeaderRepository->createQueryBuilder('d')
+            ->where('d.customer_id = :customer_id',)
+            ->setParameter('customer_id', $this->getUser()->getId())
+            ->getQuery()->getResult();
+        
+        dump($salesHeader); die;
+
     }
 
     /**
      * @Route("/ec/dna_detail", name="dna_ec_detail")
      * @Template("dna_ec_detail.twig")
      */
-    public function dna_detail()
+    public function dna_detail(Request $request)
     {
         $customer = $this->getUser();
 
@@ -164,10 +187,16 @@ class DnaEcController extends BaseProductController
         }
 
         $breeds = $this->breedsRepository->findAll();
+        $form = $this->createForm(DnaSalesType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            var_dump(111111111111111111111); die;
+        }
 
-        return [
-            'breeds' => $breeds
-        ];
+        return $this->render('dna_ec_detail.twig', [
+            'form' => $form->createView(),
+            'breeds' => $breeds,
+        ]);
     }
 
     /**
