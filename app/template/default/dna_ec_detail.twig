@@ -17,8 +17,11 @@
                                 {# <span class="ec-required">必須</span> #}
                             </div>
                             <div class="col-md-3 ec-input ec-select">
-                                {{ form_widget(form.pet_type) }}
-                                {{ form_errors(form.pet_type) }}
+                                <select id="pet_type" name="pet_type">
+                                    <option value="0">選択してください</option>
+                                    <option value="1">犬</option>
+                                    <option value="2">猫</option>
+                                </select>
                             </div>
                         </div>
 
@@ -28,11 +31,13 @@
                                 {# <span class="ec-required">必須</span> #}
                             </div>
                             <div class="col-md-3 ec-input ec-select">
-                                {{ form_widget(form.pet_kind) }}
-                                {{ form_errors(form.pet_kind) }}
+                                <select id="pet_kind" name="pet_kind">
+                                    <option value="0">選択してください</option>
+                                </select>
                             </div>
                         </div>
 
+                        <input type="hidden" id="checked-box" name="checked-box" />
                         <div id="check_kinds" class="row mb-3" style="display: flex; justify-content: center;">
                             
                         </div>
@@ -45,7 +50,7 @@
 
                         <div class="row mb-3" style="display: flex; justify-content: center;">
                             <button type="submit" id="addDnaSale" class="btn ec-btn--blue" style="margin-right: 30px; width: 150px;">追加</button>
-                            <a href="{{ url('dna_ec_top') }}" id="back" class="btn ec-btn--blue" style="width: 150px;">一覧に戻る</a>
+                            <button type="submit" id="back" class="btn ec-btn--blue" style="width: 150px;">一覧に戻る</button>
                         </div>
 
                         <input type="hidden" id="order_type" name="order_type" value="normal" />
@@ -67,21 +72,21 @@
 {# フォーム制御 #}
 <script>
     $(document).ready(function(){
-        $("#dna_sales_pet_type").change(function() {
+        $("#pet_type").change(function() {
             $.ajax({
                 type: 'get',
-                url: '/ec/dna/get_pet_type/'+$('#dna_sales_pet_type').val(),
+                url: '/ec/dna/get_pet_type/'+$('#pet_type').val(),
                 dataType: 'json'
             })
             .done(function(data) {
                 var data_stringify = JSON.stringify(data);
                 var data_json = JSON.parse(data_stringify);
 
-                $("#dna_sales_pet_kind").children().remove();
-                $("#dna_sales_pet_kind").append('<option selected value="0" selected>選択してください</option>');
+                $("#pet_kind").children().remove();
+                $("#pet_kind").append('<option selected value="0" selected>選択してください</option>');
 
                 for (let i = 0; i < data_json.length; ++i) {
-                    $("#dna_sales_pet_kind").append('<option value='+data_json[i]["id"]+'">'+data_json[i]["breeds_name"]+'</option>');
+                    $("#pet_kind").append('<option value='+data_json[i]["id"]+'">'+data_json[i]["breeds_name"]+'</option>');
                 }
             })
             .fail(function() {
@@ -89,7 +94,7 @@
             });
         });
 
-        $("#dna_sales_pet_kind").change(function() {
+        $("#pet_kind").change(function() {
             items = {
                 0 : {
                     "product" : 0,
@@ -130,12 +135,14 @@
 
             $.ajax({
                 type: 'get',
-                url: '/ec/dna/get_dna_kinds/'+$('#dna_sales_pet_kind').val(),
+                url: '/ec/dna/get_dna_kinds/'+$('#pet_kind').val(),
                 dataType: 'json'
             })
             .done(function(data) {
                 var data_stringify = JSON.stringify(data);
                 var data_json = JSON.parse(data_stringify);
+
+                console.log(data_json);
 
                 $("#check_kinds").html("");
 
@@ -145,7 +152,7 @@
                     addhtml += '<label class="ec-label required" for="conservations_is_organization">検査内容' + (i+1).toString() +'</label>';
                     addhtml += '</div>';
                     addhtml += '<div class="col-md-3 ec-checkbox">';
-                    addhtml += '<input type="checkbox" value="1" id="check_kind_' + (i+1).toString() + '" name="scales" checked>　' + data_json[i]["check_kind"];
+                    addhtml += '<input type="checkbox" value="' + data_json[i]["id"] + '" id="check_kind_' + (i+1).toString() + '" name="scales-' + (i+1).toString() + '" checked>　' + data_json[i]["check_kind"];
                     addhtml += '</div>';
                     addhtml += '</div>';
 
@@ -192,6 +199,13 @@
                 alert("取得失敗");
             });
         });
+
+        var selected = [];
+        $('#checkboxes input:checked').each(function() {
+            selected.push($(this).attr('name'));
+        });
+
+        $('#checked-box').val(selected);
     });
 </script>
 

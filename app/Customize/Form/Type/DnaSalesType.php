@@ -36,14 +36,6 @@ class DnaSalesType extends AbstractType
                 'constraints' => [
                     new Assert\NotBlank()
                 ]
-            ])
-            ->add('pet_kind', ChoiceType::class, [
-                'choices' => [],
-                'required' => true,
-                'placeholder' => 'common.select',
-                'constraints' => [
-                    new Assert\NotBlank()
-                ]
             ]);
     }
 

@@ -30,6 +30,7 @@ use Eccube\Repository\CategoryRepository;
 use Customize\Repository\BreedsRepository;
 use Customize\Repository\DnaCheckKindsEcRepository;
 use Customize\Entity\DnaCheckKindsEc;
+use Customize\Entity\DnaSalesDetail;
 use Customize\Form\Type\DnaSalesType;
 use Customize\Repository\DnaSalesHeaderRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -187,10 +188,22 @@ class DnaEcController extends BaseProductController
         }
 
         $breeds = $this->breedsRepository->findAll();
-        $form = $this->createForm(DnaSalesType::class);
+        $form = $this->createFormBuilder()->getForm();
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            var_dump(111111111111111111111); die;
+        if ($request->isMethod('POST')) {
+            // $entityManager = $this->getDoctrine()->getManager();
+
+            // $dnaSalesDetail = new DnaSalesDetail();
+            // $i = 1;
+            // while (!empty($request->get('scales-' . $i))) {
+            //     $dnaSalesDetail->setCheckStatusId(1);
+            //     $dnaSalesDetail->setAlmDnaCheckKindsId(intval($request->get('scales-' . $i)));
+            //     $dnaSalesDetail->setCheckResult($request->get('checkResult'));
+            //     $i ++;
+            // }
+
+            // $entityManager->persist($dnaSalesDetail);
+            // $entityManager->flush();
         }
 
         return $this->render('dna_ec_detail.twig', [
