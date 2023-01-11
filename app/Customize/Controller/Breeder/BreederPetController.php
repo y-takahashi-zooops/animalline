@@ -245,11 +245,16 @@ class BreederPetController extends AbstractController
 
         $thumbnail_path = $request->get('thumbnail_path') ?? '';
 
+        $is_upload_error = false;
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $is_upload_error = true;
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             
             //受信ファイル処理
             $brochureFile = $form->get('movie_file')->getData();
-                        
+
             if($brochureFile){
                 $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $newFilename = 'pmovie-'.uniqid().'.'.$brochureFile->guessExtension();
@@ -265,7 +270,11 @@ class BreederPetController extends AbstractController
             }
         }
 
-        return ['pet' => $pet,'form' => $form->createView()];
+        return [
+            'pet' => $pet,
+            'form' => $form->createView(),
+            'is_upload_error' => $is_upload_error
+        ];
     }
 
     /**
