@@ -31,7 +31,7 @@ use Customize\Form\Type\Front\ContactType;
 use Customize\Service\MailService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
-
+use DateTime;
 
 class BreederController extends AbstractController
 {
@@ -278,6 +278,11 @@ class BreederController extends AbstractController
         //犬種
         $breeds_dog = $this->breederQueryService->getBreedsHavePet(1);
 
+        //今日の日付
+        $today = new DateTime();
+
+        $pets_count_inspection = count($this->breederPetsRepository->findBy(["is_active" => 1, "dna_check_result" => 1]));
+
         return $this->render('animalline/breeder/index.twig', [
             'title' => 'ペット検索',
             'petKind' => $petKind,
@@ -298,7 +303,9 @@ class BreederController extends AbstractController
             'pref_ids_cat_breeder' => $pref_ids_cat_breeder,
             'pref_name_cat_breeder' => $pref_name_cat_breeder,
             'pref_ids_dog_breeder' => $pref_ids_dog_breeder,
-            'pref_name_dog_breeder' => $pref_name_dog_breeder
+            'pref_name_dog_breeder' => $pref_name_dog_breeder,
+            'today' => $today,
+            'pets_count_inspection' => $pets_count_inspection
         ],$response);
     }
 

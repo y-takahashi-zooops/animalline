@@ -41,13 +41,20 @@
         </div>
       </section>
 
-      <section class="mizuki_search hidden-phone">
+      <section class="mizuki_banner hidden-phone">
         <a href="#cashback"><img src="{{ '/html/template/default/assets/img/bn_cashback.png' }}" alt="キャッシュバックキャンペーン" style="padding: 0 8rem" /></a>
       </section>
-      <section class="mizuki_search visible-phone">
+      <section class="mizuki_banner visible-phone">
         <a href="#cashback"><img src="{{ '/html/template/default/assets/img/bn_cashback.png' }}" alt="キャッシュバックキャンペーン" style="padding: 0 2rem" /></a>
       </section>
 
+      <section class="dna-count-frame">
+        <div class="dna-count-frame-box">
+          {{ today | date('Y年m月d日')  }}時点<br />
+          検査済み頭数： {{ pets_count_inspection | number_format  }}頭
+        </div>
+      </section>
+      
       <section class="mizuki_search">
         <div class="mizuki_search-dogs">
           <div class="mizuki_search-dogs_title">
@@ -250,6 +257,7 @@
                     <button class="mizuki_search-button_confirm-submit">表示する</button>
                   </div>
                 </div>
+                <input type="hidden" name="pet_kind" value="1" />
               </form>
             </div>
           </div>
@@ -956,6 +964,7 @@
                     </button>
                   </div>
                 </div>
+                <input type="hidden" name="pet_kind" value="2" />
               </form>
             </div>
           </div>

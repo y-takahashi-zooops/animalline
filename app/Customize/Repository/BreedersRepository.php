@@ -3,6 +3,7 @@
 namespace Customize\Repository;
 
 use Customize\Entity\Breeders;
+use Customize\Repository\BreederPetsRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Eccube\Util\StringUtil;
@@ -15,8 +16,12 @@ use Eccube\Util\StringUtil;
  */
 class BreedersRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    protected $breederPetsRepository;
+
+    public function __construct(ManagerRegistry $registry,BreederPetsRepository $breederPetsRepository)
     {
+        $this->breederPetsRepository = $breederPetsRepository;
+        
         parent::__construct($registry, Breeders::class);
     }
 
@@ -67,5 +72,14 @@ class BreedersRepository extends ServiceEntityRepository
         return $qb->orderBy('b.' . $order['field'], $order['direction'])
             ->getQuery()
             ->getResult();
+    }
+
+    public function getBreederHeaderInfo(){
+        $breeders = $this->findBy(["is_active" => 1]);
+        $dogs = $this->breederPetsRepository->findBy(["pet_kind" => 1, "is_active" => 1]);
+        $cats = $this->breederPetsRepository->findBy(["pet_kind" => 2, "is_active" => 1]);
+
+        $top_info = ["dogs" => count($dogs),"cats" => count($cats),"breeders" => count($breeders)];
+        return $top_info;
     }
 }

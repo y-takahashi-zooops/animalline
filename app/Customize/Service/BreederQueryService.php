@@ -205,12 +205,14 @@ class BreederQueryService
             }
         }
 
+        /*
         if ($request->get('pet_new')) {
             $query->andWhere('p.release_date <= :to')
                 ->andWhere('p.release_date >= :from')
                 ->setParameter(':to', $date_now)
                 ->setParameter(':from', $time_new);
         }
+        */
 
         $query->orderBy('p.is_delete', 'asc')
             ->addOrderBy('p.is_contract', 'asc')
@@ -429,7 +431,7 @@ class BreederQueryService
             ->andWhere('b.handling_pet_kind in (:pk)')
             ->select("distinct p.name,p.id")
             ->orderBy('p.id', 'asc')
-            ->setParameter('pk', array($pet_kind -1,3));
+            ->setParameter('pk', array($pet_kind,0));
             
         return $query->getQuery()->getResult();
     }

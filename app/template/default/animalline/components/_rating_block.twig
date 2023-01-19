@@ -2,6 +2,9 @@
 
 <div class="m-1 p-1"></div>
 
+{% if point == 0 %}
+<h6>評価なし</h6>
+{% else %}
 <!-- 1 star  -->
 <i class="{{ point == 0 ? 'far fa-star' : (point  > 0 and  point  < 1) ? 'fas fa-star-half-alt' : 'fas fa-star' }}"></i>
 <!-- 2 star  -->
@@ -18,6 +21,7 @@
 <h6 class="number-rating">
     {{ point }}
 </h6>
+{% endif %}
 
 <style>
     .fas.fa-star, .far.fa-star, .fa-star-half-alt {

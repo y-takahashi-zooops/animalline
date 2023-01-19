@@ -154,7 +154,11 @@ a {
 }
 
 .mizuki_search {
-  padding-top: 8rem;
+  padding-top: 2rem;
+}
+
+.mizuki_banner {
+  padding-top: 6rem;
 }
 
 .mizuki_search-dogs,

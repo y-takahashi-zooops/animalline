@@ -118,7 +118,7 @@
                                         性別
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        <a href="{{ path('breeder_pet_search_result', { 'gender': breederPet.petSex }) }}">
+                                        <a href="{{ path('breeder_pet_search_result', { 'gender': breederPet.petSex,'breed_type': breederPet.breedsType.id }) }}">
                                             {{ breederPet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}
                                         </a>
                                     </div>
@@ -131,7 +131,7 @@
                                         見学地域
                                     </div>
                                     <div class="col-12 col-md-8 contents_col_normal">
-                                        <a href="{{ path('breeder_pet_search_result', { 'region': breederHouse.breederHousePrefId.id }) }}">
+                                        <a href="{{ path('breeder_pet_search_result', { 'region': breederHouse.breederHousePrefId.id,'breed_type': breederPet.breedsType.id }) }}">
                                             {{ breederHouse.breederHousePref ~ ' ' }}
                                         </a>
                                         {{ breederHouse.breederHouseCity ?? '' }}

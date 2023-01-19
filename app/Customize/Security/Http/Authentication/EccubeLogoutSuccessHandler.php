@@ -12,6 +12,13 @@ class EccubeLogoutSuccessHandler implements LogoutSuccessHandlerInterface
     {
         $referer = $request->headers->get('referer');
 
+        if(preg_match("/breeder/",$referer)){
+            $referer = "/breeder";
+        }
+        else if(preg_match("/adoption/",$referer)){
+            $referer = "/adoption";
+        }
+        
         return new RedirectResponse($referer);
     }
 }

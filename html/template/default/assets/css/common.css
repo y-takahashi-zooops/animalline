@@ -122,12 +122,12 @@ header .header-count .header-count__dogs{
   margin:0 15px 0 0;
 }
 header .header-count .header-count__dogs span{
-  background:url(../img/icon-dog.png) no-repeat center left /17px auto;
-  padding:0 0 0 22px;
+  #background:url(../img/icon-dog.png) no-repeat center left /17px auto;
+  padding:0 0 0 5px;
 }
 header .header-count .header-count__breeders span{
-  background:url(../img/icon-bone.png) no-repeat center left /16px auto;
-  padding:0 0 0 20px;
+  #background:url(../img/icon-bone.png) no-repeat center left /16px auto;
+  padding:0 0 0 5px;
 }
 header .header-right ul{
   display:flex;
@@ -364,10 +364,10 @@ SIDE MENU
   margin:0 0 10px;
 }
 #side-menu .side-menu__count .header-count__dogs span{
-  background:url(../img/icon-dog.png) no-repeat center left /17px auto;
+  #background:url(../img/icon-dog.png) no-repeat center left /17px auto;
 }
 #side-menu .side-menu__count .header-count__breeders span{
-  background:url(../img/icon-bone.png) no-repeat center left /16px auto;
+  #background:url(../img/icon-bone.png) no-repeat center left /16px auto;
 }
 #side-menu .side-menu__list ul{
   margin:0;
@@ -465,6 +465,21 @@ SIDE MENU
 }
 .rss-feed ul li.parent ul li{
   font-size:16px;
+}
+
+.dna-count-frame {
+  text-align: center;
+}
+
+.dna-count-frame-box {
+  margin: 1rem auto;
+  width: 300px;
+  border: thin solid black;
+}
+
+.breeder_section_detail a {
+  color: #1e2c76;
+  text-decoration:underline;
 }
 
 /*------------------

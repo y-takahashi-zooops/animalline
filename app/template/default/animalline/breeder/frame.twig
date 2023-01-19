@@ -2,6 +2,7 @@
 {% set maintitle = maintitle|default('') %}
 {% set breadcrumb = breadcrumb|default('') %}
 {% set description_add = description_add|default('') %}
+{% set header_cnt = repository('Customize\\Entity\\Breeders').getBreederHeaderInfo() %}
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -72,20 +73,24 @@
                     </a>
                 </div>
 
-                <!--
                 <div class="header-count">
                     <div class="header-count__dogs">
                         <span>子犬掲載数</span>
                         <strong>
-                            <i>2,652</i>頭
+                            <i>{{ header_cnt.dogs | number_format  }}</i>頭
+                        </strong>
+                    </div>
+                    <div class="header-count__dogs">
+                        <span>子猫掲載数</span>
+                        <strong>
+                            <i>{{ header_cnt.cats | number_format  }}</i>頭
                         </strong>
                     </div>
                     <div class="header-count__breeders">
                         <span>ブリーダー数</span>
-                        <strong><i>2,562</i>人</strong>
+                        <strong><i>{{ header_cnt.breeders | number_format }}</i>件</strong>
                     </div>
                 </div>
-                -->
             </div>
             
             <div class="header-right">
@@ -252,12 +257,11 @@
         </footer>
     
         <div id="side-menu">
-            {#
             <div class="side-menu__count">
-                <div class="header-count__dogs"><span>子犬掲載数</span><strong><i>2,652</i>頭</strong></div>
-                <div class="header-count__breeders"><span>ブリーダー数</span><strong><i>2,562</i>人</strong></div>
+                <div class="header-count__dogs"><span>子犬掲載数</span><strong><i>{{ header_cnt.dogs | number_format  }}</i>頭</strong></div>
+                <div class="header-count__dogs"><span>子猫掲載数</span><strong><i>{{ header_cnt.cats | number_format  }}</i>頭</strong></div>
+                <div class="header-count__breeders"><span>ブリーダー数</span><strong><i>{{ header_cnt.breeders | number_format  }}</i>件</strong></div>
             </div>
-            #}
             <div class="side-menu__list">
                 <ul>
                     <li class="logout">
