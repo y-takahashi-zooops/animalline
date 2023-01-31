@@ -55,6 +55,12 @@
 			$('.mail_template').show();
 			$('.mail_title').html(data.template_name);
 			$('.mail-detail').html(data.template_detail);
+            if(!data.template_attach){
+                $('#mail-attach').html("なし");
+            }
+            else{
+                $('#mail-attach').html('<a href="/aniconfig/zooops_sendmail/attach/'+data.template_attach+'" target="_blank">'+data.template_attach+'</a>');
+            }
 		}).fail(function () { // エラー時
 			alert('テンプレートデータの取得に失敗しました。');
 		});
@@ -429,6 +435,7 @@
                             {{ include('@admin/mail_template_sm.twig') }}
                         </div>
                     </div>
+                    添付ファイル：<div id="mail-attach"></div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-ec-sub previewDiaClose" data-dismiss="modal">

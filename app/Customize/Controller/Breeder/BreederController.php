@@ -305,7 +305,8 @@ class BreederController extends AbstractController
             'pref_ids_dog_breeder' => $pref_ids_dog_breeder,
             'pref_name_dog_breeder' => $pref_name_dog_breeder,
             'today' => $today,
-            'pets_count_inspection' => $pets_count_inspection
+            'pets_count_inspection' => $pets_count_inspection,
+            'search_box_mode' => 9,
         ],$response);
     }
 

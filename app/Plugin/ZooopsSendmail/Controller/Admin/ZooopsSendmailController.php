@@ -262,6 +262,7 @@ class ZooopsSendmailController extends AbstractController
         return $this->json([
             'template_name' => $template_name,
             'template_detail' => $template_detail,
+            'template_attach' => $template->getTemplateAttach(),
         ]);
     }
 
@@ -293,5 +294,17 @@ class ZooopsSendmailController extends AbstractController
 
         // 戻り値なし
         return $this->json([]);
+    }
+
+    /** 添付ファイルダウンロード
+     * @Route("/%eccube_admin_route%/zooops_sendmail/attach/{filename}", name="admin_zooops_sendmail_attach")
+     */
+    public function attach_download(Request $request,$filename)
+    {
+        $path = "var/tmp/mail/".$filename;
+
+        header('Content-Type: application/force-download');
+        header('Content-Length: '.filesize($path));
+        readfile($path);
     }
 }

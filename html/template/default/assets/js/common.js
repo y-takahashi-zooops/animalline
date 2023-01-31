@@ -80,6 +80,20 @@ $(window).on("scroll", function() {
   }
 });
 
+$('#side-dog-type-list-toggle').on('click', function() {
+  $('#side-dog-type-list').show();
+});
+$('#side-dog-list-toggle').on('click', function() {
+  $('#side-dog-list').show();
+});
+
+$('#side-cat-type-list-toggle').on('click', function() {
+  $('#side-cat-type-list').show();
+});
+$('#side-cat-list-toggle').on('click', function() {
+  $('#side-cat-list').show();
+});
+
 /*-----------------------------
 　スマホメニュー
 -----------------------------*/

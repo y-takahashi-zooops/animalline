@@ -49,7 +49,7 @@
                     <li><a href="{{ url('breeder_change') }}"><i class="bi bi-pencil-fill"></i>会員情報編集<br /><p>メールアドレス・パスワード変更の方はこちら</p></a></li>
                     
                     {% if user.is_breeder == 1 %}
-                        <li><a href="{{url('breeder_baseinfo',{'return_path': "breeder_mypage"})}}"><i class="bi bi-pencil-fill"></i>基本情報編集<br /><p>　</p></a></li>
+                        <li><a href="{{url('breeder_baseinfo',{'return_path': "breeder_mypage"})}}"><i class="bi bi-pencil-fill"></i>基本情報編集<br /><p>生体保証内容・引き渡し方法等のテンプレート登録はこちら</p></a></li>
                         {% if breeder.getHandlingPetKind() == 0 or breeder.getHandlingPetKind() == 1 %}
                             <li><a href="{{path('breeder_house_info',{'pet_type': 1 ,'return_path': "breeder_mypage"})}}"><i class="bi bi-pencil-fill"></i>犬舎情報編集<br /><p>　</p></a></li>
                         {% endif %}

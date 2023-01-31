@@ -3,19 +3,30 @@
 {% set band_color = {1:"赤", 2:"青", 3:"緑", 4:"黄色", 5:"ピンク", 6:"オレンジ"} %}
 
 {% block main %}
+    {% include 'animalline/breeder/searchbox.twig' %}
     <section id="breeder-column" class="breeder-column_dog">
         <div class="inner">
             <div class="breeder-column-row">
                 <div class="breeder-column__main">
                     {% if breederPet.isContract or breederPet.isDelete %}
                         <div class="comment-box--sblue">
+                            {% if breederPet.getPetKind() == 1 %}
                             こちらのワンちゃんは成約済のためお問い合わせできません。
+                            {% else %}
+                            こちらのネコちゃんは成約済のためお問い合わせできません。
+                            {% endif %}
                             <p class="mt-4">{{ breederPet.breeder.breederName }}ブリーダーに未掲載の子や、次回の出産予定を聞きたいなどお問い合わせをしたい方はこちら</p>
                         </div>
                         <div class="btn btn-breeder__inquiries">
                             <a href="{{ url('breeder_nopet_contact', {'breeder_id': breederPet.Breeder.id}) }}">{{ breederPet.breeder.breederName }}ブリーダーへのお問い合わせ</a>
                         </div>
                     {% endif %}
+                    <!-- ソーシャルボタン -->
+                    <div class="fb-like" data-href="{{ app.request.getUri }}" data-width="" data-layout="button_count" data-action="like" data-size="small" data-share="true"></div>
+                    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    <div class="line-it-button" data-lang="ja" data-type="like" data-env="REAL" data-url="{{ app.request.getUri }}"  style="display: none;"></div>
+                    <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
+                    <!-- ソーシャルボタン -->
                     <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
                         <div class="breeder-column__main_section_title">
                             <h2 class="float-left mb-3">
@@ -551,9 +562,13 @@
             </div>
         </div>
     </section>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v15.0" nonce="WF3XFjCe"></script>
 {% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?var=20230120">
 {% endblock %}
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -585,5 +600,6 @@
             alert('お気に入り機能を利用するにはログインが必要です')
         }
     });
+    <script src="{{ asset('assets/js-mizuki/common.js') }}?var=20230120"></script>
 </script>
 {% endblock %}

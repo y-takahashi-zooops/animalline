@@ -142,6 +142,42 @@ class BreederSearchController extends AbstractController
             array('url' => "#",'title' => $maintitle)
         );
 
+        //犬の都道府県
+        $prefs_dog = $this->breederQueryService->getActivePrefs(1);
+        $pref_ids_dog = [];
+        foreach ($prefs_dog as $pref) {
+            $pref_ids_dog[] = $pref["id"];
+            $pref_name_dog[$pref["id"]] = $pref["name"];
+        }
+
+        $prefs_dog_breeder = $this->breederQueryService->getBreederPrefs(1);
+        $pref_ids_dog_breeder = [];
+        foreach ($prefs_dog_breeder as $pref) {
+            $pref_ids_dog_breeder[] = $pref["id"];
+            $pref_name_dog_breeder[$pref["id"]] = $pref["name"];
+        }
+
+        //猫の都道府県
+        $prefs_cat = $this->breederQueryService->getActivePrefs(2);
+        $pref_ids_cat = [];
+        foreach ($prefs_cat as $pref) {
+            $pref_ids_cat[] = $pref["id"];
+            $pref_name_cat[$pref["id"]] = $pref["name"];
+        }
+        
+        $prefs_cat_breeder = $this->breederQueryService->getBreederPrefs(2);
+        $pref_ids_cat_breeder = [];
+        foreach ($prefs_cat_breeder as $pref) {
+            $pref_ids_cat_breeder[] = $pref["id"];
+            $pref_name_cat_breeder[$pref["id"]] = $pref["name"];
+        }
+
+        //猫種
+        $breeds_cat = $this->breederQueryService->getBreedsHavePet(2);
+
+        //犬種
+        $breeds_dog = $this->breederQueryService->getBreedsHavePet(1);
+
         return $this->render('animalline/breeder/pet/search_result.twig', [
             'pets' => $pets,
             'petKind' => $petKind,
@@ -152,7 +188,18 @@ class BreederSearchController extends AbstractController
             'title' => $title,
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
-            "description_add" => $breredname
+            "description_add" => $breredname,
+            'pref_name_dog' => $pref_name_dog,
+            'pref_ids_dog' => $pref_ids_dog,
+            'pref_name_cat' => $pref_name_cat,
+            'pref_ids_cat' => $pref_ids_cat,
+            'breeds_cat' => $breeds_cat,
+            'breeds_dog' => $breeds_dog,
+            'pref_ids_cat_breeder' => $pref_ids_cat_breeder,
+            'pref_name_cat_breeder' => $pref_name_cat_breeder,
+            'pref_ids_dog_breeder' => $pref_ids_dog_breeder,
+            'pref_name_dog_breeder' => $pref_name_dog_breeder,
+            'search_box_mode' => $petKind,
         ]);
     }
 

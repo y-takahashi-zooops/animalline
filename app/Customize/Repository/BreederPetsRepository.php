@@ -170,13 +170,22 @@ class BreederPetsRepository extends ServiceEntityRepository
                 ->andWhere("bp.update_date <= '$end_datetime'");
         }
 
+        return $qb->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
+            ->leftJoin('Customize\Entity\Breeders', 'bd', 'WITH', 'bd.id = bp.Breeder')
+            ->select('bp', 'b.breeds_name', 'bd.breeder_name','bd.id')
+            ->orderBy('bp.' . $order['field'], $order['direction'])
+            ->getQuery()
+            ->getScalarResult();
+
+        /*
         return $qb->leftJoin('Customize\Entity\DnaCheckStatus', 'dna', 'WITH', 'bp.id = dna.pet_id')
-            ->andWhere($qb->expr()->notIn('bp.id', $status))
+            //->andWhere($qb->expr()->notIn('bp.id', $status))
             ->leftJoin('Customize\Entity\Breeds', 'b', 'WITH', 'bp.BreedsType = b.id')
             ->leftJoin('Customize\Entity\Breeders', 'bd', 'WITH', 'bd.id = bp.Breeder')
             ->select('bp', 'dna', 'b.breeds_name', 'bd.breeder_name','bd.id')
             ->orderBy('bp.' . $order['field'], $order['direction'])
             ->getQuery()
             ->getScalarResult();
+        */
     }
 }

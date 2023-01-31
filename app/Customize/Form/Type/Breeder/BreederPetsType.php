@@ -254,7 +254,7 @@ class BreederPetsType extends AbstractType
                 ]
             ])
             ->add('price_no_display', CheckboxType::class, [
-                'label' => 'サイト上に金額を標示しない',
+                'label' => 'サイト上に金額を表示しない',
                 'required' => false,
             ])
             ->add('vaccineDetailErrors', TextType::class, [

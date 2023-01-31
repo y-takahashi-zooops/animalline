@@ -1,0 +1,929 @@
+      <section class="mizuki_search">
+        {% if search_box_mode == 1 or search_box_mode == 9 %}
+        <div class="mizuki_search-dogs">
+          <div class="mizuki_search-dogs_title">
+            <div class="mizuki_search-dogs_title-decoration">
+              <img src="{{ '/html/template/default/assets/img-mizuki/search-dog.png' }}" alt="犬のイラスト" />
+            </div>
+            <h3><a href="{{ url('breeder_pet_search_result', {'pet_kind': 1, 'pet_new': 1}) }}">ワンちゃんを探す</a></h3>
+          </div>
+          <div class="mizuki_search-button mizuki_search-dogs-button">
+            <ul class="mizuki_search-dogs-button_list">
+              
+              <li class="mizuki_search-button_list-item mizuki_search-dogs-button_list-item">
+                <a class="mizuki_search-dogs-button_breed" href="#mizuki_modal-breed-dogs">
+                  犬種からさがす
+                </a>
+              </li>
+              <li class="mizuki_search-button_list-item mizuki_search-dogs-button_list-item">
+                <a class="mizuki_search-dogs-button_area" href="#mizuki_modal-area-dogs">
+                  地域からさがす
+                </a>
+              </li>
+              <li class="mizuki_search-button_list-item mizuki_search-dogs-button_list-item">
+                <a class="mizuki_search-dogs-button_bleeder" href="#mizuki_modal-bleeder_dogs">
+                  ブリーダーをさがす
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {% endif %}
+        {% if search_box_mode == 2 or search_box_mode == 9 %}
+        <div class="mizuki_search-cats">
+          <div class="mizuki_search-cats_title">
+            <div class="mizuki_search-cats_title-decoration">
+              <img src="{{ '/html/template/default/assets/img-mizuki/search-cat.png' }}" alt="猫のイラスト" />
+            </div>
+            <h3><a href="{{ url('breeder_pet_search_result', {'pet_kind': 2, 'pet_new': 1}) }}">ネコちゃんを探す</a></h3>
+          </div>
+          <div class="mizuki_search-button mizuki_search-cats-button">
+            <ul class="mizuki_search-cats-button_list">
+              
+              <li class="mizuki_search-button_list-item mizuki_search-cats-button_list-item">
+                <a class="mizuki_search-cats-button_breed" href="#mizuki_modal-breed-cats">
+                  猫種からさがす
+                </a>
+              </li>
+              <li class="mizuki_search-button_list-item mizuki_search-cats-button_list-item">
+                <a class="mizuki_search-cats-button_area" data-target="#mizuki_modal-area-cats">
+                  地域からさがす
+                </a>
+              </li>
+              <li class="mizuki_search-button_list-item mizuki_search-cats-button_list-item">
+                <a class="mizuki_search-cats-button_bleeder" href="#mizuki_modal-bleeder-cats">
+                  ブリーダーをさがす
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {% endif %}
+        <div style="text-align:center" class="search-box-text">
+          <script async src="https://cse.google.com/cse.js?cx=263af2c471e974783">
+          </script>
+          <div class="gcse-search"></div>
+          {#
+          <form id="text-search" action="{{ url('breeder_pet_search_result') }}" method="post" class="search_container">
+            <input type="search-text"></input>
+            <input type="submit" value="検索">
+          </form>
+          #}
+        </div>
+      </section>
+
+      <section class="mizuki_modal">
+        <div id="mizuki_modal-bleeder_dogs" class="mizuki_modal-bg">
+          <div class="mizuki_modal-outer mizuki_modal-outer-dogs mizuki_modal-bleeder_dogs">
+            <div class="mizuki_modal-bleeder_dogs_title mizuki_modal_title mizuki_modal_title-dogs">
+              <div class="mizuki_modal-bleeder_dogs_title-decoration mizuki_modal_title-decoration mizuki_modal_title-decoration-dogs">
+                <img src="{{ '/html/template/default/assets/img-mizuki/search-dog.png' }}" alt="犬のイラスト" />
+              </div>
+              <h3>ワンちゃんを探す</h3>
+              <button type="button" class="modaal-close mizuki_modal-close" id="modaal-close" aria-label="Close (Press escape to close)">
+                <span></span><span></span>
+              </button>
+            </div>
+            <div class="mizuki_modal-container">
+              <h4>ワンちゃんのブリーダーを探す</h4>
+              <form action="{{ url('breeder_search') }}" class="mizuki_modal-form mizuki_modal-form-dogs" method="GET">
+                <div class="flex">
+                  <div class="flex-column mizuki_modal-form_l">
+                    <h5>見学したい地域を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="breed-area-check-all" value="1" type="checkbox" />全都道府県</div>
+                    <div class="flex">
+                      <ul class="mizuki_modal-form_area mizuki_modal-form_area-dogs flex">
+                        <li class="mizuki_modal-form_area-hokkaidou-touhoku">
+                          <ul>
+                            <h6>北海道・東北</h6>
+                            {% for i in 1..7 %}
+                              {% if i in pref_ids_dog_breeder %}
+                              <li>
+                                <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kantou-koushinetsu">
+                          <ul>
+                            <h6>関東・甲信越</h6>
+                            {% for i in 8..15 %}
+                              {% if i in pref_ids_dog_breeder %}
+                              <li>
+                                <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-tyubu-hokuriku">
+                          <ul>
+                            <h6>中部・北陸</h6>
+                            {% for i in 16..23 %}
+                              {% if i in pref_ids_dog_breeder %}
+                              <li>
+                                <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kinki">
+                          <ul>
+                            <h6>近畿</h6>
+                            {% for i in 24..30 %}
+                              {% if i in pref_ids_dog_breeder %}
+                              <li>
+                                <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-chugoku-shikoku">
+                          <ul>
+                            <h6>中国・四国</h6>
+                            {% for i in 31..39 %}
+                              {% if i in pref_ids_dog_breeder %}
+                              <li>
+                                <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kyushu-okinawa">
+                          <ul>
+                            <h6>九州・沖縄</h6>
+                            {% for i in 40..47 %}
+                              {% if i in pref_ids_dog_breeder %}
+                              <li>
+                                <input id="breed-area-dog-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="breed-area-dog-{{ i }}">{{ pref_name_dog_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="separate-line visible-phone">
+                    <img
+                      class="down-arrow down-arrow-sp"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow-sp.png' }}"
+                      alt="下矢印"
+                    />
+                  </div>
+                  <div class="separate-line hidden-phone">
+                    <img
+                      class="down-arrow down-arrow-pc"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow.png' }}"
+                      alt="横矢印"
+                    />
+                  </div>
+                  <div class="flex-column mizuki_modal-form_r">
+                    <h5>育てている犬種をしぼりこむ</h5>
+
+                    <ul class="mizuki_modal-form_breed mizuki_modal-form_breed-dogs">
+                      <!-- ここに犬種を書き込む -->
+                      <div id="breeder_breeds_by_pref">
+                      
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+
+                <div
+                  class="mizuki_search-button_footer"
+                  style="justify-content: flex-end"
+                >
+                  <div class="mizuki_search-button_confirm flex">
+                    <button class="mizuki_search-button_confirm-cancel" type="button">キャンセル</button>
+                    <button class="mizuki_search-button_confirm-submit">表示する</button>
+                  </div>
+                </div>
+                <input type="hidden" name="pet_kind" value="1" />
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div id="mizuki_modal-breed_dogs" class="mizuki_modal-bg">
+          <div class="mizuki_modal-outer mizuki_modal-outer-dogs mizuki_modal-breed_dogs">
+            <div class="mizuki_modal-breed_dogs_title mizuki_modal_title mizuki_modal_title-dogs">
+              <div class="mizuki_modal-breed_dogs_title-decoration mizuki_modal_title-decoration mizuki_modal_title-decoration-dogs">
+                <img src="{{ '/html/template/default/assets/img-mizuki/search-dog.png' }}" alt="犬のイラスト" />
+              </div>
+              <h3>ワンちゃんを探す</h3>
+              <button type="button" class="modaal-close mizuki_modal-close" id="modaal-close" aria-label="Close (Press escape to close)">
+                <span></span><span></span>
+              </button>
+            </div>
+            <div class="mizuki_modal-container">
+              <h4>犬種からさがす</h4>
+              <form action="{{ url('breeder_pet_search_result') }}" class="mizuki_modal-form mizuki_modal-form-dogs" method="GET">
+                <div class="flex">
+                  <div class="flex-column mizuki_modal-form_l">
+                    <h5>犬種を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="dog-breed-check-all" value="1" type="checkbox" />全犬種</div>
+                    <div class="flex">
+                      {#
+                      <ul class="mizuki_modal-form_size mizuki_modal-form_size-dogs">
+                        <li>
+                          <input id="dog_size-xs" type="checkbox" name="dog_size[]" value="1" />
+                          <label class="mizuki_modal-form_size-checkbox mizuki_modal-form_size-dogs-checkbox" for="dog_size-xs">超小型犬</label>
+                        </li>
+                        <li>
+                          <input id="dog_size-s" type="checkbox" name="dog_size[]" value="2" />
+                          <label class="mizuki_modal-form_size-checkbox mizuki_modal-form_size-dogs-checkbox" for="dog_size-s">小型犬</label>
+                        </li>
+                        <li>
+                          <input id="dog_size-m" type="checkbox" name="dog_size[]" value="3" />
+                          <label class="mizuki_modal-form_size-checkbox mizuki_modal-form_size-dogs-checkbox" for="dog_size-m">中型犬</label>
+                        </li>
+                        <li>
+                          <input id="dog_size-l" type="checkbox" name="dog_size[]" value="4" />
+                          <label class="mizuki_modal-form_size-checkbox mizuki_modal-form_size-dogs-checkbox" for="dog_size-l">大型犬</label>
+                        </li>
+                      </ul>
+                      #}
+                      <ul class="mizuki_modal-form_breed mizuki_modal-form_breed-dogs">
+                        <!-- ここに犬種を書き込む -->
+                        <div id="breeder_breeds_by_size">
+                          {% for breeds in breeds_dog %}
+                            <li>
+                              <input id="dog-breeds-{{ breeds.id }}" type="checkbox" name="pet_breed[]" value="{{ breeds.id }}" />
+                              <label class="mizuki_modal-form_breed-checkbox mizuki_modal-form_breed-dogs-checkbox" for="dog-breeds-{{ breeds.id }}">{{ breeds.breedsName }}</label>
+                            </li>
+                          {% endfor %}
+                        </div>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="separate-line visible-phone">
+                    <img
+                      class="down-arrow down-arrow-sp"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow-sp.png' }}"
+                      alt="下矢印"
+                    />
+                  </div>
+                  <div class="separate-line hidden-phone">
+                    <img
+                      class="down-arrow down-arrow-pc"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow.png' }}"
+                      alt="横矢印"
+                    />
+                  </div>
+                  <div class="flex-column mizuki_modal-form_r">
+                    <h5>見学したい地域をしぼりこむ</h5>
+                    <ul
+                      class="mizuki_modal-form_area mizuki_modal-form_area-dogs"
+                    >
+                      <!-- ここに都道府県を書き込む -->
+                      <div id="dog_pref_by_breeds">
+                    
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mizuki_search-button_footer">
+                  <div
+                    class="mizuki_search-button_list-item mizuki_search-button_list-item_modal"
+                  >
+                    <a
+                      class="mizuki_search-dogs-button_area"
+                      href="#mizuki_modal-area-dogs"
+                    >
+                      地域からさがす
+                    </a>
+                  </div>
+                  <input type="hidden" name="pet_kind" value="1" />
+                  <div class="mizuki_search-button_confirm flex">
+                    <button class="mizuki_search-button_confirm-cancel" type="button">
+                      キャンセル
+                    </button>
+                    <button class="mizuki_search-button_confirm-submit">
+                      表示する
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div id="mizuki_modal-area_dogs" class="mizuki_modal-bg">
+          <div
+            class="mizuki_modal-outer mizuki_modal-outer-dogs mizuki_modal-area_dogs"
+          >
+            <div
+              class="mizuki_modal-area_dogs_title mizuki_modal_title mizuki_modal_title-dogs"
+            >
+              <div
+                class="mizuki_modal-area_dogs_title-decoration mizuki_modal_title-decoration mizuki_modal_title-decoration-dogs"
+              >
+                <img src="{{ '/html/template/default/assets/img-mizuki/search-dog.png' }}" alt="犬のイラスト" />
+              </div>
+              <h3>ワンちゃんを探す</h3>
+              <button
+                type="button"
+                class="modaal-close mizuki_modal-close"
+                id="modaal-close"
+                aria-label="Close (Press escape to close)"
+              >
+                <span></span><span></span>
+              </button>
+            </div>
+            <div class="mizuki_modal-container">
+              <h4>地域からさがす</h4>
+              <form action="{{ url('breeder_pet_search_result') }}" class="mizuki_modal-form mizuki_modal-form-dogs" method="GET">
+                <div class="flex">
+                  <div class="flex-column mizuki_modal-form_l">
+                    <h5>見学したい地域を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="dog-area-check-all" value="1" type="checkbox" />全都道府県</div>
+                    <div class="flex">
+                      <ul class="mizuki_modal-form_area mizuki_modal-form_area-dogs flex">
+                        <li class="mizuki_modal-form_area-hokkaidou-touhoku">
+                          <ul>
+                            <h6>北海道・東北</h6>
+                            {% for i in 1..7 %}
+                              {% if i in pref_ids_dog %}
+                              <li>
+                                <input id="dog-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="dog-area-{{ i }}">{{ pref_name_dog[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kantou-koushinetsu">
+                          <ul>
+                            <h6>関東・甲信越</h6>
+                            {% for i in 8..15 %}
+                              {% if i in pref_ids_dog %}
+                              <li>
+                                <input id="dog-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="dog-area-{{ i }}">{{ pref_name_dog[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-tyubu-hokuriku">
+                          <ul>
+                            <h6>中部・北陸</h6>
+                            {% for i in 16..23 %}
+                              {% if i in pref_ids_dog %}
+                              <li>
+                                <input id="dog-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="dog-area-{{ i }}">{{ pref_name_dog[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kinki">
+                          <ul>
+                            <h6>近畿</h6>
+                            {% for i in 24..30 %}
+                              {% if i in pref_ids_dog %}
+                              <li>
+                                <input id="dog-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="dog-area-{{ i }}">{{ pref_name_dog[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-chugoku-shikoku">
+                          <ul>
+                            <h6>中国・四国</h6>
+                            {% for i in 31..39 %}
+                              {% if i in pref_ids_dog %}
+                              <li>
+                                <input id="dog-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="dog-area-{{ i }}">{{ pref_name_dog[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kyushu-okinawa">
+                          <ul>
+                            <h6>九州・沖縄</h6>
+                            {% for i in 40..47 %}
+                              {% if i in pref_ids_dog %}
+                              <li>
+                                <input id="dog-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-dogs-checkbox" for="dog-area-{{ i }}">{{ pref_name_dog[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="separate-line visible-phone">
+                    <img
+                      class="down-arrow down-arrow-sp"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow-sp.png' }}"
+                      alt="下矢印"
+                    />
+                  </div>
+                  <div class="separate-line hidden-phone">
+                    <img
+                      class="down-arrow down-arrow-pc"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow.png' }}"
+                      alt="横矢印"
+                    />
+                  </div>
+                  <div class="flex-column mizuki_modal-form_r">
+                    <h5>犬種をしぼりこむ</h5>
+
+                    <ul
+                      class="mizuki_modal-form_breed mizuki_modal-form_breed-dogs"
+                    >
+                      <!-- ここに犬種を書き込む -->
+                      <div id="dog_breeds_by_pref">
+                    
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mizuki_search-button_footer">
+                  <div
+                    class="mizuki_search-button_list-item mizuki_search-button_list-item_modal"
+                  >
+                    <a
+                      class="mizuki_search-dogs-button_breed"
+                      href="#mizuki_modal-area-dogs"
+                    >
+                      犬種からさがす
+                    </a>
+                  </div>
+
+                  <input type="hidden" name="pet_kind" value="1" />
+                  <div class="mizuki_search-button_confirm flex">
+                    <button class="mizuki_search-button_confirm-cancel" type="button">
+                      キャンセル
+                    </button>
+                    <button class="mizuki_search-button_confirm-submit">
+                      表示する
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div id="mizuki_modal-bleeder_cats" class="mizuki_modal-bg">
+          <div
+            class="mizuki_modal-outer mizuki_modal-outer-cats mizuki_modal-bleeder_cats"
+          >
+            <div
+              class="mizuki_modal-bleeder_cats_title mizuki_modal_title mizuki_modal_title-cats"
+            >
+              <div
+                class="mizuki_modal-bleeder_cats_title-decoration mizuki_modal_title-decoration mizuki_modal_title-decoration-cats"
+              >
+                <img src="{{ '/html/template/default/assets/img-mizuki/search-cat.png' }}" alt="猫のイラスト" />
+              </div>
+              <h3>ネコちゃんを探す</h3>
+              <button
+                type="button"
+                class="modaal-close mizuki_modal-close"
+                id="modaal-close"
+                aria-label="Close (Press escape to close)"
+              >
+                <span></span><span></span>
+              </button>
+            </div>
+            <div class="mizuki_modal-container">
+              <h4>ネコちゃんのブリーダーを探す</h4>
+              <form action="{{ url('breeder_search') }}" class="mizuki_modal-form mizuki_modal-form-cats" method="GET">
+                <div class="flex">
+                  <div class="flex-column mizuki_modal-form_l">
+                    <h5>見学したい地域を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="cat-breed-area-check-all" value="1" type="checkbox" />全都道府県</div>
+                    <div class="flex">
+                      <ul
+                        class="mizuki_modal-form_area mizuki_modal-form_area-cats flex"
+                      >
+                        <li class="mizuki_modal-form_area-hokkaidou-touhoku">
+                          <ul>
+                            <h6>北海道・東北</h6>
+                            {% for i in 1..7 %}
+                              {% if i in pref_ids_cat_breeder %}
+                              <li>
+                                <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kantou-koushinetsu">
+                          <ul>
+                            <h6>関東・甲信越</h6>
+                            {% for i in 8..15 %}
+                              {% if i in pref_ids_cat_breeder %}
+                              <li>
+                                <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-tyubu-hokuriku">
+                          <ul>
+                            <h6>中部・北陸</h6>
+                            {% for i in 16..23 %}
+                              {% if i in pref_ids_cat_breeder %}
+                              <li>
+                                <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kinki">
+                          <ul>
+                            <h6>近畿</h6>
+                            {% for i in 24..30 %}
+                              {% if i in pref_ids_cat_breeder %}
+                              <li>
+                                <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-chugoku-shikoku">
+                          <ul>
+                            <h6>中国・四国</h6>
+                            {% for i in 31..39 %}
+                              {% if i in pref_ids_cat_breeder %}
+                              <li>
+                                <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kyushu-okinawa">
+                          <ul>
+                            <h6>九州・沖縄</h6>
+                            {% for i in 40..47 %}
+                              {% if i in pref_ids_cat_breeder %}
+                              <li>
+                                <input id="breed-area-cat-{{ i }}" value="{{ i }}" name="pet_breed-area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="breed-area-cat-{{ i }}">{{ pref_name_cat_breeder[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="separate-line visible-phone">
+                    <img
+                      class="down-arrow down-arrow-sp"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow-sp.png' }}"
+                      alt="下矢印"
+                    />
+                  </div>
+                  <div class="separate-line hidden-phone">
+                    <img
+                      class="down-arrow down-arrow-pc"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow.png' }}"
+                      alt="横矢印"
+                    />
+                  </div>
+                  <div class="flex-column mizuki_modal-form_r">
+                    <h5>育てている猫種をしぼりこむ</h5>
+
+                    <ul
+                      class="mizuki_modal-form_breed mizuki_modal-form_breed-cats"
+                    >
+                      <!-- ここに猫種を書き込む -->
+                      <div id="breeder_breeds_by_pref_cat">
+                    
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+                <div
+                  class="mizuki_search-button_footer"
+                  style="justify-content: flex-end"
+                >
+                  <input type="hidden" name="pet_kind" value="2" />
+                  <div class="mizuki_search-button_confirm flex">
+                    <button class="mizuki_search-button_confirm-cancel" type="button">
+                      キャンセル
+                    </button>
+                    <button class="mizuki_search-button_confirm-submit">
+                      表示する
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div id="mizuki_modal-breed_cats" class="mizuki_modal-bg">
+          <div
+            class="mizuki_modal-outer mizuki_modal-outer-cats mizuki_modal-breed_cats"
+          >
+            <div
+              class="mizuki_modal-breed_cats_title mizuki_modal_title mizuki_modal_title-cats"
+            >
+              <div
+                class="mizuki_modal-breed_cats_title-decoration mizuki_modal_title-decoration mizuki_modal_title-decoration-cats"
+              >
+                <img src="{{ '/html/template/default/assets/img-mizuki/search-cat.png' }}" alt="猫のイラスト" />
+              </div>
+              <h3>ネコちゃんを探す</h3>
+              <button
+                type="button"
+                class="modaal-close mizuki_modal-close"
+                id="modaal-close"
+                aria-label="Close (Press escape to close)"
+              >
+                <span></span><span></span>
+              </button>
+            </div>
+            <div class="mizuki_modal-container">
+              <h4>猫種からさがす</h4>
+              <form action="{{ url('breeder_pet_search_result') }}" class="mizuki_modal-form mizuki_modal-form-cats" method="GET">
+                <div class="flex">
+                  <div class="flex-column mizuki_modal-form_l">
+                    <h5>猫種を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="cat-breed-check-all" value="1" type="checkbox" />全猫種</div>
+                    <div class="flex">
+                      <ul
+                        class="mizuki_modal-form_breed mizuki_modal-form_breed-cats"
+                      >
+                        {% for breeds in breeds_cat %}
+                          <li>
+                            <input id="cat-breeds-{{ breeds.id }}" type="checkbox" name="pet_breed[]" value="{{ breeds.id }}" />
+                            <label class="mizuki_modal-form_breed-checkbox mizuki_modal-form_breed-cats-checkbox" for="cat-breeds-{{ breeds.id }}">{{ breeds.breedsName }}</label>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="separate-line visible-phone">
+                    <img
+                      class="down-arrow down-arrow-sp"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow-sp.png' }}"
+                      alt="下矢印"
+                    />
+                  </div>
+                  <div class="separate-line hidden-phone">
+                    <img
+                      class="down-arrow down-arrow-pc"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow.png' }}"
+                      alt="横矢印"
+                    />
+                  </div>
+                  <div class="flex-column mizuki_modal-form_r">
+                    <h5>見学したい地域をしぼりこむ</h5>
+                    <ul
+                      class="mizuki_modal-form_area mizuki_modal-form_area-cats"
+                    >
+                      <!-- ここに猫種を書き込む -->
+                      <div id="cat_pref_by_breeds">
+                    
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mizuki_search-button_footer">
+                  <div
+                    class="mizuki_search-button_list-item mizuki_search-button_list-item_modal"
+                  >
+                    <a
+                      class="mizuki_search-cats-button_area"
+                      href="#mizuki_modal-area-cats"
+                    >
+                      地域からさがす
+                    </a>
+                  </div>
+
+                  <input type="hidden" name="pet_kind" value="2" />
+                  <div class="mizuki_search-button_confirm flex">
+                    <button class="mizuki_search-button_confirm-cancel" type="button">
+                      キャンセル
+                    </button>
+                    <button class="mizuki_search-button_confirm-submit">
+                      表示する
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div id="mizuki_modal-area_cats" class="mizuki_modal-bg">
+          <div
+            class="mizuki_modal-outer mizuki_modal-outer-cats mizuki_modal-area_cats"
+          >
+            <div
+              class="mizuki_modal-area_cats_title mizuki_modal_title mizuki_modal_title-cats"
+            >
+              <div
+                class="mizuki_modal-area_cats_title-decoration mizuki_modal_title-decoration mizuki_modal_title-decoration-cats"
+              >
+                <img src="{{ '/html/template/default/assets/img-mizuki/search-cat.png' }}" alt="猫のイラスト" />
+              </div>
+              <h3>ネコちゃんを探す</h3>
+              <button
+                type="button"
+                class="modaal-close mizuki_modal-close"
+                id="modaal-close"
+                aria-label="Close (Press escape to close)"
+              >
+                <span></span><span></span>
+              </button>
+            </div>
+            <div class="mizuki_modal-container">
+              <h4>地域からさがす</h4>
+              <form action="{{ url('breeder_pet_search_result') }}" class="mizuki_modal-form mizuki_modal-form-cats" method="GET">
+                <div class="flex">
+                  <div class="flex-column mizuki_modal-form_l">
+                    <h5>見学したい地域を選ぶ</h5>
+                    <div class="mizuki-selectall"><input id="cat-area-check-all" value="1" type="checkbox" />全都道府県</div>
+                    <div class="flex">
+                      <ul
+                        class="mizuki_modal-form_area mizuki_modal-form_area-cats flex"
+                      >
+                        <li class="mizuki_modal-form_area-hokkaidou-touhoku">
+                          <ul>
+                            <h6>北海道・東北</h6>
+                            {% for i in 1..7 %}
+                              {% if i in pref_ids_cat %}
+                              <li>
+                                <input id="cat-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="cat-area-{{ i }}">{{ pref_name_cat[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kantou-koushinetsu">
+                          <ul>
+                            <h6>関東・甲信越</h6>
+                            {% for i in 8..15 %}
+                              {% if i in pref_ids_cat %}
+                              <li>
+                                <input id="cat-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="cat-area-{{ i }}">{{ pref_name_cat[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-tyubu-hokuriku">
+                          <ul>
+                            <h6>中部・北陸</h6>
+                            {% for i in 16..23 %}
+                              {% if i in pref_ids_cat %}
+                              <li>
+                                <input id="cat-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="cat-area-{{ i }}">{{ pref_name_cat[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kinki">
+                          <ul>
+                            <h6>近畿</h6>
+                            {% for i in 24..30 %}
+                              {% if i in pref_ids_cat %}
+                              <li>
+                                <input id="cat-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="cat-area-{{ i }}">{{ pref_name_cat[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-chugoku-shikoku">
+                          <ul>
+                            <h6>中国・四国</h6>
+                            {% for i in 31..39 %}
+                              {% if i in pref_ids_cat %}
+                              <li>
+                                <input id="cat-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="cat-area-{{ i }}">{{ pref_name_cat[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+
+                        <li class="mizuki_modal-form_area-kyushu-okinawa">
+                          <ul>
+                            <h6>九州・沖縄</h6>
+                            {% for i in 40..47 %}
+                              {% if i in pref_ids_cat %}
+                              <li>
+                                <input id="cat-area-{{ i }}" value="{{ i }}" name="pet_breed_area[]" type="checkbox" />
+                                <label class="mizuki_modal-form_area-checkbox mizuki_modal-form_area-cats-checkbox" for="cat-area-{{ i }}">{{ pref_name_cat[i] }}</label>
+                              </li>
+                              {% endif %}
+                            {% endfor %}
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="separate-line visible-phone">
+                    <img
+                      class="down-arrow down-arrow-sp"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow-sp.png' }}"
+                      alt="下矢印"
+                    />
+                  </div>
+                  <div class="separate-line hidden-phone">
+                    <img
+                      class="down-arrow down-arrow-pc"
+                      src="{{ '/html/template/default/assets/img-mizuki/arrow.png' }}"
+                      alt="横矢印"
+                    />
+                  </div>
+                  <div class="flex-column mizuki_modal-form_r">
+                    <h5>猫種をしぼりこむ</h5>
+
+                    <ul
+                      class="mizuki_modal-form_breed mizuki_modal-form_breed-cats"
+                    >
+                      <!-- ここに猫種を書き込む -->
+                      <div id="cat_breeds_by_pref">
+                    
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mizuki_search-button_footer">
+                  <div
+                    class="mizuki_search-button_list-item mizuki_search-button_list-item_modal"
+                  >
+                    <a
+                      class="mizuki_search-cats-button_breed"
+                      href="#mizuki_modal-area-cats"
+                    >
+                      猫種からさがす
+                    </a>
+                  </div>
+                  <div class="mizuki_search-button_confirm flex">
+                    <button class="mizuki_search-button_confirm-cancel" type="button">
+                      キャンセル
+                    </button>
+                    <button class="mizuki_search-button_confirm-submit">
+                      表示する
+                    </button>
+                  </div>
+                </div>
+                <input type="hidden" name="pet_kind" value="2" />
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>

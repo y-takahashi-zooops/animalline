@@ -357,6 +357,14 @@
                     <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-delete-pet"
                         data-is-active="{{ pet.isActive }}" {{ isCheckPetContract ? 'disabled' : '' }}>このペットの情報を成約済にする</button>
                 {% endif %}
+
+                {% if pet.isActive == 1 %}
+                    {% if pet.isContact == 1 %}
+                        <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-contact-status" data-is-contact="{{ pet.isContact }}">このペットの商談中を解除する</button>
+                    {% else %}
+                        <button type="button" class="ec-blockBtn--action mt-4 mb-4" id="btn-contact-status" data-is-contact="{{ pet.isContact }}">このペットを商談中にする</button>
+                    {% endif %}
+                {% endif %}
             {% endif %}
         </div>
         <div class="col-md-4"></div>
@@ -414,6 +422,33 @@
                     いいえ
                 </button>
                 <a class="btn btn-primary" href="{{ url('breeder_pets_edit_change_status', {'id': id}) }}">
+                    はい
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-contact-status" tabindex="-1" role="dialog" aria-labelledby="modal-contact-status"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold">
+                    確認ダイアログ
+                </h5>
+                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <p class="text-left" id="modal-contact-status-message">ペット情報を商談中にしますか？</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                    いいえ
+                </button>
+                <a class="btn btn-primary" href="{{ url('breeder_pets_edit_contact_status', {'id': id}) }}">
                     はい
                 </a>
             </div>
@@ -583,6 +618,12 @@ $(document).ready(function() {
         const modalMsg = $(this).data('is-active') ? 'ペット情報を非公開にしますか？' : 'ペット情報を公開しますか？';
         $('#modal-change-status-message').text(modalMsg);
         $('#modal-change-status').modal('show');
+    });
+
+    $('#btn-contact-status').on('click', function () {
+        const modalMsg = $(this).data('is-contact') ? 'ペット情報の商談中を解除しますか？' : 'ペット情報を商談中にしますか？';
+        $('#modal-contact-status-message').text(modalMsg);
+        $('#modal-contact-status').modal('show');
     });
 });
 

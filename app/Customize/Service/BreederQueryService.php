@@ -66,7 +66,7 @@ class BreederQueryService
         return $this->breedsRepository->createQueryBuilder('b')
             ->select()
             ->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'b.id = bp.BreedsType')
-            ->where('b.pet_kind = :pet_kind and bp.BreedsType is not null')
+            ->where('b.pet_kind = :pet_kind and bp.BreedsType is not null and bp.is_active = 1')
             ->setParameter('pet_kind', $petKind)
             ->orderBy('b.breeds_name', 'ASC')
             ->getQuery()
@@ -94,7 +94,6 @@ class BreederQueryService
             ->addOrderBy('p.is_contract', 'asc')
             ->addOrderBy('p.dna_check_result', 'desc')
             ->addOrderBy('p.create_date', 'desc');
-            
             
             //->setMaxResults(16);
         /*

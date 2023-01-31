@@ -136,7 +136,7 @@ class AdoptionController extends AbstractController
      * @Route("/adoption/", name="adoption_top")
      * @Template("animalline/adoption/index.twig")
      */
-    public function adoption_index(Request $request)
+    public function adoption_index(Request $request,PaginatorInterface $paginator)
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
         $breeds = $this->adoptionQueryService->getBreedsHavePet($petKind);
@@ -201,12 +201,19 @@ class AdoptionController extends AbstractController
             }
         }
 
+        //最新の犬猫データ最大12件
+        $pets = $paginator->paginate(
+            $newPets,
+            $request->query->getInt('page', 1),
+            12
+        );
+
         return $this->render('animalline/adoption/index.twig', [
             'title' => 'ペット検索',
             'petKind' => $petKind,
             'breeds' => $breeds,
             'regions' => $regions,
-            'newPets' => $newPets,
+            'newPets' => $pets,
             'favoritePets' => $favoritePets,
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,

@@ -648,6 +648,52 @@ PAGE - CONTENT
 /*------------------
 TOP
 ------------------*/
+.search-box-text {
+  margin: 1rem auto;
+  padding: 0 10%;
+}
+
+.search_container{
+  box-sizing: border-box;
+}
+.search_container input[type="text"]{
+  background: #ffffff;
+  border: #000 solid 0.5px;
+  height: 2.0em;
+  padding-left: 10px;
+}
+.search_container input[type="text"]:focus {
+  outline: 0;
+}
+.search_container input[type="submit"]{
+  cursor: pointer;
+  border: none;
+  background: #3879D9;
+  color: #fff;
+  outline : none;
+  height: 2.2em;
+  padding: 0 15px 0 15px;
+}
+.search_container ::-webkit-input-placeholder {
+  color: #3879D9;
+}
+
+#side-dog-list{
+  display: none;
+}
+
+#side-dog-type-list{
+  display: none;
+}
+
+#side-cat-list{
+  display: none;
+}
+
+#side-cat-type-list{
+  display: none;
+}
+
 
 #main-visual{
   width:100%;

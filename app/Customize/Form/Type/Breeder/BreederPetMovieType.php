@@ -51,7 +51,7 @@ class BreederPetMovieType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new Assert\File([
-                        'maxSize' => '10m',
+                        'maxSize' => '100m',
                     ]),
                     new \Symfony\Component\Validator\Constraints\File([
                         'mimeTypes' => [
