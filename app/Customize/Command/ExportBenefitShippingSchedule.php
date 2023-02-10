@@ -127,7 +127,7 @@ class ExportBenefitShippingSchedule extends Command
                 $record['size_code'] = 1;
                 $record['retail_price'] = 0;
                 $record['delivery_unit_price'] = 0;
-                $record['shipping_company_code'] = '000003';
+                $record['shipping_company_code'] = '000002';
                 $record['delivery_address'] = $record['shipping_pref'] . ' ' . $record['shipping_city'] . ' ' . $record['shipping_address'];
                 $record['delivery_destination_classification'] = '1';
                 $record['total_product_amount'] = 0;
