@@ -1002,15 +1002,23 @@ a {
 
 .mizuki_caution {
   margin: 0 auto;
-  padding-top: 4rem;
+  padding: 2rem;
   width: 90%;
-  max-width: 600px;
+  max-width: 800px;
   text-align: center;
+    border:3px double #549C4C;
+    border-radius:25px;
+    background-color: #ECF4EB;
+    margin-top:4rem;
+    box-sizing: border-box;
 }
 
 .mizuki_caution h6 {
   font-size: 20px;
   line-height: 1.6;
+    border-radius: 15px;
+    background-color: rgba(255,255,255,0.9);
+    padding:10px 25px;
 }
 
 .mizuki_caution p {
