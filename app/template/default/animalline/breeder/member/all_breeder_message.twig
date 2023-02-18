@@ -3,82 +3,53 @@
 {% set status = 3 %}
 
 {% block main %}
-    <div class="main">
-        <div class="row">
-            <div class="main-container col-12">
-                <h1>取引メッセージ一覧</h1>
-                <div class="m-3 p-3"></div>
-                {% for message in listMessages %}
-                    <div class="row border breeder-border rounded bg-white p-2 mb-3">
-                        <div class="col-12">
-                            <a href="{{ url('breeder_breeder_message', {'id': message.Id}) }}">
-                                <div class="row">
-                                    <div class="col-md-2 col-3" style="display: grid; place-items: center;">
-                                        {# <h6 class="p-2 rounded" style="background:#539b34; color:#fff;">
-                                            {% set status = ['交渉中', '成約確認待ち', '成約', '非成約'] %}
-                                            {{ status[message.contractStatus] }}
-                                        </h6> #}
-                                        <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (message.pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
-                                            class="card-img-top" alt="Pet-image" style="max-width:100px; border-radius:100px;">
-                                        {# <div class="type"><span style="font-weight:300">{{ message.pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>{{ pet.getCoatColor() ?? '' }}</span></div> #}
-                                            <span style="font-weight:300">ID {{ message.pet.id }}</span>
-                                    </div>
-                                    <div class="col-md-10 col-9">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <h6 style="font-weight:300; margin-top:50px">{{ message.pet.breedsType.breedsName }}</h6>
-                                                {# <h5>{{ message.Customer.name01 }}{{ message.Customer.name02 }}</h5> #}
-                                            </div>
-                                            <div class="col-3">
-                                                <h6 style="font-weight:300; margin-top:50px">{{ message.pet.createDate|date('Y/m/d H:i') }}</h6>
-                                            </div>
-                                            <div class="col-5">
-                                                <h6 class="text-right pb-1">
-                                                    {# {% for item in  message.breederContacts %}
-                                                        {% if item.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') %}
-                                                            {% set status = item.isReading %}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                    {% if status == constant('Customize\\Config\\AnilineConf::RESPONSE_REPLIED') %}
-                                                        <span data-toggle="tooltip"
-                                                              title="既読" class="d-inline-block normal-tooltip"
-                                                              tabindex="0">
-                                                            <i class="fas fa-envelope-open"></i>
-                                                        </span>
-                                                    {% elseif status == constant('Customize\\Config\\AnilineConf::RESPONSE_UNREPLIED') %}
-                                                        <span data-toggle="tooltip"
-                                                              title="未読" class="d-inline-block red-tooltip"
-                                                              tabindex="0">
-                                                            <i class="fas fa-envelope"></i>
-                                                        </span>
-                                                    {% endif %} #}
-                                                    <div class="text-center">
-                                                        {% if message.BreederNewMsg == 1 %}
-                                                        <span data-toggle="tooltip"
-                                                                title="未読" class="d-inline-block red-tooltip"
-                                                                tabindex="0">
-                                                                <i class="far fa-envelope fa-4x"></i>
-                                                            </span>
-                                                        {% else %}
-                                                            <span data-toggle="tooltip"
-                                                            title="既読" class="d-inline-block normal-tooltip"
-                                                            tabindex="0">
-                                                                <i class="far fa-envelope-open fa-4x"></i>
-                                                            </span>
-                                                        {% endif %} 
-                                                    </div>
-                                                </h6>
-                                                {# <h6 class="text-right">
-                                                    返信日時：
-                                                    {{ message.lastMessageDate.format('Y年m月d日 H:i') ?? 'なし' }}
-                                                    <br>
-                                                    {{ message.BreederNewMsg ? '未読あり' }}
-                                                </h6> #}
-                                                <h6 class="text-center">
-                                                    {{ message.lastMessageDate.format('Y/m/d H:i') ?? 'なし' }}
-                                                </h6>
-                                            </div>
-                                        </div>
+    <div class="page-inner">
+        <div class="breadcrumbs">
+            <ul>
+                <li><a href="/">アニマルラインTOP</a></li>
+                <li><i class="bi bi-chevron-right"></i>マイページ</li>
+            </ul>
+        </div>
+    
+        <div id="mypage-menu">
+            <h1><i class="bi bi-chat-right-quote-fill"></i>問い合わせ対応</h1>
+        </div>
+    
+        <div class="mypage-service_list__table">
+            <div class="mypage-service_list__table_body">
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>犬種/猫種</th>
+                        <th>登録日時</th>
+                        <th></th>
+                    </tr>
+
+                    {% for message in listMessages %}
+                        {% set status = null %}
+                        <tr>
+                            <td class="image">
+                                <figure>
+                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (message.pet.thumbnailPath ?? '/noimage_plugin_list.png') }}" alt="{{ message.pet.breedsType.breedsName ?? '' }}">
+                                </figure>
+                                <p>ID {{ message.pet.id }}</p>
+                            </td>
+                            <td class="name">{{ message.pet.breedsType.breedsName }}</td>
+                            <td class="time">{{ message.pet.createDate.format('Y/m/d H:i') ?? '' }}</td>
+                            <td class="receive">
+                                <a href="{{ url('breeder_breeder_message', {'id': message.Id}) }}">
+                                    <div class="receive-icon">
+                                        {% for item in message.breederContacts %}
+                                            {% if item.messageFrom == constant('Customize\\Config\\AnilineConf::MESSAGE_FROM_USER') %}
+                                                {% set status = item.isReading %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if status == constant('Customize\\Config\\AnilineConf::RESPONSE_REPLIED') %}
+                                            <i class="bi bi-envelope-open"></i>
+                                        {% elseif (status is not null) and (status == constant('Customize\\Config\\AnilineConf::RESPONSE_UNREPLIED')) %}
+                                            <i class="bi bi-envelope"></i>
+                                            <span class="budge">1</span>
+                                        {% endif %}
                                     </div>
                                     <p>{{ message.lastMessageDate.format('Y/m/d H:i') ?? 'なし' }}</p>
                                 </a>
