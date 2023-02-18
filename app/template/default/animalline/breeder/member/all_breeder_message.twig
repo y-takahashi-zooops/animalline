@@ -30,7 +30,8 @@
                         <tr>
                             <td class="image">
                                 <figure>
-                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (message.pet.thumbnailPath ?? '/noimage_plugin_list.png') }}" alt="{{ message.pet.breedsType.breedsName ?? '' }}">
+                                    <img src="{{ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (message.getPet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                    class="w-100 mb-4 mb-sm-0" alt="...">
                                 </figure>
                                 <p>ID {{ message.pet.id }}</p>
                             </td>
