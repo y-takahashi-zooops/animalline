@@ -3,45 +3,6 @@
 {% set status = 3 %}
 
 {% block main %}
-<<<<<<< HEAD
-    <div class="page-inner">
-        <div class="breadcrumbs">
-            <ul>
-                <li><a href="/">アニマルラインTOP</a></li>
-                <li><i class="bi bi-chevron-right"></i>マイページ</li>
-            </ul>
-        </div>
-    
-        <div id="mypage-menu">
-            <h1><i class="bi bi-chat-right-quote-fill"></i>取引メッセージ</h1>
-        </div>
-    
-        <div class="mypage-service_list">
-            <div class="mypage-service_list__content">
-                <div class="mypage-service_list__content_body">
-                    <ul class="message" style="background: #FFF">
-                        {% for message in listMessages %}
-                            {% set status = null %}
-                            <li>
-                                <a href="{{ url('breeder_message', {'id': message.id}) }}">
-                                    <div class="image">
-                                        <figure>
-                                            <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (message.pet.thumbnailPath ?? '/noimage_plugin_list.png') }}" alt="{{ message.pet.breedsType.breedsName ?? '' }}">
-                                        </figure>
-                                        <div class="image-icon">
-                                        {{ message.pet.petSex == 1 ? '<span class="image-icon_male">男の子</span>' : '<span class="image-icon_female">女の子</span>' }}
-                                        </div>
-                                    </div>
-                                    <div class="text">
-                                        <div class="name">
-                                            <h3>{{ message.breeder.breederName ?? '' }}</h3>
-                                        </div>
-                                        <div class="profile">
-                                            <ul>
-                                                <li>{{ message.pet.breedsType.breedsName ?? '' }}</li>
-                                                <li>{{ message.pet.petBirthday.format('Y/m/d') ?? '' }} 生まれ</li>
-                                            </ul>
-=======
     <div class="main">
         <div class="row">
             <div class="main-container col-12">
@@ -97,7 +58,6 @@
                                                     {{ message.customerNewMsg ? '未読あり' }}
                                                 </h6>
                                             </div>
->>>>>>> 05d9fb53d8e31ee12398832855230e3ac60ebedb
                                         </div>
                                     </div>
                                     <div class="receive">
