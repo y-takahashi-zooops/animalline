@@ -22,7 +22,7 @@
                     
                         <li><a href="{{url('breeder_favorite')}}"><i class="bi bi-heart"></i>お気に入り一覧</a>{# <span class="budge">123</span> #}</li>
                         <li><a href="{{url('breeder_all_message')}}"><i class="bi bi-chat-right-quote-fill"></i>取引メッセージ</a>{% if customer_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li>
-                        <li><a href="{{url('nopet_all_message')}}"><i class="bi bi-chat-right-quote-fill"></i>ブリーダー問い合わせ</a>{% if customer_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li>
+                        <li><a href="{{url('nopet_all_message')}}"><i class="bi bi-chat-right-quote-fill"></i>ブリーダー問い合わせ</a>{# {% if customer_newmsg == 1 %}<span class="budge">New!</span>{% endif %} #}</li>
                         {% if canBenefits %}<li><a href="{{url('breeder_benefits')}}"><i class="bi bi-gift-fill"></i>ご成約特典</a></li>{% endif %}
                     
                     {% endif %}
@@ -34,7 +34,7 @@
                         
                         <li><a href="{{url('breeder_examination_status')}}"><i class="fas fa-dna"></i>DNA検査状況確認<br /><p>　</p></a></li>
                         <li><a href="{{url('breeder_pet_list')}}"><i class="fas fa-paw"></i>ペット管理<br /><p>　</p></a>{% if breeder_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li>
-                        <li><a href="{{url('nopet_user_all_message')}}"><i class="bi bi-chat-right-quote-fill"></i>ユーザー問い合わせ<br /><p>　</p></a>{% if breeder_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li>
+                        <li><a href="{{url('nopet_user_all_message')}}"><i class="bi bi-chat-right-quote-fill"></i>ユーザー問い合わせ<br /><p>　</p></a>{# {% if breeder_newmsg == 1 %}<span class="budge">New!</span>{% endif %} #}</li>
                         {# <li><a href="{{url('breeder_all_breeder_message')}}"><i class="bi bi-chat-right-quote-fill"></i>お問い合わせ対応<br /><p>　</p></a>{% if breeder_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li> #}
                     {% endif %}
                 </ul>
