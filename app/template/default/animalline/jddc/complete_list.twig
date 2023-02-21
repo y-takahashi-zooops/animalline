@@ -1,5 +1,5 @@
 {% extends 'animalline/jddc/frame.twig' %}
-{% set status = {6: '検査通過', 7: '検査NG'} %}
+{% set status = {4: '検体異常',6: '検査通過', 7: '検査NG',8: '検体異常'} %}
 {% set params = app.request.query.all %}
 
 {% block main %}

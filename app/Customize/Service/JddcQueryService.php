@@ -97,7 +97,7 @@ class JddcQueryService
      */
     public function completePetList($from,$to): array
     {
-        $status = [AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED, AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG];
+        $status = [AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED, AnilineConf::ANILINE_DNA_CHECK_STATUS_TEST_NG, AnilineConf::ANILINE_DNA_CHECK_STATUS_SPECIMEN_ABNORMALITY,AnilineConf::ANILINE_DNA_CHECK_STATUS_RESENT];
         
         $queryBreeder = $this->dnaCheckStatusRepository->createQueryBuilder('dna')
             ->leftJoin('Customize\Entity\BreederPets', 'bp', 'WITH', 'dna.pet_id = bp.id')
