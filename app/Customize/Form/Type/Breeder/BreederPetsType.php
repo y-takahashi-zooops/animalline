@@ -66,7 +66,7 @@ class BreederPetsType extends AbstractType
             ])
             ->add('pet_birthday', DateType::class, [
                 // 'data' => new DateTime(),
-                'years' => range(date('Y'), 2000),
+                'years' => range(date('Y'), 2010),
                 'required' => true,
             ])
             ->add('band_color', ChoiceType::class, [

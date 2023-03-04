@@ -386,6 +386,7 @@ class BreederQueryService
             //->andWhere('bp.is_delete = 0')
             ->orderBy('bp.is_delete', 'ASC')
             ->addOrderBy('bp.is_contract', 'ASC')
+            ->addOrderBy('bp.is_active', 'ASC')
             ->addOrderBy('bch.contract_status', 'ASC')
             ->addOrderBy('bch.last_message_date', 'DESC')
             ->select('bp, bch.id as bch_id, bch.last_message_date as last_msg,bch.contract_status, b.breeds_name, bp.is_delete, bp.movie_file')
