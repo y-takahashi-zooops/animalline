@@ -218,12 +218,16 @@ class ExportRelease extends Command
                         $recordCsv['saleCategory'] = '0';
                         $recordCsv['multiplicationRate'] = null;
                         $recordCsv['slipType'] = '0';
+
+                        /*
                         if($pc->getJanCode() != ""){
                             $recordCsv['productNumberCode'] = $pc->getJanCode();
                         }
                         else{
                             $recordCsv['productNumberCode'] = $pc->getCode();
                         }
+                        */
+                        $recordCsv['productNumberCode'] = $pc->getCode();
                         $recordCsv['colorCode'] = "9999";
                         $recordCsv['sizeCode'] = '1';
                         $recordCsv['JAN_code'] = $pc->getJanCode();
