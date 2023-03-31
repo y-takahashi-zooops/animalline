@@ -232,8 +232,8 @@ class ExportRelease extends Command
                         $recordCsv['sizeCode'] = '1';
                         $recordCsv['JAN_code'] = $pc->getJanCode();
                         $recordCsv['numberOfShippingInstructions'] = $order_item->getQuantity();
-                        $recordCsv['retailPrice'] = intval($order_item->getPrice());
-                        $recordCsv['deliveryUnitPrice'] = intval($order_item->getPrice());
+                        $recordCsv['retailPrice'] = intval($order_item->getPrice()) + intval($order_item->getTax());
+                        $recordCsv['deliveryUnitPrice'] = $recordCsv['retailPrice'];
                         $recordCsv['shippingCompanyCode'] = "000002";
                         $recordCsv['remarks'] = null;
                         $recordCsv['deliveryName'] = $shipping->getName01().$shipping->getName02();
