@@ -22,6 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Eccube\Repository\Master\OrderStatusRepository;
 use Eccube\Entity\Master\OrderStatus;
+use Customize\Repository\BusinessHolidayRepository;
 
 class ExportRelease extends Command
 {
@@ -77,6 +78,11 @@ class ExportRelease extends Command
      */
     protected $orderStatusRepository;
 
+    /**
+     * @var BusinessHolidayRepository
+     */
+    protected $businessHolidayRepository;
+
 
     /**
      * ExportRelease constructor.
@@ -90,6 +96,7 @@ class ExportRelease extends Command
      * @param OrderRepository $orderRepository
      * @param SupplierRepository $supplierRepository
      * @param OrderStatusRepository $orderStatusRepository
+     * @param BusinessHolidayRepository $businessHolidayRepository
      */
     public function __construct(
         EntityManagerInterface           $entityManager,
@@ -100,7 +107,8 @@ class ExportRelease extends Command
         OrderItemRepository              $orderItemRepository,
         OrderRepository                  $orderRepository,
         SupplierRepository               $supplierRepository,
-        OrderStatusRepository $orderStatusRepository
+        OrderStatusRepository $orderStatusRepository,
+        BusinessHolidayRepository $businessHolidayRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -112,6 +120,7 @@ class ExportRelease extends Command
         $this->orderRepository = $orderRepository;
         $this->supplierRepository = $supplierRepository;
         $this->orderStatusRepository = $orderStatusRepository;
+        $this->businessHolidayRepository = $businessHolidayRepository;
     }
 
     protected function configure()
@@ -207,7 +216,9 @@ class ExportRelease extends Command
                         }
 
                         $recordCsv['shippingInstructionNo'] = $this->generateZeroFillStr($order_item->getOrderId(), 6);
-                        $recordCsv['expectedShippingDate'] = date("Ymd");;
+                        //発送日は次の営業日にする
+                        $recordCsv['expectedShippingDate'] = $this->businessHolidayRepository->getFutureBusinessDay(1)->format('Ymd');
+                        //$recordCsv['expectedShippingDate'] = date("Ymd");
                         if($shipping->getShippingDeliveryDate() != null){
                             $recordCsv['expectedArrivalDate'] = $shipping->getShippingDeliveryDate()->format("Ymd");
                         }

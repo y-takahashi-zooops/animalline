@@ -5,6 +5,7 @@ namespace Customize\Command;
 use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\WmsSyncInfo;
+use Customize\Repository\BusinessHolidayRepository;
 use Eccube\Entity\Product;
 use Eccube\Entity\ProductClass;
 use Eccube\Entity\ProductStock;
@@ -73,7 +74,11 @@ class TestCommand extends Command
      */
     protected $categoryRepository;
     
-    
+    /**
+     * @var BusinessHolidayRepository
+     */
+    protected $businessHolidayRepository;
+
     /**
      * ExportProduct constructor.
      *
@@ -84,6 +89,7 @@ class TestCommand extends Command
      * @param SupplierRepository $supplierRepository
      * @param ProductStockService $productStockService
      * @param CategoryRepository $categoryRepository
+     * @param BusinessHolidayRepository $businessHolidayRepository
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -93,7 +99,8 @@ class TestCommand extends Command
         ProductRepository      $productRepository,
         SupplierRepository     $supplierRepository,
         ProductStockService     $productStockService,
-        CategoryRepository   $categoryRepository
+        CategoryRepository   $categoryRepository,
+        BusinessHolidayRepository $businessHolidayRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -104,6 +111,7 @@ class TestCommand extends Command
         $this->productStockService = $productStockService;
         $this->memberRepository = $memberRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->businessHolidayRepository = $businessHolidayRepository;
     }
 
     protected function configure()
@@ -118,6 +126,13 @@ class TestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+        
+        $next_date = $this->businessHolidayRepository->getFutureBusinessDay(3);
+        echo("Result::".$next_date->format('Y-m-d')."\n");
+
+        return;
+
         /*
         $em = $this->entityManager;
         $pc = $this->productClassRepository->find(13);

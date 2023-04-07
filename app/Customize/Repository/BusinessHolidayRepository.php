@@ -36,4 +36,41 @@ class BusinessHolidayRepository extends AbstractRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * ○日後の営業日を取得
+     *
+     * @param $year
+     * @return array
+     */
+    public function getFutureBusinessDay($days)
+    {
+        $today = new DateTime();
+
+        for($i=0;$i<$days;$i++){
+            $today = $today->modify('+1 day');
+
+            //echo $today->format('Y-m-d H:i:s');
+
+            $holiday = $this->createQueryBuilder('h')
+                ->where('h.holiday_date = :fromDate')
+                ->setParameters(['fromDate' => $today->format('Y/m/d')])
+                ->getQuery()
+                ->getResult();
+
+            $is_holiday = false;
+            if($holiday){
+                $is_holiday = true;
+            }
+
+            if($today->format("w") == 0){
+                $is_holiday = true;
+            }
+
+            //休日の場合はループ回数を１回増やす
+            if($is_holiday){$i--;}
+        }
+
+        return $today;
+    }
 }
