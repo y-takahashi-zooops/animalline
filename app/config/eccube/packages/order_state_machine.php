@@ -35,10 +35,19 @@ $container->loadFromExtension('framework', [
                 (string) Status::PENDING,
                 (string) Status::PROCESSING,
                 (string) Status::RETURNED,
+                '10',
             ],
             'transitions' => [
+                'new' => [
+                    'from' => '10',
+                    'to' => (string) Status::NEW
+                ],
+                'send_csv' => [
+                    'from' => [(string) Status::NEW , Status::PAID],
+                    'to' => '10'
+                ],
                 'pay' => [
-                    'from' => (string) Status::NEW,
+                    'from' => [(string) Status::NEW , '10'],
                     'to' => (string) Status::PAID,
                 ],
                 'packing' => [

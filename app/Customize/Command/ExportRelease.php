@@ -152,13 +152,12 @@ class ExportRelease extends Command
 
         //ステータステーブル準備
         $OrderStatusProgress = $this->orderStatusRepository->find(OrderStatus::IN_PROGRESS);
-        $OrderStatusNew = $this->orderStatusRepository->find(OrderStatus::NEW);
-        $OrderStatusPaid = $this->orderStatusRepository->find(OrderStatus::PAID);
+        $OrderStatusSendCsv = $this->orderStatusRepository->find('10'); //注文送信ステータス
+        //$OrderStatusPaid = $this->orderStatusRepository->find(OrderStatus::PAID);
 
         $query = $this->orderRepository->createQueryBuilder('o')
-            ->andWhere('(o.OrderStatus = :new or o.OrderStatus = :paid) and o.order_date is not null')
-            ->setParameter('new', $OrderStatusNew)
-            ->setParameter('paid', $OrderStatusPaid);
+            ->andWhere('o.OrderStatus = :sendcsv and o.order_date is not null')
+            ->setParameter('sendcsv', $OrderStatusSendCsv);
 
         $orders = $query->getQuery()->getResult();
 
