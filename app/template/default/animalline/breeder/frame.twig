@@ -3,6 +3,7 @@
 {% set breadcrumb = breadcrumb|default('') %}
 {% set description_add = description_add|default('') %}
 {% set header_cnt = repository('Customize\\Entity\\Breeders').getBreederHeaderInfo() %}
+{% set breederPet = breederPet|default('') %}
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -45,9 +46,38 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% set request_uri = app.request.server.get('REQUEST_URI') %}
+    {% set part_uri = path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params'))[1:] %}
+    {% if part_uri == 'breeder/' %}
+    <title>犬・猫ブリーダー直販サイトのアニマルライン</title>
+    <meta name="description" content="犬・猫ブリーダー直販サイトのアニマルラインです。ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
+    {% elseif part_uri == 'breeder/info' %}
+    <title>アニマルラインとは｜犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="犬・猫ブリーダー直販サイトのアニマルライン「アニマルラインとは」ページです。ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
+    {% elseif part_uri == 'breeder/terms' %}
+    <title>ブリーダー会員規約｜犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="犬・猫ブリーダー直販サイトのアニマルライン「ブリーダー会員規約」ページです。ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
+    {% elseif part_uri == 'breeder/pet/search/result' and 'size_code=1' in request_uri %}
+    <title>超小型犬の一覧｜犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="犬・猫ブリーダー直販サイトのアニマルライン「超小型犬の一覧」ページです。ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
+    {% elseif part_uri == 'breeder/pet/search/result' and 'size_code=2' in request_uri %}
+    <title>小型犬の一覧｜犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="犬・猫ブリーダー直販サイトのアニマルライン「小型犬の一覧」ページです。ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
+    {% elseif part_uri == 'breeder/pet/search/result' and 'size_code=3' in request_uri %}
+    <title>中型犬の一覧｜犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="犬・猫ブリーダー直販サイトのアニマルライン「中型犬の一覧」ページです。ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
+    {% elseif part_uri == 'breeder/pet/search/result' and 'size_code=4' in request_uri %}
+    <title>大型犬の一覧｜犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="犬・猫ブリーダー直販サイトのアニマルライン「大型犬の一覧」ページです。ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
+    {% elseif part_uri == 'breeder/pet/search/result' and 'page=' in request_uri %}
+    <title>{{title}}の{{request_uri|split('page=')|last}}ページ目 | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="{{title}}の{{request_uri|split('page=')|last}}ページ目です。販売子犬・子猫の遺伝病リスク低減に努め、ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
+    {% else %}
     <title>{{ title }} | 犬・猫ブリーダー直販のアニマルライン</title>
     <meta name="description" content="{{ title }}ページです。販売子犬・子猫の遺伝病リスク低減に努め、ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
-    
+    {% endif %}
+
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -59,7 +89,29 @@
     <link rel="stylesheet" href="{{ asset('assets/css/base-style.css') }}?v=20230131">
 
     <link rel="stylesheet" href="{{ asset('assets/css/common.css') }}?v=20230131">
-    <link rel="canonical" href=" {{ app.request.getUri }}">
+    {% set pre_url = app.request.getUriForPath(app.request.pathInfo) %}
+    {% set param_txt = "" %}
+    {% set url = app.request.getUri %}
+    {% set param = url|split('?') %}
+
+    {% if param and param[1] is defined %}
+
+      {% set params = param[1]|split('&') %}
+
+      {% for p in params %}
+        {% set ex = p|split('=') %}
+        {% if ex[0] != 'pet_kind' and ex[0] != 'page' %}
+          {% set param_txt = param_txt~"&"~p %}
+        {% endif %}
+      {% endfor %}
+
+      {% if param_txt %}
+        {% set pre_url = pre_url ~ "?" %}
+      {% endif %}
+
+    {% endif %}
+    <link rel="canonical" href="{{pre_url ~ param_txt|slice(1)}}">
+
     {% block stylesheet %}{% endblock %}
 </head>
 <body>
@@ -69,7 +121,7 @@
             <div class="header-left">
                 <div class="header-logo header-logo_breeder">
                     <a href="{{url('breeder_top')}}">
-                        <img src="{{ asset('assets/img/breeder-logo.png') }}" width="610" height="80" alt="Animalline Breeder"/>
+                        <img src="{{ asset('assets/img/breeder-logo.png') }}" width="610" height="80" alt="犬・猫ブリーダー直販サイトのアニマルライン"/>
                     </a>
                 </div>
 
@@ -149,7 +201,7 @@
                     </div>
             </div>
         </header>
-       
+
         <main role="main">
             <div class="header-navi">
             　<ul>
@@ -189,7 +241,18 @@
             </div>
 
             <div class="header-title">
-                <h1>{{ maintitle }}</h1>
+                {% if part_uri == 'breeder/pet/search/result' and 'size_code=1' in request_uri %}
+                <h1>超小型犬の一覧</h1>
+                {% elseif part_uri == 'breeder/pet/search/result' and 'size_code=2' in request_uri %}
+                <h1>小型犬の一覧</h1>
+                {% elseif part_uri == 'breeder/pet/search/result' and 'size_code=3' in request_uri %}
+                <h1>中型犬の一覧</h1>
+                {% elseif part_uri == 'breeder/pet/search/result' and 'size_code=4' in request_uri %}
+                <h1>大型犬の一覧</h1>
+                {% else %}
+                <h1>{{ title }}</h1>
+                {% endif %}
+
                 <ol itemscope itemtype="http://schema.org/BreadcrumbList" class="ani-breadcrumb">
                     {% set i = 1 %}
                     {% for item in breadcrumb %}
@@ -252,7 +315,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="footer-logo"><a href="{{url('breeder_top')}}"><img src="{{ asset('assets/img/logo.png') }}" width="305" height="40" alt="Animalline"/></a></div>
+            <div class="footer-logo"><a href="{{url('breeder_top')}}"><img src="{{ asset('assets/img/logo.png') }}" width="305" height="40" alt="犬・猫ブリーダー直販サイトのアニマルライン"/></a></div>
             <div class="copyright"><small>Copyright © 2021 Animallinez All Rights Reserved.</small></div>
         </footer>
     

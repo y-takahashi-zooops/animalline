@@ -94,7 +94,7 @@ class BreederController extends AbstractController
      */
     protected $affiliateStatusRepository;
 
-    
+
     /**
      * @var MailService
      */
@@ -164,7 +164,7 @@ class BreederController extends AbstractController
      * @Route("/breeder/", name="breeder_top")
      * @Template("animalline/breeder/index.twig")
      */
-    public function breeder_index(Request $request,PaginatorInterface $paginator)
+    public function breeder_index(Request $request, PaginatorInterface $paginator)
     {
         $petKind = $request->get('pet_kind') ?? AnilineConf::ANILINE_PET_KIND_DOG;
         $breeds = $this->breederQueryService->getBreedsHavePet($petKind);
@@ -175,17 +175,17 @@ class BreederController extends AbstractController
 
         $maintitle = "犬・猫ブリーダー直販のアニマルライン";
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP")
+            array('url' => $this->generateUrl('breeder_top'), 'title' => "犬・猫ブリーダー直販サイトのアニマルライン ")
         );
 
         //紹介コード付きアクセスの場合
         $response = new Response();
         $rid = $request->get('RID');
-        if($rid != ""){
+        if ($rid != "") {
             $sessid = $request->cookies->get('rid_key');
             //if($sessid == ""){
-                $sessid = uniqid();
-                $response->headers->setCookie(new Cookie('rid_key',$sessid));
+            $sessid = uniqid();
+            $response->headers->setCookie(new Cookie('rid_key', $sessid));
             //}
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -193,10 +193,10 @@ class BreederController extends AbstractController
             //$session = $request->getSession();
             //$sessid = $session->getId();
 
-            $affiliate = $this->affiliateStatusRepository->findOneBy(array("campaign_id" => 1,"session_id" => $sessid));
+            $affiliate = $this->affiliateStatusRepository->findOneBy(array("campaign_id" => 1, "session_id" => $sessid));
 
             //if(!$affiliate){
-                $affiliate = new AffiliateStatus();
+            $affiliate = new AffiliateStatus();
             //}
             $affiliate->setAffiliateKey($rid);
             $affiliate->setCampaignId(1);
@@ -204,7 +204,7 @@ class BreederController extends AbstractController
             $entityManager->persist($affiliate);
             $entityManager->flush();
         }
-        
+
         //最新の犬猫データ最大9件
         $newDog = $paginator->paginate(
             $newDogs,
@@ -221,17 +221,17 @@ class BreederController extends AbstractController
         //RSS
         $url = "https://animalline.jp/contents/feed/";
         $xml = file_get_contents($url);
-        $obj = simplexml_load_string($xml,'SimpleXMLElement', LIBXML_NOCDATA);
+        $obj = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
         $i = 0;
         foreach ($obj->channel->item as $val) {
-            $skip=false;
-            foreach($val->category as $cat){
-                if($cat == "保護"){
-                    $skip=true;
+            $skip = false;
+            foreach ($val->category as $cat) {
+                if ($cat == "保護") {
+                    $skip = true;
                 }
             }
-            if(!$skip){
-                if ($i < 4){
+            if (!$skip) {
+                if ($i < 4) {
                     $rssfeed[$i]['title'] = $val->title;
                     $rssfeed[$i]['link'] = $val->link;
                     $rssfeed[$i]['date'] = $val->pubDate;
@@ -264,7 +264,7 @@ class BreederController extends AbstractController
             $pref_ids_cat[] = $pref["id"];
             $pref_name_cat[$pref["id"]] = $pref["name"];
         }
-        
+
         $prefs_cat_breeder = $this->breederQueryService->getBreederPrefs(2);
         $pref_ids_cat_breeder = [];
         foreach ($prefs_cat_breeder as $pref) {
@@ -307,7 +307,7 @@ class BreederController extends AbstractController
             'today' => $today,
             'pets_count_inspection' => $pets_count_inspection,
             'search_box_mode' => 9,
-        ],$response);
+        ], $response);
     }
 
     /**
@@ -323,7 +323,7 @@ class BreederController extends AbstractController
 
         $params = json_decode($json);
 
-        $breeds = $this->breederQueryService->getBreedsByPref($params->prefs,$params->pet_kind);
+        $breeds = $this->breederQueryService->getBreedsByPref($params->prefs, $params->pet_kind);
 
         return new JsonResponse($breeds);
     }
@@ -359,11 +359,11 @@ class BreederController extends AbstractController
 
         $params = json_decode($json);
 
-        $breeds = $this->breederQueryService->getPrefByBreeds($params->breeds,$params->pet_kind);
+        $breeds = $this->breederQueryService->getPrefByBreeds($params->breeds, $params->pet_kind);
 
         return new JsonResponse($breeds);
     }
-    
+
     /**
      * @Route("/breeder/info", name="breeder_info")
      * @Template("animalline/breeder/info.twig")
@@ -429,21 +429,21 @@ class BreederController extends AbstractController
         $find_cond["is_active"] = 1;
 
         //販売中
-        if($request->query->get('filter_status') == 2){
+        if ($request->query->get('filter_status') == 2) {
             $find_cond["is_delete"] = 0;
             $find_cond["dna_check_result"] = 1;
         }
         //検査中
-        if($request->query->get('filter_status') == 3){
+        if ($request->query->get('filter_status') == 3) {
             $find_cond["dna_check_result"] = 0;
         }
         //成約済み
-        if($request->query->get('filter_status') == 4){
+        if ($request->query->get('filter_status') == 4) {
             $find_cond["is_delete"] = 1;
             //$find_cond["is_contract"] = 1;
         }
 
-        $petResults = $this->breederPetsRepository->findBy($find_cond,["is_delete" => "ASC","is_contract" => "ASC","dna_check_result" => "DESC","create_date" => "DESC"]);
+        $petResults = $this->breederPetsRepository->findBy($find_cond, ["is_delete" => "ASC", "is_contract" => "ASC", "dna_check_result" => "DESC", "create_date" => "DESC"]);
 
         $pets = $paginator->paginate(
             $petResults,
@@ -455,11 +455,11 @@ class BreederController extends AbstractController
         $evaluationCount = count($allEvaluations);
         $evaluations = $this->breederEvaluationsRepository->findBy(['Breeder' => $breeder, 'is_active' => 2], ['create_date' => 'DESC'], 3);
 
-        $html_title = "「".$breeder->getLicenseHouseName()."」".$breeder->getBreederName()."ブリーダー";
+        $html_title = "「" . $breeder->getLicenseHouseName() . "」" . $breeder->getBreederName() . "ブリーダー";
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
-            array('url' => $this->generateUrl('breeder_search'),'title' =>"ブリーダー検索"),
-            array('url' => "#",'title' => "「".$breeder->getLicenseHouseName()."」".$breeder->getBreederName()."ブリーダー")
+            array('url' => $this->generateUrl('breeder_top'), 'title' => "犬・猫ブリーダー直販サイトのアニマルライン "),
+            array('url' => $this->generateUrl('breeder_search'), 'title' => "ブリーダー検索"),
+            array('url' => "#", 'title' => "「" . $breeder->getLicenseHouseName() . "」" . $breeder->getBreederName() . "ブリーダー")
         );
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -477,7 +477,7 @@ class BreederController extends AbstractController
             'evaluationCount' => $evaluationCount,
             'maintitle' => $html_title,
             'breadcrumb' => $breadcrumb,
-            "description_add" => $breeder->getBreederName()."ブリーダー",
+            "description_add" => $breeder->getBreederName() . "ブリーダー",
             "filter_status" => $request->query->get('filter_status')
         ];
 
@@ -493,7 +493,7 @@ class BreederController extends AbstractController
         */
     }
 
-    
+
     /**
      * 評価一覧
      *
@@ -513,7 +513,7 @@ class BreederController extends AbstractController
             $request->query->getInt('page', 1),
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
-       
+
         return compact(
             'breeder',
             'evaluations'
@@ -530,11 +530,11 @@ class BreederController extends AbstractController
     {
         $maintitle = "よくあるご質問";
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
-            array('url' => $this->generateUrl('breeder_faq'),'title' =>"よくあるご質問")
+            array('url' => $this->generateUrl('breeder_top'), 'title' => "犬・猫ブリーダー直販サイトのアニマルライン "),
+            array('url' => $this->generateUrl('breeder_faq'), 'title' => "よくあるご質問")
         );
 
-        return[
+        return [
             'title' => 'よくあるご質問',
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
@@ -551,11 +551,12 @@ class BreederController extends AbstractController
     {
         $maintitle = "会社概要";
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
-            array('url' => $this->generateUrl('breeder_company'),'title' =>"会社概要")
+            array('url' => $this->generateUrl('breeder_top'), 'title' => "犬・猫ブリーダー直販サイトのアニマルライン "),
+            array('url' => $this->generateUrl('breeder_company'), 'title' => "会社概要")
         );
 
-        return['title' => '会社概要',
+        return [
+            'title' => '会社概要',
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
         ];
@@ -571,11 +572,12 @@ class BreederController extends AbstractController
     {
         $maintitle = "ご購入の流れ";
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
-            array('url' => $this->generateUrl('breeder_buyinfo'),'title' =>"ご購入の流れ")
+            array('url' => $this->generateUrl('breeder_top'), 'title' => "犬・猫ブリーダー直販サイトのアニマルライン "),
+            array('url' => $this->generateUrl('breeder_buyinfo'), 'title' => "ご購入の流れ")
         );
 
-        return['title' => 'ご購入の流れ',
+        return [
+            'title' => 'ご購入の流れ',
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
         ];
@@ -591,11 +593,12 @@ class BreederController extends AbstractController
     {
         $maintitle = "お引渡しの流れ";
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
-            array('url' => $this->generateUrl('breeder_transferinfo'),'title' =>"お引渡しの流れ")
+            array('url' => $this->generateUrl('breeder_top'), 'title' => "犬・猫ブリーダー直販サイトのアニマルライン "),
+            array('url' => $this->generateUrl('breeder_transferinfo'), 'title' => "お引渡しの流れ")
         );
 
-        return['title' => 'お引渡しの流れ',
+        return [
+            'title' => 'お引渡しの流れ',
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
         ];
@@ -611,11 +614,12 @@ class BreederController extends AbstractController
     {
         $maintitle = "お迎え時の費用について";
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
-            array('url' => $this->generateUrl('breeder_costinfo'),'title' =>"お迎え時の費用について")
+            array('url' => $this->generateUrl('breeder_top'), 'title' => "犬・猫ブリーダー直販サイトのアニマルライン "),
+            array('url' => $this->generateUrl('breeder_costinfo'), 'title' => "お迎え時の費用について")
         );
 
-        return['title' => 'お迎え時の費用について',
+        return [
+            'title' => 'お迎え時の費用について',
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
         ];
@@ -631,11 +635,12 @@ class BreederController extends AbstractController
     {
         $maintitle = "初めての方へ";
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
-            array('url' => $this->generateUrl('breeder_firstinfo'),'title' =>"初めての方へ")
+            array('url' => $this->generateUrl('breeder_top'), 'title' => "犬・猫ブリーダー直販サイトのアニマルライン "),
+            array('url' => $this->generateUrl('breeder_firstinfo'), 'title' => "初めての方へ")
         );
 
-        return['title' => '初めての方へ',
+        return [
+            'title' => '初めての方へ',
             'maintitle' => $maintitle,
             'breadcrumb' => $breadcrumb,
         ];
@@ -662,7 +667,7 @@ class BreederController extends AbstractController
     {
         $maintitle = "個人情報保護方針";
 
-        return[
+        return [
             'title' => $maintitle,
         ];
     }
@@ -722,17 +727,17 @@ class BreederController extends AbstractController
         $newFilename = $request->get("newFilename");
         if ($form->isSubmitted()) {
             $brochureFile = $form->get('files')->getData();
-            
-            if($brochureFile){
+
+            if ($brochureFile) {
                 $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename = 'contact-'.uniqid().'.'.$brochureFile->guessExtension();
+                $newFilename = 'contact-' . uniqid() . '.' . $brochureFile->guessExtension();
 
                 $brochureFile->move(
                     "var/tmp/contact/",
                     $newFilename
                 );
 
-                $builder->setData(["files" => "var/tmp/contact/".$newFilename]);
+                $builder->setData(["files" => "var/tmp/contact/" . $newFilename]);
             }
         }
 
@@ -763,18 +768,23 @@ class BreederController extends AbstractController
                     $data = $event->getArgument('data');
 
                     // メール送信
-                    $this->mailService->sendContactMail($data,$newFilename);
+                    $this->mailService->sendContactMail($data, $newFilename);
 
                     // return $this->redirect($this->generateUrl('contact_complete'));
                     return $this->render('animalline/breeder/ani_contact_complete.twig');
             }
         }
         $maintitle = "お問い合わせ";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'), 'title' => "犬・猫ブリーダー直販サイトのアニマルライン "),
+            array('url' => $this->generateUrl('breeder_ani_contact'), 'title' => "お問い合わせ"),
+        );
 
         return [
             'title' => $maintitle,
             'form' => $form->createView(),
-            "newFilename" => $newFilename
+            "newFilename" => $newFilename,
+            'breadcrumb' => $breadcrumb,
         ];
     }
 
@@ -787,9 +797,14 @@ class BreederController extends AbstractController
     public function dnainfo(Request $request)
     {
         $maintitle = "遺伝子検査";
+        $breadcrumb = array(
+            array('url' => $this->generateUrl('breeder_top'), 'title' => "犬・猫ブリーダー直販サイトのアニマルライン "),
+            array('url' => $this->generateUrl('breeder_dnainfo'), 'title' => "遺伝子検査"),
+        );
 
-        return[
+        return [
             'title' => $maintitle,
+            'breadcrumb' => $breadcrumb,
         ];
     }
 
@@ -803,7 +818,7 @@ class BreederController extends AbstractController
     {
         $maintitle = "代表的な検査項目";
 
-        return[
+        return [
             'title' => $maintitle,
         ];
     }

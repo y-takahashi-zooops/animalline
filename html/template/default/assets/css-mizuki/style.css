@@ -888,18 +888,6 @@ a {
   cursor: pointer;
 }
 
-@media (max-width: 599px) {
-  .mizuki_dna-test_faq-question {
-    padding-left: 5rem;
-    position: relative;
-    text-align: start;
-    font-size: 15px;
-    line-height: 1.6875;
-    font-weight: 500;
-    cursor: pointer;
-  }
-}
-
 .mizuki_dna-test_faq-question span {
   width: 35px;
   height: 35px;
@@ -1179,6 +1167,10 @@ a {
   width: 28.5%;
   position: relative;
   align-items: center;
+}
+
+.pet-ranking-list_item a {
+  width: 100%;
 }
 
 .pet-ranking-list_item-image {
@@ -1930,6 +1922,5 @@ a {
   margin-top: -37px;
   margin-left: 160px;
 }
-
 
 /*# sourceMappingURL=style.css.map */

@@ -10,7 +10,7 @@ RESET
 }
 
 html {
-  overflow-y:scroll;  
+  overflow-y:scroll;
 }
 
 body {
@@ -4987,4 +4987,15 @@ CONTENTS後藤追加分
     width: 100%;
     display:block;
   }
+}
+
+
+.for-seo {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
 }

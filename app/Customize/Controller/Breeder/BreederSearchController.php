@@ -138,7 +138,7 @@ class BreederSearchController extends AbstractController
             $maintitle .= "(".$breredname.")";
         }
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"犬・猫ブリーダー直販サイトのアニマルライン "),
             array('url' => "#",'title' => $maintitle)
         );
 
@@ -223,7 +223,7 @@ class BreederSearchController extends AbstractController
 
         $maintitle = "ブリーダー検索";
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"犬・猫ブリーダー直販サイトのアニマルライン "),
             array('url' => "#",'title' => "ブリーダー検索")
         );
 

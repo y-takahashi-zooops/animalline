@@ -31,7 +31,8 @@ class Breeds
     /**
      * @ORM\Column(name="breeds_name", type="string", length=255)
      */
-    private $breeds_name;
+    // private $breeds_name;
+    public $breeds_name;
 
     /**
      * @ORM\Column(name="size_code", type="smallint")
