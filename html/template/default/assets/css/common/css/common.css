@@ -1328,3 +1328,13 @@ a {
 	border-color: #D5D5D5;
 	background-color: #DB7064;
 }
+
+.for-seo {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+}

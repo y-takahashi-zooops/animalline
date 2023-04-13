@@ -251,7 +251,7 @@ class BreederPetController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             //受信ファイル処理
             $brochureFile = $form->get('movie_file')->getData();
 
@@ -341,11 +341,11 @@ class BreederPetController extends AbstractController
 
         //$maintitle = "犬・猫ブリーダー直販のアニマルライン";
         $breadcrumb = array(
-            array('url' => $this->generateUrl('breeder_top'),'title' =>"ブリーダーTOP"),
-            array('url' => "#",'title' => $breederPet->getBreedsType()->getbreedsName()),
+            array('url' => $this->generateUrl('breeder_top'),'title' =>"犬・猫ブリーダー直販サイトのアニマルライン "),
+            array('url' => "https://animalline.jp/breeder/pet/search/result?breed_type=" . $breederPet->getBreedsType()->getId(),'title' => $breederPet->getBreedsType()->getbreedsName()),
             array('url' => "#",'title' => "ペットID : ".$breederPet->getId())
         );
-        
+
         $entityManager = $this->getDoctrine()->getManager();
         $breederPet->setViewCount(intval($breederPet->getViewCount() + 1));
         $entityManager->persist($breederPet);

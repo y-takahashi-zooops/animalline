@@ -23,8 +23,8 @@ file that was distributed with this source code.
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="eccube-csrf-token" content="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
-    <title>アニマルライン 犬・猫のブリーダー直販と里親募集サイト | {{ title }}</title>
-    <meta name="description" content="Animalline（アニマルライン）は、「ブリーダー直販」と「里親としてペットを迎える」という２つの方法で、ブリーダー・動物保護団体・ペットを飼われる方に寄り添うサポートを実施致しております。">
+    <title>ログイン｜犬・猫のブリーダー直販と里親募集サイト</title>
+    <meta name="description" content="犬・猫ブリーダー直販サイトのアニマルライン「ログイン」ページです。ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
     {% if Page.author is not empty %}
         <meta name="author" content="{{ Page.author }}">
     {% endif %}
@@ -47,7 +47,7 @@ file that was distributed with this source code.
 
     <link rel="stylesheet" href="{{ asset('assets/css/base-style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/common.css') }}">
-    <link rel="canonical" href=" {{ app.request.getUri }}">
+    <link rel="canonical" href="{{ app.request.getUri }}">
     
     {% block stylesheet %}{% endblock %}
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>

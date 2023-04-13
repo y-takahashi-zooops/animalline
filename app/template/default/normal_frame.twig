@@ -51,9 +51,17 @@ file that was distributed with this source code.
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="eccube-csrf-token" content="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
+
+    {% set part_uri = path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params'))[1:] %}
+    {% if part_uri == 'entry' %}
+    <title>新規会員登録｜ 犬・猫のブリーダー直販と里親募集サイトのアニマルライン</title>
+    <meta name="description" content="アニマルラインの「新規会員登録」ページです。アニマルラインではブリーダー・動物保護団体・ペットを飼われる方に寄り添うサポートを実施致しております。">
+    {# {% elseif part_uri == 'dctn' %} #}
+    {% else %}
     <title>{{ BaseInfo.shop_name }}{% if subtitle is defined and subtitle is not empty %} / {{ subtitle }}{% elseif title is defined and title is not empty %} / {{ title }}{% endif %}</title>
     <meta name="description" content="Animalline（アニマルライン）は、「ブリーダー直販」と「里親としてペットを迎える」という２つの方法で、ブリーダー・動物保護団体・ペットを飼われる方に寄り添うサポートを実施致しております。">
-    
+    {% endif %}
+
     {% if Page.author is not empty %}
         <meta name="author" content="{{ Page.author }}">
     {% endif %}

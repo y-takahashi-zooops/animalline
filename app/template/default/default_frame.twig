@@ -38,12 +38,33 @@
     gtag('js', new Date());
     gtag('config', 'UA-212594413-1');
     </script>
-    
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="eccube-csrf-token" content="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
+
+    {% set part_uri = path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params'))[1:] %}
+
+    {% if part_uri == 'contact' %}
+    <title>お問い合わせ｜ 犬・猫のブリーダー直販と里親募集サイトのアニマルライン</title>
+    <meta name="description" content="アニマルラインの「お問い合わせ」ページです。アニマルラインではブリーダー・動物保護団体・ペットを飼われる方に寄り添うサポートを実施致しております。">
+    {% elseif part_uri == 'ec' %}
+    <title>商品販売トップ｜アニマルライン</title>
+    <meta name="description" content="アニマルラインの「商品販売トップ」ページです。アニマルラインではブリーダー・動物保護団体・ペットを飼われる方に寄り添うサポートを実施致しております。">
+    {% elseif part_uri == 'forgot' %}
+    <title>パスワードの再発行｜商品販売｜アニマルライン</title>
+    <meta name="description" content="アニマルラインの「パスワードの再発行｜商品販売」ページです。アニマルラインではブリーダー・動物保護団体・ペットを飼われる方に寄り添うサポートを実施致しております。">
+    {% elseif part_uri == 'help/privacy' %}
+    <title>プライバシーポリシー｜商品販売｜アニマルライン</title>
+    <meta name="description" content="アニマルラインの「プライバシーポリシー｜商品販売」ページです。アニマルラインではブリーダー・動物保護団体・ペットを飼われる方に寄り添うサポートを実施致しております。">
+    {% elseif part_uri == 'help/tradelaw' %}
+    <title>特定商取引法に基づく表記｜商品販売｜アニマルライン</title>
+    <meta name="description" content="アニマルラインの「特定商取引法に基づく表記｜商品販売」ページです。アニマルラインではブリーダー・動物保護団体・ペットを飼われる方に寄り添うサポートを実施致しております。">
+    {% else %}
     <title>{{ BaseInfo.shop_name }}{% if subtitle is defined and subtitle is not empty %} / {{ subtitle }}{% elseif title is defined and title is not empty %} / {{ title }}{% endif %}</title>
     <meta name="description" content="Animalline（アニマルライン）は、「ブリーダー直販」と「里親としてペットを迎える」という２つの方法で、ブリーダー・動物保護団体・ペットを飼われる方に寄り添うサポートを実施致しております。">
+    {% endif %}
+
     {% if Page.author is not empty %}
         <meta name="author" content="{{ Page.author }}">
     {% endif %}
@@ -70,7 +91,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Asap:wght@400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="{{ asset('assets/css/common/css/common.css?ver=2110291') }}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <link rel="canonical" href=" {{ app.request.getUri }}">
+    <link rel="canonical" href="{{ app.request.getUri }}">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 {% block stylesheet %}{% endblock %}
     <script>
