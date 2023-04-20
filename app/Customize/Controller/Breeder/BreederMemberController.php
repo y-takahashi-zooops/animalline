@@ -30,6 +30,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Eccube\Form\Type\Front\EntryType;
 use Customize\Repository\BreederContactHeaderRepository;
+use Customize\Repository\BreederPetsRepository;
+use Customize\Service\MailService;
+use Customize\Entity\BreederContactHeader;
+use Carbon\Carbon;
 
 class BreederMemberController extends AbstractController
 {
@@ -74,6 +78,16 @@ class BreederMemberController extends AbstractController
     protected $benefitsStatusRepository;
 
     /**
+     * @var BreederPetsRepository
+     */
+    protected $breederPetsRepository;
+
+    /**
+     * @var MailService
+     */
+    protected $mailService;
+
+    /**
      * BreederController constructor.
      *
      * @param CustomerRepository $customerRepository
@@ -84,6 +98,8 @@ class BreederMemberController extends AbstractController
      * @param BankAccountRepository $bankAccountRepository
      * @param BreederContactHeaderRepository $breederContactHeaderRepository
      * @param BenefitsStatusRepository $benefitsStatusRepository
+     * @param BreederPetsRepository $breederPetsRepository
+     * @param MailService $mailService
      */
     public function __construct(
         CustomerRepository  $customerRepository,
@@ -93,7 +109,9 @@ class BreederMemberController extends AbstractController
         TokenStorageInterface $tokenStorage,
         BankAccountRepository $bankAccountRepository,
         BreederContactHeaderRepository $breederContactHeaderRepository,
-        BenefitsStatusRepository $benefitsStatusRepository
+        BenefitsStatusRepository $benefitsStatusRepository,
+        BreederPetsRepository  $breederPetsRepository,
+        MailService $mailService
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
@@ -103,6 +121,8 @@ class BreederMemberController extends AbstractController
         $this->bankAccountRepository = $bankAccountRepository;
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->benefitsStatusRepository = $benefitsStatusRepository;
+        $this->breederPetsRepository = $breederPetsRepository;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -173,6 +193,44 @@ class BreederMemberController extends AbstractController
         $user = $this->getUser();
         $breeder = $this->breedersRepository->find($user);
         $canBenefits = false;
+
+        //問い合わせから来た場明の判定とセッション変数取得
+        $contact_save = $request->cookies->get('contact_save');
+        if($contact_save){
+            $contact_pet_id = $request->cookies->get('contact_pet');
+            $contact_image = $request->cookies->get('contact_image');
+            $contact_title = $request->cookies->get('contact_title');
+            $contact_description = $request->cookies->get('contact_description');
+            $booking_request = $request->cookies->get('booking_request');
+            $contact_type = $request->cookies->get('contact_type');
+
+            $contact = new BreederContactHeader();
+            $pet = $this->breederPetsRepository->find($contact_pet_id);
+
+            $contact
+                    ->setSendDate(Carbon::now())
+                    ->setPet($pet)
+                    ->setBreeder($pet->getBreeder())
+                    ->setCustomer($this->getUser())
+                    ->setContactTitle($contact_title)
+                    ->setImageFile($contact_image)
+                    ->setContactDescription($contact_description)
+                    ->setContactType($contact_type)
+                    ->setLastMessageDate(Carbon::now());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($contact);
+
+            $pet->setIsContact(1);
+            $entityManager->persist($pet);
+
+            $entityManager->flush();
+            $breeder = $this->customerRepository->find($contact->getBreeder()->getId());
+            $this->mailService->sendMailContractAccept($breeder, 1);
+
+            return $this->redirectToRoute('breeder_contact_complete', ['pet_id' => $contact_pet_id]);
+        }
+        //ここまで
 
         $pets = $this->breederQueryService->findBreederFavoritePets($this->getUser()->getId());
 

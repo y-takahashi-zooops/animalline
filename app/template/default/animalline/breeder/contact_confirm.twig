@@ -86,9 +86,16 @@
                             <div class="ec-registerRole__actions">
                                 <div class="ec-off4Grid">
                                     <div class="ec-off4Grid__cell">
-                                        <button class="basic-btn breeder-btn mb-4" type="submit" name="mode" value="complete">
-                                            {{ '送信'|trans }}
-                                        </button>
+                                        {% if(is_auth) %}
+                                            <button class="basic-btn breeder-btn mb-4" type="submit" name="mode" value="complete">
+                                                {{ '送信'|trans }}
+                                            </button>
+                                        {% else %}
+                                            <p style="color: #F00">※ログイン画面に遷移します。既に会員登録済みの方はログイン後問い合わせが送信されます。新規会員様はログイン画面から新規会員登録を選択してください。会員登録完了後問い合わせが送信されます。</p>
+                                            <button class="basic-btn breeder-btn mb-4" type="submit" name="mode" value="complete">
+                                                ログインして送信
+                                            </button>
+                                        {% endif %}
                                         <button class="basic-btn accent-btn bg-accent text-align-center" type="submit" name="mode" value="back">
                                             {{ '戻る'|trans }}
                                         </button>
