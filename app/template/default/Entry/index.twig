@@ -32,7 +32,10 @@ file that was distributed with this source code.
 {% block main %}
     <div class="ec-registerRole">
         <div class="ec-pageHeader">
-
+            <div style="margin: 0 20%">
+                <p style="color:#F00">すでに会員登録済みの方は「会員ログイン」からログインしてください。</p>
+                <button class="ec-blockBtn--action" onclick="location.href='{{ url('breeder_login') }}'">会員ログイン</button>
+            </div>
 {% if request.get('ReturnPath') =="adoption_mypage" %}
     <h1>{{ '新規保護団体代表者様登録'|trans }}</h1>
 {% elseif request.get('ReturnPath') =="breeder_mypage" %}
@@ -46,6 +49,8 @@ file that was distributed with this source code.
         {% endif %}
         {% if request.get('ReturnPath') =="breeder_mypage" %}
         <div style="border: solid 1px; padding: 1rem;"><b>代表者様の情報をご記入ください。団体情報のご記入 は本会員登録後にございます。</b></div>
+        {% else %}
+            
         {% endif %}
 
         <div class="ec-off1Grid">

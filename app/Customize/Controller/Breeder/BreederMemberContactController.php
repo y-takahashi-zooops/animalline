@@ -629,9 +629,9 @@ class BreederMemberContactController extends AbstractController
                     );
 
                 case 'complete':
-                    //未ログインの場合はログイン画面に遷移
+                    //未ログインの場合は新規登録画面に遷移
                     if(!$this->getUser()){
-                        return $this->redirectToRoute('breeder_login');
+                        return $this->redirectToRoute('entry',["ReturnPath" => "breeder_top"]);
                     }
 
                     $contact
