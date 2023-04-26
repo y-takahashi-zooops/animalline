@@ -32,16 +32,23 @@ file that was distributed with this source code.
 {% block main %}
     <div class="ec-registerRole">
         <div class="ec-pageHeader">
+            {% if contact_save %}
             <div style="margin: 0 20%">
-                <p style="color:#F00">すでに会員登録済みの方は「会員ログイン」からログインしてください。</p>
+                <p style="color:#F00">すでに会員登録済みの方は「会員ログイン」からログインしてください。<br />
+                ログインをした際にお問い合わせメッセージが送信されます。</p>
                 <button class="ec-blockBtn--action" onclick="location.href='{{ url('breeder_login') }}'">会員ログイン</button>
             </div>
+            {% endif %}
 {% if request.get('ReturnPath') =="adoption_mypage" %}
     <h1>{{ '新規保護団体代表者様登録'|trans }}</h1>
 {% elseif request.get('ReturnPath') =="breeder_mypage" %}
     <h1>{{ '新規ブリーダー様登録'|trans }}</h1>
 {% else %}
+    {% if contact_save %}
+    <h1>{{ 'お客様情報入力'|trans }}</h1>
+    {% else %}
     <h1>{{ '新規会員登録'|trans }}</h1>
+    {% endif %}
 {% endif %}
         </div>
         {% if request.get('ReturnPath') =="adoption_mypage" %}

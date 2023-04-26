@@ -339,11 +339,15 @@ class AnilineEntryController extends AbstractController
             }
         }
 
+        //問い合わせから来た場明の判定とセッション変数取得
+        $contact_save = $request->cookies->get('contact_save');
+
         return [
             'returnPath' => $returnPath,
             'form' => $form->createView(),
             'request' => $request,
             'prefix' => $prefix,
+            'contact_save' => $contact_save
         ];
     }
 
