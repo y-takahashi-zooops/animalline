@@ -12,7 +12,7 @@
                 </div>
                 <div class="ec-off1Grid">
                     <div class="ec-off1Grid__cell">
-                        <form method="post" action="{{ url('breeder_contact', {'pet_id': id}) }}" class="h-adr" enctype="multipart/form-data" novalidate>
+                        <form method="post" action="{{ url('breeder_contact', {'pet_id': id}) }}" class="h-adr" enctype="multipart/form-data">
                             <span class="p-country-name" style="display:none;">
                                 Japan
                             </span>
@@ -21,6 +21,7 @@
                                 <dl>
                                     <dt>
                                         {{ form_label(form.contact_type, 'コンタクト内容タイトル', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <span class="ec-required">必須</span>
                                     </dt>
                                     <dd>
                                         <div class="ec-select{{ has_errors(form.contact_type) ? ' error' }}">
@@ -31,9 +32,8 @@
                                 </dl>
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.contact_description, 'コンタクト内容本文', { 'label_attr': { 'class': 'ec-label' }}
-                                        ) }}
-                                                                    
+                                        {{ form_label(form.contact_description, 'コンタクト内容本文', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <span class="ec-required">必須</span>
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.contact_description) ? ' error' }}">
@@ -42,11 +42,11 @@
                                         </div>
                                     </dd>
                                 </dl>
+                                <div id="contact-booking-request" style="display: none">
                                 <dl>
                                     <dt>
-                                        {{ form_label(form.booking_request, '見学希望日', { 'label_attr': { 'class': 'ec-label' }}
-                                        ) }}
-                                                                    
+                                        {{ form_label(form.booking_request, '見学希望日', { 'label_attr': { 'class': 'ec-label' }}) }}
+                                        <span class="ec-required">必須</span>
                                     </dt>
                                     <dd>
                                         <div class="ec-input{{ has_errors(form.booking_request) ? ' error' }}">
@@ -55,6 +55,7 @@
                                         </div>
                                     </dd>
                                 </dl>
+                                </div>
                                 <dl>
                                     <dt>
                                         {{ form_label(form.files, '添付ファイル', { 'label_attr': { 'class': 'ec-label' }}) }}
@@ -115,6 +116,21 @@
 <script src="{{ asset('assets/js/contact_pet.js') }}"></script>
 <script>
     checkContact('{{ isSelf }}', '{{ isSold }}', '{{ isContacted }}', '{{ url("breeder_pet_detail", {"id": id})}}');
+
+    $('#breeder_contact_contact_type').ready( function() {
+        $('#breeder_contact_contact_type').change( function() {
+            if($('#breeder_contact_contact_type').val() == '2'){
+                $('#contact-booking-request').css("display", "block");
+                $('#breeder_contact_booking_request').attr("required","required");
+            }
+            else{
+                $('#contact-booking-request').css("display", "none");
+                $('#breeder_contact_booking_request').removeAttr("required")
+            }
+        });
+
+        $('#breeder_contact_contact_type').trigger('change');
+    });
 </script>
 {% endblock %}
     

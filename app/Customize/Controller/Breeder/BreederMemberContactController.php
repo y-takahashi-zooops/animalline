@@ -30,6 +30,8 @@ use Customize\Form\Type\Breeder\BreederContactType;
 use Customize\Form\Type\Breeder\BreederEvaluationsType;
 use Customize\Service\MailService;
 use Customize\Form\Type\Breeder\BreederNoPetContactType;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class BreederMemberContactController extends AbstractController
 {
@@ -554,7 +556,7 @@ class BreederMemberContactController extends AbstractController
     /**
      * お問い合わせ画面
      *
-     * @Route("/breeder/member/contact/{pet_id}", name="breeder_contact", requirements={"pet_id" = "\d+"})
+     * @Route("/breeder/contact/{pet_id}", name="breeder_contact", requirements={"pet_id" = "\d+"})
      * @Template("/animalline/breeder/contact.twig")
      */
     public function contact(Request $request)
@@ -595,19 +597,43 @@ class BreederMemberContactController extends AbstractController
             $builder->setData(["files" => "html/upload/contact/".$newFilename]);
         }
 
+        $response = new Response();
+
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
+                    //セッション変数をリセットして認証情報を取得する
+                    if(!$this->getUser()){
+                        $response->headers->setCookie(new Cookie('contact_save', true));
+                        $response->headers->setCookie(new Cookie('contact_pet', $pet->getId()));
+                        $response->headers->setCookie(new Cookie('contact_image', $newFilename));
+                        $response->headers->setCookie(new Cookie('contact_title', $arrayLabel[$request->get('breeder_contact')['contact_type'] - 1]));
+                        $response->headers->setCookie(new Cookie('contact_description', $form->get('contact_description')->getData()));
+                        $response->headers->setCookie(new Cookie('booking_request', $form->get('booking_request')->getData()));
+                        $response->headers->setCookie(new Cookie('contact_type', $request->get('breeder_contact')['contact_type']));
+                    }
+
+                    $is_auth = false;
+                    if($this->getUser()){
+                        $is_auth = true;
+                    }
+
                     return $this->render(
                         'animalline/breeder/contact_confirm.twig',
                         [
                             'form' => $form->createView(),
                             'id' => $id,
-                            'newFilename' => $newFilename
-                        ]
+                            'newFilename' => $newFilename,
+                            'is_auth' => $is_auth
+                        ], $response
                     );
 
                 case 'complete':
+                    //未ログインの場合は新規登録画面に遷移
+                    if(!$this->getUser()){
+                        return $this->redirectToRoute('entry',["ReturnPath" => "breeder_top"]);
+                    }
+
                     $contact
                         ->setSendDate(Carbon::now())
                         ->setPet($pet)
@@ -630,19 +656,35 @@ class BreederMemberContactController extends AbstractController
                     return $this->redirectToRoute('breeder_contact_complete', ['pet_id' => $id]);
             }
         }
+        else {
+            $response->headers->setCookie(new Cookie('contact_save', false));
+            $response->headers->setCookie(new Cookie('contact_pet', ""));
+            $response->headers->setCookie(new Cookie('contact_image', ""));
+            $response->headers->setCookie(new Cookie('contact_title', ""));
+            $response->headers->setCookie(new Cookie('contact_description', ""));
+            $response->headers->setCookie(new Cookie('booking_request', ""));
+            $response->headers->setCookie(new Cookie('contact_type', ""));
+        }
 
-        $isSelf = $this->getUser()->getId() === $pet->getBreeder()->getId();
+        //ユーザー認証を外したので自分のペットかどうかの判定は削除
+        //$isSelf = $this->getUser()->getId() === $pet->getBreeder()->getId();
+        $isSelf = false;
+        
+        
         $isSold = (bool)$this->breederContactHeaderRepository->findOneBy(['Pet' => $pet, 'contract_status' => AnilineConf::CONTRACT_STATUS_CONTRACT]);
         $isContacted = $this->breederContactHeaderRepository->checkContacted($this->getUser(), $pet);
 
-        return [
-            'form' => $form->createView(),
-            'id' => $id,
-            'isSelf' => $isSelf,
-            'isSold' => $isSold,
-            'isContacted' => $isContacted,
-            "newFilename" => $newFilename
-        ];
+        return $this->render(
+            'animalline/breeder/contact.twig',
+            [
+                'form' => $form->createView(),
+                'id' => $id,
+                'isSelf' => $isSelf,
+                'isSold' => $isSold,
+                'isContacted' => $isContacted,
+                "newFilename" => $newFilename
+            ], $response
+        );
     }
 
     /**
@@ -653,9 +695,19 @@ class BreederMemberContactController extends AbstractController
      */
     public function complete(Request $request)
     {
+        $response = new Response();
+
+        $response->headers->setCookie(new Cookie('contact_save', false));
+        $response->headers->setCookie(new Cookie('contact_pet', ""));
+        $response->headers->setCookie(new Cookie('contact_image', ""));
+        $response->headers->setCookie(new Cookie('contact_title', ""));
+        $response->headers->setCookie(new Cookie('contact_description', ""));
+        $response->headers->setCookie(new Cookie('booking_request', ""));
+        $response->headers->setCookie(new Cookie('contact_type', ""));
+
         return $this->render('animalline/breeder/contact_complete.twig', [
             'id' => $request->get('pet_id')
-        ]);
+        ],$response);
     }
 
     /**

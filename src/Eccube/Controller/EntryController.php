@@ -311,7 +311,7 @@ class EntryController extends AbstractController
         }
 
         // 本会員登録してログイン状態にする
-        $token = new UsernamePasswordToken($Customer, null, 'customer', ['ROLE_USER']);
+        $token = new UsernamePasswordToken($Customer, null, 'breeder', ['ROLE_USER']);
         $this->tokenStorage->setToken($token);
         $request->getSession()->migrate(true);
 

@@ -177,7 +177,7 @@ class AnilineEntryController extends AbstractController
             $returnPath = "homepage";
         }
 
-        if($returnPath == "breeder_mypage"){
+        if($returnPath == "breeder_mypage" || $returnPath == "breeder_top"){
             $prefix = "breeder";
             $regist_type = 1;
         }
@@ -304,7 +304,13 @@ class AnilineEntryController extends AbstractController
 
                     // 仮会員設定が有効な場合は、確認メールを送信し完了画面表示.
                     if ($activateFlg) {
-                        $activateUrl = $this->generateUrl('entry_activate', ['secret_key' => $Customer->getSecretKey(),'returnPath' => $returnPath], UrlGeneratorInterface::ABSOLUTE_URL);
+                        if($prefix == "breeder"){
+                            $activateUrl = $this->generateUrl('breeder_entry_activate', ['secret_key' => $Customer->getSecretKey(),'returnPath' => $returnPath], UrlGeneratorInterface::ABSOLUTE_URL);
+                        }
+                        else {
+                            $activateUrl = $this->generateUrl('entry_activate', ['secret_key' => $Customer->getSecretKey(),'returnPath' => $returnPath], UrlGeneratorInterface::ABSOLUTE_URL);
+                        }
+                        
 
                         // メール送信
                         $this->mailService->sendCustomerConfirmMail($Customer, $activateUrl);
@@ -333,11 +339,15 @@ class AnilineEntryController extends AbstractController
             }
         }
 
+        //問い合わせから来た場明の判定とセッション変数取得
+        $contact_save = $request->cookies->get('contact_save');
+
         return [
             'returnPath' => $returnPath,
             'form' => $form->createView(),
             'request' => $request,
             'prefix' => $prefix,
+            'contact_save' => $contact_save
         ];
     }
 
@@ -432,6 +442,71 @@ class AnilineEntryController extends AbstractController
         throw new HttpException\NotFoundHttpException();
     }
 
+    /**
+     * 会員のアクティベート（本会員化）を行う.
+     *
+     * @Route("/breeder/entry/activate/{secret_key}/{returnPath}/{qtyInCart}", name="breeder_entry_activate")
+     * @Route("/breeder/entry/activate/{secret_key}/", name="breeder_entry_activate_noret")
+     * @Template("Entry/activate.twig")
+     */
+    public function breeder_activate(Request $request, $secret_key, $returnPath = null, $qtyInCart = null)
+    {
+        if(!$returnPath){$returnPath = "homepage";}
+
+        if($returnPath == "breeder_mypage"){
+            $prefix = "breeder";
+        }
+        else if($returnPath == "adoption_mypage"){
+            $prefix = "adoption";
+        }
+        else{
+            $prefix = "default";
+        }
+
+        $errors = $this->recursiveValidator->validate(
+            $secret_key,
+            [
+                new Assert\NotBlank(),
+                new Assert\Regex(
+                    [
+                        'pattern' => '/^[a-zA-Z0-9]+$/',
+                    ]
+                ),
+            ]
+        );
+
+        if(!is_null($qtyInCart)) {
+
+            return [
+                'qtyInCart' => $qtyInCart,
+                'returnPath' => $returnPath,
+                'prefix' => $prefix,
+            ];
+        } elseif ($request->getMethod() === 'GET' && count($errors) === 0) {
+
+            // 会員登録処理を行う
+            $qtyInCart = $this->entryActivate($request, $secret_key,$prefix);
+
+            //問い合わせからの会員登録の場合はマイページに遷移し問い合わせ実行
+            $contact_save = $request->cookies->get('contact_save');
+            if($contact_save){
+                return $this->redirectToRoute("breeder_mypage");
+            }
+            //ここまで
+
+            if($qtyInCart == -1){
+                return $this->redirectToRoute("entry_completed");
+            }
+            return [
+                'qtyInCart' => $qtyInCart,
+                'returnPath' => $returnPath,
+                'prefix' => $prefix,
+            ];
+        }
+
+        throw new HttpException\NotFoundHttpException();
+    }
+
 
     /**
      * 会員登録処理を行う
@@ -475,7 +550,7 @@ class AnilineEntryController extends AbstractController
         }
 
         // 本会員登録してログイン状態にする
-        $token = new UsernamePasswordToken($Customer, null, 'customer', ['ROLE_USER']);
+        $token = new UsernamePasswordToken($Customer, null, 'breeder', ['ROLE_USER']);
         $this->tokenStorage->setToken($token);
         $request->getSession()->migrate(true);
 

@@ -60,10 +60,20 @@ class BreederContactType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(),
-                ]
+                ],
+                'attr' => [
+                    'placeholder' => '○○県から、家族○人で見学に伺うことは可能でしょうか。
+子犬の動画や、親犬の写真を見せていただくことは可能でしょうか。',
+                ],
             ])
             ->add('booking_request', TextareaType::class, [
                 'required' => false,
+                'attr' => [
+                    'placeholder' => '第一候補日：○月○日○時～
+第二候補日：▲月▲日▲時以降
+
+土日の日中を希望します。',
+                ],
             ])
             ->add('files', FileType::class, [
                 'label' => '添付ファイル',
