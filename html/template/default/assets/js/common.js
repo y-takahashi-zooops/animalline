@@ -9,6 +9,7 @@ jQuery(function($){
   } else {
   var headerHight = 80;
   }
+  
   $('a[href^="#"]').click(function(e){
   var anchor = $(this),
   href = anchor.attr('href'),
@@ -32,6 +33,10 @@ jQuery(function($){
   return false;
   }
   });
+
+ $('.sm-close-menu').click(function(e){
+  $('.btn-trigger').trigger('click');
+ });
 /*-----------------------------
 　スクロール
 -----------------------------*/
