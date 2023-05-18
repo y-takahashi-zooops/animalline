@@ -283,7 +283,7 @@ class BreederPetController extends AbstractController
      * @Route("/breeder/pet/detail/{id}", name="breeder_pet_detail", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/pet/detail.twig")
      */
-    public function petDetail(Request $request): ?Response
+    public function petDetail(Request $request, PaginatorInterface $paginator): ?Response
     {
         $isLoggedIn = (bool)$this->getUser();
         $id = $request->get('id');
@@ -387,6 +387,18 @@ class BreederPetController extends AbstractController
         //犬種
         $breeds_dog = $this->breederQueryService->getBreedsHavePet(1);
 
+        //ブリーダーのペット
+        $find_cond["Breeder"] = $breederPet->getBreeder();
+        $find_cond["is_active"] = 1;
+
+        $petResults = $this->breederPetsRepository->findBy($find_cond, ["is_delete" => "ASC", "is_contract" => "ASC", "dna_check_result" => "DESC", "create_date" => "DESC"]);
+
+        $pets = $paginator->paginate(
+            $petResults,
+            $request->query->getInt('page', 1),
+            AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
+        );
+
         return $this->render(
             'animalline/breeder/pet/detail.twig',
             [
@@ -414,6 +426,7 @@ class BreederPetController extends AbstractController
                 'pref_ids_dog_breeder' => $pref_ids_dog_breeder,
                 'pref_name_dog_breeder' => $pref_name_dog_breeder,
                 'search_box_mode' => $petKind,
+                'pets' => $pets,
             ]
         );
     }

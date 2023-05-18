@@ -173,6 +173,19 @@ class BreederQueryService
                 ->setParameter('size_code', $request->get('size_code'));
         }
 
+        if ($request->get('size_code') && $request->get('pet_kind') == AnilineConf::ANILINE_PET_KIND_CAT) {
+            if($request->get('size_code') == 1){
+                $size_cond = array(1,3);
+            }
+            else {
+                $size_cond = array(2,3);
+            }
+            $query->join('p.BreedsType', 'b')
+                ->andWhere('b.size_code in (:size_code)')
+                ->setParameter('size_code', $size_cond);
+        }
+        
+
         if ($request->get('breed_type')) {
             $query->andWhere('p.BreedsType = :breeds_type')
                 ->setParameter('breeds_type', $request->get('breed_type'));
@@ -222,7 +235,9 @@ class BreederQueryService
             $query->orderBy('p.favorite_count', 'DESC');
         }
         */
-        return $query->orderBy('p.create_date', 'DESC')
+        return $query->orderBy('p.is_delete', 'asc')
+            ->addOrderBy('p.is_contract', 'asc')
+            ->addOrderBy('p.update_date', 'desc')
             ->getQuery()
             ->getResult();
     }
