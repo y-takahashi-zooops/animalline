@@ -22,6 +22,7 @@ $(function() {
         }
 
         // PC表示の時のみに適用
+        /*
         if (window.innerWidth > 767) {
 
             if ($('.ec-orderRole').length) {
@@ -44,6 +45,7 @@ $(function() {
 
             }
         }
+        */
         return false;
     });
 
