@@ -49,6 +49,16 @@ class DnaSalesStatus
     private $status_comment;
 
     /**
+     * @ORM\Column(type="integer", options={"default" : 0})
+     */
+    private $price;
+
+    /**
+     * @ORM\Column(type="integer", options={"default" : 0})
+     */
+    private $test_count;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $file_path;
@@ -116,6 +126,30 @@ class DnaSalesStatus
         $this->BreedsType = $BreedsType;
 
         return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function setTestCount(int $test_count): self
+    {
+        $this->test_count = $test_count;
+
+        return $this;
+    }
+
+    public function getTestCount(): ?int
+    {
+        return $this->test_count;
     }
 
     public function getCheckStatus(): ?int

@@ -23,6 +23,7 @@
             <div class="ec-off1Grid">
 				<div class="ec-off1Grid__cell">
 
+                    {% if header %}
                     <form method="post" action="{{ url('dna_buy') }}" class="h-adr">
                     <table class="ec-dna-sales">
                         <tr>
@@ -30,29 +31,33 @@
                             <th>検査項目数</th>
                             <th>金額（税込）</th>
                         </tr>
+                        {% for detail in details %}
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ detail.getBreedsType().getBreedsName() }}</td>
+                            <td>{{ detail.getTestCount() }}</td>
+                            <td>{{ detail.getPrice() | number_format }}円</td>
                         </tr>
+                        {% endfor %}
                         <tr>
                             <td></td>
                             <td>検査料金合計</td>
-                            <td></td>
+                            <td>{{ header.getTotalPrice() | number_format }}円</td>
                         </tr>
                     </table>
+                    {% endif %}
 
                     <input type="hidden" id="order_type" name="order_type" value="normal" />
                     <input type="hidden" id="product_id" name="product_id" value="3065" />
-                    <input type="hidden" id="ProductClass" name="ProductClass" value="2438" />
+                    <input type="hidden" id="ProductClass" name="ProductClass" value="2445" />
                     <input type="hidden" id="normal_quantity" name="normal_quantity" value="1" />
                     <input type="hidden" id="quantity" name="quantity" value="1" />
                     <input type="hidden" id="is_repeat" name="is_repeat" />
                     <input type="hidden" id="repeat_span" name="repeat_span" /><input type="hidden" id="span_unit" name="span_unit" />
                     <input type="hidden" name="{{ constant('Eccube\\Common\\Constant::TOKEN_NAME') }}" value="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
-                    <button type="submit" id="buy_exec" class="ec-blockBtn--action" name="mode" value="confirm" disabled>購入手続きへ</form>
+                    <button type="submit" id="buy_exec" class="ec-blockBtn--action" name="mode" value="confirm" {% if not header %} disabled{% endif %}>購入手続きへ</form>
                 </div>
             </div>
+            
         </div><!-- contents -->
     </main><!-- container -->
 {% endblock %}

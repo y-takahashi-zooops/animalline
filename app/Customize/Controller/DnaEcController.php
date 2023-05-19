@@ -34,6 +34,7 @@ use Customize\Entity\DnaSalesDetail;
 use Customize\Entity\DnaSalesHeader;
 use Customize\Entity\DnaSalesStatus;
 use Customize\Form\Type\DnaSalesType;
+use Customize\Repository\DnaSalesHeaderRepository;
 use Customize\Repository\DnaSalesDetailRepository;
 use Customize\Repository\DnaSalesStatusRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,6 +45,8 @@ use Eccube\Repository\CartItemRepository;
 use Eccube\Repository\CartRepository;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class DnaEcController extends BaseProductController
 {
@@ -112,6 +115,16 @@ class DnaEcController extends BaseProductController
      */
     protected $dnaSalesStatusRepository;
 
+    /**
+     * @var DnaSalesHeaderRepository
+     */
+    protected $dnaSalesHeaderRepository;
+
+    /**
+     * @var DnaSalesDetailRepository
+     */
+    protected $dnaSalesDetailRepository;
+
     public function __construct(
         NewsRepository $NewsRepository,
         ProductRepository $productRepository,
@@ -125,7 +138,9 @@ class DnaEcController extends BaseProductController
         CartItemRepository $cartItemRepository,
         CartRepository $cartRepository,
         PurchaseFlow $cartPurchaseFlow,
-        DnaSalesStatusRepository $dnaSalesStatusRepository
+        DnaSalesStatusRepository $dnaSalesStatusRepository,
+        DnaSalesHeaderRepository $dnaSalesHeaderRepository,
+        DnaSalesDetailRepository $dnaSalesDetailRepository
     ) {
         $this->NewsRepository = $NewsRepository;
         $this->productListOrderByRepository = $productListOrderByRepository;
@@ -140,15 +155,32 @@ class DnaEcController extends BaseProductController
         $this->cartRepository = $cartRepository;
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
+        $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
+        $this->dnaSalesDetailRepository = $dnaSalesDetailRepository;
     }
 
 
     /**
-     * @Route("/ec/dna_test", name="dna_ec_top")
+     * @Route("/ec/dna", name="dna_ec_top")
      * @Template("dna_ec.twig")
      */
-    public function dna_ec()
+    public function dna_ec(Request $request)
     {
+        $customer = $this->getUser();
+
+        if(!$customer){
+            $this->setLoginTargetPath('dna_ec_top');
+            return $this->redirectToRoute("mypage_login");
+        }
+
+        //$contact_pet_id = $request->cookies->get('contact_pet');
+        //$response = new Response();
+        //$response->headers->setCookie(new Cookie('rid_key', $sessid));
+
+        //未購入のDNA検査情報があるか
+        $dnaSalesHeader = $this->dnaSalesHeaderRepository->findOneBy(['Customer' => $customer, 'shipping_status' => 0]);
+        $dnaSalesStatus = $this->dnaSalesStatusRepository->findBy(['DnaSalesHeader' => $dnaSalesHeader]);
+
         $salesDetail = $this->dnaSalesStatusRepository->createQueryBuilder('ds')
             ->innerJoin('Customize\Entity\DnaSalesHeader', 'dh', 'WITH', 'dh.id = ds.DnaSalesHeader')
             ->where('dh.Customer = :customer_id')
@@ -156,9 +188,11 @@ class DnaEcController extends BaseProductController
             ->setParameter('customer_id', $this->getUser()->getId())
             ->getQuery()->getResult();
 
-            return compact(
-                'salesDetail'
-            );
+        
+        return $this->render('dna_ec.twig', [
+            'header' => $dnaSalesHeader,
+            'details' => $dnaSalesStatus
+        ]);
     }
 
     /**
@@ -181,23 +215,31 @@ class DnaEcController extends BaseProductController
         if ($request->isMethod('POST')) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            $dnaSalesHeader = new DnaSalesHeader();
-            $dnaSalesHeader->setCustomer($customer);
-            $dnaSalesHeader->setTotalPrice($request->get('total_price'));
-            $dnaSalesHeader->setShippingStatus(0);
+            //未購入のDNA検査情報があるか
+            $dnaSalesHeader = $this->dnaSalesHeaderRepository->findOneBy(['Customer' => $customer, 'shipping_status' => 0]);
+
+            if(!$dnaSalesHeader){
+                $dnaSalesHeader = new DnaSalesHeader();
+                $dnaSalesHeader->setCustomer($customer);
+                $dnaSalesHeader->setShippingStatus(0);
+            }
+            $total_price = $dnaSalesHeader->getTotalPrice() + $request->get('total_price');
+
+            $dnaSalesHeader->setTotalPrice($total_price);
             $dnaSalesHeader->setShippingCity('');
             $entityManager->persist($dnaSalesHeader);
             $entityManager->flush();
 
             $dnaSalesStatus = new DnaSalesStatus();
             $dnaSalesStatus->setDnaSalesHeader($dnaSalesHeader);
-            $dnaSalesStatus->setPetKind((int)$request->get('pet_kind'));
-            $dnaSalesStatus->setBreedsType($this->breedsRepository->find($request->get('pet_type')));
+            $dnaSalesStatus->setPetKind((int)$request->get('pet_type'));
+            $dnaSalesStatus->setPrice((int)$request->get('total_price'));
+            $dnaSalesStatus->setBreedsType($this->breedsRepository->find($request->get('pet_kind')));
             $dnaSalesStatus->setCheckStatus(0);
-
+            $dnaSalesStatus->setTestCount(0);
             $entityManager->persist($dnaSalesStatus);
-            $entityManager->flush();
 
+            $test_cnt = 0;
             foreach ($request->get('status_detail') as $value) {
                 $dnaSalesDetail = new DnaSalesDetail();
                 $dnaSalesDetail->setDnaSalesStatus($dnaSalesStatus);
@@ -205,10 +247,18 @@ class DnaEcController extends BaseProductController
                 $dnaSalesDetail->setCheckResult(1);
                 $entityManager->persist($dnaSalesDetail);
                 $entityManager->flush();
+
+                $test_cnt++;
             }
 
+            //検査項目数格納
+            $dnaSalesStatus->setTestCount($test_cnt);
+
+            $entityManager->persist($dnaSalesStatus);
             $entityManager->persist($dnaSalesDetail);
             $entityManager->flush();
+
+            return $this->redirect($this->generateUrl('dna_ec_top'));
         }
 
         return $this->render('dna_ec_detail.twig', [
@@ -222,13 +272,17 @@ class DnaEcController extends BaseProductController
      */
     public function dna_buy(Request $request)
     {
-        //検査数チェック
-        $cnt = 0;
-        for($i=1;$i<=6;$i++){
-            if($request->get("check_kind_".$i) == "1"){
-                $cnt++;
-            }
+        $customer = $this->getUser();
+
+        if(!$customer){
+            $this->setLoginTargetPath('dna_ec_top');
+            return $this->redirectToRoute("mypage_login");
         }
+
+        $dnaSalesHeader = $this->dnaSalesHeaderRepository->findOneBy(['Customer' => $customer, 'shipping_status' => 0]);
+        $dnaSalesStatus = $this->dnaSalesStatusRepository->findBy(['DnaSalesHeader' => $dnaSalesHeader]);
+
+        $this->cartService->clear();
 
         $Product = $this->productRepository->find($request->get("product_id"));
         $Product_class = $this->productClassRepository->find($request->get("ProductClass"));
@@ -252,28 +306,50 @@ class DnaEcController extends BaseProductController
         );
         $this->eventDispatcher->dispatch(EccubeEvents::FRONT_PRODUCT_CART_ADD_INITIALIZE, $event);
 
-        /* @var $form \Symfony\Component\Form\FormInterface */
         $form = $builder->getForm();
         $form->handleRequest($request);
-
-        //入力チェック
-        /*
-        if (!$form->isValid()) {
-            var_dump($form->getErrors());
-            throw new NotFoundHttpException();
-        }
-        */
         
         $addCartData = $form->getData();
-        
-        $this->cartService->clear();
-        $this->cartService->addProduct(
-            $addCartData['product_class_id'],
-            $addCartData['quantity'],
-            $addCartData['is_repeat'],
-            $addCartData['repeat_span'],
-            $addCartData['span_unit']
-        );
+
+        foreach($dnaSalesStatus as $details) {
+            /*
+            $param['quantity'] = 1;
+            $param['normal_quantity'] = 1;
+            $param['product_id'] = 3065;
+            $param['ProductClass'] = 2438;
+            $param['is_repeat'] = "";
+            $param['repeat_span'] = "";
+            $param['span_unit'] = "";
+            $param['_token'] = $request->get("_token");
+
+            $url = $this->generateUrl('product_add_cart', ['id' => 3065]);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($param));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);  
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+            $http_str = curl_exec($ch);
+            var_dump($http_str);
+            curl_close($ch);
+
+            return $this->render('dna_ec.twig', [
+                'header' => null,
+                'details' => null
+            ]);
+            */
+            
+            $this->cartService->addProduct(
+                $addCartData['product_class_id'],
+                $addCartData['quantity'],
+                $addCartData['is_repeat'],
+                $addCartData['repeat_span'],
+                $addCartData['span_unit']
+            );
+
+            $addCartData['product_class_id']  = 2446;
+        }
 
         // 明細の正規化
         $Carts = $this->cartService->getCarts();
