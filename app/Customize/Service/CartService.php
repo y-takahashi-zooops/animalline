@@ -122,6 +122,7 @@ class CartService extends BaseCartService
         $this->tokenStorage = $tokenStorage;
         $this->authorizationChecker = $authorizationChecker;
     }
+
     /**
      * カートに商品を追加します.
      *
@@ -169,4 +170,60 @@ class CartService extends BaseCartService
 
         return true;
     }
+
+    /**
+     * 複数の商品をまとめてカートに追加します.
+     *
+     * @param $ProductClass ProductClass 商品規格
+     * @param $quantity int 数量
+     * @param $isRepeat boolean 定期購入フラグ
+     * @param $repeatSpan int 購入スパン
+     * @param $spanUnit boolean 購入スパン単位
+     * @return bool 商品を追加できた場合はtrue
+     */
+    public function addProductMulti($products)
+    {
+        foreach($products as $product) {
+            $ProductClass = $product["product_class_id"];
+            $quantity = $product["quantity"];
+            //$ProductClass = null;
+            if (!$ProductClass instanceof ProductClass) {
+                $ProductClassId = $ProductClass;
+                $ProductClass = $this->entityManager
+                    ->getRepository(ProductClass::class)
+                    ->find($ProductClassId);
+                if (is_null($ProductClass)) {
+                    return false;
+                }
+            }
+
+            $ClassCategory1 = $ProductClass->getClassCategory1();
+            if ($ClassCategory1 && !$ClassCategory1->isVisible()) {
+                return false;
+            }
+            $ClassCategory2 = $ProductClass->getClassCategory2();
+            if ($ClassCategory2 && !$ClassCategory2->isVisible()) {
+                return false;
+            }
+
+            $newItem = new CartItem();
+            $newItem->setQuantity($quantity);
+            $newItem->setPrice($ProductClass->getPrice02IncTax());
+            $newItem->setProductClass($ProductClass);
+
+            // 追加したカラムへデータをセット
+            $newItem
+                ->setIsRepeat(null)
+                ->setRepeatSpan(null)
+                ->SetSpanUnit(null);
+
+            $newItems[] = $newItem;
+        }
+
+        $allCartItems = $this->mergeAllCartItems($newItems);
+        $this->restoreCarts($allCartItems);
+
+        return true;
+    }
+
 }

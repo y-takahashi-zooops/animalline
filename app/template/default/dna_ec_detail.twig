@@ -11,56 +11,59 @@
             <div class="ec-off1Grid">
 				<div class="ec-off1Grid__cell">
                     <form method="post" action="{{ url('dna_ec_detail') }}" class="h-adr">
-                        <div class="row mb-3" style="display: flex; justify-content: center;">
-                            <div class="col-md-3">
-                                <label class="ec-label required" for="conservations_is_organization">ペット種別</label>
-                                {# <span class="ec-required">必須</span> #}
+                        <div class="ec-withdrawRole">
+                            <div class="row mb-3" style="text-align:center">
+                                <div class="col-sm-12">
+                                    <label class="ec-label required" for="conservations_is_organization">ペット種別</label>
+                                    {# <span class="ec-required">必須</span> #}
+                                </div>
+                                <div class="col-sm-12 ec-input ec-select">
+                                    <select id="pet_type" name="pet_type">
+                                        <option value="0">選択してください</option>
+                                        <option value="1">犬</option>
+                                        <option value="2">猫</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-md-3 ec-input ec-select">
-                                <select id="pet_type" name="pet_type">
-                                    <option value="0">選択してください</option>
-                                    <option value="1">犬</option>
-                                    <option value="2">猫</option>
-                                </select>
+                        
+
+                            <div class="row mb-3">
+                                <div class="col-sm-12">
+                                    <label class="ec-label required" for="conservations_is_organization">犬種／猫種</label>
+                                    {# <span class="ec-required">必須</span> #}
+                                </div>
+                                <div class="col-sm-12 ec-input ec-select">
+                                    <select id="pet_kind" name="pet_kind">
+                                        <option value="0">選択してください</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row mb-3" style="display: flex; justify-content: center;">
-                            <div class="col-md-3">
-                                <label class="ec-label required" for="conservations_is_organization">犬種／猫種</label>
-                                {# <span class="ec-required">必須</span> #}
+                            <input type="hidden" id="total_price" name="total_price" />
+                            <div id="check_kinds">
+                                
                             </div>
-                            <div class="col-md-3 ec-input ec-select">
-                                <select id="pet_kind" name="pet_kind">
-                                    <option value="0">選択してください</option>
-                                </select>
+
+                            <div class="row mb-3" style="display: flex; justify-content: center; margin-bottom: 50px;" id="price">
+                                <div class="col-md-6">
+                                    検査料金（税込）： 0円
+                                </div>
                             </div>
-                        </div>
 
-                        <input type="hidden" id="total_price" name="total_price" />
-                        <div id="check_kinds" class="row mb-3" style="display: flex; justify-content: center;">
-                            
-                        </div>
-
-                        <div class="row mb-3" style="display: flex; justify-content: center; margin-bottom: 50px;" id="price">
-                            <div class="col-md-6">
-                                検査料金（税込）： 0円
+                            <div class="row mb-3" style="display: flex; justify-content: center;">
+                                <button type="submit" id="addDnaSale" class="btn ec-btn--blue" style="margin-right: 30px; width: 150px;" disabled>追加</button>
+                                <a href="{{ url('dna_ec_top') }}" id="back" class="btn ec-btn--blue" style="width: 150px;">一覧に戻る</a>
                             </div>
-                        </div>
 
-                        <div class="row mb-3" style="display: flex; justify-content: center;">
-                            <button type="submit" id="addDnaSale" class="btn ec-btn--blue" style="margin-right: 30px; width: 150px;">追加</button>
-                            <a href="{{ url('dna_ec_top') }}" id="back" class="btn ec-btn--blue" style="width: 150px;">一覧に戻る</a>
+                            <input type="hidden" id="order_type" name="order_type" value="normal" />
+                            <input type="hidden" id="product_id" name="product_id" value="3065" />
+                            <input type="hidden" id="ProductClass" name="ProductClass" value="2438" />
+                            <input type="hidden" id="normal_quantity" name="normal_quantity" value="1" />
+                            <input type="hidden" id="quantity" name="quantity" value="1" />
+                            <input type="hidden" id="is_repeat" name="is_repeat" />
+                            <input type="hidden" id="repeat_span" name="repeat_span" /><input type="hidden" id="span_unit" name="span_unit" />
+                            <input type="hidden" name="{{ constant('Eccube\\Common\\Constant::TOKEN_NAME') }}" value="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
                         </div>
-
-                        <input type="hidden" id="order_type" name="order_type" value="normal" />
-                        <input type="hidden" id="product_id" name="product_id" value="3065" />
-                        <input type="hidden" id="ProductClass" name="ProductClass" value="2438" />
-                        <input type="hidden" id="normal_quantity" name="normal_quantity" value="1" />
-                        <input type="hidden" id="quantity" name="quantity" value="1" />
-                        <input type="hidden" id="is_repeat" name="is_repeat" />
-                        <input type="hidden" id="repeat_span" name="repeat_span" /><input type="hidden" id="span_unit" name="span_unit" />
-                        <input type="hidden" name="{{ constant('Eccube\\Common\\Constant::TOKEN_NAME') }}" value="{{ csrf_token(constant('Eccube\\Common\\Constant::TOKEN_NAME')) }}">
                     </form>
                 </div>
             </div>
@@ -81,6 +84,10 @@
             .done(function(data) {
                 var data_stringify = JSON.stringify(data);
                 var data_json = JSON.parse(data_stringify);
+
+                $("#check_kinds").html("");
+                $("#addDnaSale").prop('disabled',true);
+                $("#price div").html("検査料金（税込）： 0円");
 
                 $("#pet_kind").children().remove();
                 $("#pet_kind").append('<option selected value="0" selected>選択してください</option>');
@@ -148,7 +155,7 @@
 
                 counts = 0;
                 for (let i = 0; i < data_json.length; ++i) {
-                    var addhtml = '<div class="col-md-3">';
+                    var addhtml = '<div class="row justify-content-center"><div class="col-md-3">';
                     addhtml += '<label class="ec-label required" for="conservations_is_organization">検査内容' + (i+1).toString() +'</label>';
                     addhtml += '</div>';
                     addhtml += '<div class="col-md-3 ec-checkbox">';
@@ -173,10 +180,10 @@
                         $("#ProductClass").val(items[check_cnt]["product_class"]);
                         
                         if(check_cnt == 0){
-                            $("#buy_exec").prop('disabled',true)
+                            $("#addDnaSale").prop('disabled',true);
                         }
                         else{
-                            $("#buy_exec").prop('disabled',false)
+                            $("#addDnaSale").prop('disabled',false);
                         }
                     });
 
@@ -189,10 +196,10 @@
                 $("#total_price").val(items[counts]["price"]);
                 
                 if(counts == 0){
-                    $("#buy_exec").prop('disabled',true)
+                    $("#addDnaSale").prop('disabled',true);
                 }
                 else{
-                    $("#buy_exec").prop('disabled',false)
+                    $("#addDnaSale").prop('disabled',false);
                 }
                 
             })

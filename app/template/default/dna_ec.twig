@@ -30,18 +30,21 @@
                             <th>犬種/猫種</th>
                             <th>検査項目数</th>
                             <th>金額（税込）</th>
+                            <th>削除</th>
                         </tr>
                         {% for detail in details %}
                         <tr>
                             <td>{{ detail.getBreedsType().getBreedsName() }}</td>
                             <td>{{ detail.getTestCount() }}</td>
                             <td>{{ detail.getPrice() | number_format }}円</td>
+                            <td><a href="{{ url('dna_delete' , {'id': detail.getId() }) }}">✖</a></td>
                         </tr>
                         {% endfor %}
                         <tr>
                             <td></td>
                             <td>検査料金合計</td>
                             <td>{{ header.getTotalPrice() | number_format }}円</td>
+                            <td></td>
                         </tr>
                     </table>
                     {% endif %}

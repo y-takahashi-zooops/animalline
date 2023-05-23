@@ -126,12 +126,16 @@ file that was distributed with this source code.
                             {% for CartItem in Cart.CartItems %}
                                 {% set ProductClass = CartItem.ProductClass %}
                                 {% set Product = ProductClass.Product %}
+
                                 <ul class="ec-cartRow">
                                     <li class="ec-cartRow__delColumn">
+                                        {% if ProductClass.SaleType.id != 2 %}
                                         <a href="{{ url('cart_handle_item', {'operation': 'remove', 'productClassId': ProductClass.id }) }}" {{ csrf_token_for_anchor() }} class="ec-icon" data-method="put" data-message="カートから商品を削除してもよろしいですか?">
                                             <img src="{{ asset('assets/icon/cross.svg') }}" alt="delete">
                                         </a>
+                                        {% endif %}
                                     </li>
+                                    
                                     <li class="ec-cartRow__contentColumn">
                                         <div class="ec-cartRow__img">
                                             <a target="_blank" href="{{ url('product_detail', {id : Product.id} ) }}">
@@ -163,6 +167,7 @@ file that was distributed with this source code.
                                     <li class="ec-cartRow__amountColumn">
                                         <div class="ec-cartRow__amount">{{ CartItem.quantity|number_format }}</div>
                                         <div class="ec-cartRow__amountSP">{{ '数量：'|trans }}{{ CartItem.quantity|number_format }}</div>
+                                        {% if ProductClass.SaleType.id != 2 %}
                                         <div class="ec-cartRow__amountUpDown">
                                             {% if CartItem.quantity > 1 %}
                                                 <a href="{{ url('cart_handle_item', {'operation': 'down', 'productClassId': ProductClass.id}) }}" {{ csrf_token_for_anchor() }} class="ec-cartRow__amountDownButton load-overlay" data-method="put" data-confirm="false">
@@ -177,6 +182,7 @@ file that was distributed with this source code.
                                                 <span class="ec-cartRow__amountUpButton__icon"><img src="{{ asset('assets/icon/plus-dark.svg') }}" alt="increase"></span>
                                             </a>
                                         </div>
+                                        {% endif %}
                                     </li>
                                     <li class="ec-cartRow__subtotalColumn">
                                         <div class="ec-cartRow__sutbtotal">{{ CartItem.total_price|price }}</div>

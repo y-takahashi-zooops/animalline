@@ -13,6 +13,7 @@
 
 namespace Customize\Controller;
 
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Customize\Form\Type\TrainingType;
 use Customize\Service\MailService;
 use Eccube\Controller\AbstractController;
@@ -283,73 +284,30 @@ class DnaEcController extends BaseProductController
         $dnaSalesStatus = $this->dnaSalesStatusRepository->findBy(['DnaSalesHeader' => $dnaSalesHeader]);
 
         $this->cartService->clear();
-
-        $Product = $this->productRepository->find($request->get("product_id"));
-        $Product_class = $this->productClassRepository->find($request->get("ProductClass"));
-
-        $builder = $this->formFactory->createNamedBuilder(
-            '',
-            AddCartType::class,
-            null,
-            [
-                'product' => $Product,
-                'id_add_product_id' => false,
-            ]
-        );
-
-        $event = new EventArgs(
-            [
-                'builder' => $builder,
-                'Product' => $Product,
-            ],
-            $request
-        );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_PRODUCT_CART_ADD_INITIALIZE, $event);
-
-        $form = $builder->getForm();
-        $form->handleRequest($request);
         
-        $addCartData = $form->getData();
-
+        //カートに入れる商品をセット
+        $addCartData['product_class_id']  = 2439;
         foreach($dnaSalesStatus as $details) {
-            /*
-            $param['quantity'] = 1;
-            $param['normal_quantity'] = 1;
-            $param['product_id'] = 3065;
-            $param['ProductClass'] = 2438;
-            $param['is_repeat'] = "";
-            $param['repeat_span'] = "";
-            $param['span_unit'] = "";
-            $param['_token'] = $request->get("_token");
+            //商品コードで検索
+            $product_code = "DNA00000".$details->getTestCount();
+            $product_class = $this->productClassRepository->findOneBy(["code"=> $product_code]);
 
-            $url = $this->generateUrl('product_add_cart', ['id' => 3065]);
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($param));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);  
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-
-            $http_str = curl_exec($ch);
-            var_dump($http_str);
-            curl_close($ch);
-
-            return $this->render('dna_ec.twig', [
-                'header' => null,
-                'details' => null
-            ]);
-            */
-            
-            $this->cartService->addProduct(
-                $addCartData['product_class_id'],
-                $addCartData['quantity'],
-                $addCartData['is_repeat'],
-                $addCartData['repeat_span'],
-                $addCartData['span_unit']
-            );
-
-            $addCartData['product_class_id']  = 2446;
+            if($product_class){
+                if(!isset($products[$details->getTestCount()])){
+                    //要素作成
+                    $products[$details->getTestCount()] = [
+                        "product_class_id" => $product_class->getId(),
+                        "quantity" => 1
+                    ];
+                }
+                else{
+                    //要素作成
+                    $products[$details->getTestCount()]["quantity"] = $products[$details->getTestCount()]["quantity"] + 1;
+                }
+            }
         }
+
+        $this->cartService->addProductMulti($products);
 
         // 明細の正規化
         $Carts = $this->cartService->getCarts();
@@ -373,6 +331,53 @@ class DnaEcController extends BaseProductController
     }
 
     /**
+     * @Route("/ec/dna_delete", name="dna_delete")
+     */
+    public function dna_delete(Request $request)
+    {
+        $customer = $this->getUser();
+
+        if(!$customer){
+            $this->setLoginTargetPath('dna_ec_top');
+            return $this->redirectToRoute("mypage_login");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $status_id = $request->get("id");
+        //明細レコード取得
+        $dna_status = $this->dnaSalesStatusRepository->find($status_id);
+
+        if($dna_status){
+            $dna_header = $dna_status->getDnaSalesHeader();
+
+            //合計金額マイナス
+            $dna_header->setTotalPrice($dna_header->getTotalPrice() - $dna_status->getPrice());
+
+            //検査項目削除
+            $details = $this->dnaSalesDetailRepository->findBy(["DnaSalesStatus" => $dna_status]);
+            foreach($details as $detail){
+                $em->remove($detail);
+            }
+
+            //明細削除
+            $em->remove($dna_status);
+
+            //合計0円の時はヘッダも削除
+            if($dna_header->getTotalPrice() == 0){
+                $em->remove($dna_header);
+            }
+            else{
+                $em->persist($dna_header);
+            }
+
+            $em->flush();
+        }
+
+        return $this->redirect($this->generateUrl('dna_ec_top'));
+    }
+
+    /**
      * @Route("/ec/dna/get_pet_type/{id}", name="dna_ec_getpet")
      */
     public function dna_ec_getpet($id)
@@ -384,8 +389,6 @@ class DnaEcController extends BaseProductController
             ->setParameter('pet_kind', $id)
             ->orderBy('b.sort_order', 'asc')
             ->getQuery()->getResult();
-
-        //var_dump($breeds);
 
         $responce = [];
         foreach($breeds as $breed){
