@@ -49,6 +49,7 @@
 
     {% set request_uri = app.request.server.get('REQUEST_URI') %}
     {% set part_uri = path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params'))[1:] %}
+    {% set param_count = request_uri|split('pet_breed-area%5B%5D=')|length - 1 %}
     {% if part_uri == 'breeder/' %}
     <title>犬・猫ブリーダー直販サイトのアニマルライン</title>
     <meta name="description" content="犬・猫ブリーダー直販サイトのアニマルラインです。ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
@@ -73,6 +74,195 @@
     {% elseif part_uri == 'breeder/pet/search/result' and 'page=' in request_uri %}
     <title>{{title}}の{{request_uri|split('page=')|last}}ページ目 | 犬・猫ブリーダー直販のアニマルライン</title>
     <meta name="description" content="{{title}}の{{request_uri|split('page=')|last}}ページ目です。販売子犬・子猫の遺伝病リスク低減に努め、ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and param_count > 1 %}
+    <title>ブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="ブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=20' in request_uri %}
+    <title>長野県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="長野県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=21' in request_uri %}
+    <title>岐阜県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="岐阜県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=22' in request_uri %}
+    <title>静岡県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="静岡県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=23' in request_uri %}
+    <title>愛知県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="愛知県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=24' in request_uri %}
+    <title>三重県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="三重県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=25' in request_uri %}
+    <title>滋賀県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="滋賀県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=26' in request_uri %}
+    <title>京都府のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="京都府のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=27' in request_uri %}
+    <title>大阪府のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="大阪府のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=28' in request_uri %}
+    <title>兵庫県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="兵庫県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=29' in request_uri %}
+    <title>奈良県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="奈良県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=30' in request_uri %}
+    <title>{{title}} | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="ブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=31' in request_uri %}
+    <title>{{title}} | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="ブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=32' in request_uri %}
+    <title>{{title}} | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="ブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=33' in request_uri %}
+    <title>岡山県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="岡山県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=34' in request_uri %}
+    <title>広島県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="広島県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=35' in request_uri %}
+    <title>{{title}} | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="ブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=36' in request_uri %}
+    <title>徳島県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="徳島県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=37' in request_uri %}
+    <title>香川県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="香川県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=38' in request_uri %}
+    <title>愛媛県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="愛媛県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=39' in request_uri %}
+    <title>高知県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="高知県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=40' in request_uri %}
+    <title>福岡県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="福岡県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=41' in request_uri %}
+    <title>{{title}} | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="ブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=42' in request_uri %}
+    <title>長崎県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="長崎県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=43' in request_uri %}
+    <title>熊本県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="熊本県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=44' in request_uri %}
+    <title>大分県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="大分県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=45' in request_uri %}
+    <title>宮崎県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="宮崎県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=46' in request_uri %}
+    <title>鹿児島のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="鹿児島のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=47' in request_uri %}
+    <title>沖縄県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="沖縄県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=10' in request_uri %}
+    <title>群馬県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="群馬県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=11' in request_uri %}
+    <title>埼玉県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="埼玉県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=12' in request_uri %}
+    <title>千葉県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="千葉県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=13' in request_uri %}
+    <title>東京都のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="東京都のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=14' in request_uri %}
+    <title>神奈川県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="神奈川県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=15' in request_uri %}
+    <title>新潟県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="新潟県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=16' in request_uri %}
+    <title>富山県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="富山県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=17' in request_uri %}
+    <title>石川県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="石川県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=18' in request_uri %}
+    <title>福井県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="福井県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=19' in request_uri %}
+    <title>{{title}} | 犬・猫ブリーダー直販のアニマルライン</title>
+    
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=1' in request_uri %}
+    <title>{{title}} | 犬・猫ブリーダー直販のアニマルライン</title>
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=2' in request_uri %}
+    <title>青森県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="青森県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=3' in request_uri %}
+    <title>岩手県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="岩手県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=4' in request_uri %}
+    <title>宮城県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="宮城県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=5' in request_uri %}
+    <title>{{title}} | 犬・猫ブリーダー直販のアニマルライン</title>
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=6' in request_uri %}
+    <title>山形県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="山形県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=7' in request_uri %}
+    <title>福島県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="福島県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=8' in request_uri %}
+    <title>茨城県のブリーダーを探す | 犬・猫ブリーダー直販のアニマルライン</title>
+    <meta name="description" content="茨城県のブリーダー検索ページです。販売⼦⽝‧⼦猫の遺伝病リスク低減に努め、ペットオーナーへ安⼼‧安全を提供すべく遺伝⼦検査を実施した⼦⽝‧⼦猫のみを掲載しております。">
+
+    {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=9' in request_uri %}
+    <title>{{title}} | 犬・猫ブリーダー直販のアニマルライン</title>
+
     {% else %}
     <title>{{ title }} | 犬・猫ブリーダー直販のアニマルライン</title>
     <meta name="description" content="{{ title }}ページです。販売子犬・子猫の遺伝病リスク低減に努め、ペットオーナーへ安心・安全を提供すべく遺伝子検査を実施した子犬・子猫のみを掲載しております。">
@@ -143,6 +333,16 @@
                         <strong><i>{{ header_cnt.breeders | number_format }}</i>件</strong>
                     </div>
                 </div>
+
+                {% if part_uri == 'breeder/' %}
+                <div class="dna-count-frame">
+                    <div class="dna-count-frame-box">
+                      {{ today | date('Y年m月d日')  }}時点<br />
+                      検査済み頭数： {{ pets_count_inspection | number_format  }}頭
+                    </div>
+                </div>
+                {% endif %}
+
             </div>
             
             <div class="header-right">
@@ -249,10 +449,123 @@
                 <h1>中型犬の一覧</h1>
                 {% elseif part_uri == 'breeder/pet/search/result' and 'size_code=4' in request_uri %}
                 <h1>大型犬の一覧</h1>
-                {% else %}
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=47' in request_uri %}
+                <h1>沖縄県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=46' in request_uri %}
+                <h1>鹿児島のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=45' in request_uri %}
+                <h1>宮崎県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=44' in request_uri %}
+                <h1>大分県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=43' in request_uri %}
+                <h1>熊本県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=42' in request_uri %}
+                <h1>長崎県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=41' in request_uri %}
+                <h1>ブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=40' in request_uri %}
+                <h1>福岡県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=39' in request_uri %}
+                <h1>高知県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=38' in request_uri %}
+                <h1>愛媛県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=37' in request_uri %}
+                <h1>香川県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=36' in request_uri %}
+                <h1>徳島県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=35' in request_uri %}
+                <h1>ブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=34' in request_uri %}
+                <h1>広島県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=33' in request_uri %}
+                <h1>岡山県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=32' in request_uri %}
+                <h1>のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=31' in request_uri %}
+                <h1>のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=32' in request_uri %}
+                <h1>のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=31' in request_uri %}
+                <h1>のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=30' in request_uri %}
+                <h1>のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=29' in request_uri %}
+                <h1>奈良県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=28' in request_uri %}
+                <h1>兵庫県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=27' in request_uri %}
+                <h1>大阪府のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=26' in request_uri %}
+                <h1>京都府のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=25' in request_uri %}
+                <h1>滋賀県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=24' in request_uri %}
+                <h1>三重県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=23' in request_uri %}
+                <h1>愛知県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=22' in request_uri %}
+                <h1>静岡県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=21' in request_uri %}
+                <h1>岐阜県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=20' in request_uri %}
+                <h1>長野県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=19' in request_uri %}
+                <h1>ブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=18' in request_uri %}
+                <h1>福井県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=17' in request_uri %}
+                <h1>石川県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=16' in request_uri %}
+                <h1>富山県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=15' in request_uri %}
+                <h1>新潟県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=14' in request_uri %}
+                <h1>神奈川県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=13' in request_uri %}
+                <h1>東京都のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=12' in request_uri %}
+                <h1>千葉県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=11' in request_uri %}
+                <h1>埼玉県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=10' in request_uri %}
+                <h1>群馬県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=9' in request_uri %}
+                <h1>ブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=8' in request_uri %}
+                <h1>茨城県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=7' in request_uri %}
+                <h1>福島県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=6' in request_uri %}
+                <h1>山形県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=5' in request_uri %}
+                <h1>ブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=4' in request_uri %}
+                <h1>宮城県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=3' in request_uri %}
+                <h1>岩手県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=2' in request_uri %}
+                <h1>青森県のブリーダー検索</h1>
+                {% elseif part_uri == 'breeder/breeder_search' and 'pet_breed-area%5B%5D=1' in request_uri %}
+                <h1>ブリーダー検索</h1>
+                {% elseif part_uri != 'breeder/' %}
                 <h1>{{ title }}</h1>
+                {% else %}
                 {% endif %}
 
+                {# ブリーダーTOPページのみパンくずの中にh1タグを仕込む処理 #}
+                {% if part_uri == 'breeder/' %}
+                <ol itemscope itemtype="http://schema.org/BreadcrumbList" class="ani-breadcrumb">
+                    {% set i = 1 %}
+                    {% for item in breadcrumb %}
+                        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                            <a itemprop="item" href=" {{ item.url }} ">
+                            <h1><span itemprop="name"> {{ item.title }}</span></h1></a>
+                            <meta itemprop="position" content="{{ i }}" />
+                        </li>
+                        {% set i = i + 1 %}
+                    {% endfor %}
+                </ol>
+                {% else %}
                 <ol itemscope itemtype="http://schema.org/BreadcrumbList" class="ani-breadcrumb">
                     {% set i = 1 %}
                     {% for item in breadcrumb %}
@@ -264,8 +577,10 @@
                         {% set i = i + 1 %}
                     {% endfor %}
                 </ol>
+                {% endif %}
+
             </div>
-            
+
             {% block main %}{% endblock %}
             <div class="pageback">
                 <a href="#" onclick="history.back(-1);return false;"><i class="bi bi-arrow-return-left"></i></a>
@@ -275,6 +590,19 @@
                 <a href="#wrapper"><i class="bi bi-arrow-bar-up"></i></a>
             </div>
         </main>
+
+        <div style="text-align:center" class="search-box-text pc-only">
+          <script async src="https://cse.google.com/cse.js?cx=263af2c471e974783">
+          </script>
+          <div class="gcse-search"></div>
+          {#
+          <form id="text-search" action="{{ url('breeder_pet_search_result') }}" method="post" class="search_container">
+            <input type="search-text"></input>
+            <input type="submit" value="検索">
+          </form>
+          #}
+        </div>
+
         <footer id="footer03">
             <div class="inner">
             <div class="footer-row">
@@ -328,7 +656,7 @@
             <div class="side-menu__list">
                 <ul>
                     <li class="logout">
-                        <a href="{{ url('breeder_top') }}#search" class="btn sm-close-menu">
+                        <a href="{{ url('breeder_top') }}#search" class="btn">
                         <span>検索する</span>
                         </a>
                     </li>
@@ -428,6 +756,6 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
 <script src="{{ asset('assets/js/jquery.matchHeight.js') }}"></script>
-<script src="{{ asset('assets/js/common.js') }}?#var=20230518"></script>
+<script src="{{ asset('assets/js/common.js') }}"></script>
 {% block javascript %}{% endblock %}
 </html>

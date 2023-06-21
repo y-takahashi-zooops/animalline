@@ -1014,8 +1014,8 @@ a {
 }
 
 .mizuki_caution h6 {
-  font-size: 20px !important;
-  line-height: 1.6 !important;
+  font-size: 20px;
+  line-height: 1.6;
     border-radius: 15px;
     background-color: rgba(255,255,255,0.9);
     padding:10px 25px;
@@ -1709,8 +1709,8 @@ a {
   }
 
   .mizuki_caution h6 {
-    font-size: 28px !important;
-    line-height: 1.2857142857 !important;
+    font-size: 28px;
+    line-height: 1.2857142857;
   }
 
   .mizuki_caution p {
@@ -1866,11 +1866,9 @@ a {
     margin-left: 10px;
   }
 
-
   .mizuki_pet-info-tab.active {
     border: none;
   }
-
 
   .helpful-info_title-pc {
     margin: 0 auto;
@@ -1924,3 +1922,148 @@ a {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+@media screen and (max-width: 480px) {
+  .mizuki_banner {
+    margin-top: 3rem;
+  }
+}
+
+.mizuki_pet-list_cat .mizuki_pet-list,
+.mizuki_pet-list_dog .mizuki_pet-list {
+  align-items: flex-start;
+}
+
+.mizuki_pet-list-item_cat,
+.mizuki_pet-list-item_dog {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  aspect-ratio: unset;
+}
+
+.mizuki_pet-list-item-info {
+  padding: 10px 8px;
+}
+
+.mizuki_pet-list-item_cat h4,
+.mizuki_pet-list-item_dog h4 {
+  text-align: left;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.mizuki_pet-list-item_cat div,
+.mizuki_pet-list-item_dog div {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.mizuki_pet-list-item_cat div.price,
+.mizuki_pet-list-item_dog div.price {
+  color: #ef5350;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 5px 0 0;
+}
+
+.mizuki_pet-list-item_dog .pr_comment {
+  background: #AACDA5;
+  border-radius: 0 0 10px 10px;
+  padding: 8px 8px;
+  border-top: dotted 1px #000;
+}
+
+.mizuki_pet-list-item_cat .pr_comment {
+  background: #ABC9E5;
+  border-radius: 0 0 10px 10px;
+  padding: 8px 8px;
+  border-top: dotted 1px #000;
+}
+
+.mizuki_pet-list-item_cat .pr_comment p,
+.mizuki_pet-list-item_dog .pr_comment p {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.mizuki_pet-list-item_cat,
+.mizuki_pet-list-item_dog {
+  width: 49%;
+}
+
+@media (max-width: 480px) {
+  .mizuki_pet-list-item_cat h4, .mizuki_pet-list-item_dog h4 {
+    font-size: 18px;
+  }
+
+  .mizuki_pet-list-item_cat div.price, .mizuki_pet-list-item_dog div.price {
+    font-size: 16px;
+    margin-bottom: .4em;
+  }
+
+  .mizuki_pet-list-item_cat .pr_comment, .mizuki_pet-list-item_dog .pr_comment {
+    margin-top: .4em;
+  }
+
+  .mizuki_pet-list-item_cat .pr_comment p, .mizuki_pet-list-item_dog .pr_comment p {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mizuki_search-dogs-button_list-item:not(:first-of-type),
+  .mizuki_search-cats-button_list-item:not(:first-of-type) {
+    display: none;
+  }
+}
+
+.mizuki_fv.no_bg .mizuki_about_dna-test {
+  position: relative;
+  display: flex;
+}
+
+@media screen and (max-width: 768px) {
+  .mizuki_fv.no_bg {
+    margin-bottom: 5rem;
+  }
+
+  .mizuki_search {
+    padding-top: 1rem;
+  }
+
+  .mizuki_search-cats {
+    padding-top: 1rem;
+  }
+
+  .mizuki_search-dogs_title-decoration {
+    width: 53px;
+    height: 53px;
+    top: -8%;
+  }
+
+  .mizuki_search-cats_title-decoration {
+    width: 45px;
+    height: 52px;
+    top: 12%;
+  }
+
+  .mizuki_present {
+    margin-top: 2rem;
+  }
+
+  .mizuki_pet-info {
+    margin-top: 3rem;
+  }
+
+  .mizuki_caution {
+    margin-top: 2rem;
+  }
+
+  .search-box-text {
+    margin: 2rem auto;
+    padding: 0 2%;
+  }
+}

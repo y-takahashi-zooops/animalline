@@ -4999,3 +4999,74 @@ CONTENTS後藤追加分
   position: absolute;
   white-space: nowrap;
 }
+
+/* 2023.05.16 追記 */
+@media screen and (max-width: 480px) {
+  .breeder-footer__bnr {
+    padding: 0 20px;
+  }
+}
+/* 2023.05.16 追記 */
+
+
+
+header .header-left .dna-count-frame {
+  display: none;
+}
+
+@media screen and (max-width: 1280px) {
+  header .header-left {
+    justify-content: space-between;
+    width: 88%;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .pc-only {
+    display: inline;
+  }
+  .sp-only {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  header .header-left .dna-count-frame {
+    display: block;
+  }
+
+  header .header-left .dna-count-frame-box {
+    margin: 0;
+    padding: 0.4em;
+    width: auto;
+    font-size: 10px;
+  }
+
+  main .dna-count-frame {
+    display: none;
+  }
+
+  .mizuki_search h3 {
+    visibility: hidden;
+  }
+
+  .pc-only {
+    display: none;
+  }
+  .sp-only {
+    display: inline;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  header .header-left {
+    width: 74%;
+  }
+}
+
+.ani-breadcrumb li a h1 {
+  font-size: inherit;
+  display: inline;
+  color: #72a1f7;
+  font-weight: bold;
+}
