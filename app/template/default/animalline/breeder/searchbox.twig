@@ -1,6 +1,5 @@
       <section class="mizuki_search">
         {% if search_box_mode == 1 or search_box_mode == 9 %}
-
         <div class="mizuki_search-dogs">
           <div class="mizuki_search-dogs_title">
             <div class="mizuki_search-dogs_title-decoration">
@@ -13,8 +12,7 @@
               
               <li class="mizuki_search-button_list-item mizuki_search-dogs-button_list-item">
                 <a class="mizuki_search-dogs-button_breed" href="#mizuki_modal-breed-dogs">
-                  <span class="pc-only">犬種からさがす</span>
-                  <span class="sp-only">ワンちゃんを探す</span>
+                  犬種からさがす
                 </a>
               </li>
               <li class="mizuki_search-button_list-item mizuki_search-dogs-button_list-item">
@@ -44,8 +42,7 @@
               
               <li class="mizuki_search-button_list-item mizuki_search-cats-button_list-item">
                 <a class="mizuki_search-cats-button_breed" href="#mizuki_modal-breed-cats">
-                  <span class="pc-only">猫種からさがす</span>
-                  <span class="sp-only">ネコちゃんを探す</span>
+                  猫種からさがす
                 </a>
               </li>
               <li class="mizuki_search-button_list-item mizuki_search-cats-button_list-item">
@@ -62,17 +59,17 @@
           </div>
         </div>
         {% endif %}
-        {# <div style="text-align:center" class="search-box-text">
+        <div style="text-align:center" class="search-box-text">
           <script async src="https://cse.google.com/cse.js?cx=263af2c471e974783">
           </script>
           <div class="gcse-search"></div>
-          
+          {#
           <form id="text-search" action="{{ url('breeder_pet_search_result') }}" method="post" class="search_container">
             <input type="search-text"></input>
             <input type="submit" value="検索">
           </form>
-         
-        </div> #}
+          #}
+        </div>
       </section>
 
       <section class="mizuki_modal">
