@@ -5,46 +5,48 @@
 {% extends 'animalline/breeder/frame.twig' %}
 
 {% block main %}
-    <section class="mizuki_fv">
-        <div class="mizuki_fv-bg">
-          <h1 class="for-seo">犬・猫ブリーダー直販サイトのアニマルライン</h1>
-          <h1 class="visible-phone">
-            人生によりそう<br />
-            素敵なパートナー選びを<br />
-            サポートします
-          </h1>
-          <h1 class="hidden-phone">
-            人生によりそう素敵な<br />
-            <span>パートナー選びをサポートします</span>
-          </h1>
-          <p class="visible-phone">
-            Animallineは<br />
-            健全なブリーディングの推進に<br />
-            より、販売子犬・子猫の遺伝病<br />
-            リスク低減に努め、みなさまに<br />
-            安心して新しい家族をお迎えす<br />
-            るサポートを行っています。
-          </p>
-          <p class="hidden-phone">
-            Animallineは健全なブリーディングの推進により、<br />
-            販売子犬・子猫の遺伝病リスク低減に努め、<br />
-            みなさまに安心して新しい家族をお迎えする<br />
-            サポートを行っています。
-          </p>
-          <div class="mizuki_about_dna-test">
-            <div class="mizuki_fv-text_outer">
-              <p>
-                Animallineのワンちゃん・ネコちゃんは<br />
-                <span>全頭遺伝病DNA検査</span>を通過しています
-              </p>
-            </div>
-            <a name="search"></a>
-            <a href="#mizuki_dna-test"> DNA検査について詳しくはこちら </a>
-          </div>
-        </div>
-      </section>
 
-      <section class="mizuki_banner hidden-phone">
+<section class="mizuki_fv">
+  <div class="mizuki_fv-bg">
+    <h1 class="for-seo">犬・猫ブリーダー直販サイトのアニマルライン</h1>
+    <h1 class="visible-phone">
+      人生によりそう<br />
+      素敵なパートナー選びを<br />
+      サポートします
+    </h1>
+    <h1 class="hidden-phone">
+      人生によりそう素敵な<br />
+      <span>パートナー選びをサポートします</span>
+    </h1>
+    <p class="visible-phone">
+      Animallineは<br />
+      健全なブリーディングの推進に<br />
+      より、販売子犬・子猫の遺伝病<br />
+      リスク低減に努め、みなさまに<br />
+      安心して新しい家族をお迎えす<br />
+      るサポートを行っています。
+    </p>
+    <p class="hidden-phone">
+      Animallineは健全なブリーディングの推進により、<br />
+      販売子犬・子猫の遺伝病リスク低減に努め、<br />
+      みなさまに安心して新しい家族をお迎えする<br />
+      サポートを行っています。
+    </p>
+
+    <div class="mizuki_about_dna-test">
+      <div class="mizuki_fv-text_outer">
+        <p>
+          Animallineのワンちゃん・ネコちゃんは<br />
+          <span>全頭遺伝病DNA検査</span>を通過しています
+        </p>
+      </div>
+      <a name="search"></a>
+      <a href="#mizuki_dna-test"> DNA検査について詳しくはこちら </a>
+    </div>
+  </div>
+</section>
+
+<section class="mizuki_banner hidden-phone">
         <a href="#cashback"><img src="{{ '/html/template/default/assets/img/bn_cashback.png' }}" alt="キャッシュバックキャンペーン" style="padding: 0 8rem" /></a>
       </section>
       <section class="mizuki_banner visible-phone">
@@ -57,64 +59,23 @@
           検査済み頭数： {{ pets_count_inspection | number_format  }}頭
         </div>
       </section>
-     
-      {% include 'animalline/breeder/searchbox.twig' %}
 
-      <section class="mizuki_present">
-        <h2 class="mizuki_present-title-sp visible-phone">
-          <img
-            src="{{ '/html/template/default/assets/img-mizuki/ttl_tokutenSP.png' }}"
-            alt="7つのご成約特典をご用意しています"
-          />
-        </h2>
-        <h2 class="mizuki_present-title-pc hidden-phone">
-          <img
-            src="{{ '/html/template/default/assets/img-mizuki/ttl_tokuten.png' }}"
-            alt="7つのご成約特典をご用意しています"
-          />
-        </h2>
-        <div class="mizuki_present-sp visible-phone">
-          <img
-            src="{{ '/html/template/default/assets/img-mizuki/img_tokutenSP.png' }}"
-            alt="7つのご成約特典をご用意しています"
-          />
-        </div>
-        <div class="mizuki_present-pc hidden-phone">
-          <img
-            src="{{ '/html/template/default/assets/img-mizuki/img_tokuten.png' }}"
-            alt="7つのご成約特典をご用意しています"
-          />
-        </div>
-        <div class="mizuki_insurance mizuki_insurance-sp visible-phone">
-          <a href="https://www.i-sedai.com/pet/lp/?shopID=a0C1000001stuj3&agntCD=IK114591&campID=70110000000fvOT" target="_blank">
-            <img
-              src="{{ '/html/template/default/assets/img-mizuki/img_hokenSP.png' }}"
-              alt="SBIいきいき少短 ペット保険をお申込みいただくとうれしい特典！ こちらをクリック"
-            />
+      <div class="visible-phone">
+        <div class="pet-search-list-box">
+          <a href="/breeder/pet/search/result?pet_kind=1&pet_new=1">
+          <img src="{{ '/html/template/default/assets/img-mizuki/btn_dog_search_sp.png' }}" width="340" alt="ワンちゃんを探す"/>
+          </a>
+          <a href="/breeder/pet/search/result?pet_kind=2&pet_new=1">
+          <img src="{{ '/html/template/default/assets/img-mizuki/btn_cat_search_sp.png' }}" width="340" alt="ネコちゃんを探す"/>
           </a>
         </div>
-        <div class="mizuki_insurance mizuki_insurance-pc hidden-phone">
-          <a href="https://www.i-sedai.com/pet/lp/?shopID=a0C1000001stuj3&agntCD=IK114591&campID=70110000000fvOT" target="_blank">
-            <img
-              src="{{ '/html/template/default/assets/img-mizuki/img_hoken.png' }}"
-              alt="SBIいきいき少短 ペット保険をお申込みいただくとうれしい特典！ こちらをクリック"
-            />
-          </a>
-        </div>
-      </section>
-
-      <div class="mizuki_caution">
-        <h6>現在掲載中のペットに関して</h6>
-        <br />
-        <p>
-          現在Animallineに掲載中のわんちゃん・ネコちゃんのうち「検査中」と記載のある子は、検査が終わっておりません。
-          ブリーダー様へお問い合わせは可能ですが、<span style="color: red"
-            >ご成約は検査が終了し、結果に問題がない場合に可能</span
-          >となります。
-        </p>
       </div>
 
-      <section class="mizuki_pet-info visible-phone">
+      <div class="hidden-phone">
+        {% include 'animalline/breeder/searchbox.twig' %}
+      </div>
+
+<section class="mizuki_pet-info visible-phone">
         <div class="mizuki_pet-info-container">
           <div class="mizuki_pet-info-tab flex active">
             <p class="mizuki_pet-info-tab_dog">ワンちゃん新着情報</p>
@@ -146,10 +107,32 @@
                     {% else %}
                       <img src="{{'/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ pet.thumbnailPath }}" alt="{{ pet.getBreedsType().getBreedsName() ?? '' }}"/>
                     {% endif %}
+                    <div class="mizuki_pet-list-item-info">
+                      <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
+                      {% if pet.isContract != 1 and pet.isDelete != 1 %}
+                        {% if pet.getPriceNoDisplay() %}
+                            <div class="price">応相談</div>
+                        {% else %}
+                          <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
+                        {% endif %}
+                      {% endif %}
+                      <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
+                      <div class="type">
+                        <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span>
+                        <span>　{{ pet.coatColor}}</span>
+                      </div>
+                      <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
+                    </div>
+                    <div class="pr_comment">
+                      <p>{{ pet.prComment|nl2br }}</p>
+                    </div>
                   </a>
                 </li>
               {% endfor %}
             </ul>
+            <div style="text-align: right;">
+              <a href="/breeder/pet/search/result?pet_kind=1" style="color: #429137">他のワンちゃんを探す＞＞</a>
+            </div>
 
             <div class="pet-ranking_dog">
               <p class="pet-ranking-title pet-ranking-title_dog">
@@ -215,6 +198,32 @@
                   </li>
                 </ul>
               </div>
+              <div class="dog-breed-list">
+                <p class="pet-list_from-size_title">犬種から選ぶ</p>
+                <ul>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=134&pet_kind=1#gsc.tab=0">カニヘンダックスフンド</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=73&pet_kind=1#gsc.tab=0">ゴールデン・レトリーバー</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=99&pet_kind=1#gsc.tab=0">シベリアン・ハスキー</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=5&pet_kind=1#gsc.tab=0">チワワ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=9&pet_kind=1#gsc.tab=0">トイ・プードル</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=17&pet_kind=1#gsc.tab=0">パグ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=16&pet_kind=1#gsc.tab=0">パピヨン</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=75&pet_kind=1#gsc.tab=0">フラットコーテッド・レトリーバー</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=47&pet_kind=1#gsc.tab=0">フレンチブルドッグ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=35&pet_kind=1#gsc.tab=0">ペキニーズ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=96&pet_kind=1#gsc.tab=0">ボルゾイ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=11&pet_kind=1#gsc.tab=0">ポメラニアン</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=2&pet_kind=1#gsc.tab=0">マルチーズ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=8&pet_kind=1#gsc.tab=0">ミニチュアダックスフンド</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=1&pet_kind=1#gsc.tab=0">ヨークシャー・テリア</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=71&pet_kind=1#gsc.tab=0">ラブラドール・レトリーバー</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=61&pet_kind=1#gsc.tab=0">四国</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=40&pet_kind=1#gsc.tab=0">柴</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=115&pet_kind=1#gsc.tab=0">秋田</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=186&pet_kind=1#gsc.tab=0２">雑種（犬）(小型)</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=131&pet_kind=1#gsc.tab=0">ＭＩＸ（犬）(小型)</a></li>
+                </ul>
+              </div>
             </div>
           </div>
 
@@ -244,10 +253,32 @@
                     {% else %}
                       <img src="{{'/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ pet.thumbnailPath }}" alt="{{ pet.getBreedsType().getBreedsName() ?? '' }}"/>
                     {% endif %}
+                    <div class="mizuki_pet-list-item-info">
+                      <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
+                      {% if pet.isContract != 1 and pet.isDelete != 1 %}
+                        {% if pet.getPriceNoDisplay() %}
+                            <div class="price">応相談</div>
+                        {% else %}
+                          <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
+                        {% endif %}
+                      {% endif %}
+                      <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
+                      <div class="type">
+                        <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span>
+                        <span>　{{ pet.coatColor}}</span>
+                      </div>
+                      <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
+                    </div>
+                    <div class="pr_comment">
+                      <p>{{ pet.prComment|nl2br }}</p>
+                    </div>
                   </a>
                 </li>
               {% endfor %}
             </ul>
+            <div style="text-align: right;">
+              <a href="/breeder/pet/search/result?pet_kind=2" style="color: #429137">他のネコちゃんを探す＞＞</a>
+            </div>
 
             <div class="pet-ranking_cat">
               <p class="pet-ranking-title pet-ranking-title_cat">
@@ -280,12 +311,12 @@
                   </a>
                 </li>
               </ul>
-              {#
+              
               <div class="pet-list_from-hair">
                 <p class="pet-list_from-hair_title">毛種から選ぶ</p>
                 <ul class="pet-list_from-hair_list flex">
                   <li class="pet-list_from-hair_list-item">
-                    <a class="pet-list_from-hair_list-item_container flex" href="">
+                    <a class="pet-list_from-hair_list-item_container flex" href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT'), 'size_code' : 2}) }}">
                       <div class="pet-list_from-hair_list-item-image pet-list_from-hair_list-item-long">
                         <img src="/html/template/default/assets/img-mizuki/long-hair.png" alt="">
                       </div>
@@ -293,7 +324,7 @@
                     </a>
                   </li>
                   <li class="pet-list_from-hair_list-item">
-                    <a class="pet-list_from-hair_list-item_container flex" href="">
+                    <a class="pet-list_from-hair_list-item_container flex" href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT'), 'size_code' : 1}) }}">
                       <div class="pet-list_from-hair_list-item-image pet-list_from-hair_list-item-short">
                         <img src="/html/template/default/assets/img-mizuki/short-hair.png" alt="">
                       </div>
@@ -302,7 +333,31 @@
                   </li>
                 </ul>
               </div>
-              #}
+             
+            </div>
+            <div class="cat-breed-list">
+              <p class="pet-list_from-size_title">猫種から選ぶ</p>
+              <ul>
+                <li><a href="pet/search/result?pet_breed%5B%5D=210&pet_kind=2#gsc.tab=0">エキゾチック</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=231&pet_kind=2#gsc.tab=0">エキゾチックショートヘア</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=229&pet_kind=2#gsc.tab=0">サイベリアン</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=321&pet_kind=2#gsc.tab=0">スコティッシュストレート</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=321&pet_kind=2#gsc.tab=0">スコティッシュフォールド</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=221&pet_breed%5B%5D=191&pet_kind=2#gsc.tab=0">チンチラ</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=203&pet_kind=2#gsc.tab=0">デボンレックス</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=249&pet_kind=2#gsc.tab=0">トイガー</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=222&pet_kind=2#gsc.tab=0">ノルウェジアンフォレストキャット</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=199&pet_kind=2#gsc.tab=0">ブリティッシュショートヘア</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=238&pet_kind=2#gsc.tab=0">ブリティッシュロングヘア</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=223&pet_kind=2#gsc.tab=0">ベンガル</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=191&pet_kind=2#gsc.tab=0">ペルシャ</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=225&pet_kind=2#gsc.tab=0">マンチカン</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=239&pet_kind=2#gsc.tab=0">ミヌエット</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=206&pet_kind=2#gsc.tab=0">メインクーン</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=211&pet_kind=2#gsc.tab=0">ラグドール</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=226&pet_kind=2#gsc.tab=0">ラパーマ</a></li>
+                <li><a href="pet/search/result?pet_breed%5B%5D=212&pet_kind=2#gsc.tab=0">ロシアンブルー</a></li>
+              </ul>
             </div>
           </div>
         </div>
@@ -318,7 +373,8 @@
 
               <div class="mizuki_pet-list_dog active">
                 <ul class="flex mizuki_pet-list">
-                  {% for pet in newDog %}
+                  {% for i in 0..5 %}
+                    {% set pet = newDog[i] %}
                     <li class="mizuki_pet-list-item mizuki_pet-list-item_dog">
                       <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
                         {#
@@ -341,15 +397,33 @@
                         {% else %}
                           <img src="{{'/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ pet.thumbnailPath }}" alt="{{ pet.getBreedsType().getBreedsName() ?? '' }}"/>
                         {% endif %}
+                        <div class="mizuki_pet-list-item-info">
+                          <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
+                          {% if pet.isContract != 1 and pet.isDelete != 1 %}
+                            {% if pet.getPriceNoDisplay() %}
+                                <div class="price">応相談</div>
+                            {% else %}
+                              <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
+                            {% endif %}
+                          {% endif %}
+                          <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
+                          <div class="type">
+                            <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span>
+                            <span>　{{ pet.coatColor}}</span>
+                          </div>
+                          <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
+                        </div>
+                        <div class="pr_comment">
+                          <p>{{ pet.prComment|nl2br }}</p>
+                        </div>
                       </a>
                     </li>
                   {% endfor %}
                 </ul>
                 <div style="text-align: right;">
-                  <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG')}) }}" style="color: #429137">他のワンちゃんを探す＞＞</a>
+                  <a href="/breeder/pet/search/result?pet_kind=1" style="color: #429137">他のワンちゃんを探す＞＞</a>
                 </div>
               </div>
-              
               <div class="pet-ranking_dog">
                 <p class="pet-ranking-title pet-ranking-title_dog">
                   人気のワンちゃん
@@ -495,15 +569,41 @@
                   </li>
                 </ul>
               </div>
+              <div class="dog-breed-list">
+                <p class="pet-list_from-size_title">犬種から選ぶ</p>
+                <ul>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=134&pet_kind=1#gsc.tab=0">カニヘンダックスフンド</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=73&pet_kind=1#gsc.tab=0">ゴールデン・レトリーバー</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=99&pet_kind=1#gsc.tab=0">シベリアン・ハスキー</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=5&pet_kind=1#gsc.tab=0">チワワ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=9&pet_kind=1#gsc.tab=0">トイ・プードル</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=17&pet_kind=1#gsc.tab=0">パグ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=16&pet_kind=1#gsc.tab=0">パピヨン</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=75&pet_kind=1#gsc.tab=0">フラットコーテッド・レトリーバー</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=47&pet_kind=1#gsc.tab=0">フレンチブルドッグ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=35&pet_kind=1#gsc.tab=0">ペキニーズ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=96&pet_kind=1#gsc.tab=0">ボルゾイ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=11&pet_kind=1#gsc.tab=0">ポメラニアン</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=2&pet_kind=1#gsc.tab=0">マルチーズ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=8&pet_kind=1#gsc.tab=0">ミニチュアダックスフンド</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=1&pet_kind=1#gsc.tab=0">ヨークシャー・テリア</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=71&pet_kind=1#gsc.tab=0">ラブラドール・レトリーバー</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=61&pet_kind=1#gsc.tab=0">四国</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=40&pet_kind=1#gsc.tab=0">柴</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=115&pet_kind=1#gsc.tab=0">秋田</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=186&pet_kind=1#gsc.tab=0２">雑種（犬）(小型)</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=131&pet_kind=1#gsc.tab=0">ＭＩＸ（犬）(小型)</a></li>
+                </ul>
+              </div>
             </div>
-
             <div class="pet-info-cat">
               <p class="mizuki_pet-info-tab_cat flex">
                 ネコちゃん新着情報<span></span>
               </p>
               <div class="mizuki_pet-list_cat">
                 <ul class="mizuki_pet-list flex">
-                  {% for pet in newCat %}
+                  {% for i in 0..5 %}
+                    {% set pet = newCat[i] %}
                     <li class="mizuki_pet-list-item mizuki_pet-list-item_cat">
                       <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
                         {#
@@ -526,12 +626,31 @@
                         {% else %}
                           <img src="{{'/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ pet.thumbnailPath }}" alt="{{ pet.getBreedsType().getBreedsName() ?? '' }}"/>
                         {% endif %}
+                        <div class="mizuki_pet-list-item-info">
+                          <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
+                          {% if pet.isContract != 1 and pet.isDelete != 1 %}
+                            {% if pet.getPriceNoDisplay() %}
+                                <div class="price">応相談</div>
+                            {% else %}
+                              <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
+                            {% endif %}
+                          {% endif %}
+                          <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
+                          <div class="type">
+                            <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span>
+                            <span>　{{ pet.coatColor}}</span>
+                          </div>
+                          <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
+                        </div>
+                        <div class="pr_comment">
+                          <p>{{ pet.prComment|nl2br }}</p>
+                        </div>
                       </a>
                     </li>
                   {% endfor %}
                 </ul>
                 <div style="text-align: right;">
-                  <a href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT')}) }}" style="color: #429137">他のネコちゃんを探す＞＞</a>
+                  <a href="/breeder/pet/search/result?pet_kind=2" style="color: #429137">他のネコちゃんを探す＞＞</a>
                 </div>
               </div>
               <div class="pet-ranking_cat">
@@ -651,11 +770,12 @@
                   </li>
                 </ul>
               </div>
+              
               <div class="pet-list_from-hair">
                 <p class="pet-list_from-hair_title">毛種から選ぶ</p>
                 <ul class="pet-list_from-hair_list flex">
                   <li class="pet-list_from-hair_list-item">
-                    <a class="pet-list_from-hair_list-item_container flex" href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT'),'size_code' : 2}) }}">
+                    <a class="pet-list_from-hair_list-item_container flex" href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT'), 'size_code' : 2}) }}">
                       <div class="pet-list_from-hair_list-item-image pet-list_from-hair_list-item-long">
                         <img src="/html/template/default/assets/img-mizuki/long-hair.png" alt="">
                       </div>
@@ -663,7 +783,7 @@
                     </a>
                   </li>
                   <li class="pet-list_from-hair_list-item">
-                    <a class="pet-list_from-hair_list-item_container flex" href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT'),'size_code' : 1}) }}">
+                    <a class="pet-list_from-hair_list-item_container flex" href="{{ url('breeder_pet_search_result', {'pet_kind': constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT'), 'size_code' : 1}) }}">
                       <div class="pet-list_from-hair_list-item-image pet-list_from-hair_list-item-short">
                         <img src="/html/template/default/assets/img-mizuki/short-hair.png" alt="">
                       </div>
@@ -672,8 +792,100 @@
                   </li>
                 </ul>
               </div>
+             
+
+              <div class="cat-breed-list">
+                <p class="pet-list_from-size_title">猫種から選ぶ</p>
+                <ul>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=210&pet_kind=2#gsc.tab=0">エキゾチック</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=231&pet_kind=2#gsc.tab=0">エキゾチックショートヘア</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=229&pet_kind=2#gsc.tab=0">サイベリアン</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=321&pet_kind=2#gsc.tab=0">スコティッシュストレート</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=321&pet_kind=2#gsc.tab=0">スコティッシュフォールド</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=221&pet_breed%5B%5D=191&pet_kind=2#gsc.tab=0">チンチラ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=203&pet_kind=2#gsc.tab=0">デボンレックス</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=249&pet_kind=2#gsc.tab=0">トイガー</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=222&pet_kind=2#gsc.tab=0">ノルウェジアンフォレストキャット</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=199&pet_kind=2#gsc.tab=0">ブリティッシュショートヘア</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=238&pet_kind=2#gsc.tab=0">ブリティッシュロングヘア</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=223&pet_kind=2#gsc.tab=0">ベンガル</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=191&pet_kind=2#gsc.tab=0">ペルシャ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=225&pet_kind=2#gsc.tab=0">マンチカン</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=239&pet_kind=2#gsc.tab=0">ミヌエット</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=206&pet_kind=2#gsc.tab=0">メインクーン</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=211&pet_kind=2#gsc.tab=0">ラグドール</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=226&pet_kind=2#gsc.tab=0">ラパーマ</a></li>
+                  <li><a href="pet/search/result?pet_breed%5B%5D=212&pet_kind=2#gsc.tab=0">ロシアンブルー</a></li>
+                </ul>
+              </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <div class="mizuki_caution">
+        <h6><現在掲載中のペットに関して></h6>
+        <br />
+        <p>
+          現在Animallineに掲載中のわんちゃん・ネコちゃんのうち「検査中」と記載のある子は、検査が終わっておりません。
+          ブリーダー様へお問い合わせは可能ですが、<span style="color: red"
+            >ご成約は検査が終了し、結果に問題がない場合に可能</span
+          >となります。
+        </p>
+      </div>
+
+      <div style="text-align:center" class="search-box-text">
+        <script async src="https://cse.google.com/cse.js?cx=263af2c471e974783">
+        </script>
+        <div class="gcse-search"></div>
+        {#
+        <form id="text-search" action="{{ url('breeder_pet_search_result') }}" method="post" class="search_container">
+          <input type="search-text"></input>
+          <input type="submit" value="検索">
+        </form>
+        #}
+      </div>
+
+      <section class="mizuki_present">
+        <h2 class="mizuki_present-title-sp visible-phone">
+          <img
+            src="{{ '/html/template/default/assets/img-mizuki/ttl_tokutenSP.png' }}"
+            alt="7つのご成約特典をご用意しています"
+          />
+        </h2>
+        <h2 class="mizuki_present-title-pc hidden-phone">
+          <img
+            src="{{ '/html/template/default/assets/img-mizuki/ttl_tokuten.png' }}"
+            alt="7つのご成約特典をご用意しています"
+          />
+        </h2>
+        <div class="mizuki_present-sp visible-phone">
+          <img
+            src="{{ '/html/template/default/assets/img-mizuki/img_tokutenSP.png' }}"
+            alt="7つのご成約特典をご用意しています"
+          />
+        </div>
+        <div class="mizuki_present-pc hidden-phone">
+          <img
+            src="{{ '/html/template/default/assets/img-mizuki/img_tokuten.png' }}"
+            alt="7つのご成約特典をご用意しています"
+          />
+        </div>
+        <div class="mizuki_insurance mizuki_insurance-sp visible-phone">
+          <a href="https://www.i-sedai.com/pet/lp/?shopID=a0C1000001stuj3&agntCD=IK114591&campID=70110000000fvOT" target="_blank">
+            <img
+              src="{{ '/html/template/default/assets/img-mizuki/img_hokenSP.png' }}"
+              alt="SBIいきいき少短 ペット保険をお申込みいただくとうれしい特典！ こちらをクリック"
+            />
+          </a>
+        </div>
+        <div class="mizuki_insurance mizuki_insurance-pc hidden-phone">
+          <a href="https://www.i-sedai.com/pet/lp/?shopID=a0C1000001stuj3&agntCD=IK114591&campID=70110000000fvOT" target="_blank">
+            <img
+              src="{{ '/html/template/default/assets/img-mizuki/img_hoken.png' }}"
+              alt="SBIいきいき少短 ペット保険をお申込みいただくとうれしい特典！ こちらをクリック"
+            />
+          </a>
         </div>
       </section>
 
@@ -784,7 +996,6 @@
                 {{ knp_pagination_render(newPets) }}
               </div>
             </div>
-          
             {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
               <div class="breeder-column__main_section" id="breeder-column__main_section_dog_popular">
                 <div class="breeder-column__main_section_title">
@@ -876,7 +1087,7 @@
                             </a>
                         </li>
                     </ul>
-                {% endif %}  
+                {% endif %}
               </div>
             </div>
 
@@ -1001,25 +1212,21 @@
             <img src="{{ '/html/template/default/assets/img-mizuki/ttl_merit.png' }}" alt="" />
           </h2>
           <div
-            class="mizuki_advantage-item mizuki_advantage-item-1 visible-phone"
-          >
+            class="mizuki_advantage-item mizuki_advantage-item-1 visible-phone">
             <a href="#mizuki_dna-test">
               <img src="{{ '/html/template/default/assets/img-mizuki/img_merit_p1.png' }}" alt="" />
             </a>
           </div>
           <div
-            class="mizuki_advantage-item mizuki_advantage-item-2 visible-phone"
-          >
+            class="mizuki_advantage-item mizuki_advantage-item-2 visible-phone">
             <img src="{{ '/html/template/default/assets/img-mizuki/img_merit_p2.png' }}" alt="" />
           </div>
           <div
-            class="mizuki_advantage-item mizuki_advantage-item-3 visible-phone"
-          >
+            class="mizuki_advantage-item mizuki_advantage-item-3 visible-phone">
             <img src="{{ '/html/template/default/assets/img-mizuki/img_merit_p3.png' }}" alt="" />
           </div>
           <div
-            class="mizuki_advantage-item mizuki_advantage-item-pc hidden-phone"
-          >
+            class="mizuki_advantage-item mizuki_advantage-item-pc hidden-phone">
             <a href="#mizuki_dna-test">
               <img src="{{ '/html/template/default/assets/img-mizuki/img_merit_p1.png' }}" alt="" />
             </a>
@@ -1082,7 +1289,6 @@
         </div>
       </section>
 
-
       <a id="cashback"></a>
       <section class="mizuki_campaign">
         <div class="mizuki_campaign-image-sp visible-phone">
@@ -1100,12 +1306,10 @@
 
         <table class="mizuki_campaign-detail">
           <tbody>
-            {#
             <tr class="flex-column">
               <th class="">キャンペーン期間</th>
               <td class="">2022年8月1日（月）～2023年3月31日（金）</td>
             </tr>
-            #}
             <tr class="flex-column">
               <th class="">賞品</th>
               <td class="">成約代金キャッシュバック（5万円）</td>
@@ -1193,7 +1397,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/info/page.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?v=20230518-1">
+    <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?v=20230213">
 {% endblock %}
 
 {% block javascript %}

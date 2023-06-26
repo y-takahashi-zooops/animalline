@@ -10631,3 +10631,385 @@ label[for="change_subscription_cycle_type_1"] {
   padding: 1rem;
   border-radius: 5px;
 }
+
+/* 2023.05.16 追記 */
+.mizuki_fv {
+  margin-bottom: 160px;
+}
+
+.dna-count-frame {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 425px) {
+  .mizuki_fv a {
+    white-space: nowrap;
+  }
+}
+/* 2023.05.16 追記 */
+
+.dog-breed-list {
+  margin-top: 80px;
+}
+
+@media (min-width: 1001px) {
+  .dog-breed-list .inner{
+    max-width: 1200px;
+  }
+}
+
+.dog-breed-list h2 {
+  color: #29abe2;
+  background-color: #AACDA5;
+  margin: 0 0 20px 0;
+  padding: 1rem 1.3rem;
+  font-size: 18px;
+}
+
+.dog-breed-list ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.dog-breed-list ul li {
+  margin: 0;
+  padding: 0;
+}
+
+.dog-breed-list ul li a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: .4em 0;
+  background-color: #fff;
+  border: 1px solid #429137;
+  text-align: center;
+  box-sizing: border-box;
+  transition: background-color .2s ease, color .2s ease;
+  font-size: 16px;
+}
+
+.dog-breed-list ul li a:hover {
+  background-color: #429137;
+  color: #fff;
+}
+
+.cat-breed-list {
+  margin-top: 80px;
+}
+
+.cat-breed-list .pet-list_from-size_title {
+  color: #29abe2;
+}
+
+@media (min-width: 1001px) {
+  .cat-breed-list .inner{
+    max-width: 1200px;
+  }
+}
+
+.cat-breed-list h2 {
+  color: #29abe2;
+  background-color: #ABC9E5;
+  margin: 0 0 20px 0;
+  padding: 1rem 1.3rem;
+  font-size: 18px;
+}
+
+.cat-breed-list ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.cat-breed-list ul li {
+  margin: 0;
+  padding: 0;
+}
+
+.cat-breed-list ul li a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: .4em 0;
+  background-color: #fff;
+  border: 1px solid #29abe2;
+  text-align: center;
+  box-sizing: border-box;
+  transition: background-color .2s ease, color .2s ease;
+  font-size: 16px;
+}
+
+.cat-breed-list ul li a:hover {
+  background-color: #29abe2;
+  color: #fff;
+}
+
+@media screen and (max-width: 480px) {
+  .dog-breed-list,
+  .cat-breed-list {
+    margin-top: 4rem;
+  }
+  .dog-breed-list ul li a,
+  .cat-breed-list ul li a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    height: 100%;
+  }
+  .dna-count-frame {
+    margin-bottom: 1rem;
+  }
+}
+
+.mizuki_banner.hidden-phone {
+  margin-top: 3rem;
+}
+
+@media screen and (max-width: 480px) {
+  .mizuki_banner.visible-phone {
+    margin-top: 3rem;
+  }
+}
+
+
+/* 犬種猫種リッチコンテンツ */
+.feature-contents {
+  margin-top: 80px;
+}
+
+.feature-contents ul,
+.feature-contents ul li,
+.feature-contents p,
+.feature-contents dl,
+.feature-contents dl dt,
+.feature-contents dl dd,
+.feature-contents table,
+.feature-contents tr,
+.feature-contents th,
+.feature-contents td {
+  all: unset;
+  display: revert;
+  line-height: 1.6;
+}
+
+* + .feature-contents-box {
+  margin-top: 40px;
+}
+
+.feature-contents .ttl-large-bold {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: .8em;
+  font-size: 24px;
+  font-weight: bold;
+  color: #539b34;
+}
+
+.feature-contents .ttl-large-bold > i {
+  margin-right: 0.4em;
+}
+
+.feature-contents .ttl-medium {
+  margin-bottom: .8em;
+  padding-bottom: 0.4em;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: solid 1px;
+}
+
+.feature-contents strong {
+  font-weight: bold;
+}
+
+.feature-contents strong.red {
+  color: red;
+}
+
+.feature-contents dl {
+  margin-block: 1.6em;
+}
+
+.feature-contents-box dl dt {
+  border-width: 1px 1px 0 1px;
+  border-color: #000;
+  border-style: solid;
+  background: rgba(83, 155, 52, 0.4);
+  color: #000;
+  font-weight: bold;
+  padding: .8em;
+  box-sizing: border-box;
+}
+
+.feature-contents-box dl dd {
+  border-width: 1px 1px 1px 1px;
+  border-color: #000;
+  border-style: solid;
+  background: #fff;
+  padding: .8em;
+}
+
+.feature-contents-box dl dd + dt {
+  margin-top: 16px;
+}
+
+.feature-contents-box {
+  background-color: #f4f1e8;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.feature-contents-box-inner {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.feature-contents-box-inner + .feature-contents-box-inner {
+  margin-top: 30px;
+}
+
+.feature-contents-box p + p {
+  margin-top: 1.6em;
+}
+
+.feature-contents-box p:last-of-type {
+  margin-bottom: 1.6em;
+}
+
+.feature-contents table {
+  margin: 1.6em 0;
+}
+
+.feature-contents table {
+  width: 100%;
+}
+
+
+@media (min-width: 481px) {
+  .feature-contents table.width-half {
+    width: 64%;
+  }
+}
+
+.feature-contents table th,
+.feature-contents table td {
+  padding: 1.2em;
+  border: 1px solid #539b34;
+  box-sizing: border-box;
+}
+
+.feature-contents table thead th {
+  background-color: rgba(83, 155, 52, 0.9);
+  color: #fff;
+}
+
+.feature-contents table tbody th {
+  background-color: #fff;
+  color: black;
+}
+
+.feature-contents table td {
+  background-color: #fff;
+}
+
+.feature-contents-index * {
+  font-weight: 600;
+}
+
+.feature-contents-index-list-wrap {
+  border: solid 1px #ffab00;
+  padding: 1em;
+}
+
+.feature-contents .feature-contents-index-heading {
+  margin-bottom: .8em;
+  max-width: 100%;
+  background-color: #ffab00;
+  color: #fff;
+  text-align: center;
+  line-height: 2;
+  font-weight: 600;
+}
+
+.feature-contents .feature-contents-index-heading i {
+  margin-right: 0.2em;
+}
+
+.feature-contents-index-list {
+  list-style-type: none;
+  margin: 0;
+}
+
+.feature-contents-index-list > li:not(.has-ol) {
+  border-bottom: solid 1px #525263;
+}
+
+.feature-contents-index-list > li:last-of-type {
+  border-bottom: none;
+}
+
+.feature-contents-index-list a {
+  display: block;
+  padding: 0.4em 0 0.4em 0.2em;
+}
+
+.feature-contents-index > li.has-ol {
+  margin: 0 0 0.4em 0;
+  border-bottom: none;
+}
+
+.feature-contents-index-child {
+  border-top: solid 1px #525263;
+  padding-left: 2em;
+}
+
+.feature-contents-index-child > li {
+  border-bottom: dotted 1px #525263;
+}
+
+.feature-contents-index-child > li:last-of-type {
+  border-bottom: none;
+}
+
+.matome {
+  position: relative;
+}
+
+.matome > span {
+  position: absolute;
+  top: -1em;
+}
+
+@media screen and (max-width: 480px) {
+  .feature-contents {
+    margin-top: 40px;
+  }
+  .feature-contents .ttl-large-bold {
+    font-size: 20px;
+  }
+
+  .ttl-medium::before {
+    content: "";
+    display: block;
+    height: 80px;
+    margin-top: -80px;
+    visibility: hidden;
+  }
+  
+  .matome > span {
+    position: absolute;
+    top: -80px;
+  }
+}
+
+@media (min-width: 1001px) {
+  .mizuki_pet-list-item {
+    margin-top: 0.4rem;
+    width: 48%;
+  }
+}
