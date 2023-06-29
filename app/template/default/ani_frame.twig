@@ -112,13 +112,54 @@
             </div>
         </main>
 
-        <footer>
+        <footer id="footer03">
             <div class="inner">
             <div class="footer-row">
+            {#
                 <div class="footer-link">
                 <a href="/contents/">ワンニャンコラム</a> | <a href="{{url('ani_company')}}">会社概要</a>｜<a href="{{url('ani_policy')}}">プライバシーポリシー</a>
                 </div>
+            #}
+
+                <ul class="nav">
+                    <li>
+                        <ul class="nav-child">
+                            <li><a href="{{url('adoption_top')}}"><span>Adoption検索TOP</span></a></li>
+                            <li><a href="{{url('adoption_search')}}"><span>保護団体検索</span></a></li>
+                            <li><a href="{{url('adoption_transferinfo')}}"><span>お引渡しの流れ</span></a></li>
+                            <li><a href="{{url('adoption_costinfo')}}"><span>お迎え時の費用について</span></a></li>
+                            <li><a href="{{ url('adoption_ani_contact') }}">お問い合わせ</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="nav-child">
+                            <li><a href="{{url('breeder_top')}}"><span>Breeder検索TOP</span></a></li>
+                            <li><a href="{{url('breeder_search')}}"><span>ブリーダー検索</span></a></li>
+                            <li><a href="{{url('breeder_faq')}}"><span>よくあるご質問</span></a></li>
+                            <li><a href="{{url('breeder_firstinfo')}}"><span>初めての方へ</span></a></li>
+                            <li><a href="{{url('breeder_buyinfo')}}"><span>ご購入の流れ</span></a></li>
+                            <!-- <li><a href="{{url('breeder_transferinfo')}}"><span>お引渡しの流れ</span></a></li> -->
+                            <!-- <li><a href="{{url('breeder_costinfo')}}"><span>お迎え時の費用について</span></a></li> -->
+                            <li><a href="{{ url('breeder_ani_contact') }}">お問い合わせ</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="nav-child">
+                            <li><a href="/contents/"><span>ワンニャンコラム</span></a></li>
+                            <li><a href="{{url('adoption_guide_dog')}}"><span>お迎えガイド</span></a></li>
+                            <li><a href="{{ url("ani_dctn_info") }}"><span>ペットの家庭教師</span></a></li>
+                            <li><a href="{{ url("homepage") }}"><span>アニマルラインショップ</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="nav-child">
+                            <li><a href="#"><a href="{{url('ani_company')}}"><span>会社概要</span></a></a></li>
+                            <li><a href="#"><a href="{{url('ani_policy')}}"><span>プライバシーポリシー</span></a></a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
+
             <div class="footer-logo"><a href="{{url('ani_homepage')}}"><img src="{{ asset('assets/img/logo.png') }}" width="305" height="40" alt="犬・猫ブリーダー直販サイトのアニマルライン"/></a></div>
             <div class="copyright"><small>Copyright © 2021 Animalline All Rights Reserved.</small></div>
             </div>
