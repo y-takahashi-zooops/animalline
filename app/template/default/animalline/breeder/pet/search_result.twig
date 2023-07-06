@@ -71,7 +71,7 @@
                 {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_CAT') %}
 
                 {% set request_uri = app.request.server.get('REQUEST_URI') %}
-                  {% if 'pet_breed%5B%5D=213' in request_uri %}
+                  {% if 'pet_breed%5B%5D=213&' in request_uri or 'breed_type=213' in request_uri %}
                   {# スコティッシュフォールドのときに出したいリッチコンテンツ #}
                   <div class="feature-contents">
                   <p class="ttl-large-bold"><i class="fa-solid fa-paw"></i>スコティッシュフォールドってどんな猫？特徴や性格・飼い方を紹介！</p>
@@ -251,7 +251,7 @@
                 </div>
                 {% endif %}
 
-                {% if 'pet_breed%5B%5D=221' in request_uri %}
+                {% if 'pet_breed%5B%5D=221&' in request_uri or 'breed_type=221' in request_uri %}
                   {# チンチラのリッチコンテンツ #}
                   <div class="feature-contents">
                   <p class="ttl-large-bold"><i class="fa-solid fa-paw"></i>チンチラってどんな猫？特徴や性格・飼い方を紹介！</p>
@@ -379,7 +379,7 @@
       </div>
                 {% endif %}
 
-                {% if 'pet_breed%5B%5D=191' in request_uri %}
+                {% if 'pet_breed%5B%5D=191&' in request_uri or 'breed_type=191' in request_uri %}
                 {# ペルシャのリッチコンテンツ #}
                 <div class="feature-contents">
                 <p class="ttl-large-bold"><i class="fa-solid fa-paw"></i>ペルシャってどんな猫？特徴や性格・飼い方を紹介！</p>
@@ -580,7 +580,7 @@
       </div>
                 {% endif %}
 
-                {% if 'pet_breed%5B%5D=225' in request_uri %}
+                {% if 'pet_breed%5B%5D=225&' in request_uri or 'breed_type=225' in request_uri %}
                 {# マンチカンのリッチコンテンツ #}
                 <div class="feature-contents">
         <p class="ttl-large-bold"><i class="fa-solid fa-paw"></i>マンチカンってどんな猫？特徴や性格・飼い方を紹介！</p>
@@ -759,7 +759,7 @@
               {% endif %}
 
               {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
-                {% if 'pet_breed%5B%5D=5' in request_uri %}
+                {% if 'pet_breed%5B%5D=5&' in request_uri or 'breed_type=5' in request_uri %}
                 {# チワワのときに出したいリッチコンテンツ #}
                 <div class="feature-contents">
         <p class="ttl-large-bold"><i class="fa-solid fa-paw"></i>チワワってどんな犬？特徴や性格・飼い方を紹介！</p>
@@ -910,7 +910,7 @@
                   </div>
                   {% endif %}
 
-                  {% if 'pet_breed%5B%5D=9' in request_uri %}
+                  {% if 'pet_breed%5B%5D=9&' in request_uri or 'breed_type=9' in request_uri %}
                   {# トイ・プードルのリッチコンテンツ #}
                   <div class="feature-contents">
 
@@ -1097,7 +1097,7 @@
       </div>
                   {% endif %}
 
-                  {% if 'pet_breed%5B%5D=47' in request_uri %}
+                  {% if 'pet_breed%5B%5D=47&' in request_uri or 'breed_type=47' in request_uri %}
                   {# フレンチブルドッグのリッチコンテンツ #}
                   <div class="feature-contents">
         <p class="ttl-large-bold"><i class="fa-solid fa-paw"></i>フレンチブルドッグってどんな犬？特徴や性格・飼い方を紹介！</p>
@@ -1269,7 +1269,7 @@
       </div>
                   {% endif %}
 
-                  {% if 'pet_breed%5B%5D=11' in request_uri %}
+                  {% if 'pet_breed%5B%5D=11&' in request_uri or 'breed_type=11' in request_uri %}
                   {# ポメラニアンのリッチコンテンツ #}
                   <div class="feature-contents">
 
@@ -1518,7 +1518,7 @@
       </div>
                   {% endif %}
 
-                  {% if 'pet_breed%5B%5D=8' in request_uri %}
+                  {% if 'pet_breed%5B%5D=8&' in request_uri or 'breed_type=8' in request_uri %}
                   {# ミニチュアダックスフンドのリッチコンテンツ #}
                   <div class="feature-contents">
         <p class="ttl-large-bold"><i class="fa-solid fa-paw"></i>ミニチュアダックスフンドってどんな犬？特徴や性格・飼い方を紹介！</p>
@@ -1770,7 +1770,7 @@
       </div>
                   {% endif %}
 
-                  {% if 'pet_breed%5B%5D=40' in request_uri %}
+                  {% if 'pet_breed%5B%5D=40&' in request_uri or 'breed_type=40' in request_uri %}
                   {# 柴のリッチコンテンツ #}
                   <div class="feature-contents">
         <p class="ttl-large-bold"><i class="fa-solid fa-paw"></i>柴犬ってどんな犬？特徴や性格・飼い方を紹介！</p>
