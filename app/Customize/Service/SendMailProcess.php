@@ -14,109 +14,71 @@
 namespace Customize\Service;
 
 use Eccube\Repository\CustomerRepository;
-use Customize\Service\MailService;
+use Plugin\ZooopsSendmail\Repository\MailTemplateRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Customize\Service\ShippingMailService;
 
 class SendMailProcess
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
     /**
      * @var CustomerRepository
      */
     protected $customerRepository;
 
     /**
-     * @var MailService
+     * @var ShippingMailService
      */
-    protected $mailService;
+    protected $shippingMailService;
 
     public function __construct(
+        EntityManagerInterface $entityManager,
         CustomerRepository $customerRepository,
-        MailService $mailService
+        MailTemplateRepository $mailTemplateRepository,
+        ShippingMailService $shippingMailService
     ) {
+        $this->entityManager = $entityManager;
         $this->customerRepository = $customerRepository;
-        $this->mailService = $mailService;
+        $this->mailTemplateRepository = $mailTemplateRepository;
+        $this->shippingMailService = $shippingMailService;
     }
 
     /**
      * 一斉メール送信用CSV出力
      */
-    public function csvExport($searchData,$template_title,$template_detail,$attach_file)
+    public function csvExport($searchData, $template_id)
     {
-        // ファイル名作成
-        // $directorypath = 'var/tmp/mail/';
-        // $now = new \DateTime();
-        // $filename = 'mail_' . $now->format('YmdHis') . '.csv';
-        // $csvpath = $directorypath . $filename;
-
-        // フォルダがなければ作成する
-        //if (!file_exists($directorypath)) {
-        //    mkdir($directorypath, 0777, true);
-        //}
-
-        // ファイル名に従ってCSVファイル作成
-        //touch($csvpath);
-
-        // CSVファイルを開き編集
-        $createCsvFile = fopen("var/tmp/mail/sendlog".date("YmdHid").".csv", "w");
+        $template = $this->mailTemplateRepository->find($template_id);
+        $title = $template->getTemplateTitle();
+        $body = $template->getTemplateDetail();
 
         $qb = $this->customerRepository->getSearchData($searchData);
 
         //データ行挿入
         foreach ($qb as $customer) {
-            $name = $customer->getName01()."　".$customer->getName02();
-            $email = $customer->getEmail();
-
-            $this->mailService->sendEmailForManyUser($email,$template_title,$template_detail,$name,$attach_file);
-            $line[0] = $email;
-            $line[1] = $customer->getName01()."　".$customer->getName02();
-            fputcsv($createCsvFile, $line);
-            /*
-            $data[] = [
-                'name' => $customer->getName01() . $customer->getName02(), // フルネーム
-                'Email' => $customer->getEmail() // メールアドレス
-            ];
-            */
+            $this->shippingMailService->sendPlaneMail($title,$body,$customer);
         }
-        /*
-        if ($createCsvFile) {
-            foreach ($data as $line) {
-                fputcsv($createCsvFile, $line);
-            }
-        }
-        */
+    }
 
-        // CSVファイルを閉じる
-        fclose($createCsvFile);
+    /**
+     * テンプレート登録
+     */
+    public function registTemplate($data)
+    {
+        $this->entityManager->persist($data);
+        $this->entityManager->flush($data);
+    }
 
-        /*
-        // パラメータ設定
-        $password = '';
-        $method   = 'aes-256-cbc';
-        $options  = OPENSSL_RAW_DATA;
-        $iv       = openssl_random_pseudo_bytes(16);
-
-        // 暗号化
-        $enc_data = openssl_encrypt(
-            file_get_contents($csvpath),
-            $method,
-            $password,
-            $options,
-            $iv
-        );
-        */
-
-        // 出力
-        //file_put_contents($csvpath, $enc_data);
-
-        // // 複合化
-        // $dec_data = openssl_decrypt(
-        //     file_get_contents($csvpath),
-        //     $method,
-        //     $password,
-        //     $options,
-        //     $iv
-        // );
-
-        // file_put_contents($csvpath, $dec_data);
-
+    /**
+     * テンプレート削除
+     */
+    public function removeTemplate($data)
+    {
+        $this->entityManager->remove($data);
+        $this->entityManager->flush($data);
     }
 }

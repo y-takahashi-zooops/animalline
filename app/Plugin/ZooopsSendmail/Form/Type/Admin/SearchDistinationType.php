@@ -12,6 +12,8 @@ use Eccube\Form\Type\PriceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Eccube\Repository\CategoryRepository;
 use Eccube\Repository\ProductRepository;
+use Eccube\Repository\Master\OrderStatusRepository;
+
 use Plugin\ZooopsSendmail\Repository\MailTemplateRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -38,23 +40,31 @@ class SearchDistinationType extends AbstractType
     protected $eccubeConfig;
 
     /**
+     * @var OrderStatusRepository
+     */
+    protected $orderStatusRepository;
+
+    /**
      * ProductType constructor.
      *
      * @param CategoryRepository $categoryRepository
      * @param ProductRepository $productRepository
      * @param MailTemplateRepository $templateRepository
      * @param EccubeConfig $eccubeConfig
+     * @param OrderStatusRepository $orderStatusRepository
      */
     public function __construct(
         CategoryRepository $categoryRepository,
         ProductRepository $productRepository,
         MailTemplateRepository $templateRepository,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        OrderStatusRepository $orderStatusRepository
     ) {
         $this->categoryRepository = $categoryRepository;
         $this->productRepository = $productRepository;
         $this->templateRepository = $templateRepository;
         $this->eccubeConfig = $eccubeConfig;
+        $this->orderStatusRepository = $orderStatusRepository;
     }
 
 
@@ -65,6 +75,13 @@ class SearchDistinationType extends AbstractType
 
         foreach ($products as $product) {
             $productChoices[$product->getName()] = $product->getId();
+        }
+
+        // 商品名プルダウン準備
+        $orderstatus = $this->orderStatusRepository->findAll();
+
+        foreach ($orderstatus as $status) {
+            $statusChoices[$status->getName()] = $status->getId();
         }
 
         $builder
@@ -146,22 +163,15 @@ class SearchDistinationType extends AbstractType
                     new Assert\Length(['max' => $this->eccubeConfig['eccube_int_len']]),
                 ],
             ])
-
-            // 入会経路
-            ->add('member_route', ChoiceType::class, [
-                'label' => 'admin.product.name',
-                'placeholder' => false,
-                'required' => true,
+            // 商品名プルダウン
+            ->add('order_status', ChoiceType::class, [
+                'label' => '注文ステータス',
+                'placeholder' => '全てのステータス',
+                'required' => false,
                 'multiple' => false,
                 'expanded' => false,
-                'choices' => [
-                    'ブリーダー（登録済）' => '1',
-                    'ブリーダー（未登録）' => '2',
-                    '保護団体（登録済）' => '3',
-                    '保護団体（未登録）' => '4',
-                    'ＥＣ' => '5',
-                ],
-                'empty_data' => '1',
+                'choices' => $statusChoices,
+
             ]);
 
             $entity = $builder->getData();

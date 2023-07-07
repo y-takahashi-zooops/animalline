@@ -9,14 +9,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\HttpFoundation\File\File;
 
 class MailTemplateType extends AbstractType
 {
@@ -82,44 +78,6 @@ class MailTemplateType extends AbstractType
             ],
             'required' => false
         ]);
-
-        $builder->add('attach_file', FileType::class, [
-            'multiple' => false,
-            'mapped' => false,
-        ]);
-
-        $builder->add('template_attach', HiddenType::class);
-
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event){
-                $form = $event->getForm();
-                $template = $event->getData();
-
-                if($template instanceof MailTemplate) {
-                    if($template->getTemplateAttach()) {
-                        // アップロード済みのファイルをFileTypeにセット
-                        $form["attach_file"]->setData(
-                            new File("var/tmp/mail/".$template->getTemplateAttach())
-                        );
-                    }
-                }
-            })
-            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event){
-                $form = $event->getForm();
-                $template = $event->getData();
-
-                if($template instanceof MailTemplate) {
-                    $file = $form["attach_file"]->getData();
-                    var_dump($file);
-                    $filename = $file->getClientOriginalName();
-
-                    if($file) {
-                        // ファイルアップロード
-                        $file->move("var/tmp/mail/",$filename);
-                        $template->setTemplateAttach($filename);
-                    }
-                }
-            })
-        ;
     }
 
     /**

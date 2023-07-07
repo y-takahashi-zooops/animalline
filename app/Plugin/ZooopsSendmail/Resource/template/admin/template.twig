@@ -3,10 +3,10 @@
 {% set menus = ['customer', 'admin_zooops_sendmail_template'] %}
 
 {% block title %}
-	テンプレート管理
+	{{'admin.customer.customer_template' | trans}}
 {% endblock %}
 {% block sub_title %}
-	会員管理
+	{{'admin.customer.customer_management' | trans}}
 {% endblock %}
 
 {% block stylesheet %}{% endblock stylesheet %}
@@ -63,13 +63,13 @@ $('form[name=mail_template]').submit(function(){
 			<div class="c-primaryCol">
 				<div class="card rounded border-0 mb-4">
 					<div class="card-header">
-						<span class="card-title">テンプレート編集</span>
+						<span class="card-title">{{ 'admin.setting.shop.mail.mail_template_edit'|trans }}</span>
 					</div>
 					<div class="card-body">
 						<div class="row mb-4">
 							<div class="col-2">
 								<div class="d-inline-block">
-									<span>テンプレート選択</span>
+									<span>{{'admin.customer.template_selector'| trans}}</span>
 								</div>
 							</div>
 							<div class="col-10">
@@ -79,7 +79,7 @@ $('form[name=mail_template]').submit(function(){
 						<div class="borderBottom-ec-dashed"></div>
 						<div class="row mb-2 mt-4">
 							<div class="col-2">
-								<span>テンプレート名</span>
+								<span>{{'admin.customer.template_name'| trans}}</span>
 								<span class="badge badge-primary ml-1">{{ 'admin.common.required'|trans }}</span>
 							</div>
 							<div class="col-10">
@@ -89,7 +89,7 @@ $('form[name=mail_template]').submit(function(){
 						</div>
 						<div class="row mb-2">
 							<div class="col-2">
-								<span>メールタイトル</span>
+								<span>{{'admin.customer.template_title'| trans}}</span>
 								<span class="badge badge-primary ml-1">{{ 'admin.common.required'|trans }}</span>
 							</div>
 							<div class="col-10">
@@ -99,7 +99,7 @@ $('form[name=mail_template]').submit(function(){
 						</div>
 						<div class="row mb-2">
 							<div class="col-2">
-								<span>メール内容</span>
+								<span>{{'admin.customer.template_detail'| trans}}</span>
 								<span class="badge badge-primary ml-1">{{ 'admin.common.required'|trans }}</span>
 							</div>
 							<div class="col-10">
@@ -107,23 +107,6 @@ $('form[name=mail_template]').submit(function(){
 								{{ form_errors(form.template_detail) }}
 							</div>
 						</div>
-
-						<div class="row mb-2">
-							<div class="col-2">
-								<span>添付ファイル</span>
-							</div>
-							<div class="col-10">
-								{{ form_widget(form.attach_file, {'attr':{'class':'checkValue'}}) }}
-								{{ form_errors(form.attach_file) }}
-
-								{% if(formdata is defined) %}
-								{% if(formdata.TemplateAttach) %}
-								{{ formdata.TemplateAttach }}
-								{% endif %}
-								{% endif %}
-							</div>
-						</div>
-						{{ form_widget(form.template_attach, {'attr':{'class':'checkValue'}}) }}
 					</div>
 				</div>
 			</div>

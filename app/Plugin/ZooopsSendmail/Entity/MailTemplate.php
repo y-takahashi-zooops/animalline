@@ -47,14 +47,6 @@ if (!class_exists('\Plugin\ZooopsSendmail\Entity\MailTemplate')) {
         private $template_detail;
 
         /**
-         * @var string
-         *
-         * @ORM\Column(name="template_attach", type="string", length=255)
-         */
-        private $template_attach;
-        
-
-        /**
          * @var \DateTime
          *
          * @ORM\Column(name="create_date", type="datetimetz")
@@ -210,30 +202,6 @@ if (!class_exists('\Plugin\ZooopsSendmail\Entity\MailTemplate')) {
         public function getUpdateDate()
         {
             return $this->update_date;
-        }
-
-        /**
-         * Set updateDate
-         *
-         * @param \DateTime $updateDate
-         *
-         * @return MailTemplate
-         */
-        public function setTemplateAttach($template_attach)
-        {
-            $this->template_attach = $template_attach;
-
-            return $this;
-        }
-
-        /**
-         * Get updateDate
-         *
-         * @return \DateTime
-         */
-        public function getTemplateAttach()
-        {
-            return $this->template_attach;
         }
     }
 }

@@ -15,11 +15,11 @@ class ZooopsSendmailNav implements EccubeNav
             'customer' => [
                 'children' => [
                     'admin_zooops_sendmail_template' => [
-                        'name' => 'テンプレート管理',
+                        'name' => 'admin.customer.customer_template',
                         'url' => 'admin_zooops_sendmail_template',
                     ],
                     'admin_zooops_sendmail_send' => [
-                            'name' => '一斉メール送信',
+                            'name' => 'admin.customer.customer_all_mail_send',
                             'url' => 'admin_zooops_sendmail_send',
                         ],
                 ],

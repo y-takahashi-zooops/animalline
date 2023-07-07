@@ -17,7 +17,6 @@ use Eccube\Repository\CustomerRepository;
 use Eccube\Repository\Master\PageMaxRepository;
 use Plugin\ZooopsSendmail\Entity\MailTemplate;
 use Customize\Service\SendMailProcess;
-use Customize\Service\MailService;
 
 class ZooopsSendmailController extends AbstractController
 {
@@ -47,11 +46,6 @@ class ZooopsSendmailController extends AbstractController
     protected $sendMailProcess;
 
     /**
-     * @var MailService
-     */
-    protected $mailService;
-
-    /**
      * ZooopsSendmailController constructor.
      *
      * @param MailTemplateRepository $templateRepository
@@ -59,22 +53,19 @@ class ZooopsSendmailController extends AbstractController
      * @param CustomerRepository $customerRepository    
      * @param CsvExportService $csvExportService
      * @param SendMailProcess $SendMailProcess
-     * @param MailService $mailService
      */
     public function __construct(
         MailTemplateRepository $templateRepository,
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
         CsvExportService $csvExportService,
-        SendMailProcess $sendMailProcess,
-        MailService $mailService
+        SendMailProcess $sendMailProcess
     ) {
         $this->templateRepository = $templateRepository;
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
         $this->csvExportService = $csvExportService;
         $this->sendMailProcess = $sendMailProcess;
-        $this->mailService = $mailService;
     }
 
     /**
@@ -89,14 +80,13 @@ class ZooopsSendmailController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $formdata = $form->getData();
-            $this->entityManager->persist($formdata);
-            $this->entityManager->flush($formdata);
+            $this->sendMailProcess->registTemplate($formdata);
             $this->addSuccess('登録しました。', 'admin');
             return $this->redirectToRoute('admin_zooops_sendmail_template_edit', array('id' => $formdata->getId()));
         }
 
         return [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
@@ -111,18 +101,15 @@ class ZooopsSendmailController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $formdata = $form->getData();
-
             // 登録ボタンが押された場合、更新処理を行う
             if (isset($_POST['regist'])) {
-                $this->entityManager->persist($formdata);
-                $this->entityManager->flush($formdata);
+                $this->sendMailProcess->registTemplate($formdata);
                 $this->addSuccess('更新しました。', 'admin');
-                //return $this->redirectToRoute('admin_zooops_sendmail_template_edit', array('id' => $formdata->getId()));
+                return $this->redirectToRoute('admin_zooops_sendmail_template_edit', array('id' => $formdata->getId()));
             }
             // 削除ボタンが押された場合、削除処理を行う
             elseif (isset($_POST['delete'])) {
-                $this->entityManager->remove($formdata);
-                $this->entityManager->flush($formdata);
+                $this->sendMailProcess->removeTemplate($formdata);
                 $this->addSuccess('削除しました。', 'admin');
                 // 当該ページが削除されていて存在しないため、初期ページにリダイレクト
                 return $this->redirectToRoute('admin_zooops_sendmail_template');
@@ -131,7 +118,6 @@ class ZooopsSendmailController extends AbstractController
 
         return [
             'form' => $form->createView(),
-            'formdata' => $template
         ];
     }
 
@@ -151,14 +137,10 @@ class ZooopsSendmailController extends AbstractController
         // $templateForm = $this->createForm(MailTemplateType::class);
 
         // デフォルトのページカウントを50件に設定
-        /*
         $page_count = $this->session->get(
             'eccube.admin.destination.search.page_count',
             $this->eccubeConfig->get('eccube_default_page_count')
         );
-        */
-        //１ページで処理するように設定
-        $page_count = 999;
 
         // 現在選択されている表示件数を取得
         $page_count_param = (int) $request->get('page_count');
@@ -262,49 +244,26 @@ class ZooopsSendmailController extends AbstractController
         return $this->json([
             'template_name' => $template_name,
             'template_detail' => $template_detail,
-            'template_attach' => $template->getTemplateAttach(),
         ]);
     }
 
     /** ajax通信用(送信ボタン(モーダルダイアログ)押下時)
-     * @Route("/%eccube_admin_route%/zooops_sendmail/send/csv", name="admin_zooops_sendmail_csv")
+     * @Route("/%eccube_admin_route%/zooops_sendmail/send/csv/{template_id}", name="admin_zooops_sendmail_csv")
      */
-    public function send(Request $request)
+    public function send(Request $request, $template_id = 0)
     {
         if (!$request->isXmlHttpRequest()) {
             throw new BadRequestHttpException();
         }
 
-        $id = $request->get("id");
-
-        $customerIds = $request->get('customer_ids');
-
-        // 設定したテンプレートIDの各要素を取得
-        $template = $this->templateRepository->get($id);
-        $template_title = $template->getTemplateName();
-        $template_detail = $template->getTemplateDetail();
-        $attach_file = $template->getTemplateAttach();
         $searchForm = $this->createForm(SearchDistinationType::class);
 
         $viewData = $this->session->get('eccube.admin.destination.search', []);
         $searchData = FormUtil::submitAndGetData($searchForm, $viewData);
-        $searchData['customer_ids'] = $customerIds;
 
-        $this->sendMailProcess->csvExport($searchData,$template_title,$template_detail,$attach_file);
+        $this->sendMailProcess->csvExport($searchData, $template_id);
 
         // 戻り値なし
         return $this->json([]);
-    }
-
-    /** 添付ファイルダウンロード
-     * @Route("/%eccube_admin_route%/zooops_sendmail/attach/{filename}", name="admin_zooops_sendmail_attach")
-     */
-    public function attach_download(Request $request,$filename)
-    {
-        $path = "var/tmp/mail/".$filename;
-
-        header('Content-Type: application/force-download');
-        header('Content-Length: '.filesize($path));
-        readfile($path);
     }
 }

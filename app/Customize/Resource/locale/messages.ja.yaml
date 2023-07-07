@@ -54,6 +54,7 @@ common.birth_day: 生年月日
 common.tax_include: 税込
 common.separator__range: 〜
 common.separator__colon: ：
+admin.common.separator__hyphen: －
 common.quantity: 数量
 common.quantity__with_separator: 数量：
 common.subtotal: 小計
@@ -924,6 +925,7 @@ admin.customer.customer_address_registration: お届け先登録
 
 # ラベル/メッセージ
 admin.customer.customer_id: 会員ID
+admin.customer.customer_name: 会員名
 admin.customer.customer_info: 会員情報
 admin.customer.purchase_history: 注文履歴
 admin.customer.purchase_history__not_found: 注文履歴がありません
