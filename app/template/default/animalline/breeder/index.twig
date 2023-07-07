@@ -1,6 +1,7 @@
 {% set site_type = 'breeder' %}
 {% set breeds_dog_list = breeds_dog %}
 {% set breeds_cat_list = breeds_cat %}
+{% set randomPets = randomPets %}
 
 {% extends 'animalline/breeder/frame.twig' %}
 
@@ -75,7 +76,44 @@
         {% include 'animalline/breeder/searchbox.twig' %}
       </div>
 
-<section class="mizuki_pet-info visible-phone">
+
+<section class="now_on_sale">
+  <div class="now_on_sale_content">
+  <p class="now_on_sale_title">
+  販売中のワンちゃんとネコちゃん
+  <span></span>
+  </p>
+  <ul class="now_on_sale_list">
+  {% for sale in randomPets %}
+  <li>
+  <a href="{{ url('breeder_pet_detail', {'id': sale.id}) }}">
+    {% if sale.thumbnailPath == "" %}
+      <img src="{{ '/html/template/default/assets/img/noimage.png' }}" alt="{{ sale.getBreedsType().getBreedsName() ?? '' }}"/>
+    {% else %}
+      <img src="{{'/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ sale.thumbnailPath }}" alt="{{ sale.getBreedsType().getBreedsName() ?? '' }}"/>
+    {% endif %}
+    <div class="now_on_sale_info">
+      <h4>{{ sale.getBreedsType().getBreedsName() ?? '' }}</h4>
+      <div class="price">{{ sale.price|number_format(0) }}円（税込）</div>
+      <div class="birthday">{{ sale.petBirthday|date('Y年m月d日') }}生</div>
+      <div class="type">
+        <span>{{ sale.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span>
+        <span>　{{ sale.coatColor}}</span>
+      </div>
+      <div class="publish">掲載日：{{ sale.createDate|date('Y年m月d日') }}</div>
+    </div>
+    <div class="pr_comment">
+      <p>{{ sale.prComment|nl2br }}</p>
+    </div>
+  </a>
+  </li>
+  {% endfor %}
+    </ul>
+  </div>
+</section>
+
+
+      <section class="mizuki_pet-info visible-phone">
         <div class="mizuki_pet-info-container">
           <div class="mizuki_pet-info-tab flex active">
             <p class="mizuki_pet-info-tab_dog">ワンちゃん新着情報</p>
@@ -1391,6 +1429,7 @@
         </div>
       </div>
     </section>
+
 {% endblock %}
 
 {% block stylesheet %}
