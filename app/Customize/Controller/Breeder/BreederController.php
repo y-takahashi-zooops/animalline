@@ -218,6 +218,26 @@ class BreederController extends AbstractController
             9
         );
 
+        // 猫種からランダムに3件を取得
+        $cat_random_keys = array_rand($newCats, 3);
+        $cat_random = array_intersect_key($newCats, array_flip($cat_random_keys));
+
+        // 犬種からランダムに3件を取得
+        $dog_random_keys = array_rand($newDogs, 3);
+        $dog_random = array_intersect_key($newDogs, array_flip($dog_random_keys));
+
+        // ランダムに取得した犬種と猫種をマージ
+        $merge_pet_list = array_merge($cat_random, $dog_random);
+
+        // マージした犬種と猫種をランダムに並び替える
+        shuffle($merge_pet_list);
+
+        // $merge_pet_listから最初の6つの要素を取得
+        $random_pet_list = array_slice($merge_pet_list, 0, 6);
+
+        // twigに渡す変数
+        $randomPets = $random_pet_list;
+
         //RSS
         $url = "https://animalline.jp/contents/feed/";
         $xml = file_get_contents($url);
@@ -278,13 +298,33 @@ class BreederController extends AbstractController
         //犬種
         $breeds_dog = $this->breederQueryService->getBreedsHavePet(1);
 
+        // // 猫種からランダムに3件を取得
+        // $cat_random_keys = array_rand($breeds_cat, 3);
+        // $cat_random = array_intersect_key($breeds_cat, array_flip($cat_random_keys));
+
+        // // 犬種からランダムに3件を取得
+        // $dog_random_keys = array_rand($breeds_dog, 3);
+        // $dog_random = array_intersect_key($breeds_dog, array_flip($dog_random_keys));
+
+        // // ランダムに取得した犬種と猫種をマージ
+        // $merge_pet_list = array_merge($cat_random, $dog_random);
+
+        // // マージした犬種と猫種をランダムに並び替える
+        // shuffle($merge_pet_list);
+
+        // // $merge_pet_listから最初の6つの要素を取得
+        // $random_pet_list = array_slice($merge_pet_list, 0, 6);
+
+        // // twigに渡す変数
+        // $randomElements = $random_pet_list;
+
         //今日の日付
         $today = new DateTime();
 
         $pets_count_inspection = count($this->breederPetsRepository->findBy(["is_active" => 1, "dna_check_result" => 1]));
 
         return $this->render('animalline/breeder/index.twig', [
-            'title' => 'ペット検索',
+            // 'title' => 'ペット検索',
             'petKind' => $petKind,
             'breeds' => $breeds,
             'regions' => $regions,
@@ -307,6 +347,7 @@ class BreederController extends AbstractController
             'today' => $today,
             'pets_count_inspection' => $pets_count_inspection,
             'search_box_mode' => 9,
+            'randomPets' => $randomPets,
         ], $response);
     }
 
