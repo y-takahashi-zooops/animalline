@@ -95,6 +95,10 @@ class CustomizeNav implements EccubeNav
 						'name' => '入荷情報登録',
 						'url' => 'admin_product_instock_registration_new',
 					],
+					'instock_search' => [
+						'name' => '入荷実績検索',
+						'url' => 'admin_product_instock_search',
+					],
 				],
 			],
 			'order' => [

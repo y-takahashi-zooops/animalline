@@ -86,6 +86,7 @@ class BreederQueryService
 
         $query = $this->breederPetsRepository->createQueryBuilder('p')
             ->where('p.is_active = :is_active')
+            ->andWhere('p.is_contact = 0')
             //->andWhere('p.is_delete = 0')
             ->setParameter('is_active', 1)
             ->andWhere('p.pet_kind = :pet_kind')

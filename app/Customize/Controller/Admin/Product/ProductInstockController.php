@@ -168,6 +168,58 @@ class ProductInstockController extends AbstractController
     }
 
     /**
+     * 入荷実績検索画面
+     *
+     * @Route("/%eccube_admin_route%/product/instock_search", name="admin_product_instock_search")
+     * @Template("@admin/Product/instock_search.twig")
+     * @throws Exception
+     */
+    public function instock_search(PaginatorInterface $paginator, Request $request): array
+    {
+        $supplier = [];
+        $instocks = null;
+        if ($request->isMethod('GET')) {
+            $orderDate = [
+                'orderDateYear' => $request->get('order_date_year'),
+                'orderDateMonth' => $request->get('order_date_month'),
+                'orderDateDay' => $request->get('order_date_day')
+            ];
+
+            $orderDate2 = [
+                'orderDateYear' => $request->get('order_date_year2'),
+                'orderDateMonth' => $request->get('order_date_month2'),
+                'orderDateDay' => $request->get('order_date_day2')
+            ];
+
+            $scheduleDate = [
+                'scheduleDateYear' => $request->get('arrival_date_schedule_year'),
+                'scheduleDateMonth' => $request->get('arrival_date_schedule_month'),
+                'scheduleDateDay' => $request->get('arrival_date_schedule_day')
+            ];
+
+            $scheduleDate2 = [
+                'scheduleDateYear' => $request->get('arrival_date_schedule_year2'),
+                'scheduleDateMonth' => $request->get('arrival_date_schedule_month2'),
+                'scheduleDateDay' => $request->get('arrival_date_schedule_day2')
+            ];
+
+            $instocks = $this->instockScheduleRepository->search($orderDate,$orderDate2,$scheduleDate,$scheduleDate2);
+        }
+        
+        $count = count($instocks);
+        $instocks = $paginator->paginate(
+            $instocks,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', 50)
+        );
+
+        return [
+            'instocks' => $instocks,
+            'count' => $count
+        ];
+    }
+
+    /**
      * WMSに入荷情報を送信する
      *
      * @Route("/%eccube_admin_route%/product/sendwms", name="admin_product_instock_send_wms")

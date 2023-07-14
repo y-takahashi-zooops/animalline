@@ -40,7 +40,7 @@
                             </div>
 
                             <input type="hidden" id="total_price" name="total_price" />
-                            <div id="check_kinds">
+                            <div id="check_kinds" class="container">
                                 
                             </div>
 
@@ -155,10 +155,10 @@
 
                 counts = 0;
                 for (let i = 0; i < data_json.length; ++i) {
-                    var addhtml = '<div class="row justify-content-center"><div class="col-md-3">';
-                    addhtml += '<label class="ec-label required" for="conservations_is_organization">検査内容' + (i+1).toString() +'</label>';
-                    addhtml += '</div>';
-                    addhtml += '<div class="col-md-3 ec-checkbox">';
+                    //var addhtml = '<div class="d-flex justify-content-center"><div class="col-4">';
+                    //addhtml += '<label class="ec-label required" for="conservations_is_organization">検査内容' + (i+1).toString() +'</label>';
+                    //addhtml += '</div>';
+                    var addhtml = '<div class="col-4 ec-checkbox">';
                     addhtml += '<input type="checkbox" value="' + data_json[i]["id"] + '" id="check_kind_' + (i+1).toString() + '" name="status_detail[]" checked>　' + data_json[i]["check_kind"];
                     addhtml += '</div>';
                     addhtml += '</div>';

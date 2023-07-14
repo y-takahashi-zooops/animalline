@@ -20,7 +20,8 @@ use Eccube\Entity\Product;
 use Eccube\Entity\ProductStock;
 use Eccube\Util\StringUtil;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-
+use Eccube\Entity\Master\SaleType;
+use Eccube\Repository\Master\SaleTypeRepository;
 /**
  * ProductRepository
  *
@@ -40,6 +41,11 @@ class ProductRepository extends AbstractRepository
     protected $eccubeConfig;
 
     /**
+     * @var SaleTypeRepository
+     */
+    protected $saleTypeRepository;
+
+    /**
      * ProductRepository constructor.
      *
      * @param RegistryInterface $registry
@@ -49,11 +55,13 @@ class ProductRepository extends AbstractRepository
     public function __construct(
         RegistryInterface $registry,
         Queries $queries,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        SaleTypeRepository $saleTypeRepository
     ) {
         parent::__construct($registry, Product::class);
         $this->queries = $queries;
         $this->eccubeConfig = $eccubeConfig;
+        $this->saleTypeRepository = $saleTypeRepository;
     }
 
     /**
@@ -133,6 +141,8 @@ class ProductRepository extends AbstractRepository
      */
     public function getQueryBuilderBySearchData($searchData, $loggedUser = false)
     {
+        $SaleType = $this->saleTypeRepository->find(SaleType::SALE_TYPE_NORMAL);
+
         $qb = $this->createQueryBuilder('p')
             ->andWhere('p.Status = 1');
 
@@ -193,10 +203,13 @@ class ProductRepository extends AbstractRepository
         } elseif (!empty($searchData['orderby']) && $searchData['orderby']->getId() == $config['eccube_product_order_newer']) {
             // 在庫切れ商品非表示の設定が有効時対応
             // @see https://github.com/EC-CUBE/ec-cube/issues/1998
-            if ($this->getEntityManager()->getFilters()->isEnabled('option_nostock_hidden') == true) {
+            //if ($this->getEntityManager()->getFilters()->isEnabled('option_nostock_hidden') == true) {
                 $qb->innerJoin('p.ProductClasses', 'pc');
                 $qb->andWhere('pc.visible = true');
-            }
+                $qb->andWhere('pc.SaleType = :SaleType');
+                $qb->setParameter("SaleType", $SaleType);
+                
+            //}
             $qb->orderBy('p.create_date', 'DESC');
             $qb->addOrderBy('p.id', 'DESC');
         } else {

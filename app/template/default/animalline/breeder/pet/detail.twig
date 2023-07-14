@@ -44,6 +44,23 @@
                     <div class="line-it-button" data-lang="ja" data-type="like" data-env="REAL" data-url="{{ app.request.getUri }}"  style="display: none;"></div>
                     <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
                     <!-- ソーシャルボタン -->
+                    {% if like %}
+                        <div style="float:right;padding: 3px 10px">
+                            <img src="/html/template/default/assets/img/good_on.png" style="width:20px;float:left;margin-right:5px" alt="">
+                            <div style="float:right;height:20px">
+                                いいね！({{ like_count }})
+                            </div>    
+                        </div>
+                     {% else %}
+                        <a href="{{ url('breeder_pet_like', {'id': breederPet.id}) }}">
+                            <div style="float:right;padding: 3px 10px">
+                                <img src="/html/template/default/assets/img/good_off.png" style="width:20px;float:left;margin-right:5px" alt="">
+                                <div style="float:right;height:20px">
+                                    いいね！({{ like_count }})
+                                </div>    
+                            </div>
+                        </a>
+                    {% endif %}
                     <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
                         <div class="breeder-column__main_section_title">
                             <h2 class="float-left mb-3">

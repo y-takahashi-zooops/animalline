@@ -81,7 +81,7 @@ class CustomTopController extends AbstractController
 
         //新着
         $searchData["category_id"] = null;
-        //$searchData['orderby'] = $this->productListOrderByRepository->find(2);
+        $searchData['orderby'] = $this->productListOrderByRepository->find(2);
         $qb = $this->productRepository->getQueryBuilderBySearchData($searchData);
         $query = $qb->getQuery();
         $products_new = $query->getResult();

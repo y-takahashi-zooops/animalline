@@ -115,10 +115,12 @@ file that was distributed with this source code.
                         </div>
                     {% endfor %}
 
+                    {% set ProductClassSaleType = 0 %}
+
                     <div class="ec-cartRole__cart">
                         <div class="ec-cartTable">
                             <ol class="ec-cartHeader">
-                                <li class="ec-cartHeader__label">{{ '削除'|trans }}</li>
+                                <li class="ec-cartHeader__label">{{ ''|trans }}</li>
                                 <li class="ec-cartHeader__label">{{ '商品内容'|trans }}</li>
                                 <li class="ec-cartHeader__label">{{ '数量'|trans }}</li>
                                 <li class="ec-cartHeader__label">{{ '小計'|trans }}</li>
@@ -126,6 +128,7 @@ file that was distributed with this source code.
                             {% for CartItem in Cart.CartItems %}
                                 {% set ProductClass = CartItem.ProductClass %}
                                 {% set Product = ProductClass.Product %}
+                                {% set ProductClassSaleType = ProductClass.SaleType.id %}
 
                                 <ul class="ec-cartRow">
                                     <li class="ec-cartRow__delColumn">
@@ -220,7 +223,11 @@ file that was distributed with this source code.
                         </div>
                         <a class="ec-blockBtn--action" href="{{ path('cart_buystep', {'cart_key':cartKey}) }}">{{ 'レジに進む'|trans }}</a>
                         {% if loop.last %}
-                            <a class="ec-blockBtn--cancel" href="{{ path('homepage') }}">{{ 'お買い物を続ける'|trans }}</a>
+                            {% if ProductClassSaleType != 2 %}
+                                <a class="ec-blockBtn--cancel" href="{{ path('homepage') }}">{{ 'お買い物を続ける'|trans }}</a>
+                            {% else %}
+                                <a class="ec-blockBtn--cancel" href="{{ path('dna_ec_top') }}">検査項目を変更する</a>
+                            {% endif %}
                         {% endif %}
                     </div>
                 {% endfor %}

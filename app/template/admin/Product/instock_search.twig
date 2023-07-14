@@ -1,0 +1,258 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['product', 'instock_master'] %}
+{% set params = app.request.query.all %}
+
+{% block title %}入荷実績検索{% endblock %}
+{% block sub_title %}{{ 'admin.product.product_management'|trans }}{% endblock %}
+
+{% block javascript %}
+<script src="//yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
+<script>
+    $(".delete").on('click', function() {
+    $('#DeleteModal').modal('show');
+    $('#bulkDelete').val($(this).data('id'));
+});
+    $("#bulkDelete").on('click', function() {
+    $.ajax({
+        url: '{{ url("admin_product_instock_delete") }}',
+        type: 'post',
+        dataType: 'json',
+        data: {
+            'id': $('#bulkDelete').val()
+        }
+    })
+        .done(function (data) {
+            $('#DeleteModal').modal('hide');
+            location.reload();
+        })
+        .fail(function (err) {
+            console.error(err);
+        });
+});
+
+    function confirmSendWMS(){
+        if(confirm('入荷データを送信しますか？')){
+            location.href="{{url('admin_product_instock_send_wms')}}";
+        }
+    }
+</script>
+{% endblock %}
+
+{% block stylesheet %}{% endblock %}
+
+{% block main %}
+    <div class="c-outsideBlock">
+        <form id='search_form' method="get" action="">
+            <div class="c-outsideBlock__contents">
+                <div class="row justify-content-start mb-3">
+                    <div class="col-6">
+                        <label class="col-form-label">発注日</label>
+                        <div class="ec-select">
+                            <div id="instock_list_order_date" class="form-inline">
+                                <select class="form-control" id="instock_list_order_date_year" name="order_date_year">
+                                    <option value="">----</option>
+                                    {% for i in 2021..2023 %}
+                                        <option value={{ i }} {% if params.order_date_year is defined and params.order_date_year == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_order_date_month" name="order_date_month">
+                                    <option value="">--</option>
+                                    {% for i in 1..12 %}
+                                        <option value={{ i }} {% if params.order_date_month is defined and params.order_date_month == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_order_date_day" name="order_date_day">
+                                    <option value="">--</option>
+                                    {% for i in 1..31 %}
+                                        <option value={{ i }}  {% if params.order_date_day is defined and params.order_date_day == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                　～　
+                                <select class="form-control" id="instock_list_order_date_year" name="order_date_year2">
+                                    <option value="">----</option>
+                                    {% for i in 2021..2023 %}
+                                        <option value={{ i }} {% if params.order_date_year2 is defined and params.order_date_year2 == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_order_date_month" name="order_date_month2">
+                                    <option value="">--</option>
+                                    {% for i in 1..12 %}
+                                        <option value={{ i }} {% if params.order_date_month2 is defined and params.order_date_month2 == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_order_date_day" name="order_date_day2">
+                                    <option value="">--</option>
+                                    {% for i in 1..31 %}
+                                        <option value={{ i }}  {% if params.order_date_day2 is defined and params.order_date_day2 == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-start mb-3">
+                    <div class="col-6">
+                        <label class="col-form-label">入荷予定日</label>
+                        <div class="ec-select">
+                            <div id="instock_list_arrival_date_schedule" class="form-inline">
+                                <select class="form-control" id="instock_list_arrival_date_schedule_year"
+                                        name="arrival_date_schedule_year">
+                                    <option value="">----</option>
+                                    {% for i in 2021..2023 %}
+                                        <option value={{ i }}  {% if params.arrival_date_schedule_year is defined and params.arrival_date_schedule_year == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_arrival_date_schedule_month"
+                                        name="arrival_date_schedule_month">
+                                    <option value="">--</option>
+                                    {% for i in 1..12 %}
+                                        <option value={{ i }} {% if params.arrival_date_schedule_month is defined and params.arrival_date_schedule_month == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_arrival_date_schedule_day"
+                                        name="arrival_date_schedule_day">
+                                    <option value="">--</option>
+                                    {% for i in 1..31 %}
+                                        <option value={{ i }} {% if params.arrival_date_schedule_day is defined and params.arrival_date_schedule_day == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                                　～　
+                                <select class="form-control" id="instock_list_arrival_date_schedule_year" name="arrival_date_schedule_year2">
+                                    <option value="">----</option>
+                                    {% for i in 2021..2023 %}
+                                        <option value={{ i }}  {% if params.arrival_date_schedule_year2 is defined and params.arrival_date_schedule_year2 == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_arrival_date_schedule_month" name="arrival_date_schedule_month2">
+                                    <option value="">--</option>
+                                    {% for i in 1..12 %}
+                                        <option value={{ i }} {% if params.arrival_date_schedule_month2 is defined and params.arrival_date_schedule_month2 == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select><span>&nbsp;/&nbsp;</span>
+                                <select class="form-control" id="instock_list_arrival_date_schedule_day" name="arrival_date_schedule_day2">
+                                    <option value="">--</option>
+                                    {% for i in 1..31 %}
+                                        <option value={{ i }} {% if params.arrival_date_schedule_day2 is defined and params.arrival_date_schedule_day2 == i %} selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="c-outsideBlock__contents mb-5">
+                <button class="btn btn-ec-conversion px-5" type="submit">検索</button>
+                <span class="font-weight-bold ml-2">検索結果：{{ count }} 件が該当しました</span>
+            </div>
+            {# <div class="c-outsideBlock__contents mb-5">
+            <ul class="list-inline">
+                <li class="list-inline-item"><span class="font-weight-bold">公開ステータス:&nbsp;</span>公開,&nbsp;非公開</li>
+            </ul>
+        </div> #}
+        </form>
+    </div>
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <form id="form_bulk" method="get" action="">
+                    <div class="row justify-content-between mb-2">
+                        <div class="col-6"></div>
+                        <div class="col-5 text-right">
+                            <div class="d-inline-block mr-2">
+                                <div>
+                                    <select class="custom-select" onchange="location = this.value;">
+                                        {% for i in range(10, 60, 10) %}
+                                            <option value="{{ url('admin_product_instock_list',
+                                                params|merge({'item': i})) }}" {{ params.item is defined ?
+                                            (params.item == i ? 'selected') : (i == 50 ? 'selected') }}>{{ i }}件
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card rounded border-0 mb-4 d-block">
+                        <div class="card-body p-0">
+                            <table class="table table-sm">
+                                <thead>
+                                <tr>
+                                    <th class="border-top-0 pt-2 pb-2"></th>
+                                    <th class="border-top-0 pt-2 pb-2">ID</th>
+                                    <th class="border-top-0 pt-2 pb-2">発注日</th>
+                                    <th class="border-top-0 pt-2 pb-2">入荷予定日</th>
+                                    <th class="border-top-0 pt-2 pb-2">入荷日</th>
+                                    <th class="border-top-0 pt-2 pb-2">WMS送信</th>
+                                    <th class="border-top-0 pt-2 pb-2">在庫反映</th>
+                                    <th class="border-top-0 pt-2 pb-2">備考</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for instock in instocks %}
+                                    <tr>
+                                        <td class="pt-2 pb-2"></td>
+                                        <td class="align-middle">{{ instock.id }}</td>
+                                        <td class="align-middle">{{ instock.OrderDate | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.arrivalDateSchedule | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.isSendWms == 0 ? '未' : '済' }}</td>
+                                        <td class="align-middle">{{ instock.isCommit == 0 ? '未' : '済' }}</td>
+                                        <td class="align-middle">{{ instock.remarkText }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <button class="btn btn-ec-conversion px-5" type="button" onClick="confirmSendWMS()">入荷予定をWMSに送信</button>
+
+            <div class="navigation float-right">
+                {{ knp_pagination_render(instocks) }}
+            </div>
+            <!-- 完全に削除の確認モーダル-->
+            <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="discontinuance"
+                 aria-hidden="true" data-keyboard="false" data-backdrop="static">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title font-weight-bold">入荷情報を削除します</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body text-left">
+                            <p class="text-left">入荷情報を削除してよろしいですか？</p>
+                            <ul id="bulkErrors"></ul>
+                            <div class="progress" style="display: none">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                     style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-ec-sub" type="button" data-dismiss="modal">キャンセル</button>
+                            <button class="btn btn-ec-delete" type="button" id="bulkDelete">削除</button>
+                            <button class="btn btn-ec-regular" id="bulkDeleteDone" style="display: none" type="button"
+                                    data-dismiss="modal">完了
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+

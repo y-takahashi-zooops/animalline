@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Customize\Config\AnilineConf;
 use Customize\Entity\BreederPetImage;
 use Customize\Entity\BreederPets;
+use Customize\Entity\PetLike;
 use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederEvaluationsRepository;
 use Customize\Service\BreederQueryService;
@@ -34,6 +35,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Customize\Repository\PetLikeRepository;
 
 class BreederPetController extends AbstractController
 {
@@ -123,6 +125,11 @@ class BreederPetController extends AbstractController
     protected $breederPetinfoTemplateRepository;
 
     /**
+     * @var PetLikeRepository
+     */
+    protected $petLikeRepository;
+
+    /**
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
@@ -142,6 +149,7 @@ class BreederPetController extends AbstractController
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      * @param BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository
+     * @param PetLikeRepository $petLikeRepository
      */
     public function __construct(
         BreederContactsRepository        $breederContactsRepository,
@@ -160,7 +168,8 @@ class BreederPetController extends AbstractController
         DnaQueryService                  $dnaQueryService,
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
         DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository,
-        BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository
+        BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository,
+        PetLikeRepository $petLikeRepository
     )
     {
         $this->breederContactsRepository = $breederContactsRepository;
@@ -180,6 +189,7 @@ class BreederPetController extends AbstractController
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->breederPetinfoTemplateRepository = $breederPetinfoTemplateRepository;
+        $this->petLikeRepository = $petLikeRepository;
     }
 
     /**
@@ -399,6 +409,11 @@ class BreederPetController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
+        //いいね
+        $sessid = session_id();
+        $like = $this->petLikeRepository->getLike($sessid,1,$id);
+        $like_count = $this->petLikeRepository->getLikeCount(1,$id);
+
         return $this->render(
             'animalline/breeder/pet/detail.twig',
             [
@@ -427,10 +442,35 @@ class BreederPetController extends AbstractController
                 'pref_name_dog_breeder' => $pref_name_dog_breeder,
                 'search_box_mode' => $petKind,
                 'pets' => $pets,
+                'like' => $like,
+                'like_count' => $like_count,
             ]
         );
     }
 
+    /**
+     * いいね
+     * @Route("/breeder/pet/like/{id}", name="breeder_pet_like", requirements={"id" = "\d+"})
+     */
+    public function petLike(Request $request, $id)
+    {
+        $sessid = session_id();
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $like =  $this->petLikeRepository->getLike($sessid, 1, $id);
+        if(!$like){
+            $like = new PetLike();
+        }
+        $like->setSessionId($sessid);
+        $like->setSiteType(1);
+        $like->setPetId($id);
+        $entityManager->persist($like);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('breeder_pet_detail', ['id' => $id]);
+    }
+    
     /**
      * 新規ペット追加
      *
