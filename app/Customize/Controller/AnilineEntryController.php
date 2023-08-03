@@ -177,7 +177,7 @@ class AnilineEntryController extends AbstractController
             $returnPath = "homepage";
         }
 
-        if($returnPath == "breeder_mypage" || $returnPath == "breeder_top"){
+        if($returnPath == "breeder_mypage"){
             $prefix = "breeder";
             $regist_type = 1;
         }
