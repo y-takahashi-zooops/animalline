@@ -127,7 +127,10 @@ class TestCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        
+        exec("heif-convert /var/www/animalline/var/tmp/IMG_0223.HEIC /var/www/animalline/var/tmp/IMG_0223.jpg");
+        return;
+
+        //カット
         $next_date = $this->businessHolidayRepository->getFutureBusinessDay(3);
         echo("Result::".$next_date->format('Y-m-d')."\n");
 
