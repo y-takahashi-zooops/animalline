@@ -34,22 +34,73 @@ $("body").on("change", "#breeders_license_thumbnail_path", function (e) {
 });
 
 $("body").on("change", ".license_thumbnail_path", function (e) {
-    if (this.files && this.files[0] && this.files[0].size < 5000000) {
-        let reader = new FileReader();
-        reader.readAsDataURL(this.files[0]);
-        upload(reader)
-    } else {
-        alert('File too large!')
+    inputImageId = e.target.id;
+    var files = e.target.files;
+
+    var done = function (url) {
+        var files = e.target.files;
+
+        var fileReader = new FileReader();
+
+        fileReader.onload = function(event) {
+            $.ajax({
+                url:'/ajax/imageconvert',
+                type:'POST',
+                dataType: 'json',
+                data: {
+                    'filename': file.name,
+                    'filedata': event.target.result,
+                },
+            })
+            .done( (data) => {
+                bs_modal.modal('hide');
+                $('#img_license_thumbnail').attr('src',data.url).removeClass('hidden')
+                $('#breeder_license_src_path').val(data.url);
+            })
+            .fail( (jqXHR, textStatus, errorThrown) => {
+                alert('ファイルのアップロードに失敗しました。');
+            });
+        }
+
+        fileReader.readAsDataURL(file);
+    }
+
+    if (files && files.length > 0) {
+        file = files[0];
+        done(URL.createObjectURL(file));
     }
 });
 
 $("body").on("change", ".thumbnail_path", function (e) {
-    e.preventDefault();
+    inputImageId = e.target.id;
     var files = e.target.files;
+
     var done = function (url) {
-        image.src = url;
-        bs_modal.modal('show');
-    };
+        var files = e.target.files;
+
+        var fileReader = new FileReader();
+
+        fileReader.onload = function(event) {
+            $.ajax({
+                url:'/ajax/imageconvert',
+                type:'POST',
+                dataType: 'json',
+                data: {
+                    'filename': file.name,
+                    'filedata': event.target.result,
+                },
+            })
+            .done( (data) => {
+                bs_modal.modal('show');
+                image.src = data.url;
+            })
+            .fail( (jqXHR, textStatus, errorThrown) => {
+                alert('ファイルのアップロードに失敗しました。');
+            });
+        }
+
+        fileReader.readAsDataURL(file);
+    }
 
     if (files && files.length > 0) {
         file = files[0];

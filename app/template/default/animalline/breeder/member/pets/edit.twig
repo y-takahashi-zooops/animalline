@@ -85,13 +85,37 @@
             disabledFlag = true;
         }
     }
+
     $(".form-control-file").change(function (e) {
         inputImageId = e.target.id;
         var files = e.target.files;
+
         var done = function (url) {
-            image.src = url;
-            bs_modal.modal('show');
-        };
+            var files = e.target.files;
+
+            var fileReader = new FileReader();
+
+            fileReader.onload = function(event) {
+                $.ajax({
+                    url:'/ajax/imageconvert',
+                    type:'POST',
+                    dataType: 'json',
+                    data: {
+                        'filename': file.name,
+                        'filedata': event.target.result,
+                    },
+                })
+                .done( (data) => {
+                    image.src = data.url;
+                    bs_modal.modal('show');
+                })
+                .fail( (jqXHR, textStatus, errorThrown) => {
+                    alert('ファイルのアップロードに失敗しました。');
+                });
+            }
+
+            fileReader.readAsDataURL(file);
+        }
 
         if (files && files.length > 0) {
             file = files[0];

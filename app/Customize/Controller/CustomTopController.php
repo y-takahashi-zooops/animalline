@@ -26,6 +26,7 @@ use Eccube\Form\Type\Front\ContactType;
 use Eccube\Repository\Master\ProductListOrderByRepository;
 use Eccube\Repository\ProductRepository;
 use Eccube\Repository\CategoryRepository;
+use Customize\Config\AnilineConf;
 
 class CustomTopController extends AbstractController
 {
@@ -335,4 +336,61 @@ class CustomTopController extends AbstractController
         return [];
     }
     
+    /**
+     * Windowを閉じる
+     * 
+     * @Route("/ajax/imageconvert", name="image_convert")
+     */
+    public function image_convert(Request $request)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw new BadRequestHttpException();
+        }
+
+        $data = $request->get('filedata');
+        $name = $request->get('filename');
+
+        if (!file_exists(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/')) {
+            mkdir(AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/', 0777, 'R');
+        }
+
+        $folderPath = AnilineConf::ANILINE_IMAGE_URL_BASE . '/tmp/';
+        
+        
+        $fileinfo = pathinfo($name);
+        $filetype = mb_strtolower($fileinfo['extension']);
+
+        $filename = uniqid();
+        $file = $folderPath . $filename.".".$filetype;
+        $image_parts = explode(";base64,", $data);
+        $image_base64 = base64_decode($image_parts[1]);
+        file_put_contents($file, $image_base64);
+        
+        if($filetype == "heic"){
+            $base_folder = "/var/www/animalline/".$folderPath;
+            $command = "convert ". $base_folder.$filename.".".$filetype." ".$base_folder.$filename.".jpg";
+
+            /*
+            $imagick = new \Imagick();
+            $imagick->readImage($base_folder.$filename.".".$filetype);
+            $imagick->setImageFormat('jpg');
+            $imagick->writeImage($base_folder.$filename.".jpg");
+
+            $imagick->clear();
+            $imagick->destroy();
+            */
+            shell_exec($command);
+
+            $file = $folderPath . $filename.".jpg";
+        }
+
+
+        $url = "/".$file;
+        $type = $filetype;
+        
+        return $this->json([
+            'type' => $type,
+            'url' => $url,
+        ]);
+    }
 }

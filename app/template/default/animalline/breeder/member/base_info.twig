@@ -196,7 +196,7 @@
 											     class="img_preview mb-2 {{ not thumbnail_path ? 'hidden' }}"
 											     src="{{ thumbnail_path }}" alt="..."
 											     style="width: 200px; border: 1px solid #ddd;"/>
-											{{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'thumbnail_path'  } }) }}
+											{{ form_widget(form.thumbnail_path, { attr : { accept : 'image/*,HEIC,.heic', style : 'display:none;', class : 'thumbnail_path'  } }) }}
 											<input type="hidden" name="thumbnail_path" id="breeder_src_path" value="{{ thumbnail_path }}">
 										</div>
 										<a class="btn btn-ec-regular mr-2"
@@ -240,7 +240,7 @@
 											     class="img_preview mb-2 {{ not license_thumbnail_path ? 'hidden' }}"
 											     src="{{ license_thumbnail_path }}" alt="..."
 											     style="width: 200px; border: 1px solid #ddd;"/>
-											{{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*', style : 'display:none;', class : 'license_thumbnail_path'  } }) }}
+											{{ form_widget(form.license_thumbnail_path, { attr : { accept : 'image/*,.HEIC,.heic', style : 'display:none;', class : 'license_thumbnail_path'  } }) }}
 											<input type="hidden" name="license_thumbnail_path" id="breeder_license_src_path" value="{{ license_thumbnail_path }}">
 										</div>
 										<a class="btn btn-ec-regular mr-2"

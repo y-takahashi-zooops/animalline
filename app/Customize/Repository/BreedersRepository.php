@@ -76,8 +76,8 @@ class BreedersRepository extends ServiceEntityRepository
 
     public function getBreederHeaderInfo(){
         $breeders = $this->findBy(["is_active" => 1]);
-        $dogs = $this->breederPetsRepository->findBy(["pet_kind" => 1, "is_active" => 1]);
-        $cats = $this->breederPetsRepository->findBy(["pet_kind" => 2, "is_active" => 1]);
+        $dogs = $this->breederPetsRepository->findBy(["pet_kind" => 1]);
+        $cats = $this->breederPetsRepository->findBy(["pet_kind" => 2]);
 
         $top_info = ["dogs" => count($dogs),"cats" => count($cats),"breeders" => count($breeders)];
         return $top_info;
