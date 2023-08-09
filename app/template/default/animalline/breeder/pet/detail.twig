@@ -338,6 +338,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12 contents_col_normal">
@@ -354,6 +355,35 @@
                                 </div>
                             </div>
                             {% endif %}
+
+                            {#
+                            <div class="mb-4 mt-4">
+                                <span class="section_title">遺伝子検査結果</span>
+                                <!-- <div class="ques">?</div> -->
+
+                                <table>
+                                <tr>
+                                    <th>検査結果</th>
+                                    <th>検査項目</th>
+                                </tr>
+                                <tr>
+                                    <td>○（クリア）</td>
+                                    <td class="popular">¥5,000</td>
+                                    <td>¥8,000</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">申し込み</a></td>
+                                    <td><a href="#">申し込み</a></td>
+                                    <td><a href="#">申し込み</a></td>
+                                </tr>
+                                <tr>
+                                    <td>保証なし</td>
+                                    <td class="popular">保証1ヶ月</td>
+                                    <td>保証3ヶ月</td>
+                                </tr>
+                                </table>
+                            </div>
+                            #}
 
                             <div class="mb-4 mt-4">
                                 <div class="breeder_section_header">
@@ -662,7 +692,22 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?v=20230131">
+    <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?v=20230810">
+
+    <style type="text/css">
+        .section_title{ 
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .ques {
+            background: #EEE;    /* 背景色に灰色を指定 */
+            width: 1.5em;        /* 横幅を1.5文字分にする */
+            line-height: 1.5em;  /* 文字が上下中央にくるように工夫 */
+            text-align: center;  /* 文字が左右中央にくるように工夫 */
+            border-radius: 50%;  /* 円形に変更 */
+        }
+    </style>
 {% endblock %}
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
