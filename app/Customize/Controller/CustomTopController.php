@@ -368,7 +368,7 @@ class CustomTopController extends AbstractController
         
         if($filetype == "heic"){
             $base_folder = "/var/www/animalline/".$folderPath;
-            $command = "convert ". $base_folder.$filename.".".$filetype." ".$base_folder.$filename.".jpg";
+            $command = "heif-convert ". $base_folder.$filename.".".$filetype." ".$base_folder.$filename.".jpg";
 
             /*
             $imagick = new \Imagick();
