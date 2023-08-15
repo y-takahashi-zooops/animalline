@@ -44,6 +44,7 @@
                     <div class="line-it-button" data-lang="ja" data-type="like" data-env="REAL" data-url="{{ app.request.getUri }}"  style="display: none;"></div>
                     <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
                     <!-- ソーシャルボタン -->
+                    
                     <div class="breeder-column__main_section" id="breeder-column__main_section_dog_new">
                         <div class="breeder-column__main_section_title">
                             <h2 class="float-left mb-3">
@@ -53,6 +54,7 @@
                                 {% elseif breederPet.isContact == 1 %}【商談中】{% endif %}
                                 
                             </h2>
+                            
                             <div class="col-md-3 col-12 float-right btn-like mb-3 {{ isFavorite ? "red-heart" : "" }}"
                                  data-id="{{ breederPet.id }}" data-login="{{ isLoggedIn }}">
                                 <a>
@@ -318,22 +320,54 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="col-12 btn_center">
                                 <div class="row">
                                     <div class="col-12 contents_col_normal">
                                         <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
                                             <button class="btn basic-btn breeder-btn" style="height:65px;">
+                                                <i style="font-size: 1.5rem">✉
                                                 {% if breederPet.getPetKind() == 1 %}
                                                 この子犬の見学希望／お問い合わせ(無料)
                                                 {% else %}
                                                 この子猫の見学希望／お問い合わせ(無料)
                                                 {% endif %}
+                                                </i>
                                             </button>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                             {% endif %}
+
+                            {#
+                            <div class="mb-4 mt-4">
+                                <span class="section_title">遺伝子検査結果</span>
+                                <!-- <div class="ques">?</div> -->
+
+                                <table>
+                                <tr>
+                                    <th>検査結果</th>
+                                    <th>検査項目</th>
+                                </tr>
+                                <tr>
+                                    <td>○（クリア）</td>
+                                    <td class="popular">¥5,000</td>
+                                    <td>¥8,000</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#">申し込み</a></td>
+                                    <td><a href="#">申し込み</a></td>
+                                    <td><a href="#">申し込み</a></td>
+                                </tr>
+                                <tr>
+                                    <td>保証なし</td>
+                                    <td class="popular">保証1ヶ月</td>
+                                    <td>保証3ヶ月</td>
+                                </tr>
+                                </table>
+                            </div>
+                            #}
 
                             <div class="mb-4 mt-4">
                                 <div class="breeder_section_header">
@@ -443,14 +477,16 @@
                             {% if not breederPet.getIsContract() and not breederPet.getIsDelete() %}
                             <div class="col-12 btn_center">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12 contents_col_normal">
                                         <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
                                             <button class="btn basic-btn breeder-btn" style="height:65px;">
+                                                <i style="font-size: 1.5rem">✉
                                                 {% if breederPet.getPetKind() == 1 %}
                                                 この子犬の見学希望／お問い合わせ(無料)
                                                 {% else %}
                                                 この子猫の見学希望／お問い合わせ(無料)
                                                 {% endif %}
+                                                </i>
                                             </button>
                                         </a>
                                     </div>
@@ -546,6 +582,63 @@
                                 </div>
                             </div>
                             <div class="m-2 p-2"></div>
+
+                            <div class="breeder-column__main_section_title">
+                                <h3>このブリーダーが扱うペット一覧</h3>
+                            </div>
+                            <div class="breeder-column__main_section_body">
+                                <ul>
+                                    {% for pet in pets %}
+                                        <li>
+                                            <a href="{{ url('breeder_pet_detail', {'id': pet.id}) }}">
+                                                {% if pet.isContract == 1 or pet.isDelete == 1 %}
+                                                <div class="tags">
+                                                <ul>
+                                                    <li class="tag_contract"><span>成約済</span></li>
+                                                </ul>
+                                                </div>
+                                                {% elseif pet.dnaCheckResult == 0 %}
+                                                <div class="tags">
+                                                <ul>
+                                                    <li class="tag_new"><span>検査中</span></li>
+                                                </ul>
+                                                </div>
+                                                {% elseif pet.isContact == 1 %}
+                                                <div class="tags">
+                                                <ul>
+                                                    <li class="tag_popular"><span>商談中</span></li>
+                                                </ul>
+                                                </div>
+                                                {% endif %}
+
+                                                <figure>
+                                                    <img src="{{ app.request.schemeAndHttpHost ~ '/' ~ constant('Customize\\Config\\AnilineConf::ANILINE_IMAGE_URL_BASE') ~ (pet.thumbnailPath | default('/noimage_plugin_list.png')) }}"
+                                                        class="card-img-top" alt="Pet-image">
+                                                </figure>
+                                                <h4>{{ pet.getBreedsType().getBreedsName() ?? '' }}</h4>
+                                                <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
+                                                <div class="type">
+                                                    <span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>{{ pet.coatColor ?? '' }}</span>
+                                                </div>
+                                                <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
+                                                {% if pet.isContract == 1 or pet.isDelete == 1 %}
+                                                    <div class="price">---円（税込）</div>
+                                                {% else %}
+                                                    {% if pet.getPriceNoDisplay() %}
+                                                        <div class="price">応相談</div>
+                                                    {% else %}
+                                                        <div class="price">{{ pet.price|number_format(0) }}円（税込）</div>
+                                                    {% endif %}
+                                                {% endif %}
+                                                <p>{{ pet.prComment|nl2br }}</p>
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <span class="mb-2">結果が０件です。</span>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
                             {# <div class="row"> #}
                             {# <div>
                                             <div class="breeder_section_header_orange">
@@ -583,9 +676,24 @@
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v15.0" nonce="WF3XFjCe"></script>
 {% endblock %}
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}?v=20230815">
 
-    <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?v=20230131">
+    <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?v=20230810">
+
+    <style type="text/css">
+        .section_title{ 
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .ques {
+            background: #EEE;    /* 背景色に灰色を指定 */
+            width: 1.5em;        /* 横幅を1.5文字分にする */
+            line-height: 1.5em;  /* 文字が上下中央にくるように工夫 */
+            text-align: center;  /* 文字が左右中央にくるように工夫 */
+            border-radius: 50%;  /* 円形に変更 */
+        }
+    </style>
 {% endblock %}
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
