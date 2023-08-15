@@ -54,12 +54,12 @@
 }
 
 .breeder-btn {
-    background-color: var(--breeder-main-color);
+    background-color: #f89f19;
     color: #fff;
 }
 
 .breeder-btn:hover {
-    background-color: #49bb6b;
+    background-color: #f3a65f;
     color: #fff;
 }
 

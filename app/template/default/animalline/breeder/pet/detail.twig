@@ -344,11 +344,13 @@
                                     <div class="col-12 contents_col_normal">
                                         <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
                                             <button class="btn basic-btn breeder-btn" style="height:65px;">
+                                                <i style="font-size: 1.5rem">✉
                                                 {% if breederPet.getPetKind() == 1 %}
                                                 この子犬の見学希望／お問い合わせ(無料)
                                                 {% else %}
                                                 この子猫の見学希望／お問い合わせ(無料)
                                                 {% endif %}
+                                                </i>
                                             </button>
                                         </a>
                                     </div>
@@ -493,14 +495,16 @@
                             {% if not breederPet.getIsContract() and not breederPet.getIsDelete() %}
                             <div class="col-12 btn_center">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12 contents_col_normal">
                                         <a href="{{ url('breeder_contact', {'pet_id': breederPet.id}) }}">
                                             <button class="btn basic-btn breeder-btn" style="height:65px;">
+                                                <i style="font-size: 1.5rem">✉
                                                 {% if breederPet.getPetKind() == 1 %}
                                                 この子犬の見学希望／お問い合わせ(無料)
                                                 {% else %}
                                                 この子猫の見学希望／お問い合わせ(無料)
                                                 {% endif %}
+                                                </i>
                                             </button>
                                         </a>
                                     </div>
@@ -690,7 +694,7 @@
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v15.0" nonce="WF3XFjCe"></script>
 {% endblock %}
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}?v=20230815">
 
     <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?v=20230810">
 
