@@ -150,7 +150,7 @@ class JddcController extends AbstractController
 
         // get check kinds
         foreach ($dnas as $idx => $dna) {
-            $kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $dna['breeds_id']]);
+            $kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $dna['breeds_id'], "delete_flg" => 0]);
             $dna['check_kinds'] = array_map(function ($item) {
                 return $item->getCheckKind();
             }, $kinds);
