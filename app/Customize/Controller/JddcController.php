@@ -179,7 +179,7 @@ class JddcController extends AbstractController
 
         // get check kinds
         foreach ($dnas as $idx => $dna) {
-            $kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $dna['breeds_id']]);
+            $kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $dna['breeds_id'], "delete_flg" => 0]);
             $dna['check_kinds'] = array_map(function ($item) {
                 return $item->getCheckKind();
             }, $kinds);
@@ -281,7 +281,8 @@ class JddcController extends AbstractController
         if (!$Pet) {
             throw new NotFoundHttpException();
         }
-        $countCheckKind = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $Pet->getBreedsType()]));
+        
+        $countCheckKind = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $dna['breeds_id'], "delete_flg" => 0]));
         
         //更新の時は前の登録データ削除（フラグを立ててメールを送らない）
         $entityManager = $this->getDoctrine()->getManager();
