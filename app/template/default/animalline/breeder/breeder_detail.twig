@@ -20,6 +20,11 @@
                                     <div class="d-block d-sm-none m-2 p-2"></div>
                                 </div>
                             </div>
+
+                            <div class="btn btn-breeder__inquiries">
+                                <a href="{{ url('breeder_nopet_contact', {'breeder_id': breeder.Id}) }}">{{ breeder.breederName }}ブリーダーへのお問い合わせ</a>
+                            </div>
+
                             <div class="breeder_section_header">
                                 <i class="fas fa-paw"></i>
                                 基本情報
@@ -306,6 +311,10 @@
                             {% endif %}
                         </div>
                     </div>
+                </div>
+
+                <div class="btn btn-breeder__inquiries">
+                    <a href="{{ url('breeder_nopet_contact', {'breeder_id': breeder.Id}) }}">{{ breeder.breederName }}ブリーダーへのお問い合わせ</a>
                 </div>
 
                 <div class="ec-select" style="margin-top: 10px" id="pets">

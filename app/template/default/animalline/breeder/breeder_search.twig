@@ -163,6 +163,9 @@
                                 </a>
                             </div>
                         </div>
+                        <div class="btn btn-breeder__inquiries">
+                            <a href="{{ url('breeder_nopet_contact', {'breeder_id': breeder.Id}) }}">{{ breeder.breederName }}ブリーダーへのお問い合わせ</a>
+                        </div>
                         {% if breeder.prText %}
                             <div class="row ml-2 mb-4">
                                 <div class="col-12 p-2" style="background:#fff3dd">
