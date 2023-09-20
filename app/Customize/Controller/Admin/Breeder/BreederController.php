@@ -280,6 +280,11 @@ class BreederController extends AbstractController
         $arrCount = [];
 
         $dnaCheckStatus = null;
+        //集計結果からペット情報参照
+        $arrResult = [];
+        $pet_kind = 1;
+        $BreedsType = 1;
+        
         if ($request->get('order_date_year')) {
             $dnaCheckStatus = $this->dnaQueryService->findByDate(
                 $request->get('order_date_year'), $request->get('order_date_month'), $request->get('order_date_day'),
@@ -289,9 +294,6 @@ class BreederController extends AbstractController
 
             $pet_kind = $request->get('pet_kind');
             $BreedsType = $request->get('BreedsType');
-
-            //集計結果からペット情報参照
-            $arrResult = [];
 
             $fp = fopen("var/tmp/dna_check_list.csv","w");
 
