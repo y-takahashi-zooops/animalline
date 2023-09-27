@@ -32,6 +32,7 @@ use Customize\Service\MailService;
 use Customize\Form\Type\Breeder\BreederNoPetContactType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederMemberContactController extends AbstractController
 {
@@ -875,16 +876,36 @@ class BreederMemberContactController extends AbstractController
     /**
      * ブリーダー側ユーザー問い合わせ取引メッセージ一覧
      *
-     * @Route("/breeder/member/nopet_user_all_message", name="nopet_user_all_message")
+     * @Route("/breeder/member/nopet_user_all_message/{breeder_id}", name="nopet_user_all_message")
      * @Template("animalline/breeder/member/nopet_user_all_message.twig")
      */
-    public function nopet_user_all_message()
+    public function nopet_user_all_message(Request $request,string $breeder_id = "")
     {
-        $breeder = $this->breedersRepository->find($this->getUser()->getId());
+        if($breeder_id != ""){
+            //breeder_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
+            $user = $this->getUser();
+            if($user->getId() == 91 || $user->getId() == 236){
+                $user = $this->customerRepository->find($breeder_id);
+
+                if(!$user){
+                    throw new NotFoundHttpException();
+                }
+            }
+            else{
+                throw new NotFoundHttpException();
+            }
+        }
+        else{
+            //breeder_id指定がない場合はログイン中ユーザーとして処理
+            $user = $this->getUser();
+        }
+
+        $breeder = $this->breedersRepository->find($user);
         $listMessages = $this->breederNopetContactHeaderRepository->findBy(['Breeder' => $breeder], ['last_message_date' => 'DESC']);
 
         return $this->render('animalline/breeder/member/nopet_user_all_message.twig', [
-            'listMessages' => $listMessages
+            'listMessages' => $listMessages,
+            'breeder_id' => $breeder_id
         ]);
     }
 
@@ -956,11 +977,35 @@ class BreederMemberContactController extends AbstractController
     /**
      * ブリーダー側取引メッセージ画面
      *
-     * @Route("/breeder/member/nopet_user_message/{id}", name="nopet_user_message", requirements={"id" = "\d+"})
+     * @Route("/breeder/member/nopet_user_message/{id}/{breeder_id}", name="nopet_user_message", requirements={"id" = "\d+"})
      * @Template("animalline/breeder/member/nopet_user_message.twig")
      */
-    public function nopet_user_message(Request $request, BreederNopetContactHeader $msgHeader)
+    public function nopet_user_message(Request $request, BreederNopetContactHeader $msgHeader,$breeder_id = "")
     {
+
+        if($breeder_id != ""){
+            //breeder_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
+            $user = $this->getUser();
+            if($user->getId() == 91 || $user->getId() == 236){
+                $user = $this->customerRepository->find($breeder_id);
+
+                if(!$user){
+                    throw new NotFoundHttpException();
+                }
+            }
+            else{
+                throw new NotFoundHttpException();
+            }
+        }
+        else{
+            //breeder_id指定がない場合はログイン中ユーザーとして処理
+            $user = $this->getUser();
+        }
+
+        if($msgHeader->getBreeder()->getId() != $user->getId()){
+            throw new NotFoundHttpException();
+        }
+
         $msgHeader->setBreederNewMsg(0);
         $lastMsg = $this->breederNopetContactsRepository->findBy(['breederNopetContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_USER]);
         $entityManager = $this->getDoctrine()->getManager();

@@ -22,7 +22,7 @@
                         {% for message in listMessages %}
                             {% set status = null %}
                             <li>
-                                <a href="{{ url('nopet_user_message', {'id': message.id}) }}">
+                                <a href="{{ url('nopet_user_message', {'id': message.id , 'breeder_id' : breeder_id}) }}">
                                     <div class="text">
                                         <div class="name">
                                             <h3>{{ message.customer.name01 }}　{{ message.customer.name02 }}</h3>
