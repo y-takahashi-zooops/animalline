@@ -216,8 +216,8 @@ class ExportDnaKitShippingSchedule extends Command
                 }
 
                 //在庫チェック
-                /*
                 $pc = $this->productClassRepository->findOneBy(['code' => $item_code[$i]]);
+                /*
                 if($pc->getStock() < $record['kit_unit']){
                     throw new Exception("出荷に必要な在庫が不足しています。");
                 }
