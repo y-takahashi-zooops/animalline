@@ -193,6 +193,13 @@ file that was distributed with this source code.
                                                 <i class="fas fa-regular fa-vial text-secondary" aria-hidden="true"></i>
                                             </a>
                                         </div>
+
+                                        <div class="px-1 d-inline-block text-center" data-tooltip="true" data-placement="top" title="問い合わせ確認">
+                                            <a class="btn btn-ec-actionIcon" href="#"
+                                                {% if breeder.IsActive == 1 %} onClick='window.open("{{ url('nopet_user_all_message', {'breeder_id': breeder.id}) }}")' {% else %} disabled {% endif %}>
+                                                <i class="fas fa-regular fa-envelope text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>

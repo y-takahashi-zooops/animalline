@@ -25,6 +25,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BreederDnaCheck extends AbstractController
 {
