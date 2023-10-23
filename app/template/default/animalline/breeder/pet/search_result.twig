@@ -46,6 +46,8 @@
                             <div class="birthday">{{ pet.petBirthday|date('Y年m月d日') }}生</div>
                             <div class="type"><span>{{ pet.petSex == constant('Customize\\Config\\AnilineConf::ANILINE_PET_SEX_MALE') ? '男の子' : '女の子' }}</span><span>{{ pet.coatColor}}</span></div>
                             <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
+                            {% set breederHouse = pet.Breeder.getBreederHouseByPetType(pet.petKind) %}
+                            <div class="publish">見学場所：{{ breederHouse.breederHousePref ~ ' ' }}</div>
                             {% if pet.isContract != 1 and pet.isDelete != 1 %}
                               {% if pet.getPriceNoDisplay() %}
                                   <div class="price">応相談</div>

@@ -46,6 +46,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
 
     {% set request_uri = app.request.server.get('REQUEST_URI') %}
     {% set part_uri = path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params'))[1:] %}

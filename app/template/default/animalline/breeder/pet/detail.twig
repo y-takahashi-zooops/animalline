@@ -358,34 +358,41 @@
                             </div>
                             {% endif %}
 
-                            {#
                             <div class="mb-4 mt-4">
-                                <span class="section_title">遺伝子検査結果</span>
-                                <!-- <div class="ques">?</div> -->
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="section_title">遺伝子検査結果</span>
+                                        <div class="ques">
+                                            ？
+                                            <div class="description1">
+                                                クリア：2つの遺伝子がどちらも変異を持っていない場合<br />
+                                                キャリア：遺伝子変異が原因となる疾患の発症リスクは低い<br />
+                                                アフェクテッド：遺伝子変異が原因となる疾患の発症リスクは高い
+                                             </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
 
-                                <table>
+                                <table class="dnatable">
                                 <tr>
                                     <th>検査結果</th>
                                     <th>検査項目</th>
                                 </tr>
                                 <tr>
                                     <td>○（クリア）</td>
-                                    <td class="popular">¥5,000</td>
-                                    <td>¥8,000</td>
+                                    <td>{{ dna_check_results[0] | nl2br  }}</td>
                                 </tr>
                                 <tr>
-                                    <td><a href="#">申し込み</a></td>
-                                    <td><a href="#">申し込み</a></td>
-                                    <td><a href="#">申し込み</a></td>
+                                    <td>△（キャリア）</td>
+                                    <td>{{ dna_check_results[1] | nl2br  }}</td>
                                 </tr>
                                 <tr>
-                                    <td>保証なし</td>
-                                    <td class="popular">保証1ヶ月</td>
-                                    <td>保証3ヶ月</td>
+                                    <td>×（アフェクテッド）</td>
+                                    <td>{{ dna_check_results[2] | nl2br  }}</td>
                                 </tr>
                                 </table>
                             </div>
-                            #}
 
                             <div class="mb-4 mt-4">
                                 <div class="breeder_section_header">
@@ -698,7 +705,7 @@
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v15.0" nonce="WF3XFjCe"></script>
 {% endblock %}
 {% block stylesheet %}
-    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}?v=20230815">
+    <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}?v=20231023">
 
     <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?v=20230810">
 
@@ -706,15 +713,75 @@
         .section_title{ 
             font-size: 1.5rem;
             font-weight: 600;
+            display: inline-block;
         }
 
         .ques {
+            vertical-align: 20%;
             background: #EEE;    /* 背景色に灰色を指定 */
             width: 1.5em;        /* 横幅を1.5文字分にする */
             line-height: 1.5em;  /* 文字が上下中央にくるように工夫 */
             text-align: center;  /* 文字が左右中央にくるように工夫 */
             border-radius: 50%;  /* 円形に変更 */
+            display: inline-block;
+            position: relative;
         }
+        .tooltip1{
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .tooltip1 p{
+            margin:0;
+            padding:0;
+        }
+        .description1 {
+            display: none;
+            position: absolute;
+            padding: 10px;
+            font-size: 12px;
+            line-height: 1.6em;
+            color: #fff;
+            border-radius: 5px;
+            background: #000;
+            width: 400px;
+        }
+        .description1:before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            border: 15px solid transparent;
+            border-top: 15px solid #000;
+            margin-left: -170px;
+        }
+        .ques:hover .description1{
+            display: inline-block;
+            top: -90px;
+            left: -30px;
+        }
+
+        .dnatable {
+            display: block;
+            font-family: sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 115%;
+            overflow: auto;
+            width: auto;
+        }
+        .dnatable th {
+            background-color: rgb(112, 196, 105);
+            color: white;
+            font-weight: normal;
+            padding: 20px 30px;
+            text-align: center;
+        }
+        .dnatable td {
+            background-color: rgb(238, 238, 238);
+            color: rgb(111, 111, 111);
+            padding: 20px 30px;
+        }
+
     </style>
 {% endblock %}
 {% block javascript %}

@@ -26,6 +26,8 @@ use Customize\Repository\BreederExaminationInfoRepository;
 use Customize\Repository\BreederPetImageRepository;
 use Customize\Repository\BreederPetinfoTemplateRepository;
 use Customize\Repository\DnaCheckStatusRepository;
+use Customize\Repository\DnaCheckStatusDetailRepository;
+use Customize\Repository\DnaCheckKindsRepository;
 use Customize\Service\DnaQueryService;
 use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
@@ -115,6 +117,11 @@ class BreederPetController extends AbstractController
     protected $dnaCheckStatusRepository;
 
     /**
+     * @var DnaCheckStatusDetailRepository
+     */
+    protected $dnaCheckStatusDetailRepository;
+
+    /**
      * @var DnaCheckStatusHeaderRepository
      */
     protected $dnaCheckStatusHeaderRepository;
@@ -124,6 +131,11 @@ class BreederPetController extends AbstractController
      */
     protected $breederPetinfoTemplateRepository;
 
+    /**
+     * @var DnaCheckKindsRepository
+     */
+    protected $dnaCheckKindsRepository;
+    
     /**
      * @var PetLikeRepository
      */
@@ -150,6 +162,8 @@ class BreederPetController extends AbstractController
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      * @param BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository
      * @param PetLikeRepository $petLikeRepository
+     * @param DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository
+     * @param DnaCheckKindsRepository $dnaCheckKindsRepository
      */
     public function __construct(
         BreederContactsRepository        $breederContactsRepository,
@@ -169,7 +183,9 @@ class BreederPetController extends AbstractController
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
         DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository,
         BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository,
-        PetLikeRepository $petLikeRepository
+        PetLikeRepository $petLikeRepository,
+        DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository,
+        DnaCheckKindsRepository $dnaCheckKindsRepository
     )
     {
         $this->breederContactsRepository = $breederContactsRepository;
@@ -190,6 +206,8 @@ class BreederPetController extends AbstractController
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->breederPetinfoTemplateRepository = $breederPetinfoTemplateRepository;
         $this->petLikeRepository = $petLikeRepository;
+        $this->dnaCheckStatusDetailRepository = $dnaCheckStatusDetailRepository;
+        $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
     }
 
     /**
@@ -414,6 +432,47 @@ class BreederPetController extends AbstractController
         $like = $this->petLikeRepository->getLike($sessid,1,$id);
         $like_count = $this->petLikeRepository->getLikeCount(1,$id);
 
+        //DNA検査結果
+        $dna_check_results = array(0 => "－", 1 => "－", 2 => "－");
+        $dna_check_header = $this->dnaCheckStatusRepository->findOneBy(["pet_id" => $id]);
+        if($dna_check_header){
+            $dna_check_details = $this->dnaCheckStatusDetailRepository->findBy(["CheckStatus" => $dna_check_header]);
+
+            //1:クリア 2:キャリア:劣勢 3:アフェクテッド 4:キャリア:優勢
+            foreach($dna_check_details as $dna_check_detail){
+                $dna_kind = $dna_check_detail->getCheckKinds();
+
+                switch($dna_check_detail->getCheckResult()){
+                    case 1 :
+                        if($dna_check_results[0] == "－") {
+                            $dna_check_results[0] = $dna_kind->getCheckKind();   
+                        }
+                        else{
+                            $dna_check_results[0] .= "\n".$dna_kind->getCheckKind();
+                        }
+                        break;
+                    case 2:
+                    case 4:
+                        if($dna_check_results[1] == "－") {
+                            $dna_check_results[1] = $dna_kind->getCheckKind();   
+                        }
+                        else{
+                            $dna_check_results[1] .= "\n".$dna_kind->getCheckKind();
+                        }
+                        break;
+                    case 3:
+                        if($dna_check_results[2] == "－") {
+                            $dna_check_results[2] = $dna_kind->getCheckKind();   
+                        }
+                        else{
+                            $dna_check_results[2] .= "\n".$dna_kind->getCheckKind();
+                        }
+                        break;
+                }
+            }
+        }
+        
+
         return $this->render(
             'animalline/breeder/pet/detail.twig',
             [
@@ -444,6 +503,7 @@ class BreederPetController extends AbstractController
                 'pets' => $pets,
                 'like' => $like,
                 'like_count' => $like_count,
+                'dna_check_results' => $dna_check_results,
             ]
         );
     }
