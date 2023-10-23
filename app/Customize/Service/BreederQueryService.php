@@ -298,6 +298,11 @@ class BreederQueryService
                 ->setParameter('license', '%' . $request->get('license') . '%');
         }
 
+        if ($request->get('breedername')) {
+            $query->andWhere('b.license_name LIKE :license OR b.license_house_name LIKE :license')
+                ->setParameter('license', '%' . $request->get('breedername') . '%');
+        }
+
         return $query->addOrderBy('b.update_date', 'DESC')
             ->getQuery()
             ->getResult();
