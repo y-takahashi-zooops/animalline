@@ -98,7 +98,7 @@ class NewPetLotation extends Command
                 ->andWhere('p.is_delete = 0')
                 ->andWhere('p.is_contract = 0')
                 ->andWhere('p.pet_kind = :pet_kind')
-                ->andWhere('p.update_date > :date_limit')
+                ->andWhere('p.create_date > :date_limit')
                 ->setParameter('pet_kind', $i)
                 ->setParameter('date_limit', $date_limit)
                 ->addOrderBy('p.update_date', 'asc');
