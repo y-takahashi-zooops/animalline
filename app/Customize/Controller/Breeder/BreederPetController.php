@@ -433,40 +433,29 @@ class BreederPetController extends AbstractController
         $like_count = $this->petLikeRepository->getLikeCount(1,$id);
 
         //DNA検査結果
-        $dna_check_results = array(0 => "－", 1 => "－", 2 => "－");
+        //$dna_check_results = array(0 => "－", 1 => "－", 2 => "－");
+        $dna_check_kinds = array();
         $dna_check_header = $this->dnaCheckStatusRepository->findOneBy(["pet_id" => $id]);
+        $dna_check_result = "";
+
         if($dna_check_header){
             $dna_check_details = $this->dnaCheckStatusDetailRepository->findBy(["CheckStatus" => $dna_check_header]);
 
             //1:クリア 2:キャリア:劣勢 3:アフェクテッド 4:キャリア:優勢
+            $dna_check_result = "◯（クリア）";
             foreach($dna_check_details as $dna_check_detail){
                 $dna_kind = $dna_check_detail->getCheckKinds();
+                $dna_check_kinds[] = $dna_kind->getCheckKind();
 
                 switch($dna_check_detail->getCheckResult()){
                     case 1 :
-                        if($dna_check_results[0] == "－") {
-                            $dna_check_results[0] = $dna_kind->getCheckKind();   
-                        }
-                        else{
-                            $dna_check_results[0] .= "\n".$dna_kind->getCheckKind();
-                        }
                         break;
                     case 2:
-                    case 4:
-                        if($dna_check_results[1] == "－") {
-                            $dna_check_results[1] = $dna_kind->getCheckKind();   
-                        }
-                        else{
-                            $dna_check_results[1] .= "\n".$dna_kind->getCheckKind();
-                        }
                         break;
                     case 3:
-                        if($dna_check_results[2] == "－") {
-                            $dna_check_results[2] = $dna_kind->getCheckKind();   
-                        }
-                        else{
-                            $dna_check_results[2] .= "\n".$dna_kind->getCheckKind();
-                        }
+                        $dna_check_result = "✕（アフェクテッド）";
+                    case 4:
+                        $dna_check_result = "△（キャリア）";
                         break;
                 }
             }
@@ -503,7 +492,8 @@ class BreederPetController extends AbstractController
                 'pets' => $pets,
                 'like' => $like,
                 'like_count' => $like_count,
-                'dna_check_results' => $dna_check_results,
+                'dna_check_result' => $dna_check_result,
+                'dna_check_kinds' => $dna_check_kinds,
             ]
         );
     }

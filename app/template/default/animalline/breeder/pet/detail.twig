@@ -377,19 +377,13 @@
                                 <table class="dnatable">
                                 <tr>
                                     <th>検査結果</th>
+                                    <td colspan="{{ dna_check_kinds|length }}">{{ dna_check_result }}</td>
+                                </tr>
+                                <tr>
                                     <th>検査項目</th>
-                                </tr>
-                                <tr>
-                                    <td>○（クリア）</td>
-                                    <td>{{ dna_check_results[0] | nl2br  }}</td>
-                                </tr>
-                                <tr>
-                                    <td>△（キャリア）</td>
-                                    <td>{{ dna_check_results[1] | nl2br  }}</td>
-                                </tr>
-                                <tr>
-                                    <td>×（アフェクテッド）</td>
-                                    <td>{{ dna_check_results[2] | nl2br  }}</td>
+                                    {% for dna_check_kind in dna_check_kinds %}
+                                        <td>{{ dna_check_kind }}</td>
+                                    {% endfor %}
                                 </tr>
                                 </table>
                             </div>

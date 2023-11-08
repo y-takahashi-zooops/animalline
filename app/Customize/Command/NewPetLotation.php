@@ -89,6 +89,8 @@ class NewPetLotation extends Command
     {
         $date_now = Carbon::now();
 
+        $date_limit = date("Y-m-d H:i:s",strtotime("-2 week"));
+
         for($i=1;$i<=2;$i++){
             //Breeder
             $query = $this->breederPetsRepository->createQueryBuilder('p')
@@ -96,7 +98,9 @@ class NewPetLotation extends Command
                 ->andWhere('p.is_delete = 0')
                 ->andWhere('p.is_contract = 0')
                 ->andWhere('p.pet_kind = :pet_kind')
+                ->andWhere('p.update_date > :date_limit')
                 ->setParameter('pet_kind', $i)
+                ->setParameter('date_limit', $date_limit)
                 ->addOrderBy('p.update_date', 'asc');
             
             $pets = $query->getQuery()->getResult();

@@ -282,7 +282,7 @@ class JddcController extends AbstractController
             throw new NotFoundHttpException();
         }
         
-        $countCheckKind = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $dna['breeds_id'], "delete_flg" => 0]));
+        $countCheckKind = count($this->dnaCheckKindsRepository->findBy(['Breeds' => $Pet->getBreedsType(), "delete_flg" => 0]));
         
         //更新の時は前の登録データ削除（フラグを立ててメールを送らない）
         $entityManager = $this->getDoctrine()->getManager();
