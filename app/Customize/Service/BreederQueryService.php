@@ -231,15 +231,19 @@ class BreederQueryService
             ->addOrderBy('p.dna_check_result', 'desc')
             ->addOrderBy('p.create_date', 'desc');
         */
-        /*
+        
         if ($request->get('featured_pet')) {
-            $query->orderBy('p.favorite_count', 'DESC');
+            $query->orderBy('p.is_delete', 'asc')
+                ->addOrderBy('p.is_contract', 'asc')
+                ->addOrderBy('p.view_count', 'desc');
         }
-        */
-        return $query->orderBy('p.is_delete', 'asc')
-            ->addOrderBy('p.is_contract', 'asc')
-            ->addOrderBy('p.update_date', 'desc')
-            ->getQuery()
+        else{
+            $query->orderBy('p.is_delete', 'asc')
+                ->addOrderBy('p.is_contract', 'asc')
+                ->addOrderBy('p.update_date', 'desc');
+        }
+
+        return $query->getQuery()
             ->getResult();
     }
 

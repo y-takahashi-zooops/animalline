@@ -374,10 +374,17 @@ class BreederPetController extends AbstractController
             array('url' => "#",'title' => "ペットID : ".$breederPet->getId())
         );
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $breederPet->setViewCount(intval($breederPet->getViewCount() + 1));
-        $entityManager->persist($breederPet);
-        $entityManager->flush();
+        $sql_state = "UPDATE alm_breeder_pets SET view_count = :viewcnt WHERE id = :petid";
+        $view_cnt = intval($breederPet->getViewCount() + 1);
+        $pet_id = $breederPet->getId();
+        $stmt = $this->entityManager->getConnection()->prepare($sql_state);
+        $stmt->bindParam('viewcnt', $view_cnt);
+        $stmt->bindParam('petid', $pet_id);
+        $stmt->execute();
+
+        //$breederPet->setViewCount(intval($breederPet->getViewCount() + 1));
+        //$entityManager->persist($breederPet);
+        //$entityManager->flush();
 
         //犬の都道府県
         $prefs_dog = $this->breederQueryService->getActivePrefs(1);
