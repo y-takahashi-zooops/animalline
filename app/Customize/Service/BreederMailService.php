@@ -733,4 +733,35 @@ class BreederMailService
             return null;
         }
     }
+
+    /**
+     * 動物取扱者証明書更新通知
+     *
+     * @param $Customer 会員情報
+     * @param string $activateUrl アクティベート用url
+     */
+    public function sendLicenseExpire($Customer)
+    {
+        log_info('受注メール送信開始');
+
+        // メール内容作成
+        $body = $this->twig->render('Mail/Breeder/breeder_license_expire.twig', [
+            'Customer' => $Customer,
+            'BaseInfo' => $this->BaseInfo,
+        ]);
+
+        $message = (new \Swift_Message())
+            ->setSubject('【Animalline】動物取扱業登録証画像送付のお願い')
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo([$Customer->getEmail()])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+
+        $message->setBody($body);
+
+        $count = $this->mailer->send($message);
+
+        return $count;
+    }
 }
