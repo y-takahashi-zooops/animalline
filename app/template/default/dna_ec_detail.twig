@@ -78,7 +78,7 @@
         $("#pet_type").change(function() {
             $.ajax({
                 type: 'get',
-                url: '/ec/dna/get_pet_type/'+$('#pet_type').val(),
+                url: '/dna/get_pet_type/'+$('#pet_type').val(),
                 dataType: 'json'
             })
             .done(function(data) {
@@ -142,7 +142,7 @@
 
             $.ajax({
                 type: 'get',
-                url: '/ec/dna/get_dna_kinds/'+$('#pet_kind').val(),
+                url: '/dna/get_dna_kinds/'+$('#pet_kind').val(),
                 dataType: 'json'
             })
             .done(function(data) {

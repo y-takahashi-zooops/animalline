@@ -162,7 +162,7 @@ class DnaEcController extends BaseProductController
 
 
     /**
-     * @Route("/ec/dna", name="dna_ec_top")
+     * @Route("/dna_ec", name="dna_ec_top")
      * @Template("dna_ec.twig")
      */
     public function dna_ec(Request $request)
@@ -197,42 +197,7 @@ class DnaEcController extends BaseProductController
     }
 
     /**
-     * @Route("/dna_ec", name="dna_ec_top2")
-     * @Template("dna_ec.twig")
-     */
-    public function dna_ec2(Request $request)
-    {
-        $customer = $this->getUser();
-
-        if(!$customer){
-            $this->setLoginTargetPath('dna_ec_top');
-            return $this->redirectToRoute("mypage_login");
-        }
-
-        //$contact_pet_id = $request->cookies->get('contact_pet');
-        //$response = new Response();
-        //$response->headers->setCookie(new Cookie('rid_key', $sessid));
-
-        //未購入のDNA検査情報があるか
-        $dnaSalesHeader = $this->dnaSalesHeaderRepository->findOneBy(['Customer' => $customer, 'shipping_status' => 0]);
-        $dnaSalesStatus = $this->dnaSalesStatusRepository->findBy(['DnaSalesHeader' => $dnaSalesHeader]);
-
-        $salesDetail = $this->dnaSalesStatusRepository->createQueryBuilder('ds')
-            ->innerJoin('Customize\Entity\DnaSalesHeader', 'dh', 'WITH', 'dh.id = ds.DnaSalesHeader')
-            ->where('dh.Customer = :customer_id')
-            ->select('')
-            ->setParameter('customer_id', $this->getUser()->getId())
-            ->getQuery()->getResult();
-
-        
-        return $this->render('dna_ec.twig', [
-            'header' => $dnaSalesHeader,
-            'details' => $dnaSalesStatus
-        ]);
-    }
-
-    /**
-     * @Route("/ec/dna_detail", name="dna_ec_detail")
+     * @Route("/dna_detail", name="dna_ec_detail")
      * @Template("dna_ec_detail.twig")
      */
     public function dna_detail(Request $request)
@@ -304,7 +269,7 @@ class DnaEcController extends BaseProductController
     }
 
     /**
-     * @Route("/ec/dna_buy", name="dna_buy")
+     * @Route("/dna_buy", name="dna_buy")
      */
     public function dna_buy(Request $request)
     {
@@ -366,7 +331,7 @@ class DnaEcController extends BaseProductController
     }
 
     /**
-     * @Route("/ec/dna_delete", name="dna_delete")
+     * @Route("/dna_delete", name="dna_delete")
      */
     public function dna_delete(Request $request)
     {
@@ -413,7 +378,7 @@ class DnaEcController extends BaseProductController
     }
 
     /**
-     * @Route("/ec/dna/get_pet_type/{id}", name="dna_ec_getpet")
+     * @Route("/dna/get_pet_type/{id}", name="dna_ec_getpet")
      */
     public function dna_ec_getpet($id)
     {
@@ -434,7 +399,7 @@ class DnaEcController extends BaseProductController
     }
 
     /**
-     * @Route("/ec/dna/get_dna_kinds/{id}", name="dna_ec_detkind")
+     * @Route("/dna/get_dna_kinds/{id}", name="dna_ec_detkind")
      */
     public function get_dna_kinds($id)
     {
