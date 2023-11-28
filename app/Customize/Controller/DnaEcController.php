@@ -197,7 +197,7 @@ class DnaEcController extends BaseProductController
     }
 
     /**
-     * @Route("/ec/dna2", name="dna_ec_top2")
+     * @Route("/dna_ec", name="dna_ec_top2")
      * @Template("dna_ec.twig")
      */
     public function dna_ec2(Request $request)
