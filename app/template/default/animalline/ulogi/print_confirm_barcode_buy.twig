@@ -1,0 +1,48 @@
+{% extends 'animalline/ulogi/frame.twig' %}
+
+{% block main %}
+<div class="main">
+	<div class="main-container col-12">
+		<div class="row">
+			<h1>DNA検査キット送付用バーコード印刷</h1>
+			<hr>
+		</div>
+		<div class="row">
+			<div class="col" style="text-align: center;margin-top: 4rem;">
+				<h3>有料検査検体登録シートを印字します。</h3><br>
+				<div>
+					<input type="button" class="btn btn-primary btn-lg" value=" 印刷実行" onclick="KickPrintExecuteEx()" />
+					<input type="button" class="btn btn-success btn-lg" value=" 印刷設定" onclick="KickChangePrintInfo()" />
+				</div>
+			</div>
+		</div>
+		<div class="row" style="margin-top: 4rem;">
+			<div class="col" style="margin: 0 auto 0 auto;">
+				<div class="ec-registerRole__actions">
+					<div class="ec-off4Grid">
+						<div class="ec-off4Grid__cell">
+							<a href="{{ url('ulogi_print_list') }}" class="btn btn-warning w-100 m-1">戻る</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" src="http://ps.animalline.jp/cwebclient.min.js?version=11.2.0" charset="utf-8"></script>
+<script type="text/javascript">
+function KickPrintExecuteEx() {
+	cwebclient.CreatePrintingDataScriptUrl = "http://ps.animalline.jp/get_ccd/DNAKitSendBuy/{{ fileid }}";
+	// 帳票名（Job ファイル名）を引数に指定します。
+	cwebclient.PrintExecuteEx("DNAKit001");
+}
+function KickChangePrintInfo() {
+	// 引数に帳票名（Job ファイル名）を指定します
+	cwebclient.ChangePrintInfo("DNAKit001");
+}
+</script>
+{% endblock %}

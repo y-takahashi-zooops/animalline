@@ -44,7 +44,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
      */
     class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, ItemHolderInterface
     {
-        use NameTrait, PointTrait, \Plugin\GmoPaymentGateway4\Entity\OrderTrait;
+        use NameTrait, PointTrait, \Plugin\GmoPaymentGateway4\Entity\OrderTrait, \Customize\Entity\OrderTrait;
 
         /**
          * 課税対象の明細を返す.

@@ -102,6 +102,11 @@ class DnaSalesHeader
      */
     private $update_date;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default" : 0})
+     */
+    private $kit_count;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -297,6 +302,18 @@ class DnaSalesHeader
     public function setUpdateDate(?\DateTime $updateDate): self
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+    public function getKitCount(): ?int
+    {
+        return $this->kit_count;
+    }
+
+    public function setKitCount(?int $kit_count): self
+    {
+        $this->kit_count = $kit_count;
 
         return $this;
     }

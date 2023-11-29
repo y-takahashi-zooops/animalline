@@ -23,6 +23,8 @@ use Eccube\Repository\Master\OrderStatusRepository;
 use Eccube\Repository\OrderRepository;
 use Eccube\Entity\Master\OrderStatus;
 use Eccube\Repository\ShippingRepository;
+use Customize\Repository\DnaSalesHeaderRepository;
+use Customize\Repository\DnaSalesStatusRepository;
 
 class ImportShippingSchedule extends Command
 {
@@ -89,6 +91,16 @@ class ImportShippingSchedule extends Command
     protected $shippingRepository;
 
     /**
+     * @var DnaSalesHeaderRepository
+     */
+    protected $dnaSalesHeaderRepository;
+
+    /**
+     * @var DnaSalesStatusRepository
+     */
+    protected $dnaSalesStatusRepository;
+
+    /**
      * Import shipping schedule constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -101,6 +113,8 @@ class ImportShippingSchedule extends Command
      * @param OrderRepository $orderRepository
      * @param OrderStatusRepository $orderStatusRepository
      * @param ShippingRepository $shippingRepository
+     * @param DnaSalesHeaderRepository $dnaSalesHeaderRepository
+     * @param DnaSalesStatusRepository $dnaSalesStatusRepository
      */
     public function __construct(
         EntityManagerInterface           $entityManager,
@@ -112,7 +126,9 @@ class ImportShippingSchedule extends Command
         ProductStockService       $productStockService,
         OrderRepository                  $orderRepository,
         OrderStatusRepository $orderStatusRepository,
-        ShippingRepository $shippingRepository
+        ShippingRepository $shippingRepository,
+        DnaSalesHeaderRepository         $dnaSalesHeaderRepository,
+        DnaSalesStatusRepository         $dnaSalesStatusRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -125,6 +141,8 @@ class ImportShippingSchedule extends Command
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->shippingRepository = $shippingRepository;
+        $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
+        $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
     }
 
     protected function configure()
@@ -227,6 +245,25 @@ var_dump($fileName);
                     $em->persist($shippingHeader);
                     $em->flush();
                     */
+                }
+                elseif(substr($data[0],0,1) == "7"){
+                    //有料販売DNA検査実績
+                    $id = intval(substr($data[0],1));
+
+                    $header = $this->dnaSalesHeaderRepository->find($id);
+                    
+                    $header->setShippingStatus(3);
+                    $header->setKitShippingOperationDate(new \DateTime());
+
+                    $em->persist($header);
+                    $em->flush();
+
+                    $Order = $this->orderRepository->find($header->getOrderId());
+                    $Order->setOrderStatus($OrderStatusDeliverd);
+                    $customer = $Order->getCustomer();
+
+                    $data = ["name" => $header->getShippingName()];
+                    $this->mailService->sendDnaKitSendCompleteBuy($customer->getEmail(),$data);
                 }
                 else{
                     $id = intval(substr($data[0],1));

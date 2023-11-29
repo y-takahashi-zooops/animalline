@@ -18,6 +18,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Customize\Service\ProductStockService;
+use Customize\Repository\DnaSalesHeaderRepository;
+use Customize\Repository\DnaSalesStatusRepository;
+use Eccube\Repository\Master\OrderStatusRepository;
+use Eccube\Repository\OrderRepository;
+use Eccube\Entity\Master\OrderStatus;
 
 class ExportDnaKitShippingSchedule extends Command
 {
@@ -64,6 +69,26 @@ class ExportDnaKitShippingSchedule extends Command
     protected $productStockService;
 
     /**
+     * @var DnaSalesHeaderRepository
+     */
+    protected $dnaSalesHeaderRepository;
+
+    /**
+     * @var DnaSalesStatusRepository
+     */
+    protected $dnaSalesStatusRepository;
+
+    /**
+     * @var OrderStatusRepository
+     */
+    protected $orderStatusRepository;
+
+    /**
+     * @var OrderRepository
+     */
+    protected $orderRepository;
+
+    /**
      * Export DNA kit shipping schedule constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -73,6 +98,10 @@ class ExportDnaKitShippingSchedule extends Command
      * @param ProductClassRepository $productClassRepository
      * @param ProductStockRepository $productStockRepository
      * @param ProductStockService $productStockService
+     * @param DnaSalesHeaderRepository $dnaSalesHeaderRepository
+     * @param DnaSalesStatusRepository $dnaSalesStatusRepository
+     * @param OrderStatusRepository $orderStatusRepository
+     * @param OrderRepository $orderRepository
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -81,7 +110,11 @@ class ExportDnaKitShippingSchedule extends Command
         DnaCheckStatusRepository $dnaCheckStatusRepository,
         ProductClassRepository $productClassRepository,
         ProductStockRepository $productStockRepository,
-        ProductStockService $productStockService
+        ProductStockService $productStockService,
+        DnaSalesHeaderRepository         $dnaSalesHeaderRepository,
+        DnaSalesStatusRepository         $dnaSalesStatusRepository,
+        OrderStatusRepository $orderStatusRepository,
+        OrderRepository                  $orderRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -91,6 +124,10 @@ class ExportDnaKitShippingSchedule extends Command
         $this->productClassRepository = $productClassRepository;
         $this->productStockRepository = $productStockRepository;
         $this->productStockService = $productStockService;
+        $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
+        $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
+        $this->orderStatusRepository = $orderStatusRepository;
+        $this->orderRepository = $orderRepository;
     }
 
     protected function configure()
@@ -154,10 +191,13 @@ class ExportDnaKitShippingSchedule extends Command
         }
         */
 
-        if (!$records = $qb->getQuery()->getArrayResult()) {
+        $records = $qb->getQuery()->getArrayResult();
+        /*
+        if (!$records) {
             echo "Records not found.\n";
             return;
         }
+        */
 
         $em = $this->entityManager;
         // 自動コミットをやめ、トランザクションを開始
@@ -235,6 +275,85 @@ class ExportDnaKitShippingSchedule extends Command
             }
         }
 
+        //有料販売発送データ作成
+        $qb = $this->dnaSalesHeaderRepository->createQueryBuilder('dnah');
+        $qb->select(
+            'dnah.id as dna_header_id',
+            'dnah.kit_count as kit_unit',
+            'dnah.shipping_name',
+            'dnah.shipping_zip',
+            'dnah.shipping_pref',
+            'dnah.shipping_city',
+            'dnah.shipping_address',
+            'dnah.shipping_tel'
+        )
+            ->where('dnah.shipping_status = :shipping_status')
+            ->setParameters([
+                'shipping_status' => 1
+            ])
+            ->orderBy('dnah.id', 'ASC');
+
+        if (!$records = $qb->getQuery()->getArrayResult()) {
+            echo "Records not found.\n";
+            return;
+        }
+
+        $dnaBuyHeaderIds = [];
+
+        foreach ($records as $record) {
+            $item_code = ["8799009","8799008","8790005","8790006"];
+            $item_count = 4;
+
+            $dnaNo = $this->generateZeroFillStr($record['dna_header_id'],5,"7");
+            $nextDay = (new DateTime($now->toString() . ' +1 day'))->format('Ymd');
+            
+            $record['shipping_zip'] = substr($record['shipping_zip'],0,3) . "-" . substr($record['shipping_zip'],3);
+            for($i=0;$i<$item_count;$i++){
+                $record['delivery_instruction_no'] = $dnaNo;
+                $record['expected_shipping_date'] = date("Ymd");
+                $record['warehouse_code'] = '00001';
+                $record['sale_category'] = 0;
+                $record['slip_type'] = 0;
+                $record['product_number_code'] = $item_code[$i];
+                $record['color_code'] = "9999";
+                $record['size_code'] = 1;
+                $record['retail_price'] = 0;
+                $record['delivery_unit_price'] = 0;
+                $record['shipping_company_code'] = '000003';
+                $record['delivery_address'] = $record['shipping_pref'] . ' ' . $record['shipping_city'] . ' ' . $record['shipping_address'];
+                $record['delivery_destination_classification'] = '1';
+                $record['total_product_amount'] = 0;
+                $record['discount_amount'] = 0;
+                $record['sale_tax'] = 0;
+                $record['postage'] = 0;
+                $record['gross_weight'] = 1;
+                $record['number_units'] = 1;
+                $record['payment_method_classification'] = '0';
+                $record['sales_destination_classification'] = '01';
+                $record['part_number_code_2'] = $item_code[$i];
+                $record['handling flight_type'] = '000';
+                $record['destination_classification'] = '1';
+                $record['slip_output_order'] = $dnaNo.$i;
+                //キット以外はキット数量に関わらず１個
+                if($i > 0) {
+                    $record['kit_unit'] = 1;
+                }
+
+                $pc = $this->productClassRepository->findOneBy(['code' => $item_code[$i]]);
+                $this->productStockService->calculateStock($em, $pc, -$record['kit_unit']);
+
+                $row = [];
+                foreach ($cols as $col) {
+                    $row[] = $record[$col] ?? null; // null for blank field
+                }
+                $rows[] = $row;
+
+                $dnaBuyHeaderIds[] = $record['dna_header_id'];
+            }
+        }
+        //ここまで
+
+        
         $dir = 'var/tmp/wms/shipping_schedule/';
         if (!file_exists($dir) && !mkdir($dir, 0777, true)) {
             throw new Exception("Can't create directory.");
@@ -250,11 +369,28 @@ class ExportDnaKitShippingSchedule extends Command
         }
         fclose($csvFile);
 
-        // reduce query duplicate records
+        // 無料検査ステータス更新
         $uniqIds = array_unique($dnaHeaderIds);
         foreach ($uniqIds as $id) {
             $Header = $this->dnaCheckStatusHeaderRepository->find($id);
             $Header->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_INSTRUCTING);
+            $em->persist($Header);
+        }
+
+        // 有料検査ステータス更新
+        $uniqIds = array_unique($dnaBuyHeaderIds);
+        $OrderStatusProgress = $this->orderStatusRepository->find(OrderStatus::IN_PROGRESS);
+
+        foreach ($uniqIds as $id) {
+            $Header = $this->dnaSalesHeaderRepository->find($id);
+
+            //販売ステータス更新
+            $order = $this->orderRepository->find($Header->getOrderId());
+            //ステータスを処理中にする
+            $order->setOrderStatus($OrderStatusProgress);
+
+            //ステータス更新
+            $Header->setShippingStatus(2);
             $em->persist($Header);
         }
 

@@ -4,7 +4,7 @@
     <div class="main">
         <div class="row">
             <div class="main-container col-12">
-                <h1 class="mb-0">出荷待ち一覧</h1>
+                <h1 class="mb-0">無料検査出荷待ち一覧</h1>
                 <table class="table table-sm dna-table text-center responsive-table">
                     <thead>
                     <tr class="heading">
@@ -25,6 +25,38 @@
                             <td>
                                 <input type="button" class="btn btn-primary" value="送付状印刷" onclick="getSheetData({{ dna.getId() }})">
                                 <input type="button" class="btn btn-primary" value="シート印刷" onclick="getBarcodeData({{ dna.getId() }})">
+                            </td>
+                            <td></td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">結果が０件です。</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <h1 class="mb-0">有料検査出荷待ち一覧</h1>
+                <table class="table table-sm dna-table text-center responsive-table">
+                    <thead>
+                    <tr class="heading">
+                        <th class="border-top-0 pt-2 pb-2">No.</th>
+                        <th class="border-top-0 pt-2 pb-2">送り先名</th>
+                        <th class="border-top-0 pt-2 pb-2">送り先TEL</th>
+                        <th class="border-top-0 pt-2 pb-2">キット数量</th>
+                        <th class="border-top-0 pt-2 pb-2">印刷</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for buy_dna in buy_dnas %}
+                        <tr>
+                            <td class="id">6{{ "%05d"|format(buy_dna.getId()) }}</td>
+                            <td>{{ buy_dna.getShippingName() }}</td>
+                            <td>{{ buy_dna.getShippingTel() }}</td>
+                            <td>{{ buy_dna.getKitCount() }}</td>
+                            <td>
+                                <input type="button" class="btn btn-primary" value="送付状印刷" onclick="getSheetDataBuy({{ buy_dna.getId() }})">
+                                <input type="button" class="btn btn-primary" value="シート印刷" onclick="getBarcodeDataBuy({{ buy_dna.getId() }})">
                             </td>
                             <td></td>
                         </tr>
@@ -66,6 +98,23 @@
         });
     }
 
+    function getBarcodeDataBuy(id){
+        if(!confirm('印刷します。よろしいですか？')){return;}
+
+        $.ajax({
+            url: '{{ url('ulogi_get_printdata_kit_barcode_buy') }}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'header_id' : id,
+            }
+        }).done(function (data) {// 正常時
+            printBarcodeBuy(data);
+        }).fail(function () { // エラー時
+            alert('読み込みエラー');
+        });
+    }
+
     function printBarcode(senddata){
         
         //alert(JSON.stringify(senddata));
@@ -79,6 +128,24 @@
             }
         }).done(function (data) {// 正常時
             location.href = "{{ url('ulogi_print_confirm_barcode') }}?fileid=" + data["output"];
+        }).fail(function () { // エラー時
+            alert('読み込みエラー');
+        });
+    }
+
+    function printBarcodeBuy(senddata){
+        
+        //alert(JSON.stringify(senddata));
+
+        $.ajax({
+            url: 'http://ps.animalline.jp/print_execute_kit_barcode_buy',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'jsondata' : JSON.stringify(senddata),
+            }
+        }).done(function (data) {// 正常時
+            location.href = "{{ url('ulogi_print_confirm_barcode_buy') }}?fileid=" + data["output"];
         }).fail(function () { // エラー時
             alert('読み込みエラー');
         });
@@ -102,6 +169,23 @@
         });
     }
 
+    function getSheetDataBuy(id){
+        if(!confirm('印刷します。よろしいですか？')){return;}
+
+        $.ajax({
+            url: '{{ url('ulogi_get_printdata_kit_sheet_buy') }}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'header_id' : id,
+            }
+        }).done(function (data) {// 正常時
+            printSheetBuy(data);
+        }).fail(function () { // エラー時
+            alert('読み込みエラー');
+        });
+    }
+
     function printSheet(senddata){
         
         //alert(JSON.stringify(senddata));
@@ -115,6 +199,24 @@
             }
         }).done(function (data) {// 正常時
             location.href = "{{ url('ulogi_print_confirm_sheet') }}?fileid=" + data["output"];
+        }).fail(function () { // エラー時
+            alert('読み込みエラー');
+        });
+    }
+
+    function printSheetBuy(senddata){
+        
+        //alert(JSON.stringify(senddata));
+
+        $.ajax({
+            url: 'http://ps.animalline.jp/print_execute_kit_sheet_buy',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'jsondata' : JSON.stringify(senddata),
+            }
+        }).done(function (data) {// 正常時
+            location.href = "{{ url('ulogi_print_confirm_sheet_buy') }}?fileid=" + data["output"];
         }).fail(function () { // エラー時
             alert('読み込みエラー');
         });

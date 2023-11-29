@@ -24,6 +24,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Knp\Component\Pager\PaginatorInterface;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Customize\Repository\DnaCheckStatusRepository;
+use Customize\Repository\DnaSalesHeaderRepository;
+use Customize\Repository\DnaSalesStatusRepository;
 
 class UlogiController extends AbstractController
 {
@@ -38,18 +40,34 @@ class UlogiController extends AbstractController
      */
     protected $dnaCheckStatusRepository;
 
+    /**
+     * @var DnaSalesHeaderRepository
+     */
+    protected $dnaSalesHeaderRepository;
+
+    /**
+     * @var DnaSalesStatusRepository
+     */
+    protected $dnaSalesStatusRepository;
+
 
     /**
      * VeqtaController constructor.
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
+     * @param DnaSalesHeaderRepository $dnaSalesHeaderRepository
+     * @param DnaSalesStatusRepository $dnaSalesStatusRepository
      */
     public function __construct(
         DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository,
-        DnaCheckStatusRepository         $dnaCheckStatusRepository
+        DnaCheckStatusRepository         $dnaCheckStatusRepository,
+        DnaSalesHeaderRepository         $dnaSalesHeaderRepository,
+        DnaSalesStatusRepository         $dnaSalesStatusRepository
     ) {
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
+        $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
+        $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
     }
 
     /**
@@ -78,7 +96,12 @@ class UlogiController extends AbstractController
             ['create_date' => 'DESC']
         );
 
-        return ['dnas' => $dnas,];
+        $buy_dnas = $this->dnaSalesHeaderRepository->findBy(
+            ['shipping_status' => 2],
+            ['create_date' => 'DESC']
+        );
+
+        return ['dnas' => $dnas,'buy_dnas' => $buy_dnas];
     }
 
     /**
@@ -115,6 +138,37 @@ class UlogiController extends AbstractController
     /**
      * Register and receive DNA kit result
      *
+     * @Route("/ulogi/get_printdata_kit_barcode_buy", name="ulogi_get_printdata_kit_barcode_buy")
+     */
+    public function get_printdata_kit_barcode_buy(Request $request)
+    {
+        $registerId = $this->getUser();
+        
+        $header = $this->dnaSalesHeaderRepository->findOneBy(['id' =>$request->get("header_id")]);
+
+        $dnas = $this->dnaSalesStatusRepository->findBy(
+            ['DnaSalesHeader' => $header],
+            ['id' => 'ASC']
+        );
+
+        $i=1;
+        foreach($dnas as $dna){
+            $datas[$i] = [
+                'barcode' =>  "3".sprintf('%05d',$dna->getId()),
+                'setno' => "7".sprintf('%05d',$header->getId())
+            ];
+
+            $i++;
+        }
+        return $this->json([
+            'title' => $header->getShippingName(),
+            'datas' => $datas,
+        ]);
+    }
+
+    /**
+     * Register and receive DNA kit result
+     *
      * @Route("/ulogi/get_printdata_kit_sheet", name="ulogi_get_printdata_kit_sheet")
      */
     public function get_printdata_kit_sheet(Request $request)
@@ -129,6 +183,26 @@ class UlogiController extends AbstractController
             'address02' => $header->getShippingAddress(),
             'name' => $header->getShippingName(),
             'setno' => "5".sprintf('%05d',$header->getId())
+        ]);
+    }
+
+    /**
+     * Register and receive DNA kit result
+     *
+     * @Route("/ulogi/get_printdata_kit_sheet_buy", name="ulogi_get_printdata_kit_sheet_buy")
+     */
+    public function get_printdata_kit_sheet_buy(Request $request)
+    {
+        $registerId = $this->getUser();
+        
+        $header = $this->dnaSalesHeaderRepository->findOneBy(['id' =>$request->get("header_id")]);
+
+        return $this->json([
+            'post_code' => "〒".substr($header->getShippingZip(),0,3) . "-" . substr($header->getShippingZip(),3),
+            'address01' => $header->getShippingPref().$header->getShippingCity(),
+            'address02' => $header->getShippingAddress(),
+            'name' => $header->getShippingName(),
+            'setno' => "7".sprintf('%05d',$header->getId())
         ]);
     }
 
@@ -162,4 +236,33 @@ class UlogiController extends AbstractController
         ]);
     }
 
+    /**
+     * Register and receive DNA kit result
+     *
+     * @Route("/ulogi/print_confirm_barcode_buy", name="ulogi_print_confirm_barcode_buy")
+     * @Template("animalline/ulogi/print_confirm_barcode_buy.twig")
+     */
+    public function print_confirm_barcode_buy(Request $request)
+    {
+        $fileid = $request->get("fileid");
+
+        return $this->render("animalline/ulogi/print_confirm_barcode_buy.twig", [
+            'fileid' => $fileid
+        ]);
+    }
+
+    /**
+     * Register and receive DNA kit result
+     *
+     * @Route("/ulogi/print_confirm_sheet_buy", name="ulogi_print_confirm_sheet_buy")
+     * @Template("animalline/ulogi/print_confirm_sheet_buy.twig")
+     */
+    public function print_confirm_sheet_buy(Request $request)
+    {
+        $fileid = $request->get("fileid");
+
+        return $this->render("animalline/ulogi/print_confirm_sheet_buy.twig", [
+            'fileid' => $fileid
+        ]);
+    }
 }

@@ -101,6 +101,8 @@
         <span>　{{ sale.coatColor}}</span>
       </div>
       <div class="publish">掲載日：{{ sale.createDate|date('Y年m月d日') }}</div>
+      <div class="publish">ブリーダー：{{ sale.Breeder.getLicenseHouseName() }}</div>
+      
     </div>
     <div class="pr_comment">
       <p>{{ sale.prComment|nl2br }}</p>
@@ -160,6 +162,7 @@
                         <span>　{{ pet.coatColor}}</span>
                       </div>
                       <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
+                      <div class="publish">ブリーダー：{{ pet.Breeder.getLicenseHouseName() }}</div>
                     </div>
                     <div class="pr_comment">
                       <p>{{ pet.prComment|nl2br }}</p>
@@ -306,6 +309,7 @@
                         <span>　{{ pet.coatColor}}</span>
                       </div>
                       <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
+                      <div class="publish">ブリーダー：{{ pet.Breeder.getLicenseHouseName() }}</div>
                     </div>
                     <div class="pr_comment">
                       <p>{{ pet.prComment|nl2br }}</p>
@@ -450,6 +454,7 @@
                             <span>　{{ pet.coatColor}}</span>
                           </div>
                           <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
+                          <div class="publish">ブリーダー：{{ pet.Breeder.getLicenseHouseName() }}</div>
                         </div>
                         <div class="pr_comment">
                           <p>{{ pet.prComment|nl2br }}</p>
@@ -679,6 +684,7 @@
                             <span>　{{ pet.coatColor}}</span>
                           </div>
                           <div class="publish">掲載日：{{ pet.createDate|date('Y年m月d日') }}</div>
+                          <div class="publish">ブリーダー：{{ pet.Breeder.getLicenseHouseName() }}</div>
                         </div>
                         <div class="pr_comment">
                           <p>{{ pet.prComment|nl2br }}</p>

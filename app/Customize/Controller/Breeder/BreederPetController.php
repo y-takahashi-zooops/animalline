@@ -442,7 +442,7 @@ class BreederPetController extends AbstractController
         //DNA検査結果
         //$dna_check_results = array(0 => "－", 1 => "－", 2 => "－");
         $dna_check_kinds = array();
-        $dna_check_header = $this->dnaCheckStatusRepository->findOneBy(["pet_id" => $id]);
+        $dna_check_header = $this->dnaCheckStatusRepository->findOneBy(["pet_id" => $id,"check_status" => 6]);
         $dna_check_result = "";
 
         if($dna_check_header){
@@ -465,6 +465,17 @@ class BreederPetController extends AbstractController
                         $dna_check_result = "△（キャリア）";
                         break;
                 }
+            }
+        }
+        else{
+            $dna_check_result = "検査中";
+
+            $dna_check_kinds = [];
+            foreach ($this->dnaCheckKindsRepository->findBy(
+                ['Breeds' => $breederPet->getBreedsType(), 'delete_flg' => 0],
+                ['update_date' => 'DESC', 'id' => 'DESC']
+            ) as $item) {
+                $dna_check_kinds[] = $item->getCheckKind();
             }
         }
         

@@ -165,7 +165,7 @@ class ExportRelease extends Command
         //$OrderStatusPaid = $this->orderStatusRepository->find(OrderStatus::PAID);
 
         $query = $this->orderRepository->createQueryBuilder('o')
-            ->andWhere('o.OrderStatus = :sendcsv and o.order_date is not null')
+            ->andWhere('o.OrderStatus = :sendcsv and o.order_date is not null and o.nosend_wms <> 1')
             ->setParameter('sendcsv', $OrderStatusSendCsv);
 
         $orders = $query->getQuery()->getResult();
