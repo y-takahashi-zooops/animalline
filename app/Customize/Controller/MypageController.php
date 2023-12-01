@@ -41,6 +41,9 @@ use Eccube\Repository\ProductClassRepository;
 use Customize\Form\Type\ChangeSubscriptionType;
 use Customize\Service\SubscriptionProcess;
 use Eccube\Repository\ShippingRepository;
+use Customize\Repository\DnaSalesHeaderRepository;
+use Customize\Repository\DnaSalesStatusRepository;
+use DateTime;
 
 class MypageController extends BaseMypageController
 {
@@ -115,6 +118,16 @@ class MypageController extends BaseMypageController
     protected $shippingRepository;
 
     /**
+     * @var DnaSalesHeaderRepository
+     */
+    protected $dnaSalesHeaderRepository;
+
+    /**
+     * @var DnaSalesStatusRepository
+     */
+    protected $dnaSalesStatusRepository;
+    
+    /**
      * MypageController constructor.
      *
      * @param OrderRepository $orderRepository
@@ -131,6 +144,8 @@ class MypageController extends BaseMypageController
      * @param SubscriptionProcess $SubscriptionProcess
      * @param CustomerAddressRepository $customerAddressRepository
      * @param ShippingRepository $shippingRepository
+     * @param DnaSalesHeaderRepository $dnaSalesHeaderRepository
+     * @param DnaSalesStatusRepository $dnaSalesStatusRepository
      */
     public function __construct(
         OrderRepository $orderRepository,
@@ -146,7 +161,9 @@ class MypageController extends BaseMypageController
         ProductRepository $productRepository,
         SubscriptionProcess $SubscriptionProcess,
         CustomerAddressRepository $customerAddressRepository,
-        ShippingRepository $shippingRepository
+        ShippingRepository $shippingRepository,
+        DnaSalesHeaderRepository $dnaSalesHeaderRepository,
+        DnaSalesStatusRepository $dnaSalesStatusRepository
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -162,7 +179,121 @@ class MypageController extends BaseMypageController
         $this->SubscriptionProcess = $SubscriptionProcess;
         $this->customerAddressRepository = $customerAddressRepository;
         $this->shippingRepository = $shippingRepository;
+        $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
+        $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
     }
+
+    /**
+     * DNA検査
+     *
+     * @Route("/mypage/dna", name="mypage_dna")
+     * @Template("Mypage/dna.twig")
+     */
+    public function dna_index(Request $request)
+    {
+        $Customer = $this->getUser();
+
+        // ログインユーザーの定期注文を全取得
+        $dna_headers = $this->dnaSalesHeaderRepository->createQueryBuilder('dh')
+            ->where('dh.Customer = :customer_id')
+            ->andWhere('dh.shipping_status > 0')
+            ->setParameter('customer_id', $Customer->getId())
+            ->getQuery()->getResult();
+
+        return [
+            'dna_headers' => $dna_headers
+        ];
+    }
+
+    /**
+     * DNA検査情報登録
+     *
+     * @Route("/mypage/dna_petreg/{id}", name="mypage_dna_petreg")
+     * @Template("Mypage/dna_petreg.twig")
+     */
+    public function dna_petreg(Request $request, $id)
+    {
+        $Customer = $this->getUser();
+
+        $DnaSalesStatus = $this->dnaSalesStatusRepository->find($id);
+        if(!$DnaSalesStatus) {
+            throw new NotFoundHttpException();
+        }
+
+        //ログインユーザーの明細かの確認
+        $DnaSalesHeader = $this->dnaSalesHeaderRepository->findOneBy(
+            [
+                'id' => $DnaSalesStatus->getDnaSalesHeader()->getId(),
+                'Customer' => $Customer,
+            ]
+        );
+        if (!$DnaSalesHeader) {
+            throw new NotFoundHttpException();
+        }
+
+        $form_data["pet_name"] = $DnaSalesStatus->getPetName();
+        if($DnaSalesStatus->getBirthday()){
+            $form_data["birthday_year"] = $DnaSalesStatus->getBirthday()->format("Y");
+            $form_data["birthday_month"] = $DnaSalesStatus->getBirthday()->format("m");
+            $form_data["birthday_day"] = $DnaSalesStatus->getBirthday()->format("d");
+        }
+        else{
+            $form_data["birthday_year"] = "";
+            $form_data["birthday_month"] = "";
+            $form_data["birthday_day"] = "";
+        }
+        $form_data["image_path"] = $DnaSalesStatus->getImagePath();
+
+        $errors = [];
+        if($request->get("action") == "regist"){
+            $form_data["pet_name"] = $request->get("pet_name");
+            $form_data["birthday_year"] = $request->get("birthday_year");
+            $form_data["birthday_month"] = $request->get("birthday_month");
+            $form_data["birthday_day"] = $request->get("birthday_day");
+
+            //登録処理
+            if($request->get("pet_name") == ""){
+                $errors[] = "ペット名が入力されていません。";
+            }
+            $date_string = $request->get("birthday_year")."/".$request->get("birthday_month")."/".$request->get("birthday_day");
+            $birthday = strtotime($date_string);
+            if(!$birthday){
+                $errors[] = "誕生日が正しくありません";
+            }
+
+            //受信ファイル処理
+            $image_path = $form_data["image_path"];
+            if($_FILES['tmp_image_path']['tmp_name']){
+                $image_tmp = $_FILES['tmp_image_path']['tmp_name'];
+
+                $image_path = uniqid().'.'.pathinfo($_FILES['tmp_image_path']['name'], PATHINFO_EXTENSION);
+                if(!file_exists("html/upload/dnabuy/")){
+                    mkdir("html/upload/dnabuy/");
+                }
+                copy($image_tmp,"html/upload/dnabuy/".$image_path);
+                //var_dump("html/upload/dnabuy/".$image_path);
+            }
+            $form_data["image_path"] = $image_path;
+            var_dump($image_path);
+            if(count($errors) == 0){
+                $DnaSalesStatus->setPetName($request->get("pet_name"));
+                $DnaSalesStatus->setBirthDay(new DateTime(date("Y/m/d", $birthday)));
+                $DnaSalesStatus->setImagePath($image_path);
+
+                $this->entityManager->persist($DnaSalesStatus);
+                $this->entityManager->flush();
+
+                //return $this->redirectToRoute('mypage_dna');
+            }
+        }
+
+        return [
+            "status" => $DnaSalesStatus,
+            "errors" => $errors,
+            "form_data" => $form_data,
+        ];
+    }
+
 
     /**
      * 定期購入管理.

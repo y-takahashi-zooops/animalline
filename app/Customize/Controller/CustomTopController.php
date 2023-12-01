@@ -121,6 +121,14 @@ class CustomTopController extends AbstractController
     }
 
     /**
+     * @Route("/d", name="dna_byt_regpet")
+     */
+    public function dna_byt_regpet()
+    {
+        return $this->redirectToRoute("mypage_dna");
+    }
+
+    /**
      * @Route("/tr", name="ani_training")
      * @Template("ani_training.twig")
      */

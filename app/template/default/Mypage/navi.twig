@@ -42,6 +42,9 @@ file that was distributed with this source code.
 		<li class="ec-navlistRole__item {% if mypageno|default('') == 'withdraw' %}active{% endif %}">
 			<a href="{{ url('mypage_withdraw') }}">{{ '退会手続き'|trans }}</a>
 		</li>
+		<li class="ec-navlistRole__item {% if mypageno|default('') == 'dna' %}active{% endif %}">
+			<a href="{{ url('mypage_dna') }}">{{ '有料DNA検査'|trans }}</a>
+		</li>
 	</ul>
 </div>
 

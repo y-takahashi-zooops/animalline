@@ -38,7 +38,7 @@ use Customize\Repository\DnaSalesHeaderRepository;
 use Customize\Repository\DnaSalesStatusRepository;
 use Customize\Repository\DnaSalesDetailRepository;
 
-class JddcController extends AbstractController
+class JddcBuyController extends AbstractController
 {
     /**
      * @var DnaCheckStatusHeaderRepository
@@ -147,28 +147,30 @@ class JddcController extends AbstractController
     }
 
     /**
-     * Register and receive DNA kit result
-     *
-     * @Route("/jddc/", name="jddc_index")
-     * @Template("animalline/jddc/index.twig")
-     */
-    public function index(): array
-    {
-        return [];
-    }
-
-    /**
      * Pet list
      *
-     * @Route("/jddc/complete_list", name="jddc_complete_list")
-     * @Template("animalline/jddc/complete_list.twig")
+     * @Route("/jddc/complete_list_buy", name="jddc_complete_list_buy")
+     * @Template("animalline/jddc/complete_list_buy.twig")
      */
-    public function complete_list(Request $request, PaginatorInterface $paginator): array
+    public function complete_list_buy(Request $request, PaginatorInterface $paginator): array
     {
         $from = $request->get("create_date_from");
         $to = $request->get("create_date_to");
 
-        $dnasResult = $this->jddcQueryService->completePetList($from,$to);
+        $builder = $this->dnaSalesStatusRepository->createQueryBuilder('dh')
+            ->andWhere('dh.check_status = 3');
+
+        if($from){
+            $builder->andWhere('dh.create_date >= :create_date_from')
+                ->setParameter('create_date_from', $from);
+        }
+        if($to){
+            $builder->andWhere('dh.create_date <= :create_date_to')
+                ->setParameter('create_date_to', $to);
+        }
+        
+        $dnasResult = $builder->getQuery()->getResult();
+
         $dnas = $paginator->paginate(
             $dnasResult,
             $request->query->getInt('page', 1),
@@ -192,26 +194,21 @@ class JddcController extends AbstractController
     /**
      * Pet list
      *
-     * @Route("/jddc/pet_list", name="jddc_pet_list")
-     * @Template("animalline/jddc/pet_list.twig")
+     * @Route("/jddc/pet_list_buy", name="jddc_pet_list_buy")
+     * @Template("animalline/jddc/pet_list_buy.twig")
      */
-    public function pet_list(Request $request, PaginatorInterface $paginator): array
+    public function pet_list_buy(Request $request, PaginatorInterface $paginator): array
     {
-        $dnasResult = $this->jddcQueryService->filterPetList($request->query->getInt('filter_status'));
+        $builder = $this->dnaSalesStatusRepository->createQueryBuilder('dh')
+            ->andWhere('dh.check_status = 1');
+
+        $dnasResult = $builder->getQuery()->getResult();
+
         $dnas = $paginator->paginate(
             $dnasResult,
             $request->query->getInt('page', 1),
             $request->query->getInt('item', AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE)
         );
-
-        // get check kinds
-        foreach ($dnas as $idx => $dna) {
-            $kinds = $this->dnaCheckKindsRepository->findBy(['Breeds' => $dna['breeds_id'], "delete_flg" => 0]);
-            $dna['check_kinds'] = array_map(function ($item) {
-                return $item->getCheckKind();
-            }, $kinds);
-            $dnas[$idx] = $dna;
-        }
 
         return compact(
             'dnas'
@@ -221,18 +218,18 @@ class JddcController extends AbstractController
     /**
      * Receive DNA kit result
      *
-     * @Route("/jddc/arrive", name="jddc_arrive")
-     * @Template("animalline/jddc/arrive.twig")
+     * @Route("/jddc/arrive_buy", name="jddc_arrive_buy")
+     * @Template("animalline/jddc/arrive_buy.twig")
      */
-    public function arrive(Request $request)
+    public function arrive_buy(Request $request)
     {
         if ($request->get('dna-id') && $request->isMethod('POST')) {
-            $dna = $this->dnaCheckStatusRepository->find((int)$request->get('dna-id'));
-            $dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING);
+            $dna = $this->dnaSalesStatusRepository->find((int)$request->get('dna-id'));
+            $dna->setCheckStatus(2);
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            return $this->redirectToRoute('jddc_arrive');
+            return $this->redirectToRoute('jddc_arrive_buy');
         }
         return [];
     }
@@ -240,11 +237,11 @@ class JddcController extends AbstractController
     /**
      * Register and receive DNA kit result
      *
-     * @Route("/jddc/arrive/get_user", name="jddc_arrive_get_user")
+     * @Route("/jddc/arrive/get_user_buy", name="jddc_arrive_get_user_buy")
      * @param Request $request
      * @return JsonResponse
      */
-    public function getArriveUser(Request $request): JsonResponse
+    public function getArriveUserBuy(Request $request): JsonResponse
     {
         $barcode = $request->get('barcode');
         $shippingName = null;
@@ -252,22 +249,16 @@ class JddcController extends AbstractController
         $petBirthday = null;
         $petKind = null;
         $petType = null;
-        $siteType = $barcode[0];
         $dnaId = substr($barcode, 1);
-        $dnaCheckStatus = $this->dnaCheckStatusRepository->find($dnaId);
+        $dnaCheckStatus = $this->dnaSalesStatusRepository->find($dnaId);
         if ($dnaCheckStatus) {
-            $header = $this->dnaCheckStatusHeaderRepository->find($dnaCheckStatus->getDnaHeader());
-            if ($dnaCheckStatus->getCheckStatus() == 3 && $header->getLaboType() == 2) {
+            $header = $this->dnaSalesHeaderRepository->find($dnaCheckStatus->getDnaSalesHeader());
+            if ($dnaCheckStatus->getCheckStatus() == 1) {
                 $show = true;
                 $shippingName = $header->getShippingName();
-                if ($dnaCheckStatus->getPetId()) {
-                    $pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
-                        $this->breederPetsRepository->find($dnaCheckStatus->getPetId()) :
-                        $this->conservationPetsRepository->find($dnaCheckStatus->getPetId());
-                    $petBirthday = $pet->getPetBirthday() ? $pet->getPetBirthday()->format('Y/m/d') : null;
-                    $petKind = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫';
-                    $petType = $pet->getBreedsType()->getBreedsName();
-                }
+                $petBirthday = $dnaCheckStatus->getBirthday() ? $dnaCheckStatus->getBirthday()->format('Y/m/d') : null;
+                $petKind = $dnaCheckStatus->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫';
+                $petType = $dnaCheckStatus->getBreedsType()->getBreedsName();
             }
         }
         $data = [
@@ -283,11 +274,11 @@ class JddcController extends AbstractController
 
     /**
      * DNA検査結果登録.
-     * @Route("/jddc/result_regist", name="jddc_result_regist")
-     * @Template("animalline/jddc/result_regist.twig")
+     * @Route("/jddc/result_regist_buy", name="jddc_result_regist_buy")
+     * @Template("animalline/jddc/result_regist_buy.twig")
      * @throws Exception
      */
-    public function result_regist(Request $request, VeqtaPdfService $veqtaPdfService)
+    public function result_regist_buy(Request $request, VeqtaPdfService $veqtaPdfService)
     {
         if (!$request->isMethod('POST')) {
             return [];
@@ -295,17 +286,10 @@ class JddcController extends AbstractController
 
         $barcode = $request->get('barcode');
         $checkStatus = $request->get('check_status_total');
-        $siteType = $barcode[0];
         $dnaId = substr($barcode, 1);
 
-        $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
+        $Dna = $this->dnaSalesStatusRepository->findOneBy(['id' => $dnaId]);
         if (!$Dna) {
-            throw new NotFoundHttpException();
-        }
-        $Pet = $siteType == AnilineConf::ANILINE_SITE_TYPE_BREEDER ?
-            $this->breederPetsRepository->find($Dna->getPetId()) :
-            $this->conservationPetsRepository->find($Dna->getPetId());
-        if (!$Pet) {
             throw new NotFoundHttpException();
         }
         
@@ -464,49 +448,41 @@ class JddcController extends AbstractController
     /**
      * Read barcode.
      *
-     * @Route("/jddc_read_barcode", name="jddc_read_barcode", methods={"GET"})
+     * @Route("/jddc_read_barcode_buy", name="jddc_read_barcode_buy", methods={"GET"})
      * @param Request $request
      * @return JsonResponse
      */
-    public function readBarCode(Request $request): JsonResponse
+    public function readBarCodeBuy(Request $request): JsonResponse
     {
         $barcode = $request->get('barcode');
-        $siteType = $barcode[0];
         $dnaId = substr($barcode, 1);
 
         $data['hasRecord'] = false;
-        $Dna = $this->dnaCheckStatusRepository->findOneBy(['id' => $dnaId, 'site_type' => $siteType]);
+        $Dna = $this->dnaSalesStatusRepository->findOneBy(['id' => $dnaId]);
         if ($Dna) {
-            if($Dna->getDnaHeader()->getLaboType() == 2){
-                if ($Dna->getSiteType() == AnilineConf::SITE_CATEGORY_BREEDER) {
-                    $pet = $this->breederPetsRepository->find($Dna->getPetId());
-                } else {
-                    $pet = $this->conservationPetsRepository->find($Dna->getPetId());
-                }
-
-                $data['breed'] = $pet->getBreedsType() ? $pet->getBreedsType()->getBreedsName() : '';
-                $data['pet_birthday'] = $pet->getPetBirthday() ? $pet->getPetBirthday()->format('Y/m/d') : '';
-                if (!$pet->getPetKind()) {
-                    $data['pet_kind'] = '';
-                } else {
-                    $data['pet_kind'] = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫';
-                }
-
-                $checkKinds = [];
-                foreach ($this->dnaCheckKindsRepository->findBy(
-                    ['Breeds' => $pet->getBreedsType(), 'delete_flg' => 0],
-                    ['update_date' => 'DESC', 'id' => 'DESC']
-                ) as $item) {
-                    $itemArr = [];
-                    $itemArr['id'] = $item->getId();
-                    $itemArr['check_kind'] = $item->getCheckKind();
-                    $checkKinds[] = $itemArr;
-                }
-                $data['checkKind'] = $checkKinds;
-                $data['shippingName'] = $Dna->getDnaHeader()->getShippingName();
-                $data['hasRecord'] = $Dna->getCheckStatus() === AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING;
-                $data['hasRecord'] = true;
+            $data['breed'] = $Dna->getBreedsType() ? $Dna->getBreedsType()->getBreedsName() : '';
+            $data['pet_birthday'] = $Dna->BirthDay() ? $Dna->BirthDay()->format('Y/m/d') : '';
+            if (!$Dna->getPetKind()) {
+                $data['pet_kind'] = '';
+            } else {
+                $data['pet_kind'] = $pet->getPetKind() == AnilineConf::ANILINE_PET_KIND_DOG ? '犬' : '猫';
             }
+
+            $checkKinds = [];
+            foreach ($this->dnaCheckKindsRepository->findBy(
+                ['Breeds' => $pet->getBreedsType(), 'delete_flg' => 0],
+                ['update_date' => 'DESC', 'id' => 'DESC']
+            ) as $item) {
+                $itemArr = [];
+                $itemArr['id'] = $item->getId();
+                $itemArr['check_kind'] = $item->getCheckKind();
+                $checkKinds[] = $itemArr;
+            }
+            $data['checkKind'] = $checkKinds;
+            $data['shippingName'] = $Dna->getDnaHeader()->getShippingName();
+            $data['hasRecord'] = $Dna->getCheckStatus() === AnilineConf::ANILINE_DNA_CHECK_STATUS_CHECKING;
+            $data['hasRecord'] = true;
+            
         }
         return new JsonResponse($data);
     }

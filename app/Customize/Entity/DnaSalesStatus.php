@@ -74,6 +74,21 @@ class DnaSalesStatus
     private $check_return_date;
 
     /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $birthday;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $image_path;
+
+    /**
+     * @ORM\Column(type="string", length=40, nullable=true)
+     */
+    private $pet_name;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="create_date", type="datetimetz", nullable=true)
@@ -86,6 +101,18 @@ class DnaSalesStatus
      * @ORM\Column(name="update_date", type="datetimetz", nullable=true)
      */
     private $update_date;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection|DnaDetails[]
+     *
+     * @ORM\OneToMany(targetEntity="Customize\Entity\DnaSalesDetail", mappedBy="DnaSalesStatus", cascade={"persist","remove"})
+     */
+    private $DnaDetails;
+
+    public function getDetails()
+    {
+        return $this->DnaDetails;
+    }
 
     public function getId(): ?int
     {
@@ -246,6 +273,42 @@ class DnaSalesStatus
     public function setUpdateDate(?\DateTime $updateDate): self
     {
         $this->update_date = $updateDate;
+
+        return $this;
+    }
+
+    public function getImagePath()
+    {
+        return $this->image_path;
+    }
+
+    public function setImagePath($image_path)
+    {
+        $this->image_path = $image_path;
+
+        return $this;
+    }
+
+    public function getPetName()
+    {
+        return $this->pet_name;
+    }
+
+    public function setPetName($pet_name)
+    {
+        $this->pet_name = $pet_name;
+
+        return $this;
+    }
+
+    public function getBirthDay()
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthDay($birthday)
+    {
+        $this->birthday = $birthday;
 
         return $this;
     }

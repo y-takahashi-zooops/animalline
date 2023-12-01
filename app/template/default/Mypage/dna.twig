@@ -1,0 +1,84 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set mypageno = 'dna' %}
+
+{% set body_class = 'mypage' %}
+
+{% block main %}
+    <div class="ec-layoutRole__main">
+        <div class="ec-mypageRole">
+            <div class="ec-pageHeader">
+                <h1>{{ 'マイページ'|trans }}/{{ '有料DNA検査'|trans }}</h1>
+            </div>
+            {% include 'Mypage/navi.twig' %}
+        </div>
+        <div class="ec-mypageRole">
+                {% for dna_header in dna_headers %}
+                    <div class="ec-historyRole">
+                        <div class="ec-historyRole__contents">
+                            <div class="ec-historyRole__header">
+                                <div class="ec-historyListHeader">
+                                    <p class="ec-historyListHeader__date">{{ dna_header.OrderDate|date_sec }}</p>
+                                    <dl class="ec-definitions">
+                                        <dt>{{ 'ご注文番号'|trans }}</dt>
+                                        <dd>{{ dna_header.OrderId }}</dd>
+                                    </dl>
+                                    {% if (BaseInfo.option_mypage_order_status_display) %}
+                                        <dl class="ec-definitions">
+                                            <dt>{{ 'ご注文状況'|trans }}</dt>
+                                            <dd>{{ dna_header.Status }}</dd>
+                                        </dl>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="ec-historyRole__detail">
+                                {% for DnaStatus in dna_header.DnaStatuses %}
+                                    <div class="ec-imageGrid">
+                                        <div class="ec-imageGrid__img">
+                                            {% if DnaStatus.ImagePath is null %}
+                                                <img src="{{ asset(''|no_image_product, 'save_image') }}"/>
+                                            {% else %}
+                                                <img src="/html/upload/dnabuy/{{ DnaStatus.ImagePath }}">
+                                            {% endif %}
+                                        </div>
+                                        <div class="ec-imageGrid__content">
+                                            <p class="ec-historyRole__detailTitle">{{ DnaStatus.BreedsType.BreedsName }}</p>
+                                            ペット名：
+                                            {% if DnaStatus.PetName is not empty %}
+                                                {{ DnaStatus.PetName }}
+                                            {% else %}
+                                                未登録
+                                            {% endif %}
+
+                                            <br><p>誕生日：
+                                            {% if DnaStatus.BirthDay %}
+                                                {{ DnaStatus.BirthDay|date("Y/m/d") }}
+                                            {% else %}
+                                                未登録
+                                            {% endif %}
+                                            {% if DnaStatus.CheckStatus == 1 %}
+                                            <p class="ec-historyListHeader__action"><a class="ec-inlineBtn"
+                                                                               href="{{ url('mypage_dna_petreg', {'id': DnaStatus.Id}) }}">{{ '情報を登録'|trans }}</a>
+                                            </p>
+                                            {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+        </div>
+    </div>
+{% endblock %}

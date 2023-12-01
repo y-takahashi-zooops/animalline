@@ -1,0 +1,106 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set body_class = 'mypage' %}
+
+{% set mypageno = 'dna' %}
+
+{% block main %}
+    <div class="ec-layoutRole__main">
+        <div class="ec-mypageRole">
+            <div class="ec-pageHeader">
+                <h1>{{ 'マイページ'|trans }}/{{ 'DNA検査ペット情報'|trans }}</h1>
+            </div>
+            {% include 'Mypage/navi.twig' %}
+        </div>
+        <div class="ec-mypageRole">
+            
+            <div class="ec-editRole">
+                
+                <div class="ec-off1Grid">
+                    <div class="ec-off1Grid__cell">
+                        <div>
+                        {% for error in errors %}
+                            <p style="color:#F00">{{ error }}</p>
+                        {% endfor %}
+                        </div>
+
+                        <form method="post" action="{{ url('mypage_dna_petreg', {'id': status.Id}) }}" enctype="multipart/form-data" name="petform">
+                            <div class="ec-borderedDefs">
+                                <dl>
+                                    <dt>
+                                        <label class="ec-label required">ペット名</label><span class="ec-required">必須</span>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-halfInput">
+                                            <input type="text" id="pet_name" name="pet_name" maxlength="40" placeholder="ペット名" value="{{ form_data.pet_name }}" />
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>
+                                        <label class="ec-label required">生年月日</label><span class="ec-required">必須</span>
+                                    </dt>
+                                    <dd>
+                                        <div class="ec-birth">
+                                             <select  id="birthday_year" name="birthday_year">
+                                                <option value="">----</option>
+                                                {% for year in "now"|date("Y").."now"|date("Y")-20 %}
+                                                    <option value="{{ year }}"{% if form_data.birthday_year == year %} selected{% endif %}>{{year}}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <span>/</span>
+											<select  id="birthday_month" name="birthday_month">
+                                                <option value="">--</option>
+                                                {% for i in 1..12 %}
+                                                    <option value="{{ i }}"{% if form_data.birthday_month == i %} selected{% endif %}>{{ "%02d"|format(i) }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <span>/</span>
+											<select  id="birthday_day" name="birthday_day">
+                                                <option value="">--</option>
+                                                {% for i in 1..31 %}
+                                                    <option value="{{ i }}"{% if form_data.birthday_day == i %} selected{% endif %}>{{ "%02d"|format(i) }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </dd>
+                                </dl>
+                                <dl>
+									<dt>
+										<label class="ec-label required" for="breeders_thumbnail_path">ペット画像</label>
+									</dt>
+									<dd>
+                                        {% if form_data.image_path %}
+                                            <img id="img_thumbnail" class="img_preview mb-2 " src="/html/upload/dnabuy/{{ form_data.image_path }}" alt="..." style="width: 200px; border: 1px solid #ddd;">
+                                            <input type="hidden" name="image_path" id="image_path" value="{{ form_data.image_path }}">
+                                        {% endif %}
+                                        <input type="file" name="tmp_image_path" id="tmp_image_path" accept="image/*">
+									</dd>
+								</dl>
+                            </div>
+
+                            <input type="hidden" id="action" name="action"  value="regist" />
+                            <div class="ec-RegisterRole__actions">
+                                <div class="ec-off4Grid">
+                                    <div class="ec-off4Grid__cell">
+                                        <button type="submit" class="ec-blockBtn--action">{{ '登録する'|trans }}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

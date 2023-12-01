@@ -3,6 +3,7 @@
 namespace Customize\Entity;
 
 use Customize\Repository\DnaSalesHeaderRepository;
+use Customize\Repository\DnaSalesStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Entity\Customer;
 
@@ -81,6 +82,11 @@ class DnaSalesHeader
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
+    private $order_date;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
     private $kit_shipping_date;
 
     /**
@@ -106,6 +112,13 @@ class DnaSalesHeader
      * @ORM\Column(type="integer", nullable=true, options={"default" : 0})
      */
     private $kit_count;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection|DnaStatuses[]
+     *
+     * @ORM\OneToMany(targetEntity="Customize\Entity\DnaSalesStatus", mappedBy="DnaSalesHeader", cascade={"persist","remove"})
+     */
+    private $DnaStatuses;
 
     public function getId(): ?int
     {
@@ -256,6 +269,18 @@ class DnaSalesHeader
         return $this;
     }
 
+    public function getOrderDate(): ?\DateTimeInterface
+    {
+        return $this->order_date;
+    }
+
+    public function setOrderDate(?\DateTimeInterface $order_date): self
+    {
+        $this->order_date = $order_date;
+
+        return $this;
+    }
+
     public function getKitShippingOperationDate(): ?\DateTimeInterface
     {
         return $this->kit_shipping_operation_date;
@@ -271,6 +296,28 @@ class DnaSalesHeader
     public function getCreateDate(): ?\DateTimeInterface
     {
         return $this->create_date;
+    }
+
+    public function getStatus()
+    {
+        $status = "";
+        switch($this->shipping_status){
+        case 1 :
+            $status = "検査キット発送待ち";
+            break;
+        case 2 :
+            $status = "検査キット発送手配中";
+            break;
+        case 3 :
+            $status = "検査キット発送済";
+            break;
+        }
+        return $status;
+    }
+
+    public function getDnaStatuses()
+    {
+        return $this->DnaStatuses;
     }
 
     /**
