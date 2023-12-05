@@ -26,3 +26,12 @@ th, td {
     border-left-width: 0px;
     border-bottom-width: 0px;
 }
+
+.dna_check_container {
+    width: 600px;
+    text-align: left;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+}

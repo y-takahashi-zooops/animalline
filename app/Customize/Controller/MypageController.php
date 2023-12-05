@@ -283,7 +283,7 @@ class MypageController extends BaseMypageController
                 $this->entityManager->persist($DnaSalesStatus);
                 $this->entityManager->flush();
 
-                //return $this->redirectToRoute('mypage_dna');
+                return $this->redirectToRoute('mypage_dna');
             }
         }
 
