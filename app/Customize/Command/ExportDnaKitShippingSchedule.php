@@ -293,6 +293,7 @@ class ExportDnaKitShippingSchedule extends Command
             ])
             ->orderBy('dnah.id', 'ASC');
 
+        $records = $qb->getQuery()->getArrayResult();
         /*
         if (!$records = $qb->getQuery()->getArrayResult()) {
             echo "Records not found.\n";
@@ -381,7 +382,6 @@ var_dump($uniqIds);
         }
 
         // 有料検査ステータス更新
-        $dnaBuyHeaderIds = [];
         $uniqIdsBuy = array_unique($dnaBuyHeaderIds);
         $OrderStatusProgress = $this->orderStatusRepository->find(OrderStatus::IN_PROGRESS);
 var_dump($uniqIdsBuy);
