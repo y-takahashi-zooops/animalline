@@ -47,7 +47,6 @@
                                     {{ inspection.DnaCheckKind.CheckKind }}<br />
                                 {% endfor %}
                             </td>
-                            <td data-label="検査ステータス"></td>
                             <td data-label="登録日時">{{ dna.CreateDate ? dna.CreateDate | date('Y/m/d') : '_' }}</td>
                             <td data-label="ステータス更新日">{{ dna.UpdateDate ? dna.UpdateDate | date('Y/m/d') : '_' }}</td>
                         </tr>
