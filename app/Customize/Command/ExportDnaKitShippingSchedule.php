@@ -381,6 +381,7 @@ var_dump($uniqIds);
         }
 
         // 有料検査ステータス更新
+        $dnaBuyHeaderIds = [];
         $uniqIdsBuy = array_unique($dnaBuyHeaderIds);
         $OrderStatusProgress = $this->orderStatusRepository->find(OrderStatus::IN_PROGRESS);
 var_dump($uniqIdsBuy);
