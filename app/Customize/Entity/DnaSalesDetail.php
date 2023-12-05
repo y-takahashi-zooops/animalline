@@ -34,11 +34,6 @@ class DnaSalesDetail
     private $dnaCheckKind;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $alm_dna_check_kinds_id;
-
-    /**
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $check_result;
@@ -67,7 +62,7 @@ class DnaSalesDetail
         return $this->dnaCheckKind;
     }
 
-    public function setDnaCheckKind(?DnaSalesStatus $dnaCheckKind)
+    public function setDnaCheckKind($dnaCheckKind)
     {
         $this->dnaCheckKind = $dnaCheckKind;
 
@@ -82,18 +77,6 @@ class DnaSalesDetail
     public function setDnaSalesStatus(?DnaSalesStatus $DnaSalesStatus): self
     {
         $this->DnaSalesStatus = $DnaSalesStatus;
-
-        return $this;
-    }
-
-    public function getAlmDnaCheckKindsId(): ?int
-    {
-        return $this->alm_dna_check_kinds_id;
-    }
-
-    public function setAlmDnaCheckKindsId(int $alm_dna_check_kinds_id): self
-    {
-        $this->alm_dna_check_kinds_id = $alm_dna_check_kinds_id;
 
         return $this;
     }

@@ -242,9 +242,12 @@ class DnaEcController extends BaseProductController
 
             $test_cnt = 0;
             foreach ($request->get('status_detail') as $value) {
+                $check_kind = $this->dnaCheckKindsEcRepository->find($value);
+
                 $dnaSalesDetail = new DnaSalesDetail();
                 $dnaSalesDetail->setDnaSalesStatus($dnaSalesStatus);
-                $dnaSalesDetail->setAlmDnaCheckKindsId($value);
+                //$dnaSalesDetail->setAlmDnaCheckKindsId($value);
+                $dnaSalesDetail->setDnaCheckKind($check_kind);
                 $dnaSalesDetail->setCheckResult(1);
                 $entityManager->persist($dnaSalesDetail);
                 $entityManager->flush();
