@@ -293,11 +293,13 @@ class ExportDnaKitShippingSchedule extends Command
             ])
             ->orderBy('dnah.id', 'ASC');
 
+        /*
         if (!$records = $qb->getQuery()->getArrayResult()) {
             echo "Records not found.\n";
             return;
         }
-
+        */
+        
         $dnaBuyHeaderIds = [];
 
         foreach ($records as $record) {
