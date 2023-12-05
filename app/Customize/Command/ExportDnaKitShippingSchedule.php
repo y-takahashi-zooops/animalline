@@ -299,7 +299,7 @@ class ExportDnaKitShippingSchedule extends Command
             return;
         }
         */
-        
+
         $dnaBuyHeaderIds = [];
 
         foreach ($records as $record) {
@@ -373,6 +373,7 @@ class ExportDnaKitShippingSchedule extends Command
 
         // 無料検査ステータス更新
         $uniqIds = array_unique($dnaHeaderIds);
+var_dump($uniqIds);
         foreach ($uniqIds as $id) {
             $Header = $this->dnaCheckStatusHeaderRepository->find($id);
             $Header->setShippingStatus(AnilineConf::ANILINE_SHIPPING_STATUS_INSTRUCTING);
@@ -382,7 +383,7 @@ class ExportDnaKitShippingSchedule extends Command
         // 有料検査ステータス更新
         $uniqIds = array_unique($dnaBuyHeaderIds);
         $OrderStatusProgress = $this->orderStatusRepository->find(OrderStatus::IN_PROGRESS);
-
+var_dump($uniqIds);
         foreach ($uniqIds as $id) {
             $Header = $this->dnaSalesHeaderRepository->find($id);
 
