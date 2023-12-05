@@ -44,7 +44,7 @@
                             <td data-label="生年月日">{{ dna.Birthday ? dna.Birthday | date('Y/m/d') : '_' }}</td>
                             <td data-label="検査項目">
                                 {% for inspection in dna.Details %}
-                                
+                                    {{ inspection.DnaCheckKind.CheckKind }}<br />
                                 {% endfor %}
                             </td>
                             <td data-label="検査ステータス"></td>

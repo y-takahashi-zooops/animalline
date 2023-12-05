@@ -28,6 +28,12 @@ class DnaSalesDetail
     private $DnaSalesStatus;
 
     /**
+     * @ORM\ManyToOne(targetEntity=DnaCheckKindsEc::class, inversedBy="DnaSalesDetail")
+     * @ORM\JoinColumn(name="alm_dna_check_kinds_id", nullable=false)
+     */
+    private $dnaCheckKind;
+
+    /**
      * @ORM\Column(type="integer")
      */
     private $alm_dna_check_kinds_id;
@@ -54,6 +60,18 @@ class DnaSalesDetail
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getDnaCheckKind()
+    {
+        return $this->dnaCheckKind;
+    }
+
+    public function setDnaCheckKind(?DnaSalesStatus $dnaCheckKind)
+    {
+        $this->dnaCheckKind = $dnaCheckKind;
+
+        return $this;
     }
 
     public function getDnaSalesStatus(): ?DnaSalesStatus
