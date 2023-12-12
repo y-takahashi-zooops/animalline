@@ -304,7 +304,7 @@ class ExportDnaKitShippingSchedule extends Command
         $dnaBuyHeaderIds = [];
 
         foreach ($records as $record) {
-            $item_code = ["8799009","8799008","8790005","8790006"];
+            $item_code = ["8799010","8799008","8799011","8790006"];
             $item_count = 4;
 
             $dnaNo = $this->generateZeroFillStr($record['dna_header_id'],5,"7");

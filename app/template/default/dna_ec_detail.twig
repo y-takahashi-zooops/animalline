@@ -3,6 +3,7 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/css/index.css') }}?ver=211205">
     <link rel="stylesheet" href="{{ asset('assets/css/dna/dna_sales.css') }}?ver=211205">
+</head>
 {% endblock %}
 
 {% block main %}
@@ -19,7 +20,7 @@
                                     {# <span class="ec-required">必須</span> #}
                                 </div>
                                 <div class="col-sm-12 ec-input ec-select">
-                                    <select id="pet_type" name="pet_type">
+                                    <select id="pet_type" name="pet_type" class="select2_01">
                                         <option value="0">選択してください</option>
                                         <option value="1">犬</option>
                                         <option value="2">猫</option>
@@ -34,7 +35,7 @@
                                     {# <span class="ec-required">必須</span> #}
                                 </div>
                                 <div class="col-sm-12 ec-input ec-select">
-                                    <select id="pet_kind" name="pet_kind">
+                                    <select id="pet_kind" name="pet_kind"  class="select2_02"  style="width:400px;">
                                         <option value="0">選択してください</option>
                                     </select>
                                 </div>
@@ -79,6 +80,8 @@
 {% endblock %}
 
 {% block javascript %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 {# フォーム制御 #}
 <script>
     $(document).ready(function(){
@@ -118,32 +121,32 @@
                 1 : {
                     "product" : 3065,
                     "product_class" : 2438,
-                    "price" : 4070
+                    "price" : 4477
                 },
                 2 : {
                     "product" : 3066,
                     "product_class" : 2439,
-                    "price" : 8140
+                    "price" : 8954
                 },
                 3 : {
                     "product" : 3067,
                     "product_class" : 2440,
-                    "price" : 12210
+                    "price" : 13431
                 },
                 4 : {
                     "product" : 3068,
                     "product_class" : 2441,
-                    "price" : 16280
+                    "price" : 17908
                 },
                 5 : {
                     "product" : 3069,
                     "product_class" : 2442,
-                    "price" : 20350
+                    "price" : 22385
                 },
                 6 : {
                     "product" : 3070,
                     "product_class" : 2443,
-                    "price" : 24420
+                    "price" : 26862
                 }
             };
 
@@ -217,5 +220,10 @@
         });
     });
 </script>
-
+<script>
+$(document).ready(function() {
+    $('.select2_01').select2();
+    $('.select2_02').select2({width: 'resolve'});
+});
+</script>
 {% endblock %}
