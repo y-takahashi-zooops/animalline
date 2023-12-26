@@ -26,6 +26,8 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Customize\Repository\DnaSalesHeaderRepository;
+use Customize\Repository\DnaSalesStatusRepository;
 
 class DnaController extends AbstractController
 {
@@ -70,6 +72,16 @@ class DnaController extends AbstractController
     protected $dnaCheckStatusHeaderRepository;
 
     /**
+     * @var DnaSalesHeaderRepository
+     */
+    protected $dnaSalesHeaderRepository;
+
+    /**
+     * @var DnaSalesStatusRepository
+     */
+    protected $dnaSalesStatusRepository;
+
+    /**
      * DnaController constructor
      * @param DnaQueryService $dnaQueryService
      * @param DnaCheckStatusRepository $dnaCheckStatusRepository
@@ -78,6 +90,8 @@ class DnaController extends AbstractController
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
      * @param BreedsRepository $breedsRepository
      * @param DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+     * @param DnaSalesHeaderRepository $dnaSalesHeaderRepository
+     * @param DnaSalesStatusRepository $dnaSalesStatusRepository
      */
     public function __construct(
         DnaQueryService                $dnaQueryService,
@@ -87,7 +101,9 @@ class DnaController extends AbstractController
         DnaCheckKindsRepository        $dnaCheckKindsRepository,
         DnaCheckKindsEcRepository      $dnaCheckKindsEcRepository,
         BreedsRepository               $breedsRepository,
-        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
+        DnaSalesHeaderRepository $dnaSalesHeaderRepository,
+        DnaSalesStatusRepository $dnaSalesStatusRepository
     ) {
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
@@ -97,6 +113,8 @@ class DnaController extends AbstractController
         $this->dnaCheckKindsEcRepository = $dnaCheckKindsEcRepository;
         $this->breedsRepository = $breedsRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
+        $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
+        $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
     }
 
     /**
@@ -375,6 +393,32 @@ class DnaController extends AbstractController
             'isDelete' => $isDelete
         ];
     }
+
+    /**
+     * DNA検査状況確認（有料）
+     *
+     * @Route("/%eccube_admin_route%/dna/examination_status_ec", name="admin_dna_examination_status_ec")
+     * @Template("@admin/DNA/examination_status_ec.twig")
+     */
+    public function examination_status_ec(PaginatorInterface $paginator, Request $request)
+    {
+
+        // ログインユーザーの定期注文を全取得
+        $results = $this->dnaSalesStatusRepository->createQueryBuilder('ds')
+            ->Where('ds.check_status > 0')
+            ->getQuery()->getResult();
+
+        $dnas = $paginator->paginate(
+            $results,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('item', 50)
+        );
+
+        return [
+            'dnas' => $dnas
+        ];
+    }
+
 
     /**
      * CSVダウンロード
