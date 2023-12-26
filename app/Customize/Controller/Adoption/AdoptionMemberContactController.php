@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Customize\Entity\ConservationContacts;
 use Customize\Entity\ConservationContactHeader;
+use Customize\Entity\ConservationPets;
 use Customize\Repository\ConservationPetsRepository;
 use Customize\Repository\ConservationContactHeaderRepository;
 use Customize\Repository\ConservationContactsRepository;
@@ -255,14 +256,14 @@ class AdoptionMemberContactController extends AbstractController
     /**
      * 保護団体側取引メッセージ一覧
      *
-     * @Route("/adoption/member/all_adoption_message", name="adoption_all_adoption_message")
+     * @Route("/adoption/member/all_adoption_message/{id}", name="adoption_all_adoption_message", requirements={"id" = "\d+"})
      * @Template("animalline/adoption/member/all_adoption_message.twig")
      */
-    public function all_adoption_message()
+    public function all_adoption_message(Request $request, ConservationPets $conservationPets)
     {
         $Conservation = $this->conservationsRepository->find($this->getUser()->getId());
 
-        $listMessages = $this->conservationContactHeaderRepository->findBy(['Conservation' => $Conservation], ['last_message_date' => 'DESC']);
+        $listMessages = $this->conservationContactHeaderRepository->findBy(['Conservation' => $Conservation,'Pet' => $conservationPets], ['last_message_date' => 'DESC']);
 
         return $this->render('animalline/adoption/member/all_adoption_message.twig', [
             'listMessages' => $listMessages
