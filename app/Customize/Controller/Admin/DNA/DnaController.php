@@ -406,6 +406,7 @@ class DnaController extends AbstractController
         // ログインユーザーの定期注文を全取得
         $results = $this->dnaSalesStatusRepository->createQueryBuilder('ds')
             ->Where('ds.check_status > 0')
+            ->orderBy("ds.id",  "DESC")
             ->getQuery()->getResult();
 
         $dnas = $paginator->paginate(

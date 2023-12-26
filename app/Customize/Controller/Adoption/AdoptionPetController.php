@@ -125,6 +125,8 @@ class AdoptionPetController extends AbstractController
      */
     public function adoption_pet_list(PaginatorInterface $paginator, Request $request)
     {
+        $user = $this->getUser();
+
         $petlist_view = $request->get("petlist_view");
         if(!$petlist_view){$petlist_view = 1;}
 
@@ -134,14 +136,21 @@ class AdoptionPetController extends AbstractController
         foreach ($pets as $key => $pet) {
             $pet['check'] = false;
             if ($pet['cch_id']) {
-                $msgHeader = $this->conservationContactHeaderRepository->find($pet['cch_id']);
-                $pet['message'] = $this->conservationContactsRepository->findOneBy(['ConservationContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_USER], ['create_date' => 'DESC']);
-                if ($msgHeader->getConservationNewMsg() == AnilineConf::NEW_MESSAGE) {
-                    $pet['check'] = true;
+                //問い合わせが2件以上ある場合はidを-1に設定する。
+                $Headers = $this->conservationContactHeaderRepository->findBy(["Conservation" => $user]);
+                if(count($Headers) > 1){
+                    $pet['cch_id'] = -1;
                 }
-                if ($pet['message']) {
-                    if ($pet['message']->getIsReading() == AnilineConf::RESPONSE_UNREPLIED) {
+                else {
+                    $msgHeader = $this->conservationContactHeaderRepository->find($pet['cch_id']);
+                    $pet['message'] = $this->conservationContactsRepository->findOneBy(['ConservationContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_USER], ['create_date' => 'DESC']);
+                    if ($msgHeader->getConservationNewMsg() == AnilineConf::NEW_MESSAGE) {
                         $pet['check'] = true;
+                    }
+                    if ($pet['message']) {
+                        if ($pet['message']->getIsReading() == AnilineConf::RESPONSE_UNREPLIED) {
+                            $pet['check'] = true;
+                        }
                     }
                 }
             }

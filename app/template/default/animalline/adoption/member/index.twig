@@ -6,7 +6,7 @@
     <div class="page-inner">
     
         <div id="mypage-menu">
-            <h1>マイページ</h1>
+            <h1>マイページ{{ user.id }}</h1>
             <div class="mypage-menu_list">
                 <ul>
                     {% if user.isConservation == 0 %}

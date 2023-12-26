@@ -71,17 +71,31 @@
                         </td>
                         <td class="receive">
                             {% if pet['cch_id'] %}
-                                <a href="{{ url('adoption_adoption_message', {'id':pet['cch_id']}) }}">
-                                    <div class="receive-icon">
-                                        {% if pet['check'] %}
-                                            <i class="bi bi-envelope"></i>
-                                            <span class="budge">1</span>
-                                        {% else %}
-                                            <i class="bi bi-envelope-open"></i>
-                                        {% endif %}
-                                    </div>
-                                    <p>{{ pet['last_msg'] ? pet['last_msg']|date('Y/m/d H:i') : 'なし' }}</p>
-                                </a>
+                                {% if pet['cch_id'] == -1 %}
+                                    <a href="{{ url('adoption_all_adoption_message') }}">
+                                        <div class="receive-icon">
+                                            {% if pet['check'] %}
+                                                <i class="bi bi-envelope"></i>
+                                                <span class="budge">1</span>
+                                            {% else %}
+                                                <i class="bi bi-envelope-open"></i>
+                                            {% endif %}
+                                        </div>
+                                        <p>{{ pet['last_msg'] ? pet['last_msg']|date('Y/m/d H:i') : 'なし' }}</p>
+                                    </a>
+                                {% else %}
+                                    <a href="{{ url('adoption_adoption_message', {'id':pet['cch_id']}) }}">
+                                        <div class="receive-icon">
+                                            {% if pet['check'] %}
+                                                <i class="bi bi-envelope"></i>
+                                                <span class="budge">1</span>
+                                            {% else %}
+                                                <i class="bi bi-envelope-open"></i>
+                                            {% endif %}
+                                        </div>
+                                        <p>{{ pet['last_msg'] ? pet['last_msg']|date('Y/m/d H:i') : 'なし' }}</p>
+                                    </a>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>

@@ -196,6 +196,7 @@ file that was distributed with this source code.
                                     <th class="border-top-0 pt-2 pb-2">入荷日</th>
                                     <th class="border-top-0 pt-2 pb-2">WMS送信</th>
                                     <th class="border-top-0 pt-2 pb-2">在庫反映</th>
+                                    <th class="border-top-0 pt-2 pb-2">明細情報</th>
                                     <th class="border-top-0 pt-2 pb-2">備考</th>
                                     <th class="border-top-0 pt-2 pb-2 pr-3" colspan="2"></th>
                                 </tr>
@@ -211,6 +212,13 @@ file that was distributed with this source code.
                                         <td class="align-middle">{{ instock.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
                                         <td class="align-middle">{{ instock.isSendWms == 0 ? '未' : '済' }}</td>
                                         <td class="align-middle">{{ instock.isCommit == 0 ? '未' : '済' }}</td>
+                                        <td class="align-middle">
+                                        {% for detail in details[instock.id] %}
+                                            【
+                                            {{ detail.ProductClass.Product.Name }}
+                                            {{detail.ArrivalQuantitySchedule}}個】<br />
+                                        {% endfor %}
+                                        </td>
                                         <td class="align-middle">{{ instock.remarkText }}</td>
                                         <td class="align-middle pr-3" colspan="2">
                                             <div class="text-right">
