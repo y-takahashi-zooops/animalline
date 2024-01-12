@@ -85,7 +85,8 @@ class ExportBenefitShippingSchedule extends Command
             'bs.shipping_pref',
             'bs.shipping_city',
             'bs.shipping_address',
-            'bs.shipping_tel'
+            'bs.shipping_tel',
+            'bs.benefits_type'
         )
             ->where('bs.update_date <= :to')
             ->andWhere('bs.shipping_status = :shipping_status')
@@ -100,6 +101,8 @@ class ExportBenefitShippingSchedule extends Command
             return;
         }
 
+        $items = array(1=> "9899000",2 => "9899001",3 => "9899002",4 => "9899003",5 => "9899004");
+
         $em = $this->entityManager;
         // 自動コミットをやめ、トランザクションを開始
         $em->getConnection()->setAutoCommit(false);
@@ -112,7 +115,7 @@ class ExportBenefitShippingSchedule extends Command
         $benefitsStatusIds = [];
 
         // 商品コードは一時的にダミー
-        $item_code = ["9899002"];
+        $item_code = [$items[$record['benefits_type']]];
         foreach ($records as $record) {
             $benefitsNo = $this->generateZeroFillStr($record['benefit_id']);
             $record['shipping_zip'] = substr($record['shipping_zip'],0,3) . "-" . substr($record['shipping_zip'],3);

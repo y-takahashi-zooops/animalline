@@ -56,6 +56,7 @@ class BenefitsStatusType extends AbstractType
                     '子猫用' => 2,
                     '成犬用' => 3,
                     '成猫用' => 4,
+                    '成犬（大型犬）用' => 5,
                 ],
             'placeholder' => 'common.select'
         ])
