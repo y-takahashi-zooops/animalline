@@ -115,7 +115,9 @@ class ExportBenefitShippingSchedule extends Command
         $benefitsStatusIds = [];
 
         // 商品コードは一時的にダミー
-        $item_code = $items[$record['benefits_type']];
+        var_dump($record['benefits_type']);
+        var_dump($items);
+        $item_code = $items[2];
         foreach ($records as $record) {
             $benefitsNo = $this->generateZeroFillStr($record['benefit_id']);
             $record['shipping_zip'] = substr($record['shipping_zip'],0,3) . "-" . substr($record['shipping_zip'],3);
