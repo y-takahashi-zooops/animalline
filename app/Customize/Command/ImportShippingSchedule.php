@@ -25,6 +25,7 @@ use Eccube\Entity\Master\OrderStatus;
 use Eccube\Repository\ShippingRepository;
 use Customize\Repository\DnaSalesHeaderRepository;
 use Customize\Repository\DnaSalesStatusRepository;
+use Customize\Repository\BenefitsStatusRepository;
 
 class ImportShippingSchedule extends Command
 {
@@ -101,6 +102,11 @@ class ImportShippingSchedule extends Command
     protected $dnaSalesStatusRepository;
 
     /**
+     * @var BenefitsStatusRepository
+     */
+    protected $benefitsStatusRepository;
+
+    /**
      * Import shipping schedule constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -115,6 +121,7 @@ class ImportShippingSchedule extends Command
      * @param ShippingRepository $shippingRepository
      * @param DnaSalesHeaderRepository $dnaSalesHeaderRepository
      * @param DnaSalesStatusRepository $dnaSalesStatusRepository
+     * @param BenefitsStatusRepository $benefitsStatusRepository
      */
     public function __construct(
         EntityManagerInterface           $entityManager,
@@ -128,7 +135,8 @@ class ImportShippingSchedule extends Command
         OrderStatusRepository $orderStatusRepository,
         ShippingRepository $shippingRepository,
         DnaSalesHeaderRepository         $dnaSalesHeaderRepository,
-        DnaSalesStatusRepository         $dnaSalesStatusRepository
+        DnaSalesStatusRepository         $dnaSalesStatusRepository,
+        BenefitsStatusRepository $benefitsStatusRepository
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -143,6 +151,7 @@ class ImportShippingSchedule extends Command
         $this->shippingRepository = $shippingRepository;
         $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
         $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
+        $this->benefitsStatusRepository = $benefitsStatusRepository;
     }
 
     protected function configure()
@@ -227,24 +236,16 @@ var_dump($fileName);
                 }
                 elseif(substr($data[0],0,1) == "6"){
                     //成約特典実績
-                    /*
                     $id = intval(substr($data[0],1));
 
-                    $Order = $this->orderRepository->find($id);
-                    $Order->setOrderStatus($OrderStatusDeliverd);
+                    $Order = $this->benefitsStatusRepository->find($id);
+                    $Order->setShippingStatus(3);
 
-                    $dateShipping = new DateTime($data[1]);
-                    $shippingHeader = $this->shippingScheduleHeaderRepository->find($data[0]);
-                    if (!$shippingHeader) {
-                        continue;
-                    }
-                    $shippingHeader->setShippingDate($dateShipping)
-                        ->setWmsShipNo($data[4]);
+                    $dateShipping = new DateTime();
+                    $Order->setBenefitsShippingOperationDate($dateShipping);
 
                     $em->persist($Order);
-                    $em->persist($shippingHeader);
                     $em->flush();
-                    */
                 }
                 elseif(substr($data[0],0,1) == "7"){
                     //有料販売DNA検査実績
