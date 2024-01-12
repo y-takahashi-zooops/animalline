@@ -101,7 +101,7 @@ class ExportBenefitShippingSchedule extends Command
             return;
         }
 
-        $items = array(1=> "9899000",2 => "9899001",3 => "9899002",4 => "9899003",5 => "9899004");
+        $items = array(1 => "9899000", 2 => "9899001", 3 => "9899002", 4 => "9899003", 5 => "9899004");
 
         $em = $this->entityManager;
         // 自動コミットをやめ、トランザクションを開始
@@ -115,7 +115,7 @@ class ExportBenefitShippingSchedule extends Command
         $benefitsStatusIds = [];
 
         // 商品コードは一時的にダミー
-        $item_code = [$items[$record['benefits_type']]];
+        $item_code = $items[2];
         foreach ($records as $record) {
             $benefitsNo = $this->generateZeroFillStr($record['benefit_id']);
             $record['shipping_zip'] = substr($record['shipping_zip'],0,3) . "-" . substr($record['shipping_zip'],3);
@@ -125,7 +125,7 @@ class ExportBenefitShippingSchedule extends Command
                 $record['warehouse_code'] = '00001';
                 $record['sale_category'] = 0;
                 $record['slip_type'] = 0;
-                $record['product_number_code'] = $item_code[$i];
+                $record['product_number_code'] = $item_code;
                 $record['color_code'] = "9999";
                 $record['size_code'] = 1;
                 $record['retail_price'] = 0;
@@ -141,7 +141,7 @@ class ExportBenefitShippingSchedule extends Command
                 $record['number_units'] = 1;
                 $record['payment_method_classification'] = '0';
                 $record['sales_destination_classification'] = '01';
-                $record['part_number_code_2'] = $item_code[$i];
+                $record['part_number_code_2'] = $item_code;
                 $record['handling flight_type'] = '000';
                 $record['destination_classification'] = '1';
                 $record['slip_output_order'] = $benefitsNo . $i;
