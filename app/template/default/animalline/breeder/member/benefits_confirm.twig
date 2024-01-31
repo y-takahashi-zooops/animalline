@@ -37,7 +37,7 @@
                                         </dt>
                                         <dd>
                                             <div class="ec-input{{ has_errors(form.benefits_type) ? ' error' }}">
-                                                {{ form.benefits_type.vars.choices[form.benefits_type.vars.data].label }}
+                                                {{ form.benefits_type.vars.choices[form.benefits_type.vars.data - 1].label }}
                                                 {{ form_widget(form.benefits_type, { 'attr': {'class': 'hidden'} }) }}
                                             </div>
                                         </dd>
