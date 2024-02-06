@@ -477,6 +477,14 @@ class BreederController extends AbstractController
       throw new NotFoundHttpException();
     }
 
+    if($breeder->getIsActive() == 0){
+      throw new NotFoundHttpException();
+    }
+    if($breeder->getExaminationStatus() != 2){
+      throw new NotFoundHttpException();
+    }
+
+
     $handling_pet_kind = $breeder->getHandlingPetKind();
     $dogHouse = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 1]);
     $catHouse = $this->breederHouseRepository->findOneBy(["Breeder" => $breeder, "pet_type" => 2]);

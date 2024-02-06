@@ -70,7 +70,7 @@ file that was distributed with this source code.
                 <div class="ec-select pb-2">
                     <div id="instock_list_order_date" class="form-inline">
                         <select class="form-control" id="instock_list_order_date_year" name="order_date_year">
-                            {% for i in 2021..2023 %}
+                            {% for i in 2021..2024 %}
                                 <option value={{ i }} {% if params.order_date_year is defined and params.order_date_year == i %} selected{% endif %}>{{ i }}</option>
                             {% endfor %}
                         </select><span>&nbsp;/&nbsp;</span>
@@ -86,7 +86,7 @@ file that was distributed with this source code.
                         </select>
                         　～　
                         <select class="form-control" id="instock_list_order_date_year" name="order_date_year2">
-                            {% for i in 2021..2023 %}
+                            {% for i in 2021..2024 %}
                                 <option value={{ i }} {% if params.order_date_year is defined and params.order_date_year2 == i %} selected{% endif %}>{{ i }}</option>
                             {% endfor %}
                         </select><span>&nbsp;/&nbsp;</span>
