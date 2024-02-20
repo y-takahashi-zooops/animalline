@@ -257,11 +257,11 @@ class ExportRelease extends Command
                         $recordCsv['areaCode'] = null;
                         $recordCsv['BBDATE'] = null;
                         $recordCsv['deliveryDestinationClassification'] = '1';
-                        $recordCsv['totalProductPrice'] = intval($order->getSubTotal());
+                        $recordCsv['totalProductPrice'] = intval($order->getSubTotal()) - intval($order->getDiscount());
                         $recordCsv['discountAmount'] = 0;
                         $recordCsv['consumptionTax'] = 0;
                         $recordCsv['postage'] = intval($order->getDeliveryFeeTotal());
-                        $recordCsv['coupon'] = null;
+                        $recordCsv['coupon'] = intval($order->getDiscount();
                         $recordCsv['grossWeight'] = 1;
                         $recordCsv['numberOfUnits'] = 1;
                         if($order->getPaymentMethod() == "代金引換"){
