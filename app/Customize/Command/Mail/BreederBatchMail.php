@@ -142,7 +142,7 @@ class BreederBatchMail extends Command
                 }
                 */
                 sleep(1);
-            //}
+            }
         }
         
         echo "Breeder remind mail handled.\n";
