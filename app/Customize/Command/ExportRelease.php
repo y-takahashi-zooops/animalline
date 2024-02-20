@@ -261,7 +261,7 @@ class ExportRelease extends Command
                         $recordCsv['discountAmount'] = 0;
                         $recordCsv['consumptionTax'] = 0;
                         $recordCsv['postage'] = intval($order->getDeliveryFeeTotal());
-                        $recordCsv['coupon'] = intval($order->getDiscount();
+                        $recordCsv['coupon'] = intval($order->getDiscount());
                         $recordCsv['grossWeight'] = 1;
                         $recordCsv['numberOfUnits'] = 1;
                         if($order->getPaymentMethod() == "代金引換"){
