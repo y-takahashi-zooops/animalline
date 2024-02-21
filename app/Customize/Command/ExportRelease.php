@@ -257,7 +257,7 @@ class ExportRelease extends Command
                         $recordCsv['areaCode'] = null;
                         $recordCsv['BBDATE'] = null;
                         $recordCsv['deliveryDestinationClassification'] = '1';
-                        $recordCsv['totalProductPrice'] = intval($order->getSubTotal()) - intval($order->getDiscount());
+                        $recordCsv['totalProductPrice'] = intval($order->getSubTotal());
                         $recordCsv['discountAmount'] = 0;
                         $recordCsv['consumptionTax'] = 0;
                         $recordCsv['postage'] = intval($order->getDeliveryFeeTotal());
