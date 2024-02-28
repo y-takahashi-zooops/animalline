@@ -458,11 +458,13 @@ class BreederPetController extends AbstractController
                     case 1 :
                         break;
                     case 2:
+                        $dna_check_result = "◯（劣性キャリア）";
                         break;
                     case 3:
                         $dna_check_result = "✕（アフェクテッド）";
+                        break;
                     case 4:
-                        $dna_check_result = "△（キャリア）";
+                        $dna_check_result = "△（優性キャリア）";
                         break;
                 }
             }
