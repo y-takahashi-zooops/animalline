@@ -38,7 +38,7 @@
       <div class="mizuki_fv-text_outer">
         <p>
           Animallineのワンちゃん・ネコちゃんは<br />
-          <span>全頭遺伝病DNA検査</span>を通過しています
+          ご成約時に全頭遺伝病DNA検査を実施しています。
         </p>
       </div>
       <a name="search"></a>
@@ -47,8 +47,9 @@
   </div>
 </section>
 
-<section class="mizuki_banner hidden-phone">
-        <a href="#cashback"><img src="{{ '/html/template/default/assets/img/bn_cashback.png' }}" alt="キャッシュバックキャンペーン" style="padding: 0 8rem" /></a>
+      {#
+      <section class="mizuki_banner hidden-phone">
+      <a href="#cashback"><img src="{{ '/html/template/default/assets/img/bn_cashback.png' }}" alt="キャッシュバックキャンペーン" style="padding: 0 8rem" /></a>
       </section>
       <section class="mizuki_banner visible-phone">
         <a href="#cashback"><img src="{{ '/html/template/default/assets/img/bn_cashback.png' }}" alt="キャッシュバックキャンペーン" style="padding: 0 2rem" /></a>
@@ -60,6 +61,7 @@
           検査済み頭数： {{ pets_count_inspection | number_format  }}頭
         </div>
       </section>
+      #}
 
       <div class="visible-phone">
         <div class="pet-search-list-box">
@@ -867,6 +869,7 @@
         </div>
       </section>
 
+      {#
       <div class="mizuki_caution">
         <h6><現在掲載中のペットに関して></h6>
         <br />
@@ -877,6 +880,7 @@
           >となります。
         </p>
       </div>
+      #}
 
       <div style="text-align:center" class="search-box-text">
         <script async src="https://cse.google.com/cse.js?cx=263af2c471e974783">
@@ -1334,6 +1338,8 @@
       </section>
 
       <a id="cashback"></a>
+
+      {#
       <section class="mizuki_campaign">
         <div class="mizuki_campaign-image-sp visible-phone">
           <img
@@ -1398,6 +1404,7 @@
           </tbody>
         </table>
       </section>
+      #}
 
     <section id="breeder-footer">
       <div class="inner">
@@ -1438,7 +1445,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/info/page.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/breeder-style.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?v=20230810">
+    <link rel="stylesheet" href="{{ asset('assets/css-mizuki/style.css') }}?v=20240301">
 {% endblock %}
 
 {% block javascript %}

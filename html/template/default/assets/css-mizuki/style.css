@@ -131,7 +131,7 @@ a {
   text-align: center;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.7692307692;
 }
 
@@ -1428,7 +1428,7 @@ a {
   .mizuki_fv-text_outer p {
     top: 6%;
     left: 51%;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.8;
   }
 
