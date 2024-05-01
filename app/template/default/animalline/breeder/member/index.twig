@@ -30,9 +30,10 @@
                         <li><a href="{{url('breeder_examination')}}"><i class="bi bi-pencil-fill"></i>ブリーダー申請を行う</a></li>
                     {% endif %}
                     {% if user.is_breeder == 1 %}
-                        <li><a href="{{url('breeder_examination_kit')}}"><i class="fas fa-dna"></i>DNA検査キット請求<br /><p>生体掲載をご希望の方はこちら</p></a></li>
                         
-                        <li><a href="{{url('breeder_examination_status')}}"><i class="fas fa-dna"></i>DNA検査状況確認<br /><p>　</p></a></li>
+                        {# <li><a href="{{url('breeder_examination_kit')}}"><i class="fas fa-dna"></i>DNA検査キット請求<br /><p>生体掲載をご希望の方はこちら</p></a></li> #}
+                        
+                        {# <li><a href="{{url('breeder_examination_status')}}"><i class="fas fa-dna"></i>DNA検査状況確認<br /><p>　</p></a></li> #}
                         <li><a href="{{url('breeder_pet_list')}}"><i class="fas fa-paw"></i>ペット管理<br /><p>　</p></a>{% if breeder_newmsg == 1 %}<span class="budge">New!</span>{% endif %}</li>
                         <li><a href="{{url('nopet_user_all_message')}}"><i class="bi bi-chat-right-quote-fill"></i>ユーザー問い合わせ<br /><p>　</p></a>{# {% if breeder_newmsg == 1 %}<span class="budge">New!</span>{% endif %} #}</li>
                         {# <li><a href="{{url('breeder_pet_regist_list')}}"><i class="fas fa-dna"></i>検体情報入力<br /><p>ペット情報の登録はこちら<br />検体情報入力後、DNA検査に入らせていただきます</p></a></li> #}
