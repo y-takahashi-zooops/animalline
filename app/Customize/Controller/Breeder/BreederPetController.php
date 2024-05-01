@@ -544,10 +544,12 @@ class BreederPetController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/breeder/member/pets/new/{barcode}/{kind}/{breeder_id}", name="breeder_pets_new", methods={"GET","POST"}, requirements={"barcode" = "^\d{6}$"})
+     * @Route("/breeder/member/pets/new/{kind}/{breeder_id}", name="breeder_pets_new", methods={"GET","POST"})
      */
-    public function breeder_pets_new(Request $request, $barcode, $kind = 0,$breeder_id = ""): Response
+    public function breeder_pets_new(Request $request, $kind = 0,$breeder_id = ""): Response
     {
+        $barcode = "";
+
         if($breeder_id != ""){
             //breeder_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
             $user = $this->getUser();
@@ -567,12 +569,15 @@ class BreederPetController extends AbstractController
             $user = $this->getUser();
         }
 
+        /*
         $dnaId = substr($barcode, 1);
         if (!$Dna = $this->dnaCheckStatusRepository->find($dnaId)) {
             throw new NotFoundHttpException();
         }
         $breederId = $Dna->getDnaHeader()->getRegisterId();
+        */
         $breeder = $this->breedersRepository->find($user);
+        $breederId = $breeder->getId();
 
         //ブリーダー審査通過チェック
         $is_breeder = $user->getIsBreeder();
@@ -583,11 +588,13 @@ class BreederPetController extends AbstractController
         }
 
         //ペット登録済チェック
+        /*
         if(!is_null($Dna->getPetId())){
             return $this->render('animalline/breeder/member/already_regist.twig', [
                 'breeder' => $breeder
             ]);
         }
+        */
 
         //犬・猫いずれかのみ取扱の場合は種別選択なし
         $handling = $breeder->getHandlingPetKind();
@@ -674,9 +681,11 @@ class BreederPetController extends AbstractController
                 ->setPetCode($barcode);
 
             // update dna check status
+            /*
             $Dna->setPetId($breederPet->getId())
                 ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED)
                 ->setKitPetRegisterDate(new DateTime);
+            */
 
             $entityManager->persist($petImage0);
             $entityManager->persist($petImage1);
@@ -684,7 +693,7 @@ class BreederPetController extends AbstractController
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($breederPet);
-            $entityManager->persist($Dna);
+            //$entityManager->persist($Dna);
             $entityManager->flush();
 
             if($breeder_id != ""){

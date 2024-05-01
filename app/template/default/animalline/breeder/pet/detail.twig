@@ -54,7 +54,6 @@
                             <h2 class="float-left mb-3">
                                 {{ breederPet.breedsType.breedsName ?? '' }}
                                 {% if breederPet.isContract or breederPet.isDelete %}【成約済】
-                                {% elseif breederPet.dnaCheckResult == 0 %}【DNA検査中】
                                 {% elseif breederPet.isContact == 1 %}【商談中】{% endif %}
                                 
                             </h2>

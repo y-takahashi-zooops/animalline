@@ -10,6 +10,7 @@
     <div class="ec-registerCompleteRole">
         <div class="ec-offGrid ec-text-ac">
             <div class="ec-offGrid__cell">
+                {#
                 <div class="ec-reportHeading">
                     <div>
                         <img src="{{ asset('assets/img/dna_kit_send_info.png') }}" alt=""/>
@@ -21,11 +22,12 @@
                         検査が完了しましたら、ご登録いただいたペット情報が公開となります。
                     </h2>
                 </div>
+                #}
                 <div class="m-2 p-2"></div>
                 <div class="ec-off2Grid">
                     <div class="ec-off2Grid__cell">
-                        <a class="ec-blockBtn--cancel mb-4" href="{{ url('breeder_pet_list') }}">
-                            ペット管理ページに戻る
+                        <a class="ec-blockBtn--cancel mb-4" href="{{ url('breeder_mypage') }}">
+                           マイページに戻る
                         </a>
                     </div>
                 </div>
