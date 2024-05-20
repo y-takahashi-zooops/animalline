@@ -151,6 +151,13 @@ file that was distributed with this source code.
                                 <td class="align-middle pr-3" colspan="3">
                                     <div class="text-right">
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true"
+                                            data-placement="top" title="ペット情報登録">
+                                            <a class="btn btn-ec-actionIcon"
+                                                href="{{ url('breeder_pets_new', {'breeder_id': breeder.Id,}) }}" target="_blank">
+                                                <i class="fa fa-paw fa-lg text-secondary" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                        <div class="px-1 d-inline-block text-center" data-tooltip="true"
                                             data-placement="top" title="登録内容編集">
                                             <a class="btn btn-ec-actionIcon"
                                                 href="{{ url('admin_breeder_edit', {'id': breeder.Id}) }}">
@@ -163,13 +170,6 @@ file that was distributed with this source code.
                                                 href="{{ url('admin_breeder_house', {'id': breeder.Id}) }}" {% else %}
                                                 disabled {% endif %}>
                                                 <i class="fa fa-home fa-lg text-secondary" aria-hidden="true"></i>
-                                            </a>
-                                        </div>
-                                        <div class="px-1 d-inline-block text-center" data-tooltip="true"
-                                            data-placement="top" title="ペット情報編集">
-                                            <a class="btn btn-ec-actionIcon"
-                                                href="{{ url('admin_breeder_pet_list', {'id': breeder.Id}) }}">
-                                                <i class="fa fa-paw fa-lg text-secondary" aria-hidden="true"></i>
                                             </a>
                                         </div>
                                         <div class="px-1 d-inline-block text-center" data-tooltip="true"
