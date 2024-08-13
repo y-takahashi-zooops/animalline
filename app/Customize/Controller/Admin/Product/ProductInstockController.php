@@ -225,7 +225,7 @@ class ProductInstockController extends AbstractController
         }
 
         foreach ($instocks as $instock) {
-            log_info($instock);
+            log_info('入荷情報チェック：'.$instock);
         }
         
         $count = count($instocks);
