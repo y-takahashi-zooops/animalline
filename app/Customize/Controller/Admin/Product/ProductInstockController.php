@@ -223,10 +223,6 @@ class ProductInstockController extends AbstractController
 
             $instocks = $this->instockScheduleRepository->search($orderDate,$orderDate2,$scheduleDate,$scheduleDate2);
         }
-
-        foreach ($instocks as $instock) {
-            log_info('入荷情報チェック：'.$instock);
-        }
         
         $count = count($instocks);
         $instocks = $paginator->paginate(
