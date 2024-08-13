@@ -323,11 +323,9 @@
                         <option value="2" {{ filter_status == 2 ? 'selected' }}>
                             販売中
                         </option>
-                        {#
                         <option value="3" {{ filter_status == 3 ? 'selected' }}>
                             検査中
                         </option>
-                        #}
                         <option value="4" {{ filter_status == 4 ? 'selected' }}>
                             成約済
                         </option>
@@ -347,12 +345,14 @@
                                         <li class="tag_contract"><span>成約済</span></li>
                                     </ul>
                                     </div>
+                                    {#
                                     {% elseif pet.dnaCheckResult == 0 %}
                                     <div class="tags">
                                     <ul>
                                         <li class="tag_new"><span>検査中</span></li>
                                     </ul>
                                     </div>
+                                    #}
                                     {% elseif pet.isContact == 1 %}
                                     <div class="tags">
                                     <ul>
