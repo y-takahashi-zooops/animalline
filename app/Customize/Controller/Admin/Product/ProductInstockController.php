@@ -175,7 +175,7 @@ class ProductInstockController extends AbstractController
         for ($year = $year5YearsAgo; $year <= $year10YearsLater; $year++) {
             $years[] = $year;
         }
-        var_dump($instocks);
+
         return [
             'instocks' => $instocks,
             'supplier' => $supplier,
@@ -245,7 +245,7 @@ class ProductInstockController extends AbstractController
         for ($year = $year5YearsAgo; $year <= $year10YearsLater; $year++) {
             $years[] = $year;
         }
-var_dump($instocks);
+
         return [
             'instocks' => $instocks,
             'count' => $count,
