@@ -198,12 +198,12 @@ file that was distributed with this source code.
                                     <th class="border-top-0 pt-2 pb-2">備考</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody>{{ dump(instocks) }}
                                 {% for instock in instocks %}
                                     <tr>
                                         <td class="pt-2 pb-2"></td>
                                         <td class="align-middle">{{ instock.id }}</td>
-                                        <td class="align-middle">{{ instock.orderDate | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.OrderDate | date('Y/m/d') }}</td>
                                         <td class="align-middle">{{ instock.arrivalDateSchedule | date('Y/m/d') }}</td>
                                         <td class="align-middle">{{ instock.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
                                         <td class="align-middle">{{ instock.isSendWms == 0 ? '未' : '済' }}</td>
