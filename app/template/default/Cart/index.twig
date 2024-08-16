@@ -132,11 +132,9 @@ file that was distributed with this source code.
 
                                 <ul class="ec-cartRow">
                                     <li class="ec-cartRow__delColumn">
-                                        {% if ProductClass.SaleType.id != 2 %}
                                         <a href="{{ url('cart_handle_item', {'operation': 'remove', 'productClassId': ProductClass.id }) }}" {{ csrf_token_for_anchor() }} class="ec-icon" data-method="put" data-message="カートから商品を削除してもよろしいですか?">
                                             <img src="{{ asset('assets/icon/cross.svg') }}" alt="delete">
                                         </a>
-                                        {% endif %}
                                     </li>
                                     
                                     <li class="ec-cartRow__contentColumn">
