@@ -1,1 +1,525 @@
 /* カスタマイズ用CSS */
+.ec-nutro {
+    box-sizing: border-box;
+    margin: 0 auto;
+    margin-bottom: 16px;
+    padding: 5px 20px 0;
+    width: 100%;
+    max-width: 1130px;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #525263;
+}
+@media only screen and (max-width: 769px) {
+    .ec-nutro .pc {
+        display: none;
+    }
+}
+@media only screen and (min-width: 768px) {
+    .ec-nutro {
+        padding: 16px 0 0;
+    }
+    .ec-nutro .sp {
+        display: none;
+    }
+}
+
+.ec-nutro__head {
+}
+.ec-nutro__title {
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+}
+.ec-nutro__mv {
+    margin: 15px 0 0;
+}
+.ec-nutro__btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 24px 0 0;
+    width: 100%;
+    height: 48px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background: #0067B6;
+}
+.ec-nutro__btn::after {
+    box-sizing: border-box;
+    display: block;
+    margin-bottom: 5px;
+    margin-left: 8px;
+    border-right: 0.1rem solid #fff;
+    border-bottom: 0.1rem solid #fff;
+    width: 0.8rem;
+    height: 0.8rem;
+    transform: rotate(45deg);
+    content: "";
+}
+.ec-nutro__btn:hover {
+    color: #fff;
+    opacity: 0.7;
+}
+@media only screen and (min-width: 768px) {
+    .ec-nutro__title {
+        font-size: 18px;
+    }
+    .ec-nutro__mv {
+        margin: 20px 0 0;
+    }
+    .ec-nutro__btn {
+        margin: 30px auto 0;
+        width: 302px;
+        height: 56px;
+    }
+}
+
+.ec-nutro__dealer {
+    margin: 50px 0 0;
+    padding: 20px 0 0;
+    border-top: solid 1px #B7B7B7;
+}
+.ec-nutro__dealer--head {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+}
+.ec-nutro__dealer--info {
+    margin: 24px 0 0;
+}
+.ec-nutro__dealer--img {
+    text-align: center;
+}
+.ec-nutro__dealer--text {
+    margin: 24px 0 0;
+    font-size: 14px;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+}
+.ec-nutro__dealer--phone {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 15px 0 0;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+}
+.ec-nutro__dealer--phoneHead,
+.ec-nutro__dealer--phoneDetail {
+    margin-top: 5px;
+}
+.ec-nutro__dealer--phoneHead {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 77px;
+    height: 21px;
+    color: #fff;
+    background: #5E5E5E;
+}
+.ec-nutro__dealer--phoneDetail {
+    margin-left: 10px;
+    width: calc(100% - 87px);
+}
+.ec-nutro__dealer--form {
+    display: inline-flex;
+    align-items: center;
+    margin: 10px 0 0;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+    text-decoration: underline;
+}
+.ec-nutro__dealer--form::after {
+    display: block;
+    margin-left: 8px;
+    border-top: 0.1rem solid #000;
+    border-right: 0.1rem solid #000;
+    width: 0.8rem;
+    height: 0.8rem;
+    transform: rotate(45deg);
+    box-sizing: border-box;
+    content: "";
+}
+.ec-nutro__dealer--desc {
+    margin: 24px 0 0;
+    font-size: 14px;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+}
+@media only screen and (min-width: 768px) {
+    .ec-nutro__dealer {
+        margin: 80px 0 0;
+        padding: 30px 0 0;
+    }
+    .ec-nutro__dealer--head {
+        font-size: 22px;
+        line-height: 1.45;
+    }
+    .ec-nutro__dealer--info {
+        display: flex;
+        align-items: center;
+    }
+    .ec-nutro__dealer--img {
+        flex: none;
+        margin-right: 30px;
+    }
+    .ec-nutro__dealer--text {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.625;
+    }
+    .ec-nutro__dealer--phone {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 25px 0 0;
+        font-size: 16px;
+        line-height: 1.625;
+    }
+    .ec-nutro__dealer--phoneHead,
+    .ec-nutro__dealer--phoneDetail {
+    }
+    .ec-nutro__dealer--phoneHead {
+        width: 89px;
+        height: 29px;
+    }
+    .ec-nutro__dealer--phoneDetail {
+        margin-left: 15px;
+        width: calc(100% - 104px);
+    }
+    .ec-nutro__dealer--form {
+        margin: 16px 0 0;
+        font-size: 16px;
+        line-height: 1.625;
+    }
+    .ec-nutro__dealer--form::after {
+        margin-left: 12px;
+    }
+    .ec-nutro__dealer--desc {
+        font-size: 16px;
+        line-height: 1.625;
+    }
+}
+
+.ec-nutro__point {
+    margin: 40px 0 20px;
+    background: #F4F5F7;
+}
+.ec-nutro__point--head {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 0 0 300px 0;
+    width: 280px;
+    height: 90px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1.625;
+    letter-spacing: 0.02em;
+    background: #0067B6;
+}
+.ec-nutro__point--img {
+    margin-right: 20px;
+    width: 50px;
+}
+.ec-nutro__point--desc {
+    padding: 24px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #525263;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+}
+@media only screen and (min-width: 768px) {
+    .ec-nutro__point {
+        display: flex;
+        margin: 60px 0 20px;
+    }
+    .ec-nutro__point--head {
+        flex: none;
+        padding: 0 30px;
+        width: 343px;
+        height: auto;
+        font-size: 20px;
+        line-height: 1.6;
+    }
+    .ec-nutro__point--img {
+        flex: none;
+        width: 70px;
+    }
+    .ec-nutro__point--desc {
+        padding: 20px 40px;
+        font-size: 16px;
+        line-height: 1.625;
+    }
+}
+
+.ec-nutro__section {
+    margin: 40px 0 0;
+}
+.ec-nutro__section--head {
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1.625;
+    letter-spacing: 0.02em;
+    background: #525263;
+}
+.ec-nutro__section--img {
+    margin: 20px 0 0;
+}
+.ec-nutro__section--text {
+    margin: 20px 0 0;
+    font-size: 14px;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+}
+.ec-nutro__section--text em {
+    font-weight: bold;
+    color: #0067B6;
+}
+.ec-nutro__section--point {
+    list-style: none;
+    margin: 20px 0 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #0067B6;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+}
+.ec-nutro__section--pointItem {
+    
+}
+.ec-nutro__section--flex {
+}
+.ec-nutro__section--container {
+}
+.ec-nutro__section--supremo {
+}
+.ec-nutro__section--supremoItem {
+    margin: 20px 0 0;
+    width: 100%;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+}
+.ec-nutro__section--supremoImg {
+
+}
+.ec-nutro__section--supremoTitle {
+    margin: 12px 0 0;
+    font-weight: bold;
+    color: #0067B6;
+}
+.ec-nutro__section--supremoDesc {
+    margin: 12px 0 0;
+    line-height: 1.7;
+}
+.ec-nutro__section--wildrecipe {
+}
+.ec-nutro__section--wildrecipeItem {
+    margin: 20px 0 0;
+    width: 100%;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+}
+.ec-nutro__section--wildrecipeImg {
+
+}
+.ec-nutro__section--wildrecipeTitle {
+    margin: 12px 0 0;
+    font-weight: bold;
+    color: #0067B6;
+}
+.ec-nutro__section--wildrecipeDesc {
+    margin: 12px 0 0;
+    line-height: 1.7;
+}
+.ec-nutro__section--wildrecipeFeature {
+    
+}
+.ec-nutro__section--wildrecipeFeatureItem {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 20px;
+}
+.ec-nutro__section--wildrecipeFeatureIcon {
+    width: 50px;
+}
+.ec-nutro__section--naturalchoice {
+    
+}
+.ec-nutro__section--naturalchoiceItem {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 20px;
+}
+.ec-nutro__section--naturalchoiceIcon {
+    width: 50px;
+}
+.ec-nutro__section--ttl {
+    margin-left: 5px;
+    width: calc(100% - 55px);
+    font-size: 14px;
+    font-weight: bold;
+    color: #0067B6;
+    letter-spacing: 0.02em;
+}
+.ec-nutro__section--dtl {
+    margin: 12px 0 0;
+    width: 100%;
+    font-size: 16px;
+    line-height: 1.625;
+    letter-spacing: 0.02em;
+}
+@media only screen and (min-width: 768px) {
+    .ec-nutro__section {
+        margin: 60px 0 0;
+    }
+    .ec-nutro__section--head {
+        padding: 15px 30px;
+        font-size: 22px;
+        line-height: 1.45;
+    }
+    .ec-nutro__section--img {
+        margin: 24px 0 0;
+    }
+    .ec-nutro__section--text {
+        margin: 24px 0 0;
+        font-size: 16px;
+        line-height: 1.625;
+    }
+    .ec-nutro__section--point {
+        margin: 24px 0 0;
+        font-size: 16px;
+        line-height: 1.625;
+    }
+    .ec-nutro__section--flex {
+        display: flex;
+    }
+    .ec-nutro__section--container {
+        order: -1;
+        margin-right: 60px;
+    }
+    .ec-nutro__section--flex .ec-nutro__section--flex {
+        flex: none;
+    }
+    .ec-nutro__section--supremo {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .ec-nutro__section--supremoItem {
+        margin: 24px 0 0;
+        width: calc((100% - 50px) / 2);
+        max-width: 520px;
+        font-size: 16px;
+    }
+    .ec-nutro__section--supremoImg {
+    
+    }
+    .ec-nutro__section--supremoTitle {
+        margin: 24px 0 0;
+    }
+    .ec-nutro__section--supremoDesc {
+        margin: 10px 0 0;
+        line-height: 1.625;
+    }
+    .ec-nutro__section--wildrecipe {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .ec-nutro__section--wildrecipeItem {
+        margin: 24px 0 0;
+        width: calc((100% - 50px) / 2);
+        max-width: 520px;
+        font-size: 16px;
+    }
+    .ec-nutro__section--wildrecipeImg {
+    
+    }
+    .ec-nutro__section--wildrecipeTitle {
+        margin: 24px 0 0;
+    }
+    .ec-nutro__section--wildrecipeDesc {
+        margin: 10px 0 0;
+        line-height: 1.625;
+    }
+    .ec-nutro__section--wildrecipeFeature {
+        margin: 4px 0 0;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .ec-nutro__section--wildrecipeFeatureItem {
+        display: block;
+        overflow: hidden;
+        width: calc(50% - 30px / 2);
+    }
+    .ec-nutro__section--wildrecipeFeatureItem:nth-child(2n) {
+        margin-left: 30px;
+    }
+    .ec-nutro__section--wildrecipeFeatureIcon {
+        float: left;
+        margin-right: 15px;
+        width: 80px;
+        height: 100%;
+    }
+    .ec-nutro__section--naturalchoice {
+        margin: 4px 0 0;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .ec-nutro__section--naturalchoiceItem {
+        display: block;
+        overflow: hidden;
+        width: calc(50% - 30px / 2);
+    }
+    .ec-nutro__section--naturalchoiceItem:nth-child(2n) {
+        margin-left: 30px;
+    }
+    .ec-nutro__section--naturalchoiceIcon {
+        float: left;
+        margin-right: 15px;
+        width: 80px;
+        height: 100%;
+    }
+    .ec-nutro__section--ttl {
+        margin-left: 0;
+        width: auto;
+        font-size: 16px;
+    }
+    .ec-nutro__section--dtl {
+        margin: 7px 0 0;
+        width: auto;
+    }
+}
+
+.ec-nutro__notice {
+    margin: 40px 0 0;
+}
+.ec-nutro__notice--text {
+    font-size: 12px;
+    line-height: 1.66;
+    letter-spacing: 0.02em;
+}
+.ec-nutro__notice--text:not(:first-child) {
+    margin-top: 20px;
+}
+@media only screen and (min-width: 768px) {
+    .ec-nutro__notice {
+        margin: 60px 0 0;
+    }
+    .ec-nutro__notice--text {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+}
