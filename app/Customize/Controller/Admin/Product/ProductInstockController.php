@@ -161,11 +161,27 @@ class ProductInstockController extends AbstractController
             $request->query->getInt('item', 50)
         );
 
+        // 現在の年を取得
+        $currentYear = date('Y');
+
+        // 5年前の年
+        $year5YearsAgo = $currentYear - 5;
+
+        // 10年後の年
+        $year10YearsLater = $currentYear + 10;
+
+        // 年数を配列に格納
+        $years = [];
+        for ($year = $year5YearsAgo; $year <= $year10YearsLater; $year++) {
+            $years[] = $year;
+        }
+
         return [
             'instocks' => $instocks,
             'supplier' => $supplier,
             'count' => $count,
-            'details' => $details
+            'details' => $details,
+            'years' => $years
         ];
     }
 
@@ -215,9 +231,25 @@ class ProductInstockController extends AbstractController
             $request->query->getInt('item', 50)
         );
 
+        // 現在の年を取得
+        $currentYear = date('Y');
+
+        // 5年前の年
+        $year5YearsAgo = $currentYear - 5;
+
+        // 10年後の年
+        $year10YearsLater = $currentYear + 10;
+
+        // 年数を配列に格納
+        $years = [];
+        for ($year = $year5YearsAgo; $year <= $year10YearsLater; $year++) {
+            $years[] = $year;
+        }
+
         return [
             'instocks' => $instocks,
-            'count' => $count
+            'count' => $count,
+            'years' => $years
         ];
     }
 

@@ -46,7 +46,7 @@ class InstockScheduleHeaderType extends AbstractType
 
         $builder
             ->add('order_date', DateType::class, [
-                'years' => range(date('Y')-1, date('Y')),
+                'years' => range(date('Y')-5, date('Y')+10),
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
                 //'data' => new DateTime(),
@@ -60,7 +60,7 @@ class InstockScheduleHeaderType extends AbstractType
                 ],
             ])
             ->add('arrival_date_schedule', DateType::class, [
-                'years' => range(date('Y')-1, date('Y')),
+                'years' => range(date('Y')-5, date('Y')+10),
                 'format' => 'yyyy-MM-dd',
                 'required' => true,
                 //'data' => new DateTime(),
