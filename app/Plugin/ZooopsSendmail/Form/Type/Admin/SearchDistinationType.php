@@ -172,6 +172,19 @@ class SearchDistinationType extends AbstractType
                 'expanded' => false,
                 'choices' => $statusChoices,
 
+            ])
+            // 会員カテゴリプルダウン
+            ->add('regist_type', ChoiceType::class, [
+                'label' => '会員カテゴリ',
+                'placeholder' => '全ての会員',
+                'required' => false,
+                'multiple' => false,
+                'expanded' => false,
+                'choices' => [
+                    '一般会員' => '0',
+                    'ブリーダー' => '1',
+                    '保護団体' => '2',
+                ],
             ]);
 
             $entity = $builder->getData();

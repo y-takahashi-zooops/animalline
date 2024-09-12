@@ -112,6 +112,16 @@
                                 {{ form_errors(searchForm.order_status) }}
                             </div>
                         </div>
+
+                        <div class="form-row mb-2">
+                            <div class="col-10">
+                                <p class="col-form-label">
+                                    {{ 'admin.common.regist_type'|trans }}
+                                </p>
+                                {{ form_widget(searchForm.regist_type) }}
+                                {{ form_errors(searchForm.regist_type) }}
+                            </div>
+                        </div>
                     </div>
                     <div class="col-6">
                         <div class="mb-2">
@@ -251,6 +261,9 @@
                                     {{ 'common.gender'|trans }}
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2 text-center">
+                                    {{ 'admin.common.regist_type'|trans }}
+                                </th>
+                                <th class="border-top-0 pt-2 pb-2 text-center">
                                     {{ 'admin.order.last_buy_date'|trans }}
                                 </th>
                                 <th class="border-top-0 pt-2 pb-2 text-center">
@@ -275,6 +288,9 @@
                                     </td>
                                     <td class="align-middle text-center">
                                         {{ customer.sex }}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        {{ customer.regist_type }}
                                     </td>
                                     {# 購入履歴がない場合はハイフン表示にする #}
                                     <td class="align-middle text-center">
