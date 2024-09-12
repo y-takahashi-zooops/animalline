@@ -292,10 +292,11 @@
                                     <td class="align-middle text-center">
                                         {% if customer.regist_type == 0 %}
                                             一般会員
-                                        {% if customer.regist_type == 1 %}
+                                        {% elseif customer.regist_type == 1 %}
                                             ブリーダー
-                                        {% if customer.regist_type == 2 %}
+                                        {% elseif customer.regist_type == 2 %}
                                             保護団体
+                                        {% endif %}
                                     </td>
                                     {# 購入履歴がない場合はハイフン表示にする #}
                                     <td class="align-middle text-center">
