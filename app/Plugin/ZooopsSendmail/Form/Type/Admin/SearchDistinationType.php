@@ -181,9 +181,9 @@ class SearchDistinationType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'choices' => [
-                    '一般会員' => '0',
-                    'ブリーダー' => '1',
-                    '保護団体' => '2',
+                    '一般会員' => '1',
+                    'ブリーダー' => '2',
+                    '保護団体' => '3',
                 ],
             ]);
 
