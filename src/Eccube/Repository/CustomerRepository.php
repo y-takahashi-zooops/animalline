@@ -530,6 +530,26 @@ class CustomerRepository extends AbstractRepository
                 ->setParameter('customer_ids', $searchData['customer_ids']);
         }
 
+        // 会員カテゴリ
+        if (!empty($searchData['regist_type'])) {
+            switch ($searchData['regist_type']) {
+                case 1: // 一般会員
+                    $qb->andWhere('c.regist_type = :regist_type')
+                        ->setParameter('regist_type', 0);
+                    break;
+                case 2: // ブリーダー
+                    $qb->andWhere('c.regist_type = :regist_type')
+                        ->setParameter('regist_type', 1);
+                    break;
+                case 3: // 保護団体
+                    $qb->andWhere('c.regist_type = :regist_type')
+                        ->setParameter('regist_type', 2);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         $searchResult = $qb
             ->getQuery()
             ->getResult();

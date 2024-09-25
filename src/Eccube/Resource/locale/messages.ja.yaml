@@ -517,6 +517,7 @@ admin.common.device_type: 端末種別
 admin.common.authority: 権限
 admin.common.payment_method: 支払方法
 admin.common.charge: 手数料
+admin.common.regist_type: 会員カテゴリ
 #------------------------------------------------------------------------------------
 # ホーム
 #------------------------------------------------------------------------------------
