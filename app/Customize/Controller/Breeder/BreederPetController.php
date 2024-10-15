@@ -567,7 +567,7 @@ class BreederPetController extends AbstractController
         else{
             //breeder_id指定がない場合はログイン中ユーザーとして処理
             $user = $this->getUser();
-        }
+        }dump($user);
 
         /*
         $dnaId = substr($barcode, 1);
@@ -576,7 +576,7 @@ class BreederPetController extends AbstractController
         }
         $breederId = $Dna->getDnaHeader()->getRegisterId();
         */
-        $breeder = $this->breedersRepository->find($user);dump($breeder);
+        $breeder = $this->breedersRepository->find($user);
         $breederId = $breeder->getId();
 
         //ブリーダー審査通過チェック
