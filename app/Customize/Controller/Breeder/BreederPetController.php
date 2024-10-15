@@ -544,7 +544,7 @@ class BreederPetController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/breeder/member/pets/new/{kind}/{breeder_id}/{barcode}", name="breeder_pets_new", methods={"GET","POST"})
+     * @Route("/breeder/member/pets/new/{barcode}/{kind}/{breeder_id}", name="breeder_pets_new", methods={"GET","POST"})
      */
     public function breeder_pets_new(Request $request, $kind = 0,$breeder_id = "",$barcode = ""): Response
     {
