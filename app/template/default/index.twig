@@ -127,22 +127,20 @@
             </div>
             <div class="side-set">
                 <div class="main-area">
-					{% if is_granted('ROLE_USER') == true %}
-						<div class="edit-area keyvisual">
-							<div class="row">
-								<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1562'}) }}"><img alt="画像1" src="{{ asset('assets/img/ec/banner_top01.png') }}" /></a></div>
-								<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1578'}) }}"><img alt="画像1" src="{{ asset('assets/img/ec/banner_top04.png') }}" /></a></div>
+					<div class="edit-area keyvisual">
+						<div class="row">
+							<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1562'}) }}"><img alt="画像1" src="{{ asset('assets/img/ec/banner_top01.png') }}" /></a></div>
+							<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1578'}) }}"><img alt="画像1" src="{{ asset('assets/img/ec/banner_top04.png') }}" /></a></div>
 
-								<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1561'}) }}" style="margin-top:1rem;"><img alt="画像2" src="{{ asset('assets/img/ec/banner_top02.png') }}" /></a></div>
-								<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1579'}) }}" style="margin-top:1rem;"><img alt="画像2" src="{{ asset('assets/img/ec/banner_top05.png') }}" /></a></div>
+							<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1561'}) }}" style="margin-top:1rem;"><img alt="画像2" src="{{ asset('assets/img/ec/banner_top02.png') }}" /></a></div>
+							<div class="col-md-6 col-sm-12"><a href="{{ url('product_detail', {'id': '1579'}) }}" style="margin-top:1rem;"><img alt="画像2" src="{{ asset('assets/img/ec/banner_top05.png') }}" /></a></div>
 
-								<div class="col-md-6 col-sm1-12"><a href="{{ url('product_detail', {'id': '1560'}) }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top03.png') }}" /></a></div>
-								<div class="col-md-6 col-sm1-12"><a href="{{ url('product_detail', {'id': '1580'}) }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top06.png') }}" /></a></div>
+							<div class="col-md-6 col-sm1-12"><a href="{{ url('product_detail', {'id': '1560'}) }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top03.png') }}" /></a></div>
+							<div class="col-md-6 col-sm1-12"><a href="{{ url('product_detail', {'id': '1580'}) }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_top06.png') }}" /></a></div>
 
-								<div class="col-md-12 col-sm1-12"><a href="{{ url('ec_nutro') }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_nutro.png') }}" /></a></div>
-							</div>
+							<div class="col-md-12 col-sm1-12"><a href="{{ url('ec_nutro') }}" style="margin-top:1rem;"><img alt="画像3" src="{{ asset('assets/img/ec/banner_nutro.png') }}" /></a></div>
 						</div>
-					{% endif %}
+					</div>
 					
 					<div class="edit-area keyvisual">
 						<div class="row">

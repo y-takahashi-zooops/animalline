@@ -148,7 +148,7 @@ class ProductRepository extends AbstractRepository
 
         // restrict products display for user
         if (!$loggedUser) {
-            $qb-> andWhere('p.is_check_auth = 0');
+            // $qb-> andWhere('p.is_check_auth = 0');
         }
 
         // category
