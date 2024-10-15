@@ -553,7 +553,7 @@ class BreederPetController extends AbstractController
         if($breeder_id != ""){
             //breeder_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
             $user = $this->getUser();
-            if($user->getId() == 91 || $user->getId() == 236 || $user->getId() == 386){
+            if($user->getId() == 91 || $user->getId() == 236){
                 $user = $this->customerRepository->find($breeder_id);
 
                 if(!$user){
