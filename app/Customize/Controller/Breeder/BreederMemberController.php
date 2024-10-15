@@ -190,7 +190,7 @@ class BreederMemberController extends AbstractController
      */
     public function breeder_mypage(Request $request)
     {
-        $user = $this->getUser();
+        $user = $this->getUser();var_dump($user);
         $breeder = $this->breedersRepository->find($user);
         $canBenefits = false;
 
