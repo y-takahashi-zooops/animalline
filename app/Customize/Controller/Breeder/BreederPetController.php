@@ -544,11 +544,11 @@ class BreederPetController extends AbstractController
     /**
      * 新規ペット追加
      *
-     * @Route("/breeder/member/pets/new/{kind}/{breeder_id}", name="breeder_pets_new", methods={"GET","POST"})
+     * @Route("/breeder/member/pets/new/{kind}/{breeder_id}/{barcode}", name="breeder_pets_new", methods={"GET","POST"})
      */
-    public function breeder_pets_new(Request $request, $kind = 0,$breeder_id = ""): Response
+    public function breeder_pets_new(Request $request, $kind = 0,$breeder_id = "",$barcode = ""): Response
     {
-        $barcode = "";
+        // $barcode = "";
 
         if($breeder_id != ""){
             //breeder_id指定がある場合はログインユーザーチェックを行い、許可ユーザーであれば指定のブリーダーをシミュレート
@@ -587,6 +587,18 @@ class BreederPetController extends AbstractController
             ]);
         }
 
+        if($barcode != ""){
+            $dnaId = substr($barcode, 1);
+            if (!$Dna = $this->dnaCheckStatusRepository->find($dnaId)) {
+                throw new NotFoundHttpException();
+            }
+            //ペット登録済チェック
+            if(!is_null($Dna->getPetId())){
+                return $this->render('animalline/breeder/member/already_regist.twig', [
+                    'breeder' => $breeder
+                ]);
+            }
+        }
         //ペット登録済チェック
         /*
         if(!is_null($Dna->getPetId())){
@@ -680,6 +692,13 @@ class BreederPetController extends AbstractController
                 ->setThumbnailPath($img0)
                 ->setPetCode($barcode);
 
+            if($barcode != ""){
+                // update dna check status
+                $Dna->setPetId($breederPet->getId())
+                    ->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PET_REGISTERED)
+                    ->setKitPetRegisterDate(new DateTime);
+                $entityManager->persist($Dna);
+            }
             // update dna check status
             /*
             $Dna->setPetId($breederPet->getId())
@@ -693,7 +712,7 @@ class BreederPetController extends AbstractController
             $entityManager->persist($petImage3);
             $entityManager->persist($petImage4);
             $entityManager->persist($breederPet);
-            //$entityManager->persist($Dna);
+            // $entityManager->persist($Dna);
             $entityManager->flush();
 
             if($breeder_id != ""){
