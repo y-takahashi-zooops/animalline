@@ -347,9 +347,9 @@ class JddcController extends AbstractController
                 }
 
                 //ＮＧの場合メールを送る
-                if($is_sendmail){
-                    $this->mailService->sendDnaCheckNg($Customer,$Dna,$restext);
-                }
+                // if($is_sendmail){
+                //     $this->mailService->sendDnaCheckNg($Customer,$Dna,$restext);
+                // }
                 break;
             default: // 61: クリア, 62: キャリア.
                 $Dna->setCheckStatus(AnilineConf::ANILINE_DNA_CHECK_STATUS_PASSED);
@@ -362,9 +362,9 @@ class JddcController extends AbstractController
                     $restext = "キャリア（劣性）";
                 }
 
-                if($is_sendmail){
-                    $this->mailService->sendDnaCheckOk($Customer,$Dna,$restext);
-                }
+                // if($is_sendmail){
+                //     $this->mailService->sendDnaCheckOk($Customer,$Dna,$restext);
+                // }
         }
 
         if (
