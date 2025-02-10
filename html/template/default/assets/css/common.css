@@ -940,6 +940,9 @@ TOP
 .top-content__container_text_btn a{
   background-color:#ffc000;
 }
+.top-content__container_text_btn.bg_navy a{
+  background-color:#5EC4F2;
+}
 
 .top-content__container_text_btn_02{
   text-align:center;
@@ -2007,7 +2010,9 @@ BREEDER - ADOPTION
   font-size: 20px;
   text-align: center;
 }
-
+.header-h2 {
+  padding-bottom: .8rem;
+}
 /*------------------
 Width <= 1280px
 ------------------*/
@@ -4742,13 +4747,11 @@ CONTENTS後藤追加分
 
 
 .innerSBlue{
-	margin: 0 auto;
-	padding: 0.8rem 0.8rem 0.8rem 0.8rem;
-	margin-bottom: 1.5rem;
+	margin: 0 1rem 8rem;
+	padding: 2rem;
 	background-color: #D0E1EF;
 	border-radius: 1rem;
-	margin-left: 1rem;
-	margin-right: 1rem;
+  line-height: 2;
 }
 
 .innerSBlue h2 {
