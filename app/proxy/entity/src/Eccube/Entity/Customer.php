@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
     {
     use \Customize\Entity\CustomerTrait, \Plugin\GmoPaymentGateway4\Entity\CustomerTrait;
 
-        /**
+    /**
          * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})

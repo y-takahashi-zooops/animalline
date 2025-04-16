@@ -35,7 +35,7 @@ class ConfigController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/gmo_payment_gateway/config", name="gmo_payment_gateway4_admin_config")
+     * @Route("/%eccube_admin_route%/gmo_payment_gateway4/config", name="gmo_payment_gateway4_admin_config")
      * @Template("@GmoPaymentGateway4/admin/config.twig")
      */
     public function index(Request $request)

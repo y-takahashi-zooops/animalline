@@ -243,7 +243,7 @@ class PaymentHelperCvs extends PaymentHelper
 
         if (isset($results['ConfNo']) && !is_null($results['ConfNo'])) {
             if ($cvscode == $const[$dprefix . 'familymart']) {
-                // ファミリーマート（企業コード）
+                // ファミリーマート（第１番号(5桁)）
                 $data['ConfNo']['name'] = trans($rprefix . 'confno2');
             } else if ($cvscode == $const[$dprefix . 'seicomart']) {
                 // セイコーマート（申込番号）
@@ -256,7 +256,7 @@ class PaymentHelperCvs extends PaymentHelper
         }
 
         if ($cvscode == $const[$dprefix . 'familymart']) {
-            // ファミリーマート（注文番号）
+            // ファミリーマート（第２番号(12桁)）
             if (isset($results['ReceiptNo']) &&
                 !is_null($results['ReceiptNo'])) {
                 $data['ReceiptNo']['name'] = trans($rprefix . 'receiptno3');

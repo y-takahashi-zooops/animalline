@@ -12,13 +12,14 @@ use Plugin\GmoPaymentGateway4\Entity\GmoPaymentMethod;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperCvs;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperPayEasyAtm;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperPayEasyNet;
-use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
-use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
 use Plugin\GmoPaymentGateway4\Service\Method\CarAu;
 use Plugin\GmoPaymentGateway4\Service\Method\CarDocomo;
 use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
+use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
+use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
+use Plugin\GmoPaymentGateway4\Service\Method\Ganb;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
 use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Repository\GmoPaymentMethodRepository;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
@@ -30,8 +31,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * 支払方法設定(編集)画面のFormを拡張しGMOPG入力フォームを追加する.
@@ -119,7 +121,7 @@ class PaymentRegisterExtention extends AbstractTypeExtension
             'appendValidation' => 'appendValidationAu',
             'getData' => 'getDataAu',
         ],
-        // ドコモケータイ払い
+        // d払い
         CarDocomo::class => [
             'appendForm' => 'appendFormDocomo',
             'setData' => 'setDataDocomo',
@@ -142,6 +144,14 @@ class PaymentRegisterExtention extends AbstractTypeExtension
             'setDefaultData' => 'setDefaultDataRakutenPay',
             'appendValidation' => 'appendValidationRakutenPay',
             'getData' => 'getDataRakutenPay',
+        ],
+        // 銀行振込（バーチャル口座 あおぞら）
+        Ganb::class => [
+            'appendForm' => 'appendFormGanb',
+            'setData' => 'setDataGanb',
+            'setDefaultData' => 'setDefaultDataGanb',
+            'appendValidation' => 'appendValidationGanb',
+            'getData' => 'getDataGanb',
         ],
     ];
 
@@ -189,7 +199,7 @@ class PaymentRegisterExtention extends AbstractTypeExtension
                 $this->$funcName($event);
             }
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $repo =& $this->gmoPaymentMethodRepository;
 
                 // 支払方法毎に保存処理を行う
@@ -211,6 +221,14 @@ class PaymentRegisterExtention extends AbstractTypeExtension
     public function getExtendedType()
     {
         return PaymentRegisterType::class;
+    }
+
+    /**
+     * Return the class of the type being extended.
+     */
+    public static function getExtendedTypes(): iterable
+    {
+        return [PaymentRegisterType::class];
     }
 
     /**
@@ -267,7 +285,10 @@ class PaymentRegisterExtention extends AbstractTypeExtension
                 'expanded' => true,
                 'mapped' => false,
                 'choices' => [
-                    trans('gmo_payment_gateway.admin.use') => 1,
+                    trans('gmo_payment_gateway.admin.payment_edit.' .
+                          'credit.TdFlag.2') => 2,
+                    trans('gmo_payment_gateway.admin.payment_edit.' .
+                          'credit.TdFlag.1') => 1,
                     trans('gmo_payment_gateway.admin.notuse') => 0,
                 ],
             ])
@@ -278,6 +299,77 @@ class PaymentRegisterExtention extends AbstractTypeExtension
                 'attr' => [
                     'class' => 'width222',
                     'maxlength' => '18',
+                ],
+            ])
+            // 3DS必須タイプ
+            ->add('TdRequired', ChoiceType::class, [
+                'expanded' => true,
+                'mapped' => false,
+                'choices' => [
+                    trans('gmo_payment_gateway.admin.payment_edit.' .
+                          'credit.TdRequired.0') => 0,
+                    trans('gmo_payment_gateway.admin.payment_edit.' .
+                          'credit.TdRequired.1') => 1,
+                    trans('gmo_payment_gateway.admin.payment_edit.' .
+                          'credit.TdRequired.2') => 2,
+                ],
+            ])
+            // 入力回数制限
+            ->add('use_limit', ChoiceType::class, [
+                'required' => true,
+                'expanded' => true,
+                'mapped' => false,
+                'choices' => [
+                    trans('gmo_payment_gateway.admin.use') => 1,
+                    trans('gmo_payment_gateway.admin.notuse') => 0,
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            // 入力回数制限 検出時間
+            ->add('limit_min', TextType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'width65',
+                    'maxlength' => '3',
+                    'pattern' => '\d*',
+                ],
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 1,
+                    ]),
+                ],
+            ])
+            // 入力回数制限 エラー上限回数
+            ->add('limit_count', TextType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'width65',
+                    'maxlength' => '2',
+                    'pattern' => '\d*',
+                ],
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 1,
+                    ]),
+                ],
+            ])
+            // 入力回数制限 ロック時間
+            ->add('lock_min', TextType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'width65',
+                    'maxlength' => '3',
+                    'pattern' => '\d*',
+                ],
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 1,
+                    ]),
                 ],
             ])
             // 決済完了案内タイトル
@@ -329,6 +421,27 @@ class PaymentRegisterExtention extends AbstractTypeExtension
             ->setData($data['use_securitycd_option']);
         $form['TdFlag']->setData($data['TdFlag']);
         $form['TdTenantName']->setData($data['TdTenantName']);
+
+        $form['TdRequired']->setData(0);
+        if (isset($data['TdRequired']) && strlen($data['TdRequired']) > 0) {
+            $form['TdRequired']->setData($data['TdRequired']);
+        }
+
+        $form['use_limit']->setData(0);
+        if (isset($data['use_limit']) && strlen($data['use_limit']) > 0) {
+            $form['use_limit']->setData($data['use_limit']);
+
+            if (!empty($data['limit_min'])) {
+                $form['limit_min']->setData($data['limit_min']);
+            }
+            if (!empty($data['limit_count'])) {
+                $form['limit_count']->setData($data['limit_count']);
+            }
+            if (!empty($data['lock_min'])) {
+                $form['lock_min']->setData($data['lock_min']);
+            }
+        }
+
         $form['order_mail_title1']->setData($data['order_mail_title1']);
         $form['order_mail_body1']->setData($data['order_mail_body1']);
         $form['ClientField1']->setData($data['ClientField1']);
@@ -345,6 +458,8 @@ class PaymentRegisterExtention extends AbstractTypeExtension
         $form['use_securitycd']->setData(0);
         $form['use_securitycd_option']->setData(1);
         $form['TdFlag']->setData(0);
+        $form['TdRequired']->setData(0);
+        $form['use_limit']->setData(0);
     }
 
     /**
@@ -352,8 +467,40 @@ class PaymentRegisterExtention extends AbstractTypeExtension
      */
     private function appendValidationCredit(FormEvent $event)
     {
-        // 処理なし
-        ;
+        $form = $event->getForm();
+
+        // 入力回数制限を利用するに設定している場合
+        // 検出時間、エラー上限回数、ロック時間
+        // を必須とする
+
+        $use_limit = $form['use_limit']->getData();
+        if (empty($use_limit)) {
+            return;
+        }
+
+        // 検出時間をチェック
+        if (is_null($form['limit_min']->getData())) {
+            $form['limit_min']->addError(new FormError(trans(
+                'gmo_payment_gateway.admin.payment_edit.credit.' .
+                'limit_min.validate1'
+            )));
+        }
+
+        // エラー上限回数をチェック
+        if (is_null($form['limit_count']->getData())) {
+            $form['limit_count']->addError(new FormError(trans(
+                'gmo_payment_gateway.admin.payment_edit.credit.' .
+                'limit_count.validate1'
+            )));
+        }
+
+        // ロック時間をチェック
+        if (is_null($form['lock_min']->getData())) {
+            $form['lock_min']->addError(new FormError(trans(
+                'gmo_payment_gateway.admin.payment_edit.credit.' .
+                'lock_min.validate1'
+            )));
+        }
     }
 
     private function getDataCredit(FormEvent $event)
@@ -369,6 +516,11 @@ class PaymentRegisterExtention extends AbstractTypeExtension
             $form['use_securitycd_option']->getData();
         $data['TdFlag'] = $form['TdFlag']->getData();
         $data['TdTenantName'] = $form['TdTenantName']->getData();
+        $data['TdRequired'] = $form['TdRequired']->getData();
+        $data['use_limit'] = $form['use_limit']->getData();
+        $data['limit_min'] = $form['limit_min']->getData();
+        $data['limit_count'] = $form['limit_count']->getData();
+        $data['lock_min'] = $form['lock_min']->getData();
         $data['order_mail_title1'] = $form['order_mail_title1']->getData();
         $data['order_mail_body1'] = $form['order_mail_body1']->getData();
         $data['ClientField1'] = $form['ClientField1']->getData();
@@ -1862,7 +2014,7 @@ class PaymentRegisterExtention extends AbstractTypeExtension
     }
 
     /**
-     * ドコモケータイ払い向けのフォームを追加
+     * d払い向けのフォームを追加
      */
     private function appendFormDocomo(FormEvent $event)
     {
@@ -1960,7 +2112,7 @@ class PaymentRegisterExtention extends AbstractTypeExtension
     }
 
     /**
-     * ドコモケータイ払い向けのフォームの追加検証
+     * d払い向けのフォームの追加検証
      */
     private function appendValidationDocomo(FormEvent $event)
     {
@@ -2219,6 +2371,116 @@ class PaymentRegisterExtention extends AbstractTypeExtension
         $data = [];
 
         $data['JobCd'] = $form['JobCd']->getData();
+        $data['order_mail_title1'] = $form['order_mail_title1']->getData();
+        $data['order_mail_body1'] = $form['order_mail_body1']->getData();
+        $data['ClientField1'] = $form['ClientField1']->getData();
+        $data['ClientField2'] = $form['ClientField2']->getData();
+
+        return $data;
+    }
+
+    /**
+     * 銀行振込（バーチャル口座 あおぞら）向けのフォームを追加
+     */
+    private function appendFormGanb(FormEvent $event)
+    {
+        $PaymentUtil = PaymentUtil::getInstance();
+        $form = $event->getForm();
+
+        $form
+            // 取引有効日数
+            ->add('TradeDays', TextType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'width65',
+                    'maxlength' => '3',
+                    'pattern' => '\d*',
+                ],
+                'constraints' => [
+                    new LessThanOrEqual([
+                        'value' => 999,
+                        'message' => trans(
+                            'gmo_payment_gateway.admin.' .
+                            'payment_edit.ganb.trade_days.validate1'
+                        ),
+                    ]),
+                ],
+            ])
+            // 決済完了案内タイトル
+            ->add('order_mail_title1', TextType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'width222',
+                    'maxlength' => '50',
+                ],
+            ])
+            // 決済完了案内本文
+            ->add('order_mail_body1', TextareaType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'area',
+                    'maxlength' => '1000',
+                ],
+            ])
+            // 自由項目1
+            ->add('ClientField1', TextType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'width222',
+                    'maxlength' => '100',
+                ],
+            ])
+            // 自由項目2
+            ->add('ClientField2', TextType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'width222',
+                    'maxlength' => '100',
+                ],
+            ]);
+    }
+
+    private function setDataGanb(FormEvent $event, $data)
+    {
+        $form = $event->getForm();
+
+        $form['TradeDays']->setData($data['TradeDays']);
+        $form['order_mail_title1']->setData($data['order_mail_title1']);
+        $form['order_mail_body1']->setData($data['order_mail_body1']);
+        $form['ClientField1']->setData($data['ClientField1']);
+        $form['ClientField2']->setData($data['ClientField2']);
+    }
+
+    private function setDefaultDataGanb(FormEvent $event)
+    {
+        $form = $event->getForm();
+
+        $form['order_mail_title1']
+            ->setData(trans('gmo_payment_gateway.admin.' .
+                            'payment_edit.order_mail_title1'));
+    }
+
+    /**
+     * 銀行振込（バーチャル口座 あおぞら）向けのフォームの追加検証
+     */
+    private function appendValidationGanb(FormEvent $event)
+    {
+        // 処理なし
+        ;
+    }
+
+    private function getDataGanb(FormEvent $event)
+    {
+        $form = $event->getForm();
+
+        $data = [];
+
+        $data['TradeDays'] = $form['TradeDays']->getData();
         $data['order_mail_title1'] = $form['order_mail_title1']->getData();
         $data['order_mail_body1'] = $form['order_mail_body1']->getData();
         $data['ClientField1'] = $form['ClientField1']->getData();

@@ -13,13 +13,14 @@ use Eccube\Entity\Payment;
 use Eccube\Form\Type\Admin\OrderType;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperAdmin;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperCvs;
-use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
-use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
 use Plugin\GmoPaymentGateway4\Service\Method\CarAu;
 use Plugin\GmoPaymentGateway4\Service\Method\CarDocomo;
 use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
+use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
+use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
+use Plugin\GmoPaymentGateway4\Service\Method\Ganb;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
 use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\Form\AbstractTypeExtension;
@@ -82,19 +83,23 @@ class OrderExtention extends AbstractTypeExtension
         ],
         // auかんたん決済
         CarAu::class => [
-            'createInfo' => 'createCarrierInfo',
+            'createInfo' => 'createAuInfo',
         ],
-        // ドコモケータイ払い
+        // d払い
         CarDocomo::class => [
-            'createInfo' => 'createCarrierInfo',
+            'createInfo' => 'createDocomoInfo',
         ],
         // ソフトバンクまとめて支払い
         CarSoftbank::class => [
-            'createInfo' => 'createCarrierInfo',
+            'createInfo' => 'createSoftbankInfo',
         ],
         // 楽天ペイ
         RakutenPay::class => [
             'createInfo' => 'createRakutenPayInfo',
+        ],
+        // 銀行振込（バーチャル口座 あおぞら）
+        Ganb::class => [
+            'createInfo' => 'createGanbInfo',
         ],
     ];
 
@@ -157,6 +162,14 @@ class OrderExtention extends AbstractTypeExtension
     }
 
     /**
+     * Return the class of the type being extended.
+     */
+    public static function getExtendedTypes(): iterable
+    {
+        return [OrderType::class];
+    }
+
+    /**
      * 共通の表示用決済情報を生成する
      *
      * @param Order $Order 注文
@@ -215,7 +228,8 @@ class OrderExtention extends AbstractTypeExtension
 
         // 承認番号
         if (isset($logData['pay_status']) &&
-            $logData['pay_status'] != $const[$prefix . 'unsettled']) {
+            $logData['pay_status'] != $const[$prefix . 'unsettled'] &&
+            isset($logData['Approve'])) {
             $info['Approve'] = $logData['Approve'];
         }
         // 支払い方法
@@ -329,14 +343,112 @@ class OrderExtention extends AbstractTypeExtension
     }
 
     /**
-     * キャリア決済向けの決済情報
+     * auかんたん決済向けの決済情報
      *
      * @param Order $Order 注文
      * @param array $logData GMO-PG 送受信ログデータ配列
      * @param array $info 表示用決済情報配列
      * @return array 表示用決済情報配列
      */
-    private function createCarrierInfo(Order $Order, $logData, array $info)
+    private function createAuInfo(Order $Order, $logData, array $info)
+    {
+        $const = $this->eccubeConfig;
+        $prefix = "gmo_payment_gateway.pay_status.";
+
+        // 操作ボタン
+        $info['buttons']['status'] = 1;
+        if (isset($logData['pay_status'])) {
+            $pay_status = $logData['pay_status'];
+            if ($pay_status == $const[$prefix . 'auth']) {
+                $info['buttons']['commit'] = 1;
+            }
+            if ($pay_status == $const[$prefix . 'auth'] ||
+                $pay_status == $const[$prefix . 'commit'] ||
+                $pay_status == $const[$prefix . 'sales'] ||
+                $pay_status == $const[$prefix . 'capture']) {
+                $info['buttons']['cancel'] = 1;
+            }
+            // 実売上済み・即時売上済みの場合のみ処理続行
+            if ($pay_status != $const[$prefix . 'sales'] &&
+                $pay_status != $const[$prefix . 'capture']) {
+                return $info;
+            }
+            // 返金額が0円以下の場合は表示しない
+            $amount = 0;
+            if (!empty($logData['Amount'])) {
+                $amount = $logData['Amount'];
+            }
+            if (($amount - $Order->getDecPaymentTotal()) <= 0) {
+                return $info;
+            }
+            // 売上確定月の翌月以降なら一部取消・返品を表示する
+            if (isset($logData['TranDate'])) {
+                $YYYYMM = date('Ym');
+                $tranYYYYMM = substr($logData['TranDate'], 0, 6);
+                if ($tranYYYYMM < $YYYYMM) {
+                    $info['buttons']['partial'] = 1;
+                }
+            }
+        }
+
+        return $info;
+    }
+
+    /**
+     * d払い向けの決済情報
+     *
+     * @param Order $Order 注文
+     * @param array $logData GMO-PG 送受信ログデータ配列
+     * @param array $info 表示用決済情報配列
+     * @return array 表示用決済情報配列
+     */
+    private function createDocomoInfo(Order $Order, $logData, array $info)
+    {
+        $const = $this->eccubeConfig;
+        $prefix = "gmo_payment_gateway.pay_status.";
+
+        // 操作ボタン
+        $info['buttons']['status'] = 1;
+        if (isset($logData['pay_status'])) {
+            $pay_status = $logData['pay_status'];
+            if ($pay_status == $const[$prefix . 'auth']) {
+                $info['buttons']['commit'] = 1;
+            }
+            if ($pay_status == $const[$prefix . 'auth'] ||
+                $pay_status == $const[$prefix . 'commit'] ||
+                $pay_status == $const[$prefix . 'sales'] ||
+                $pay_status == $const[$prefix . 'capture']) {
+                $info['buttons']['cancel'] = 1;
+            }
+            // 実売上済み・即時売上済みの場合のみ処理続行
+            if ($pay_status != $const[$prefix . 'sales'] &&
+                $pay_status != $const[$prefix . 'capture']) {
+                return $info;
+            }
+            // 返金額が0円以下の場合は表示しない
+            $amount = 0;
+            if (!empty($logData['Amount'])) {
+                $amount = $logData['Amount'];
+            }
+            if (($amount - $Order->getDecPaymentTotal()) <= 0) {
+                return $info;
+            }
+            // 一部取消・返品を表示する
+            $info['buttons']['partial'] = 1;
+        }
+
+        return $info;
+    }
+
+    /**
+     * ソフトバンク決済向けの決済情報
+     *
+     * @param Order $Order 注文
+     * @param array $logData GMO-PG 送受信ログデータ配列
+     * @param array $info 表示用決済情報配列
+     * @return array 表示用決済情報配列
+     */
+    private function createSoftbankInfo(Order $Order, $logData, array $info)
     {
         $const = $this->eccubeConfig;
         $prefix = "gmo_payment_gateway.pay_status.";
@@ -389,6 +501,76 @@ class OrderExtention extends AbstractTypeExtension
                 }
             }
         }
+
+        return $info;
+    }
+
+    /**
+     * 銀行振込（バーチャル口座 あおぞら）向けの決済情報
+     *
+     * @param Order $Order 注文
+     * @param array $logData GMO-PG 送受信ログデータ配列
+     * @param array $info 表示用決済情報配列
+     * @return array 表示用決済情報配列
+     */
+    private function createGanbInfo(Order $Order, $logData, array $info)
+    {
+        // 銀行コード
+        if (isset($logData['BankCode']) && !empty($logData['BankCode'])) {
+            $info['BankCode'] = $logData['BankCode'];
+        }
+        // 銀行名
+        if (isset($logData['BankName']) && !empty($logData['BankName'])) {
+            $info['BankName'] = $logData['BankName'];
+        }
+        // 支店コード
+        if (isset($logData['BranchCode']) && !empty($logData['BranchCode'])) {
+            $info['BranchCode'] = $logData['BranchCode'];
+        }
+        // 支店名
+        if (isset($logData['BranchName']) && !empty($logData['BranchName'])) {
+            $info['BranchName'] = $logData['BranchName'];
+        }
+        // 預金種別
+        if (isset($logData['AccountType']) &&
+            !empty($logData['AccountType'])) {
+            $info['AccountType'] = $logData['AccountType'];
+        }
+        // 口座番号
+        if (isset($logData['AccountNumber']) &&
+            !empty($logData['AccountNumber'])) {
+            $info['AccountNumber'] = $logData['AccountNumber'];
+        }
+        // 口座名義
+        if (isset($logData['AccountHolderName']) &&
+            !empty($logData['AccountHolderName'])) {
+            $info['AccountHolderName'] = $logData['AccountHolderName'];
+        }
+        // 取引有効期限(YYYYMMDD)
+        if (isset($logData['AvailableDate']) &&
+            !empty($logData['AvailableDate'])) {
+            $info['AvailableDate'] = $logData['AvailableDate'];
+        }
+        // 入金金額(累計)
+        if (isset($logData['GanbTotalTransferAmount'])) {
+            $info['TotalTransferAmount'] = $logData['GanbTotalTransferAmount'];
+
+            $amount = 0;
+            if (!empty($info['Amount'])) {
+                $amount = $info['Amount'];
+            }
+            $total = 0;
+            if (!empty($info['TotalTransferAmount'])) {
+                $total = $info['TotalTransferAmount'];
+            }
+            $info['isMismatchAmount'] = false;
+            if ($amount != $total) {
+                $info['isMismatchAmount'] = true;
+            }
+        }
+
+        // 操作ボタン
+        $info['buttons']['status'] = 1;
 
         return $info;
     }

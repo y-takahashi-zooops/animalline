@@ -84,7 +84,7 @@ class PaymentStatusController extends AbstractController
      * @Template("@GmoPaymentGateway4/admin/payment_status.twig")
      */
     public function index
-        (Request $request, $page_no = null, PaginatorInterface $paginator)
+        (Request $request, PaginatorInterface $paginator, $page_no = null)
     {
         $searchForm = $this->createForm(SearchPaymentType::class);
 
@@ -121,7 +121,7 @@ class PaymentStatusController extends AbstractController
         if ('POST' === $request->getMethod()) {
             $searchForm->handleRequest($request);
 
-            if ($searchForm->isValid()) {
+            if ($searchForm->isSubmitted() && $searchForm->isValid()) {
                 /**
                  * 検索が実行された場合は, セッションに検索条件を保存する.
                  * ページ番号は最初のページ番号に初期化する.
@@ -226,8 +226,7 @@ class PaymentStatusController extends AbstractController
     /**
      * 一括処理.
      *
-     * @Method("POST")
-     * @Route("/%eccube_admin_route%/gmo_payment_gateway/payment_status/bulk_action/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_payment_status_bulk_action")
+     * @Route("/%eccube_admin_route%/gmo_payment_gateway/payment_status/bulk_action/{id}", requirements={"id" = "\d+"}, name="gmo_payment_gateway_admin_payment_status_bulk_action", methods={"POST"})
      */
     public function bulkAction(Request $request, $id)
     {

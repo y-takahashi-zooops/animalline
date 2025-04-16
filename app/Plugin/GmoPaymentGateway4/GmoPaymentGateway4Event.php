@@ -8,11 +8,18 @@
 namespace Plugin\GmoPaymentGateway4;
 
 use Eccube\Event\TemplateEvent;
+use Plugin\GmoPaymentGateway4\Service\FraudDetector;
+use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperCredit;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class GmoPaymentGateway4Event implements EventSubscriberInterface
 {
+    /**
+     * @var Plugin\GmoPaymentGateway4\Service\FraudDetector
+     */
+    protected $FraudDetector;
+
     /**
      * @var Plugin\GmoPaymentGateway4\Service\PaymentHelperCredit
      */
@@ -21,12 +28,18 @@ class GmoPaymentGateway4Event implements EventSubscriberInterface
     /**
      * コンストラクタ
      *
+     * @param FraudDetector $FraudDetector
      * @param PaymentHelperCredit $PaymentHelperCredit
      */
     public function __construct(
+        FraudDetector $FraudDetector,
         PaymentHelperCredit $PaymentHelperCredit
     ) {
+        $this->FraudDetector = $FraudDetector;
         $this->PaymentHelperCredit = $PaymentHelperCredit;
+
+        // 不正検知機能を初期化
+        $this->FraudDetector->initPaymentMethodClass(CreditCard::class);
     }
 
     /**
@@ -84,6 +97,9 @@ class GmoPaymentGateway4Event implements EventSubscriberInterface
      */
     public function onDefaultShoppingIndexTwig(TemplateEvent $event)
     {
+        // 不正検知サービスを渡す
+        $event->setParameter('FraudDetector', $this->FraudDetector);
+
         $event->addSnippet('@GmoPaymentGateway4/payment.twig');
     }
 

@@ -12,22 +12,24 @@ use Eccube\Form\Type\Shopping\OrderType;
 use Eccube\Repository\PaymentRepository;
 use Plugin\GmoPaymentGateway4\Entity\GmoConfig;
 use Plugin\GmoPaymentGateway4\Entity\GmoPaymentInput;
+use Plugin\GmoPaymentGateway4\Service\Method\CarAu;
+use Plugin\GmoPaymentGateway4\Service\Method\CarDocomo;
+use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
+use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
+use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
+use Plugin\GmoPaymentGateway4\Service\Method\Ganb;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
+use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperMember;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperCvs;
+use Plugin\GmoPaymentGateway4\Service\PaymentHelperGanb;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperPayEasyAtm;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperPayEasyNet;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperAu;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperDocomo;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperSoftbank;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperRakutenPay;
-use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
-use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
-use Plugin\GmoPaymentGateway4\Service\Method\CarAu;
-use Plugin\GmoPaymentGateway4\Service\Method\CarDocomo;
-use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
-use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Repository\GmoConfigRepository;
 use Plugin\GmoPaymentGateway4\Repository\GmoPaymentMethodRepository;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
@@ -73,6 +75,11 @@ class OrderExtention extends AbstractTypeExtension
     protected $PaymentHelperCvs;
 
     /**
+     * @var PaymentHelperGanb
+     */
+    protected $PaymentHelperGanb;
+
+    /**
      * @var PaymentHelperPayEasyAtm
      */
     protected $PaymentHelperPayEasyAtm;
@@ -108,6 +115,7 @@ class OrderExtention extends AbstractTypeExtension
          GmoPaymentMethodRepository $gmoPaymentMethodRepository,
          PaymentHelperMember $PaymentHelperMember,
          PaymentHelperCvs $PaymentHelperCvs,
+         PaymentHelperGanb $PaymentHelperGanb,
          PaymentHelperPayEasyAtm $PaymentHelperPayEasyAtm,
          PaymentHelperPayEasyNet $PaymentHelperPayEasyNet,
          PaymentHelperAu $PaymentHelperAu,
@@ -120,6 +128,7 @@ class OrderExtention extends AbstractTypeExtension
         $this->gmoPaymentMethodRepository = $gmoPaymentMethodRepository;
         $this->PaymentHelperMember = $PaymentHelperMember;
         $this->PaymentHelperCvs = $PaymentHelperCvs;
+        $this->PaymentHelperGanb = $PaymentHelperGanb;
         $this->PaymentHelperPayEasyAtm = $PaymentHelperPayEasyAtm;
         $this->PaymentHelperPayEasyNet = $PaymentHelperPayEasyNet;
         $this->PaymentHelperAu = $PaymentHelperAu;
@@ -159,7 +168,7 @@ class OrderExtention extends AbstractTypeExtension
             'helper' => 'PaymentHelperAu',
             'setData' => 'setDataAu',
         ],
-        // ドコモケータイ払い
+        // d払い
         CarDocomo::class => [
             'appendForm' => 'appendFormDocomo',
             'helper' => 'PaymentHelperDocomo',
@@ -176,6 +185,12 @@ class OrderExtention extends AbstractTypeExtension
             'appendForm' => 'appendFormRakutenPay',
             'helper' => 'PaymentHelperRakutenPay',
             'setData' => 'setDataRakutenPay',
+        ],
+        // 銀行振込
+        Ganb::class => [
+            'appendForm' => 'appendFormGanb',
+            'helper' => 'PaymentHelperGanb',
+            'setData' => 'setDataGanb',
         ],
     ];
 
@@ -241,6 +256,14 @@ class OrderExtention extends AbstractTypeExtension
     public function getExtendedType()
     {
         return OrderType::class;
+    }
+
+    /**
+     * Return the class of the type being extended.
+     */
+    public static function getExtendedTypes(): iterable
+    {
+        return [OrderType::class];
     }
 
     /**
@@ -496,7 +519,7 @@ class OrderExtention extends AbstractTypeExtension
     }
 
     /**
-     * ドコモケータイ払い向けのフォームを追加
+     * d払い向けのフォームを追加
      *
      * @param FormEvent $event フォームイベント
      * @param GmoConfig $config プラグイン設定
@@ -547,6 +570,25 @@ class OrderExtention extends AbstractTypeExtension
     }
 
     private function setDataRakutenPay
+        (FormEvent $event, GmoPaymentInput $GmoPaymentInput)
+    {
+        ;
+    }
+
+    /**
+     * 銀行振込（バーチャル口座 あおぞら）向けのフォームを追加
+     *
+     * @param FormEvent $event フォームイベント
+     * @param GmoConfig $config プラグイン設定
+     * @param array $method_config 支払方法設定
+     */
+    private function appendFormGanb
+        (FormEvent $event, GmoConfig $config, array $method_config)
+    {
+        ;
+    }
+
+    private function setDataGanb
         (FormEvent $event, GmoPaymentInput $GmoPaymentInput)
     {
         ;

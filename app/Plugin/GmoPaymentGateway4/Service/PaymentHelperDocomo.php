@@ -30,7 +30,7 @@ class PaymentHelperDocomo extends PaymentHelperCarrier
     }
 
     /**
-     * ドコモケータイ払いを行う
+     * d払いを行う
      *
      * @param Order $Order 注文
      * @param array $sendData 送信データ

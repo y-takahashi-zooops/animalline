@@ -15,13 +15,14 @@ use Eccube\Entity\PageLayout;
 use Eccube\Entity\Payment;
 use Plugin\GmoPaymentGateway4\Entity\GmoConfig;
 use Plugin\GmoPaymentGateway4\Entity\GmoPaymentMethod;
-use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
-use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
-use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
 use Plugin\GmoPaymentGateway4\Service\Method\CarAu;
 use Plugin\GmoPaymentGateway4\Service\Method\CarDocomo;
 use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
+use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
+use Plugin\GmoPaymentGateway4\Service\Method\Cvs;
+use Plugin\GmoPaymentGateway4\Service\Method\Ganb;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
+use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
 use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -132,6 +133,7 @@ class PluginManager extends AbstractPluginManager
         $rule_min = 1;
 
         switch ($class) {
+        // 楽天ペイ
         case RakutenPay::class:
             $rule_min = 100;
             break;
@@ -176,6 +178,11 @@ class PluginManager extends AbstractPluginManager
             $rule_max = 99999999;
             break;
 
+        // 以下、無制限
+
+        // 銀行振込（バーチャル口座 あおぞら）
+        case Ganb::class:
+        // クレジット
         case CreditCard::class:
         default:
             break;
@@ -262,11 +269,13 @@ class PluginManager extends AbstractPluginManager
             ['class' => CarAu::class,
              'name' => trans('auかんたん決済')],
             ['class' => CarDocomo::class,
-             'name' => trans('ドコモケータイ払い')],
+             'name' => trans('d払い')],
             ['class' => CarSoftbank::class,
              'name' => trans('ソフトバンクまとめて支払い')],
             ['class' => RakutenPay::class,
              'name' => trans('楽天ペイ')],
+            ['class' => Ganb::class,
+             'name' => trans('銀行振込(あおぞら)')],
         ];
 
         // 支払方法を追加

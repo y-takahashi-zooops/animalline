@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
     {
     use \Plugin\GmoPaymentGateway4\Entity\PaymentTrait;
 
-        /**
+    /**
          * @return string
          */
         public function __toString()

@@ -26,7 +26,12 @@ class PaymentHelperCredit extends PaymentHelper
      */
     protected function getGmoPaymentMethodClass()
     {
-        return CreditCard::class;
+        $className = CreditCard::class;
+
+        // 不正検知機能を初期化
+        $this->fraudDetector->initPaymentMethodClass($className);
+
+        return $className;
     }
 
     /**
@@ -61,6 +66,13 @@ class PaymentHelperCredit extends PaymentHelper
             }
         }
 
+        // 3DS1.0,3DS2.0の場合
+        if ((isset($sendData['TdFlag']) && !empty($sendData['TdFlag'])) ||
+            (!isset($sendData['TdFlag']) &&
+             !empty($this->gmoPaymentMethodConfig['TdFlag']))) {
+            $paramNames[] = 'TdRequired';
+        }
+
         $sendData['action_status'] =
             $const['gmo_payment_gateway.action_status.entry_request'];
         $sendData['pay_status'] =
@@ -73,6 +85,7 @@ class PaymentHelperCredit extends PaymentHelper
         if (!$GmoOrderPayment->isExistsAccessIDAndPass()) {
             $r = $this->sendOrderRequest($Order, $url, $paramNames, $sendData);
             if (!$r) {
+                $this->fraudDetector->errorOccur();
                 return $r;
             }
         }
@@ -113,6 +126,34 @@ class PaymentHelperCredit extends PaymentHelper
             $sendData['Method'] = $sendData['credit_pay_methods2'];
         }
 
+        // 3DS2.0の場合
+        if ((isset($sendData['TdFlag']) && $sendData['TdFlag'] == '2') ||
+            (!isset($sendData['TdFlag']) &&
+             $this->gmoPaymentMethodConfig['TdFlag'] == '2')) {
+            $paramNames = array_merge($paramNames, [
+                'RetUrl',
+
+                'Tds2ChAccChange',
+                'Tds2ChAccDate',
+                'Tds2ShipNameInd',
+                'Tds2BillAddrCountry',
+                'Tds2BillAddrLine1',
+                'Tds2BillAddrLine2',
+                'Tds2BillAddrPostCode',
+                'Tds2BillAddrState',
+                'Tds2Email',
+                'Tds2ShipAddrCountry',
+                'Tds2ShipAddrLine1',
+                'Tds2ShipAddrLine2',
+                'Tds2ShipAddrPostCode',
+                'Tds2ShipAddrState',
+            ]);
+
+            $sendData['RetUrl'] = $this->container->get('router')
+                ->generate('gmo_payment_gateway_3dsecure', ['version' => 2],
+                           UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+
         $sendData['action_status'] =
             $const['gmo_payment_gateway.action_status.exec_request'];
         $sendData['pay_status'] = '';
@@ -130,20 +171,36 @@ class PaymentHelperCredit extends PaymentHelper
         $sendData['fail_pay_status'] =
             $const['gmo_payment_gateway.pay_status.fail'];
         if (isset($sendData['TdFlag'])) {
-            if ($sendData['TdFlag'] == '1') {
+            if ($sendData['TdFlag'] == '1' || $sendData['TdFlag'] == '2') {
                 $sendData['success_pay_status'] =
                     $const['gmo_payment_gateway.pay_status.unsettled'];
             }
-        } else if ($this->gmoPaymentMethodConfig['TdFlag'] === '1') {
+        } else if ($this->gmoPaymentMethodConfig['TdFlag'] == '1' ||
+                   $this->gmoPaymentMethodConfig['TdFlag'] == '2') {
             $sendData['success_pay_status'] =
                 $const['gmo_payment_gateway.pay_status.unsettled'];
         }
 
         $r = $this->sendOrderRequest($Order, $url, $paramNames, $sendData);
 
+        if (!$r) {
+            $this->fraudDetector->errorOccur();
+        }
+
         PaymentUtil::logInfo('PaymentHelperCredit::doRequest end.');
         
         return $r;
+    }
+
+    /**
+     * 3Dセキュアを利用する設定か否かを返す
+     *
+     * @param array $sendData 送信データ
+     * @return boolean true: 利用する, false: 利用しない
+     */
+    protected function use3dSecure(array $sendData)
+    {
+        ;
     }
 
     /**
@@ -158,6 +215,23 @@ class PaymentHelperCredit extends PaymentHelper
             !empty($results['ACSUrl']) &&
             !empty($results['PaReq']) &&
             !empty($results['MD'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 決済実行の結果3Dセキュア2.0を実行するためのレスポンスが
+     * 返ってきたか確認する
+     *
+     * @return boolean true: 3Dセキュア2.0, false: 非3Dセキュア2.0
+     */
+    public function is3dSecure2Response()
+    {
+        $results = $this->getResults();
+        if (!empty($results['ACS']) && $results['ACS'] === "2" &&
+            !empty($results['RedirectUrl'])) {
             return true;
         }
 
@@ -180,7 +254,7 @@ class PaymentHelperCredit extends PaymentHelper
         $sendData['ACSUrl'] = $results['ACSUrl'];
         $sendData['PaReq'] = $results['PaReq'];
         $sendData['TermUrl'] = $this->container->get('router')
-            ->generate('gmo_payment_gateway_3dsecure', [],
+            ->generate('gmo_payment_gateway_3dsecure', ['version' => 1],
                        UrlGeneratorInterface::ABSOLUTE_URL);
         $sendData['MD'] = $results['MD'];
 
@@ -193,6 +267,34 @@ class PaymentHelperCredit extends PaymentHelper
 
         PaymentUtil::logInfo
             ('PaymentHelperCredit::redirectTo3dSecurePage end.');
+
+        return $result;
+    }
+
+    /**
+     * 3Dセキュア2.0パスワード入力画面へリダイレクトする情報を返す
+     *
+     * @return PaymentResult
+     */
+    public function redirectTo3dSecure2Page()
+    {
+        PaymentUtil::logInfo
+            ('PaymentHelperCredit::redirectTo3dSecure2Page start.');
+
+        $sendData = [];
+        $results = $this->getResults();
+
+        $sendData['RedirectUrl'] = $results['RedirectUrl'];
+
+        $template = '@GmoPaymentGateway4/payments/credit_3dsecure2.twig';
+        $contents = $this->twig->render($template, ['sendData' => $sendData]);
+
+        $result = new PaymentResult();
+        $result->setSuccess(true);
+        $result->setResponse(Response::create($contents));
+
+        PaymentUtil::logInfo
+            ('PaymentHelperCredit::redirectTo3dSecure2Page end.');
 
         return $result;
     }
@@ -252,8 +354,70 @@ class PaymentHelperCredit extends PaymentHelper
 
         $r = $this->sendOrderRequest($Order, $url, $paramNames, $receiveData);
 
+        if (!$r) {
+            $this->fraudDetector->errorOccur();
+        }
+
         PaymentUtil::logInfo
             ('PaymentHelperCredit::do3dSecureContinuation end.');
+
+        return $r;
+    }
+
+    /**
+     * 本人認証サービス（3Dセキュア2.0）パスワード入力画面後の処理
+     * ReceiveController で利用する
+     *
+     * @param Order $Order 受注
+     * @param array $receiveData 受信データ
+     * @return boolean true: OK, false: NG
+     */
+    public function do3dSecure2Continuation(Order $Order, array $receiveData)
+    {
+        PaymentUtil::logInfo
+            ('PaymentHelperCredit::do3dSecure2Continuation start.');
+
+        $const = $this->eccubeConfig;
+
+        // 取引ID(AccessID)の検証
+        $paymentLogData = $Order->getGmoOrderPayment()->getPaymentLogData();
+        if (isset($paymentLogData['AccessID']) &&
+            $paymentLogData['AccessID'] !== $receiveData['AccessID']) {
+            $msg = 'gmo_payment_gateway.shopping.credit.3dsecure2.error1';
+            $this->setError(trans($msg, [
+                '%AccessID1%' => $receiveData['AccessID'],
+                '%AccessID2%' => $paymentLogData['AccessID'],
+            ]));
+            return false;
+        }
+
+        $url = $this->GmoConfig->getServerUrl() . 'SecureTran2.idPass';
+
+        $paramNames = [
+            'AccessID',
+            'AccessPass',
+        ];
+
+        $receiveData['action_status'] =
+            $const['gmo_payment_gateway.action_status.recv_notice'];
+        $receiveData['success_pay_status'] =
+            $const['gmo_payment_gateway.pay_status.auth'];
+        if (!is_null($this->gmoPaymentMethodConfig['JobCd'])) {
+            $status = 'gmo_payment_gateway.pay_status.' .
+                strtolower($this->gmoPaymentMethodConfig['JobCd']);
+            $receiveData['success_pay_status'] = $const[$status];
+        }
+        $receiveData['fail_pay_status'] =
+            $const['gmo_payment_gateway.pay_status.fail'];
+
+        $r = $this->sendOrderRequest($Order, $url, $paramNames, $receiveData);
+
+        if (!$r) {
+            $this->fraudDetector->errorOccur();
+        }
+
+        PaymentUtil::logInfo
+            ('PaymentHelperCredit::do3dSecure2Continuation end.');
 
         return $r;
     }

@@ -42,6 +42,20 @@ http://www.gmo-pg.com/
             });
         });
 
+        // 一部取消(一部返品)実行
+        $('#gmo_payment_gateway-action__partial').on('click', function () {
+            if (!fnGmoConfirm()) {
+                return;
+            }
+            $('#gmo_payment_gateway-info__body button').prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: '{{ url('gmo_payment_gateway_admin_order_partial', { id: Order.id }) }}',
+            }).always(function () {
+                location.href = location.href.replace(/#.*$/, '');
+            });
+        });
+
         // 取消(返品)実行
         $('#gmo_payment_gateway-action__cancel').on('click', function () {
             if (!fnGmoConfirm()) {
@@ -104,6 +118,12 @@ http://www.gmo-pg.com/
         });
     });
 </script>
+<style type="text/css">
+    .col-2plus {
+        flex: 0 0 17%;
+        max-width: 17%;
+    }
+</style>
 <div class="d-none">
   <div id="gmo_payment_gateway-info" class="card rounded border-0 mb-4">
     <div class="card-header">
@@ -122,7 +142,7 @@ http://www.gmo-pg.com/
       <div class="card-body">
 
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.payment_method'|trans }}</span>
           </div>
           <div class="col">
@@ -132,7 +152,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.pay_status is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.pay_status'|trans }}</span>
           </div>
           <div class="col">
@@ -143,7 +163,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.OrderID is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.order_id'|trans }}</span>
           </div>
           <div class="col">
@@ -154,7 +174,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.ErrInfo is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.err_info'|trans }}</span>
           </div>
           <div class="col">
@@ -165,7 +185,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.error_msg is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.err_msg'|trans }}</span>
           </div>
           <div class="col">
@@ -176,7 +196,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.Approve is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.approve'|trans }}</span>
           </div>
           <div class="col">
@@ -187,7 +207,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.Method is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.method'|trans }}</span>
           </div>
           <div class="col">
@@ -198,7 +218,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.Forward is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.forward'|trans }}</span>
           </div>
           <div class="col">
@@ -209,7 +229,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.TranID is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.tran_id'|trans }}</span>
           </div>
           <div class="col">
@@ -220,7 +240,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.TranDate is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.tran_date'|trans }}</span>
           </div>
           <div class="col">
@@ -231,7 +251,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.Convenience is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.convenience'|trans }}</span>
           </div>
           <div class="col">
@@ -242,7 +262,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.CustID is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.cust_id'|trans }}</span>
           </div>
           <div class="col">
@@ -253,7 +273,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.BkCode is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.bk_code'|trans }}</span>
           </div>
           <div class="col">
@@ -264,7 +284,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.ConfNo is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.conf_no'|trans }}</span>
           </div>
           <div class="col">
@@ -275,7 +295,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.ReceiptNo is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.receipt_no'|trans }}</span>
           </div>
           <div class="col">
@@ -286,7 +306,7 @@ http://www.gmo-pg.com/
 
 	{% if Order.getGmoPaymentInfo.PaymentTerm is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.payment_term'|trans }}</span>
           </div>
           <div class="col">
@@ -295,23 +315,122 @@ http://www.gmo-pg.com/
         </div>
 	{% endif %}
 
+	{% if Order.getGmoPaymentInfo.BankCode is defined %}
+        <div class="row mb-2">
+          <div class="col-2 col-2plus">
+            <span>{{ 'gmo_payment_gateway.admin.order_edit.col.bank_code'|trans }}</span>
+          </div>
+          <div class="col">
+            {{ Order.getGmoPaymentInfo.BankCode }}
+          </div>
+        </div>
+	{% endif %}
+
+	{% if Order.getGmoPaymentInfo.BankName is defined %}
+        <div class="row mb-2">
+          <div class="col-2 col-2plus">
+            <span>{{ 'gmo_payment_gateway.admin.order_edit.col.bank_name'|trans }}</span>
+          </div>
+          <div class="col">
+            {{ Order.getGmoPaymentInfo.BankName }}
+          </div>
+        </div>
+	{% endif %}
+
+	{% if Order.getGmoPaymentInfo.BranchCode is defined %}
+        <div class="row mb-2">
+          <div class="col-2 col-2plus">
+            <span>{{ 'gmo_payment_gateway.admin.order_edit.col.branch_code'|trans }}</span>
+          </div>
+          <div class="col">
+            {{ Order.getGmoPaymentInfo.BranchCode }}
+          </div>
+        </div>
+	{% endif %}
+
+	{% if Order.getGmoPaymentInfo.BranchName is defined %}
+        <div class="row mb-2">
+          <div class="col-2 col-2plus">
+            <span>{{ 'gmo_payment_gateway.admin.order_edit.col.branch_name'|trans }}</span>
+          </div>
+          <div class="col">
+            {{ Order.getGmoPaymentInfo.BranchName }}
+          </div>
+        </div>
+	{% endif %}
+
+	{% if Order.getGmoPaymentInfo.AccountType is defined %}
+        <div class="row mb-2">
+          <div class="col-2 col-2plus">
+            <span>{{ 'gmo_payment_gateway.admin.order_edit.col.account_type'|trans }}</span>
+          </div>
+          <div class="col">
+            {{ Order.getGmoPaymentInfo.AccountType }}
+          </div>
+        </div>
+	{% endif %}
+
+	{% if Order.getGmoPaymentInfo.AccountNumber is defined %}
+        <div class="row mb-2">
+          <div class="col-2 col-2plus">
+            <span>{{ 'gmo_payment_gateway.admin.order_edit.col.account_number'|trans }}</span>
+          </div>
+          <div class="col">
+            {{ Order.getGmoPaymentInfo.AccountNumber }}
+          </div>
+        </div>
+	{% endif %}
+
+	{% if Order.getGmoPaymentInfo.AccountHolderName is defined %}
+        <div class="row mb-2">
+          <div class="col-2 col-2plus">
+            <span>{{ 'gmo_payment_gateway.admin.order_edit.col.account_holder_name'|trans }}</span>
+          </div>
+          <div class="col">
+            {{ Order.getGmoPaymentInfo.AccountHolderName }}
+          </div>
+        </div>
+	{% endif %}
+
+	{% if Order.getGmoPaymentInfo.AvailableDate is defined %}
+        <div class="row mb-2">
+          <div class="col-2 col-2plus">
+            <span>{{ 'gmo_payment_gateway.admin.order_edit.col.available_date'|trans }}</span>
+          </div>
+          <div class="col">
+            {{ Order.getGmoPaymentInfo.AvailableDate }}
+          </div>
+        </div>
+	{% endif %}
+
 	{% if Order.getGmoPaymentInfo.Amount is defined %}
         <div class="row mb-2">
-          <div class="col-2">
-            <span>{{ 'gmo_payment_gateway.admin.order_edit.col.amount'|trans }}</span>
+          <div class="col-2 col-2plus">
+            <span>{{ 'gmo_payment_gateway.admin.order_edit.col.amount'|trans }}{% if Order.getPayment.getMethodClass == 'Plugin\\GmoPaymentGateway4\\Service\\Method\\Ganb' %}({{ 'gmo_payment_gateway.admin.order_edit.col.amount.ganb'|trans }}){% endif %}</span>
           </div>
           <div class="col">
             {{ Order.getGmoPaymentInfo.Amount|number_format }}{{ 'gmo_payment_gateway.com.yen'|trans }}
 	    {% if Order.getGmoPaymentInfo.attention is defined %}
-	    <span class="attention">{{ Order.getGmoPaymentInfo.attention }}</span>
+	    <span class="text-danger">{{ Order.getGmoPaymentInfo.attention }}</span>
 	    {% endif %}
+          </div>
+        </div>
+	{% endif %}
+
+	{% if Order.getGmoPaymentInfo.TotalTransferAmount is defined %}
+        <div class="row mb-2">
+          <div class="col-2 col-2plus">
+            <span>{{ 'gmo_payment_gateway.admin.order_edit.col.total_transfer_amount'|trans }}</span>
+          </div>
+          <div class="col {% if Order.getGmoPaymentInfo.isMismatchAmount %}text-danger font-weight-bold{% endif %}">
+            {{ Order.getGmoPaymentInfo.TotalTransferAmount|number_format }}{{ 'gmo_payment_gateway.com.yen'|trans }}
           </div>
         </div>
 	{% endif %}
 
 	{% if Order.getGmoPaymentInfo.buttons is defined and Order.getGmoPaymentInfo.buttons|length %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.action'|trans }}</span>
           </div>
           <div class="col">
@@ -319,6 +438,11 @@ http://www.gmo-pg.com/
 	      {% if Order.getGmoPaymentInfo.buttons.commit is defined %}
               <li class="list-inline-item">
                 <button id="gmo_payment_gateway-action__commit" type="button" class="btn btn-success px-5">{{ 'gmo_payment_gateway.admin.order_edit.button.commit'|trans }}</button>
+              </li>
+	      {% endif %}
+	      {% if Order.getGmoPaymentInfo.buttons.partial is defined %}
+              <li class="list-inline-item">
+                <button id="gmo_payment_gateway-action__partial" type="button" class="btn btn-danger px-5">{{ 'gmo_payment_gateway.admin.order_edit.button.partial'|trans }}</button>
               </li>
 	      {% endif %}
 	      {% if Order.getGmoPaymentInfo.buttons.cancel is defined %}
@@ -348,7 +472,7 @@ http://www.gmo-pg.com/
 
         {% if Order.getGmoPaymentInfo.Amount is defined %}
         <div class="row mb-2">
-          <div class="col-2">
+          <div class="col-2 col-2plus">
             <span>{{ 'gmo_payment_gateway.admin.order_edit.col.log'|trans }}</span>
           </div>
           <div class="col">

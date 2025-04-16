@@ -25,6 +25,14 @@ class GmoPaymentGateway4Nav implements EccubeNav
                     ],
                 ],
             ],
+            'customer' => [
+                'children' => [
+                    'gmo_payment_gateway_admin_fraud_detection' => [
+                        'name' => 'gmo_payment_gateway.admin.nav.fraud_detection_list',
+                        'url' => 'gmo_payment_gateway_admin_fraud_detection',
+                    ],
+                ],
+            ],
         ];
     }
 }

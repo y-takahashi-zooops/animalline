@@ -13,6 +13,8 @@ use Plugin\GmoPaymentGateway4\Entity\GmoConfig;
 use Plugin\GmoPaymentGateway4\Entity\GmoPaymentInput;
 use Plugin\GmoPaymentGateway4\Form\Type\MypageCardType;
 use Plugin\GmoPaymentGateway4\Repository\GmoConfigRepository;
+use Plugin\GmoPaymentGateway4\Service\FraudDetector;
+use Plugin\GmoPaymentGateway4\Service\Method\CreditCard;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperCredit;
 use Plugin\GmoPaymentGateway4\Service\PaymentHelperMember;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
@@ -30,6 +32,11 @@ class MypageCardController extends AbstractController
     protected $GmoConfig;
 
     /**
+     * @var Plugin\GmoPaymentGateway4\Service\FraudDetector
+     */
+    protected $FraudDetector;
+
+    /**
      * @var Plugin\GmoPaymentGateway4\Service\PaymentHelperCredit
      */
     protected $PaymentHelperCredit;
@@ -43,17 +50,23 @@ class MypageCardController extends AbstractController
      * MypageCardController constructor.
      *
      * @param GmoConfigRepository $GmoConfigRepository
+     * @param FraudDetector $FraudDetector
      * @param PaymentHelperCredit $PaymentHelperCredit
      * @param PaymentHelperMember $PaymentHelperMember
      */
     public function __construct(
         GmoConfigRepository $GmoConfigRepository,
+        FraudDetector $FraudDetector,
         PaymentHelperCredit $PaymentHelperCredit,
         PaymentHelperMember $PaymentHelperMember
     ) {
         $this->GmoConfig = $GmoConfigRepository->get();
+        $this->FraudDetector = $FraudDetector;
         $this->PaymentHelperCredit = $PaymentHelperCredit;
         $this->PaymentHelperMember = $PaymentHelperMember;
+
+        // 不正検知機能を初期化
+        $this->FraudDetector->initPaymentMethodClass(CreditCard::class);
     }
 
     /**
@@ -91,14 +104,19 @@ class MypageCardController extends AbstractController
         $cardList =
             $this->PaymentHelperMember->searchCard($Customer, [], true);
 
+        // 不正検知の状態を取得
+        $isFraudDetect = $this->FraudDetector->isLock();
+
         // 登録／修正
-        if ($form->isSubmitted() && $form->isValid()) {
+        if (!$isFraudDetect && $form->isSubmitted() && $form->isValid()) {
             $GmoPaymentInput = new GmoPaymentInput();
             $GmoPaymentInput->setFormData($form);
             $sendData = $GmoPaymentInput->getArrayData();
             if (!$this->PaymentHelperMember
                 ->saveCard($Customer, $sendData, $sendData['CardSeq'])) {
                 $this->setErrorMessage();
+                // エラーを記録して最新の不正検知状態を取得
+                $isFraudDetect = $this->FraudDetector->errorOccur();
                 goto finish;
             }
 
@@ -118,12 +136,21 @@ class MypageCardController extends AbstractController
 
     finish:
 
+        // 不正が検出された場合はメッセージを表示
+        if ($isFraudDetect) {
+            $this->addDanger(trans(
+                'gmo_payment_gateway.mypage.card_edit.fraud.detect.lock',
+                ['%ip%' => $this->FraudDetector->getRemoteAddr()]
+            ));
+        }
+
         PaymentUtil::logInfo('MypageCardController::index end.');
 
         return [
             'form' => $form->createView(),
             'cardList' => $cardList,
             'GmoConfig' => $this->GmoConfig,
+            'isFraudDetect' => $isFraudDetect,
         ];
     }
 
