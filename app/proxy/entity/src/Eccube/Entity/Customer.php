@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
     {
     use \Customize\Entity\CustomerTrait, \Plugin\GmoPaymentGateway4\Entity\CustomerTrait;
 
-        /**
+    /**
          * @var int
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
@@ -324,7 +324,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         /**
          * {@inheritdoc}
          */
-        public function getRoles()
+        public function getRoles(): array
         {
             $roles = ['ROLE_USER'];
             if($this->is_breeder){
@@ -347,8 +347,17 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 
         /**
          * {@inheritdoc}
+         * 20250422 バージョンアップに伴い追加
          */
-        public function eraseCredentials()
+        public function getUserIdentifier(): string
+        {
+            return $this->email; // 通常はメールアドレスなど一意の識別子
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function eraseCredentials(): void
         {
         }
 
