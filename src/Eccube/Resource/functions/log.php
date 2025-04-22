@@ -11,6 +11,7 @@
  * file that was distributed with this source code.
  */
 
+/* 20250421 delete
 function log_emergency($message, array $context = [])
 {
     $app = \Eccube\Application::getInstance();
@@ -18,7 +19,9 @@ function log_emergency($message, array $context = [])
         $app['eccube.logger']->emergency($message, $context);
     }
 }
+*/
 
+/* delete 20250421
 function log_alert($message, array $context = [])
 {
     $app = \Eccube\Application::getInstance();
@@ -74,6 +77,7 @@ function log_debug($message, array $context = [])
         $app['eccube.logger']->debug($message, $context);
     }
 }
+*/
 
 /**
  * プラグイン用ログ出力関数
@@ -82,6 +86,7 @@ function log_debug($message, array $context = [])
  *
  * @return \Symfony\Bridge\Monolog\Logger
  */
+/*
 function logs($channel)
 {
     $app = \Eccube\Application::getInstance();
@@ -90,3 +95,4 @@ function logs($channel)
 
     return $container->get('monolog.logger.'.$channel);
 }
+*/
