@@ -27,11 +27,13 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormTypeExtensionInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 /**
  * @FormExtension
  */
-class DoctrineOrmExtension extends AbstractTypeExtension
+class DoctrineOrmExtension extends AbstractTypeExtension implements FormTypeExtensionInterface
 {
     /**
      * @var EntityManager
@@ -122,8 +124,8 @@ class DoctrineOrmExtension extends AbstractTypeExtension
         );
     }
 
-    public function getExtendedType()
+    public static function getExtendedTypes(): iterable
     {
-        return FormType::class;
+        return [EntityType::class];
     }
 }
