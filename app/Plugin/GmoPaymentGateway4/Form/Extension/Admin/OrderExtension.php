@@ -30,7 +30,7 @@ use Symfony\Component\Form\FormEvents;
 /**
  * 受注修正画面のFormを拡張しPGマルチペイメントサービス決済情報を追加する.
  */
-class OrderExtention extends AbstractTypeExtension
+class OrderExtension extends AbstractTypeExtension 
 {
     /**
      * @var EccubeConfig
@@ -151,9 +151,9 @@ class OrderExtention extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): iterable
     {
-        return OrderType::class;
+        return [OrderType::class];
     }
 
     /**

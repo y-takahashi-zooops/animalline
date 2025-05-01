@@ -39,6 +39,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Eccube\Service\OrderHelper as BaseOrderHelper;
+use MobileDetect\MobileDetect;
 
 class OrderHelper extends BaseOrderHelper
 {
@@ -134,10 +135,12 @@ class OrderHelper extends BaseOrderHelper
         $preOrderId = $this->createPreOrderId();
         $Order->setPreOrderId($preOrderId);
 
+        $detect = new MobileDetect();
+
         // 顧客情報の設定
         $this->setCustomer($Order, $Customer);
 
-        $DeviceType = $this->deviceTypeRepository->find($this->mobileDetector->isMobile() ? DeviceType::DEVICE_TYPE_MB : DeviceType::DEVICE_TYPE_PC);
+        $DeviceType = $this->deviceTypeRepository->find($this->$detect->isMobile() ? DeviceType::DEVICE_TYPE_MB : DeviceType::DEVICE_TYPE_PC);
         $Order->setDeviceType($DeviceType);
 
         // 明細情報の設定

@@ -35,6 +35,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
+use MobileDetect\MobileDetect;
 
 class TwigInitializeListener implements EventSubscriberInterface
 {
@@ -187,7 +188,9 @@ class TwigInitializeListener implements EventSubscriberInterface
         }
 
         $type = DeviceType::DEVICE_TYPE_PC;
-        if ($this->mobileDetector->isMobile()) {
+        $detect = new MobileDetect();
+
+        if ($this->$detect->isMobile()) {
             $type = DeviceType::DEVICE_TYPE_MB;
         }
 

@@ -26,6 +26,6 @@ return [
     Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true, 'install' => true],
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
-    SunCat\MobileDetectBundle\MobileDetectBundle::class => ['all' => true],
+//    SunCat\MobileDetectBundle\MobileDetectBundle::class => ['all' => true],
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
 ];

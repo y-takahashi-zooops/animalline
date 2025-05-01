@@ -21,19 +21,19 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandle
 class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
 {
     /** @var \SessionHandlerInterface */
-    private $handler;
+    private \SessionHandlerInterface $handler;
     /** @var bool */
-    private $doDestroy;
+    private bool $doDestroy = false;
     /** @var string */
-    private $sessionName;
+    private string $sessionName;
     /** @var string|null */
-    private $prefetchId;
+    private ?string $prefetchId = null;
     /** @var string|null */
-    private $prefetchData;
+    private ?string $prefetchData = null;
     /** @var string */
-    private $newSessionId;
+    private string $newSessionId = '';
     /** @var string|null */
-    private $igbinaryEmptyData;
+    private ?string $igbinaryEmptyData = null;
 
     /**
      *  {@inheritdoc}
@@ -50,7 +50,7 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function open($savePath, $sessionName)
+    public function open($savePath, $sessionName): bool
     {
         $this->sessionName = $sessionName;
         // see https://github.com/symfony/symfony/blob/2adc85d49cbe14e346068fa7e9c2e1f08ab31de6/src/Symfony/Component/HttpFoundation/Session/Storage/Handler/AbstractSessionHandler.php#L35-L37
@@ -64,7 +64,7 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doRead($sessionId)
+    protected function doRead($sessionId): string
     {
         return $this->handler->read($sessionId);
     }
@@ -72,7 +72,7 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function updateTimestamp($sessionId, $data)
+    public function updateTimestamp($sessionId, $data): bool
     {
         return $this->write($sessionId, $data);
     }
@@ -80,7 +80,7 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doWrite($sessionId, $data)
+    protected function doWrite($sessionId, $data): bool
     {
         return $this->handler->write($sessionId, $data);
     }
@@ -89,7 +89,7 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
      * {@inheritdoc}
      * @see https://github.com/symfony/symfony/blob/2adc85d49cbe14e346068fa7e9c2e1f08ab31de6/src/Symfony/Component/HttpFoundation/Session/Storage/Handler/AbstractSessionHandler.php#L126-L167
      */
-    public function destroy($sessionId)
+    public function destroy($sessionId): bool
     {
         if (\PHP_VERSION_ID < 70000) {
             $this->prefetchData = null;
@@ -145,7 +145,7 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doDestroy($sessionId)
+    protected function doDestroy($sessionId): bool
     {
         $this->doDestroy = false;
 
@@ -155,15 +155,15 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): bool
     {
         return $this->handler->close();
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): int|false
     {
         return $this->handler->gc($maxlifetime);
     }
@@ -171,7 +171,7 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * @return string
      */
-    public function getCookieSameSite()
+    public function getCookieSameSite(): string
     {
         if ($this->shouldSendSameSiteNone() && \PHP_VERSION_ID >= 70300 && $this->getCookieSecure()) {
             return Cookie::SAMESITE_NONE;
@@ -183,7 +183,7 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * @return string
      */
-    public function getCookiePath()
+    public function getCookiePath(): string
     {
         $cookiePath = env('ECCUBE_COOKIE_PATH', '/');
         if ($this->shouldSendSameSiteNone() && \PHP_VERSION_ID < 70300 && $this->getCookieSecure()) {
@@ -196,7 +196,7 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * @return string
      */
-    public function getCookieSecure()
+    public function getCookieSecure(): string
     {
         $request = Request::createFromGlobals();
         return $request->isSecure() ? '1' : '0';
@@ -205,7 +205,7 @@ class SameSiteNoneCompatSessionHandler extends StrictSessionHandler
     /**
      * @return bool
      */
-    private function shouldSendSameSiteNone()
+    private function shouldSendSameSiteNone(): bool
     {
         $userAgent = array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : null;
         return SameSite::handle($userAgent);

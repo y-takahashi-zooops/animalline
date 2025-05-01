@@ -25,7 +25,7 @@ use Eccube\Entity\Master\OrderStatus;
 use Eccube\Entity\Order;
 use Eccube\Entity\OrderItem;
 use Eccube\Entity\Shipping;
-use Eccube\EventListener\SecurityListener;
+//use Eccube\EventListener\SecurityListener;
 use Eccube\Repository\DeliveryRepository;
 use Eccube\Repository\Master\DeviceTypeRepository;
 use Eccube\Repository\Master\OrderItemTypeRepository;
@@ -34,15 +34,18 @@ use Eccube\Repository\Master\PrefRepository;
 use Eccube\Repository\OrderRepository;
 use Eccube\Repository\PaymentRepository;
 use Eccube\Util\StringUtil;
-use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
+//use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
+//use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Detection\MobileDetect;
+//use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class OrderHelper
 {
     // FIXME 必要なメソッドのみ移植する
-    use ControllerTrait;
+//    use ControllerTrait;
 
     /**
      * @var ContainerInterface
@@ -91,6 +94,16 @@ class OrderHelper
      */
     protected $orderItemTypeRepository;
 
+    /**
+     * @var MobileDetect
+     */
+    protected $mobileDetect;
+
+    /**
+     * @var Security
+     */
+    protected $security;
+
     public function __construct(
         ContainerInterface $container,
         EntityManagerInterface $entityManager,
@@ -101,20 +114,22 @@ class OrderHelper
         PaymentRepository $paymentRepository,
         DeviceTypeRepository $deviceTypeRepository,
         PrefRepository $prefRepository,
-        MobileDetector $mobileDetector,
-        SessionInterface $session
+        SessionInterface $session,
+        MobileDetect $mobileDetect,
+        Security $security
     ) {
         $this->container = $container;
+        $this->entityManager = $entityManager;
         $this->orderRepository = $orderRepository;
-        $this->orderStatusRepository = $orderStatusRepository;
         $this->orderItemTypeRepository = $orderItemTypeRepository;
+        $this->orderStatusRepository = $orderStatusRepository;
         $this->deliveryRepository = $deliveryRepository;
         $this->paymentRepository = $paymentRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
-        $this->entityManager = $entityManager;
         $this->prefRepository = $prefRepository;
-        $this->mobileDetector = $mobileDetector;
         $this->session = $session;
+        $this->mobileDetect = $mobileDetect;
+        $this->security = $security;
     }
 
     /**
@@ -136,7 +151,9 @@ class OrderHelper
         // 顧客情報の設定
         $this->setCustomer($Order, $Customer);
 
-        $DeviceType = $this->deviceTypeRepository->find($this->mobileDetector->isMobile() ? DeviceType::DEVICE_TYPE_MB : DeviceType::DEVICE_TYPE_PC);
+        $detect = new MobileDetect();
+
+        $DeviceType = $this->deviceTypeRepository->find($this->$detect->isMobile() ? DeviceType::DEVICE_TYPE_MB : DeviceType::DEVICE_TYPE_PC);
         $Order->setDeviceType($DeviceType);
 
         // 明細情報の設定
@@ -196,17 +213,25 @@ class OrderHelper
     public function isLoginRequired()
     {
         // フォームログイン済はログイン不要
-        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+//        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+//            return false;
+//        }
+        if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
             return false;
         }
-
         // Remember Meログイン済の場合はフォームからのログインが必要
-        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+//        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+//            return true;
+//        }
+        if ($this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return true;
         }
 
         // 未ログインだがお客様情報を入力している場合はログイン不要
-        if (!$this->getUser() && $this->getNonMember()) {
+//        if (!$this->getUser() && $this->getNonMember()) {
+//            return false;
+//        }
+        if (!$this->security->getUser() && $this->getNonMember()) {
             return false;
         }
 

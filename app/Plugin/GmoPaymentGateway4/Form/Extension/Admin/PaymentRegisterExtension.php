@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 /**
  * 支払方法設定(編集)画面のFormを拡張しGMOPG入力フォームを追加する.
  */
-class PaymentRegisterExtention extends AbstractTypeExtension
+class PaymentRegisterExtension extends AbstractTypeExtension
 {
     /**
      * @var PaymentMethodRepository
@@ -208,9 +208,9 @@ class PaymentRegisterExtention extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): iterable
     {
-        return PaymentRegisterType::class;
+        return [PaymentRegisterType::class];
     }
 
     /**

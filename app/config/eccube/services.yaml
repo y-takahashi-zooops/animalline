@@ -58,6 +58,9 @@ services:
     Eccube\Service\Composer\ComposerProcessService:
         lazy: true
 
+    Eccube\Service\OrderHelper:
+        lazy: true
+
     Eccube\Service\Composer\ComposerServiceInterface:
         factory: ['Eccube\Service\Composer\ComposerServiceFactory', createService]
 
@@ -191,3 +194,19 @@ services:
         
     Customize\Service\OrderHelper:
         decorates: Eccube\Service\OrderHelper
+        arguments:
+            $container: '@service_container'
+            $entityManager: '@doctrine.orm.entity_manager'
+            $orderRepository: '@Eccube\Repository\OrderRepository'
+            $orderItemTypeRepository: '@Eccube\Repository\Master\OrderItemTypeRepository'
+            $orderStatusRepository: '@Eccube\Repository\Master\OrderStatusRepository'
+            $deliveryRepository: '@Eccube\Repository\DeliveryRepository'
+            $paymentRepository: '@Eccube\Repository\PaymentRepository'
+            $deviceTypeRepository: '@Eccube\Repository\Master\DeviceTypeRepository'
+            $prefRepository: '@Eccube\Repository\Master\PrefRepository'
+            $session: '@session'
+            $mobileDetect: '@Detection\MobileDetect'
+            $security: '@security.helper'
+            
+    MobileDetect:
+        class: MobileDetect\MobileDetect

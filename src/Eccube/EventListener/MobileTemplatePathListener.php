@@ -19,6 +19,7 @@ use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Twig\Environment;
+use MobileDetect\MobileDetect;
 
 class MobileTemplatePathListener implements EventSubscriberInterface
 {
@@ -52,6 +53,8 @@ class MobileTemplatePathListener implements EventSubscriberInterface
 
     public function onKernelRequest(GetResponseEvent $event)
     {
+        $detect = new MobileDetect();
+
         if (!$event->isMasterRequest()) {
             return;
         }
@@ -60,7 +63,7 @@ class MobileTemplatePathListener implements EventSubscriberInterface
             return;
         }
 
-        if (!$this->detector->isMobile()) {
+        if (!$this->$detect->isMobile()) {
             return;
         }
 

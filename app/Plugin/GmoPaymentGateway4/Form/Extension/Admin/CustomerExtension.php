@@ -19,7 +19,7 @@ use Symfony\Component\Form\FormEvents;
 /**
  * 会員修正画面のFormを拡張しPGマルチペイメントサービス決済情報を追加する.
  */
-class CustomerExtention extends AbstractTypeExtension
+class CustomerExtension extends AbstractTypeExtension
 {
     /**
      * @var Plugin\GmoPaymentGateway4\Service\PaymentHelperMember
@@ -57,8 +57,9 @@ class CustomerExtention extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): iterable
     {
-        return CustomerType::class;
+        // 拡張したいフォームクラスを返す
+        return [CustomerType::class];
     }
 }
