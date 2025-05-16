@@ -19,8 +19,8 @@ use Eccube\Doctrine\Query\Queries;
 use Eccube\Entity\Customer;
 use Eccube\Entity\Master\CustomerStatus;
 use Eccube\Util\StringUtil;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * CustomerRepository
@@ -51,26 +51,26 @@ class CustomerRepository extends AbstractRepository
     protected $eccubeConfig;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
 
     /**
      * CustomerRepository constructor.
      *
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      * @param Queries $queries
      * @param EntityManagerInterface $entityManager
      * @param OrderRepository $orderRepository
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param UserPasswordHasherInterface $passwordHasher
      * @param EccubeConfig $eccubeConfig
      */
     public function __construct(
-        RegistryInterface $registry,
+        ManagerRegistry $registry,
         Queries $queries,
         EntityManagerInterface $entityManager,
         OrderRepository $orderRepository,
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         EccubeConfig $eccubeConfig
     ) {
         parent::__construct($registry, Customer::class);
@@ -78,7 +78,7 @@ class CustomerRepository extends AbstractRepository
         $this->queries = $queries;
         $this->entityManager = $entityManager;
         $this->orderRepository = $orderRepository;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->eccubeConfig = $eccubeConfig;
     }
 

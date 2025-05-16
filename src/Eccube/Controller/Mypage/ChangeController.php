@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ChangeController extends AbstractController
 {
@@ -38,17 +38,17 @@ class ChangeController extends AbstractController
     protected $customerRepository;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
 
     public function __construct(
         CustomerRepository $customerRepository,
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         TokenStorageInterface $tokenStorage
     ) {
         $this->customerRepository = $customerRepository;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -89,13 +89,9 @@ class ChangeController extends AbstractController
             if ($Customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $Customer->setPassword($previous_password);
             } else {
-                $encoder = $this->encoderFactory->getEncoder($Customer);
-                if ($Customer->getSalt() === null) {
-                    $Customer->setSalt($encoder->createSalt());
-                }
-                $Customer->setPassword(
-                    $encoder->encodePassword($Customer->getPassword(), $Customer->getSalt())
-                );
+                $encoded = $this->passwordHasher->hashPassword($Customer, $Customer->getPassword());
+                $Customer->setPassword($encoded);
+                $Customer->setSalt(null);
             }
             $this->entityManager->flush();
 

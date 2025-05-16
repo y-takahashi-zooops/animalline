@@ -15,11 +15,10 @@ namespace Eccube\EventListener;
 
 use Eccube\Common\EccubeConfig;
 use Eccube\Request\Context;
-use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Twig\Environment;
-use MobileDetect\MobileDetect;
+use Detection\MobileDetect;
 
 class MobileTemplatePathListener implements EventSubscriberInterface
 {
@@ -34,7 +33,7 @@ class MobileTemplatePathListener implements EventSubscriberInterface
     protected $twig;
 
     /**
-     * @var MobileDetector
+     * @var Mobile_Detect
      */
     protected $detector;
 
@@ -43,7 +42,7 @@ class MobileTemplatePathListener implements EventSubscriberInterface
      */
     protected $eccubeConfig;
 
-    public function __construct(Context $context, Environment $twig, MobileDetector $detector, EccubeConfig $eccubeConfig)
+    public function __construct(Context $context, Environment $twig, MobileDetect $detector, EccubeConfig $eccubeConfig)
     {
         $this->context = $context;
         $this->twig = $twig;
@@ -53,7 +52,7 @@ class MobileTemplatePathListener implements EventSubscriberInterface
 
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $detect = new MobileDetect();
+        $detect = $this->detector;
 
         if (!$event->isMasterRequest()) {
             return;

@@ -48,8 +48,8 @@ class ProductTypeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): iterable
     {
-        return ProductType::class;
+        return [OrderType::class];
     }
 }

@@ -24,7 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CustomerEditController extends AbstractController
 {
@@ -34,16 +34,16 @@ class CustomerEditController extends AbstractController
     protected $customerRepository;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
 
     public function __construct(
         CustomerRepository $customerRepository,
-        EncoderFactoryInterface $encoderFactory
+        UserPasswordHasherInterface $passwordHasher
     ) {
         $this->customerRepository = $customerRepository;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
     }
 
     /**
@@ -94,16 +94,12 @@ class CustomerEditController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             log_info('会員登録開始', [$Customer->getId()]);
 
-            $encoder = $this->encoderFactory->getEncoder($Customer);
-
             if ($Customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $Customer->setPassword($previous_password);
             } else {
-                if ($Customer->getSalt() === null) {
-                    $Customer->setSalt($encoder->createSalt());
-                    $Customer->setSecretKey($this->customerRepository->getUniqueSecretKey());
-                }
-                $Customer->setPassword($encoder->encodePassword($Customer->getPassword(), $Customer->getSalt()));
+                $Customer->setPassword(
+                   $this->passwordHasher->hashPassword($Customer, $Customer->getPassword())
+                );
             }
 
             // 退会ステータスに更新の場合、ダミーのアドレスに更新

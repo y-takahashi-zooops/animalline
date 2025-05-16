@@ -34,17 +34,18 @@ use Eccube\Repository\Master\PrefRepository;
 use Eccube\Repository\OrderRepository;
 use Eccube\Repository\PaymentRepository;
 use Eccube\Util\StringUtil;
-use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
+// use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
+// use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Eccube\Service\OrderHelper as BaseOrderHelper;
-use MobileDetect\MobileDetect;
+use Detection\MobileDetect;
 
 class OrderHelper extends BaseOrderHelper
 {
     // FIXME 必要なメソッドのみ移植する
-    use ControllerTrait;
+    // use ControllerTrait;
 
     /**
      * @var ContainerInterface
@@ -103,8 +104,9 @@ class OrderHelper extends BaseOrderHelper
         PaymentRepository $paymentRepository,
         DeviceTypeRepository $deviceTypeRepository,
         PrefRepository $prefRepository,
-        MobileDetector $mobileDetector,
-        SessionInterface $session
+        MobileDetect $mobileDetector,
+        SessionInterface $session,
+        Security $security
     ) {
         $this->container = $container;
         $this->orderRepository = $orderRepository;
@@ -140,7 +142,7 @@ class OrderHelper extends BaseOrderHelper
         // 顧客情報の設定
         $this->setCustomer($Order, $Customer);
 
-        $DeviceType = $this->deviceTypeRepository->find($this->$detect->isMobile() ? DeviceType::DEVICE_TYPE_MB : DeviceType::DEVICE_TYPE_PC);
+        $DeviceType = $this->deviceTypeRepository->find($detect->isMobile() ? DeviceType::DEVICE_TYPE_MB : DeviceType::DEVICE_TYPE_PC);
         $Order->setDeviceType($DeviceType);
 
         // 明細情報の設定

@@ -47,7 +47,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class Kernel extends BaseKernel
 {
@@ -118,12 +118,7 @@ class Kernel extends BaseKernel
         date_default_timezone_set($timezone);
 
         // RFC違反のメールを送信できるよう独自のValidationを設定
-        if (!$container->getParameter('eccube_rfc_email_check')) {
-            // RFC違反のメールを許容する
-            \Swift_DependencyContainer::getInstance()
-                ->register('email.validator')
-                ->asSharedInstanceOf(NoRFCEmailValidator::class);
-        }
+        // Symfony Mailerに移行済みのため不要な処理を削除
 
         // Activate to $app
         $app = Application::getInstance(['debug' => $this->isDebug()]);
@@ -155,30 +150,21 @@ class Kernel extends BaseKernel
         $loader->load($dir.'/services_'.$this->environment.self::CONFIG_EXTS, 'glob');
     }
 
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    protected function configureRoutes(RoutingConfigurator $routes): void
     {
+        $routes->import(__DIR__ . '/../../app/config/eccube/routes.yaml');
         $container = $this->getContainer();
-
-        $scheme = ['https', 'http'];
-        $forceSSL = $container->getParameter('eccube_force_ssl');
-        if ($forceSSL) {
-            $scheme = 'https';
-        }
-        $routes->setSchemes($scheme);
 
         $confDir = $this->getProjectDir().'/app/config/eccube';
         if (is_dir($confDir.'/routes/')) {
             $builder = $routes->import($confDir.'/routes/*'.self::CONFIG_EXTS, '/', 'glob');
-            $builder->setSchemes($scheme);
         }
         if (is_dir($confDir.'/routes/'.$this->environment)) {
             $builder = $routes->import($confDir.'/routes/'.$this->environment.'/**/*'.self::CONFIG_EXTS, '/', 'glob');
-            $builder->setSchemes($scheme);
         }
         $builder = $routes->import($confDir.'/routes'.self::CONFIG_EXTS, '/', 'glob');
-        $builder->setSchemes($scheme);
+
         $builder = $routes->import($confDir.'/routes_'.$this->environment.self::CONFIG_EXTS, '/', 'glob');
-        $builder->setSchemes($scheme);
 
         // 有効なプラグインのルーティングをインポートする.
         $plugins = $container->getParameter('eccube.plugins.enabled');
@@ -187,12 +173,9 @@ class Kernel extends BaseKernel
             $dir = $pluginDir.'/'.$plugin.'/Controller';
             if (file_exists($dir)) {
                 $builder = $routes->import($dir, '/', 'annotation');
-                $builder->setSchemes($scheme);
             }
             if (file_exists($pluginDir.'/'.$plugin.'/Resource/config')) {
-
                 $builder = $routes->import($pluginDir.'/'.$plugin.'/Resource/config/routes'.self::CONFIG_EXTS, '/', 'glob');
-                $builder->setSchemes($scheme);
             }
         }
     }

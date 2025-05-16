@@ -29,13 +29,13 @@ use Eccube\Repository\PageRepository;
 use Eccube\Repository\PageLayoutRepository;
 use Eccube\Repository\BlockPositionRepository;
 use Eccube\Request\Context;
-use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
+// use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
-use MobileDetect\MobileDetect;
+use Detection\MobileDetect;
 
 class TwigInitializeListener implements EventSubscriberInterface
 {
@@ -188,9 +188,9 @@ class TwigInitializeListener implements EventSubscriberInterface
         }
 
         $type = DeviceType::DEVICE_TYPE_PC;
-        $detect = new MobileDetect();
+        // $detect = new MobileDetect();
 
-        if ($this->$detect->isMobile()) {
+        if ($this->mobileDetector->isMobile()) {
             $type = DeviceType::DEVICE_TYPE_MB;
         }
 

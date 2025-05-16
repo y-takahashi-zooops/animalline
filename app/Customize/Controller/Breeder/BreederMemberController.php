@@ -27,7 +27,7 @@ use Customize\Form\Type\Front\ResetPasswordType;
 use Customize\Repository\BankAccountRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Eccube\Form\Type\Front\EntryType;
 use Customize\Repository\BreederContactHeaderRepository;
 use Customize\Repository\BreederPetsRepository;
@@ -58,9 +58,9 @@ class BreederMemberController extends AbstractController
     protected $tokenStorage;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
 
     /**
      * @var BankAccountRepository
@@ -93,7 +93,7 @@ class BreederMemberController extends AbstractController
      * @param CustomerRepository $customerRepository
      * @param BreedersRepository $breedersRepository
      * @param BreederQueryService $breederQueryService
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param UserPasswordHasherInterface $passwordHasher
      * @param TokenStorageInterface $tokenStorage
      * @param BankAccountRepository $bankAccountRepository
      * @param BreederContactHeaderRepository $breederContactHeaderRepository
@@ -105,7 +105,7 @@ class BreederMemberController extends AbstractController
         CustomerRepository  $customerRepository,
         BreedersRepository  $breedersRepository,
         BreederQueryService $breederQueryService,
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         TokenStorageInterface $tokenStorage,
         BankAccountRepository $bankAccountRepository,
         BreederContactHeaderRepository $breederContactHeaderRepository,
@@ -116,7 +116,7 @@ class BreederMemberController extends AbstractController
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
         $this->breederQueryService = $breederQueryService;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->tokenStorage = $tokenStorage;
         $this->bankAccountRepository = $bankAccountRepository;
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
@@ -464,7 +464,7 @@ class BreederMemberController extends AbstractController
             if ($Customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $Customer->setPassword($previous_password);
             } else {
-                $encoder = $this->encoderFactory->getEncoder($Customer);
+                $encoder = $this->passwordHasher->getEncoder($Customer);
                 if ($Customer->getSalt() === null) {
                     $Customer->setSalt($encoder->createSalt());
                 }

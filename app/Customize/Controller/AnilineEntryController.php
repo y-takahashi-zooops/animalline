@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Eccube\Service\CartService;
@@ -68,9 +68,9 @@ class AnilineEntryController extends AbstractController
     protected $customerRepository;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
 
     /**
      * @var TokenStorageInterface
@@ -105,7 +105,7 @@ class AnilineEntryController extends AbstractController
      * @param MailService $mailService
      * @param BaseInfoRepository $baseInfoRepository
      * @param CustomerRepository $customerRepository
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param UserPasswordHasherInterface $passwordHasher
      * @param ValidatorInterface $validatorInterface
      * @param TokenStorageInterface $tokenStorage
      * @param AffiliateStatusRepository $affiliateStatusRepository
@@ -118,7 +118,7 @@ class AnilineEntryController extends AbstractController
         MailService $mailService,
         BaseInfoRepository $baseInfoRepository,
         CustomerRepository $customerRepository,
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validatorInterface,
         TokenStorageInterface $tokenStorage,
         AffiliateStatusRepository $affiliateStatusRepository,
@@ -129,7 +129,7 @@ class AnilineEntryController extends AbstractController
         $this->mailService = $mailService;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->customerRepository = $customerRepository;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->recursiveValidator = $validatorInterface;
         $this->tokenStorage = $tokenStorage;
         $this->cartService = $cartService;
@@ -270,7 +270,7 @@ class AnilineEntryController extends AbstractController
                         }
                     }
 
-                    $encoder = $this->encoderFactory->getEncoder($Customer);
+                    $encoder = $this->passwordHasher->getEncoder($Customer);
                     $salt = $encoder->createSalt();
                     $password = $encoder->encodePassword($Customer->getPassword(), $salt);
                     $secretKey = $this->customerRepository->getUniqueSecretKey();
