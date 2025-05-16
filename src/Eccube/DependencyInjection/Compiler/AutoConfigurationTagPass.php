@@ -55,17 +55,26 @@ class AutoConfigurationTagPass implements CompilerPassInterface
     protected function configureFormTypeExtensionTag(Definition $definition)
     {
         $class = $definition->getClass();
+
+        if (!is_string($class) || $class === '' || !class_exists($class)) {
+            return;
+        }
+
         if (!is_subclass_of($class, AbstractTypeExtension::class)) {
             return;
         }
+
         if ($definition->hasTag('form.type_extension')) {
             return;
         }
 
         $ref = new \ReflectionClass($class);
         $instance = $ref->newInstanceWithoutConstructor();
-        $type = $instance->getExtendedType();
-
-        $definition->addTag('form.type_extension', ['extended_type' => $type]);
+        
+        if (method_exists($instance, 'getExtendedTypes')) {
+            foreach ($instance::getExtendedTypes() as $extendedType) {
+                $definition->addTag('form.type_extension', ['extended_type' => $extendedType]);
+            }
+        }
     }
 }

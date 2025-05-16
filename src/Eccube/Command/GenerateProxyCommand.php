@@ -15,11 +15,11 @@ namespace Eccube\Command;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Eccube\Service\EntityProxyService;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateProxyCommand extends ContainerAwareCommand
+class GenerateProxyCommand extends Command
 {
     protected static $defaultName = 'eccube:generate:proxies';
 
@@ -28,10 +28,12 @@ class GenerateProxyCommand extends ContainerAwareCommand
      */
     private $entityProxyService;
 
-    public function __construct(EntityProxyService $entityProxyService)
+    public function __construct(EntityProxyService $entityProxyService, string $projectDir,  array $enabledPlugins)
     {
         parent::__construct();
         $this->entityProxyService = $entityProxyService;
+        $this->projectDir = $projectDir;
+        $this->enabledPlugins = $enabledPlugins;
     }
 
     protected function configure()
@@ -45,21 +47,18 @@ class GenerateProxyCommand extends ContainerAwareCommand
         // アノテーションを読み込めるように設定.
         AnnotationRegistry::registerAutoloadNamespace('Eccube\Annotation', __DIR__.'/../../../src');
 
-        $container = $this->getContainer();
-        $projectDir = $container->getParameter('kernel.project_dir');
-        $includeDirs = [$projectDir.'/app/Customize/Entity'];
+        $includeDirs = [$this->projectDir.'/app/Customize/Entity'];
 
-        $enabledPlugins = $container->getParameter('eccube.plugins.enabled');
-        foreach ($enabledPlugins as $code) {
-            if (file_exists($projectDir.'/app/Plugin/'.$code.'/Entity')) {
-                $includeDirs[] = $projectDir.'/app/Plugin/'.$code.'/Entity';
+        foreach ($this->enabledPlugins as $code) {
+            if (file_exists($this->projectDir.'/app/Plugin/'.$code.'/Entity')) {
+                $includeDirs[] = $this->projectDir.'/app/Plugin/'.$code.'/Entity';
             }
         }
 
         $this->entityProxyService->generate(
             $includeDirs,
             [],
-            $projectDir.'/app/proxy/entity',
+            $this->projectDir.'/app/proxy/entity',
             $output
         );
     }

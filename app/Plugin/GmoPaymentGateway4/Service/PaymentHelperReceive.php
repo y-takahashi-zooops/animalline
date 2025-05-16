@@ -978,19 +978,16 @@ class PaymentHelperReceive extends PaymentHelper
             'orderData' => $paymentLogData,
             'payment_method' => $payment_method,
         ]);
+        $email = (new Email())
+            ->subject($subject)
+            ->from($this->BaseInfo->getEmail01(), $this->BaseInfo->getShopName())
+            ->to($this->BaseInfo->getEmail02())
+            ->bcc($this->BaseInfo->getEmail01())
+            ->replyTo($this->BaseInfo->getEmail03())
+            ->returnPath($this->BaseInfo->getEmail04())
+            ->html($body);
 
-        $message = (new \Swift_Message())
-            ->setSubject($subject)
-            ->setFrom([$this->BaseInfo->getEmail01() =>
-                       $this->BaseInfo->getShopName()])
-            ->setTo($this->BaseInfo->getEmail02())
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04())
-            ->setBody($body);
-        $this->mailer->send($message);
-
-        PaymentUtil::logInfo('sendMail end.');
+        $this->mailer->send($email);
     }
 
     /**

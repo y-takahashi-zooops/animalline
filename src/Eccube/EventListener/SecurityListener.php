@@ -22,10 +22,10 @@ use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Service\OrderHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\AuthenticationEvents;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
+// use Symfony\Component\Security\Core\AuthenticationEvents;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class SecurityListener implements EventSubscriberInterface
 {
@@ -106,7 +106,7 @@ class SecurityListener implements EventSubscriberInterface
     {
         return [
             SecurityEvents::INTERACTIVE_LOGIN => 'onInteractiveLogin',
-            AuthenticationEvents::AUTHENTICATION_FAILURE => 'onAuthenticationFailure',
+            'security.authentication.failure' => 'onAuthenticationFailure',
         ];
     }
 }

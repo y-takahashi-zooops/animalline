@@ -13,10 +13,11 @@
 
 namespace Eccube;
 
-use Eccube\ServiceProvider\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface as PimpleServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 
-class Application extends \Pimple
+class Application extends Container
 {
     /** @var Application $instance */
     protected static $instance;
@@ -92,7 +93,7 @@ class Application extends \Pimple
      *
      * @see https://github.com/silexphp/Silex/blob/1.3/src/Silex/Application.php#L174
      */
-    public function register(ServiceProviderInterface $provider, array $values = [])
+    public function register(PimpleServiceProviderInterface $provider, array $values = [])
     {
         $this->providers[] = $provider;
         $provider->register($this);
@@ -100,7 +101,7 @@ class Application extends \Pimple
             $this[$key] = $value;
         }
 
-        return $this;
+        return parent::register($provider, $values);
     }
 
     /**

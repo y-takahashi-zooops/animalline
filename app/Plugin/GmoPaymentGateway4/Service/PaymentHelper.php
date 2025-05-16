@@ -34,6 +34,9 @@ use Plugin\GmoPaymentGateway4\Service\Method\PayEasyNet;
 use Plugin\GmoPaymentGateway4\Util\ErrorUtil;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Twig\Environment;
 
 /**
  * 決済共通処理を行うクラス
@@ -46,12 +49,12 @@ abstract class PaymentHelper
     protected $container;
 
     /**
-     * @var \Swift_Mailer
+     * @var MailerInterface
      */
     protected $mailer;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
@@ -155,8 +158,8 @@ abstract class PaymentHelper
      * PaymentHelper constructor.
      *
      * @param ContainerInterface $container
-     * @param \Swift_Mailer $mailer
-     * @param \Twig_Environment $twig
+     * @param MailerInterface $mailer
+     * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
      * @param EntityManagerInterface $entityManager
      * @param PluginService $pluginService
@@ -173,8 +176,8 @@ abstract class PaymentHelper
      */
     public function __construct(
         ContainerInterface $container,
-        \Swift_Mailer $mailer,
-        \Twig_Environment $twig,
+        MailerInterface $mailer,
+        Environment $twig,
         EccubeConfig $eccubeConfig,
         EntityManagerInterface $entityManager,
         PluginService $pluginService,

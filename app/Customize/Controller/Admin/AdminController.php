@@ -37,7 +37,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 
@@ -62,9 +62,9 @@ class AdminController extends AbstractController
     protected $memberRepository;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+     protected $passwordHasher;
 
     /**
      * @var OrderRepository
@@ -107,7 +107,7 @@ class AdminController extends AbstractController
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param AuthenticationUtils $helper
      * @param MemberRepository $memberRepository
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param UserPasswordHasherInterface $passwordHasher
      * @param OrderRepository $orderRepository
      * @param OrderStatusRepository $orderStatusRepository
      * @param CustomerRepository $custmerRepository
@@ -120,7 +120,7 @@ class AdminController extends AbstractController
         AuthorizationCheckerInterface $authorizationChecker,
         AuthenticationUtils $helper,
         MemberRepository $memberRepository,
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,
         CustomerRepository $custmerRepository,
@@ -132,7 +132,7 @@ class AdminController extends AbstractController
         $this->authorizationChecker = $authorizationChecker;
         $this->helper = $helper;
         $this->memberRepository = $memberRepository;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->customerRepository = $custmerRepository;
@@ -360,7 +360,7 @@ class AdminController extends AbstractController
             $salt = $Member->getSalt();
             $password = $form->get('change_password')->getData();
 
-            $encoder = $this->encoderFactory->getEncoder($Member);
+            $encoder = $this->passwordHasher->getEncoder($Member);
 
             // 2系からのデータ移行でsaltがセットされていない場合はsaltを生成.
             if (empty($salt)) {

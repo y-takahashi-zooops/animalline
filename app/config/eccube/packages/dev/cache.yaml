@@ -1,0 +1,6 @@
+framework:
+  cache:
+    pools:
+      doctrine.result_cache_pool:
+        adapter: 'cache.adapter.filesystem'
+        default_lifetime: 3600

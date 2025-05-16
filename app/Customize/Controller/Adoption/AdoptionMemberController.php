@@ -22,7 +22,7 @@ use Customize\Entity\ConservationBankAccount;
 use Customize\Form\Type\Adoption\ConservationBankAccountType;
 use Customize\Repository\ConservationBankAccountRepository;
 use Eccube\Form\Type\Front\EntryType;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Customize\Repository\ConservationContactHeaderRepository;
@@ -45,9 +45,9 @@ class AdoptionMemberController extends AbstractController
     protected $adoptionQueryService;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var UserPasswordHasherInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
 
     /**
      * @var TokenStorage
@@ -75,7 +75,7 @@ class AdoptionMemberController extends AbstractController
      * @param CustomerRepository $customerRepository
      * @param ConservationsRepository $conservationsRepository
      * @param AdoptionQueryService $adoptionQueryService
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param UserPasswordHasherInterface $passwordHasher
      * @param TokenStorageInterface $tokenStorage
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      * @param BenefitsStatusRepository $benefitsStatusRepository
@@ -85,7 +85,7 @@ class AdoptionMemberController extends AbstractController
         CustomerRepository  $customerRepository,
         ConservationsRepository  $conservationsRepository,
         AdoptionQueryService  $adoptionQueryService,
-        EncoderFactoryInterface $encoderFactory,
+        UserPasswordHasherInterface $passwordHasher,
         TokenStorageInterface $tokenStorage,
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
         BenefitsStatusRepository $benefitsStatusRepository,
@@ -94,7 +94,7 @@ class AdoptionMemberController extends AbstractController
         $this->customerRepository = $customerRepository;
         $this->conservationsRepository = $conservationsRepository;
         $this->adoptionQueryService = $adoptionQueryService;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
         $this->tokenStorage = $tokenStorage;
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->benefitsStatusRepository = $benefitsStatusRepository;
@@ -307,7 +307,7 @@ class AdoptionMemberController extends AbstractController
             if ($customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $customer->setPassword($previousPassword);
             } else {
-                $encoder = $this->encoderFactory->getEncoder($customer);
+                $encoder = $this->passwordHasher->getEncoder($customer);
                 if ($customer->getSalt() === null) {
                     $customer->setSalt($encoder->createSalt());
                 }

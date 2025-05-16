@@ -29,7 +29,7 @@ abstract class AbstractEntity implements \ArrayAccess
 {
     private $AnnotationReader;
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         $method = Inflector::classify($offset);
 
@@ -39,11 +39,11 @@ abstract class AbstractEntity implements \ArrayAccess
             || method_exists($this, "has$method");
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         $method = Inflector::classify($offset);
 
@@ -58,7 +58,7 @@ abstract class AbstractEntity implements \ArrayAccess
         }
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
     }
 

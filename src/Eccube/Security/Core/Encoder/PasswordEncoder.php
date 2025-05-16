@@ -14,9 +14,9 @@
 namespace Eccube\Security\Core\Encoder;
 
 use Eccube\Common\EccubeConfig;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
-class PasswordEncoder implements PasswordEncoderInterface
+class PasswordEncoder implements PasswordHasherInterface
 {
     /**
      * @var string
@@ -48,6 +48,25 @@ class PasswordEncoder implements PasswordEncoderInterface
     public function setAuthMagic($authMagic)
     {
         $this->auth_magic = $authMagic;
+    }
+    
+    /**
+     * Symfony 5.3+ のインターフェースに必須のメソッド
+     */
+    public function hash(string $plainPassword): string
+    {
+        return $this->encodePassword($plainPassword, '');
+    }
+
+    public function verify(string $hashedPassword, string $plainPassword): bool
+    {
+        return $this->isPasswordValid($hashedPassword, $plainPassword, '');
+    }
+
+    public function needsRehash(string $hashedPassword): bool
+    {
+        // 再ハッシュが必要なら true を返す（今回は常に false）
+        return false;
     }
 
     /**

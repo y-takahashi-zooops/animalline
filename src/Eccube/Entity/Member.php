@@ -49,7 +49,15 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * {@inheritdoc}
          */
-        public function getRoles()
+        public function getUserIdentifier(): string
+        {
+            return $this->login_id; // ユーザー識別子としてlogin_idを返す
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getRoles(): array
         {
             return ['ROLE_ADMIN'];
         }
@@ -65,7 +73,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
         /**
          * {@inheritdoc}
          */
-        public function eraseCredentials()
+        public function eraseCredentials(): void
         {
         }
 

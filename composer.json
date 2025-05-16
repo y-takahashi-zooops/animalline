@@ -13,6 +13,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": "8.2",
+        "doctrine/annotations": "*",
         "doctrine/cache": "^2.0",
         "doctrine/common": "^3.0",
         "doctrine/dbal": "^3.4",
@@ -22,7 +23,13 @@
         "egulias/email-validator": "^4.0",
         "fakerphp/faker": "^1.20",
         "mobiledetect/mobiledetectlib": "*",
-        "nesbot/carbon": "^3.0"
+        "nesbot/carbon": "^3.0",
+        "pimple/pimple": "3.0",
+        "symfony/event-dispatcher-contracts": "*",
+        "symfony/password-hasher": "*",
+        "symfony/security-core": "*",
+        "symfony/security-http": "*",
+        "twig/twig": "*"
     },
     "require-dev": {
         "captbaritone/mailcatcher-codeception-module": "^1.2",

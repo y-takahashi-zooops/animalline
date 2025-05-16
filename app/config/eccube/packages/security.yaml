@@ -1,11 +1,15 @@
 security:
-    encoders:
+    password_hashers:
         # Our user class and the algorithm we'll use to encode passwords
         # https://symfony.com/doc/current/security.html#c-encoding-the-user-s-password
+
+        # 自動的にパスワードハッシュを設定
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        
         Eccube\Entity\Member:
-          id: Eccube\Security\Core\Encoder\PasswordEncoder
+          algorithm: bcrypt
         Eccube\Entity\Customer:
-          id: Eccube\Security\Core\Encoder\PasswordEncoder
+          algorithm: bcrypt
     providers:
         # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
         # In this example, users are stored via Doctrine in the database
@@ -22,12 +26,12 @@ security:
             security: false
         admin:
             pattern: '^/%eccube_admin_route%/'
-            anonymous: true
+            lazy: true
             provider: member_provider
             form_login:
                 check_path: admin_login
                 login_path: admin_login
-                csrf_token_generator: security.csrf.token_manager
+                enable_csrf: true
                 default_target_path: admin_homepage
                 username_parameter: 'login_id'
                 password_parameter: 'password'
@@ -39,7 +43,7 @@ security:
                 target: admin_login
         adoption:
             pattern: '^/adoption/'
-            anonymous: true
+            lazy: true
             provider: customer_provider
             remember_me:
                 secret: '%kernel.secret%'
@@ -49,7 +53,7 @@ security:
             form_login:
                 check_path: adoption_login
                 login_path: adoption_login
-                csrf_token_generator: security.csrf.token_manager
+                enable_csrf: true
                 default_target_path: adoption_mypage
                 username_parameter: 'login_email'
                 password_parameter: 'login_pass'
@@ -59,10 +63,9 @@ security:
             logout:
                 path: logout
                 target: adoption_top
-                success_handler: eccube.security.logout_success_handler
         breeder:
             pattern: '^/breeder/'
-            anonymous: true
+            lazy: true
             provider: customer_provider
             remember_me:
                 secret: '%kernel.secret%'
@@ -72,7 +75,7 @@ security:
             form_login:
                 check_path: breeder_login
                 login_path: breeder_login
-                csrf_token_generator: security.csrf.token_manager
+                enable_csrf: true
                 default_target_path: breeder_mypage
                 username_parameter: 'login_email'
                 password_parameter: 'login_pass'
@@ -82,10 +85,9 @@ security:
             logout:
                 path: logout
                 target: breeder_top
-                success_handler: eccube.security.logout_success_handler
         customer:
             pattern: '^/'
-            anonymous: true
+            lazy: true
             provider: customer_provider
             remember_me:
                 secret: '%kernel.secret%'
@@ -95,7 +97,7 @@ security:
             form_login:
                 check_path: mypage_login
                 login_path: mypage_login
-                csrf_token_generator: security.csrf.token_manager
+                enable_csrf: true
                 default_target_path: homepage
                 username_parameter: 'login_email'
                 password_parameter: 'login_pass'
@@ -105,7 +107,6 @@ security:
             logout:
                 path: logout
                 target: homepage
-                success_handler: eccube.security.logout_success_handler
     access_decision_manager:
         strategy: unanimous
         allow_if_all_abstain: false

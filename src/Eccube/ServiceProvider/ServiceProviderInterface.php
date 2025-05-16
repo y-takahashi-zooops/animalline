@@ -13,7 +13,8 @@
 
 namespace Eccube\ServiceProvider;
 
-use Eccube\Application;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface as PimpleServiceProviderInterface;
 
 /**
  * Interface that all Silex service providers must implement.
@@ -22,7 +23,7 @@ use Eccube\Application;
  *
  * @see https://github.com/silexphp/Silex/blob/1.3/src/Silex/ServiceProviderInterface.php
  */
-interface ServiceProviderInterface
+interface ServiceProviderInterface extends PimpleServiceProviderInterface
 {
     /**
      * Registers services on the given app.
@@ -30,7 +31,7 @@ interface ServiceProviderInterface
      * This method should only be used to configure services and parameters.
      * It should not get services.
      */
-    public function register(Application $app);
+    public function register(Container $pimple);
 
     /**
      * Bootstraps the application.
@@ -39,5 +40,5 @@ interface ServiceProviderInterface
      * and should be used for "dynamic" configuration (whenever
      * a service must be requested).
      */
-    public function boot(Application $app);
+    public function boot(Container $pimple);
 }
