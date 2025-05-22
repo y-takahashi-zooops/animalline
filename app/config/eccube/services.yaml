@@ -37,6 +37,7 @@ services:
 
     Eccube\Service\Composer\ComposerApiService:
         public: true
+        shared: true
         autowire: true
         autoconfigure: true
 

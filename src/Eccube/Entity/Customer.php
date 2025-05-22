@@ -321,23 +321,33 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         /**
          * {@inheritdoc}
          */
-        public function getRoles()
+        public function getRoles(): array
         {
             return ['ROLE_USER'];
-        }
+	}
+
+	/**
+         * ユーザー識別子を返す（Symfony 5.3 以降必須）
+         *
+         * @return string
+         */
+         public function getUserIdentifier(): string
+         {
+            return (string) $this->email;
+         }
 
         /**
          * {@inheritdoc}
          */
-        public function getUsername()
+        public function getUsername(): string
         {
-            return $this->email;
+            return $this->getUserIdentifier();
         }
 
         /**
          * {@inheritdoc}
          */
-        public function eraseCredentials()
+        public function eraseCredentials(): void
         {
         }
 

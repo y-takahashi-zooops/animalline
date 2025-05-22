@@ -16,7 +16,7 @@ namespace Eccube\EventListener;
 use Eccube\Common\EccubeConfig;
 use Eccube\Request\Context;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Twig\Environment;
 use Detection\MobileDetect;
 
@@ -50,11 +50,11 @@ class MobileTemplatePathListener implements EventSubscriberInterface
         $this->eccubeConfig = $eccubeConfig;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         $detect = $this->detector;
 
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
         // 管理画面の場合は実行しない.
