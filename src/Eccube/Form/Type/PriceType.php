@@ -30,20 +30,18 @@ class PriceType extends AbstractType
      */
     protected $eccubeConfig;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
+    protected $currency;
 
     /**
      * PriceType constructor.
      *
      * @param EccubeConfig $eccubeConfig
+     * @param string $currency
      */
-    public function __construct(EccubeConfig $eccubeConfig, ContainerInterface $container)
+    public function __construct(EccubeConfig $eccubeConfig, string $currency)
     {
         $this->eccubeConfig = $eccubeConfig;
-        $this->container = $container;
+        $this->currency = $currency;
     }
 
     /**
@@ -51,7 +49,7 @@ class PriceType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $currency = $this->container->getParameter('currency');
+        $currency = $this->currency;
         $scale = Intl::getCurrencyBundle()->getFractionDigits($currency);
         $max = $this->eccubeConfig['eccube_price_max'];
         $min = -$max;

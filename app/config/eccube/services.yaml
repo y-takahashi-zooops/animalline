@@ -14,6 +14,8 @@ parameters:
 
     session.save_path: '%env(SESSION_SAVE_PATH)%'
 
+    eccube_content_maintenance_file_path: '%kernel.project_dir%/app/config/eccube/.maintenance'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -79,6 +81,8 @@ services:
     Eccube\Service\SystemService:
         lazy: true
         public: true
+        arguments:
+            $maintenanceFilePath: '%eccube_content_maintenance_file_path%'
 
     Eccube\Service\Composer\ComposerProcessService:
         lazy: true
@@ -283,3 +287,81 @@ services:
     session:
         class: Symfony\Component\HttpFoundation\Session\Session
         factory: ['@session.factory', 'createSession']
+    
+    Plugin\GmoPaymentGateway4\PluginManager:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $eccubeConfig: '@Eccube\Common\EccubeConfig'
+    
+    Plugin\GmoPaymentGateway4\Service\PaymentHelperAu:
+        arguments:
+        - '%eccube.config%'
+        - '@Plugin\GmoPaymentGateway4\Service\GmoConfig'
+        - '@router'
+    
+    Plugin\ProductReview4\PluginManager:
+        bind:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $pageRepository: '@Eccube\Repository\PageRepository'
+            $eccubeThemeFrontDir: '%eccube_theme_front_dir%'
+        public: true
+
+    Eccube\Command\DeleteCartsCommand:
+        arguments:
+            $locale: '%locale%'
+            $timezoneId: '%timezone%'
+        tags:
+            - { name: 'console.command' }
+    
+    Eccube\Command\InstallerCommand:
+        arguments:
+            $params: '@parameter_bag'
+        tags:
+            - { name: 'console.command' }
+
+    Eccube\Command\PluginGenerateCommand:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+        tags:
+            - { name: 'console.command' }
+    
+    Eccube\Controller\Admin\Content\MaintenanceController:
+        arguments:
+            $maintenanceFilePath: '%eccube_content_maintenance_file_path%'
+    
+    Eccube\DataCollector\EccubeDataCollector:
+        arguments:
+            $currency: '%currency%'
+            $locale: '%locale%'
+            $enabledPlugins: '%eccube.plugins.enabled%'
+            $disabledPlugins: '%eccube.plugins.disabled%'
+            $pluginRepository: '@Eccube\Repository\PluginRepository'
+        tags:
+            - { name: data_collector, template: '@Eccube/admin/collector/eccube.html.twig', id: 'eccube_core' }
+    
+    Eccube\Doctrine\EventSubscriber\TaxRuleEventSubscriber:
+        arguments:
+            $taxRuleService: '@Eccube\Service\TaxRuleService'
+        tags:
+            - { name: doctrine.event_subscriber }
+    
+    Eccube\Form\Type\PriceType:
+        arguments:
+            $eccubeConfig: '@Eccube\Common\EccubeConfig'
+            $currency: '%currency%'
+        tags:
+            - { name: form.type }
+    
+    Eccube\Repository\PageRepository:
+        arguments:
+            $userDataRealDir: '%eccube_theme_user_data_dir%'
+            $templateRealDir: '%eccube_theme_app_dir%'
+            $templateDefaultRealDir: '%eccube_theme_src_dir%'
+    
+    Eccube\Service\EntityProxyService:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+    
+    Eccube\Service\Composer\ComposerServiceFactory:
+        arguments:
+            $composerApiService: '@Eccube\Service\Composer\ComposerApiService'

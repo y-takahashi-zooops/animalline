@@ -16,7 +16,7 @@ namespace Eccube\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
@@ -37,23 +37,20 @@ class PluginGenerateCommand extends Command
      */
     protected $fs;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
+    private string $projectDir;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(string $projectDir)
     {
         parent::__construct();
-        $this->container = $container;
+        $this->projectDir = $projectDir;
     }
 
     protected function configure()
     {
         $this
-            ->addArgument('name', InputOption::VALUE_REQUIRED, 'plugin name')
-            ->addArgument('code', InputOption::VALUE_REQUIRED, 'plugin code')
-            ->addArgument('ver', InputOption::VALUE_REQUIRED, 'plugin version')
+            ->addArgument('name', InputArgument::VALUE_REQUIRED, 'plugin name')
+            ->addArgument('code', InputArgument::VALUE_REQUIRED, 'plugin code')
+            ->addArgument('ver', InputArgument::VALUE_REQUIRED, 'plugin version')
             ->setDescription('Generate plugin skeleton.');
     }
 
@@ -108,7 +105,7 @@ class PluginGenerateCommand extends Command
         $this->validateCode($code);
         $this->validateVersion($version);
 
-        $pluginDir = $this->container->getParameter('kernel.project_dir').'/app/Plugin/'.$code;
+        $pluginDir = $this->projectDir . '/app/Plugin/' . $code;
 
         $this->createDirectories($pluginDir);
         $this->createConfig($pluginDir, $name, $code, $version);
@@ -122,7 +119,7 @@ class PluginGenerateCommand extends Command
         $this->io->success(sprintf('Plugin was successfully created: %s %s %s', $name, $code, $version));
     }
 
-    public function validateCode($code)
+    public function validateCode($code): string
     {
         if (empty($code)) {
             throw new InvalidArgumentException('The code can not be empty.');
@@ -134,7 +131,7 @@ class PluginGenerateCommand extends Command
             throw new InvalidArgumentException('The code [a-zA-Z_] is available.');
         }
 
-        $pluginDir = $this->container->getParameter('kernel.project_dir').'/app/Plugin/'.$code;
+        $pluginDir = $this->projectDir . '/app/Plugin/' . $code;
         if (file_exists($pluginDir)) {
             throw new InvalidArgumentException('Plugin directory exists.');
         }
@@ -329,9 +326,10 @@ EOL;
      */
     protected function createConfigController($pluginDir, $code)
     {
-        $snakecased = Container::underscore($code);
+        $snakecased = $this->underscore($code);
 
         $source = <<<EOL
+    
 <?php
 
 namespace Plugin\\${code}\\Controller\\Admin;
@@ -604,5 +602,10 @@ EOL;
 
 EOL;
         $this->fs->dumpFile($pluginDir.'/Resource/template/admin/config.twig', $source);
+    }
+
+    private function underscore(string $text): string
+    {
+        return strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_$1', $text));
     }
 }

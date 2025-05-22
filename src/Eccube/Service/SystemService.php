@@ -16,7 +16,6 @@ namespace Eccube\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\DataCollector\MemoryDataCollector;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 
@@ -44,23 +43,19 @@ class SystemService implements EventSubscriberInterface
      */
     protected $entityManager;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
+    protected string $maintenanceFilePath;
 
     /**
      * SystemService constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param ContainerInterface $container
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        ContainerInterface $container
+        string $maintenanceFilePath
     ) {
         $this->entityManager = $entityManager;
-        $this->container = $container;
+        $this->maintenanceFilePath = $maintenanceFilePath;
     }
 
     /**
@@ -144,7 +139,7 @@ class SystemService implements EventSubscriberInterface
     public function switchMaintenance($isEnable = false, $mode = self::AUTO_MAINTENANCE)
     {
         $isMaintenanceMode = $this->isMaintenanceMode();
-        $path = $this->container->getParameter('eccube_content_maintenance_file_path');
+        $path = $this->maintenanceFilePath;
 
         if ($isEnable && $isMaintenanceMode === false) {
             file_put_contents($path, $mode);
@@ -189,7 +184,7 @@ class SystemService implements EventSubscriberInterface
     public function isMaintenanceMode()
     {
         // .maintenanceが存在しているかチェック
-        return file_exists($this->container->getParameter('eccube_content_maintenance_file_path'));
+        return file_exists($this->maintenanceFilePath);
     }
 
     /**

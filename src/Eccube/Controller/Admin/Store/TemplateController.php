@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class TemplateController extends AbstractController
 {
@@ -42,6 +43,8 @@ class TemplateController extends AbstractController
      */
     protected $deviceTypeRepository;
 
+    protected EventDispatcherInterface $eventDispatcher;
+
     /**
      * TemplateController constructor.
      *
@@ -50,10 +53,12 @@ class TemplateController extends AbstractController
      */
     public function __construct(
         TemplateRepository $templateRepository,
-        DeviceTypeRepository $deviceTypeRepository
+        DeviceTypeRepository $deviceTypeRepository,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->templateRepository = $templateRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -72,7 +77,7 @@ class TemplateController extends AbstractController
 
         $Templates = $this->templateRepository->findBy(['DeviceType' => $DeviceType]);
 
-        $form = $this->formFactory->createBuilder()
+        $form = $this->createFormBuilder()
             ->add('selected', HiddenType::class)
             ->getForm();
         $form->handleRequest($request);
@@ -191,8 +196,8 @@ class TemplateController extends AbstractController
 
         // テンプレートディレクトリの削除
         $templateCode = $Template->getCode();
-        $targetRealDir = $this->container->getParameter('kernel.project_dir').'/app/template/'.$templateCode;
-        $targetHtmlRealDir = $this->container->getParameter('kernel.project_dir').'/html/template/'.$templateCode;
+        $targetRealDir = $this->getParameter('kernel.project_dir').'/app/template/'.$templateCode;
+        $targetHtmlRealDir = $this->getParameter('kernel.project_dir').'/html/template/'.$templateCode;
 
         $fs = new Filesystem();
         $fs->remove($targetRealDir);

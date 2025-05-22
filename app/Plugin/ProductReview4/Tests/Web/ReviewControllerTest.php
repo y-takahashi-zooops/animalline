@@ -49,6 +49,17 @@ class ReviewControllerTest extends AbstractWebTestCase
      */
     protected $productStatusRepo;
 
+    public function __construct(
+        ProductRepository $productRepo,
+        SexRepository $sexMasterRepo,
+        ProductStatusRepository $productStatusRepo
+    ) {
+        parent::__construct();
+        $this->productRepo = $productRepo;
+        $this->sexMasterRepo = $sexMasterRepo;
+        $this->productStatusRepo = $productStatusRepo;
+    }
+
     /**
      * Setup method.
      */
@@ -57,10 +68,6 @@ class ReviewControllerTest extends AbstractWebTestCase
         parent::setUp();
         $this->faker = $this->getFaker();
         $this->deleteAllRows(['plg_product_review']);
-
-        $this->productRepo = $this->container->get(ProductRepository::class);
-        $this->sexMasterRepo = $this->container->get(SexRepository::class);
-        $this->productStatusRepo = $this->container->get(ProductStatusRepository::class);
     }
 
     /**

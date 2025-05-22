@@ -21,7 +21,6 @@ use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 use Zend\Code\Reflection\ClassReflection;
 
@@ -33,22 +32,22 @@ class EntityProxyService
     protected $entityManager;
 
     /**
-     * @var ContainerInterface
+     * @var string
      */
-    protected $container;
+    protected $projectDir;
 
     /**
      * EntityProxyService constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param ContainerInterface $container
+     * @param string $projectDir
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        ContainerInterface $container
+        string $projectDir
     ) {
         $this->entityManager = $entityManager;
-        $this->container = $container;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -96,7 +95,7 @@ class EntityProxyService
             foreach ($traits as $trait) {
                 $this->addTrait($entityTokens, $trait);
             }
-            $projectDir = str_replace('\\', '/', $this->container->getParameter('kernel.project_dir'));
+            $projectDir = str_replace('\\', '/', $this->projectDir);
 
             // baseDir e.g. /src/Eccube/Entity and /app/Plugin/PluginCode/Entity
             $baseDir = str_replace($projectDir, '', str_replace($baseName, '', $fileName));

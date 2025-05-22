@@ -78,9 +78,9 @@ class PaymentHelperSoftbank extends PaymentHelperCarrier
         ];
 
         // 決済結果戻しURL
-        $sendData['RetURL'] = $this->container->get('router')
-            ->generate('gmo_payment_gateway_softbank_result', [],
-                       UrlGeneratorInterface::ABSOLUTE_URL);
+        $sendData['RetURL'] = $this->router->generate(
+            'gmo_payment_gateway_softbank_result', [], UrlGeneratorInterface::ABSOLUTE_URL
+        );
 
         $sendData['action_status'] =
             $const['gmo_payment_gateway.action_status.exec_request'];

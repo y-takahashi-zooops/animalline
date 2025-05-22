@@ -179,9 +179,9 @@ class PaymentHelperCredit extends PaymentHelper
 
         $sendData['ACSUrl'] = $results['ACSUrl'];
         $sendData['PaReq'] = $results['PaReq'];
-        $sendData['TermUrl'] = $this->container->get('router')
-            ->generate('gmo_payment_gateway_3dsecure', [],
-                       UrlGeneratorInterface::ABSOLUTE_URL);
+        $sendData['TermUrl'] = $this->router->generate(
+            'gmo_payment_gateway_3dsecure', [], UrlGeneratorInterface::ABSOLUTE_URL
+        );
         $sendData['MD'] = $results['MD'];
 
         $template = '@GmoPaymentGateway4/payments/credit_3dsecure.twig';
