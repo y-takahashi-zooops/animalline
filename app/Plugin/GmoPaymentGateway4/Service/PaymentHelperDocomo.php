@@ -86,9 +86,9 @@ class PaymentHelperDocomo extends PaymentHelperCarrier
         $sendData['DocomoDisp2'] =
             $this->getDocomoDisp($this->gmoPaymentMethodConfig['DocomoDisp2']);
         // 決済結果戻しURL
-        $sendData['RetURL'] = $this->container->get('router')
-            ->generate('gmo_payment_gateway_docomo_result', [],
-                       UrlGeneratorInterface::ABSOLUTE_URL);
+        $sendData['RetURL'] = $this->router->generate(
+            'gmo_payment_gateway_docomo_resul', [], UrlGeneratorInterface::ABSOLUTE_URL
+        );
 
         $sendData['action_status'] =
             $const['gmo_payment_gateway.action_status.exec_request'];

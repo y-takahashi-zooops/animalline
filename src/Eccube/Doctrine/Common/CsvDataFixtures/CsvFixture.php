@@ -18,8 +18,6 @@ use Doctrine\DBAL\Connection;
 // use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use SplFileObject;
 
 /**
@@ -27,33 +25,24 @@ use SplFileObject;
  *
  * @see https://github.com/doctrine/data-fixtures/blob/master/lib/Doctrine/Common/DataFixtures/FixtureInterface.php
  */
-class CsvFixture implements FixtureInterface, ContainerAwareInterface
+class CsvFixture implements FixtureInterface
 {
     /**
      * @var \SplFileObject
      */
     // protected $file;
     private ?SplFileObject $file = null;
-    private ?ContainerInterface $container = null;
+    private Connection $connection;
 
     /**
      * CsvFixture constructor.
      *
      * @param \SplFileObject|null $file
      */
-    public function __construct(?SplFileObject $file = null)
+    public function __construct(Connection $connection, ?SplFileObject $file = null)
     {
+        $this->connection = $connection;
         $this->file = $file;
-    }
-
-    /**
-     * CsvFixture setContainer.
-     *
-     * @param \ContainerInterface|null $container
-     */
-    public function setContainer(ContainerInterface $container = null): void
-    {
-        $this->container = $container;
     }
 
     /**
@@ -61,7 +50,7 @@ class CsvFixture implements FixtureInterface, ContainerAwareInterface
      */
     public function load(ObjectManager $manager): void
     {
-        if ($this->file === null || $this->container === null) {
+        if ($this->file === null) {
             throw new \LogicException('CSVファイルかDIコンテナが設定されていません。');
         }
 
@@ -83,7 +72,7 @@ class CsvFixture implements FixtureInterface, ContainerAwareInterface
         $sql = $this->getSql($table_name, $headers);
 
         /** @var Connection $connection */
-        $connection = $this->container->get(Connection::class);
+        $connection = $this->connection;
         $connection->beginTransaction();
 
         if ('mysql' === $connection->getDatabasePlatform()->getName()) {

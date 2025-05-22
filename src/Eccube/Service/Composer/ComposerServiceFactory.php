@@ -15,12 +15,18 @@ namespace Eccube\Service\Composer;
 
 use Eccube\Entity\BaseInfo;
 use Eccube\Repository\BaseInfoRepository;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ComposerServiceFactory
 {
-    public static function createService(ContainerInterface $container)
+    private ComposerApiService $composerApiService;
+
+    public function __construct(ComposerApiService $composerApiService)
     {
-        return $container->get(ComposerApiService::class);
+        $this->composerApiService = $composerApiService;
+    }
+
+    public function createService(): ComposerApiService
+    {
+        return $this->composerApiService;
     }
 }

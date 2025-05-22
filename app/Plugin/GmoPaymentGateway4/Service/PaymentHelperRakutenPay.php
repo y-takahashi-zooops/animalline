@@ -93,13 +93,13 @@ class PaymentHelperRakutenPay extends PaymentHelper
         // 商品名
         $sendData['ItemName'] = $this->getItemName($Order);
         // 決済結果戻しURL(正常時)
-        $sendData['RetURL'] = $this->container->get('router')
-            ->generate('gmo_payment_gateway_rakuten_pay_result',
-                       ['result' => 1], UrlGeneratorInterface::ABSOLUTE_URL);
+        $sendData['RetURL'] = $this->router->generate(
+            'gmo_payment_gateway_rakuten_pay_result', [], UrlGeneratorInterface::ABSOLUTE_URL
+        );
         // 決済結果戻しURL(異常時)
-        $sendData['ErrorRcvURL'] = $this->container->get('router')
-            ->generate('gmo_payment_gateway_rakuten_pay_result',
-                       ['result' => 0], UrlGeneratorInterface::ABSOLUTE_URL);
+        $sendData['ErrorRcvURL'] = $this->router->generate(
+            'gmo_payment_gateway_rakuten_pay_result', [], UrlGeneratorInterface::ABSOLUTE_URL
+        );
 
         $sendData['action_status'] =
             $const['gmo_payment_gateway.action_status.exec_request'];

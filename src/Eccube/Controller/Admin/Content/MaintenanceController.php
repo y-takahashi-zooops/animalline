@@ -27,9 +27,15 @@ class MaintenanceController extends AbstractController
      */
     protected $systemService;
 
-    public function __construct(SystemService $systemService)
+    /**
+     * @var string
+     */
+    protected $maintenanceFilePath;
+
+    public function __construct(SystemService $systemService, string $maintenanceFilePath)
     {
         $this->systemService = $systemService;
+        $this->maintenanceFilePath = $maintenanceFilePath;
     }
 
     /**
@@ -48,7 +54,7 @@ class MaintenanceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $changeTo = $request->request->get('maintenance');
-            $path = $this->container->getParameter('eccube_content_maintenance_file_path');
+            $path = $this->maintenanceFilePath;
 
             if ($isMaintenance === false && $changeTo == 'on') {
                 // 現在メンテナンスモードではない　かつ　メンテナンスモードを有効　にした場合

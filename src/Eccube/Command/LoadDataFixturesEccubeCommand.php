@@ -24,15 +24,16 @@ class LoadDataFixturesEccubeCommand extends DoctrineCommand
 {
     protected static $defaultName = 'eccube:fixtures:load';
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
+    private ParameterBagInterface $params;
+    private EccubeConfig $eccubeConfig;
 
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(
+        EccubeConfig $eccubeConfig,
+        ParameterBagInterface $params
+    ) {
         parent::__construct();
-        $this->container = $container;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->params = $params;
     }
 
     protected function configure()
@@ -66,8 +67,7 @@ EOF
         $login_id = env('ECCUBE_ADMIN_USER', 'admin');
         $login_password = env('ECCUBE_ADMIN_PASS', 'password');
 
-        $eccubeConfig = $this->container->get(EccubeConfig::class);
-        $encoder = new \Eccube\Security\Core\Encoder\PasswordEncoder($eccubeConfig);
+        $encoder = new \Eccube\Security\Core\Encoder\PasswordEncoder($this->eccubeConfig);
 
         $salt = \Eccube\Util\StringUtil::random(32);
         $password = $encoder->encodePassword($login_password, $salt);
@@ -117,20 +117,20 @@ EOF
         ]);
 
         $faviconPath = '/assets/img/common/favicon.ico';
-        if (!file_exists($this->container->getParameter('eccube_html_dir').'/user_data'.$faviconPath)) {
+        if (!file_exists($this->params->get('eccube_html_dir').'/user_data'.$faviconPath)) {
             $file = new Filesystem();
             $file->copy(
-                $this->container->getParameter('eccube_html_front_dir').$faviconPath,
-                $this->container->getParameter('eccube_html_dir').'/user_data'.$faviconPath
+                $this->params->get('eccube_html_front_dir').$faviconPath,
+                $this->params->get('eccube_html_dir').'/user_data'.$faviconPath
             );
         }
 
         $logoPath = '/assets/pdf/logo.png';
-        if (!file_exists($this->container->getParameter('eccube_html_dir').'/user_data'.$logoPath)) {
+        if (!file_exists($this->params->get('eccube_html_dir').'/user_data'.$logoPath)) {
             $file = new Filesystem();
             $file->copy(
-                $this->container->getParameter('eccube_html_admin_dir').$logoPath,
-                $this->container->getParameter('eccube_html_dir').'/user_data'.$logoPath
+                $this->params->get('eccube_html_admin_dir').$logoPath,
+                $this->params->get('eccube_html_dir').'/user_data'.$logoPath
             );
         }
 
