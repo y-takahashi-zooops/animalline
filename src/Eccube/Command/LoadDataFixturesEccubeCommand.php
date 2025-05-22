@@ -17,7 +17,8 @@ use Doctrine\Bundle\DoctrineBundle\Command\DoctrineCommand;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class LoadDataFixturesEccubeCommand extends DoctrineCommand
@@ -25,15 +26,13 @@ class LoadDataFixturesEccubeCommand extends DoctrineCommand
     protected static $defaultName = 'eccube:fixtures:load';
 
     private ParameterBagInterface $params;
-    private EccubeConfig $eccubeConfig;
+    private ManagerRegistry $registry;
 
-    public function __construct(
-        EccubeConfig $eccubeConfig,
-        ParameterBagInterface $params
-    ) {
-        parent::__construct();
-        $this->eccubeConfig = $eccubeConfig;
+    public function __construct(ManagerRegistry $registry, ParameterBagInterface $params)
+    {
+        parent::__construct($registry);
         $this->params = $params;
+        $this->registry = $registry;
     }
 
     protected function configure()

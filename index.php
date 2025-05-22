@@ -1,7 +1,7 @@
 <?php
 
 use Eccube\Kernel;
-use Symfony\Component\Debug\Debug;
+use Symfony\Component\ErrorHandler\Debug;
 use Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,13 +24,14 @@ if (!isset($_SERVER['APP_ENV'])) {
     }
 
     if (file_exists(__DIR__.'/.env')) {
-        (new Dotenv(__DIR__))->overload();
+	    $dotenv = Dotenv::createImmutable(__DIR__);
+            $dotenv->load();
 
         if (strpos(getenv('DATABASE_URL'), 'sqlite') !== false && !extension_loaded('pdo_sqlite')) {
-            (new Dotenv(__DIR__, '.env.install'))->overload();
+            Dotenv::createImmutable(__DIR__, ['.env.install'])->load();
         }
     } else {
-        (new Dotenv(__DIR__, '.env.install'))->overload();
+        Dotenv::createImmutable(__DIR__, ['.env.install'])->load();
     }
 }
 
