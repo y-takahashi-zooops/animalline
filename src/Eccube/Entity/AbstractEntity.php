@@ -15,7 +15,8 @@ namespace Eccube\Entity;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Doctrine\ORM\Proxy\Proxy;
@@ -31,7 +32,8 @@ abstract class AbstractEntity implements \ArrayAccess
 
     public function offsetExists($offset): bool
     {
-        $method = Inflector::classify($offset);
+        $inflector = InflectorFactory::create()->build();
+	$method = $inflector->classify($offset);
 
         return method_exists($this, $method)
             || method_exists($this, "get$method")
@@ -45,7 +47,8 @@ abstract class AbstractEntity implements \ArrayAccess
 
     public function offsetGet($offset): mixed
     {
-        $method = Inflector::classify($offset);
+        $inflector = InflectorFactory::create()->build();
+        $method = $inflector->classify($offset);
 
         if (method_exists($this, $method)) {
             return $this->$method();

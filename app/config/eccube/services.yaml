@@ -17,7 +17,7 @@ parameters:
     eccube_content_maintenance_file_path: '%kernel.project_dir%/app/config/eccube/.maintenance'
 
 services:
-    # default configuration for services in *this* file
+        # default configuration for services in *this* file
     _defaults:
         # automatically injects dependencies in your services
         autowire: true
@@ -61,6 +61,10 @@ services:
         - '../../../src/Eccube/{Annotation,Common,Entity,Exception,Log,Plugin,ServiceProvider,Resource,Doctrine/ORM/tools/}'
         - '../../../src/Eccube/Form/Extension'
 
+    Customize\Controller\:
+        resource: '../../../app/Customize/Controller'
+        tags: ['controller.service_arguments']
+
     Eccube\Log\Logger:
         autowire: true
         autoconfigure: true
@@ -92,7 +96,7 @@ services:
         lazy: true
 
     Eccube\Service\Composer\ComposerServiceInterface:
-        factory: ['Eccube\Service\Composer\ComposerServiceFactory', createService]
+        factory: ['@Eccube\Service\Composer\ComposerServiceFactory', createService]
 
     # controllers are imported separately to make sure they're public
     # and have a tag that allows actions to type-hint services
@@ -115,10 +119,6 @@ services:
         - '../../../app/Customize/{Entity,Resource,Tests}'
         - '../../../app/Customize/Form/Extension'
 
-    Customize\Controller\:
-        resource: '../../../app/Customize/Controller'
-        tags: ['controller.service_arguments']
-    
     # Animalline拡張
     Customize\EventListener\LogoutListener:
         tags:
@@ -131,6 +131,12 @@ services:
 
     eccube.collector.core:
         class: Eccube\DataCollector\EccubeDataCollector
+        arguments:
+            $locale: '%locale%'
+            $currency: '%currency%'
+            $enabledPlugins: '%eccube.plugins.enabled%'
+            $disabledPlugins: '%eccube.plugins.disabled%'
+            $pluginRepository: '@Eccube\Repository\PluginRepository'
         tags:
           - { name: 'data_collector', template: '@toolbar/eccube.html.twig', id: 'eccube_core', priority: -512 }
 
@@ -366,3 +372,8 @@ services:
     Eccube\Service\Composer\ComposerServiceFactory:
         arguments:
             $composerApiService: '@Eccube\Service\Composer\ComposerApiService'
+
+    Customize\Service\MailService:
+        autowire: true
+        autoconfigure: true
+        public: true

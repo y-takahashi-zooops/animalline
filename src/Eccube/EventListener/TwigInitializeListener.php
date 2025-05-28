@@ -36,6 +36,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Detection\MobileDetect;
+use Psr\Log\LoggerInterface;
 
 class TwigInitializeListener implements EventSubscriberInterface
 {
@@ -104,6 +105,8 @@ class TwigInitializeListener implements EventSubscriberInterface
      */
     private $layoutRepository;
 
+    private $logger;
+
     /**
      * TwigInitializeListener constructor.
      *
@@ -132,7 +135,8 @@ class TwigInitializeListener implements EventSubscriberInterface
         Context $context,
         MobileDetect $mobileDetector,
         UrlGeneratorInterface $router,
-        LayoutRepository $layoutRepository
+	LayoutRepository $layoutRepository,
+	LoggerInterface $logger
     ) {
         $this->twig = $twig;
         $this->baseInfoRepository = $baseInfoRepository;
@@ -145,7 +149,8 @@ class TwigInitializeListener implements EventSubscriberInterface
         $this->requestContext = $context;
         $this->mobileDetector = $mobileDetector;
         $this->router = $router;
-        $this->layoutRepository = $layoutRepository;
+	$this->layoutRepository = $layoutRepository;
+	$this->logger = $logger;
     }
 
     /**
@@ -212,7 +217,7 @@ class TwigInitializeListener implements EventSubscriberInterface
 
         // Pageに紐づくLayoutにDeviceTypeが一致するLayoutがない場合はPCのレイアウトを探す
         if (!$Layout) {
-            log_info('fallback to PC layout');
+	    $this->logger->info('fallback to PC layout');
             foreach ($PageLayouts as $PageLayout) {
                 if ($PageLayout->getDeviceTypeId() == DeviceType::DEVICE_TYPE_PC) {
                     $Layout = $PageLayout->getLayout();

@@ -32,6 +32,7 @@ use Customize\Repository\ConservationsRepository;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Twig\Environment;
 
 class MailService
 {
@@ -88,7 +89,7 @@ class MailService
      * @param MailHistoryRepository $mailHistoryRepository
      * @param BaseInfoRepository $baseInfoRepository
      * @param EventDispatcherInterface $eventDispatcher
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
      * @param BreedersRepository $breedersRepository
      * @param ConservationsRepository $conservationsRepository
@@ -99,7 +100,7 @@ class MailService
         MailHistoryRepository $mailHistoryRepository,
         BaseInfoRepository $baseInfoRepository,
         EventDispatcherInterface $eventDispatcher,
-        \Twig_Environment $twig,
+        Environment $twig,
         EccubeConfig $eccubeConfig,
         BreedersRepository $breedersRepository,
         ConservationsRepository $conservationsRepository

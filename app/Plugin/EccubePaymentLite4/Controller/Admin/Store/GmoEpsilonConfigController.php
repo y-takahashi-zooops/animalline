@@ -24,7 +24,7 @@ class GmoEpsilonConfigController extends AbstractController
     /**
      * @var EccubeConfig
      */
-    protected $eccubeConfig;
+    protected EccubeConfig $eccubeConfig;
 
     /**
      * @var ConfigRepository

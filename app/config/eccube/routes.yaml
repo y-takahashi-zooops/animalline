@@ -1,9 +1,16 @@
+eccube:
+    resource: "@Eccube/Resource/config/routing.yml"
+    prefix: /
+
 controllers:
-    resource: ../../../src/Eccube/Controller/
+    # resource: ../../../src/Eccube/Controller/
+    resource: '%kernel.project_dir%/src/Eccube/Controller/'
     type: annotation
 customize_controllers:
-    resource: ../../../app/Customize/Controller/
+    # resource: ../../../app/Customize/Controller/
+    resource: '%kernel.project_dir%/app/Customize/Controller/'
     type: annotation
+    prefix: /
 
 some_route:
     path: /example
@@ -33,4 +40,6 @@ admin_logout:
     path: '/%eccube_admin_route%/logout'
 logout:
     path: /logout
-    
+
+when@dev:
+    - { resource: '%kernel.project_dir%/app/config/eccube/routes/dev/web_profiler.yaml', prefix: / }
