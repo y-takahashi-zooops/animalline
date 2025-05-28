@@ -152,8 +152,11 @@ class Kernel extends BaseKernel
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import(__DIR__ . '/../../app/config/eccube/routes.yaml');
-        $container = $this->getContainer();
+        // $routes->import(__DIR__ . '/../../app/config/eccube/routes.yaml');
+	$routes->import($this->getProjectDir().'/config/routes.yaml', '/', 'yaml');
+        $routes->import(__DIR__ . '/../../app/config/eccube/routes.yaml', '/', 'yaml');
+
+	$container = $this->getContainer();
 
         $confDir = $this->getProjectDir().'/app/config/eccube';
         if (is_dir($confDir.'/routes/')) {
@@ -161,7 +164,16 @@ class Kernel extends BaseKernel
         }
         if (is_dir($confDir.'/routes/'.$this->environment)) {
             $builder = $routes->import($confDir.'/routes/'.$this->environment.'/**/*'.self::CONFIG_EXTS, '/', 'glob');
-        }
+	}
+	
+	// dev環境のみ web_profiler.yaml を追加で読み込む
+	if ($this->environment === 'dev') {
+	    $profilerPath = $confDir . '/routes/dev/web_profiler.yaml';
+	    if (file_exists($profilerPath)) {
+	        $routes->import($profilerPath, '/', 'yaml');
+	    }
+	}
+
         $builder = $routes->import($confDir.'/routes'.self::CONFIG_EXTS, '/', 'glob');
 
         $builder = $routes->import($confDir.'/routes_'.$this->environment.self::CONFIG_EXTS, '/', 'glob');

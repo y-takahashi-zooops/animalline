@@ -15,8 +15,8 @@ namespace Eccube\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
@@ -48,9 +48,9 @@ class PluginGenerateCommand extends Command
     protected function configure()
     {
         $this
-            ->addArgument('name', InputArgument::VALUE_REQUIRED, 'plugin name')
-            ->addArgument('code', InputArgument::VALUE_REQUIRED, 'plugin code')
-            ->addArgument('ver', InputArgument::VALUE_REQUIRED, 'plugin version')
+            ->addArgument('name', InputArgument::REQUIRED, 'plugin name')
+            ->addArgument('code', InputArgument::REQUIRED, 'plugin code')
+            ->addArgument('ver', InputArgument::REQUIRED, 'plugin version')
             ->setDescription('Generate plugin skeleton.');
     }
 

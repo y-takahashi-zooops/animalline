@@ -61,23 +61,16 @@ class ShoppingController extends AbstractShoppingController
      */
     protected $orderRepository;
 
-    /**
-     * @var PaymentMethodFactoryInterface
-     */
-    protected $paymentMethodFactory;
-
     public function __construct(
         CartService $cartService,
         MailService $mailService,
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
-        PaymentMethodFactoryInterface $paymentMethodFactory
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->orderRepository = $orderRepository;
         $this->orderHelper = $orderHelper;
-        $this->paymentMethodFactory = $paymentMethodFactory;
     }
 
     /**
@@ -720,8 +713,8 @@ class ShoppingController extends AbstractShoppingController
      */
     private function createPaymentMethod(Order $Order, FormInterface $form)
     {
-        $PaymentMethod = $this->paymentMethodFactory->create($Order->getPayment()->getMethodClass());
-        $PaymentMethod->setOrder($Order);
+	$paymentMethod = $this->container->get($Order->getPayment()->getMethodClass());    
+	$PaymentMethod->setOrder($Order);
         $PaymentMethod->setFormType($form);
 
         return $PaymentMethod;

@@ -1,0 +1,9 @@
+admin:
+    resource: "@Eccube/Controller/Admin/"
+    type: annotation
+    prefix: /%eccube_admin_route%
+
+front:
+    resource: "@Eccube/Controller/"
+    type: annotation
+    exclude: "@Eccube/Controller/Admin/"

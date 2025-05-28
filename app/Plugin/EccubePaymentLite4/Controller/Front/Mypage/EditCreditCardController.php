@@ -44,11 +44,6 @@ class EditCreditCardController extends AbstractController
      */
     private $configRepository;
 
-    /**
-     * @var EccubeConfig
-     */
-    protected $eccubeConfig;
-
     public function __construct(
         RequestGetUserInfoService $requestGetUserInfoService,
         RequestReceiveOrderService $requestReceiveOrderService,

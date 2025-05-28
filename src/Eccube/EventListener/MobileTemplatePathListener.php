@@ -62,7 +62,7 @@ class MobileTemplatePathListener implements EventSubscriberInterface
             return;
         }
 
-        if (!$this->$detect->isMobile()) {
+        if (!$detect->isMobile()) {
             return;
         }
 

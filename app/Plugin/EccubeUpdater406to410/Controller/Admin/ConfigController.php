@@ -38,10 +38,6 @@ use Symfony\Component\Yaml\Yaml;
 
 class ConfigController extends AbstractController
 {
-    /**
-     * @var EccubeConfig
-     */
-    protected $eccubeConfig;
 
     /**
      * @var BaseInfoRepository

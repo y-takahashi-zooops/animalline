@@ -20,6 +20,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Twig\Environment;
 
 class BreederMailService
 {
@@ -54,7 +55,7 @@ class BreederMailService
     protected $eccubeConfig;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
@@ -66,7 +67,7 @@ class BreederMailService
      * @param MailHistoryRepository $mailHistoryRepository
      * @param BaseInfoRepository $baseInfoRepository
      * @param EventDispatcherInterface $eventDispatcher
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
      */
     public function __construct(
@@ -75,7 +76,7 @@ class BreederMailService
         MailHistoryRepository $mailHistoryRepository,
         BaseInfoRepository $baseInfoRepository,
         EventDispatcherInterface $eventDispatcher,
-        \Twig_Environment $twig,
+        Environment $twig,
         EccubeConfig $eccubeConfig
     ) {
         $this->mailer = $mailer;

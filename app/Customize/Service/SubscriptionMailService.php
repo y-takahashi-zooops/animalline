@@ -38,7 +38,7 @@ class SubscriptionMailService
     protected $eccubeConfig;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
@@ -47,13 +47,13 @@ class SubscriptionMailService
      *
      * @param MailerInterface $mailer
      * @param BaseInfoRepository $baseInfoRepository
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
      */
     public function __construct(
         MailerInterface $mailer,
         BaseInfoRepository $baseInfoRepository,
-        \Twig_Environment $twig,
+        Environment $twig,
         EccubeConfig $eccubeConfig
     ) {
         $this->mailer = $mailer;

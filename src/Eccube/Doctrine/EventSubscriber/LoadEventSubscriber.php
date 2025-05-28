@@ -15,7 +15,7 @@ namespace Eccube\Doctrine\EventSubscriber;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Events;
 use Eccube\Entity\AbstractEntity;
 
@@ -36,7 +36,7 @@ class LoadEventSubscriber implements EventSubscriber
         return [Events::postLoad];
     }
 
-    public function postLoad(LifecycleEventArgs $args)
+    public function postLoad(PostLoadEventArgs $args)
     {
         $entity = $args->getObject();
         if ($entity instanceof AbstractEntity) {
