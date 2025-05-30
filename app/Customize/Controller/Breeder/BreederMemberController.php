@@ -36,6 +36,7 @@ use Customize\Entity\BreederContactHeader;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BreederMemberController extends AbstractController
 {
@@ -90,7 +91,7 @@ class BreederMemberController extends AbstractController
     protected $mailService;
 
     protected FormFactoryInterface $formFactory;
-    
+
     /**
      * BreederController constructor.
      *
@@ -106,6 +107,7 @@ class BreederMemberController extends AbstractController
      * @param MailService $mailService
      * @param EntityManagerInterface $entityManager
      * @param FormFactoryInterface $formFactory
+     * @param EventDispatcherInterface $eventDispatcher;
      */
     public function __construct(
         CustomerRepository  $customerRepository,
@@ -119,7 +121,8 @@ class BreederMemberController extends AbstractController
         BreederPetsRepository  $breederPetsRepository,
 	MailService $mailService,
 	EntityManagerInterface $entityManager,
-	FormFactoryInterface $formFactory
+	FormFactoryInterface $formFactory,
+	EventDispatcherInterface $eventDispatcher,
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
@@ -133,6 +136,7 @@ class BreederMemberController extends AbstractController
 	$this->mailService = $mailService;
 	$this->entityManager = $entityManager;
 	$this->formFactory = $formFactory;
+	$this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -181,7 +185,7 @@ class BreederMemberController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_MYPAGE_LOGIN_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_MYPAGE_LOGIN_INITIALIZE);
 
         $form = $builder->getForm();
 

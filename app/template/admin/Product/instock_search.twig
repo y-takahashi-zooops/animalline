@@ -220,7 +220,7 @@ file that was distributed with this source code.
             <button class="btn btn-ec-conversion px-5" type="button" onClick="confirmSendWMS()">入荷予定をWMSに送信</button>
 
             <div class="navigation float-right">
-                {{ knp_pagination_render(instocks) }}
+                {{ knp_pagination_render(instocks, '@KnpPaginator/twitter_bootstrap_v4_pagination.html.twig') }}
             </div>
             <!-- 完全に削除の確認モーダル-->
             <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="discontinuance"

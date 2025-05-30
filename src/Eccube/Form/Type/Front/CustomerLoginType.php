@@ -51,8 +51,10 @@ class CustomerLoginType extends AbstractType
                 'max_length' => $this->eccubeConfig['eccube_stext_len'],
             ],
             'constraints' => [
-                new Assert\NotBlank(),
-                new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
+		new Assert\NotBlank(),
+		new Email([
+    		    'mode' => $this->eccubeConfig['eccube_rfc_email_check'] ? 'strict' : 'loose',
+		]),
             ],
             'data' => $this->authenticationUtils->getLastUsername(),
         ]);
