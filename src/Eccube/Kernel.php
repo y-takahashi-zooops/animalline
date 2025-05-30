@@ -47,6 +47,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Twig\Loader\FilesystemLoader;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class Kernel extends BaseKernel
@@ -126,6 +127,12 @@ class Kernel extends BaseKernel
         $app->initialize();
         $app->boot();
 
+
+	if ($container->has('twig.loader.native_filesystem')) {
+            $loader = $container->get('twig.loader.native_filesystem');
+            $loader->addPath($this->getProjectDir() . '/app/template/default', 'KnpPaginator');
+        }
+
         $container->set('app', $app);
     }
 
@@ -150,33 +157,48 @@ class Kernel extends BaseKernel
         $loader->load($dir.'/services_'.$this->environment.self::CONFIG_EXTS, 'glob');
     }
 
-    protected function configureRoutes(RoutingConfigurator $routes): void
+    // 追記
+    protected function configureRoutes(RoutingConfigurator $routes)
     {
-        // $routes->import(__DIR__ . '/../../app/config/eccube/routes.yaml');
-	$routes->import($this->getProjectDir().'/config/routes.yaml', '/', 'yaml');
-        $routes->import(__DIR__ . '/../../app/config/eccube/routes.yaml', '/', 'yaml');
+        $container = $this->getContainer();
 
-	$container = $this->getContainer();
+        $scheme = ['https', 'http'];
+        $forceSSL = $container->getParameter('eccube_force_ssl');
+        if ($forceSSL) {
+            $scheme = ['https'];
+        }
 
         $confDir = $this->getProjectDir().'/app/config/eccube';
         if (is_dir($confDir.'/routes/')) {
-            $builder = $routes->import($confDir.'/routes/*'.self::CONFIG_EXTS, '/', 'glob');
+            $builder = $routes->import($confDir.'/routes/*'.self::CONFIG_EXTS);
+            $builder->schemes($scheme);
         }
         if (is_dir($confDir.'/routes/'.$this->environment)) {
-            $builder = $routes->import($confDir.'/routes/'.$this->environment.'/**/*'.self::CONFIG_EXTS, '/', 'glob');
-	}
-	
-	// dev環境のみ web_profiler.yaml を追加で読み込む
-	if ($this->environment === 'dev') {
-	    $profilerPath = $confDir . '/routes/dev/web_profiler.yaml';
-	    if (file_exists($profilerPath)) {
-	        $routes->import($profilerPath, '/', 'yaml');
-	    }
-	}
+            $builder = $routes->import($confDir.'/routes/'.$this->environment.'/**/*'.self::CONFIG_EXTS);
+            $builder->schemes($scheme);
+        }
+        $builder = $routes->import($confDir.'/routes'.self::CONFIG_EXTS);
+        $builder->schemes($scheme);
+        $builder = $routes->import($confDir.'/routes_'.$this->environment.self::CONFIG_EXTS);
+        $builder->schemes($scheme);
 
-        $builder = $routes->import($confDir.'/routes'.self::CONFIG_EXTS, '/', 'glob');
+	// dev環境用 profiler ルーティング
+        if ($this->environment === 'dev') {
+            $profilerPath = $confDir . '/routes/dev/web_profiler.yaml';
+           if (file_exists($profilerPath)) {
+               $routes->import($profilerPath, '/', 'yaml');
+           }
+        }
 
-        $builder = $routes->import($confDir.'/routes_'.$this->environment.self::CONFIG_EXTS, '/', 'glob');
+        // 環境別ルーティング
+        $routesEnvFile = $confDir . '/routes' . self::CONFIG_EXTS;
+        if (file_exists($routesEnvFile)) {
+            $routes->import($routesEnvFile, '/', 'glob');
+        }
+        $routesEnvFile2 = $confDir . '/routes_' . $this->environment . self::CONFIG_EXTS;
+        if (file_exists($routesEnvFile2)) {
+            $routes->import($routesEnvFile2, '/', 'glob');
+	}
 
         // 有効なプラグインのルーティングをインポートする.
         $plugins = $container->getParameter('eccube.plugins.enabled');
@@ -184,13 +206,16 @@ class Kernel extends BaseKernel
         foreach ($plugins as $plugin) {
             $dir = $pluginDir.'/'.$plugin.'/Controller';
             if (file_exists($dir)) {
-                $builder = $routes->import($dir, '/', 'annotation');
+                $builder = $routes->import($dir,'annotation');
+                $builder->schemes($scheme);
             }
             if (file_exists($pluginDir.'/'.$plugin.'/Resource/config')) {
-                $builder = $routes->import($pluginDir.'/'.$plugin.'/Resource/config/routes'.self::CONFIG_EXTS, '/', 'glob');
+                $builder = $routes->import($pluginDir.'/'.$plugin.'/Resource/config/routes'.self::CONFIG_EXTS);
+                $builder->schemes($scheme);
             }
         }
     }
+
 
     protected function build(ContainerBuilder $container)
     {

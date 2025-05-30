@@ -34,6 +34,8 @@ use Customize\Repository\BreederPetsRepository;
 use Customize\Service\MailService;
 use Customize\Entity\BreederContactHeader;
 use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class BreederMemberController extends AbstractController
 {
@@ -87,6 +89,8 @@ class BreederMemberController extends AbstractController
      */
     protected $mailService;
 
+    protected FormFactoryInterface $formFactory;
+    
     /**
      * BreederController constructor.
      *
@@ -100,6 +104,8 @@ class BreederMemberController extends AbstractController
      * @param BenefitsStatusRepository $benefitsStatusRepository
      * @param BreederPetsRepository $breederPetsRepository
      * @param MailService $mailService
+     * @param EntityManagerInterface $entityManager
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         CustomerRepository  $customerRepository,
@@ -111,7 +117,9 @@ class BreederMemberController extends AbstractController
         BreederContactHeaderRepository $breederContactHeaderRepository,
         BenefitsStatusRepository $benefitsStatusRepository,
         BreederPetsRepository  $breederPetsRepository,
-        MailService $mailService
+	MailService $mailService,
+	EntityManagerInterface $entityManager,
+	FormFactoryInterface $formFactory
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
@@ -122,7 +130,9 @@ class BreederMemberController extends AbstractController
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->benefitsStatusRepository = $benefitsStatusRepository;
         $this->breederPetsRepository = $breederPetsRepository;
-        $this->mailService = $mailService;
+	$this->mailService = $mailService;
+	$this->entityManager = $entityManager;
+	$this->formFactory = $formFactory;
     }
 
     /**
@@ -218,14 +228,14 @@ class BreederMemberController extends AbstractController
                     ->setContactType($contact_type)
                     ->setLastMessageDate(Carbon::now());
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($contact);
+	    $this->entityManager->persist($contact);
 
             $pet->setIsContact(1);
-            $entityManager->persist($pet);
+            $this->entityManager->persist($pet);
 
-            $entityManager->flush();
-            $breeder = $this->customerRepository->find($contact->getBreeder()->getId());
+            $this->entityManager->flush();
+
+	    $breeder = $this->customerRepository->find($contact->getBreeder()->getId());
             $this->mailService->sendMailContractAccept($breeder, 1);
 
             return $this->redirectToRoute('breeder_contact_complete', ['pet_id' => $contact_pet_id]);
@@ -335,8 +345,8 @@ class BreederMemberController extends AbstractController
                 ->setLicensePref($breederData->getPrefLicense())
                 ->setThumbnailPath($thumbnail_path)
                 ->setLicenseThumbnailPath($license_thumbnail_path);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($breederData);
+	    $entityManager = $this->entityManager;
+	    $entityManager->persist($breederData);
 
             if($breederData->getIdHash() == ""){
                 $breederData->setIdHash(md5($breederData->getId()));
@@ -379,7 +389,7 @@ class BreederMemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $breederPetinfoTemplate->setBreeder($breeder);
             $entityManager->persist($breederPetinfoTemplate);
             $entityManager->flush();
@@ -405,7 +415,7 @@ class BreederMemberController extends AbstractController
 
         $form = $builder->getForm();
         $form->handleRequest($request);
-        $entityManager = $this->getDoctrine()->getManager();
+	$entityManager = $this->entityManager;
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();

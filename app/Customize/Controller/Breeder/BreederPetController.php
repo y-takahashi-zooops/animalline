@@ -38,6 +38,7 @@ use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Customize\Repository\PetLikeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederPetController extends AbstractController
 {
@@ -164,6 +165,7 @@ class BreederPetController extends AbstractController
      * @param PetLikeRepository $petLikeRepository
      * @param DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository
      * @param DnaCheckKindsRepository $dnaCheckKindsRepository
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
         BreederContactsRepository        $breederContactsRepository,
@@ -185,7 +187,8 @@ class BreederPetController extends AbstractController
         BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository,
         PetLikeRepository $petLikeRepository,
         DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository,
-        DnaCheckKindsRepository $dnaCheckKindsRepository
+	DnaCheckKindsRepository $dnaCheckKindsRepository,
+	EntityManagerInterface $entityManager
     )
     {
         $this->breederContactsRepository = $breederContactsRepository;
@@ -207,7 +210,8 @@ class BreederPetController extends AbstractController
         $this->breederPetinfoTemplateRepository = $breederPetinfoTemplateRepository;
         $this->petLikeRepository = $petLikeRepository;
         $this->dnaCheckStatusDetailRepository = $dnaCheckStatusDetailRepository;
-        $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
+	$this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
+	$this->entityManager = $entityManager;
     }
 
     /**

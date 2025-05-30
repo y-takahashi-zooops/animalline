@@ -1,13 +1,2 @@
-custom_routes:
-    resource: '../app/config/eccube/routes.yaml'
-    type: yaml
-
-admin:
-    resource: '../src/Eccube/Controller/Admin/'
-    type: annotation
-    prefix: /%eccube_admin_route%
-
-front:
-    resource: '../src/Eccube/Controller/'
-    type: annotation
-    exclude: '../src/Eccube/Controller/Admin/'
+imports:
+    - { resource: routes/attributes.yaml }
