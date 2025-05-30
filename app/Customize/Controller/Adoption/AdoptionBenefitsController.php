@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Eccube\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionBenefitsController extends AbstractController
 {
@@ -25,17 +26,24 @@ class AdoptionBenefitsController extends AbstractController
     protected $conservationContactHeaderRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * BreederController constructor.
      * 
      * @param BenefitsStatusRepository $benefitsStatusRepository
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         BenefitsStatusRepository    $benefitsStatusRepository,
         ConservationContactHeaderRepository $conservationContactHeaderRepository
     ) {
         $this->benefitsStatusRepository = $benefitsStatusRepository;
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -86,8 +94,8 @@ class AdoptionBenefitsController extends AbstractController
                         $shippingdate->modify('+1 day');
                     }
                     $benefitsStatus->setBenefitsShippingDate($shippingdate);
-                
-                    $entityManager = $this->getDoctrine()->getManager();
+
+                    $entityManager = $this->entityManager;
                     $entityManager->persist($benefitsStatus);
 
                     $entityManager->flush();

@@ -28,6 +28,7 @@ use Customize\Form\Type\Front\ContactType;
 use Customize\Service\MailService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionController extends AbstractController
 {
@@ -81,6 +82,11 @@ class AdoptionController extends AbstractController
     protected $mailService;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationPetsRepository $conservationPetsRepository
@@ -95,6 +101,7 @@ class AdoptionController extends AbstractController
      * @param AffiliateStatusRepository $affiliateStatusRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         ConservationPetsRepository     $conservationPetsRepository,
         ConservationPetImageRepository $conservationPetImageRepository,
         ConservationContactsRepository $conservationContactsRepository,
@@ -116,6 +123,7 @@ class AdoptionController extends AbstractController
         $this->conservationsHousesRepository = $conservationsHousesRepository;
         $this->mailService = $mailService;
         $this->affiliateStatusRepository = $affiliateStatusRepository;
+        $this->entityManager = $entityManager;
     }
 
 
@@ -160,7 +168,7 @@ class AdoptionController extends AbstractController
                 $response->headers->setCookie(new Cookie('rid_key',$sessid));
             //}
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
 
             //$session = $request->getSession();
             //$sessid = $session->getId();
@@ -294,7 +302,7 @@ class AdoptionController extends AbstractController
             AnilineConf::ANILINE_NUMBER_ITEM_PER_PAGE
         );
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $conservation->setViewCount(intval($conservation->getViewCount() + 1));
         $entityManager->persist($conservation);
         $entityManager->flush();

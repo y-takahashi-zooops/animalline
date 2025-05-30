@@ -39,6 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Repository\Master\OrderItemTypeRepository;
 use Customize\Controller\Admin\Product\ProductController as BaseProductController;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ProductWasteController extends BaseProductController
 {
@@ -108,6 +109,11 @@ class ProductWasteController extends BaseProductController
     protected $stockWasteReasonRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * ProductWasteController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -125,6 +131,7 @@ class ProductWasteController extends BaseProductController
      * @param StockWasteReasonRepository $stockWasteReasonRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         CsvExportService                $csvExportService,
         ProductClassRepository          $productClassRepository,
         ProductImageRepository          $productImageRepository,
@@ -152,6 +159,7 @@ class ProductWasteController extends BaseProductController
         $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->stockWasteRepository = $stockWasteRepository;
         $this->stockWasteReasonRepository = $stockWasteReasonRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -167,7 +175,7 @@ class ProductWasteController extends BaseProductController
             $waste = $this->stockWasteRepository->find($request->get('id_destroy'));
             $productClass = $waste->getProductClass();
             $productClass->setStock((int)$productClass->getStock() + $waste->getWasteUnit());
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($productClass);
             $entityManager->remove($waste);
             $entityManager->flush();
@@ -227,7 +235,7 @@ class ProductWasteController extends BaseProductController
                     ->setProductClass($productClass);
                 $this->productClassRepository->decrementStock($productClass, $stockUnit);
                 $productClass->setUpdateDate(Carbon::now());
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->entityManager;
                 $entityManager->persist($stockWaste);
                 $entityManager->persist($productClass);
                 $entityManager->flush();

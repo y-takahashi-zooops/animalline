@@ -23,6 +23,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ProductSupplierController extends AbstractController
 {
@@ -37,17 +38,24 @@ class ProductSupplierController extends AbstractController
     protected $productClassRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * ProductController constructor.
      *
      * @param ProductClassRepository $productClassRepository
      * @param SupplierRepository $supplierRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         ProductClassRepository $productClassRepository,
         SupplierRepository     $supplierRepository
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->supplierRepository = $supplierRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -63,7 +71,7 @@ class ProductSupplierController extends AbstractController
             $supplier = $this->supplierRepository->find($request->get('id-destroy'));
             $issetProduct = $this->productClassRepository->findBy(['supplier_code' => $supplier->getSupplierCode()]);
             if (!$issetProduct) {
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->entityManager;
                 $entityManager->remove($supplier);
                 $entityManager->flush();
             }
@@ -75,7 +83,7 @@ class ProductSupplierController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($supplierNew);
             $entityManager->flush();
 
@@ -96,7 +104,7 @@ class ProductSupplierController extends AbstractController
                 $supplier = $this->supplierRepository->find($request->get('supplier-id'));
                 $formHandle->handleRequest($request);
                 if ($formHandle->isSubmitted() && $formHandle->isValid()) {
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $this->entityManager;
                     $entityManager->persist($supplier);
                     $entityManager->flush();
                 }

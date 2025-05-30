@@ -10,6 +10,7 @@ use Customize\Repository\ConservationsHousesRepository;
 use Eccube\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionHouseController extends AbstractController
 {
@@ -24,17 +25,24 @@ class AdoptionHouseController extends AbstractController
     protected $conservationsHouseRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * ConservationController constructor.
      *
      * @param ConservationsRepository $conservationsRepository
      * @param ConservationsHousesRepository $conservationsHouseRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         ConservationsRepository             $conservationsRepository,
         ConservationsHousesRepository       $conservationsHouseRepository
     ) {
         $this->conservationsRepository = $conservationsRepository;
         $this->conservationsHouseRepository = $conservationsHouseRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -66,7 +74,7 @@ class AdoptionHouseController extends AbstractController
             $conservationsHouse->setConservation($conservation)
                 ->setPetType($petType)
                 ->setConservationHousePref($conservationsHouse->getPref());
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($conservationsHouse);
 
             $entityManager->flush();

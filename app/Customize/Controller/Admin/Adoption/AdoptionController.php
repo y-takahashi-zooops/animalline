@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionController extends AbstractController
 {
@@ -75,6 +76,11 @@ class AdoptionController extends AbstractController
     protected $mailService;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * AdoptionController constructor.
      *
      * @param ConservationsRepository $conservationsRepository
@@ -95,7 +101,8 @@ class AdoptionController extends AbstractController
         AdoptionQueryService           $adoptionQueryService,
         CustomerRepository             $customerRepository,
         ConservationBankAccountRepository             $conservationBankAccountRepository,
-        MailService                    $mailService
+        MailService                    $mailService,
+        EntityManagerInterface $entityManager
     ) {
         $this->conservationsRepository = $conservationsRepository;
         $this->breedsRepository = $breedsRepository;
@@ -105,6 +112,7 @@ class AdoptionController extends AbstractController
         $this->customerRepository = $customerRepository;
         $this->conservationBankAccountRepository = $conservationBankAccountRepository;
         $this->mailService = $mailService;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -149,7 +157,7 @@ class AdoptionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $conservation->setPref($conservation->getPrefId());
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             if ($request->get('conservations')['is_active'] == AnilineConf::IS_ACTIVE_PRIVATE) {
                 $conservationPets = $this->conservationPetsRepository->findBy(['Conservation' => $conservation]);
                 foreach ($conservationPets as $conservationPet) {

@@ -22,6 +22,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ProductMakerController extends AbstractController
 {
@@ -31,13 +32,20 @@ class ProductMakerController extends AbstractController
     protected $productMakerRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * Product maker controller constructor.
      *
      * @param ProductMakerRepository $productMakerRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         ProductMakerRepository $productMakerRepository
     ) {
+        $this->entityManager = $entityManager;
         $this->productMakerRepository = $productMakerRepository;
     }
 
@@ -55,7 +63,7 @@ class ProductMakerController extends AbstractController
             $idDestroy &&
             $Maker = $this->productMakerRepository->find($idDestroy)
         ) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->remove($Maker);
             $entityManager->flush();
 
@@ -67,7 +75,7 @@ class ProductMakerController extends AbstractController
         $form = $this->createForm(ProductMakerType::class, $Maker);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($Maker);
             $entityManager->flush();
 
@@ -94,7 +102,7 @@ class ProductMakerController extends AbstractController
             ) {
                 $formHandle->handleRequest($request);
                 if ($formHandle->isSubmitted() && $formHandle->isValid()) {
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $this->entityManager;
                     $entityManager->persist($Maker);
                     $entityManager->flush();
                 }
