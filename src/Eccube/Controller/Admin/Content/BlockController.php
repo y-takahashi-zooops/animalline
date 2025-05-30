@@ -69,7 +69,8 @@ class BlockController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CONTENT_BLOCK_INDEX_COMPLETE, $event);
+        // $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CONTENT_BLOCK_INDEX_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CONTENT_BLOCK_INDEX_COMPLETE);
 
         return [
             'Blocks' => $Blocks,
