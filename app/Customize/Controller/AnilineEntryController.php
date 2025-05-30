@@ -39,6 +39,7 @@ use Eccube\Service\CartService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class AnilineEntryController extends AbstractController
 {
@@ -97,6 +98,8 @@ class AnilineEntryController extends AbstractController
      */
     protected $conservationsRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * EntryController constructor.
      *
@@ -123,7 +126,8 @@ class AnilineEntryController extends AbstractController
         TokenStorageInterface $tokenStorage,
         AffiliateStatusRepository $affiliateStatusRepository,
         BreedersRepository $breedersRepository,
-        ConservationsRepository $conservationsRepository
+        ConservationsRepository $conservationsRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
@@ -136,6 +140,7 @@ class AnilineEntryController extends AbstractController
         $this->affiliateStatusRepository = $affiliateStatusRepository;
         $this->breedersRepository = $breedersRepository;
         $this->conservationsRepository = $conservationsRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**
