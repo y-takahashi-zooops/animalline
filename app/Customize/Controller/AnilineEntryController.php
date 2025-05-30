@@ -40,6 +40,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class AnilineEntryController extends AbstractController
 {
@@ -127,7 +128,8 @@ class AnilineEntryController extends AbstractController
         AffiliateStatusRepository $affiliateStatusRepository,
         BreedersRepository $breedersRepository,
         ConservationsRepository $conservationsRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
@@ -141,6 +143,7 @@ class AnilineEntryController extends AbstractController
         $this->breedersRepository = $breedersRepository;
         $this->conservationsRepository = $conservationsRepository;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
