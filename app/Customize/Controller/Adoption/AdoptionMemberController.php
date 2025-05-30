@@ -26,6 +26,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Customize\Repository\ConservationContactHeaderRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionMemberController extends AbstractController
 {
@@ -70,6 +71,11 @@ class AdoptionMemberController extends AbstractController
     protected $conservationBankAccountRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * ConservationController constructor.
      *
      * @param CustomerRepository $customerRepository
@@ -82,6 +88,7 @@ class AdoptionMemberController extends AbstractController
      * @param ConservationBankAccountRepository $conservationBankAccountRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         CustomerRepository  $customerRepository,
         ConservationsRepository  $conservationsRepository,
         AdoptionQueryService  $adoptionQueryService,
@@ -99,6 +106,7 @@ class AdoptionMemberController extends AbstractController
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->benefitsStatusRepository = $benefitsStatusRepository;
         $this->conservationBankAccountRepository = $conservationBankAccountRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -245,7 +253,7 @@ class AdoptionMemberController extends AbstractController
                 ->setThumbnailPath($thumbnail_path)
                 ->setLicenseThumbnailPath($license_thumbnail_path);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($conservation);
 
             if($conservation->getIdHash() == ""){

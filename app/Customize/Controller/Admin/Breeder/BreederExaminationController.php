@@ -28,6 +28,7 @@ use Customize\Repository\BreederHouseRepository;
 use Customize\Form\Type\Admin\BreedersType;
 use Eccube\Repository\CustomerRepository;
 use Customize\Service\MailService;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederExaminationController extends AbstractController
 {
@@ -57,6 +58,11 @@ class BreederExaminationController extends AbstractController
     protected $breederHouseRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * BreederExaminationController constructor.
      * @param BreedersRepository $breedersRepository
      * @param BreederExaminationInfoRepository $breederExaminationInfoRepository
@@ -65,6 +71,7 @@ class BreederExaminationController extends AbstractController
      * @param BreederHouseRepository $breederHouseRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         BreedersRepository               $breedersRepository,
         BreederExaminationInfoRepository $breederExaminationInfoRepository,
         CustomerRepository               $customerRepository,
@@ -76,6 +83,7 @@ class BreederExaminationController extends AbstractController
         $this->customerRepository = $customerRepository;
         $this->mailService = $mailService;
         $this->breederHouseRepository = $breederHouseRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -177,7 +185,7 @@ class BreederExaminationController extends AbstractController
                 $this->mailService->sendBreederExaminationMailReject($Customer, $data);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($examination);
             $entityManager->persist($Customer);
             $entityManager->flush();

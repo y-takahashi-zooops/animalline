@@ -32,6 +32,7 @@ use Customize\Service\MailService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederController extends AbstractController
 {
@@ -94,6 +95,11 @@ class BreederController extends AbstractController
    */
   protected $affiliateStatusRepository;
 
+  /**
+   * @var EntityManagerInterface
+   */
+  protected EntityManagerInterface $entityManager;
+
 
   /**
    * @var MailService
@@ -117,6 +123,7 @@ class BreederController extends AbstractController
    * @param AffiliateStatusRepository $affiliateStatusRepository
    */
   public function __construct(
+    EntityManagerInterface $entityManager,
     BreederContactsRepository $breederContactsRepository,
     BreederPetImageRepository $breederPetImageRepository,
     BreederQueryService       $breederQueryService,
@@ -144,6 +151,7 @@ class BreederController extends AbstractController
     $this->breederEvaluationsRepository = $breederEvaluationsRepository;
     $this->mailService = $mailService;
     $this->affiliateStatusRepository = $affiliateStatusRepository;
+    $this->entityManager = $entityManager;
   }
 
 
@@ -206,7 +214,7 @@ class BreederController extends AbstractController
       $response->headers->setCookie(new Cookie('rid_key', $sessid));
       //}
 
-      $entityManager = $this->getDoctrine()->getManager();
+      $entityManager = $this->entityManager;
 
       //$session = $request->getSession();
       //$sessid = $session->getId();
@@ -526,7 +534,7 @@ class BreederController extends AbstractController
       array('url' => "#", 'title' => "「" . $breeder->getLicenseHouseName() . "」" . $breeder->getBreederName() . "ブリーダー")
     );
 
-    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager = $this->entityManager;
     $breeder->setViewCount(intval($breeder->getViewCount() + 1));
     $entityManager->persist($breeder);
     $entityManager->flush();

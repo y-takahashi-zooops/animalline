@@ -214,7 +214,7 @@ class AdoptionPetController extends AbstractController
             array('url' => "#",'title' => $conservationPet->getBreedsType()->getbreedsName())
         );
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $conservationPet->setViewCount(intval($conservationPet->getViewCount() + 1));
         $entityManager->persist($conservationPet);
         $entityManager->flush();
@@ -286,7 +286,7 @@ class AdoptionPetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $conservationPet->setConservation($conservation);
             $conservationPet->setDnaCheckResult(0);
             $conservationPet->setIsActive(intval($conservation->getIsActive()));
@@ -514,7 +514,7 @@ class AdoptionPetController extends AbstractController
                 $img2 = $this->setImageSrc($request->get('img2'), $petId);
                 $img3 = $this->setImageSrc($request->get('img3'), $petId);
                 $img4 = $this->setImageSrc($request->get('img4'), $petId);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->entityManager;
                 $conservationPet->setThumbnailPath($img0);
 
                 $entityManager->persist($conservationPet);
@@ -641,7 +641,7 @@ class AdoptionPetController extends AbstractController
      */
     public function movie_upload(Request $request,$pet_id)
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
 
         $pet = $this->conservationPetsRepository->find($pet_id);
         if (!$pet) {
