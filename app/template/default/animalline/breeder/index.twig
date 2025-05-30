@@ -1035,7 +1035,7 @@
                 </ul>
               </div>
               <div class="navigation">
-                {{ knp_pagination_render(newPets) }}
+                {{ knp_pagination_render(newPets, '@KnpPaginator/twitter_bootstrap_v4_pagination.html.twig') }}
               </div>
             </div>
             {% if petKind == constant('Customize\\Config\\AnilineConf::ANILINE_PET_KIND_DOG') %}
