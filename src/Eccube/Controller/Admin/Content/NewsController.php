@@ -13,6 +13,7 @@
 
 namespace Eccube\Controller\Admin\Content;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Customize\Config\AnilineConf;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\News;
@@ -36,13 +37,22 @@ class NewsController extends AbstractController
     protected $newsRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * NewsController constructor.
      *
      * @param NewsRepository $newsRepository
      */
-    public function __construct(NewsRepository $newsRepository)
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        NewsRepository $newsRepository
+    )
     {
         $this->newsRepository = $newsRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -120,7 +130,7 @@ class NewsController extends AbstractController
         $form = $builder->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             if (!$News->getUrl()) {
                 $News->setLinkMethod(false);
             }

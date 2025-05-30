@@ -36,6 +36,7 @@ use Knp\Component\Pager\Paginator;
 use Eccube\Repository\CategoryRepository;
 use Eccube\Repository\ProductRepository;
 use Eccube\Form\Type\AddCartType;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ProductInstockController extends AbstractController
 {
@@ -80,6 +81,11 @@ class ProductInstockController extends AbstractController
     protected $categoryRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * ProductInstockController constructor.
      *
      * @param SupplierRepository $supplierRepository
@@ -90,6 +96,7 @@ class ProductInstockController extends AbstractController
      * @param ProductStockService $productStockService
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         SupplierRepository              $supplierRepository,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
@@ -107,6 +114,7 @@ class ProductInstockController extends AbstractController
         $this->productStockService = $productStockService;
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -273,7 +281,7 @@ class ProductInstockController extends AbstractController
      */
     public function deleteInstock(Request $request): JsonResponse
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         if ($request->get('id')) {
             $instockHeader = $this->instockScheduleHeaderRepository->find($request->get('id'));
             $instocks = $this->instockScheduleRepository->findBy(['InstockHeader' => $request->get('id')]);

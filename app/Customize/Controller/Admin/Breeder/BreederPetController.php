@@ -30,6 +30,7 @@ use DateTime;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederPetController extends AbstractController
 {
@@ -54,6 +55,11 @@ class BreederPetController extends AbstractController
     protected $breederPetsRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * BreederPetController constructor.
      * @param BreedsRepository $breedsRepository
      * @param BreederPetImageRepository $breederPetImageRepository
@@ -61,6 +67,7 @@ class BreederPetController extends AbstractController
      * @param BreederPetsRepository $breederPetsRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         BreedsRepository          $breedsRepository,
         BreederPetImageRepository $breederPetImageRepository,
         BreederQueryService       $breederQueryService,
@@ -70,6 +77,7 @@ class BreederPetController extends AbstractController
         $this->breederQueryService = $breederQueryService;
         $this->breederPetImageRepository = $breederPetImageRepository;
         $this->breederPetsRepository = $breederPetsRepository;
+        $this->translator = $translator;
     }
 
     // 廃止予定
@@ -229,7 +237,7 @@ class BreederPetController extends AbstractController
                 $breederPet->setReleaseDate($curStatus === AnilineConf::IS_ACTIVE_PUBLIC ? new DateTime : null);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($breederPet);
             $entityManager->flush();
 

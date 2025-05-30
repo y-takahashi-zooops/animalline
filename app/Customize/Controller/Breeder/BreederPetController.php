@@ -143,6 +143,11 @@ class BreederPetController extends AbstractController
     protected $petLikeRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * BreederController constructor.
      *
      * @param BreederContactsRepository $breederContactsRepository
@@ -187,8 +192,8 @@ class BreederPetController extends AbstractController
         BreederPetinfoTemplateRepository $breederPetinfoTemplateRepository,
         PetLikeRepository $petLikeRepository,
         DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository,
-	DnaCheckKindsRepository $dnaCheckKindsRepository,
-	EntityManagerInterface $entityManager
+        DnaCheckKindsRepository $dnaCheckKindsRepository,
+        EntityManagerInterface $entityManager
     )
     {
         $this->breederContactsRepository = $breederContactsRepository;
@@ -210,8 +215,8 @@ class BreederPetController extends AbstractController
         $this->breederPetinfoTemplateRepository = $breederPetinfoTemplateRepository;
         $this->petLikeRepository = $petLikeRepository;
         $this->dnaCheckStatusDetailRepository = $dnaCheckStatusDetailRepository;
-	$this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
-	$this->entityManager = $entityManager;
+        $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -263,7 +268,7 @@ class BreederPetController extends AbstractController
      */
     public function movie_upload(Request $request,$pet_id)
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
 
         $pet = $this->breederPetsRepository->find($pet_id);
         if (!$pet) {
@@ -530,7 +535,7 @@ class BreederPetController extends AbstractController
     {
         $sessid = session_id();
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
 
         $like =  $this->petLikeRepository->getLike($sessid, 1, $id);
         if(!$like){
@@ -657,7 +662,7 @@ class BreederPetController extends AbstractController
                 $breederPet->setPedigreeCode('0');
             }
             */
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $breeder = $this->breedersRepository->find($breederId);
             $breederPet->setBreeder($breeder);
             $breederPet->setIsActive(1);
@@ -834,7 +839,7 @@ class BreederPetController extends AbstractController
                 $img2 = $this->setImageSrc($request->get('img2'), $petId);
                 $img3 = $this->setImageSrc($request->get('img3'), $petId);
                 $img4 = $this->setImageSrc($request->get('img4'), $petId);
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->entityManager;
                 $breederPet->setThumbnailPath($img0);
                 $entityManager->persist($breederPet);
                 foreach ($breederPetImages as $key => $image) {

@@ -16,6 +16,7 @@ use Eccube\Repository\CustomerRepository;
 use Eccube\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederHouseController extends AbstractController
 {
@@ -55,6 +56,11 @@ class BreederHouseController extends AbstractController
     protected $customerRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * BreederController constructor.
      *
      * @param BreederQueryService $breederQueryService
@@ -65,6 +71,7 @@ class BreederHouseController extends AbstractController
      * @param CustomerRepository $customerRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         BreederQueryService              $breederQueryService,
         BreedersRepository               $breedersRepository,
         PrefRepository                   $prefRepository,
@@ -78,6 +85,7 @@ class BreederHouseController extends AbstractController
         $this->breederHouseRepository = $breederHouseRepository;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->customerRepository = $customerRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -110,7 +118,7 @@ class BreederHouseController extends AbstractController
             $breederHouse->setBreeder($breeder)
                 ->setPetType($petType)
                 ->setBreederHousePref($housePref['name']);
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($breederHouse);
 
             $entityManager->flush();

@@ -33,6 +33,7 @@ use Customize\Form\Type\Breeder\BreederNoPetContactType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederMemberContactController extends AbstractController
 {
@@ -91,6 +92,11 @@ class BreederMemberContactController extends AbstractController
      */
     protected $breederQueryService;
 
+    /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
 
     /**
      * BreederController constructor.
@@ -109,6 +115,7 @@ class BreederMemberContactController extends AbstractController
      */
 
     public function __construct(
+        EntityManagerInterface $entityManager,
         BreederContactHeaderRepository $breederContactHeaderRepository,
         BreederContactsRepository      $breederContactsRepository,
         SendoffReasonRepository        $sendoffReasonRepository,
@@ -132,6 +139,7 @@ class BreederMemberContactController extends AbstractController
         $this->mailService = $mailService;
         $this->breederNopetContactHeaderRepository = $breederNopetContactHeaderRepository;
         $this->breederNopetContactsRepository = $breederNopetContactsRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -159,7 +167,7 @@ class BreederMemberContactController extends AbstractController
     {
         $msgHeader->setCustomerNewMsg(0);
         $lastMsg = $this->breederContactsRepository->findBy(['BreederContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_MEMBER]);
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         foreach ($lastMsg as $item) {
             $item->setIsReading(AnilineConf::ANILINE_READ);
             $entityManager->persist($item);
@@ -193,7 +201,7 @@ class BreederMemberContactController extends AbstractController
             $msgHeader->setBreederNewMsg(1)
                 ->setLastMessageDate(Carbon::now());
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($breederContact);
             $entityManager->persist($msgHeader);
             $entityManager->flush();
@@ -215,7 +223,7 @@ class BreederMemberContactController extends AbstractController
                 ->setSendDate(Carbon::now())
                 ->setBreederContactHeader($msgHeader);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($msgHeader);
             $entityManager->persist($breederContact);
             $entityManager->flush();
@@ -293,7 +301,7 @@ class BreederMemberContactController extends AbstractController
                         ->setIsActive(1)
                         ->setBreeder($pet->getBreeder())
                         ->setCustomer($this->getUser());
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $this->entityManager;
                     $entityManager->persist($contract);
                     $entityManager->flush();
 
@@ -317,7 +325,7 @@ class BreederMemberContactController extends AbstractController
                     if (!$msgHeader) {
                         throw new HttpException\NotFoundHttpException();
                     }
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $this->entityManager;
 
                     $breeder_base = $this->customerRepository->find($breeder->getId());
                     switch ($msgHeader->getContractStatus()) {
@@ -416,7 +424,7 @@ class BreederMemberContactController extends AbstractController
     {
         $msgHeader->setBreederNewMsg(0);
         $lastMsg = $this->breederContactsRepository->findBy(['BreederContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_USER]);
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         foreach ($lastMsg as $item) {
             $item->setIsReading(AnilineConf::ANILINE_READ);
             $entityManager->persist($item);
@@ -450,7 +458,7 @@ class BreederMemberContactController extends AbstractController
             $msgHeader->setCustomerNewMsg(1)
                 ->setLastMessageDate(Carbon::now());
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($breederContact);
             $entityManager->persist($msgHeader);
             $entityManager->flush();
@@ -471,7 +479,7 @@ class BreederMemberContactController extends AbstractController
                 ->setIsReading(0)
                 ->setBreederContactHeader($msgHeader);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($msgHeader);
             $entityManager->persist($breederContact);
             $entityManager->flush();
@@ -532,7 +540,7 @@ class BreederMemberContactController extends AbstractController
                 }
                 */
             }
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($msgHeader);
             $entityManager->flush();
 
@@ -643,7 +651,7 @@ class BreederMemberContactController extends AbstractController
                         ->setContactTitle($arrayLabel[$request->get('breeder_contact')['contact_type'] - 1])
                         ->setImageFile($newFilename)
                         ->setLastMessageDate(Carbon::now());
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $this->entityManager;
                     $entityManager->persist($contact);
 
                     $pet->setIsContact(1);
@@ -720,7 +728,7 @@ class BreederMemberContactController extends AbstractController
     public function deleteMessageContact(Request $request) {
         $msg = $this->breederContactsRepository->find($request->get('msgId'));
         $msgHeaderId = $msg->getBreederContactHeader()->getId();
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         $msg->setIsDelete(AnilineConf::ANILINE_MESSAGE_DELETED);
         $entityManager->persist($msg);
         $entityManager->flush();
@@ -801,7 +809,7 @@ class BreederMemberContactController extends AbstractController
                         ->setContactTitle($arrayLabel[$request->get('breeder_no_pet_contact')['contact_type'] - 1])
                         ->setImageFile($newFilename)
                         ->setLastMessageDate(Carbon::now());
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $this->entityManager;
                     $entityManager->persist($contact);
                     $entityManager->flush();
                     $breederContact = new BreederContacts();
@@ -919,7 +927,7 @@ class BreederMemberContactController extends AbstractController
     {
         $msgHeader->setCustomerNewMsg(0);
         $lastMsg = $this->breederNopetContactsRepository->findBy(['breederNopetContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_MEMBER]);
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         foreach ($lastMsg as $item) {
             $item->setIsReading(AnilineConf::ANILINE_READ);
             $entityManager->persist($item);
@@ -952,7 +960,7 @@ class BreederMemberContactController extends AbstractController
             $msgHeader->setBreederNewMsg(1)
                 ->setLastMessageDate(Carbon::now());
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($breederNopetContact);
             $entityManager->persist($msgHeader);
             $entityManager->flush();
@@ -1008,7 +1016,7 @@ class BreederMemberContactController extends AbstractController
 
         $msgHeader->setBreederNewMsg(0);
         $lastMsg = $this->breederNopetContactsRepository->findBy(['breederNopetContactHeader' => $msgHeader, 'message_from' => AnilineConf::MESSAGE_FROM_USER]);
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->entityManager;
         foreach ($lastMsg as $item) {
             $item->setIsReading(AnilineConf::ANILINE_READ);
             $entityManager->persist($item);
@@ -1042,7 +1050,7 @@ class BreederMemberContactController extends AbstractController
             $msgHeader->setCustomerNewMsg(1)
                 ->setLastMessageDate(Carbon::now());
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($breederNopetContact);
             $entityManager->persist($msgHeader);
             $entityManager->flush();

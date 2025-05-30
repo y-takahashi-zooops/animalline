@@ -35,6 +35,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Customize\Service\MailService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BreederController extends AbstractController
 {
@@ -104,6 +105,11 @@ class BreederController extends AbstractController
     protected $breederEvaluationsRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected EntityManagerInterface $entityManager;
+
+    /**
      * breederController constructor.
      * @param BreedersRepository $breedersRepository
      * @param BreedsRepository $breedsRepository
@@ -120,6 +126,7 @@ class BreederController extends AbstractController
      * @param BreederEvaluationsRepository $breederEvaluationsRepository
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         BreedersRepository               $breedersRepository,
         BreedsRepository                 $breedsRepository,
         BreederPetImageRepository        $breederPetImageRepository,
@@ -147,6 +154,7 @@ class BreederController extends AbstractController
         $this->dnaQueryService = $dnaQueryService;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
         $this->breederEvaluationsRepository = $breederEvaluationsRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -242,7 +250,7 @@ class BreederController extends AbstractController
                 ->setLicensePref($breederData->getPrefLicense())
                 ->setThumbnailPath($thumbnailPath)
                 ->setLicenseThumbnailPath($licenseThumbnailPath);
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
 
             if ($request->get('breeders')['is_active'] == AnilineConf::IS_ACTIVE_PRIVATE) {
                 $breederPets = $this->breederPetsRepository->findBy(['Breeder' => $breederData]);
@@ -397,7 +405,7 @@ class BreederController extends AbstractController
 
             $evaluation = $this->breederEvaluationsRepository->find($id);
             $evaluation->setIsActive($result);
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->entityManager;
             $entityManager->persist($evaluation);
             $entityManager->flush();
 
