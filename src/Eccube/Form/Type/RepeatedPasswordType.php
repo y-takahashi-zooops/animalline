@@ -20,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\OptionsResolver\Options;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class RepeatedPasswordType
@@ -36,9 +37,10 @@ class RepeatedPasswordType extends AbstractType
      *
      * @param EccubeConfig $eccubeConfig
      */
-    public function __construct(EccubeConfig $eccubeConfig)
+    public function __construct(EccubeConfig $eccubeConfig, TranslatorInterface $translator)
     {
         $this->eccubeConfig = $eccubeConfig;
+        $this->translator = $translator;
     }
 
     /**
