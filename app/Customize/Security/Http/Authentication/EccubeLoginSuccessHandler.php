@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 
 class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
-    private $logger;
+    protected $logger;
     public function __construct(HttpUtils $httpUtils, array $options = [], LoggerInterface $logger)
     {
         parent::__construct($httpUtils, $options);
