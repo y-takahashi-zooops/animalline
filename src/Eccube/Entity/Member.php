@@ -269,7 +269,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
          *
          * @return Member
          */
-        public function setPassword($password)
+        public function setPassword(?string $password): self
         {
             $this->password = $password;
 
@@ -281,7 +281,7 @@ if (!class_exists('\Eccube\Entity\Member')) {
          *
          * @return string
          */
-        public function getPassword()
+        public function getPassword(): ?string
         {
             return $this->password;
         }
