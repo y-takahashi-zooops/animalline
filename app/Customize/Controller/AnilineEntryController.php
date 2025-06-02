@@ -99,7 +99,7 @@ class AnilineEntryController extends AbstractController
      */
     protected $conservationsRepository;
 
-    protected $formFactory;
+    public $formFactory;
 
     /**
      * EntryController constructor.
