@@ -18,15 +18,14 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class EccubeAuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
-    // public function __construct(HttpUtils $httpUtils)
-    // {
-    //     parent::__construct($httpUtils, [
-    //         'default_target_path' => '/admin_homepage', // デフォルトリダイレクト先を設定
-    //     ]);
-    // }
+    public function __construct(HttpKernelInterface $httpKernel, HttpUtils $httpUtils, array $options = [])
+    {
+        parent::__construct($httpKernel, $httpUtils, $options);
+    }
 
     /**
      * {@inheritdoc}
