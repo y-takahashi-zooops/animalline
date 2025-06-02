@@ -18,9 +18,14 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Http\HttpUtils;
 
 class EccubeAuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
+    public function __construct(HttpUtils $httpUtils)
+    {
+        parent::__construct($httpUtils);
+    }
     /**
      * {@inheritdoc}
      */
@@ -35,7 +40,7 @@ class EccubeAuthenticationFailureHandler extends DefaultAuthenticationFailureHan
             // URLが http:// または https:// で始まる場合、リダイレクト先を変更
             if (preg_match('/^https?:\/\//i', $response->getTargetUrl())) {
                 // 新しいリダイレクト先を設定
-                $response->setTargetUrl($request->getUriForPath('/admin_homepage'));
+                $response->setTargetUrl($request->getUriForPath('/'));
             }
         }
         return $response;

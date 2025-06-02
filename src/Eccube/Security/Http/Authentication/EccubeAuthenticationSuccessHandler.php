@@ -17,9 +17,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\HttpUtils;
 
 class EccubeAuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
+    public function __construct(HttpUtils $httpUtils)
+    {
+        parent::__construct($httpUtils, [
+            'default_target_path' => '/admin_homepage', // デフォルトリダイレクト先を設定
+        ]);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -32,7 +40,7 @@ class EccubeAuthenticationSuccessHandler extends DefaultAuthenticationSuccessHan
         if ($response instanceof Response) {
             $targetUrl = $response->headers->get('Location');
             if ($targetUrl && preg_match('/^https?:\/\//i', $targetUrl)) {
-                $response->headers->set('Location', $request->getUriForPath('/admin_homepage'));
+                $response->headers->set('Location', $request->getUriForPath('/'));
             }
         }
         return $response;
