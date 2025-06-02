@@ -132,7 +132,8 @@ class EntryController extends AbstractController
         $Customer = $this->customerRepository->newCustomer();
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
-        $builder = $this->formFactory->createBuilder(EntryType::class, $Customer);
+        // $builder = $this->formFactory->createBuilder(EntryType::class, $Customer);
+        $builder = $this->formFactory->create(EntryType::class, $Customer);
 
         $event = new EventArgs(
             [
