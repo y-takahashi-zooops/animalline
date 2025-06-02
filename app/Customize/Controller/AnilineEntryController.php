@@ -358,7 +358,7 @@ class AnilineEntryController extends AbstractController
         //     'contact_save' => $contact_save
         // ];
 
-        return $this->render('\app\template\admin\Breeder\examination.twig', [
+        return $this->render('block.twig', [
             'returnPath' => $returnPath,
             'form' => $form->createView(),
             'request' => $request,
