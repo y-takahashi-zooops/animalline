@@ -387,3 +387,5 @@ services:
     Eccube\Security\Http\Authentication\EccubeAuthenticationSuccessHandler:
         arguments:
             $httpUtils: '@security.http_utils'
+            $options: { default_target_path: '/admin/' }
+        tags: ['monolog.logger']

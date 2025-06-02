@@ -39,7 +39,7 @@ class EccubeAuthenticationSuccessHandler extends DefaultAuthenticationSuccessHan
         if ($response instanceof Response) {
             $targetUrl = $response->headers->get('Location');
             if ($targetUrl && preg_match('/^https?:\/\//i', $targetUrl)) {
-                $response->headers->set('Location', $request->getUriForPath('/admin_homepage'));
+                $response->headers->set('Location', $request->getUriForPath('/admin/'));
             }
         }
         return $response;
