@@ -154,6 +154,7 @@ services:
         arguments:
             - '@security.http_utils'
             - { default_target_path: '/%eccube_admin_route%/' }
+            - '@logger'
         tags: ['monolog.logger']
 
     eccube.security.failure_handler:
