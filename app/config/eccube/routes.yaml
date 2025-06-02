@@ -8,9 +8,9 @@ customize_controllers:
     type: annotation
     prefix: /
 
-aniconfig:
-    path: /aniconfig
-    controller: App\Controller\AniconfigController::index
+# aniconfig:
+#     path: /aniconfig
+#     controller: App\Controller\AniconfigController::index
 
     #some_route:
     #path: /example
