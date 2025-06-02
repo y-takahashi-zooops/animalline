@@ -12,7 +12,7 @@ class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
     public function __construct(HttpKernelInterface $httpKernel, HttpUtils $httpUtils, array $options = [])
     {
-        parent::__construct($httpKernel, $httpUtils, $options);
+        parent::__construct($httpUtils, $options);
     }
     /**
      * {@inheritdoc}

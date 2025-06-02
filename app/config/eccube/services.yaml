@@ -150,7 +150,6 @@ services:
     eccube.security.success_handler:
         class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
         arguments:
-            - '@http_kernel'
             - '@security.http_utils'
             - { default_target_path: '/%eccube_admin_route%/' }
         tags: ['monolog.logger']
