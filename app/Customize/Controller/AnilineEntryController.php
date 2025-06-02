@@ -357,7 +357,7 @@ class AnilineEntryController extends AbstractController
         //     'prefix' => $prefix,
         //     'contact_save' => $contact_save
         // ];
-        return $this->render('@admin/Breeder/examination.twig', [
+        return $this->render('Entry/index.twig', [
             'returnPath' => $returnPath,
             'form' => $form->createView(),
             'request' => $request,
