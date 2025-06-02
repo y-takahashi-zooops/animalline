@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
-    public function __construct(HttpKernelInterface $httpKernel, HttpUtils $httpUtils, array $options = [])
+    public function __construct(HttpUtils $httpUtils, array $options = [])
     {
         parent::__construct($httpUtils, $options);
     }
