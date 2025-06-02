@@ -99,7 +99,6 @@ class AdminController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected EventDispatcherInterface $eventDispatcher;
 
 
     /**
