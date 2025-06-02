@@ -8,12 +8,15 @@ http://www.ec-cube.co.jp/
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
-{{ dd(Blocks) }}
+
 {% for Block in Blocks %}
+    {{ dump(Block) }}
+
     {% if Block.use_controller %}
         {{ render(path('block_' ~ Block.file_name)) }}
     {% else %}
         {{ include_dispatch('Block/' ~ Block.file_name ~ '.twig') }}
     {% endif %}
 {% endfor %}
+
 
