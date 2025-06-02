@@ -19,13 +19,15 @@ use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureH
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+
 
 class EccubeAuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
-    // public function __construct(HttpUtils $httpUtils)
-    // {
-    //     parent::__construct($httpUtils);
-    // }
+    public function __construct(HttpKernelInterface $httpKernel, HttpUtils $httpUtils, array $options = [])
+    {
+        parent::__construct($httpKernel, $httpUtils, $options);
+    }
     /**
      * {@inheritdoc}
      */
