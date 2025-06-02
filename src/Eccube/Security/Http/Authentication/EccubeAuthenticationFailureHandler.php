@@ -35,7 +35,7 @@ class EccubeAuthenticationFailureHandler extends DefaultAuthenticationFailureHan
             // URLが http:// または https:// で始まる場合、リダイレクト先を変更
             if (preg_match('/^https?:\/\//i', $response->getTargetUrl())) {
                 // 新しいリダイレクト先を設定
-                $response->setTargetUrl($request->getUriForPath('/'));
+                $response->setTargetUrl($request->getUriForPath('/admin_homepage'));
             }
         }
         return $response;
