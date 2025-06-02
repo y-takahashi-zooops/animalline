@@ -39,6 +39,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 
 use Customize\Repository\BreederPetsRepository;
@@ -98,6 +99,8 @@ class AdminController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    protected EventDispatcherInterface $eventDispatcher;
+
 
     /**
      * @var array 売り上げ状況用受注状況
@@ -131,7 +134,8 @@ class AdminController extends AbstractController
         PluginApiService $pluginApiService,
         BreederPetsRepository $breederPetsRepository,
         ConservationPetsRepository $conservationPetsRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->helper = $helper;
@@ -145,6 +149,7 @@ class AdminController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
