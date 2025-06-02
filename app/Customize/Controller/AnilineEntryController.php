@@ -222,7 +222,8 @@ class AnilineEntryController extends AbstractController
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_ENTRY_INDEX_INITIALIZE);
 
         /* @var $form \Symfony\Component\Form\FormInterface */
-        $form = $builder->getForm();
+        // $form = $builder->getForm();
+        $form = $builder->createView();
 
         $form->handleRequest($request);
 
