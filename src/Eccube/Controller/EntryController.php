@@ -90,6 +90,7 @@ class EntryController extends AbstractController
      * @param UserPasswordHasherInterface $passwordHasher,
      * @param ValidatorInterface $validatorInterface
      * @param TokenStorageInterface $tokenStorage
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         CartService $cartService,
