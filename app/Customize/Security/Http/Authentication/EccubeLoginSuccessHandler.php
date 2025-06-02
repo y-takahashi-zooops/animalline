@@ -19,16 +19,22 @@ class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?Response
     {
-        $response = parent::onAuthenticationSuccess($request, $token);
+        // $response = parent::onAuthenticationSuccess($request, $token);
 
-        // 呼び出し元に戻る
-        //$referer = $request->headers->get('referer');
-        //$response->setTargetUrl($referer);
+        // // 呼び出し元に戻る
+        // //$referer = $request->headers->get('referer');
+        // //$response->setTargetUrl($referer);
 
-        if (preg_match('/^https?:\\\\/i', $response->getTargetUrl())) {
-            $response->setTargetUrl($request->getUriForPath('/%eccube_admin_route%/'));
-        }
+        // if (preg_match('/^https?:\\\\/i', $response->getTargetUrl())) {
+        //     $response->setTargetUrl($request->getUriForPath('/%eccube_admin_route%/'));
+        // }
 
-        return $response;
+        // return $response;
+        
+        // 管理画面（eccube_admin_route）に強制リダイレクト
+        return $this->httpUtils->createRedirectResponse(
+            $request,
+            $request->getBaseUrl() . '/%eccube_admin_route%/' // Symfonyが %eccube_admin_route% をパラメータ展開します
+        );
     }
 }
