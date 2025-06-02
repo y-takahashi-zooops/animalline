@@ -99,7 +99,7 @@ class AnilineEntryController extends AbstractController
      */
     protected $conservationsRepository;
 
-    protected FormFactoryInterface $formFactory;
+    public $formFactory;
 
     /**
      * EntryController constructor.
@@ -180,11 +180,6 @@ class AnilineEntryController extends AbstractController
      */
     public function index(Request $request)
     {
-        dd($this->formFactory);
-        if ($this->formFactory === null) {
-            $this->formFactory = $this->get(FormFactoryInterface::class);
-        }
-
         $returnPath = $request->get("ReturnPath");
 
         if($returnPath == ""){
