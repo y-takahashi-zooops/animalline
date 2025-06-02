@@ -209,8 +209,9 @@ class AnilineEntryController extends AbstractController
         $Customer = $this->customerRepository->newCustomer();
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
-        // $builder = $this->formFactory->createBuilder(EntryType::class, $Customer);
-        $builder = $this->formFactory->create(EntryType::class, $Customer);
+        $builder = $this->formFactory->createBuilder(EntryType::class, $Customer);
+        $builder2 = $this->formFactory->create(EntryType::class, $Customer);
+        dd('変数を確認', $builder, $builder2);
 
         $event = new EventArgs(
             [
@@ -222,8 +223,7 @@ class AnilineEntryController extends AbstractController
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_ENTRY_INDEX_INITIALIZE);
 
         /* @var $form \Symfony\Component\Form\FormInterface */
-        // $form = $builder->getForm();
-        $form = $builder->createView();
+        $form = $builder->getForm();
 
         $form->handleRequest($request);
 
