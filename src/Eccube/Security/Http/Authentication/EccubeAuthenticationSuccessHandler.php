@@ -21,12 +21,12 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class EccubeAuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
-    public function __construct(HttpUtils $httpUtils)
-    {
-        parent::__construct($httpUtils, [
-            'default_target_path' => '/admin_homepage', // デフォルトリダイレクト先を設定
-        ]);
-    }
+    // public function __construct(HttpUtils $httpUtils)
+    // {
+    //     parent::__construct($httpUtils, [
+    //         'default_target_path' => '/admin_homepage', // デフォルトリダイレクト先を設定
+    //     ]);
+    // }
 
     /**
      * {@inheritdoc}
