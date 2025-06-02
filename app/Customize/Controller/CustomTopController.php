@@ -27,6 +27,7 @@ use Eccube\Repository\Master\ProductListOrderByRepository;
 use Eccube\Repository\ProductRepository;
 use Eccube\Repository\CategoryRepository;
 use Customize\Config\AnilineConf;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class CustomTopController extends AbstractController
 {
@@ -55,18 +56,22 @@ class CustomTopController extends AbstractController
      */
     private $mailService;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         NewsRepository $NewsRepository,
         ProductRepository $productRepository,
         CategoryRepository $categoryRepository,
         ProductListOrderByRepository $productListOrderByRepository,
-        MailService $mailService
+        MailService $mailService,
+        FormFactoryInterface $formFactory
     ) {
         $this->NewsRepository = $NewsRepository;
         $this->productListOrderByRepository = $productListOrderByRepository;
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
         $this->mailService = $mailService;
+        $this->formFactory = $formFactory;
     }
     /**
      * @Route("/ec", name="homepage")

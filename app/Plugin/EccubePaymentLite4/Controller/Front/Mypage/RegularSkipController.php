@@ -13,6 +13,7 @@ use Plugin\EccubePaymentLite4\Service\IsMypageRegularSettingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class RegularSkipController extends AbstractController
 {
@@ -29,14 +30,18 @@ class RegularSkipController extends AbstractController
      */
     private $isActiveRegularService;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         CalculateOneAfterAnotherNextDeliveryDateService $calculateOneAfterAnotherNextDeliveryDateService,
         IsMypageRegularSettingService $isMypageRegularSettingService,
-        IsActiveRegularService $isActiveRegularService
+        IsActiveRegularService $isActiveRegularService,
+        FormFactoryInterface $formFactory
     ) {
         $this->calculateOneAfterAnotherNextDeliveryDateService = $calculateOneAfterAnotherNextDeliveryDateService;
         $this->isMypageRegularSettingService = $isMypageRegularSettingService;
         $this->isActiveRegularService = $isActiveRegularService;
+        $this->formFactory = $formFactory;
     }
 
     /**

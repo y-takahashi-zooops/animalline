@@ -14,6 +14,7 @@ use Plugin\EccubePaymentLite4\Service\IsMypageRegularSettingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class RegularResumeController extends AbstractController
 {
@@ -34,16 +35,20 @@ class RegularResumeController extends AbstractController
      */
     private $isActiveRegularService;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         RegularStatusRepository $regularStatusRepository,
         GetNextDeliveryDateWhenResumingService $getNextDeliveryDateWhenResumingService,
         IsMypageRegularSettingService $isMypageRegularSettingService,
-        IsActiveRegularService $isActiveRegularService
+        IsActiveRegularService $isActiveRegularService,
+        FormFactoryInterface $formFactory
     ) {
         $this->regularStatusRepository = $regularStatusRepository;
         $this->getNextDeliveryDateWhenResumingService = $getNextDeliveryDateWhenResumingService;
         $this->isMypageRegularSettingService = $isMypageRegularSettingService;
         $this->isActiveRegularService = $isActiveRegularService;
+        $this->formFactory = $formFactory;
     }
 
     /**

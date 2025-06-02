@@ -13,6 +13,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class HolidayController extends AbstractController
 {
@@ -21,10 +22,14 @@ class HolidayController extends AbstractController
      */
     protected $businessHolidayRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
-        BusinessHolidayRepository $businessHolidayRepository
+        BusinessHolidayRepository $businessHolidayRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->businessHolidayRepository = $businessHolidayRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**

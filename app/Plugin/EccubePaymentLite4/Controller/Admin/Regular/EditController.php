@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class EditController extends AbstractController
 {
@@ -91,6 +92,8 @@ class EditController extends AbstractController
      */
     private $saleTypeRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         RegularOrderRepository $regularOrderRepository,
         RegularCreditService $regularCreditService,
@@ -104,7 +107,8 @@ class EditController extends AbstractController
         ConfigRepository $configRepository,
         IsActiveRegularService $isActiveRegularService,
         SearchProductRepository $searchProductRepository,
-        SaleTypeRepository $saleTypeRepository
+        SaleTypeRepository $saleTypeRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->regularOrderRepository = $regularOrderRepository;
         $this->regularCreditService = $regularCreditService;
@@ -119,6 +123,7 @@ class EditController extends AbstractController
         $this->isActiveRegularService = $isActiveRegularService;
         $this->searchProductRepository = $searchProductRepository;
         $this->saleTypeRepository = $saleTypeRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**

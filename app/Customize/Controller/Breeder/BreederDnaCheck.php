@@ -27,6 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class BreederDnaCheck extends AbstractController
 {
@@ -100,6 +101,8 @@ class BreederDnaCheck extends AbstractController
      */
     protected EntityManagerInterface $entityManager;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * BreederController constructor.
      *
@@ -130,7 +133,8 @@ class BreederDnaCheck extends AbstractController
         BreederEvaluationsRepository     $breederEvaluationsRepository,
         DnaQueryService                  $dnaQueryService,
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
-        DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository
+        DnaCheckStatusHeaderRepository   $dnaCheckStatusHeaderRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->breederContactsRepository = $breederContactsRepository;
         $this->breederQueryService = $breederQueryService;
@@ -146,6 +150,7 @@ class BreederDnaCheck extends AbstractController
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**

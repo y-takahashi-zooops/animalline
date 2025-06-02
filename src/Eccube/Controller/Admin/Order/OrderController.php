@@ -49,6 +49,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class OrderController extends AbstractController
 {
@@ -123,6 +124,8 @@ class OrderController extends AbstractController
      */
     protected $mailService;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * OrderController constructor.
      *
@@ -154,7 +157,8 @@ class OrderController extends AbstractController
         OrderPdfRepository $orderPdfRepository,
         ValidatorInterface $validator,
         OrderStateMachine $orderStateMachine,
-        MailService $mailService
+        MailService $mailService,
+        FormFactoryInterface $formFactory
     ) {
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->csvExportService = $csvExportService;
@@ -170,6 +174,7 @@ class OrderController extends AbstractController
         $this->validator = $validator;
         $this->orderStateMachine = $orderStateMachine;
         $this->mailService = $mailService;
+        $this->formFactory = $formFactory;
     }
 
     /**

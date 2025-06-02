@@ -43,6 +43,8 @@ class BlockController extends AbstractController
      */
     protected $deviceTypeRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         BlockRepository $blockRepository,
         DeviceTypeRepository $deviceTypeRepository,

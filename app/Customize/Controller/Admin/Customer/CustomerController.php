@@ -45,6 +45,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class CustomerController extends AbstractController
 {
@@ -108,6 +109,8 @@ class CustomerController extends AbstractController
      */
     protected $customerQueryService;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
@@ -120,7 +123,8 @@ class CustomerController extends AbstractController
         ConservationPetsRepository $conservationPetsRepository,
         BreederPetsRepository $breederPetsRepository,
         CustomerStatusRepository $customerStatusRepository,
-        CustomerQueryService $customerQueryService
+        CustomerQueryService $customerQueryService,
+        FormFactoryInterface $formFactory
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -134,6 +138,7 @@ class CustomerController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->customerStatusRepository = $customerStatusRepository;
         $this->customerQueryService = $customerQueryService;
+        $this->formFactory = $formFactory;
     }
 
     /**

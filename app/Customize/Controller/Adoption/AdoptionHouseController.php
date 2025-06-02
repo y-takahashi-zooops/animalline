@@ -11,6 +11,7 @@ use Eccube\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class AdoptionHouseController extends AbstractController
 {
@@ -29,6 +30,8 @@ class AdoptionHouseController extends AbstractController
      */
     protected EntityManagerInterface $entityManager;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * ConservationController constructor.
      *
@@ -38,11 +41,13 @@ class AdoptionHouseController extends AbstractController
     public function __construct(
         EntityManagerInterface $entityManager,
         ConservationsRepository             $conservationsRepository,
-        ConservationsHousesRepository       $conservationsHouseRepository
+        ConservationsHousesRepository       $conservationsHouseRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->conservationsRepository = $conservationsRepository;
         $this->conservationsHouseRepository = $conservationsHouseRepository;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**

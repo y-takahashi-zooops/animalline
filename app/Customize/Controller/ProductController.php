@@ -34,6 +34,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Eccube\Controller\ProductController as BaseProductController;
 use Eccube\Repository\CartItemRepository;
 use Eccube\Repository\CartRepository;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ProductController extends BaseProductController
 {
@@ -84,6 +85,8 @@ class ProductController extends BaseProductController
 
     private $title = '';
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * ProductController constructor.
      *
@@ -106,7 +109,8 @@ class ProductController extends BaseProductController
         AuthenticationUtils $helper,
         ProductListMaxRepository $productListMaxRepository,
         CartItemRepository $cartItemRepository,
-        CartRepository $cartRepository
+        CartRepository $cartRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -117,6 +121,7 @@ class ProductController extends BaseProductController
         $this->productListMaxRepository = $productListMaxRepository;
         $this->cartItemRepository = $cartItemRepository;
         $this->cartRepository = $cartRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**

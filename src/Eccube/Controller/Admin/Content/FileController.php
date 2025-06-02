@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class FileController extends AbstractController
 {
@@ -36,16 +37,18 @@ class FileController extends AbstractController
     const UTF = 'UTF-8';
     private $errors = [];
     private $encode = '';
+    protected FormFactoryInterface $formFactory;
 
     /**
      * FileController constructor.
      */
-    public function __construct()
+    public function __construct(FormFactoryInterface $formFactory)
     {
         $this->encode = self::UTF;
         if ('\\' === DIRECTORY_SEPARATOR) {
             $this->encode = self::SJIS;
         }
+        $this->formFactory = $formFactory;
     }
 
     /**

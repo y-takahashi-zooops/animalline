@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class WithdrawController extends AbstractController
 {
@@ -55,6 +56,8 @@ class WithdrawController extends AbstractController
      */
     private $orderHelper;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * WithdrawController constructor.
      *
@@ -69,13 +72,15 @@ class WithdrawController extends AbstractController
         CustomerStatusRepository $customerStatusRepository,
         TokenStorageInterface $tokenStorage,
         CartService $cartService,
-        OrderHelper $orderHelper
+        OrderHelper $orderHelper,
+        FormFactoryInterface $formFactory
     ) {
         $this->mailService = $mailService;
         $this->customerStatusRepository = $customerStatusRepository;
         $this->tokenStorage = $tokenStorage;
         $this->cartService = $cartService;
         $this->orderHelper = $orderHelper;
+        $this->formFactory = $formFactory;
     }
 
     /**

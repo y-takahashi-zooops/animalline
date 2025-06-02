@@ -30,6 +30,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Class ProductReviewController admin.
@@ -54,6 +55,8 @@ class ProductReviewController extends AbstractController
     /** @var CsvExportService */
     protected $csvExportService;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * ProductReviewController constructor.
      *
@@ -66,12 +69,14 @@ class ProductReviewController extends AbstractController
         PageMaxRepository $pageMaxRepository,
         ProductReviewRepository $productReviewRepository,
         ProductReviewConfigRepository $productReviewConfigRepository,
-        CsvExportService $csvExportService
+        CsvExportService $csvExportService,
+        FormFactoryInterface $formFactory
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->productReviewRepository = $productReviewRepository;
         $this->productReviewConfigRepository = $productReviewConfigRepository;
         $this->csvExportService = $csvExportService;
+        $this->formFactory = $formFactory;
     }
 
     /**
