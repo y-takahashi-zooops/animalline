@@ -383,3 +383,7 @@ services:
         autowire: true
         autoconfigure: true
         public: true
+    
+    Eccube\Security\Http\Authentication\EccubeAuthenticationSuccessHandler:
+        arguments:
+            $router: '@router'
