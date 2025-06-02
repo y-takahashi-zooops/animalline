@@ -225,7 +225,6 @@ class AnilineEntryController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            dd('227行目if到達確認');
             switch ($request->get('mode')) {
                 case 'confirm':
                     log_info('会員登録確認開始');
@@ -351,6 +350,14 @@ class AnilineEntryController extends AbstractController
         //問い合わせから来た場明の判定とセッション変数取得
         $contact_save = $request->cookies->get('contact_save');
 
+        dd(
+            'returnで渡している変数を確認する',
+            $returnPath,
+            $form->createView(),
+            $request,
+            $prefix,
+            $contact_save
+        );
         return [
             'returnPath' => $returnPath,
             'form' => $form->createView(),
