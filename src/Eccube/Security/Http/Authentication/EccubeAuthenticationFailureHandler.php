@@ -38,5 +38,6 @@ class EccubeAuthenticationFailureHandler extends DefaultAuthenticationFailureHan
                 $response->setTargetUrl($request->getUriForPath('/'));
             }
         }
+        return $response;
     }
 }
