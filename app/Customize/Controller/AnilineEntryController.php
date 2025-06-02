@@ -180,6 +180,10 @@ class AnilineEntryController extends AbstractController
      */
     public function index(Request $request)
     {
+        if ($this->formFactory === null) {
+            $this->formFactory = $this->get(FormFactoryInterface::class);
+        }
+
         $returnPath = $request->get("ReturnPath");
 
         if($returnPath == ""){
