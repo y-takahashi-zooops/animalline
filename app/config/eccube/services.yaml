@@ -390,6 +390,3 @@ services:
             $httpUtils: '@security.http_utils'
             $options: { default_target_path: '/%eccube_admin_route%/' }
         tags: ['monolog.logger']
-
-    eccube.security.success_handler:
-        alias: Eccube\Security\Http\Authentication\EccubeAuthenticationSuccessHandler
