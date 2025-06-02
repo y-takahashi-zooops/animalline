@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ShoppingController extends AbstractShoppingController
 {
@@ -61,16 +62,20 @@ class ShoppingController extends AbstractShoppingController
      */
     protected $orderRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         CartService $cartService,
         MailService $mailService,
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
+        FormFactoryInterface $formFactory
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->orderRepository = $orderRepository;
         $this->orderHelper = $orderHelper;
+        $this->formFactory = $formFactory;
     }
 
     /**

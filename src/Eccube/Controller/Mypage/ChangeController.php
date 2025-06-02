@@ -24,6 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ChangeController extends AbstractController
 {
@@ -42,14 +43,18 @@ class ChangeController extends AbstractController
      */
     protected $passwordHasher;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         CustomerRepository $customerRepository,
         UserPasswordHasherInterface $passwordHasher,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        FormFactoryInterface $formFactory
     ) {
         $this->customerRepository = $customerRepository;
         $this->passwordHasher = $passwordHasher;
         $this->tokenStorage = $tokenStorage;
+        $this->formFactory = $formFactory;
     }
 
     /**

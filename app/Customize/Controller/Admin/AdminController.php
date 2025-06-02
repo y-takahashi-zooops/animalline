@@ -43,6 +43,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class AdminController extends AbstractController
 {
@@ -95,6 +96,8 @@ class AdminController extends AbstractController
     /** @var ConservationPetsRepository */
     protected $conservationPetsRepository;
 
+    protected FormFactoryInterface $formFactory;
+
 
     /**
      * @var array 売り上げ状況用受注状況
@@ -127,7 +130,8 @@ class AdminController extends AbstractController
         ProductRepository $productRepository,
         PluginApiService $pluginApiService,
         BreederPetsRepository $breederPetsRepository,
-        ConservationPetsRepository $conservationPetsRepository
+        ConservationPetsRepository $conservationPetsRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->helper = $helper;
@@ -140,6 +144,7 @@ class AdminController extends AbstractController
         $this->pluginApiService = $pluginApiService;
         $this->breederPetsRepository = $breederPetsRepository;
         $this->conservationPetsRepository = $conservationPetsRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**

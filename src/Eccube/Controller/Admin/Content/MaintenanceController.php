@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Eccube\Service\SystemService;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class MaintenanceController extends AbstractController
 {
@@ -32,10 +33,15 @@ class MaintenanceController extends AbstractController
      */
     protected $maintenanceFilePath;
 
-    public function __construct(SystemService $systemService, string $maintenanceFilePath)
-    {
+    protected FormFactoryInterface $formFactory;
+
+    public function __construct(SystemService $systemService,
+        string $maintenanceFilePath,
+        FormFactoryInterface $formFactory
+    ) {
         $this->systemService = $systemService;
         $this->maintenanceFilePath = $maintenanceFilePath;
+        $this->formFactory = $formFactory;
     }
 
     /**

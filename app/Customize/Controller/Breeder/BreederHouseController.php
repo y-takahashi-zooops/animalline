@@ -17,6 +17,7 @@ use Eccube\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class BreederHouseController extends AbstractController
 {
@@ -60,6 +61,8 @@ class BreederHouseController extends AbstractController
      */
     protected EntityManagerInterface $entityManager;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * BreederController constructor.
      *
@@ -77,7 +80,8 @@ class BreederHouseController extends AbstractController
         PrefRepository                   $prefRepository,
         BreederHouseRepository           $breederHouseRepository,
         BreederPetsRepository            $breederPetsRepository,
-        CustomerRepository               $customerRepository
+        CustomerRepository               $customerRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->breederQueryService = $breederQueryService;
         $this->breedersRepository = $breedersRepository;
@@ -86,6 +90,7 @@ class BreederHouseController extends AbstractController
         $this->breederPetsRepository = $breederPetsRepository;
         $this->customerRepository = $customerRepository;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**

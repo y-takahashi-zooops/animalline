@@ -44,6 +44,7 @@ use Eccube\Repository\ShippingRepository;
 use Customize\Repository\DnaSalesHeaderRepository;
 use Customize\Repository\DnaSalesStatusRepository;
 use DateTime;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class MypageController extends BaseMypageController
 {
@@ -126,7 +127,9 @@ class MypageController extends BaseMypageController
      * @var DnaSalesStatusRepository
      */
     protected $dnaSalesStatusRepository;
-    
+
+    protected FormFactoryInterface $formFactory;
+
     /**
      * MypageController constructor.
      *
@@ -163,7 +166,8 @@ class MypageController extends BaseMypageController
         CustomerAddressRepository $customerAddressRepository,
         ShippingRepository $shippingRepository,
         DnaSalesHeaderRepository $dnaSalesHeaderRepository,
-        DnaSalesStatusRepository $dnaSalesStatusRepository
+        DnaSalesStatusRepository $dnaSalesStatusRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -181,6 +185,7 @@ class MypageController extends BaseMypageController
         $this->shippingRepository = $shippingRepository;
         $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
         $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**

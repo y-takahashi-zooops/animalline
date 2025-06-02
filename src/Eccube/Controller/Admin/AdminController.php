@@ -39,6 +39,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class AdminController extends AbstractController
 {
@@ -85,6 +86,8 @@ class AdminController extends AbstractController
     /** @var PluginApiService */
     protected $pluginApiService;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * @var array 売り上げ状況用受注状況
      */
@@ -112,7 +115,8 @@ class AdminController extends AbstractController
         OrderStatusRepository $orderStatusRepository,
         CustomerRepository $custmerRepository,
         ProductRepository $productRepository,
-        PluginApiService $pluginApiService
+        PluginApiService $pluginApiService,
+        FormFactoryInterface $formFactory
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->helper = $helper;
@@ -123,6 +127,7 @@ class AdminController extends AbstractController
         $this->customerRepository = $custmerRepository;
         $this->productRepository = $productRepository;
         $this->pluginApiService = $pluginApiService;
+        $this->formFactory = $formFactory;
     }
 
     /**

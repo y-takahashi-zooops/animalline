@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Eccube\Controller\NonMemberShoppingController as BaseNonMemberShoppingController;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class NonMemberShoppingController extends BaseNonMemberShoppingController
 {
@@ -48,6 +49,8 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
      */
     protected $cartService;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * NonMemberShoppingController constructor.
      *
@@ -60,12 +63,14 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
         ValidatorInterface $validator,
         PrefRepository $prefRepository,
         OrderHelper $orderHelper,
-        CartService $cartService
+        CartService $cartService,
+        FormFactoryInterface $formFactory
     ) {
         $this->validator = $validator;
         $this->prefRepository = $prefRepository;
         $this->orderHelper = $orderHelper;
         $this->cartService = $cartService;
+        $this->formFactory = $formFactory;
     }
 
     /**

@@ -39,6 +39,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Customize\Repository\PetLikeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class BreederPetController extends AbstractController
 {
@@ -147,6 +148,8 @@ class BreederPetController extends AbstractController
      */
     protected EntityManagerInterface $entityManager;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * BreederController constructor.
      *
@@ -193,7 +196,8 @@ class BreederPetController extends AbstractController
         PetLikeRepository $petLikeRepository,
         DnaCheckStatusDetailRepository $dnaCheckStatusDetailRepository,
         DnaCheckKindsRepository $dnaCheckKindsRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory
     )
     {
         $this->breederContactsRepository = $breederContactsRepository;
@@ -217,6 +221,7 @@ class BreederPetController extends AbstractController
         $this->dnaCheckStatusDetailRepository = $dnaCheckStatusDetailRepository;
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**

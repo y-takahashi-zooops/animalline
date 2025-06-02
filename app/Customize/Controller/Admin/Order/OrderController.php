@@ -52,6 +52,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\ConservationsRepository;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class OrderController extends AbstractController
 {
@@ -136,6 +137,8 @@ class OrderController extends AbstractController
      */
     protected $conservationsRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * OrderController constructor.
      *
@@ -171,7 +174,8 @@ class OrderController extends AbstractController
         OrderStateMachine $orderStateMachine,
         MailService $mailService,
         BreedersRepository $breedersRepository,
-        ConservationsRepository $conservationsRepository
+        ConservationsRepository $conservationsRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->csvExportService = $csvExportService;
@@ -189,6 +193,7 @@ class OrderController extends AbstractController
         $this->mailService = $mailService;
         $this->breedersRepository = $breedersRepository;
         $this->conservationsRepository = $conservationsRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**

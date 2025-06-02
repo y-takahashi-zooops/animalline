@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class MemberController extends AbstractController
 {
@@ -43,6 +44,8 @@ class MemberController extends AbstractController
      */
     protected $passwordHasher;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * MemberController constructor.
      *
@@ -53,11 +56,13 @@ class MemberController extends AbstractController
     public function __construct(
         UserPasswordHasherInterface $passwordHasher,
         MemberRepository $memberRepository,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        FormFactoryInterface $formFactory
     ) {
         $this->passwordHasher = $passwordHasher;
         $this->memberRepository = $memberRepository;
         $this->tokenStorage = $tokenStorage;
+        $this->formFactory = $formFactory;
     }
 
     /**

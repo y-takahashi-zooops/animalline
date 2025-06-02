@@ -24,6 +24,7 @@ use Customize\Form\Type\Adoption\ConservationContactType;
 use Customize\Service\MailService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class AdoptionMemberContactController extends AbstractController
 {
@@ -67,6 +68,8 @@ class AdoptionMemberContactController extends AbstractController
      */
     protected EntityManagerInterface $entityManager;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * AdoptionController constructor.
      *
@@ -86,7 +89,8 @@ class AdoptionMemberContactController extends AbstractController
         ConservationsRepository        $conservationsRepository,
         ConservationPetsRepository     $conservationPetsRepository,
         CustomerRepository             $customerRepository,
-        MailService                    $mailService
+        MailService                    $mailService,
+        FormFactoryInterface $formFactory
     ) {
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
@@ -96,6 +100,7 @@ class AdoptionMemberContactController extends AbstractController
         $this->customerRepository = $customerRepository;
         $this->mailService = $mailService;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**

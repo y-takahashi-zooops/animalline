@@ -22,9 +22,18 @@ use Eccube\Form\Type\Admin\MasterdataType;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class MasterdataController extends AbstractController
 {
+    protected FormFactoryInterface $formFactory;
+
+    public function __construct(
+        FormFactoryInterface $formFactory
+    ) {
+        $this->formFactory = $formFactory;
+    }
+
     /**
      * @Route("/%eccube_admin_route%/setting/system/masterdata", name="admin_setting_system_masterdata")
      * @Route("/%eccube_admin_route%/setting/system/masterdata/{entity}/edit", name="admin_setting_system_masterdata_view")

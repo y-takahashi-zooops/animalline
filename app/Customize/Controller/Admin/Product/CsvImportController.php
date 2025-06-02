@@ -43,6 +43,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class CsvImportController extends AbstractCsvImportController
 {
@@ -88,6 +89,8 @@ class CsvImportController extends AbstractCsvImportController
 
     private $errors = [];
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * CsvImportController constructor.
      *
@@ -109,7 +112,8 @@ class CsvImportController extends AbstractCsvImportController
         ProductStatusRepository $productStatusRepository,
         ProductRepository $productRepository,
         ProductClassRepository $productClassRepository,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        FormFactoryInterface $formFactory
     ) {
         $this->deliveryDurationRepository = $deliveryDurationRepository;
         $this->tagRepository = $tagRepository;
@@ -119,6 +123,7 @@ class CsvImportController extends AbstractCsvImportController
         $this->productRepository = $productRepository;
         $this->productClassRepository = $productClassRepository;
         $this->validator = $validator;
+        $this->formFactory = $formFactory;
     }
 
     /**

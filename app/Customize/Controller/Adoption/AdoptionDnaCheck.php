@@ -24,6 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Customize\Repository\DnaCheckStatusHeaderRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class AdoptionDnaCheck extends AbstractController
 {
@@ -87,6 +88,8 @@ class AdoptionDnaCheck extends AbstractController
      */
     protected EntityManagerInterface $entityManager;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * AdoptionController constructor.
      *
@@ -114,7 +117,8 @@ class AdoptionDnaCheck extends AbstractController
         CustomerRepository $customerRepository,
         DnaQueryService $dnaQueryService,
         DnaCheckStatusRepository $dnaCheckStatusRepository,
-        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository
+        DnaCheckStatusHeaderRepository $dnaCheckStatusHeaderRepository,
+        FormFactoryInterface $formFactory
     )
     {
         $this->conservationContactsRepository = $conservationContactsRepository;
@@ -129,6 +133,7 @@ class AdoptionDnaCheck extends AbstractController
         $this->dnaCheckStatusRepository = $dnaCheckStatusRepository;
         $this->dnaCheckStatusHeaderRepository = $dnaCheckStatusHeaderRepository;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
