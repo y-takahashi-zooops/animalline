@@ -12,6 +12,8 @@ parameters:
     timezone: '%env(ECCUBE_TIMEZONE)%'
     currency: '%env(ECCUBE_CURRENCY)%'
 
+    eccube_admin_route: admin
+
     session.save_path: '%env(SESSION_SAVE_PATH)%'
 
     eccube_content_maintenance_file_path: '%kernel.project_dir%/app/config/eccube/.maintenance'
