@@ -386,4 +386,4 @@ services:
     
     Eccube\Security\Http\Authentication\EccubeAuthenticationSuccessHandler:
         arguments:
-            $router: '@router'
+            $httpUtils: '@security.http_utils'
