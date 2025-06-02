@@ -33,6 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Eccube\Service\CartService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class EntryController extends AbstractController
 {
@@ -96,7 +97,8 @@ class EntryController extends AbstractController
         CustomerRepository $customerRepository,
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validatorInterface,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        FormFactoryInterface $formFactory
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
@@ -106,6 +108,7 @@ class EntryController extends AbstractController
         $this->recursiveValidator = $validatorInterface;
         $this->tokenStorage = $tokenStorage;
         $this->cartService = $cartService;
+        $this->formFactory = $formFactory;
     }
 
     /**
