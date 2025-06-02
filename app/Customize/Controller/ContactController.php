@@ -23,6 +23,7 @@ use Customize\Service\MailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ContactController extends AbstractController
 {
@@ -31,15 +32,19 @@ class ContactController extends AbstractController
      */
     protected $mailService;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * ContactController constructor.
      *
      * @param MailService $mailService
      */
     public function __construct(
-        MailService $mailService)
+        MailService $mailService,
+        FormFactoryInterface $formFactory)
     {
         $this->mailService = $mailService;
+        $this->formFactory = $formFactory;
     }
 
     /**

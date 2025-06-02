@@ -77,6 +77,8 @@ class EntryController extends AbstractController
      */
     protected $cartService;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * EntryController constructor.
      *

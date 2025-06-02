@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ClassCategoryController extends AbstractController
 {
@@ -44,6 +45,8 @@ class ClassCategoryController extends AbstractController
      */
     protected $classNameRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * ClassCategoryController constructor.
      *
@@ -54,11 +57,13 @@ class ClassCategoryController extends AbstractController
     public function __construct(
         ProductClassRepository $productClassRepository,
         ClassCategoryRepository $classCategoryRepository,
-        ClassNameRepository $classNameRepository
+        ClassNameRepository $classNameRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->classCategoryRepository = $classCategoryRepository;
         $this->classNameRepository = $classNameRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**

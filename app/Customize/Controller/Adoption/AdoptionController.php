@@ -29,6 +29,7 @@ use Customize\Service\MailService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class AdoptionController extends AbstractController
 {
@@ -86,6 +87,8 @@ class AdoptionController extends AbstractController
      */
     protected EntityManagerInterface $entityManager;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * AdoptionController constructor.
      *
@@ -111,7 +114,8 @@ class AdoptionController extends AbstractController
         ConservationsRepository        $conservationsRepository,
         ConservationsHousesRepository  $conservationsHousesRepository,
         MailService                    $mailService,
-        AffiliateStatusRepository $affiliateStatusRepository
+        AffiliateStatusRepository $affiliateStatusRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
@@ -124,6 +128,7 @@ class AdoptionController extends AbstractController
         $this->mailService = $mailService;
         $this->affiliateStatusRepository = $affiliateStatusRepository;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
 

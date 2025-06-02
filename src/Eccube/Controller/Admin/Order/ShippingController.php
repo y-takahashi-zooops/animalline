@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ShippingController extends AbstractController
 {
@@ -87,6 +88,8 @@ class ShippingController extends AbstractController
      */
     protected $purchaseFlow;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * EditController constructor.
      *
@@ -109,7 +112,8 @@ class ShippingController extends AbstractController
         ShippingRepository $shippingRepository,
         SerializerInterface $serializer,
         OrderStateMachine $orderStateMachine,
-        PurchaseFlow $orderPurchaseFlow
+        PurchaseFlow $orderPurchaseFlow,
+        FormFactoryInterface $formFactory
     ) {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
@@ -120,6 +124,7 @@ class ShippingController extends AbstractController
         $this->serializer = $serializer;
         $this->orderStateMachine = $orderStateMachine;
         $this->purchaseFlow = $orderPurchaseFlow;
+        $this->formFactory = $formFactory;
     }
 
     /**

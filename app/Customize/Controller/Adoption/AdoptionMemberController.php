@@ -27,6 +27,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Customize\Repository\ConservationContactHeaderRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class AdoptionMemberController extends AbstractController
 {
@@ -75,6 +76,8 @@ class AdoptionMemberController extends AbstractController
      */
     protected EntityManagerInterface $entityManager;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * ConservationController constructor.
      *
@@ -96,7 +99,8 @@ class AdoptionMemberController extends AbstractController
         TokenStorageInterface $tokenStorage,
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
         BenefitsStatusRepository $benefitsStatusRepository,
-        ConservationBankAccountRepository $conservationBankAccountRepository
+        ConservationBankAccountRepository $conservationBankAccountRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->customerRepository = $customerRepository;
         $this->conservationsRepository = $conservationsRepository;
@@ -107,6 +111,7 @@ class AdoptionMemberController extends AbstractController
         $this->benefitsStatusRepository = $benefitsStatusRepository;
         $this->conservationBankAccountRepository = $conservationBankAccountRepository;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**

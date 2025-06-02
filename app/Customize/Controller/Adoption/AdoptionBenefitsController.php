@@ -12,6 +12,7 @@ use Eccube\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class AdoptionBenefitsController extends AbstractController
 {
@@ -30,6 +31,8 @@ class AdoptionBenefitsController extends AbstractController
      */
     protected EntityManagerInterface $entityManager;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * BreederController constructor.
      * 
@@ -39,11 +42,13 @@ class AdoptionBenefitsController extends AbstractController
     public function __construct(
         EntityManagerInterface $entityManager,
         BenefitsStatusRepository    $benefitsStatusRepository,
-        ConservationContactHeaderRepository $conservationContactHeaderRepository
+        ConservationContactHeaderRepository $conservationContactHeaderRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->benefitsStatusRepository = $benefitsStatusRepository;
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**

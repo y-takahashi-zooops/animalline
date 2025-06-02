@@ -23,6 +23,7 @@ use Eccube\Service\OrderStateMachine;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class CsvImportController extends AbstractCsvImportController
 {
@@ -36,12 +37,16 @@ class CsvImportController extends AbstractCsvImportController
      */
     protected $orderStateMachine;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         ShippingRepository $shippingRepository,
-        OrderStateMachine $orderStateMachine
+        OrderStateMachine $orderStateMachine,
+        FormFactoryInterface $formFactory
     ) {
         $this->shippingRepository = $shippingRepository;
         $this->orderStateMachine = $orderStateMachine;
+        $this->formFactory = $formFactory;
     }
 
     /**

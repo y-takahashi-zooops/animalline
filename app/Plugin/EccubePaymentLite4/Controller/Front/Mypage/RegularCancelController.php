@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class RegularCancelController extends AbstractController
 {
@@ -36,16 +37,20 @@ class RegularCancelController extends AbstractController
      */
     private $configRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         RegularStatusRepository $regularStatusRepository,
         IsMypageRegularSettingService $isMypageRegularSettingService,
         IsActiveRegularService $isActiveRegularService,
-        ConfigRepository $configRepository
+        ConfigRepository $configRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->regularStatusRepository = $regularStatusRepository;
         $this->isMypageRegularSettingService = $isMypageRegularSettingService;
         $this->isActiveRegularService = $isActiveRegularService;
         $this->configRepository = $configRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**

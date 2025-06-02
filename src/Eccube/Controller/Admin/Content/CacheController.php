@@ -19,9 +19,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class CacheController extends AbstractController
 {
+    protected FormFactoryInterface $formFactory;
+
+    public function __construct(
+        FormFactoryInterface $formFactory
+    ) {
+        $this->formFactory = $formFactory;
+    }
+
     /**
      * @Route("/%eccube_admin_route%/content/cache", name="admin_content_cache")
      * @Template("@admin/Content/cache.twig")

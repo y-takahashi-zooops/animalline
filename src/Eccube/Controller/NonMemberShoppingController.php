@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class NonMemberShoppingController extends AbstractShoppingController
 {
@@ -49,6 +50,8 @@ class NonMemberShoppingController extends AbstractShoppingController
      */
     protected $cartService;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * NonMemberShoppingController constructor.
      *
@@ -61,12 +64,14 @@ class NonMemberShoppingController extends AbstractShoppingController
         ValidatorInterface $validator,
         PrefRepository $prefRepository,
         OrderHelper $orderHelper,
-        CartService $cartService
+        CartService $cartService,
+        FormFactoryInterface $formFactory
     ) {
         $this->validator = $validator;
         $this->prefRepository = $prefRepository;
         $this->orderHelper = $orderHelper;
         $this->cartService = $cartService;
+        $this->formFactory = $formFactory;
     }
 
     /**

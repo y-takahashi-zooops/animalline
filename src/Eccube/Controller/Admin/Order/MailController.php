@@ -28,6 +28,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class MailController extends AbstractController
 {
@@ -50,6 +51,8 @@ class MailController extends AbstractController
      */
     protected $twig;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * MailController constructor.
      *
@@ -62,12 +65,14 @@ class MailController extends AbstractController
         MailService $mailService,
         MailHistoryRepository $mailHistoryRepository,
         OrderRepository $orderRepository,
-        Environment $twig
+        Environment $twig,
+        FormFactoryInterface $formFactory
     ) {
         $this->mailService = $mailService;
         $this->mailHistoryRepository = $mailHistoryRepository;
         $this->orderRepository = $orderRepository;
         $this->twig = $twig;
+        $this->formFactory = $formFactory;
     }
 
     /**

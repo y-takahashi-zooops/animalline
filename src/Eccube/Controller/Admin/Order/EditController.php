@@ -52,6 +52,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class EditController extends AbstractController
 {
@@ -125,6 +126,8 @@ class EditController extends AbstractController
      */
     private $orderHelper;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * EditController constructor.
      *
@@ -157,7 +160,8 @@ class EditController extends AbstractController
         OrderItemTypeRepository $orderItemTypeRepository,
         OrderStatusRepository $orderStatusRepository,
         OrderStateMachine $orderStateMachine,
-        OrderHelper $orderHelper
+        OrderHelper $orderHelper,
+        FormFactoryInterface $formFactory
     ) {
         $this->taxRuleService = $taxRuleService;
         $this->deviceTypeRepository = $deviceTypeRepository;
@@ -173,6 +177,7 @@ class EditController extends AbstractController
         $this->orderStatusRepository = $orderStatusRepository;
         $this->orderStateMachine = $orderStateMachine;
         $this->orderHelper = $orderHelper;
+        $this->formFactory = $formFactory;
     }
 
     /**

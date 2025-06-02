@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class BreederController extends AbstractController
 {
@@ -100,6 +101,8 @@ class BreederController extends AbstractController
    */
   protected EntityManagerInterface $entityManager;
 
+  protected FormFactoryInterface $formFactory;
+
 
   /**
    * @var MailService
@@ -136,7 +139,8 @@ class BreederController extends AbstractController
     BreederExaminationInfoRepository $breederExaminationInfoRepository,
     BreederEvaluationsRepository $breederEvaluationsRepository,
     MailService                      $mailService,
-    AffiliateStatusRepository $affiliateStatusRepository
+    AffiliateStatusRepository $affiliateStatusRepository,
+    FormFactoryInterface $formFactory
   ) {
     $this->breederContactsRepository = $breederContactsRepository;
     $this->breederPetImageRepository = $breederPetImageRepository;
@@ -152,6 +156,7 @@ class BreederController extends AbstractController
     $this->mailService = $mailService;
     $this->affiliateStatusRepository = $affiliateStatusRepository;
     $this->entityManager = $entityManager;
+    $this->formFactory = $formFactory;
   }
 
 

@@ -33,6 +33,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ShippingMultipleController extends AbstractShoppingController
 {
@@ -66,6 +67,8 @@ class ShippingMultipleController extends AbstractShoppingController
      */
     protected $orderRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * ShippingMultipleController constructor.
      *
@@ -82,7 +85,8 @@ class ShippingMultipleController extends AbstractShoppingController
         OrderItemTypeRepository $orderItemTypeRepository,
         OrderHelper $orderHelper,
         CartService $cartService,
-        PurchaseFlow $cartPurchaseFlow
+        PurchaseFlow $cartPurchaseFlow,
+        FormFactoryInterface $formFactory
     ) {
         $this->prefRepository = $prefRepository;
         $this->orderRepository = $orderRepository;
@@ -90,6 +94,7 @@ class ShippingMultipleController extends AbstractShoppingController
         $this->orderHelper = $orderHelper;
         $this->cartService = $cartService;
         $this->cartPurchaseFlow = $cartPurchaseFlow;
+        $this->formFactory = $formFactory;
     }
 
     /**

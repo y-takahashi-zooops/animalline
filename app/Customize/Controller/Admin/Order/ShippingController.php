@@ -45,6 +45,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Eccube\Controller\Admin\Order\ShippingController as BaseShippingController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ShippingController extends BaseShippingController
 {
@@ -103,6 +104,8 @@ class ShippingController extends BaseShippingController
      */
     protected $shippingScheduleRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * EditController constructor.
      *
@@ -129,7 +132,8 @@ class ShippingController extends BaseShippingController
         OrderStateMachine                $orderStateMachine,
         PurchaseFlow                     $orderPurchaseFlow,
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
-        ShippingScheduleRepository       $shippingScheduleRepository
+        ShippingScheduleRepository       $shippingScheduleRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
@@ -142,6 +146,7 @@ class ShippingController extends BaseShippingController
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->shippingScheduleHeaderRepository = $shippingScheduleHeaderRepository;
         $this->shippingScheduleRepository = $shippingScheduleRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**

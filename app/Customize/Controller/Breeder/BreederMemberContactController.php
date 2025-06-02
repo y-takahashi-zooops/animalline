@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class BreederMemberContactController extends AbstractController
 {
@@ -97,6 +98,8 @@ class BreederMemberContactController extends AbstractController
      */
     protected EntityManagerInterface $entityManager;
 
+    protected FormFactoryInterface $formFactory;
+
 
     /**
      * BreederController constructor.
@@ -126,7 +129,8 @@ class BreederMemberContactController extends AbstractController
         BreederQueryService            $breederQueryService,
         MailService                    $mailService,
         BreederNopetContactHeaderRepository $breederNopetContactHeaderRepository,
-        BreederNopetContactsRepository $breederNopetContactsRepository
+        BreederNopetContactsRepository $breederNopetContactsRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->breederContactsRepository = $breederContactsRepository;
@@ -140,6 +144,7 @@ class BreederMemberContactController extends AbstractController
         $this->breederNopetContactHeaderRepository = $breederNopetContactHeaderRepository;
         $this->breederNopetContactsRepository = $breederNopetContactsRepository;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**

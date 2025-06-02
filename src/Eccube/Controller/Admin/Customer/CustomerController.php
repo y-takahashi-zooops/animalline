@@ -36,6 +36,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class CustomerController extends AbstractController
 {
@@ -69,13 +70,16 @@ class CustomerController extends AbstractController
      */
     protected $customerRepository;
 
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
         SexRepository $sexRepository,
         PrefRepository $prefRepository,
         MailService $mailService,
-        CsvExportService $csvExportService
+        CsvExportService $csvExportService,
+        FormFactoryInterface $formFactory
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -83,6 +87,7 @@ class CustomerController extends AbstractController
         $this->prefRepository = $prefRepository;
         $this->mailService = $mailService;
         $this->csvExportService = $csvExportService;
+        $this->formFactory = $formFactory;
     }
 
     /**

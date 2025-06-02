@@ -36,6 +36,7 @@ use Customize\Service\MailService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class BreederController extends AbstractController
 {
@@ -109,6 +110,8 @@ class BreederController extends AbstractController
      */
     protected EntityManagerInterface $entityManager;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * breederController constructor.
      * @param BreedersRepository $breedersRepository
@@ -139,7 +142,8 @@ class BreederController extends AbstractController
         DnaCheckStatusRepository         $dnaCheckStatusRepository,
         DnaQueryService                  $dnaQueryService,
         DnaCheckKindsRepository          $dnaCheckKindsRepository,
-        BreederEvaluationsRepository     $breederEvaluationsRepository
+        BreederEvaluationsRepository     $breederEvaluationsRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->breedersRepository = $breedersRepository;
         $this->breederPetsRepository = $breederPetsRepository;
@@ -155,6 +159,7 @@ class BreederController extends AbstractController
         $this->dnaCheckKindsRepository = $dnaCheckKindsRepository;
         $this->breederEvaluationsRepository = $breederEvaluationsRepository;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
