@@ -22,10 +22,10 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class EccubeAuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
-    public function __construct(HttpUtils $httpUtils)
-    {
-        parent::__construct($httpUtils);
-    }
+    // public function __construct(HttpUtils $httpUtils)
+    // {
+    //     parent::__construct($httpUtils);
+    // }
     /**
      * {@inheritdoc}
      */
