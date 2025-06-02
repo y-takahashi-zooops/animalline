@@ -224,8 +224,8 @@ class AnilineEntryController extends AbstractController
         $form = $builder->getForm();
 
         $form->handleRequest($request);
-        dd('変数を確認', $form, $form->isSubmitted(), $form->isValid());
         if ($form->isSubmitted() && $form->isValid()) {
+            dd('227行目if到達確認');
             switch ($request->get('mode')) {
                 case 'confirm':
                     log_info('会員登録確認開始');
