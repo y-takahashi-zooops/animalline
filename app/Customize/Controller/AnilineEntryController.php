@@ -210,8 +210,6 @@ class AnilineEntryController extends AbstractController
 
         /* @var $builder \Symfony\Component\Form\FormBuilderInterface */
         $builder = $this->formFactory->createBuilder(EntryType::class, $Customer);
-        $builder2 = $this->formFactory->create(EntryType::class, $Customer);
-        dd('変数を確認', $builder, $builder2);
 
         $event = new EventArgs(
             [
@@ -226,7 +224,7 @@ class AnilineEntryController extends AbstractController
         $form = $builder->getForm();
 
         $form->handleRequest($request);
-
+        dd('変数を確認', $form, $form->isSubmitted(), $form->isValid());
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
