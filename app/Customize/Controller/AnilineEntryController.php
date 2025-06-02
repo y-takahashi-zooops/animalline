@@ -99,7 +99,7 @@ class AnilineEntryController extends AbstractController
      */
     protected $conservationsRepository;
 
-    protected FormFactoryInterface $formFactory;
+    protected $formFactory;
 
     /**
      * EntryController constructor.
@@ -350,14 +350,6 @@ class AnilineEntryController extends AbstractController
         //問い合わせから来た場明の判定とセッション変数取得
         $contact_save = $request->cookies->get('contact_save');
 
-        dd(
-            'returnで渡している変数を確認する',
-            $returnPath,
-            $form->createView(),
-            $request,
-            $prefix,
-            $contact_save
-        );
         return [
             'returnPath' => $returnPath,
             'form' => $form->createView(),
