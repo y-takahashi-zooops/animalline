@@ -149,6 +149,12 @@ services:
     #Animalline用にカスタマイズ
     eccube.security.success_handler:
         class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
+        arguments:
+        $httpKernel: '@http_kernel'
+        $httpUtils: '@security.http_utils'
+        $options:
+            default_target_path: '/%eccube_admin_route%/'  # 管理画面トップのパス
+        tags: ['monolog.logger']
 
     eccube.security.failure_handler:
         class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
@@ -383,10 +389,3 @@ services:
         autowire: true
         autoconfigure: true
         public: true
-    
-    Eccube\Security\Http\Authentication\EccubeAuthenticationSuccessHandler:
-        arguments:
-            $httpKernel: '@http_kernel'
-            $httpUtils: '@security.http_utils'
-            $options: { default_target_path: '/%eccube_admin_route%/' }
-        tags: ['monolog.logger']
