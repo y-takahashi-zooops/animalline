@@ -88,7 +88,7 @@ class AnilineEntryController extends AbstractController
      * @var AffiliateStatusRepository
      */
     protected $affiliateStatusRepository;
-    
+
     /**
      * @var BreedersRepository
      */
@@ -99,6 +99,9 @@ class AnilineEntryController extends AbstractController
      */
     protected $conservationsRepository;
 
+    /**
+     * @var FormFactoryInterface
+     */
     protected $formFactory;
 
     /**
