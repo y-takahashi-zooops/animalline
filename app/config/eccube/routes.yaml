@@ -3,8 +3,8 @@ controllers:
     # resource: '%kernel.project_dir%/src/Eccube/Controller/'
     type: annotation
 customize_controllers:
-    resource: ../../../app/Customize/Controller/
-    # resource: '%kernel.project_dir%/app/Customize/Controller/'
+    # resource: ../../../app/Customize/Controller/
+    resource: '%kernel.project_dir%/app/Customize/Controller/'
     type: annotation
     prefix: /
 
