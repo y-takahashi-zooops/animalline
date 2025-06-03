@@ -71,7 +71,7 @@ file that was distributed with this source code.
 <body id="page_{{ app.request.get('_route') }}" class="{{ body_class|default('other_page') }}">
 {# Layout: BODY_AFTER #}
 {% if Layout.BodyAfter %}
-    
+    {{ include('block.twig', {'Blocks': Layout.BodyAfter}) }}
 {% endif %}
 
 <div class="ec-layoutRole">
