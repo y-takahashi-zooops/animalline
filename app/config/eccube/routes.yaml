@@ -5,7 +5,7 @@ controllers:
 customize_controllers:
     # resource: ../../../app/Customize/Controller/
     # resource: '%kernel.project_dir%/app/Customize/Controller/'
-    resource: ../../../app/Customize/Controller/
+    resource: ../../Customize/Controller/
     type: annotation
     prefix: /
 
