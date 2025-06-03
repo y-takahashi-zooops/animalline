@@ -164,7 +164,7 @@ file that was distributed with this source code.
 {% block javascript %}{% endblock %}
 {# Layout: CLOSE_BODY_BEFORE #}
 {% if Layout.CloseBodyBefore %}
-    
+    {{ include('block.twig', {'Blocks': Layout.CloseBodyBefore}) }}
 {% endif %}
 {# プラグイン用Snippet #}
 {% if plugin_snippets is defined %}
