@@ -149,7 +149,7 @@ services:
           - { name: 'data_collector', template: '@toolbar/eccube.html.twig', id: 'eccube_core', priority: -512 }
 
     #Animalline用にカスタマイズ
-    eccube.security.success_handler:
+    Eccube\Security\Http\Authentication\EccubeAuthenticationSuccessHandler:
         class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
         arguments:
             - '@security.http_utils'
