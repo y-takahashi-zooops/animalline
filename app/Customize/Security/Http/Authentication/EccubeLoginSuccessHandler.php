@@ -22,13 +22,15 @@ class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?Response
     {
-        file_put_contents('/tmp/login_success.log', date('Y-m-d H:i:s') . " - Login success handler called\n", FILE_APPEND);
-        $this->logger->info('EccubeLoginSuccessHandler: ログイン成功');
+        throw new \RuntimeException('Custom SuccessHandler was called!');
+        
+        // file_put_contents('/tmp/login_success.log', date('Y-m-d H:i:s') . " - Login success handler called\n", FILE_APPEND);
+        // $this->logger->info('EccubeLoginSuccessHandler: ログイン成功');
 
-        $targetPath = $this->defaultOptions['default_target_path'] ?? '/';
-        $this->logger->info('Redirecting to: ' . $targetPath);
+        // $targetPath = $this->defaultOptions['default_target_path'] ?? '/';
+        // $this->logger->info('Redirecting to: ' . $targetPath);
 
-        return $this->httpUtils->createRedirectResponse($request, '/admin/');
+        // return $this->httpUtils->createRedirectResponse($request, '/admin/');
 
         // return $this->httpUtils->createRedirectResponse($request, $targetPath);
     }
