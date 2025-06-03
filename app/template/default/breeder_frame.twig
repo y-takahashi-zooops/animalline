@@ -62,7 +62,7 @@ file that was distributed with this source code.
     </script>
     {# Layout: HEAD #}
     {% if Layout.Head %}
-        {{ include('block.twig', {'Blocks': Layout.Head}) }}
+        
     {% endif %}
     {# プラグイン用styleseetやmetatagなど #}
     {% if plugin_assets is defined %}{{ include('@admin/snippet.twig', { snippets: plugin_assets }) }}{% endif %}
@@ -71,7 +71,7 @@ file that was distributed with this source code.
 <body id="page_{{ app.request.get('_route') }}" class="{{ body_class|default('other_page') }}">
 {# Layout: BODY_AFTER #}
 {% if Layout.BodyAfter %}
-    {{ include('block.twig', {'Blocks': Layout.BodyAfter}) }}
+    
 {% endif %}
 
 <div class="ec-layoutRole">
@@ -81,7 +81,7 @@ file that was distributed with this source code.
     {# Layout: CONTENTS_TOP #}
     {% if Layout.ContentsTop %}
         <div class="ec-layoutRole__contentTop">
-            {{ include('block.twig', {'Blocks': Layout.ContentsTop}) }}
+            
         </div>
     {% endif %}
 
@@ -89,7 +89,7 @@ file that was distributed with this source code.
         {# Layout: SIDE_LEFT #}
         {% if Layout.SideLeft %}
             <div class="ec-layoutRole__left">
-                {{ include('block.twig', {'Blocks': Layout.SideLeft}) }}
+                
             </div>
         {% endif %}
 
@@ -104,7 +104,7 @@ file that was distributed with this source code.
             {# Layout: MAIN_TOP #}
             {% if Layout.MainTop %}
                 <div class="ec-layoutRole__mainTop">
-                    {{ include('block.twig', {'Blocks': Layout.MainTop}) }}
+                    
                 </div>
             {% endif %}
 
@@ -114,7 +114,7 @@ file that was distributed with this source code.
             {# Layout: MAIN_Bottom #}
             {% if Layout.MainBottom %}
                 <div class="ec-layoutRole__mainBottom">
-                    {{ include('block.twig', {'Blocks': Layout.MainBottom}) }}
+                    
                 </div>
             {% endif %}
         </div>
@@ -122,7 +122,7 @@ file that was distributed with this source code.
         {# Layout: SIDE_RIGHT #}
         {% if Layout.SideRight %}
             <div class="ec-layoutRole__right">
-                {{ include('block.twig', {'Blocks': Layout.SideRight}) }}
+                
             </div>
         {% endif %}
     </div>
@@ -130,7 +130,7 @@ file that was distributed with this source code.
     {# Layout: CONTENTS_BOTTOM #}
     {% if Layout.ContentsBottom %}
         <div class="ec-layoutRole__contentBottom">
-            {{ include('block.twig', {'Blocks': Layout.ContentsBottom}) }}
+            
         </div>
     {% endif %}
 
@@ -153,7 +153,7 @@ file that was distributed with this source code.
 <div class="ec-drawerRole">
     {# Layout: DRAWER #}
     {% if Layout.Drawer %}
-        {{ include('block.twig', {'Blocks': Layout.Drawer}) }}
+        
     {% endif %}
 </div>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
@@ -164,7 +164,7 @@ file that was distributed with this source code.
 {% block javascript %}{% endblock %}
 {# Layout: CLOSE_BODY_BEFORE #}
 {% if Layout.CloseBodyBefore %}
-    {{ include('block.twig', {'Blocks': Layout.CloseBodyBefore}) }}
+    
 {% endif %}
 {# プラグイン用Snippet #}
 {% if plugin_snippets is defined %}
