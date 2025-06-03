@@ -114,7 +114,7 @@ file that was distributed with this source code.
             {# Layout: MAIN_Bottom #}
             {% if Layout.MainBottom %}
                 <div class="ec-layoutRole__mainBottom">
-                    
+                    {{ include('block.twig', {'Blocks': Layout.MainBottom}) }}
                 </div>
             {% endif %}
         </div>
