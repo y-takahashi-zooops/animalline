@@ -7,20 +7,28 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Psr\Log\LoggerInterface;
 
 class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
-    public function __construct(HttpUtils $httpUtils, array $options = [])
+    protected $logger;
+    public function __construct(HttpUtils $httpUtils, array $options = [], LoggerInterface $logger)
     {
         parent::__construct($httpUtils, $options);
+        $this->logger = $logger;
     }
     /**
      * {@inheritdoc}
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?Response
     {
-        $targetPath = $this->defaultOptions['default_target_path'] ?? '/';
+        $this->logger->info('EccubeLoginSuccessHandler: ログイン成功');
 
-        return $this->httpUtils->createRedirectResponse($request, $targetPath);
+        $targetPath = $this->defaultOptions['default_target_path'] ?? '/';
+        $this->logger->info('Redirecting to: ' . $targetPath);
+
+        return $this->httpUtils->createRedirectResponse($request, '/admin/');
+
+        // return $this->httpUtils->createRedirectResponse($request, $targetPath);
     }
 }
