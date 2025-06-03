@@ -153,11 +153,7 @@ file that was distributed with this source code.
 <div class="ec-drawerRole">
     {# Layout: DRAWER #}
     {% if Layout.Drawer %}
-        {% if form is defined and form is not null %}
-            formあり
-        {% else %}
-            {# form が未定義または null の場合は何も表示しない #}
-        {% endif %}
+        {{ include('block.twig', {'Blocks': Layout.Drawer}) }}
     {% endif %}
 </div>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
