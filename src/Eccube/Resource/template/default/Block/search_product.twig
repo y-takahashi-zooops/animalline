@@ -9,7 +9,7 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
 {% if form is defined and form is not null %}
-    {% form_theme form 'Form/form_div_layout.twig' %}
+    {% include 'form_theme_snippet.twig' %}
 
     <div class="ec-headerSearch">
         <form method="get" class="searchform" action="{{ path('product_list') }}">
