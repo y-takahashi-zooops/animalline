@@ -153,12 +153,8 @@ file that was distributed with this source code.
 <div class="ec-drawerRole">
     {# Layout: DRAWER #}
     {% if Layout.Drawer %}
-        
+        {{ include('block.twig', {'Blocks': Layout.Drawer}) }}
     {% endif %}
-        テスト出力！
-    {% for Block in Layout.Drawer %}
-        DEBUG Drawer Block: {{ Block.name }} / {{ Block.file_name }}
-    {% endfor %}
 </div>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
