@@ -9,10 +9,6 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
 {% for Block in Blocks %}
-    <!-- DEBUG Drawer Block: {{ Block.name }} / {{ Block.file_name }} -->
-{% endfor %}
-
-{% for Block in Blocks %}
     <!-- ▼{{ Block.name }} -->
     {% if Block.use_controller %}
         {{ render(path('block_' ~ Block.file_name)) }}
