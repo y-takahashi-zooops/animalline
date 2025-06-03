@@ -22,6 +22,7 @@ class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?Response
     {
+        file_put_contents('/tmp/login_success.log', date('Y-m-d H:i:s') . " - Login success handler called\n", FILE_APPEND);
         $this->logger->info('EccubeLoginSuccessHandler: ログイン成功');
 
         $targetPath = $this->defaultOptions['default_target_path'] ?? '/';
