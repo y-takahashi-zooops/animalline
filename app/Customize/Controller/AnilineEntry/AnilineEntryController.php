@@ -11,7 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Customize\Controller;
+namespace Customize\Controller\AnilineEntry;
 
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\BaseInfo;
