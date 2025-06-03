@@ -11,12 +11,6 @@ customize_controllers:
     type: annotation
     prefix: /
 
-# 管理画面向けルーティング
-customize_admin_controllers:
-    resource: ../../Customize/Controller/Admin/
-    type: annotation
-    prefix: /%eccube_admin_route%/
-
 # aniconfig:
 #     path: /aniconfig
 #     controller: App\Controller\AniconfigController::index
