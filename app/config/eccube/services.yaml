@@ -148,18 +148,6 @@ services:
         tags:
           - { name: 'data_collector', template: '@toolbar/eccube.html.twig', id: 'eccube_core', priority: -512 }
 
-    #Animalline用にカスタマイズ
-    Eccube\Security\Http\Authentication\EccubeAuthenticationSuccessHandler:
-        class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
-        arguments:
-            - '@security.http_utils'
-            - '@logger'
-            - { default_target_path: '/%eccube_admin_route%/' }
-        tags: ['monolog.logger']
-
-    eccube.security.failure_handler:
-        class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
-
     # # Animalline拡張
     # eccube.security.logout_success_handler:
     #     class: Customize\Security\Http\Authentication\EccubeLogoutSuccessHandler
@@ -390,3 +378,16 @@ services:
         autowire: true
         autoconfigure: true
         public: true
+    
+    #Animalline用にカスタマイズ
+    eccube.security.success_handler:
+        class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
+        public: true
+        arguments:
+            - '@security.http_utils'
+            - '@logger'
+            - { default_target_path: '/%eccube_admin_route%/' }
+        tags: ['monolog.logger']
+
+    eccube.security.failure_handler:
+        class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
