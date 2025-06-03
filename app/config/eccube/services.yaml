@@ -71,13 +71,6 @@ services:
         autowire: true
         autoconfigure: true
 
-    Customize\Controller\Admin\:
-        resource: '../../../app/Customize/Controller'
-        # resource: ../../Customize/Controller/Admin/
-        tags: ['controller.service_arguments']
-        autowire: true
-        autoconfigure: true
-
     Eccube\Log\Logger:
         autowire: true
         autoconfigure: true
