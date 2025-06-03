@@ -154,9 +154,9 @@ file that was distributed with this source code.
     {# Layout: DRAWER #}
     {% if Layout.Drawer %}
         {% if form is defined and form is not null %}
-            {{ include('block.twig', {'Blocks': Layout.Drawer}) }}
+            formあり
         {% else %}
-                {# form が未定義または null の場合は何も表示しない #}
+            {# form が未定義または null の場合は何も表示しない #}
         {% endif %}
     {% endif %}
 </div>
