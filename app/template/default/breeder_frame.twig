@@ -62,7 +62,7 @@ file that was distributed with this source code.
     </script>
     {# Layout: HEAD #}
     {% if Layout.Head %}
-        
+        {{ include('block.twig', {'Blocks': Layout.Head}) }}
     {% endif %}
     {# プラグイン用styleseetやmetatagなど #}
     {% if plugin_assets is defined %}{{ include('@admin/snippet.twig', { snippets: plugin_assets }) }}{% endif %}
