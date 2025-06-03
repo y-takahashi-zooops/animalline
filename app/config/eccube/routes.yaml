@@ -1,15 +1,21 @@
 controllers:
-    resource: ../../../src/Eccube/Controller/
+    # resource: ../../../src/Eccube/Controller/
+    resource: ../../Customize/Controller/
     # resource: '%kernel.project_dir%/src/Eccube/Controller/'
-    # resource: ../../Customize/Controller/
     type: annotation
 
 customize_controllers:
-    resource: ../../../app/Customize/Controller/
+    # resource: ../../../app/Customize/Controller/
     # resource: '%kernel.project_dir%/app/Customize/Controller/'
-    # resource: ../../Customize/Controller/
+    resource: ../../Customize/Controller/
     type: annotation
     prefix: /
+
+# 管理画面向けルーティング
+customize_admin_controllers:
+    resource: ../../Customize/Controller/Admin/
+    type: annotation
+    prefix: /%eccube_admin_route%/
 
 # aniconfig:
 #     path: /aniconfig
