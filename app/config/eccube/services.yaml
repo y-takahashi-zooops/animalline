@@ -64,9 +64,9 @@ services:
         - '../../../src/Eccube/Form/Extension'
 
     Customize\Controller\:
-        # resource: '../../../app/Customize/Controller'
+        resource: '../../../app/Customize/Controller'
         # resource: '%kernel.project_dir%/app/Customize/Controller'
-        resource: ../../Customize/Controller/
+        # resource: ../../Customize/Controller/
         tags: ['controller.service_arguments']
         autowire: true
         autoconfigure: true
@@ -107,9 +107,9 @@ services:
     # controllers are imported separately to make sure they're public
     # and have a tag that allows actions to type-hint services
     Eccube\Controller\:
-        # resource: '../../../src/Eccube/Controller'
+        resource: '../../../src/Eccube/Controller'
         # resource: '%kernel.project_dir%/src/Eccube/Controller'
-        resource: ../../Customize/Controller/
+        # resource: ../../Customize/Controller/
         tags: ['controller.service_arguments']
         autowire: true
         autoconfigure: true
