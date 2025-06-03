@@ -81,7 +81,7 @@ file that was distributed with this source code.
     {# Layout: CONTENTS_TOP #}
     {% if Layout.ContentsTop %}
         <div class="ec-layoutRole__contentTop">
-            
+            {{ include('block.twig', {'Blocks': Layout.ContentsTop}) }}
         </div>
     {% endif %}
 
