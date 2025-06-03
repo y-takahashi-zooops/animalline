@@ -26,7 +26,7 @@ security:
             security: false
         admin:
             pattern: '^/%eccube_admin_route%/'
-            lazy: true
+            # lazy: true
             provider: member_provider
             form_login:
                 check_path: admin_login
@@ -38,6 +38,9 @@ security:
                 use_forward: false
                 success_handler: eccube.security.success_handler
                 failure_handler: eccube.security.failure_handler
+            login_throttling:
+                max_attempts: '%eccube_login_throttling_max_attempts%'
+                interval: '%eccube_login_throttling_interval%'
             logout:
                 path: admin_logout
                 target: admin_login
