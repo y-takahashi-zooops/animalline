@@ -154,6 +154,10 @@ file that was distributed with this source code.
     {# Layout: DRAWER #}
     {% if Layout.Drawer %}
         
+        {% for Block in Layout.Drawer %}
+            テスト出力！
+            DEBUG Drawer Block: {{ Block.name }} / {{ Block.file_name }}
+        {% endfor %}
     {% endif %}
 </div>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
