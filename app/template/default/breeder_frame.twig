@@ -89,7 +89,7 @@ file that was distributed with this source code.
         {# Layout: SIDE_LEFT #}
         {% if Layout.SideLeft %}
             <div class="ec-layoutRole__left">
-                
+                {{ include('block.twig', {'Blocks': Layout.SideLeft}) }}
             </div>
         {% endif %}
 
