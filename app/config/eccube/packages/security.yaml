@@ -26,13 +26,13 @@ security:
             security: false
         admin:
             pattern: '^/%eccube_admin_route%/'
-            lazy: true
+            # lazy: true
             provider: member_provider
             form_login:
                 check_path: admin_login
                 login_path: admin_login
                 enable_csrf: true
-                default_target_path: '/%eccube_admin_route%/'
+                default_target_path: admin_homepage
                 username_parameter: 'login_id'
                 password_parameter: 'password'
                 use_forward: false
