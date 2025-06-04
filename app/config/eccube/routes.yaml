@@ -2,7 +2,7 @@
 #     resource: ../../src/Eccube/Controller/
 #     type: annotation
 customize_controllers:
-    resource: ../../app/Customize/Controller/
+    resource: ../../Customize/Controller/
     type: annotation
 
 # aniconfig:
