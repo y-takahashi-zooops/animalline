@@ -56,15 +56,15 @@ services:
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     Eccube\:
-        resource: '../../src/Eccube/*'
+        resource: '../../../src/Eccube/*'
         # you can exclude directories or files
         # but if a service is unused, it's removed anyway
         exclude:
-        - '../../src/Eccube/{Annotation,Common,Entity,Exception,Log,Plugin,ServiceProvider,Resource,Doctrine/ORM/tools/}'
-        - '../../src/Eccube/Form/Extension'
+        - '../../../src/Eccube/{Annotation,Common,Entity,Exception,Log,Plugin,ServiceProvider,Resource,Doctrine/ORM/tools/}'
+        - '../../../src/Eccube/Form/Extension'
 
     Customize\Controller\:
-        resource: '../../app/Customize/Controller'
+        resource: '../../../app/Customize/Controller'
         # resource: ../../Customize/Controller/
         # resource: '%kernel.project_dir%/app/Customize/Controller'
         tags: ['controller.service_arguments']
@@ -107,7 +107,7 @@ services:
     # controllers are imported separately to make sure they're public
     # and have a tag that allows actions to type-hint services
     Eccube\Controller\:
-        resource: '../../src/Eccube/Controller'
+        resource: '../../../src/Eccube/Controller'
         # resource: ../../Customize/Controller/
         # resource: '%kernel.project_dir%/src/Eccube/Controller'
         tags: ['controller.service_arguments']
@@ -120,14 +120,14 @@ services:
           $blockTemplates: '%eccube_twig_block_templates%'
 
     Plugin\:
-        resource: '../../app/Plugin/*'
-        exclude: '../../app/Plugin/*/{Entity,Resource,ServiceProvider,Tests,Codeception,DoctrineMigrations}'
+        resource: '../../../app/Plugin/*'
+        exclude: '../../../app/Plugin/*/{Entity,Resource,ServiceProvider,Tests,Codeception,DoctrineMigrations}'
 
     Customize\:
-        resource: '../../app/Customize/*'
+        resource: '../../../app/Customize/*'
         exclude:
-        - '../../app/Customize/{Entity,Resource,Tests}'
-        - '../../app/Customize/Form/Extension'
+        - '../../../app/Customize/{Entity,Resource,Tests}'
+        - '../../../app/Customize/Form/Extension'
 
     # Animalline拡張
     Customize\EventListener\LogoutListener:
