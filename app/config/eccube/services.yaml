@@ -394,7 +394,7 @@ services:
     
     #Animalline用にカスタマイズ
     app.eccube.security.success_handler:
-        # parent: security.authentication.success_handler
+        parent: security.authentication.success_handler
         class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
         public: true
         arguments:
