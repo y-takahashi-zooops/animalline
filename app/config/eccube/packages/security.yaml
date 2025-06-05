@@ -25,7 +25,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         admin:
-            pattern: '^/aniconfig'
+            pattern: '^/admin'
             # lazy: true
             provider: member_provider
             form_login:
