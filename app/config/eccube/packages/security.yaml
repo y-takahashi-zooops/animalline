@@ -32,7 +32,6 @@ security:
                 login_path: admin_login
                 check_path: admin_login
                 enable_csrf: true
-                default_target_path: /admin/
                 username_parameter: 'login_id'
                 password_parameter: 'password'
                 use_forward: false
