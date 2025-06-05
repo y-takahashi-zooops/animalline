@@ -117,7 +117,7 @@ class EntryController extends AbstractController
     /**
      * 会員登録画面.
      *
-     * @Route("/aniline-entry", name="custom_entry")
+     * @Route("/custom-entry", name="custom_entry")
      * @Template("Entry/index.twig")
      */
     public function index(Request $request)
