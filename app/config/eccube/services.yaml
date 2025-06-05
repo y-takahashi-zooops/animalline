@@ -399,6 +399,7 @@ services:
         public: true
         arguments:
             - '@security.http_utils'
+            - '@logger'
             - { default_target_path: '/%eccube_admin_route%/' }
 
     eccube.security.failure_handler:
