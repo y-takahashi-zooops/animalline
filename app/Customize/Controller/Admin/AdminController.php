@@ -157,7 +157,7 @@ class AdminController extends AbstractController
      */
     public function login(Request $request)
     {
-        logger("いふのまえ");
+        dump("いふのまえ");
         if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             dd("stop！！！！");
             return $this->redirectToRoute('admin_homepage');
