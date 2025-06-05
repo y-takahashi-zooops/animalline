@@ -9,7 +9,6 @@ customize_controllers:
 
 web_profiler:
     resource: "../../config/eccube/routes/dev/web_profiler.yaml"
-    type: annotation
 
 # aniconfig:
 #     path: /aniconfig
