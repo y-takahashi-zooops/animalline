@@ -396,11 +396,11 @@ services:
     app.security.login_success_handler:
         class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
         arguments:
-        - '@router'
-        - '@eccube.repository.member'
-        - '@eccube.service.shopping_service'
+            - '@security.http_utils'
+            - '@logger'
+            - { default_target_path: '/%eccube_admin_route%/' }
         tags:
-        - { name: 'monolog.logger', channel: 'security' }
+            - { name: 'monolog.logger', channel: 'security' }
 
     eccube.security.failure_handler:
         class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
