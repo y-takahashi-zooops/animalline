@@ -8,7 +8,7 @@ use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessH
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-// use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
