@@ -5,6 +5,7 @@ controllers:
 customize_controllers:
     resource: ../../Customize/Controller/
     type: annotation
+    prefix: /
 
 
 # aniconfig:
