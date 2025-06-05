@@ -150,6 +150,7 @@ class AdminController extends AbstractController
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
     }
 
     /**
