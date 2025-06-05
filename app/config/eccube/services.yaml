@@ -394,12 +394,12 @@ services:
     
     #Animalline用にカスタマイズ
     app.eccube.security.success_handler:
-        parent: security.authentication.success_handler
+        # parent: security.authentication.success_handler
         class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
         public: true
         arguments:
             - '@security.http_utils'
-            - '@monolog.logger'
+            - '@logger'
             - { default_target_path: '/%eccube_admin_route%/' }
 
     eccube.security.failure_handler:
