@@ -37,7 +37,13 @@ services:
           string $projectDir: '%kernel.project_dir%'
           array $enabledPlugins: ["GmoPaymentGateway4","ProductReview4","ZooopsSendmail","ZooopsSubscription"]
 
-    Eccube\Controller\Block\SearchProductController:
+    # Eccube\Controller\Block\SearchProductController:
+    #     autowire: true
+    #     autoconfigure: true
+    #     tags: ['controller.service_arguments']
+
+    Eccube\Controller\Block\:
+        resource: '../../../src/Eccube/Controller/Block'
         autowire: true
         autoconfigure: true
         tags: ['controller.service_arguments']
