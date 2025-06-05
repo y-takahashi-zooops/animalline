@@ -161,7 +161,6 @@ class AdminController extends AbstractController
             dd("stop！！！！");
             return $this->redirectToRoute('admin_homepage');
         }
-        dd("いふ入ってないがな");
         /* @var $form \Symfony\Component\Form\FormInterface */
         $builder = $this->formFactory->createNamedBuilder('', LoginType::class);
 
