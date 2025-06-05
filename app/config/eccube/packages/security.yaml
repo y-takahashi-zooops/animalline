@@ -86,7 +86,7 @@ security:
                 path: logout
                 target: breeder_top
         customer:
-            pattern: '^/'
+            pattern: '^/customer'
             lazy: true
             provider: customer_provider
             remember_me:
