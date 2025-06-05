@@ -21,7 +21,7 @@ class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
     /**
      * {@inheritdoc}
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         dd("さくせすはんどら");
         throw new \RuntimeException('Custom SuccessHandler was called!');
