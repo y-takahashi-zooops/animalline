@@ -131,7 +131,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/login", name="admin_login")
+     * @Route("/%eccube_admin_route%/login", name="aniconfig_login")
      * @Template("@admin/login.twig")
      */
     public function login(Request $request)
