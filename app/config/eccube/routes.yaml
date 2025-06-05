@@ -41,5 +41,5 @@ admin_logout:
 logout:
     path: /logout
 
-    #when@dev:
-        #    - { resource: '%kernel.project_dir%/app/config/eccube/routes/dev/web_profiler.yaml', prefix: / }
+    when@dev:
+        - { resource: '%kernel.project_dir%/app/config/eccube/routes/dev/web_profiler.yaml', prefix: / }
