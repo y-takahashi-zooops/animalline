@@ -157,11 +157,11 @@ class AdminController extends AbstractController
      */
     public function login(Request $request)
     {
-        dd("stop");
         if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
+            dd("stop！！！！");
             return $this->redirectToRoute('admin_homepage');
         }
-
+        dd("いふ入ってないがな");
         /* @var $form \Symfony\Component\Form\FormInterface */
         $builder = $this->formFactory->createNamedBuilder('', LoginType::class);
 
