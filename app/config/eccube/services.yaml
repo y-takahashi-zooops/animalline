@@ -393,7 +393,7 @@ services:
         public: true
     
     #Animalline用にカスタマイズ
-    app.eccube.security.success_handler:
+    eccube.security.success_handler:
             class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
             public: true
             arguments:
