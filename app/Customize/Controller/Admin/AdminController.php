@@ -159,7 +159,7 @@ class AdminController extends AbstractController
      */
     public function login(Request $request)
     {
-        $this->logger->info('★★ loginメソッドが呼ばれました ★★');
+        $this->logger->info('◆◆ loginメソッドが呼ばれました ◆◆');
         if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             dd("stop！！！！");
             return $this->redirectToRoute('admin_homepage');
