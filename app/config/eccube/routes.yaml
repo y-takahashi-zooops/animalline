@@ -7,6 +7,8 @@ customize_controllers:
     type: annotation
     prefix: /
 
+web_profiler:
+    resource: "../../config/eccube/routes/dev/web_profiler.yaml"
 
 # aniconfig:
 #     path: /aniconfig
@@ -41,5 +43,5 @@ admin_logout:
 logout:
     path: /logout
 
-    #when@dev:
-        #    - { resource: '%kernel.project_dir%/app/config/eccube/routes/dev/web_profiler.yaml', prefix: / }
+    # when@dev:
+    #     - { resource: '%kernel.project_dir%/app/config/eccube/routes/dev/web_profiler.yaml', prefix: / }

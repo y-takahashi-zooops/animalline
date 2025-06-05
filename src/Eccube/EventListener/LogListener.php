@@ -125,7 +125,7 @@ class LogListener implements EventSubscriberInterface
     }
 
     /**
-     * @param PostResponseEvent $event
+     * @param TerminateEvent $event
      */
     public function onKernelTerminate(TerminateEvent $event)
     {
