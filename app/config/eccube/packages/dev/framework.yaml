@@ -3,4 +3,4 @@ framework:
         enabled: true
         collect: true
         only_exceptions: false
-        storage: 'file'
+        dsn: 'file:%kernel.cache_dir%/profiler'
