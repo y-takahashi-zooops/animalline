@@ -116,7 +116,7 @@ class TransactionListener implements EventSubscriberInterface
     /**
      *  Kernel terminate listener callback.
      *
-     * @param PostResponseEvent $event
+     * @param TerminateEvent $event
      */
     public function onKernelTerminate(TerminateEvent $event)
     {
