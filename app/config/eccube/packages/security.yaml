@@ -29,9 +29,10 @@ security:
             # lazy: true
             provider: member_provider
             form_login:
-                login_path: admin_login
-                check_path: admin_login
+                login_path: aniconfig_login
+                check_path: aniconfig_login
                 enable_csrf: true
+                default_target_path: /%eccube_admin_route%/
                 username_parameter: 'login_id'
                 password_parameter: 'password'
                 use_forward: false

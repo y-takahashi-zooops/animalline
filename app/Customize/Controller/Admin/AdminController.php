@@ -154,7 +154,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/login", name="admin_login")
+     * @Route("/aniconfig/login", name="aniconfig_login")
      * @Template("@admin/login.twig")
      */
     public function login(Request $request)
