@@ -1,9 +1,11 @@
 controllers:
-    resource: ../../Eccube/Controller/
+    resource: ../../../src/Eccube/Controller/
     type: annotation
+
 customize_controllers:
     resource: ../../Customize/Controller/
     type: annotation
+
 
 # aniconfig:
 #     path: /aniconfig
