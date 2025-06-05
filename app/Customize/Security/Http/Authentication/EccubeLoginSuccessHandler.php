@@ -8,16 +8,20 @@ use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessH
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-use Psr\Log\LoggerInterface;
+// use Psr\Log\LoggerInterface;
 
 class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
-    protected $logger;
-    public function __construct(HttpUtils $httpUtils, LoggerInterface $logger,array $options = [])
+    // protected $logger;
+    // public function __construct(HttpUtils $httpUtils, LoggerInterface $logger,array $options = [])
+    // {
+    //     parent::__construct($httpUtils, $options);
+    //     $this->logger = $logger;
+    //     // parent::__construct($httpUtils, $logger, $options);
+    // }
+    public function __construct(HttpKernelInterface $httpKernel, HttpUtils $httpUtils, array $options = [])
     {
-        parent::__construct($httpUtils, $options);
-        $this->logger = $logger;
-        // parent::__construct($httpUtils, $logger, $options);
+        parent::__construct($httpKernel, $httpUtils, $options);
     }
     /**
      * {@inheritdoc}
