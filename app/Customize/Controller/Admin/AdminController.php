@@ -160,10 +160,15 @@ class AdminController extends AbstractController
     public function login(Request $request)
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // appを取得
+            $app = \Eccube\Application::getInstance();
+            // user情報を取得
+            $user = $app['user'];
             dd(
                 "postttttttttttt",
                 $this->authorizationChecker,
-                $this->authorizationChecker->isGranted('ROLE_ADMIN')
+                $this->authorizationChecker->isGranted('ROLE_ADMIN'),
+                $user
             );
         }
         $this->logger->info('◆◆ loginメソッドが呼ばれました ◆◆');
