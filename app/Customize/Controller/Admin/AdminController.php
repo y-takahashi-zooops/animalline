@@ -40,7 +40,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-
+use Psr\Log\LoggerInterface;
 
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
@@ -134,7 +134,8 @@ class AdminController extends AbstractController
         BreederPetsRepository $breederPetsRepository,
         ConservationPetsRepository $conservationPetsRepository,
         FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        LoggerInterface $logger,
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->helper = $helper;
@@ -157,7 +158,7 @@ class AdminController extends AbstractController
      */
     public function login(Request $request)
     {
-        dump($request);
+        $this->logger->info('★★ loginメソッドが呼ばれました ★★');
         if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             dd("stop！！！！");
             return $this->redirectToRoute('admin_homepage');
