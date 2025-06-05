@@ -393,14 +393,15 @@ services:
         public: true
     
     #Animalline用にカスタマイズ
-    app.security.login_success_handler:
-        class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
-        arguments:
-            - '@security.http_utils'
-            - '@logger'
-            - { default_target_path: '/%eccube_admin_route%/' }
-        tags:
-            - { name: 'monolog.logger', channel: 'security' }
+    app.eccube.security.success_handler:
+            class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
+            public: true
+            arguments:
+                - '@security.http_utils'
+                - '@logger'
+                - { default_target_path: '/%eccube_admin_route%/' }
+            tags: ['monolog.logger']
+    
 
     eccube.security.failure_handler:
         class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
