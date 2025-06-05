@@ -16,9 +16,7 @@ class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
     {
         // parent::__construct($httpUtils, $options);
         // $this->logger = $logger;
-        $this->httpUtils = $httpUtils;
-        $this->logger = $logger;
-        $this->options = $options;
+        parent::__construct($httpUtils, $logger, $options);
     }
     /**
      * {@inheritdoc}
