@@ -32,6 +32,7 @@ class EccubeAuthenticationSuccessHandler extends DefaultAuthenticationSuccessHan
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?Response
     {
+        dd("さくせすはんどらあああああ");
         // 親クラスの onAuthenticationSuccess メソッドを呼び出す
         $response = parent::onAuthenticationSuccess($request, $token);
 
