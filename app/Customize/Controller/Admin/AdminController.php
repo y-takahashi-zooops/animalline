@@ -160,7 +160,11 @@ class AdminController extends AbstractController
     public function login(Request $request)
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            dd("postttttttttttt");
+            dd(
+                "postttttttttttt",
+                $this->authorizationChecker,
+                $this->authorizationChecker->isGranted('ROLE_ADMIN')
+            );
         }
         $this->logger->info('◆◆ loginメソッドが呼ばれました ◆◆');
         if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
