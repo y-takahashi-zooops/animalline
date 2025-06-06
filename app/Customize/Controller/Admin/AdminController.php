@@ -41,6 +41,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
+use Eccube\Common\EccubeConfig;
+use Symfony\Component\Security\Core\Security;
 
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
@@ -136,6 +138,8 @@ class AdminController extends AbstractController
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
         LoggerInterface $logger,
+        EccubeConfig $eccubeConfig,
+        Security $security
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->helper = $helper;
@@ -151,6 +155,8 @@ class AdminController extends AbstractController
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->security = $security;
     }
 
     /**
@@ -166,7 +172,6 @@ class AdminController extends AbstractController
 
         $this->logger->info('◆◆ loginメソッドが呼ばれました ◆◆');
         if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
-            dd("stop！！！！");
             return $this->redirectToRoute('admin_homepage');
         }
         /* @var $form \Symfony\Component\Form\FormInterface */
