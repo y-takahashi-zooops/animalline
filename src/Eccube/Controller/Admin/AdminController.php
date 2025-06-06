@@ -152,7 +152,7 @@ class AdminController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ADMIM_LOGIN_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_ADMIM_LOGIN_INITIALIZE,);
 
         $form = $builder->getForm();
 
