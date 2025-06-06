@@ -14,6 +14,7 @@ use Customize\Repository\InstockScheduleHeaderRepository;
 use Customize\Repository\InstockScheduleRepository;
 use DateTime;
 use Symfony\Component\Console\Input\InputArgument;
+use Psr\Log\LoggerInterface;
 
 class ImportInstockSchedule extends Command
 {
@@ -50,25 +51,33 @@ class ImportInstockSchedule extends Command
     protected $productStockRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * Import instock schedule constructor.
      *
      * @param EntityManagerInterface $entityManager
      * @param InstockScheduleHeaderRepository $instockScheduleHeaderRepository
      * @param InstockScheduleRepository $instockScheduleRepository
      * @param ProductStockRepository $productStockRepository
+     * @param LoggerInterface $logger
      *
      */
     public function __construct(
         EntityManagerInterface          $entityManager,
         InstockScheduleHeaderRepository $instockScheduleHeaderRepository,
         InstockScheduleRepository       $instockScheduleRepository,
-        ProductStockRepository          $productStockRepository
+        ProductStockRepository          $productStockRepository,
+        LoggerInterface $logger
     ) {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
         $this->instockScheduleRepository = $instockScheduleRepository;
         $this->productStockRepository = $productStockRepository;
+        $this->logger = $logger;
     }
 
     protected function configure()
@@ -127,7 +136,7 @@ var_dump($fileNames);
                 throw new Exception('Error: Failed to open file');
             }
 
-            log_info('商品CSV取込開始');
+            $this->logger->info('商品CSV取込開始');
 
             // CSVファイルの登録処理
             while (($data = fgetcsv($fp)) !== FALSE) {
@@ -138,7 +147,7 @@ var_dump($fileNames);
                 $Header = $this->instockScheduleHeaderRepository->find($headerId);
 
                 if (!$Header) {
-                    log_info('ID ['.$data[0].'] が見つかりません');
+                    $this->logger->info('ID ['.$data[0].'] が見つかりません');
                     continue;
                 }
                 $rt = $Header->getRemarkText();
@@ -169,7 +178,7 @@ var_dump($fileNames);
             rename($csvpath, $logWmsDir . $fileName); // move files
         }
 
-        log_info('商品CSV取込完了');
+        $this->logger->info('商品CSV取込完了');
         fclose($fp);
         echo 'Import succeeded.' . "\n";
     }
