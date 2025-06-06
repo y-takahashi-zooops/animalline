@@ -204,7 +204,6 @@ class AdminController extends AbstractController
      */
     public function index(Request $request)
     {
-        dd("管理画面にいってる？");
         $adminRoute = $this->eccubeConfig['eccube_admin_route'];
         $is_danger_admin_url = false;
         if ($adminRoute === 'admin') {
