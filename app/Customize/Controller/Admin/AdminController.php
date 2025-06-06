@@ -159,7 +159,6 @@ class AdminController extends AbstractController
      */
     public function login(Request $request)
     {
-        dd("tomare");
         $this->logger->info('◆◆ loginメソッドが呼ばれました ◆◆');
         if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             dd("stop！！！！");
@@ -200,6 +199,7 @@ class AdminController extends AbstractController
      */
     public function index(Request $request)
     {
+        dd("管理画面にいってる？");
         $adminRoute = $this->eccubeConfig['eccube_admin_route'];
         $is_danger_admin_url = false;
         if ($adminRoute === 'admin') {
