@@ -43,6 +43,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Eccube\Common\EccubeConfig;
 use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityManagerInterface;
 
 use Customize\Repository\BreederPetsRepository;
 use Customize\Repository\ConservationPetsRepository;
