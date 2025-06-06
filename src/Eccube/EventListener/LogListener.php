@@ -129,6 +129,8 @@ class LogListener implements EventSubscriberInterface
      */
     public function onKernelTerminate(TerminateEvent $event)
     {
+        // TODO 後で消す
+        file_put_contents('/tmp/profiler_called.log', date('c') . ' ProfilerListener called' . PHP_EOL, FILE_APPEND);
         $route = $this->getRoute($event->getRequest());
         $this->logger->info('PROCESS END', [$route]);
     }

@@ -5,7 +5,7 @@ web_profiler:
 framework:
     profiler: 
         enabled: true
-        only_exceptions: false
         collect: true
+        only_exceptions: false
         # プロファイラーの保存先を直接指定
         dsn: 'file:%kernel.cache_dir%/profiler'
