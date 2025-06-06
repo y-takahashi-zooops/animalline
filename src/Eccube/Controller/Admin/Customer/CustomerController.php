@@ -106,7 +106,7 @@ class CustomerController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_INDEX_INITIALIZE);
 
         $searchForm = $builder->getForm();
 
@@ -168,7 +168,7 @@ class CustomerController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_INDEX_SEARCH, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_INDEX_SEARCH);
 
         $pagination = $paginator->paginate(
             $qb,
@@ -216,7 +216,7 @@ class CustomerController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_RESEND_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_RESEND_COMPLETE);
 
         $this->addSuccess('admin.common.send_complete', 'admin');
 
@@ -264,7 +264,7 @@ class CustomerController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_DELETE_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_DELETE_COMPLETE);
 
         return $this->redirect($this->generateUrl('admin_customer_page',
                 ['page_no' => $page_no]).'?resume='.Constant::ENABLED);
@@ -324,7 +324,7 @@ class CustomerController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_CUSTOMER_CSV_EXPORT, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_CUSTOMER_CSV_EXPORT);
 
                     $ExportCsvRow->pushData();
                 }

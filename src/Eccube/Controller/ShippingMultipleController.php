@@ -160,7 +160,7 @@ class ShippingMultipleController extends AbstractShoppingController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -324,7 +324,7 @@ class ShippingMultipleController extends AbstractShoppingController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_COMPLETE);
 
             log_info('複数配送設定処理完了', [$Order->getId()]);
 
@@ -398,7 +398,7 @@ class ShippingMultipleController extends AbstractShoppingController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_EDIT_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_EDIT_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -438,7 +438,7 @@ class ShippingMultipleController extends AbstractShoppingController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_EDIT_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_EDIT_COMPLETE);
 
             log_info('複数配送のお届け先追加処理完了');
 

@@ -107,7 +107,7 @@ class ForgotController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_FORGOT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_FORGOT_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -133,7 +133,7 @@ class ForgotController extends AbstractController
                     ],
                     $request
                 );
-                $this->eventDispatcher->dispatch(EccubeEvents::FRONT_FORGOT_INDEX_COMPLETE, $event);
+                $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_FORGOT_INDEX_COMPLETE);
 
                 // 完了URLの生成
                 $reset_url = $this->generateUrl('forgot_reset', ['reset_key' => $Customer->getResetKey(),'return_path' => $return_path], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -271,7 +271,7 @@ class ForgotController extends AbstractController
                     ],
                     $request
                 );
-                $this->eventDispatcher->dispatch(EccubeEvents::FRONT_FORGOT_RESET_COMPLETE, $event);
+                $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_FORGOT_RESET_COMPLETE);
 
                 // 完了メッセージを設定
                 $this->addFlash('password_reset_complete', trans('front.forgot.reset_complete'));

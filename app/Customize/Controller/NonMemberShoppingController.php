@@ -111,7 +111,7 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_NONMEMBER_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_NONMEMBER_INITIALIZE);
 
         $form = $builder->getForm();
 
@@ -145,7 +145,7 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_NONMEMBER_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_NONMEMBER_COMPLETE);
 
             if ($event->getResponse() !== null) {
                 return $event->getResponse();
