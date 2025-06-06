@@ -159,6 +159,11 @@ class AdminController extends AbstractController
      */
     public function login(Request $request)
     {
+        $error = $this->helper->getLastAuthenticationError();
+        if ($error) {
+            $this->logger->error('ログインエラー: '.$error->getMessage());
+        }
+
         $this->logger->info('◆◆ loginメソッドが呼ばれました ◆◆');
         if ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             dd("stop！！！！");
