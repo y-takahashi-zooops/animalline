@@ -116,7 +116,8 @@ class AdminController extends AbstractController
         CustomerRepository $custmerRepository,
         ProductRepository $productRepository,
         PluginApiService $pluginApiService,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->helper = $helper;
@@ -128,6 +129,7 @@ class AdminController extends AbstractController
         $this->productRepository = $productRepository;
         $this->pluginApiService = $pluginApiService;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
