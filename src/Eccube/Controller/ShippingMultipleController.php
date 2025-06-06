@@ -34,6 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class ShippingMultipleController extends AbstractShoppingController
 {
@@ -70,6 +71,11 @@ class ShippingMultipleController extends AbstractShoppingController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ShippingMultipleController constructor.
      *
      * @param PrefRepository $prefRepository
@@ -78,6 +84,7 @@ class ShippingMultipleController extends AbstractShoppingController
      * @param OrderHelper $orderHelper
      * @param CartService $cartService
      * @param PurchaseFlow $cartPurchaseFlow
+     * @param LoggerInterface $logger
      */
     public function __construct(
         PrefRepository $prefRepository,
@@ -86,7 +93,8 @@ class ShippingMultipleController extends AbstractShoppingController
         OrderHelper $orderHelper,
         CartService $cartService,
         PurchaseFlow $cartPurchaseFlow,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->prefRepository = $prefRepository;
         $this->orderRepository = $orderRepository;
@@ -95,6 +103,7 @@ class ShippingMultipleController extends AbstractShoppingController
         $this->cartService = $cartService;
         $this->cartPurchaseFlow = $cartPurchaseFlow;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -167,7 +176,7 @@ class ShippingMultipleController extends AbstractShoppingController
 
         $errors = [];
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('複数配送設定処理開始', [$Order->getId()]);
+            $this->logger->info('複数配送設定処理開始', [$Order->getId()]);
 
             $data = $form['shipping_multiple'];
 
@@ -326,7 +335,7 @@ class ShippingMultipleController extends AbstractShoppingController
             );
             $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_COMPLETE);
 
-            log_info('複数配送設定処理完了', [$Order->getId()]);
+            $this->logger->info('複数配送設定処理完了', [$Order->getId()]);
 
             $this->entityManager->refresh($Order);
 
@@ -405,7 +414,7 @@ class ShippingMultipleController extends AbstractShoppingController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('複数配送のお届け先追加処理開始');
+            $this->logger->info('複数配送のお届け先追加処理開始');
 
             if ($this->isGranted('ROLE_USER')) {
                 $CustomerAddresses = $Customer->getCustomerAddresses();
@@ -440,7 +449,7 @@ class ShippingMultipleController extends AbstractShoppingController
             );
             $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_MULTIPLE_EDIT_COMPLETE);
 
-            log_info('複数配送のお届け先追加処理完了');
+            $this->logger->info('複数配送のお届け先追加処理完了');
 
             return $this->redirectToRoute('shopping_shipping_multiple');
         }

@@ -53,6 +53,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class EditController extends AbstractController
 {
@@ -129,6 +130,11 @@ class EditController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * EditController constructor.
      *
      * @param TaxRuleService $taxRuleService
@@ -145,6 +151,7 @@ class EditController extends AbstractController
      * @param OrderStatusRepository $orderStatusRepository
      * @param OrderStateMachine $orderStateMachine
      * @param OrderHelper $orderHelper
+     * @param LoggerInterface $logger
      */
     public function __construct(
         TaxRuleService $taxRuleService,
@@ -161,7 +168,8 @@ class EditController extends AbstractController
         OrderStatusRepository $orderStatusRepository,
         OrderStateMachine $orderStateMachine,
         OrderHelper $orderHelper,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->taxRuleService = $taxRuleService;
         $this->deviceTypeRepository = $deviceTypeRepository;
@@ -178,6 +186,7 @@ class EditController extends AbstractController
         $this->orderStateMachine = $orderStateMachine;
         $this->orderHelper = $orderHelper;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -259,7 +268,7 @@ class EditController extends AbstractController
             // 登録ボタン押下
             switch ($request->get('mode')) {
                 case 'register':
-                    log_info('受注登録開始', [$TargetOrder->getId()]);
+                    $this->logger->info('受注登録開始', [$TargetOrder->getId()]);
 
                     if (!$flowResult->hasError() && $form->isValid()) {
                         try {
@@ -327,7 +336,7 @@ class EditController extends AbstractController
 
                         $this->addSuccess('admin.common.save_complete', 'admin');
 
-                        log_info('受注登録完了', [$TargetOrder->getId()]);
+                        $this->logger->info('受注登録完了', [$TargetOrder->getId()]);
 
                         if ($returnLink = $form->get('return_link')->getData()) {
                             try {

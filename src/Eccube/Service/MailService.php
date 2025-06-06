@@ -32,6 +32,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
 use Twig\Environment;
+use Psr\Log\LoggerInterface;
 
 class MailService
 {
@@ -71,6 +72,11 @@ class MailService
     protected $twig;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * MailService constructor.
      *
      * @param MailerInterface $mailer,
@@ -80,6 +86,7 @@ class MailService
      * @param EventDispatcherInterface $eventDispatcher
      * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
+     * @param LoggerInterface $logger
      */
     public function __construct(
         MailerInterface $mailer,
@@ -88,7 +95,8 @@ class MailService
         BaseInfoRepository $baseInfoRepository,
         EventDispatcherInterface $eventDispatcher,
         Environment $twig,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        LoggerInterface $logger
     ) {
         $this->mailer = $mailer;
         $this->mailTemplateRepository = $mailTemplateRepository;
@@ -97,6 +105,7 @@ class MailService
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->twig = $twig;
+        $this->logger = $logger;
     }
 
     /**
@@ -107,7 +116,7 @@ class MailService
      */
     public function sendCustomerConfirmMail(\Eccube\Entity\Customer $Customer, $activateUrl)
     {
-        log_info('仮会員登録メール送信開始');
+        $this->logger->info('仮会員登録メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_confirm_mail_template_id']);
 
@@ -154,7 +163,7 @@ class MailService
 
         $count = $this->mailer->send($message, $failures);
 
-        log_info('仮会員登録メール送信完了', ['count' => $count]);
+        $this->logger->info('仮会員登録メール送信完了', ['count' => $count]);
 
         return $count;
     }
@@ -166,7 +175,7 @@ class MailService
      */
     public function sendCustomerCompleteMail(\Eccube\Entity\Customer $Customer)
     {
-        log_info('会員登録完了メール送信開始');
+        $this->logger->info('会員登録完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_complete_mail_template_id']);
 
@@ -211,7 +220,7 @@ class MailService
 
         try {
             $this->mailer->send($email);
-            log_info('会員登録完了メール送信完了');
+            $this->logger->info('会員登録完了メール送信完了');
         } catch (\Throwable $e) {
             log_error('会員登録完了メール送信失敗', ['error' => $e->getMessage()]);
             return false;
@@ -228,7 +237,7 @@ class MailService
      */
     public function sendCustomerWithdrawMail(Customer $Customer)
     {
-        log_info('退会手続き完了メール送信開始');
+        $this->logger->info('退会手続き完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->findOneBy([
             'template_name' => '退会完了メール',
@@ -276,7 +285,7 @@ class MailService
 
         try {
             $this->mailer->send($email);
-            log_info('退会手続き完了メール送信完了');
+            $this->logger->info('退会手続き完了メール送信完了');
         } catch (\Throwable $e) {
             log_error('退会手続き完了メール送信失敗', ['error' => $e->getMessage()]);
         }
@@ -291,7 +300,7 @@ class MailService
      */
     public function sendContactMail($formData)
     {
-        log_info('お問い合わせ受付メール送信開始');
+        $this->logger->info('お問い合わせ受付メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find(
             $this->eccubeConfig['eccube_contact_mail_template_id']
@@ -340,7 +349,7 @@ class MailService
         // メール送信
         try {
             $this->mailer->send($email);
-            log_info('お問い合わせ受付メール送信完了');
+            $this->logger->info('お問い合わせ受付メール送信完了');
         } catch (\Throwable $e) {
             log_error('お問い合わせ受付メール送信失敗', ['error' => $e->getMessage()]);
             return false;
@@ -358,7 +367,7 @@ class MailService
      */
     public function sendOrderMail(\Eccube\Entity\Order $Order)
     {
-        log_info('受注メール送信開始');
+        $this->logger->info('受注メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_order_mail_template_id']);
         if (is_null($MailTemplate)) {
@@ -401,7 +410,7 @@ class MailService
         // メール送信処理
         try {
             $count = $this->mailer->send($email);
-            log_info('受注メール送信完了', ['count' => $count]);
+            $this->logger->info('受注メール送信完了', ['count' => $count]);
         } catch (\Throwable $e) {
             log_error('受注メール送信失敗', ['error' => $e->getMessage()]);
             return false;
@@ -420,7 +429,7 @@ class MailService
 
         $this->mailHistoryRepository->save($MailHistory);
 
-        log_info('受注メール送信完了', ['count' => $count]);
+        $this->logger->info('受注メール送信完了', ['count' => $count]);
 
         return true;
     }
@@ -433,7 +442,7 @@ class MailService
      */
     public function sendAdminCustomerConfirmMail(\Eccube\Entity\Customer $Customer, $activateUrl)
     {
-        log_info('仮会員登録再送メール送信開始');
+        $this->logger->info('仮会員登録再送メール送信開始');
 
         /* @var $MailTemplate \Eccube\Entity\MailTemplate */
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_confirm_mail_template_id']);
@@ -481,7 +490,7 @@ class MailService
 
         try {
             $count = $this->mailer->send($email);
-            log_info('仮会員登録再送メール送信完了', ['count' => $count]);
+            $this->logger->info('仮会員登録再送メール送信完了', ['count' => $count]);
         } catch (\Throwable $e) {
             log_error('仮会員登録再送メール送信失敗', ['error' => $e->getMessage()]);
             return false;
@@ -504,7 +513,7 @@ class MailService
      */
     public function sendAdminOrderMail(Order $Order, $formData)
     {
-        log_info('受注管理通知メール送信開始');
+        $this->logger->info('受注管理通知メール送信開始');
 
         $email = (new Email())
             ->subject('[' . $this->BaseInfo->getShopName() . '] ' . $formData['mail_subject'])
@@ -528,7 +537,7 @@ class MailService
 
         try {
             $count = $this->mailer->send($email);
-            log_info('受注管理通知メール送信完了', ['count' => $count]);
+            $this->logger->info('受注管理通知メール送信完了', ['count' => $count]);
         } catch (\Throwable $e) {
             log_error('受注管理通知メール送信失敗', ['error' => $e->getMessage()]);
             return false;
@@ -545,7 +554,7 @@ class MailService
      */
     public function sendPasswordResetNotificationMail(\Eccube\Entity\Customer $Customer, $reset_url)
     {
-        log_info('パスワード再発行メール送信開始');
+        $this->logger->info('パスワード再発行メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_forgot_mail_template_id']);
         if (is_null($MailTemplate)) {
@@ -594,7 +603,7 @@ class MailService
 
         try {
             $count = $this->mailer->send($email);
-            log_info('パスワード再発行メール送信完了', ['count' => $count]);
+            $this->logger->info('パスワード再発行メール送信完了', ['count' => $count]);
         } catch (\Throwable $e) {
             log_error('パスワード再発行メール送信失敗', ['error' => $e->getMessage()]);
             return false;
@@ -611,7 +620,7 @@ class MailService
      */
     public function sendPasswordResetCompleteMail(\Eccube\Entity\Customer $Customer, $password)
     {
-        log_info('パスワード変更完了メール送信開始');
+        $this->logger->info('パスワード変更完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_reset_complete_mail_template_id']);
         if (is_null($MailTemplate)) {
@@ -658,7 +667,7 @@ class MailService
 
         try {
             $count = $this->mailer->send($email);
-            log_info('パスワード変更完了メール送信完了', ['count' => $count]);
+            $this->logger->info('パスワード変更完了メール送信完了', ['count' => $count]);
         } catch (\Throwable $e) {
             log_error('パスワード変更完了メール送信失敗', ['error' => $e->getMessage()]);
             return false;
@@ -677,7 +686,7 @@ class MailService
      */
     public function sendShippingNotifyMail(Shipping $Shipping)
     {
-        log_info('出荷通知メール送信処理開始', ['id' => $Shipping->getId()]);
+        $this->logger->info('出荷通知メール送信処理開始', ['id' => $Shipping->getId()]);
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_shipping_notify_mail_template_id']);
         if (is_null($MailTemplate)) {
@@ -726,7 +735,7 @@ class MailService
 
         $this->mailHistoryRepository->save($MailHistory);
 
-        log_info('出荷通知メール送信処理完了', ['id' => $Shipping->getId()]);
+        $this->logger->info('出荷通知メール送信処理完了', ['id' => $Shipping->getId()]);
     }
 
     /**

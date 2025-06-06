@@ -32,6 +32,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
+use Psr\Log\LoggerInterface;
 
 class ShippingMailService
 {
@@ -76,6 +77,11 @@ class ShippingMailService
     protected $entityManager;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * MailService constructor.
      *
      * @param MailerInterface $mailer
@@ -86,6 +92,7 @@ class ShippingMailService
      * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
      * @param EntityManagerInterface $entityManager
+     * @param LoggerInterface $logger
      */
     public function __construct(
         MailerInterface $mailer,
@@ -95,7 +102,8 @@ class ShippingMailService
         EventDispatcherInterface $eventDispatcher,
         Environment $twig,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
     ) {
         $this->mailer = $mailer;
         $this->mailTemplateRepository = $mailTemplateRepository;
@@ -105,6 +113,7 @@ class ShippingMailService
         $this->eccubeConfig = $eccubeConfig;
         $this->twig = $twig;
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
     
@@ -117,7 +126,7 @@ class ShippingMailService
      */
     public function sendPlaneMail($title, $body, $Customer)
     {
-        log_info('受注メール送信開始');
+        $this->logger->info('受注メール送信開始');
 
         $email = (new Email())
             ->subject('['.$this->BaseInfo->getShopName().'] '.$title)
@@ -144,7 +153,7 @@ class ShippingMailService
      */
     public function sendShippingDateChangeMail(\Eccube\Entity\Order $Order)
     {
-        log_info('受注メール送信開始');
+        $this->logger->info('受注メール送信開始');
 
         $body = $this->twig->render('Mail/shipping_date_change.twig', ['Order' => $Order]);
 
@@ -179,7 +188,7 @@ class ShippingMailService
         $stmt->bindParam('mail_html_body', $mailHtmlBody);
         $stmt->execute();
 
-        log_info('受注メール送信完了');
+        $this->logger->info('受注メール送信完了');
 
         return $email;
     }

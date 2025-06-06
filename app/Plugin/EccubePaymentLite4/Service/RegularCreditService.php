@@ -19,6 +19,7 @@ use Plugin\EccubePaymentLite4\Entity\RegularStatus;
 use Plugin\EccubePaymentLite4\Repository\ConfigRepository;
 use Plugin\EccubePaymentLite4\Repository\RegularOrderRepository;
 use Plugin\EccubePaymentLite4\Repository\RegularStatusRepository;
+use Psr\Log\LoggerInterface;
 
 class RegularCreditService
 {
@@ -55,6 +56,11 @@ class RegularCreditService
      */
     private $configRepository;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         RegularStatusRepository $regularStatusRepository,
@@ -63,7 +69,8 @@ class RegularCreditService
         ConfigRepository $configRepository,
         EccubeConfig $eccubeConfig,
         PurchaseFlow $shoppingPurchaseFlow,
-        OrderNoProcessor $orderNoProcessor
+        OrderNoProcessor $orderNoProcessor,
+        LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->purchaseFlow = $shoppingPurchaseFlow;
@@ -73,6 +80,7 @@ class RegularCreditService
         $this->configRepository = $configRepository;
         $this->eccubeConfig = $eccubeConfig;
         $this->orderNoProcessor = $orderNoProcessor;
+        $this->logger = $logger;
     }
 
     public function createOrder(RegularOrder $RegularOrder)
@@ -101,7 +109,7 @@ class RegularCreditService
         	$results = $flowResult->getErrors();
         	log_error('定期受注の処理でエラーが発生しました。注文が保存されていない可能性があります');
         	foreach ($results as $result) {
-        		log_info("Error:" . $result->getMessage());
+        		$this->logger->info("Error:" . $result->getMessage());
         	}
         }
 

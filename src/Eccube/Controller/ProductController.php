@@ -39,6 +39,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class ProductController extends AbstractController
 {
@@ -77,9 +78,15 @@ class ProductController extends AbstractController
      */
     protected $productListMaxRepository;
 
+    protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     private $title = '';
 
-    protected FormFactoryInterface $formFactory;
 
     /**
      * ProductController constructor.
@@ -91,6 +98,7 @@ class ProductController extends AbstractController
      * @param BaseInfoRepository $baseInfoRepository
      * @param AuthenticationUtils $helper
      * @param ProductListMaxRepository $productListMaxRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         PurchaseFlow $cartPurchaseFlow,
@@ -100,7 +108,8 @@ class ProductController extends AbstractController
         BaseInfoRepository $baseInfoRepository,
         AuthenticationUtils $helper,
         ProductListMaxRepository $productListMaxRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -110,6 +119,7 @@ class ProductController extends AbstractController
         $this->helper = $helper;
         $this->productListMaxRepository = $productListMaxRepository;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -407,7 +417,7 @@ class ProductController extends AbstractController
 
         $addCartData = $form->getData();
 
-        log_info(
+        $this->logger->info(
             'カート追加処理開始',
             [
                 'product_id' => $Product->getId(),
@@ -437,7 +447,7 @@ class ProductController extends AbstractController
 
         $this->cartService->save();
 
-        log_info(
+        $this->logger->info(
             'カート追加処理完了',
             [
                 'product_id' => $Product->getId(),

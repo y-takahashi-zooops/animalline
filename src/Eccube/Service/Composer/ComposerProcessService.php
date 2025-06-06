@@ -18,6 +18,7 @@ use Eccube\Common\EccubeConfig;
 use Eccube\Entity\BaseInfo;
 use Eccube\Exception\PluginException;
 use Eccube\Repository\BaseInfoRepository;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class ComposerProcessService
@@ -47,18 +48,30 @@ class ComposerProcessService implements ComposerServiceInterface
     private $baseInfoRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ComposerProcessService constructor.
      *
      * @param EccubeConfig $eccubeConfig
      * @param EntityManagerInterface $entityManager
      * @param ComposerApiService $composerApiService
+     * @param LoggerInterface $logger
      */
-    public function __construct(EccubeConfig $eccubeConfig, EntityManagerInterface $entityManager, ComposerApiService $composerApiService, BaseInfoRepository $baseInfoRepository)
-    {
+    public function __construct(
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager,
+        ComposerApiService $composerApiService,
+        BaseInfoRepository $baseInfoRepository,
+        LoggerInterface $logger
+    ) {
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
         $this->composerApiService = $composerApiService;
         $this->baseInfoRepository = $baseInfoRepository;
+        $this->logger = $logger;
     }
 
     public function execRequire($packageName, $output = null)
@@ -101,7 +114,7 @@ class ComposerProcessService implements ComposerServiceInterface
             if ($returnValue) {
                 throw new PluginException($outputString);
             }
-            log_info(PHP_EOL.$outputString.PHP_EOL);
+            $this->logger->info(PHP_EOL.$outputString.PHP_EOL);
 
             return $outputString;
         } catch (\Exception $exception) {

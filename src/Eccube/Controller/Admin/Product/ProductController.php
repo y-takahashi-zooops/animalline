@@ -55,6 +55,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Psr\Log\LoggerInterface;
 
 class ProductController extends AbstractController
 {
@@ -109,6 +110,11 @@ class ProductController extends AbstractController
     protected $tagRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -121,6 +127,7 @@ class ProductController extends AbstractController
      * @param PageMaxRepository $pageMaxRepository
      * @param ProductStatusRepository $productStatusRepository
      * @param TagRepository $tagRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CsvExportService $csvExportService,
@@ -132,7 +139,8 @@ class ProductController extends AbstractController
         BaseInfoRepository $baseInfoRepository,
         PageMaxRepository $pageMaxRepository,
         ProductStatusRepository $productStatusRepository,
-        TagRepository $tagRepository
+        TagRepository $tagRepository,
+        LoggerInterface $logger
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -144,6 +152,7 @@ class ProductController extends AbstractController
         $this->pageMaxRepository = $pageMaxRepository;
         $this->productStatusRepository = $productStatusRepository;
         $this->tagRepository = $tagRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -443,7 +452,7 @@ class ProductController extends AbstractController
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                log_info('商品登録開始', [$id]);
+                $this->logger->info('商品登録開始', [$id]);
                 $Product = $form->getData();
 
                 if (!$has_class) {
@@ -590,7 +599,7 @@ class ProductController extends AbstractController
                 $Product->setUpdateDate(new \DateTime());
                 $this->entityManager->flush();
 
-                log_info('商品登録完了', [$id]);
+                $this->logger->info('商品登録完了', [$id]);
 
                 $event = new EventArgs(
                     [
@@ -698,7 +707,7 @@ class ProductController extends AbstractController
             }
 
             if ($Product instanceof Product) {
-                log_info('商品削除開始', [$id]);
+                $this->logger->info('商品削除開始', [$id]);
 
                 $deleteImages = $Product->getProductImage();
                 $ProductClasses = $Product->getProductClasses();
@@ -728,22 +737,22 @@ class ProductController extends AbstractController
                         }
                     }
 
-                    log_info('商品削除完了', [$id]);
+                    $this->logger->info('商品削除完了', [$id]);
 
                     $success = true;
                     $message = trans('admin.common.delete_complete');
 
                     $cacheUtil->clearDoctrineCache();
                 } catch (ForeignKeyConstraintViolationException $e) {
-                    log_info('商品削除エラー', [$id]);
+                    $this->logger->info('商品削除エラー', [$id]);
                     $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $Product->getName()]);
                 }
             } else {
-                log_info('商品削除エラー', [$id]);
+                $this->logger->info('商品削除エラー', [$id]);
                 $message = trans('admin.common.delete_error');
             }
         } else {
-            log_info('商品削除エラー', [$id]);
+            $this->logger->info('商品削除エラー', [$id]);
             $message = trans('admin.common.delete_error');
         }
 
@@ -986,7 +995,7 @@ class ProductController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
         $response->send();
 
-        log_info('商品CSV出力ファイル名', [$filename]);
+        $this->logger->info('商品CSV出力ファイル名', [$filename]);
 
         return $response;
     }

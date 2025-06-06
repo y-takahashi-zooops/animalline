@@ -25,6 +25,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class ChangeController extends AbstractController
 {
@@ -45,16 +46,23 @@ class ChangeController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         CustomerRepository $customerRepository,
         UserPasswordHasherInterface $passwordHasher,
         TokenStorageInterface $tokenStorage,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->customerRepository = $customerRepository;
         $this->passwordHasher = $passwordHasher;
         $this->tokenStorage = $tokenStorage;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -89,7 +97,7 @@ class ChangeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('会員編集開始');
+            $this->logger->info('会員編集開始');
 
             if ($Customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $Customer->setPassword($previous_password);
@@ -100,7 +108,7 @@ class ChangeController extends AbstractController
             }
             $this->entityManager->flush();
 
-            log_info('会員編集完了');
+            $this->logger->info('会員編集完了');
 
             $event = new EventArgs(
                 [

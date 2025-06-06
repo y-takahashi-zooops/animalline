@@ -28,6 +28,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Customize\Repository\ConservationContactHeaderRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class AdoptionMemberController extends AbstractController
 {
@@ -79,6 +80,11 @@ class AdoptionMemberController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ConservationController constructor.
      *
      * @param CustomerRepository $customerRepository
@@ -89,6 +95,7 @@ class AdoptionMemberController extends AbstractController
      * @param ConservationContactHeaderRepository $conservationContactHeaderRepository
      * @param BenefitsStatusRepository $benefitsStatusRepository
      * @param ConservationBankAccountRepository $conservationBankAccountRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -100,7 +107,8 @@ class AdoptionMemberController extends AbstractController
         ConservationContactHeaderRepository $conservationContactHeaderRepository,
         BenefitsStatusRepository $benefitsStatusRepository,
         ConservationBankAccountRepository $conservationBankAccountRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->customerRepository = $customerRepository;
         $this->conservationsRepository = $conservationsRepository;
@@ -112,6 +120,7 @@ class AdoptionMemberController extends AbstractController
         $this->conservationBankAccountRepository = $conservationBankAccountRepository;
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -135,7 +144,7 @@ class AdoptionMemberController extends AbstractController
         //ログイン完了後に元のページに戻るためのセッション変数を設定
 
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            log_info('認証済のためログイン処理をスキップ');
+            $this->logger->info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute('adoption_mypage');
         }
@@ -315,7 +324,7 @@ class AdoptionMemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('会員編集開始');
+            $this->logger->info('会員編集開始');
 
             if ($customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $customer->setPassword($previousPassword);
@@ -330,7 +339,7 @@ class AdoptionMemberController extends AbstractController
             }
             $this->entityManager->flush();
 
-            log_info('会員編集完了');
+            $this->logger->info('会員編集完了');
 
             $event = new EventArgs(
                 [

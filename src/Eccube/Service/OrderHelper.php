@@ -41,6 +41,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Detection\MobileDetect;
 //use Symfony\Component\Security\Core\Security;
 use Symfony\Bundle\SecurityBundle\Security;
+use Psr\Log\LoggerInterface;
 
 class OrderHelper
 {
@@ -104,6 +105,11 @@ class OrderHelper
      */
     protected $security;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         ContainerInterface $container,
         EntityManagerInterface $entityManager,
@@ -116,7 +122,8 @@ class OrderHelper
         PrefRepository $prefRepository,
         SessionInterface $session,
         MobileDetect $mobileDetect,
-        Security $security
+        Security $security,
+        LoggerInterface $logger
     ) {
         $this->container = $container;
         $this->entityManager = $entityManager;
@@ -130,6 +137,7 @@ class OrderHelper
         $this->session = $session;
         $this->mobileDetect = $mobileDetect;
         $this->security = $security;
+        $this->logger = $logger;
     }
 
     /**
@@ -192,7 +200,7 @@ class OrderHelper
         if (count($Cart->getCartItems()) > 0) {
             $divide = $this->session->get(self::SESSION_CART_DIVIDE_FLAG);
             if ($divide) {
-                log_info('ログイン時に販売種別が異なる商品がカートと結合されました。');
+                $this->logger->info('ログイン時に販売種別が異なる商品がカートと結合されました。');
 
                 return false;
             }
@@ -200,7 +208,7 @@ class OrderHelper
             return true;
         }
 
-        log_info('カートに商品が入っていません。');
+        $this->logger->info('カートに商品が入っていません。');
 
         return false;
     }

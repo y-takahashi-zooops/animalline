@@ -35,6 +35,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Yaml\Yaml;
+use Psr\Log\LoggerInterface;
 
 class ConfigController extends AbstractController
 {
@@ -80,6 +81,11 @@ class ConfigController extends AbstractController
     protected $updateFile;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ConfigController constructor.
      */
     public function __construct(
@@ -88,7 +94,8 @@ class ConfigController extends AbstractController
         PluginRepository $pluginRepository,
         PluginApiService $pluginApiService,
         ComposerApiService $composerApiService,
-        SystemService $systemService
+        SystemService $systemService,
+        LoggerInterface $logger
     ) {
         $this->baseInfoRepository = $baseInfoRepository;
         $this->pluginRepository = $pluginRepository;
@@ -96,6 +103,7 @@ class ConfigController extends AbstractController
         $this->composerApiService = $composerApiService;
         $this->systemService = $systemService;
         $this->eccubeConfig = $eccubeConfig;
+        $this->logger = $logger;
 
         $this->projectDir = realpath($eccubeConfig->get('kernel.project_dir'));
         $this->dataDir = $this->projectDir.'/app/PluginData/eccube_update_plugin';
@@ -332,14 +340,14 @@ class ConfigController extends AbstractController
             'eccube:update406to401:dump-autoload',
         ];
 
-        log_info('Start update commands');
+        $this->logger->info('Start update commands');
         foreach ($commands as $command) {
             while (@ob_end_flush());
             echo $command.'...<br>';
             flush();
             ob_start();
             $commandline = $phpPath.' bin/console '.$command;
-            log_info('Execute '.$commandline);
+            $this->logger->info('Execute '.$commandline);
             $process = new Process($commandline);
             $process->setTimeout(600);
             $process->setWorkingDirectory($this->projectDir);
@@ -351,9 +359,9 @@ class ConfigController extends AbstractController
                 log_error($process->getOutput());
                 break;
             }
-            log_info('Done '.$commandline);
+            $this->logger->info('Done '.$commandline);
         }
-        log_info('End update commands');
+        $this->logger->info('End update commands');
 
         // ファイル上書き後、return Responseでシステムエラーとなるため、直接処理を記述
         echo "<html>

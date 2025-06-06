@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
 
 class Reception3DSAuthenticationController extends AbstractController
 {
@@ -53,6 +54,11 @@ class Reception3DSAuthenticationController extends AbstractController
      */
     protected $orderHelper;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
 
     public function __construct(
         ConfigRepository $configRepository,
@@ -61,7 +67,8 @@ class Reception3DSAuthenticationController extends AbstractController
         OrderRepository $orderRepository,
         CartService $cartService,
         MailService $mailService,
-        OrderHelper $orderHelper
+        OrderHelper $orderHelper,
+        LoggerInterface $logger
     ) {
         $this->configRepository = $configRepository;
         $this->gmoEpsilonRequestService = $gmoEpsilonRequestService;
@@ -71,6 +78,7 @@ class Reception3DSAuthenticationController extends AbstractController
         $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->orderHelper = $orderHelper;
+        $this->logger = $logger;
     }
 
     /**
@@ -104,7 +112,7 @@ class Reception3DSAuthenticationController extends AbstractController
         $preOrderId = $md;
         $Order = $this->getPurchasePendingOrder($preOrderId);
         if (!$Order) {
-            log_info('[注文処理] 決済処理中の受注が存在しません.', [$preOrderId]);
+            $this->logger->info('[注文処理] 決済処理中の受注が存在しません.', [$preOrderId]);
 
             return $this->redirectToRoute('shopping_error');
         }
@@ -141,7 +149,7 @@ class Reception3DSAuthenticationController extends AbstractController
 
         if ($result === $this->eccubeConfig['gmo_epsilon']['receive_parameters']['result']['ok']) {
             try {
-                log_info('[注文処理] PaymentMethodを取得します.', [$Order->getPayment()->getMethodClass()]);
+                $this->logger->info('[注文処理] PaymentMethodを取得します.', [$Order->getPayment()->getMethodClass()]);
                 $paymentMethod = $PaymentMethod = $this->container->get($Order->getPayment()->getMethodClass());
                 $paymentMethod->setOrder($Order);
 
@@ -150,14 +158,14 @@ class Reception3DSAuthenticationController extends AbstractController
                  *
                  * PaymentMethod::checkoutでは決済処理が行われ, 正常に処理出来た場合はPurchaseFlow::commitがコールされます.
                  */
-                log_info('[注文処理] PaymentMethod::checkoutを実行します.');
+                $this->logger->info('[注文処理] PaymentMethod::checkoutを実行します.');
                 if ($response = $this->executeCheckout($paymentMethod)) {
                     return $response;
                 }
 
                 $this->entityManager->flush();
 
-                log_info('[注文処理] 注文処理が完了しました.', [$Order->getId()]);
+                $this->logger->info('[注文処理] 注文処理が完了しました.', [$Order->getId()]);
             } catch (ShoppingException $e) {
                 log_error('[注文処理] 購入エラーが発生しました.', [$e->getMessage()]);
 
@@ -178,18 +186,18 @@ class Reception3DSAuthenticationController extends AbstractController
 
 
             // カート削除
-            log_info('[注文処理] カートをクリアします.', [$Order->getId()]);
+            $this->logger->info('[注文処理] カートをクリアします.', [$Order->getId()]);
             $this->cartService->clear();
 
             // 受注IDをセッションにセット
             $this->session->set(OrderHelper::SESSION_ORDER_ID, $Order->getId());
 
             // メール送信
-            log_info('[注文処理] 注文メールの送信を行います.', [$Order->getId()]);
+            $this->logger->info('[注文処理] 注文メールの送信を行います.', [$Order->getId()]);
             $this->mailService->sendOrderMail($Order);
             $this->entityManager->flush();
 
-            log_info('[注文処理] 注文処理が完了しました. 購入完了画面へ遷移します.', [$Order->getId()]);
+            $this->logger->info('[注文処理] 注文処理が完了しました. 購入完了画面へ遷移します.', [$Order->getId()]);
 
             return $this->redirectToRoute('shopping_complete');
         }
@@ -209,7 +217,7 @@ class Reception3DSAuthenticationController extends AbstractController
         // PaymentResultがresponseを保持している場合はresponseを返す
         if ($response instanceof Response && ($response->isRedirection() || $response->isSuccessful())) {
             $this->entityManager->flush();
-            log_info('[注文処理] PaymentMethod::checkoutが指定したレスポンスを表示します.');
+            $this->logger->info('[注文処理] PaymentMethod::checkoutが指定したレスポンスを表示します.');
 
             return $response;
         }
@@ -221,7 +229,7 @@ class Reception3DSAuthenticationController extends AbstractController
                 $this->addError($error);
             }
 
-            log_info('[注文処理] PaymentMethod::checkoutのエラーのため, 購入エラー画面へ遷移します.', [$PaymentResult->getErrors()]);
+            $this->logger->info('[注文処理] PaymentMethod::checkoutのエラーのため, 購入エラー画面へ遷移します.', [$PaymentResult->getErrors()]);
 
             return $this->redirectToRoute('shopping_error');
         }

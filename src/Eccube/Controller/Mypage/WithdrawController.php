@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class WithdrawController extends AbstractController
 {
@@ -59,6 +60,11 @@ class WithdrawController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * WithdrawController constructor.
      *
      * @param MailService $mailService
@@ -66,6 +72,7 @@ class WithdrawController extends AbstractController
      * @param TokenStorageInterface $tokenStorage
      * @param CartService $cartService
      * @param OrderHelper $orderHelper
+     * @param LoggerInterface $logger
      */
     public function __construct(
         MailService $mailService,
@@ -73,7 +80,8 @@ class WithdrawController extends AbstractController
         TokenStorageInterface $tokenStorage,
         CartService $cartService,
         OrderHelper $orderHelper,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->mailService = $mailService;
         $this->customerStatusRepository = $customerStatusRepository;
@@ -81,6 +89,7 @@ class WithdrawController extends AbstractController
         $this->cartService = $cartService;
         $this->orderHelper = $orderHelper;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -108,7 +117,7 @@ class WithdrawController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
-                    log_info('退会確認画面表示');
+                    $this->logger->info('退会確認画面表示');
 
                     return $this->render(
                         'Mypage/withdraw_confirm.twig',
@@ -118,7 +127,7 @@ class WithdrawController extends AbstractController
                     );
 
                 case 'complete':
-                    log_info('退会処理開始');
+                    $this->logger->info('退会処理開始');
 
                     /* @var $Customer \Eccube\Entity\Customer */
                     $Customer = $this->getUser();
@@ -131,7 +140,7 @@ class WithdrawController extends AbstractController
 
                     $this->entityManager->flush();
 
-                    log_info('退会処理完了');
+                    $this->logger->info('退会処理完了');
 
                     $event = new EventArgs(
                         [
@@ -151,7 +160,7 @@ class WithdrawController extends AbstractController
                     // ログアウト
                     $this->tokenStorage->setToken(null);
 
-                    log_info('ログアウト完了');
+                    $this->logger->info('ログアウト完了');
 
                     return $this->redirect($this->generateUrl('mypage_withdraw_complete'));
             }

@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Psr\Log\LoggerInterface;
 
 class CustomerEditController extends AbstractController
 {
@@ -38,12 +39,19 @@ class CustomerEditController extends AbstractController
      */
     protected $passwordHasher;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         CustomerRepository $customerRepository,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
+        LoggerInterface $logger
     ) {
         $this->customerRepository = $customerRepository;
         $this->passwordHasher = $passwordHasher;
+        $this->logger = $logger;
     }
 
     /**
@@ -92,7 +100,7 @@ class CustomerEditController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('会員登録開始', [$Customer->getId()]);
+            $this->logger->info('会員登録開始', [$Customer->getId()]);
 
             if ($Customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $Customer->setPassword($previous_password);
@@ -111,7 +119,7 @@ class CustomerEditController extends AbstractController
             $this->entityManager->persist($Customer);
             $this->entityManager->flush();
 
-            log_info('会員登録完了', [$Customer->getId()]);
+            $this->logger->info('会員登録完了', [$Customer->getId()]);
 
             $event = new EventArgs(
                 [

@@ -27,6 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class NonMemberShoppingController extends AbstractShoppingController
 {
@@ -53,25 +54,33 @@ class NonMemberShoppingController extends AbstractShoppingController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * NonMemberShoppingController constructor.
      *
      * @param ValidatorInterface $validator
      * @param PrefRepository $prefRepository
      * @param OrderHelper $orderHelper
      * @param CartService $cartService
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ValidatorInterface $validator,
         PrefRepository $prefRepository,
         OrderHelper $orderHelper,
         CartService $cartService,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->validator = $validator;
         $this->prefRepository = $prefRepository;
         $this->orderHelper = $orderHelper;
         $this->cartService = $cartService;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -108,7 +117,7 @@ class NonMemberShoppingController extends AbstractShoppingController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('非会員お客様情報登録開始');
+            $this->logger->info('非会員お客様情報登録開始');
 
             $data = $form->getData();
             $Customer = new Customer();
@@ -141,7 +150,7 @@ class NonMemberShoppingController extends AbstractShoppingController
                 return $event->getResponse();
             }
 
-            log_info('非会員お客様情報登録完了');
+            $this->logger->info('非会員お客様情報登録完了');
 
             return $this->redirectToRoute('shopping');
         }
@@ -163,27 +172,27 @@ class NonMemberShoppingController extends AbstractShoppingController
         }
         $this->isTokenValid();
         try {
-            log_info('非会員お客様情報変更処理開始');
+            $this->logger->info('非会員お客様情報変更処理開始');
             $data = $request->request->all();
             // 入力チェック
             $errors = $this->customerValidation($data);
             foreach ($errors as $error) {
                 if ($error->count() != 0) {
-                    log_info('非会員お客様情報変更入力チェックエラー');
+                    $this->logger->info('非会員お客様情報変更入力チェックエラー');
 
                     return $this->json(['status' => 'NG'], 400);
                 }
             }
             $pref = $this->prefRepository->findOneBy(['name' => $data['customer_pref']]);
             if (!$pref) {
-                log_info('非会員お客様情報変更入力チェックエラー');
+                $this->logger->info('非会員お客様情報変更入力チェックエラー');
 
                 return $this->json(['status' => 'NG'], 400);
             }
             $preOrderId = $this->cartService->getPreOrderId();
             $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
             if (!$Order) {
-                log_info('受注が存在しません');
+                $this->logger->info('受注が存在しません');
                 $this->addError('front.shopping.order_error');
 
                 return $this->redirectToRoute('shopping_error');
@@ -227,7 +236,7 @@ class NonMemberShoppingController extends AbstractShoppingController
                 $request
             );
             $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_CUSTOMER_INITIALIZE);
-            log_info('非会員お客様情報変更処理完了', [$Order->getId()]);
+            $this->logger->info('非会員お客様情報変更処理完了', [$Order->getId()]);
             $message = ['status' => 'OK', 'kana01' => $data['customer_kana01'], 'kana02' => $data['customer_kana02']];
 
             $response = $this->json($message);

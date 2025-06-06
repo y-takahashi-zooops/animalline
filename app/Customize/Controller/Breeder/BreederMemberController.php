@@ -37,6 +37,7 @@ use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 
 class BreederMemberController extends AbstractController
 {
@@ -93,6 +94,11 @@ class BreederMemberController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * BreederController constructor.
      *
      * @param CustomerRepository $customerRepository
@@ -108,6 +114,7 @@ class BreederMemberController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @param FormFactoryInterface $formFactory
      * @param EventDispatcherInterface $eventDispatcher;
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CustomerRepository  $customerRepository,
@@ -119,10 +126,11 @@ class BreederMemberController extends AbstractController
         BreederContactHeaderRepository $breederContactHeaderRepository,
         BenefitsStatusRepository $benefitsStatusRepository,
         BreederPetsRepository  $breederPetsRepository,
-	MailService $mailService,
-	EntityManagerInterface $entityManager,
-	FormFactoryInterface $formFactory,
-	EventDispatcherInterface $eventDispatcher,
+        MailService $mailService,
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        LoggerInterface $logger
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
@@ -133,10 +141,11 @@ class BreederMemberController extends AbstractController
         $this->breederContactHeaderRepository = $breederContactHeaderRepository;
         $this->benefitsStatusRepository = $benefitsStatusRepository;
         $this->breederPetsRepository = $breederPetsRepository;
-	$this->mailService = $mailService;
-	$this->entityManager = $entityManager;
-	$this->formFactory = $formFactory;
-	$this->eventDispatcher = $eventDispatcher;
+        $this->mailService = $mailService;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
     }
 
     /**
@@ -160,7 +169,7 @@ class BreederMemberController extends AbstractController
         //ログイン完了後に元のページに戻るためのセッション変数を設定
 
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            log_info('認証済のためログイン処理をスキップ');
+            $this->logger->info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute('breeder_mypage');
         }
@@ -473,7 +482,7 @@ class BreederMemberController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('会員編集開始');
+            $this->logger->info('会員編集開始');
 
             if ($Customer->getPassword() === $this->eccubeConfig['eccube_default_password']) {
                 $Customer->setPassword($previous_password);
@@ -488,7 +497,7 @@ class BreederMemberController extends AbstractController
             }
             $this->entityManager->flush();
 
-            log_info('会員編集完了');
+            $this->logger->info('会員編集完了');
 
             $event = new EventArgs(
                 [

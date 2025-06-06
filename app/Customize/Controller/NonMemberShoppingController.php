@@ -26,6 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Eccube\Controller\NonMemberShoppingController as BaseNonMemberShoppingController;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class NonMemberShoppingController extends BaseNonMemberShoppingController
 {
@@ -52,25 +53,33 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * NonMemberShoppingController constructor.
      *
      * @param ValidatorInterface $validator
      * @param PrefRepository $prefRepository
      * @param OrderHelper $orderHelper
      * @param CartService $cartService
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ValidatorInterface $validator,
         PrefRepository $prefRepository,
         OrderHelper $orderHelper,
         CartService $cartService,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->validator = $validator;
         $this->prefRepository = $prefRepository;
         $this->orderHelper = $orderHelper;
         $this->cartService = $cartService;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -118,7 +127,7 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('非会員お客様情報登録開始');
+            $this->logger->info('非会員お客様情報登録開始');
 
             $data = $form->getData();
             $Customer = new Customer();
@@ -151,7 +160,7 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
                 return $event->getResponse();
             }
 
-            log_info('非会員お客様情報登録完了');
+            $this->logger->info('非会員お客様情報登録完了');
 
             return $this->redirectToRoute('shopping');
         }

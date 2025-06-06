@@ -24,6 +24,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Psr\Log\LoggerInterface;
 
 class AnilineMypageController extends AbstractController
 {
@@ -58,6 +59,11 @@ class AnilineMypageController extends AbstractController
     protected $purchaseFlow;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * MypageController constructor.
      *
      * @param OrderRepository $orderRepository
@@ -65,19 +71,22 @@ class AnilineMypageController extends AbstractController
      * @param CartService $cartService
      * @param BaseInfoRepository $baseInfoRepository
      * @param PurchaseFlow $purchaseFlow
+     * @param LoggerInterface $logger
      */
     public function __construct(
         OrderRepository $orderRepository,
         CustomerFavoriteProductRepository $customerFavoriteProductRepository,
         CartService $cartService,
         BaseInfoRepository $baseInfoRepository,
-        PurchaseFlow $purchaseFlow
+        PurchaseFlow $purchaseFlow,
+        LoggerInterface $logger
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->cartService = $cartService;
         $this->purchaseFlow = $purchaseFlow;
+        $this->logger = $logger;
     }
 
     /**
@@ -102,7 +111,7 @@ class AnilineMypageController extends AbstractController
         $prefix = $request->get('type');
         
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            log_info('認証済のためログイン処理をスキップ');
+            $this->logger->info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute('homepage');
         }
@@ -146,7 +155,7 @@ class AnilineMypageController extends AbstractController
     public function market(Request $request, AuthenticationUtils $utils)
     {   
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            log_info('認証済のためログイン処理をスキップ');
+            $this->logger->info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute('homepage');
         }

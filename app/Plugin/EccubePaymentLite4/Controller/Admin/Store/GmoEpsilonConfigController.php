@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
 
 class GmoEpsilonConfigController extends AbstractController
 {
@@ -50,13 +51,19 @@ class GmoEpsilonConfigController extends AbstractController
      */
     private $gmoEpsilonUrlService;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         EccubeConfig $eccubeConfig,
         ConfigRepository $configRepository,
         PaymentRepository $paymentRepository,
         GmoEpsilonRequestService $gmoEpsilonRequestService,
         SaleTypeRepository $saleTypeRepository,
-        GmoEpsilonUrlService $gmoEpsilonUrlService
+        GmoEpsilonUrlService $gmoEpsilonUrlService,
+        LoggerInterface $logger
     ) {
         $this->eccubeConfig = $eccubeConfig;
         $this->configRepository = $configRepository;
@@ -64,6 +71,7 @@ class GmoEpsilonConfigController extends AbstractController
         $this->gmoEpsilonRequestService = $gmoEpsilonRequestService;
         $this->saleTypeRepository = $saleTypeRepository;
         $this->gmoEpsilonUrlService = $gmoEpsilonUrlService;
+        $this->logger = $logger;
     }
 
     /**
@@ -231,7 +239,7 @@ class GmoEpsilonConfigController extends AbstractController
                 }
                 $this->addSuccess('gmo_epsilon.admin.save.update_success', 'admin');
             } catch (\Exception $exception) {
-                log_info('Update Payment Data Error: '.$exception->getMessage());
+                $this->logger->info('Update Payment Data Error: '.$exception->getMessage());
                 $this->addError('gmo_epsilon.admin.save.failed', 'admin');
             }
         } else {

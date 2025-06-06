@@ -21,6 +21,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Twig\Environment;
+use Psr\Log\LoggerInterface;
 
 class BreederMailService
 {
@@ -60,6 +61,11 @@ class BreederMailService
     protected $twig;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * MailService constructor.
      *
      * @param MailerInterface $mailer
@@ -69,6 +75,7 @@ class BreederMailService
      * @param EventDispatcherInterface $eventDispatcher
      * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
+     * @param LoggerInterface $logger
      */
     public function __construct(
         MailerInterface $mailer,
@@ -77,7 +84,8 @@ class BreederMailService
         BaseInfoRepository $baseInfoRepository,
         EventDispatcherInterface $eventDispatcher,
         Environment $twig,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        LoggerInterface $logger
     ) {
         $this->mailer = $mailer;
         $this->mailTemplateRepository = $mailTemplateRepository;
@@ -86,6 +94,7 @@ class BreederMailService
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->twig = $twig;
+        $this->logger = $logger;
     }
 
     /**
@@ -96,7 +105,7 @@ class BreederMailService
      */
     public function sendCustomerConfirmMail(\Customize\Entity\Breeders $Breeders, $activateUrl)
     {
-        log_info('仮会員登録メール送信開始');
+        $this->logger->info('仮会員登録メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_confirm_mail_template_id']);
 
@@ -145,7 +154,7 @@ class BreederMailService
 
         try {
             $this->mailer->send($email);
-            log_info('仮会員登録メール送信完了', ['email' => $Breeders->getEmail()]);
+            $this->logger->info('仮会員登録メール送信完了', ['email' => $Breeders->getEmail()]);
             return 1;
         } catch (\Throwable $e) {
             log_error('メール送信エラー', ['exception' => $e]);
@@ -160,7 +169,7 @@ class BreederMailService
      */
     public function sendCustomerCompleteMail(\Customize\Entity\Breeders $Breeders)
     {
-        log_info('会員登録完了メール送信開始');
+        $this->logger->info('会員登録完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_complete_mail_template_id']);
 
@@ -206,7 +215,7 @@ class BreederMailService
 
         $this->mailer->send($email);
 
-        log_info('会員登録完了メール送信完了');
+        $this->logger->info('会員登録完了メール送信完了');
 
         return 1;
     }
@@ -219,7 +228,7 @@ class BreederMailService
      */
     public function sendCustomerWithdrawMail(Breeders $Breeders, string $email)
     {
-        log_info('退会手続き完了メール送信開始');
+        $this->logger->info('退会手続き完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_customer_withdraw_mail_template_id']);
 
@@ -267,7 +276,7 @@ class BreederMailService
          // Send email via Symfony Mailer
         $this->mailer->send($emailMessage);
 
-        log_info('退会手続き完了メール送信完了');
+        $this->logger->info('退会手続き完了メール送信完了');
 
         return 1;
     }
@@ -279,7 +288,7 @@ class BreederMailService
      */
     public function sendContactMail($formData)
     {
-        log_info('お問い合わせ受付メール送信開始');
+        $this->logger->info('お問い合わせ受付メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_contact_mail_template_id']);
 
@@ -327,7 +336,7 @@ class BreederMailService
         // メール送信
         $count = $this->mailer->send($emailMessage);
 
-        log_info('お問い合わせ受付メール送信完了', ['count' => $count]);
+        $this->logger->info('お問い合わせ受付メール送信完了', ['count' => $count]);
 
         return $count;
     }
@@ -341,7 +350,7 @@ class BreederMailService
      */
     public function sendOrderMail(\Eccube\Entity\Order $Order)
     {
-        log_info('受注メール送信開始');
+        $this->logger->info('受注メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_order_mail_template_id']);
 
@@ -403,7 +412,7 @@ class BreederMailService
 
         $this->mailHistoryRepository->save($MailHistory);
 
-        log_info('受注メール送信完了', ['count' => $count]);
+        $this->logger->info('受注メール送信完了', ['count' => $count]);
 
         return $emailMessage;
     }
@@ -416,7 +425,7 @@ class BreederMailService
      */
     public function sendAdminCustomerConfirmMail(\Customize\Entity\Breeders $Breeders, $activateUrl)
     {
-        log_info('仮会員登録再送メール送信開始');
+        $this->logger->info('仮会員登録再送メール送信開始');
 
         /* @var $MailTemplate \Eccube\Entity\MailTemplate */
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_entry_confirm_mail_template_id']);
@@ -467,7 +476,7 @@ class BreederMailService
         // メール送信
         $count = $this->mailer->send($emailMessage);
 
-        log_info('仮会員登録再送メール送信完了', ['count' => $count]);
+        $this->logger->info('仮会員登録再送メール送信完了', ['count' => $count]);
 
         return $count;
     }
@@ -486,7 +495,7 @@ class BreederMailService
      */
     public function sendAdminOrderMail(Order $Order, $formData)
     {
-        log_info('受注管理通知メール送信開始');
+        $this->logger->info('受注管理通知メール送信開始');
 
         $emailMessage = (new Email())
             ->subject('['.$this->BaseInfo->getShopName().'] '.$formData['mail_subject'])
@@ -511,7 +520,7 @@ class BreederMailService
         // メール送信
         $count = $this->mailer->send($emailMessage);
 
-        log_info('受注管理通知メール送信完了', ['count' => $count]);
+        $this->logger->info('受注管理通知メール送信完了', ['count' => $count]);
 
         return $emailMessage;
     }
@@ -524,7 +533,7 @@ class BreederMailService
      */
     public function sendPasswordResetNotificationMail(\Customize\Entity\Breeders $Breeders, $reset_url)
     {
-        log_info('パスワード再発行メール送信開始');
+        $this->logger->info('パスワード再発行メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_forgot_mail_template_id']);
         $body = $this->twig->render($MailTemplate->getFileName(), [
@@ -574,7 +583,7 @@ class BreederMailService
         // メール送信
         $count = $this->mailer->send($emailMessage);
 
-        log_info('パスワード再発行メール送信完了', ['count' => $count]);
+        $this->logger->info('パスワード再発行メール送信完了', ['count' => $count]);
 
         return $count;
     }
@@ -587,7 +596,7 @@ class BreederMailService
      */
     public function sendPasswordResetCompleteMail(\Customize\Entity\Breeders $Breeders, $password)
     {
-        log_info('パスワード変更完了メール送信開始');
+        $this->logger->info('パスワード変更完了メール送信開始');
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_reset_complete_mail_template_id']);
 
@@ -637,7 +646,7 @@ class BreederMailService
         // メール送信
         $count = $this->mailer->send($emailMessage);
 
-        log_info('パスワード変更完了メール送信完了', ['count' => $count]);
+        $this->logger->info('パスワード変更完了メール送信完了', ['count' => $count]);
 
         return $count;
     }
@@ -652,7 +661,7 @@ class BreederMailService
      */
     public function sendShippingNotifyMail(Shipping $Shipping)
     {
-        log_info('出荷通知メール送信処理開始', ['id' => $Shipping->getId()]);
+        $this->logger->info('出荷通知メール送信処理開始', ['id' => $Shipping->getId()]);
 
         $MailTemplate = $this->mailTemplateRepository->find($this->eccubeConfig['eccube_shipping_notify_mail_template_id']);
 
@@ -701,7 +710,7 @@ class BreederMailService
 
         $this->mailHistoryRepository->save($MailHistory);
 
-        log_info('出荷通知メール送信処理完了', ['id' => $Shipping->getId()]);
+        $this->logger->info('出荷通知メール送信処理完了', ['id' => $Shipping->getId()]);
     }
 
     /**
@@ -770,7 +779,7 @@ class BreederMailService
      */
     public function sendLicenseExpire($Customer)
     {
-        log_info('受注メール送信開始');
+        $this->logger->info('受注メール送信開始');
 
         // メール内容作成
         $body = $this->twig->render('Mail/Breeder/breeder_license_expire.twig', [

@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Psr\Log\LoggerInterface;
 
 class ForgotController extends AbstractController
 {
@@ -52,23 +53,31 @@ class ForgotController extends AbstractController
     protected $passwordHasher;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ForgotController constructor.
      *
      * @param ValidatorInterface $validator
      * @param MailService $mailService
      * @param CustomerRepository $customerRepository
      * @param UserPasswordHasherInterface $passwordHasher
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ValidatorInterface $validator,
         MailService $mailService,
         CustomerRepository $customerRepository,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
+        LoggerInterface $logger
     ) {
         $this->validator = $validator;
         $this->mailService = $mailService;
         $this->customerRepository = $customerRepository;
         $this->passwordHasher = $passwordHasher;
+        $this->logger = $logger;
     }
 
     /**
@@ -142,7 +151,7 @@ class ForgotController extends AbstractController
                 $this->mailService->sendPasswordResetNotificationMail($Customer, $reset_url);
 
                 // ログ出力
-                log_info('send reset password mail to:'."{$Customer->getId()} {$Customer->getEmail()} {$request->getClientIp()}");
+                $this->logger->info('send reset password mail to:'."{$Customer->getId()} {$Customer->getEmail()} {$request->getClientIp()}");
             } else {
                 log_warning(
                     'Un active customer try send reset password email: ',

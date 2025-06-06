@@ -34,6 +34,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Eccube\Service\CartService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class EntryController extends AbstractController
 {
@@ -80,6 +81,11 @@ class EntryController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * EntryController constructor.
      *
      * @param CartService $cartService
@@ -91,6 +97,7 @@ class EntryController extends AbstractController
      * @param ValidatorInterface $validatorInterface
      * @param TokenStorageInterface $tokenStorage
      * @param FormFactoryInterface $formFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CartService $cartService,
@@ -101,7 +108,8 @@ class EntryController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validatorInterface,
         TokenStorageInterface $tokenStorage,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
@@ -112,6 +120,7 @@ class EntryController extends AbstractController
         $this->tokenStorage = $tokenStorage;
         $this->cartService = $cartService;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -123,7 +132,7 @@ class EntryController extends AbstractController
     public function index(Request $request)
     {
         if ($this->isGranted('ROLE_USER')) {
-            log_info('認証済のためログイン処理をスキップ');
+            $this->logger->info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute('mypage');
         }
@@ -152,8 +161,8 @@ class EntryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
-                    log_info('会員登録確認開始');
-                    log_info('会員登録確認完了');
+                    $this->logger->info('会員登録確認開始');
+                    $this->logger->info('会員登録確認完了');
 
                     return $this->render(
                         'Entry/confirm.twig',
@@ -163,7 +172,7 @@ class EntryController extends AbstractController
                     );
 
                 case 'complete':
-                    log_info('会員登録開始');
+                    $this->logger->info('会員登録開始');
 
                     $password = $this->passwordHasher->hashPassword($Customer, $Customer->getPassword());
                     $secretKey = $this->customerRepository->getUniqueSecretKey();
@@ -176,7 +185,7 @@ class EntryController extends AbstractController
                     $this->entityManager->persist($Customer);
                     $this->entityManager->flush();
 
-                    log_info('会員登録完了');
+                    $this->logger->info('会員登録完了');
 
                     $event = new EventArgs(
                         [
@@ -201,7 +210,7 @@ class EntryController extends AbstractController
                             return $event->getResponse();
                         }
 
-                        log_info('仮会員登録完了画面へリダイレクト');
+                        $this->logger->info('仮会員登録完了画面へリダイレクト');
 
                         return $this->redirectToRoute('entry_complete');
 
@@ -283,7 +292,7 @@ class EntryController extends AbstractController
      */
     private function entryActivate(Request $request, $secret_key)
     {
-        log_info('本会員登録開始');
+        $this->logger->info('本会員登録開始');
         $Customer = $this->customerRepository->getProvisionalCustomerBySecretKey($secret_key);
         if (is_null($Customer)) {
             throw new HttpException\NotFoundHttpException();
@@ -294,7 +303,7 @@ class EntryController extends AbstractController
         $this->entityManager->persist($Customer);
         $this->entityManager->flush();
 
-        log_info('本会員登録完了');
+        $this->logger->info('本会員登録完了');
 
         $event = new EventArgs(
             [
@@ -323,7 +332,7 @@ class EntryController extends AbstractController
             $this->cartService->save();
         }
 
-        log_info('ログイン済に変更', [$this->getUser()->getId()]);
+        $this->logger->info('ログイン済に変更', [$this->getUser()->getId()]);
 
         return $qtyInCart;
 
