@@ -54,6 +54,8 @@ use Customize\Repository\BreedersRepository;
 use Customize\Repository\ConservationsRepository;
 use Symfony\Component\Form\FormFactoryInterface;
 
+use Psr\Log\LoggerInterface;
+
 class OrderController extends AbstractController
 {
     /**
@@ -140,6 +142,11 @@ class OrderController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * OrderController constructor.
      *
      * @param PurchaseFlow $orderPurchaseFlow
@@ -157,6 +164,7 @@ class OrderController extends AbstractController
      * @param OrderStateMachine $orderStateMachine ;
      * @param BreedersRepository $breedersRepository ;
      * @param ConservationsRepository $conservationsRepository ;
+     * @param LoggerInterface $logger
      */
     public function __construct(
         PurchaseFlow $orderPurchaseFlow,
@@ -175,7 +183,8 @@ class OrderController extends AbstractController
         MailService $mailService,
         BreedersRepository $breedersRepository,
         ConservationsRepository $conservationsRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->csvExportService = $csvExportService;
@@ -194,6 +203,7 @@ class OrderController extends AbstractController
         $this->breedersRepository = $breedersRepository;
         $this->conservationsRepository = $conservationsRepository;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -354,7 +364,7 @@ class OrderController extends AbstractController
                 ->find($order_id);
             if ($Order) {
                 $this->entityManager->remove($Order);
-                log_info('受注削除', [$Order->getId()]);
+                $this->logger->info('受注削除', [$Order->getId()]);
             }
         }
 
@@ -378,7 +388,7 @@ class OrderController extends AbstractController
     {
         $filename = 'order_'.(new \DateTime())->format('YmdHis').'.csv';
         $response = $this->exportCsv($request, CsvType::CSV_TYPE_ORDER, $filename);
-        log_info('受注CSV出力ファイル名', [$filename]);
+        $this->logger->info('受注CSV出力ファイル名', [$filename]);
 
         return $response;
     }
@@ -396,7 +406,7 @@ class OrderController extends AbstractController
     {
         $filename = 'shipping_'.(new \DateTime())->format('YmdHis').'.csv';
         $response = $this->exportCsv($request, CsvType::CSV_TYPE_SHIPPING, $filename);
-        log_info('配送CSV出力ファイル名', [$filename]);
+        $this->logger->info('配送CSV出力ファイル名', [$filename]);
 
         return $response;
     }
@@ -526,7 +536,7 @@ class OrderController extends AbstractController
         $result = [];
         try {
             if ($Order->getOrderStatus()->getId() == $OrderStatus->getId()) {
-                log_info('対応状況一括変更スキップ');
+                $this->logger->info('対応状況一括変更スキップ');
                 $result = ['message' => trans('admin.order.skip_change_status', ['%name%' => $Shipping->getId()])];
             } else {
                 if ($this->orderStateMachine->can($Order, $OrderStatus)) {
@@ -584,7 +594,7 @@ class OrderController extends AbstractController
                     ])];
                 }
 
-                log_info('対応状況一括変更処理完了', [$Order->getId()]);
+                $this->logger->info('対応状況一括変更処理完了', [$Order->getId()]);
             }
         } catch (\Exception $e) {
             log_error('予期しないエラーです', [$e->getMessage()]);
@@ -624,7 +634,7 @@ class OrderController extends AbstractController
         );
 
         if ($errors->count() != 0) {
-            log_info('送り状番号入力チェックエラー');
+            $this->logger->info('送り状番号入力チェックエラー');
             $messages = [];
             /** @var \Symfony\Component\Validator\ConstraintViolationInterface $error */
             foreach ($errors as $error) {
@@ -637,7 +647,7 @@ class OrderController extends AbstractController
         try {
             $shipping->setTrackingNumber($trackingNumber);
             $this->entityManager->flush($shipping);
-            log_info('送り状番号変更処理完了', [$shipping->getId()]);
+            $this->logger->info('送り状番号変更処理完了', [$shipping->getId()]);
             $message = ['status' => 'OK', 'shipping_id' => $shipping->getId(), 'tracking_number' => $trackingNumber];
 
             return $this->json($message);
@@ -663,7 +673,7 @@ class OrderController extends AbstractController
 
         if (count($ids) == 0) {
             $this->addError('admin.order.delivery_note_parameter_error', 'admin');
-            log_info('The Order cannot found!');
+            $this->logger->info('The Order cannot found!');
 
             return $this->redirectToRoute('admin_order');
         }
@@ -717,7 +727,7 @@ class OrderController extends AbstractController
 
         // Validation
         if (!$form->isValid()) {
-            log_info('The parameter is invalid!');
+            $this->logger->info('The parameter is invalid!');
 
             return $this->render('@admin/Order/order_pdf.twig', [
                 'form' => $form->createView(),
@@ -732,7 +742,7 @@ class OrderController extends AbstractController
         // 異常終了した場合の処理
         if (!$status) {
             $this->addError('admin.order.export.pdf.download.failure', 'admin');
-            log_info('Unable to create pdf files! Process have problems!');
+            $this->logger->info('Unable to create pdf files! Process have problems!');
 
             return $this->render('@admin/Order/order_pdf.twig', [
                 'form' => $form->createView(),
@@ -755,7 +765,7 @@ class OrderController extends AbstractController
             $response->headers->set('Content-Disposition', 'inline; filename="'.$orderPdfService->getPdfFileName().'"');
         }
 
-        log_info('OrderPdf download success!', ['Order ID' => implode(',', $request->get('ids', []))]);
+        $this->logger->info('OrderPdf download success!', ['Order ID' => implode(',', $request->get('ids', []))]);
 
         $isDefault = isset($arrData['default']) ? $arrData['default'] : false;
         if ($isDefault) {

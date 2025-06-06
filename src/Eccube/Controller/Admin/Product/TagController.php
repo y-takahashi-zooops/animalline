@@ -24,6 +24,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
 
 class TagController extends AbstractController
 {
@@ -32,9 +33,15 @@ class TagController extends AbstractController
      */
     protected $tagRepository;
 
-    public function __construct(TagRepository $tagRepository)
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(TagRepository $tagRepository, LoggerInterface $logger)
     {
         $this->tagRepository = $tagRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -130,7 +137,7 @@ class TagController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('タグ削除開始', [$Tag->getId()]);
+        $this->logger->info('タグ削除開始', [$Tag->getId()]);
 
         try {
             $this->tagRepository->delete($Tag);
@@ -144,9 +151,9 @@ class TagController extends AbstractController
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 
-            log_info('タグ削除完了', [$Tag->getId()]);
+            $this->logger->info('タグ削除完了', [$Tag->getId()]);
         } catch (\Exception $e) {
-            log_info('タグ削除エラー', [$Tag->getId(), $e]);
+            $this->logger->info('タグ削除エラー', [$Tag->getId(), $e]);
 
             $message = trans('admin.common.delete_error.foreign_key', ['%name%' => $Tag->getName()]);
             $this->addError($message, 'admin');

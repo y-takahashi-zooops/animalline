@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class MemberController extends AbstractController
 {
@@ -47,22 +48,30 @@ class MemberController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * MemberController constructor.
      *
      * @param UserPasswordHasherInterface $passwordHasher
      * @param MemberRepository $memberRepository
      * @param TokenStorageInterface $tokenStorage
+     * @param LoggerInterface $logger
      */
     public function __construct(
         UserPasswordHasherInterface $passwordHasher,
         MemberRepository $memberRepository,
         TokenStorageInterface $tokenStorage,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->passwordHasher = $passwordHasher;
         $this->memberRepository = $memberRepository;
         $this->tokenStorage = $tokenStorage;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -250,7 +259,7 @@ class MemberController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('メンバー削除開始', [$Member->getId()]);
+        $this->logger->info('メンバー削除開始', [$Member->getId()]);
 
         try {
             $this->memberRepository->delete($Member);
@@ -265,14 +274,14 @@ class MemberController extends AbstractController
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 
-            log_info('メンバー削除完了', [$Member->getId()]);
+            $this->logger->info('メンバー削除完了', [$Member->getId()]);
         } catch (ForeignKeyConstraintViolationException $e) {
-            log_info('メンバー削除エラー', [$Member->getId()]);
+            $this->logger->info('メンバー削除エラー', [$Member->getId()]);
 
             $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $Member->getName()]);
             $this->addError($message, 'admin');
         } catch (\Exception $e) {
-            log_info('メンバー削除エラー', [$Member->getId(), $e]);
+            $this->logger->info('メンバー削除エラー', [$Member->getId(), $e]);
 
             $message = trans('admin.common.delete_error');
             $this->addError($message, 'admin');

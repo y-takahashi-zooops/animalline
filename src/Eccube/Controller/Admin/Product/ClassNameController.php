@@ -26,6 +26,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class ClassNameController extends AbstractController
 {
@@ -37,14 +38,21 @@ class ClassNameController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ClassNameController constructor.
      *
      * @param ClassNameRepository $classNameRepository
+     * @param LoggerInterface $logger
      */
-    public function __construct(ClassNameRepository $classNameRepository, FormFactoryInterface $formFactory)
+    public function __construct(ClassNameRepository $classNameRepository, FormFactoryInterface $formFactory, LoggerInterface $logger)
     {
         $this->classNameRepository = $classNameRepository;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -91,11 +99,11 @@ class ClassNameController extends AbstractController
         if ($request->getMethod() === 'POST') {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                log_info('商品規格登録開始', [$id]);
+                $this->logger->info('商品規格登録開始', [$id]);
 
                 $this->classNameRepository->save($TargetClassName);
 
-                log_info('商品規格登録完了', [$id]);
+                $this->logger->info('商品規格登録完了', [$id]);
 
                 $event = new EventArgs(
                     [
@@ -145,7 +153,7 @@ class ClassNameController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('商品規格削除開始', [$ClassName->getId()]);
+        $this->logger->info('商品規格削除開始', [$ClassName->getId()]);
 
         try {
             $this->classNameRepository->delete($ClassName);
@@ -155,7 +163,7 @@ class ClassNameController extends AbstractController
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 
-            log_info('商品規格削除完了', [$ClassName->getId()]);
+            $this->logger->info('商品規格削除完了', [$ClassName->getId()]);
         } catch (\Exception $e) {
             $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $ClassName->getName()]);
             $this->addError($message, 'admin');

@@ -39,6 +39,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class ShoppingController extends AbstractShoppingController
 {
@@ -62,6 +63,11 @@ class ShoppingController extends AbstractShoppingController
      */
     protected $orderRepository;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     protected FormFactoryInterface $formFactory;
 
     public function __construct(
@@ -69,13 +75,15 @@ class ShoppingController extends AbstractShoppingController
         MailService $mailService,
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->orderRepository = $orderRepository;
         $this->orderHelper = $orderHelper;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -96,7 +104,7 @@ class ShoppingController extends AbstractShoppingController
     {
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
-            log_info('[注文手続] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
+            $this->logger->info('[注文手続] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
 
             return $this->redirectToRoute('shopping_login');
         }
@@ -104,29 +112,29 @@ class ShoppingController extends AbstractShoppingController
         // カートチェック.
         $Cart = $this->cartService->getCart();
         if (!($Cart && $this->orderHelper->verifyCart($Cart))) {
-            log_info('[注文手続] カートが購入フローへ遷移できない状態のため, カート画面に遷移します.');
+            $this->logger->info('[注文手続] カートが購入フローへ遷移できない状態のため, カート画面に遷移します.');
 
             return $this->redirectToRoute('cart');
         }
 
         // 受注の初期化.
-        log_info('[注文手続] 受注の初期化処理を開始します.');
+        $this->logger->info('[注文手続] 受注の初期化処理を開始します.');
         $Customer = $this->getUser() ? $this->getUser() : $this->orderHelper->getNonMember();
         $Order = $this->orderHelper->initializeOrder($Cart, $Customer);
 
         // 集計処理.
-        log_info('[注文手続] 集計処理を開始します.', [$Order->getId()]);
+        $this->logger->info('[注文手続] 集計処理を開始します.', [$Order->getId()]);
         $flowResult = $this->executePurchaseFlow($Order, false);
         $this->entityManager->flush();
 
         if ($flowResult->hasError()) {
-            log_info('[注文手続] Errorが発生したため購入エラー画面へ遷移します.', [$flowResult->getErrors()]);
+            $this->logger->info('[注文手続] Errorが発生したため購入エラー画面へ遷移します.', [$flowResult->getErrors()]);
 
             return $this->redirectToRoute('shopping_error');
         }
 
         if ($flowResult->hasWarning()) {
-            log_info('[注文手続] Warningが発生しました.', [$flowResult->getWarning()]);
+            $this->logger->info('[注文手続] Warningが発生しました.', [$flowResult->getWarning()]);
 
             // 受注明細と同期をとるため, CartPurchaseFlowを実行する
             $cartPurchaseFlow->validate($Cart, new PurchaseContext());
@@ -170,7 +178,7 @@ class ShoppingController extends AbstractShoppingController
     {
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
-            log_info('[リダイレクト] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
+            $this->logger->info('[リダイレクト] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
 
             return $this->redirectToRoute('shopping_login');
         }
@@ -179,7 +187,7 @@ class ShoppingController extends AbstractShoppingController
         $preOrderId = $this->cartService->getPreOrderId();
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
         if (!$Order) {
-            log_info('[リダイレクト] 購入処理中の受注が存在しません.');
+            $this->logger->info('[リダイレクト] 購入処理中の受注が存在しません.');
 
             return $this->redirectToRoute('shopping_error');
         }
@@ -188,7 +196,7 @@ class ShoppingController extends AbstractShoppingController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('[リダイレクト] 集計処理を開始します.', [$Order->getId()]);
+            $this->logger->info('[リダイレクト] 集計処理を開始します.', [$Order->getId()]);
             $response = $this->executePurchaseFlow($Order);
             $this->entityManager->flush();
 
@@ -198,7 +206,7 @@ class ShoppingController extends AbstractShoppingController
 
             $redirectTo = $form['redirect_to']->getData();
             if (empty($redirectTo)) {
-                log_info('[リダイレクト] リダイレクト先未指定のため注文手続き画面へ遷移します.');
+                $this->logger->info('[リダイレクト] リダイレクト先未指定のため注文手続き画面へ遷移します.');
 
                 return $this->redirectToRoute('shopping');
             }
@@ -213,18 +221,18 @@ class ShoppingController extends AbstractShoppingController
                     return 0 !== \strpos($key, '_');
                 }, ARRAY_FILTER_USE_KEY);
 
-                log_info('[リダイレクト] リダイレクトを実行します.', [$result['_route'], $params]);
+                $this->logger->info('[リダイレクト] リダイレクトを実行します.', [$result['_route'], $params]);
 
                 // pathからurlを再構築してリダイレクト.
                 return $this->redirectToRoute($result['_route'], $params);
             } catch (\Exception $e) {
-                log_info('[リダイレクト] URLの形式が不正です', [$redirectTo, $e->getMessage()]);
+                $this->logger->info('[リダイレクト] URLの形式が不正です', [$redirectTo, $e->getMessage()]);
 
                 return $this->redirectToRoute('shopping_error');
             }
         }
 
-        log_info('[リダイレクト] フォームエラーのため, 注文手続き画面を表示します.', [$Order->getId()]);
+        $this->logger->info('[リダイレクト] フォームエラーのため, 注文手続き画面を表示します.', [$Order->getId()]);
 
         return [
             'form' => $form->createView(),
@@ -246,7 +254,7 @@ class ShoppingController extends AbstractShoppingController
     {
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
-            log_info('[注文確認] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
+            $this->logger->info('[注文確認] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
 
             return $this->redirectToRoute('shopping_login');
         }
@@ -255,7 +263,7 @@ class ShoppingController extends AbstractShoppingController
         $preOrderId = $this->cartService->getPreOrderId();
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
         if (!$Order) {
-            log_info('[注文確認] 購入処理中の受注が存在しません.', [$preOrderId]);
+            $this->logger->info('[注文確認] 購入処理中の受注が存在しません.', [$preOrderId]);
 
             return $this->redirectToRoute('shopping_error');
         }
@@ -264,7 +272,7 @@ class ShoppingController extends AbstractShoppingController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('[注文確認] 集計処理を開始します.', [$Order->getId()]);
+            $this->logger->info('[注文確認] 集計処理を開始します.', [$Order->getId()]);
             $response = $this->executePurchaseFlow($Order);
             $this->entityManager->flush();
 
@@ -272,7 +280,7 @@ class ShoppingController extends AbstractShoppingController
                 return $response;
             }
 
-            log_info('[注文確認] PaymentMethod::verifyを実行します.', [$Order->getPayment()->getMethodClass()]);
+            $this->logger->info('[注文確認] PaymentMethod::verifyを実行します.', [$Order->getPayment()->getMethodClass()]);
             $paymentMethod = $this->createPaymentMethod($Order, $form);
             $PaymentResult = $paymentMethod->verify();
 
@@ -283,7 +291,7 @@ class ShoppingController extends AbstractShoppingController
                         $this->addError($error);
                     }
 
-                    log_info('[注文確認] PaymentMethod::verifyのエラーのため, 注文手続き画面へ遷移します.', [$PaymentResult->getErrors()]);
+                    $this->logger->info('[注文確認] PaymentMethod::verifyのエラーのため, 注文手続き画面へ遷移します.', [$PaymentResult->getErrors()]);
 
                     return $this->redirectToRoute('shopping');
                 }
@@ -292,7 +300,7 @@ class ShoppingController extends AbstractShoppingController
                 if ($response instanceof Response && ($response->isRedirection() || $response->isSuccessful())) {
                     $this->entityManager->flush();
 
-                    log_info('[注文確認] PaymentMethod::verifyが指定したレスポンスを表示します.');
+                    $this->logger->info('[注文確認] PaymentMethod::verifyが指定したレスポンスを表示します.');
 
                     return $response;
                 }
@@ -300,7 +308,7 @@ class ShoppingController extends AbstractShoppingController
 
             $this->entityManager->flush();
 
-            log_info('[注文確認] 注文確認画面を表示します.');
+            $this->logger->info('[注文確認] 注文確認画面を表示します.');
 
             return [
                 'form' => $form->createView(),
@@ -308,7 +316,7 @@ class ShoppingController extends AbstractShoppingController
             ];
         }
 
-        log_info('[注文確認] フォームエラーのため, 注文手続画面を表示します.', [$Order->getId()]);
+        $this->logger->info('[注文確認] フォームエラーのため, 注文手続画面を表示します.', [$Order->getId()]);
 
         // FIXME @Templateの差し替え.
         $request->attributes->set('_template', new Template(['template' => 'Shopping/index.twig']));
@@ -331,7 +339,7 @@ class ShoppingController extends AbstractShoppingController
     {
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
-            log_info('[注文処理] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
+            $this->logger->info('[注文処理] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
 
             return $this->redirectToRoute('shopping_login');
         }
@@ -340,7 +348,7 @@ class ShoppingController extends AbstractShoppingController
         $preOrderId = $this->cartService->getPreOrderId();
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
         if (!$Order) {
-            log_info('[注文処理] 購入処理中の受注が存在しません.', [$preOrderId]);
+            $this->logger->info('[注文処理] 購入処理中の受注が存在しません.', [$preOrderId]);
 
             return $this->redirectToRoute('shopping_error');
         }
@@ -353,13 +361,13 @@ class ShoppingController extends AbstractShoppingController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('[注文処理] 注文処理を開始します.', [$Order->getId()]);
+            $this->logger->info('[注文処理] 注文処理を開始します.', [$Order->getId()]);
 
             try {
                 /*
                  * 集計処理
                  */
-                log_info('[注文処理] 集計処理を開始します.', [$Order->getId()]);
+                $this->logger->info('[注文処理] 集計処理を開始します.', [$Order->getId()]);
                 $response = $this->executePurchaseFlow($Order);
                 $this->entityManager->flush();
 
@@ -367,13 +375,13 @@ class ShoppingController extends AbstractShoppingController
                     return $response;
                 }
 
-                log_info('[注文処理] PaymentMethodを取得します.', [$Order->getPayment()->getMethodClass()]);
+                $this->logger->info('[注文処理] PaymentMethodを取得します.', [$Order->getPayment()->getMethodClass()]);
                 $paymentMethod = $this->createPaymentMethod($Order, $form);
 
                 /*
                  * 決済実行(前処理)
                  */
-                log_info('[注文処理] PaymentMethod::applyを実行します.');
+                $this->logger->info('[注文処理] PaymentMethod::applyを実行します.');
                 if ($response = $this->executeApply($paymentMethod)) {
                     return $response;
                 }
@@ -383,14 +391,14 @@ class ShoppingController extends AbstractShoppingController
                  *
                  * PaymentMethod::checkoutでは決済処理が行われ, 正常に処理出来た場合はPurchaseFlow::commitがコールされます.
                  */
-                log_info('[注文処理] PaymentMethod::checkoutを実行します.');
+                $this->logger->info('[注文処理] PaymentMethod::checkoutを実行します.');
                 if ($response = $this->executeCheckout($paymentMethod)) {
                     return $response;
                 }
 
                 $this->entityManager->flush();
 
-                log_info('[注文処理] 注文処理が完了しました.', [$Order->getId()]);
+                $this->logger->info('[注文処理] 注文処理が完了しました.', [$Order->getId()]);
             } catch (ShoppingException $e) {
                 log_error('[注文処理] 購入エラーが発生しました.', [$e->getMessage()]);
 
@@ -410,23 +418,23 @@ class ShoppingController extends AbstractShoppingController
             }
 
             // カート削除
-            log_info('[注文処理] カートをクリアします.', [$Order->getId()]);
+            $this->logger->info('[注文処理] カートをクリアします.', [$Order->getId()]);
             $this->cartService->clear();
 
             // 受注IDをセッションにセット
             $this->session->set(OrderHelper::SESSION_ORDER_ID, $Order->getId());
 
             // メール送信
-            log_info('[注文処理] 注文メールの送信を行います.', [$Order->getId()]);
+            $this->logger->info('[注文処理] 注文メールの送信を行います.', [$Order->getId()]);
             $this->mailService->sendOrderMail($Order);
             $this->entityManager->flush();
 
-            log_info('[注文処理] 注文処理が完了しました. 購入完了画面へ遷移します.', [$Order->getId()]);
+            $this->logger->info('[注文処理] 注文処理が完了しました. 購入完了画面へ遷移します.', [$Order->getId()]);
 
             return $this->redirectToRoute('shopping_complete');
         }
 
-        log_info('[注文処理] フォームエラーのため, 購入エラー画面へ遷移します.', [$Order->getId()]);
+        $this->logger->info('[注文処理] フォームエラーのため, 購入エラー画面へ遷移します.', [$Order->getId()]);
 
         return $this->redirectToRoute('shopping_error');
     }
@@ -439,13 +447,13 @@ class ShoppingController extends AbstractShoppingController
      */
     public function complete(Request $request)
     {
-        log_info('[注文完了] 注文完了画面を表示します.');
+        $this->logger->info('[注文完了] 注文完了画面を表示します.');
 
         // 受注IDを取得
         $orderId = $this->session->get(OrderHelper::SESSION_ORDER_ID);
 
         if (empty($orderId)) {
-            log_info('[注文完了] 受注IDを取得できないため, トップページへ遷移します.');
+            $this->logger->info('[注文完了] 受注IDを取得できないため, トップページへ遷移します.');
 
             return $this->redirectToRoute('homepage');
         }
@@ -464,12 +472,12 @@ class ShoppingController extends AbstractShoppingController
             return $event->getResponse();
         }
 
-        log_info('[注文完了] 購入フローのセッションをクリアします. ');
+        $this->logger->info('[注文完了] 購入フローのセッションをクリアします. ');
         $this->orderHelper->removeSession();
 
         $hasNextCart = !empty($this->cartService->getCarts());
 
-        log_info('[注文完了] 注文完了画面を表示しました. ', [$hasNextCart]);
+        $this->logger->info('[注文完了] 注文完了画面を表示しました. ', [$hasNextCart]);
 
         return [
             'Order' => $Order,
@@ -514,7 +522,7 @@ class ShoppingController extends AbstractShoppingController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('お届先情報更新開始', [$Shipping->getId()]);
+            $this->logger->info('お届先情報更新開始', [$Shipping->getId()]);
 
             /** @var CustomerAddress $CustomerAddress */
             $CustomerAddress = $form['addresses']->getData();
@@ -539,7 +547,7 @@ class ShoppingController extends AbstractShoppingController
             );
             $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_COMPLETE);
 
-            log_info('お届先情報更新完了', [$Shipping->getId()]);
+            $this->logger->info('お届先情報更新完了', [$Shipping->getId()]);
 
             return $this->redirectToRoute('shopping');
         }
@@ -604,7 +612,7 @@ class ShoppingController extends AbstractShoppingController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('お届け先追加処理開始', ['order_id' => $Order->getId(), 'shipping_id' => $Shipping->getId()]);
+            $this->logger->info('お届け先追加処理開始', ['order_id' => $Order->getId(), 'shipping_id' => $Shipping->getId()]);
 
             $Shipping->setFromCustomerAddress($CustomerAddress);
 
@@ -630,7 +638,7 @@ class ShoppingController extends AbstractShoppingController
             );
             $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_EDIT_COMPLETE);
 
-            log_info('お届け先追加処理完了', ['order_id' => $Order->getId(), 'shipping_id' => $Shipping->getId()]);
+            $this->logger->info('お届け先追加処理完了', ['order_id' => $Order->getId(), 'shipping_id' => $Shipping->getId()]);
 
             return $this->redirectToRoute('shopping');
         }
@@ -743,20 +751,20 @@ class ShoppingController extends AbstractShoppingController
 
             // dispatcherがresponseを保持している場合はresponseを返す
             if ($response instanceof Response && ($response->isRedirection() || $response->isSuccessful())) {
-                log_info('[注文処理] PaymentMethod::applyが指定したレスポンスを表示します.');
+                $this->logger->info('[注文処理] PaymentMethod::applyが指定したレスポンスを表示します.');
 
                 return $response;
             }
 
             // forwardすることも可能.
             if ($dispatcher->isForward()) {
-                log_info('[注文処理] PaymentMethod::applyによりForwardします.',
+                $this->logger->info('[注文処理] PaymentMethod::applyによりForwardします.',
                     [$dispatcher->getRoute(), $dispatcher->getPathParameters(), $dispatcher->getQueryParameters()]);
 
                 return $this->forwardToRoute($dispatcher->getRoute(), $dispatcher->getPathParameters(),
                     $dispatcher->getQueryParameters());
             } else {
-                log_info('[注文処理] PaymentMethod::applyによりリダイレクトします.',
+                $this->logger->info('[注文処理] PaymentMethod::applyによりリダイレクトします.',
                     [$dispatcher->getRoute(), $dispatcher->getPathParameters(), $dispatcher->getQueryParameters()]);
 
                 return $this->redirectToRoute($dispatcher->getRoute(),
@@ -779,7 +787,7 @@ class ShoppingController extends AbstractShoppingController
         // PaymentResultがresponseを保持している場合はresponseを返す
         if ($response instanceof Response && ($response->isRedirection() || $response->isSuccessful())) {
             $this->entityManager->flush();
-            log_info('[注文処理] PaymentMethod::checkoutが指定したレスポンスを表示します.');
+            $this->logger->info('[注文処理] PaymentMethod::checkoutが指定したレスポンスを表示します.');
 
             return $response;
         }
@@ -791,7 +799,7 @@ class ShoppingController extends AbstractShoppingController
                 $this->addError($error);
             }
 
-            log_info('[注文処理] PaymentMethod::checkoutのエラーのため, 購入エラー画面へ遷移します.', [$PaymentResult->getErrors()]);
+            $this->logger->info('[注文処理] PaymentMethod::checkoutのエラーのため, 購入エラー画面へ遷移します.', [$PaymentResult->getErrors()]);
 
             return $this->redirectToRoute('shopping_error');
         }

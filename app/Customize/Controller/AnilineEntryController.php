@@ -42,6 +42,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 
 class AnilineEntryController extends AbstractController
 {
@@ -103,6 +104,11 @@ class AnilineEntryController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * EntryController constructor.
      *
      * @param CartService $cartService
@@ -117,6 +123,7 @@ class AnilineEntryController extends AbstractController
      * @param BreedersRepository $breedersRepository
      * @param ConservationsRepository $conservationsRepository
      * @param FormFactoryInterface $formFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CartService $cartService,
@@ -131,7 +138,8 @@ class AnilineEntryController extends AbstractController
         BreedersRepository $breedersRepository,
         ConservationsRepository $conservationsRepository,
         FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        LoggerInterface $logger
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
@@ -146,6 +154,7 @@ class AnilineEntryController extends AbstractController
         $this->conservationsRepository = $conservationsRepository;
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
     }
 
     /**
@@ -201,7 +210,7 @@ class AnilineEntryController extends AbstractController
         }
 
         if ($this->isGranted('ROLE_USER')) {
-            log_info('認証済のためログイン処理をスキップ');
+            $this->logger->info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute($returnPath);
         }
@@ -228,8 +237,8 @@ class AnilineEntryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($request->get('mode')) {
                 case 'confirm':
-                    log_info('会員登録確認開始');
-                    log_info('会員登録確認完了');
+                    $this->logger->info('会員登録確認開始');
+                    $this->logger->info('会員登録確認完了');
 
                     return $this->render(
                         'Entry/confirm.twig',
@@ -241,7 +250,7 @@ class AnilineEntryController extends AbstractController
                     );
 
                 case 'complete':
-                    log_info('会員登録開始');
+                    $this->logger->info('会員登録開始');
 
                     //ブリーダー・保護団体紹介チェック
                     $sessid = $request->cookies->get('rid_key');
@@ -249,7 +258,7 @@ class AnilineEntryController extends AbstractController
                     //$sessid = $session->getId();
                     $rid = 0;
 
-                    log_info("【キャンペーン】チェック開始 sessid=".$sessid);
+                    $this->logger->info("【キャンペーン】チェック開始 sessid=".$sessid);
 
                     if($sessid != ""){
                         $affiliate = $this->affiliateStatusRepository->findOneBy(array("session_id" => $sessid,"campaign_id" => array(1,2)),array('create_date' => 'DESC'));
@@ -264,7 +273,7 @@ class AnilineEntryController extends AbstractController
                                     $rid = $breeder->getId();
                                 }
                                 else{
-                                    log_info("【キャンペーン】関連ブリーダーが見つかりません。sessid=".$sessid."  hash=".$id_hash);
+                                    $this->logger->info("【キャンペーン】関連ブリーダーが見つかりません。sessid=".$sessid."  hash=".$id_hash);
                                 }
                             } elseif($cid == 2){
                                 //保護団体
@@ -273,7 +282,7 @@ class AnilineEntryController extends AbstractController
                                     $rid = $conservation->getId();
                                 }
                                 else{
-                                    log_info("【キャンペーン】関連保護団体が見つかりません。sessid=".$sessid."  hash=".$id_hash);
+                                    $this->logger->info("【キャンペーン】関連保護団体が見つかりません。sessid=".$sessid."  hash=".$id_hash);
                                 }
                             }
                         }
@@ -297,7 +306,7 @@ class AnilineEntryController extends AbstractController
                     $this->entityManager->persist($Customer);
                     $this->entityManager->flush();
 
-                    log_info('会員登録完了');
+                    $this->logger->info('会員登録完了');
 
                     $event = new EventArgs(
                         [
@@ -328,7 +337,7 @@ class AnilineEntryController extends AbstractController
                             return $event->getResponse();
                         }
 
-                        log_info('仮会員登録完了画面へリダイレクト');
+                        $this->logger->info('仮会員登録完了画面へリダイレクト');
 
                         return $this->redirectToRoute('entry_complete',['ReturnPath' => $returnPath,]);
 
@@ -533,7 +542,7 @@ class AnilineEntryController extends AbstractController
      */
     private function entryActivate(Request $request, $secret_key,$prefix)
     {
-        log_info('本会員登録開始');
+        $this->logger->info('本会員登録開始');
         $Customer = $this->customerRepository->getProvisionalCustomerBySecretKey($secret_key);
         if (is_null($Customer)) {
             return -1;
@@ -545,7 +554,7 @@ class AnilineEntryController extends AbstractController
         $this->entityManager->persist($Customer);
         $this->entityManager->flush();
 
-        log_info('本会員登録完了');
+        $this->logger->info('本会員登録完了');
 
         $event = new EventArgs(
             [
@@ -574,7 +583,7 @@ class AnilineEntryController extends AbstractController
             $this->cartService->save();
         }
 
-        log_info('ログイン済に変更', [$this->getUser()->getId()]);
+        $this->logger->info('ログイン済に変更', [$this->getUser()->getId()]);
 
         return $qtyInCart;
 

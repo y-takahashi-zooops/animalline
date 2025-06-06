@@ -36,6 +36,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Psr\Log\LoggerInterface;
 
 class MypageController extends AbstractController
 {
@@ -70,6 +71,11 @@ class MypageController extends AbstractController
     protected $purchaseFlow;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * MypageController constructor.
      *
      * @param OrderRepository $orderRepository
@@ -77,19 +83,22 @@ class MypageController extends AbstractController
      * @param CartService $cartService
      * @param BaseInfoRepository $baseInfoRepository
      * @param PurchaseFlow $purchaseFlow
+     * @param LoggerInterface $logger
      */
     public function __construct(
         OrderRepository $orderRepository,
         CustomerFavoriteProductRepository $customerFavoriteProductRepository,
         CartService $cartService,
         BaseInfoRepository $baseInfoRepository,
-        PurchaseFlow $purchaseFlow
+        PurchaseFlow $purchaseFlow,
+        LoggerInterface $logger
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->cartService = $cartService;
         $this->purchaseFlow = $purchaseFlow;
+        $this->logger = $logger;
     }
 
     /**
@@ -101,7 +110,7 @@ class MypageController extends AbstractController
     public function login(Request $request, AuthenticationUtils $utils)
     {
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            log_info('認証済のためログイン処理をスキップ');
+            $this->logger->info('認証済のためログイン処理をスキップ');
 
             return $this->redirectToRoute('mypage');
         }
@@ -229,7 +238,7 @@ class MypageController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('再注文開始', [$order_no]);
+        $this->logger->info('再注文開始', [$order_no]);
 
         $Customer = $this->getUser();
 
@@ -251,7 +260,7 @@ class MypageController extends AbstractController
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_MYPAGE_ORDER_INITIALIZE);
 
         if (!$Order) {
-            log_info('対象の注文が見つかりません', [$order_no]);
+            $this->logger->info('対象の注文が見つかりません', [$order_no]);
             throw new NotFoundHttpException();
         }
 
@@ -282,7 +291,7 @@ class MypageController extends AbstractController
                     $this->cartService->save();
                 }
             } catch (CartException $e) {
-                log_info($e->getMessage(), [$order_no]);
+                $this->logger->info($e->getMessage(), [$order_no]);
                 $this->addRequestError($e->getMessage());
             }
         }
@@ -304,7 +313,7 @@ class MypageController extends AbstractController
             return $event->getResponse();
         }
 
-        log_info('再注文完了', [$order_no]);
+        $this->logger->info('再注文完了', [$order_no]);
 
         return $this->redirect($this->generateUrl('cart'));
     }
@@ -357,7 +366,7 @@ class MypageController extends AbstractController
 
         $Customer = $this->getUser();
 
-        log_info('お気に入り商品削除開始', [$Customer->getId(), $Product->getId()]);
+        $this->logger->info('お気に入り商品削除開始', [$Customer->getId(), $Product->getId()]);
 
         $CustomerFavoriteProduct = $this->customerFavoriteProductRepository->findOneBy(['Customer' => $Customer, 'Product' => $Product]);
 
@@ -375,7 +384,7 @@ class MypageController extends AbstractController
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_MYPAGE_DELETE_COMPLETE);
 
-        log_info('お気に入り商品削除完了', [$Customer->getId(), $CustomerFavoriteProduct->getId()]);
+        $this->logger->info('お気に入り商品削除完了', [$Customer->getId(), $CustomerFavoriteProduct->getId()]);
 
         return $this->redirect($this->generateUrl('mypage_favorite'));
     }

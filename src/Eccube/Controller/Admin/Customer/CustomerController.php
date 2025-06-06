@@ -37,6 +37,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class CustomerController extends AbstractController
 {
@@ -72,6 +73,11 @@ class CustomerController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
@@ -79,7 +85,8 @@ class CustomerController extends AbstractController
         PrefRepository $prefRepository,
         MailService $mailService,
         CsvExportService $csvExportService,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -88,6 +95,7 @@ class CustomerController extends AbstractController
         $this->mailService = $mailService;
         $this->csvExportService = $csvExportService;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -230,7 +238,7 @@ class CustomerController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('会員削除開始', [$id]);
+        $this->logger->info('会員削除開始', [$id]);
 
         $page_no = intval($this->session->get('eccube.admin.customer.search.page_no'));
         $page_no = $page_no ? $page_no : Constant::ENABLED;
@@ -256,7 +264,7 @@ class CustomerController extends AbstractController
             $this->addError($message, 'admin');
         }
 
-        log_info('会員削除完了', [$id]);
+        $this->logger->info('会員削除完了', [$id]);
 
         $event = new EventArgs(
             [
@@ -342,7 +350,7 @@ class CustomerController extends AbstractController
 
         $response->send();
 
-        log_info('会員CSVファイル名', [$filename]);
+        $this->logger->info('会員CSVファイル名', [$filename]);
 
         return $response;
     }

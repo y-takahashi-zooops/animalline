@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
 
 class CustomerDeliveryEditController extends AbstractController
 {
@@ -33,10 +34,17 @@ class CustomerDeliveryEditController extends AbstractController
      */
     protected $customerAddressRepository;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
-        CustomerAddressRepository $customerAddressRepository
+        CustomerAddressRepository $customerAddressRepository,
+        LoggerInterface $logger
     ) {
         $this->customerAddressRepository = $customerAddressRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -88,12 +96,12 @@ class CustomerDeliveryEditController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('お届け先登録開始', [$did]);
+            $this->logger->info('お届け先登録開始', [$did]);
 
             $this->entityManager->persist($CustomerAddress);
             $this->entityManager->flush();
 
-            log_info('お届け先登録完了', [$did]);
+            $this->logger->info('お届け先登録完了', [$did]);
 
             $event = new EventArgs(
                 [
@@ -127,7 +135,7 @@ class CustomerDeliveryEditController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('お届け先削除開始', [$did]);
+        $this->logger->info('お届け先削除開始', [$did]);
 
         $CustomerAddress = $this->customerAddressRepository->find($did);
         if (is_null($CustomerAddress)) {
@@ -150,7 +158,7 @@ class CustomerDeliveryEditController extends AbstractController
             $this->addError($message, 'admin');
         }
 
-        log_info('お届け先削除完了', [$did]);
+        $this->logger->info('お届け先削除完了', [$did]);
 
         $event = new EventArgs(
             [

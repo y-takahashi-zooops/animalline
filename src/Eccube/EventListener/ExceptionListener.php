@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Psr\Log\LoggerInterface;
 
 class ExceptionListener implements EventSubscriberInterface
 {
@@ -33,12 +34,18 @@ class ExceptionListener implements EventSubscriberInterface
     protected $requestContext;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ExceptionListener constructor.
      */
-    public function __construct(\Twig_Environment $twig, Context $requestContext)
+    public function __construct(\Twig_Environment $twig, Context $requestContext, LoggerInterface $logger)
     {
         $this->twig = $twig;
         $this->requestContext = $requestContext;
+        $this->logger = $logger;
     }
 
     public function onKernelException(GetResponseForExceptionEvent $event)
@@ -76,7 +83,7 @@ class ExceptionListener implements EventSubscriberInterface
         }
 
         if (isset($infoMess)) {
-            log_info($infoMess, [
+            $this->logger->info($infoMess, [
                 $exception->getMessage(),
                 $exception->getFile(),
                 $exception->getLine(),

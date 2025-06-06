@@ -11,6 +11,7 @@ use Plugin\EccubePaymentLite4\Repository\RegularDiscountRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
 
 class RegularDiscountSettingController extends AbstractController
 {
@@ -25,14 +26,21 @@ class RegularDiscountSettingController extends AbstractController
     private $productClassRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * RegularDiscountSettingController constructor.
      */
     public function __construct(
         RegularDiscountRepository $regularDiscountRepository,
-        ProductClassRepository $productClassRepository
+        ProductClassRepository $productClassRepository,
+        LoggerInterface $logger
     ) {
         $this->regularDiscountRepository = $regularDiscountRepository;
         $this->productClassRepository = $productClassRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -96,7 +104,7 @@ class RegularDiscountSettingController extends AbstractController
                     return $this->redirectToRoute('eccube_payment_lite4_admin_regular_discount_setting');
                 }
             } catch (\Exception $e) {
-                log_info('定期回数割引削除エラー', [$e]);
+                $this->logger->info('定期回数割引削除エラー', [$e]);
                 $this->addError('関連するデータがあるため定期回数割引を削除できませんでした', 'admin');
 
                 return $this->redirectToRoute('eccube_payment_lite4_admin_regular_discount_setting');

@@ -60,6 +60,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Eccube\Controller\Admin\Product\ProductController as BaseProductController;
 use Eccube\Repository\Master\OrderItemTypeRepository;
+use Psr\Log\LoggerInterface;
 
 class ProductController extends BaseProductController
 {
@@ -139,6 +140,11 @@ class ProductController extends BaseProductController
     protected $stockWasteReasonRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -156,6 +162,7 @@ class ProductController extends BaseProductController
      * @param OrderItemTypeRepository $orderItemTypeRepository
      * @param StockWasteRepository $stockWasteRepository
      * @param StockWasteReasonRepository $stockWasteReasonRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CsvExportService                $csvExportService,
@@ -172,7 +179,8 @@ class ProductController extends BaseProductController
         InstockScheduleRepository       $instockScheduleRepository,
         OrderItemTypeRepository         $orderItemTypeRepository,
         StockWasteRepository            $stockWasteRepository,
-        StockWasteReasonRepository      $stockWasteReasonRepository
+        StockWasteReasonRepository      $stockWasteReasonRepository,
+        LoggerInterface $logger
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -189,6 +197,7 @@ class ProductController extends BaseProductController
         $this->orderItemTypeRepository = $orderItemTypeRepository;
         $this->stockWasteRepository = $stockWasteRepository;
         $this->stockWasteReasonRepository = $stockWasteReasonRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -504,7 +513,7 @@ class ProductController extends BaseProductController
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                log_info('商品登録開始', [$id]);
+                $this->logger->info('商品登録開始', [$id]);
                 $Product = $form->getData();
 
                 if (!$has_class) {
@@ -651,7 +660,7 @@ class ProductController extends BaseProductController
                 $Product->setUpdateDate(new \DateTime());
                 $this->entityManager->flush();
 
-                log_info('商品登録完了', [$id]);
+                $this->logger->info('商品登録完了', [$id]);
 
                 $event = new EventArgs(
                     [
@@ -759,7 +768,7 @@ class ProductController extends BaseProductController
             }
 
             if ($Product instanceof Product) {
-                log_info('商品削除開始', [$id]);
+                $this->logger->info('商品削除開始', [$id]);
 
                 $deleteImages = $Product->getProductImage();
                 $ProductClasses = $Product->getProductClasses();
@@ -789,22 +798,22 @@ class ProductController extends BaseProductController
                         }
                     }
 
-                    log_info('商品削除完了', [$id]);
+                    $this->logger->info('商品削除完了', [$id]);
 
                     $success = true;
                     $message = trans('admin.common.delete_complete');
 
                     $cacheUtil->clearDoctrineCache();
                 } catch (ForeignKeyConstraintViolationException $e) {
-                    log_info('商品削除エラー', [$id]);
+                    $this->logger->info('商品削除エラー', [$id]);
                     $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $Product->getName()]);
                 }
             } else {
-                log_info('商品削除エラー', [$id]);
+                $this->logger->info('商品削除エラー', [$id]);
                 $message = trans('admin.common.delete_error');
             }
         } else {
-            log_info('商品削除エラー', [$id]);
+            $this->logger->info('商品削除エラー', [$id]);
             $message = trans('admin.common.delete_error');
         }
 
@@ -1047,7 +1056,7 @@ class ProductController extends BaseProductController
         $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
         $response->send();
 
-        log_info('商品CSV出力ファイル名', [$filename]);
+        $this->logger->info('商品CSV出力ファイル名', [$filename]);
 
         return $response;
     }

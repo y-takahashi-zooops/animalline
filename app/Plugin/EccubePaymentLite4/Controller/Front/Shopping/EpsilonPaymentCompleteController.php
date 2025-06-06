@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class EpsilonPaymentCompleteController extends AbstractController
 {
@@ -62,6 +63,11 @@ class EpsilonPaymentCompleteController extends AbstractController
      */
     private $mailHistoryRepository;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,
@@ -71,7 +77,8 @@ class EpsilonPaymentCompleteController extends AbstractController
         UpdateGmoEpsilonOrderService $updateGmoEpsilonOrderService,
         CartService $cartService,
         MailService $mailService,
-        MailHistoryRepository $mailHistoryRepository
+        MailHistoryRepository $mailHistoryRepository,
+        LoggerInterface $logger
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
@@ -82,6 +89,7 @@ class EpsilonPaymentCompleteController extends AbstractController
         $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->mailHistoryRepository = $mailHistoryRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -112,7 +120,7 @@ class EpsilonPaymentCompleteController extends AbstractController
         }
         // Check the order was completed
         if ($Order->getGmoEpsilonOrderNo()) {
-            log_info('[注文確認] 注文が完了しました.', [$Order->getId()]);
+            $this->logger->info('[注文確認] 注文が完了しました.', [$Order->getId()]);
             return $this->redirectToRoute('shopping_error');
         }
         $results = $this

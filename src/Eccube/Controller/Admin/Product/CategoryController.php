@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
 
 class CategoryController extends AbstractController
 {
@@ -43,17 +44,25 @@ class CategoryController extends AbstractController
     protected $categoryRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * CategoryController constructor.
      *
      * @param CsvExportService $csvExportService
      * @param CategoryRepository $categoryRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CsvExportService $csvExportService,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        LoggerInterface $logger
     ) {
         $this->csvExportService = $csvExportService;
         $this->categoryRepository = $categoryRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -121,11 +130,11 @@ class CategoryController extends AbstractController
                 if ($this->eccubeConfig['eccube_category_nest_level'] < $TargetCategory->getHierarchy()) {
                     throw new BadRequestHttpException();
                 }
-                log_info('カテゴリ登録開始', [$id]);
+                $this->logger->info('カテゴリ登録開始', [$id]);
 
                 $this->categoryRepository->save($TargetCategory);
 
-                log_info('カテゴリ登録完了', [$id]);
+                $this->logger->info('カテゴリ登録完了', [$id]);
 
                 // $formが保存されたフォーム
                 // 下の編集用フォームの場合とイベント名が共通のため
@@ -223,7 +232,7 @@ class CategoryController extends AbstractController
         }
         $Parent = $TargetCategory->getParent();
 
-        log_info('カテゴリ削除開始', [$id]);
+        $this->logger->info('カテゴリ削除開始', [$id]);
 
         try {
             $this->categoryRepository->delete($TargetCategory);
@@ -238,11 +247,11 @@ class CategoryController extends AbstractController
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 
-            log_info('カテゴリ削除完了', [$id]);
+            $this->logger->info('カテゴリ削除完了', [$id]);
 
             $cacheUtil->clearDoctrineCache();
         } catch (\Exception $e) {
-            log_info('カテゴリ削除エラー', [$id, $e]);
+            $this->logger->info('カテゴリ削除エラー', [$id, $e]);
 
             $message = trans('admin.common.delete_error_foreign_key', ['%name%' => $TargetCategory->getName()]);
             $this->addError($message, 'admin');
@@ -350,7 +359,7 @@ class CategoryController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
         $response->send();
 
-        log_info('カテゴリCSV出力ファイル名', [$filename]);
+        $this->logger->info('カテゴリCSV出力ファイル名', [$filename]);
 
         return $response;
     }

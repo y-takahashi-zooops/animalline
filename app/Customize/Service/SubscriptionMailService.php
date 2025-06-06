@@ -19,6 +19,7 @@ use Eccube\Repository\BaseInfoRepository;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
+use Psr\Log\LoggerInterface;
 
 class SubscriptionMailService
 {
@@ -43,23 +44,31 @@ class SubscriptionMailService
     protected $twig;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * SubscriptionMailService constructor.
      *
      * @param MailerInterface $mailer
      * @param BaseInfoRepository $baseInfoRepository
      * @param Environment $twig
      * @param EccubeConfig $eccubeConfig
+     * @param LoggerInterface $logger
      */
     public function __construct(
         MailerInterface $mailer,
         BaseInfoRepository $baseInfoRepository,
         Environment $twig,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        LoggerInterface $logger
     ) {
         $this->mailer = $mailer;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->eccubeConfig = $eccubeConfig;
         $this->twig = $twig;
+        $this->logger = $logger;
     }
 
      /**
@@ -71,7 +80,7 @@ class SubscriptionMailService
      */
     public function sendSubscriotionRemindMail($Customer)
     {
-        log_info('次回お届け日変更リマインドメール送信開始');
+        $this->logger->info('次回お届け日変更リマインドメール送信開始');
 
         // メール内容作成
         $body = $this->twig->render('Mail/subscription_remind.twig', [
@@ -107,7 +116,7 @@ class SubscriptionMailService
 
         $this->mailer->send($email);
 
-        log_info('次回お届け日変更リマインドメール送信完了');
+        $this->logger->info('次回お届け日変更リマインドメール送信完了');
 
         return 1;
     }
@@ -121,7 +130,7 @@ class SubscriptionMailService
      */
     public function sendSubscriotionConfirmMail($Order, $Shipping, $SubscriptionContract)
     {
-        log_info('次回お届け日確定メール送信開始');
+        $this->logger->info('次回お届け日確定メール送信開始');
 
         // メール内容作成
         $body = $this->twig->render('Mail/subscription_confirm.twig', [
@@ -161,7 +170,7 @@ class SubscriptionMailService
 
         $this->mailer->send($email);
 
-        log_info('次回お届け日確定メール送信完了');
+        $this->logger->info('次回お届け日確定メール送信完了');
 
         return 1;
     }

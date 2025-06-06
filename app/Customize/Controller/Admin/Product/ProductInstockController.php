@@ -39,6 +39,8 @@ use Eccube\Form\Type\AddCartType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
+use Psr\Log\LoggerInterface;
+
 class ProductInstockController extends AbstractController
 {
     /**
@@ -89,6 +91,11 @@ class ProductInstockController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ProductInstockController constructor.
      *
      * @param SupplierRepository $supplierRepository
@@ -97,6 +104,7 @@ class ProductInstockController extends AbstractController
      * @param ExportInstockSchedule $exportInstockSchedule
      * @param ProductStockRepository $productStockRepository
      * @param ProductStockService $productStockService
+     * @param LoggerInterface $logger
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -108,7 +116,8 @@ class ProductInstockController extends AbstractController
         ProductStockService          $productStockService,
         ProductRepository $productRepository,
         CategoryRepository $categoryRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->supplierRepository = $supplierRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
@@ -120,6 +129,7 @@ class ProductInstockController extends AbstractController
         $this->categoryRepository = $categoryRepository;
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -362,7 +372,7 @@ class ProductInstockController extends AbstractController
             $totalPrice = array_sum($subTotalPrices);
 
             if ($request->get('mode') === 'register') {
-                log_info('受注登録開始', [$TargetInstock->getId()]);
+                $this->logger->info('受注登録開始', [$TargetInstock->getId()]);
                 if ($form->isValid()) {
                     $TargetInstock->setInstockSchedule();
                     if (!$id) {
@@ -418,7 +428,7 @@ class ProductInstockController extends AbstractController
                     $this->entityManager->flush();
 
                     $this->addSuccess('admin.common.save_complete', 'admin');
-                    log_info('受注登録完了', [$TargetInstock->getId()]);
+                    $this->logger->info('受注登録完了', [$TargetInstock->getId()]);
                     return $this->redirectToRoute($id ? 'admin_product_instock_list' : 'admin_product_instock_registration_new');
                 }
             }

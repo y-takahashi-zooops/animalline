@@ -36,6 +36,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
 use Eccube\Controller\ShoppingController as BaseShoppingController;
 use Customize\Service\SubscriptionProcess;
+use Psr\Log\LoggerInterface;
 
 class ShoppingController extends BaseShoppingController
 {
@@ -64,18 +65,25 @@ class ShoppingController extends BaseShoppingController
      */
     protected $subscriptionProcess;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct(
         CartService $cartService,
         MailService $mailService,
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
-        SubscriptionProcess $subscriptionProcess
+        SubscriptionProcess $subscriptionProcess,
+        LoggerInterface $logger
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->orderRepository = $orderRepository;
         $this->orderHelper = $orderHelper;
         $this->subscriptionProcess = $subscriptionProcess;
+        $this->logger = $logger;
     }
 
     /**
@@ -90,7 +98,7 @@ class ShoppingController extends BaseShoppingController
     {
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
-            log_info('[注文処理] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
+            $this->logger->info('[注文処理] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
 
             return $this->redirectToRoute('shopping_login');
         }
@@ -99,7 +107,7 @@ class ShoppingController extends BaseShoppingController
         $preOrderId = $this->cartService->getPreOrderId();
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
         if (!$Order) {
-            log_info('[注文処理] 購入処理中の受注が存在しません.', [$preOrderId]);
+            $this->logger->info('[注文処理] 購入処理中の受注が存在しません.', [$preOrderId]);
 
             return $this->redirectToRoute('shopping_error');
         }
@@ -112,13 +120,13 @@ class ShoppingController extends BaseShoppingController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            log_info('[注文処理] 注文処理を開始します.', [$Order->getId()]);
+            $this->logger->info('[注文処理] 注文処理を開始します.', [$Order->getId()]);
 
             try {
                 /*
                  * 集計処理
                  */
-                log_info('[注文処理] 集計処理を開始します.', [$Order->getId()]);
+                $this->logger->info('[注文処理] 集計処理を開始します.', [$Order->getId()]);
                 $response = $this->executePurchaseFlow($Order);
                 $this->entityManager->flush();
 
@@ -126,13 +134,13 @@ class ShoppingController extends BaseShoppingController
                     return $response;
                 }
 
-                log_info('[注文処理] PaymentMethodを取得します.', [$Order->getPayment()->getMethodClass()]);
+                $this->logger->info('[注文処理] PaymentMethodを取得します.', [$Order->getPayment()->getMethodClass()]);
                 $paymentMethod = $this->createPaymentMethod($Order, $form);
 
                 /*
                  * 決済実行(前処理)
                  */
-                log_info('[注文処理] PaymentMethod::applyを実行します.');
+                $this->logger->info('[注文処理] PaymentMethod::applyを実行します.');
                 if ($response = $this->executeApply($paymentMethod)) {
                     return $response;
                 }
@@ -142,14 +150,14 @@ class ShoppingController extends BaseShoppingController
                  *
                  * PaymentMethod::checkoutでは決済処理が行われ, 正常に処理出来た場合はPurchaseFlow::commitがコールされます.
                  */
-                log_info('[注文処理] PaymentMethod::checkoutを実行します.');
+                $this->logger->info('[注文処理] PaymentMethod::checkoutを実行します.');
                 if ($response = $this->executeCheckout($paymentMethod)) {
                     return $response;
                 }
 
                 $this->entityManager->flush();
 
-                log_info('[注文処理] 注文処理が完了しました.', [$Order->getId()]);
+                $this->logger->info('[注文処理] 注文処理が完了しました.', [$Order->getId()]);
             } catch (ShoppingException $e) {
                 log_error('[注文処理] 購入エラーが発生しました.', [$e->getMessage()]);
 
@@ -174,23 +182,23 @@ class ShoppingController extends BaseShoppingController
             $this->subscriptionProcess->order($Customer, $CartItems, $Order);
 
             // カート削除
-            log_info('[注文処理] カートをクリアします.', [$Order->getId()]);
+            $this->logger->info('[注文処理] カートをクリアします.', [$Order->getId()]);
             $this->cartService->clear();
 
             // 受注IDをセッションにセット
             $this->session->set(OrderHelper::SESSION_ORDER_ID, $Order->getId());
 
             // メール送信
-            log_info('[注文処理] 注文メールの送信を行います.', [$Order->getId()]);
+            $this->logger->info('[注文処理] 注文メールの送信を行います.', [$Order->getId()]);
             $this->mailService->sendOrderMail($Order);
             // $this->entityManager->flush();
 
-            log_info('[注文処理] 注文処理が完了しました. 購入完了画面へ遷移します.', [$Order->getId()]);
+            $this->logger->info('[注文処理] 注文処理が完了しました. 購入完了画面へ遷移します.', [$Order->getId()]);
 
             return $this->redirectToRoute('shopping_complete');
         }
 
-        log_info('[注文処理] フォームエラーのため, 購入エラー画面へ遷移します.', [$Order->getId()]);
+        $this->logger->info('[注文処理] フォームエラーのため, 購入エラー画面へ遷移します.', [$Order->getId()]);
 
         return $this->redirectToRoute('shopping_error');
     }
@@ -230,20 +238,20 @@ class ShoppingController extends BaseShoppingController
 
             // dispatcherがresponseを保持している場合はresponseを返す
             if ($response instanceof Response && ($response->isRedirection() || $response->isSuccessful())) {
-                log_info('[注文処理] PaymentMethod::applyが指定したレスポンスを表示します.');
+                $this->logger->info('[注文処理] PaymentMethod::applyが指定したレスポンスを表示します.');
 
                 return $response;
             }
 
             // forwardすることも可能.
             if ($dispatcher->isForward()) {
-                log_info('[注文処理] PaymentMethod::applyによりForwardします.',
+                $this->logger->info('[注文処理] PaymentMethod::applyによりForwardします.',
                     [$dispatcher->getRoute(), $dispatcher->getPathParameters(), $dispatcher->getQueryParameters()]);
 
                 return $this->forwardToRoute($dispatcher->getRoute(), $dispatcher->getPathParameters(),
                     $dispatcher->getQueryParameters());
             } else {
-                log_info('[注文処理] PaymentMethod::applyによりリダイレクトします.',
+                $this->logger->info('[注文処理] PaymentMethod::applyによりリダイレクトします.',
                     [$dispatcher->getRoute(), $dispatcher->getPathParameters(), $dispatcher->getQueryParameters()]);
 
                 return $this->redirectToRoute($dispatcher->getRoute(),
@@ -266,7 +274,7 @@ class ShoppingController extends BaseShoppingController
         // PaymentResultがresponseを保持している場合はresponseを返す
         if ($response instanceof Response && ($response->isRedirection() || $response->isSuccessful())) {
             $this->entityManager->flush();
-            log_info('[注文処理] PaymentMethod::checkoutが指定したレスポンスを表示します.');
+            $this->logger->info('[注文処理] PaymentMethod::checkoutが指定したレスポンスを表示します.');
 
             return $response;
         }
@@ -278,7 +286,7 @@ class ShoppingController extends BaseShoppingController
                 $this->addError($error);
             }
 
-            log_info('[注文処理] PaymentMethod::checkoutのエラーのため, 購入エラー画面へ遷移します.', [$PaymentResult->getErrors()]);
+            $this->logger->info('[注文処理] PaymentMethod::checkoutのエラーのため, 購入エラー画面へ遷移します.', [$PaymentResult->getErrors()]);
 
             return $this->redirectToRoute('shopping_error');
         }

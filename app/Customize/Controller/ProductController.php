@@ -35,6 +35,7 @@ use Eccube\Controller\ProductController as BaseProductController;
 use Eccube\Repository\CartItemRepository;
 use Eccube\Repository\CartRepository;
 use Symfony\Component\Form\FormFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class ProductController extends BaseProductController
 {
@@ -83,9 +84,14 @@ class ProductController extends BaseProductController
      */
     protected $cartRepository;
 
-    private $title = '';
-
     protected FormFactoryInterface $formFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    private $title = '';
 
     /**
      * ProductController constructor.
@@ -99,6 +105,7 @@ class ProductController extends BaseProductController
      * @param ProductListMaxRepository $productListMaxRepository
      * @param CartItemRepository $cartItemRepository
      * @param CartRepository $cartRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         PurchaseFlow $cartPurchaseFlow,
@@ -110,7 +117,8 @@ class ProductController extends BaseProductController
         ProductListMaxRepository $productListMaxRepository,
         CartItemRepository $cartItemRepository,
         CartRepository $cartRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger
     ) {
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -122,6 +130,7 @@ class ProductController extends BaseProductController
         $this->cartItemRepository = $cartItemRepository;
         $this->cartRepository = $cartRepository;
         $this->formFactory = $formFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -173,7 +182,7 @@ class ProductController extends BaseProductController
                 return;
             }
 
-        log_info(
+        $this->logger->info(
             'カート追加処理開始',
             [
                 'product_id' => $Product->getId(),
@@ -211,7 +220,7 @@ class ProductController extends BaseProductController
 
         $this->cartService->save();
 
-        log_info(
+        $this->logger->info(
             'カート追加処理完了',
             [
                 'product_id' => $Product->getId(),

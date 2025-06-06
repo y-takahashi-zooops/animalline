@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Psr\Log\LoggerInterface;
 
 class NewsController extends AbstractController
 {
@@ -42,17 +43,25 @@ class NewsController extends AbstractController
     protected EntityManagerInterface $entityManager;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * NewsController constructor.
      *
      * @param NewsRepository $newsRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        NewsRepository $newsRepository
+        NewsRepository $newsRepository,
+        LoggerInterface $logger
     )
     {
         $this->newsRepository = $newsRepository;
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -176,7 +185,7 @@ class NewsController extends AbstractController
     {
         $this->isTokenValid();
 
-        log_info('新着情報削除開始', [$News->getId()]);
+        $this->logger->info('新着情報削除開始', [$News->getId()]);
 
         try {
             $this->newsRepository->delete($News);
@@ -186,7 +195,7 @@ class NewsController extends AbstractController
 
             $this->addSuccess('admin.common.delete_complete', 'admin');
 
-            log_info('新着情報削除完了', [$News->getId()]);
+            $this->logger->info('新着情報削除完了', [$News->getId()]);
 
             // キャッシュの削除
             $cacheUtil->clearDoctrineCache();

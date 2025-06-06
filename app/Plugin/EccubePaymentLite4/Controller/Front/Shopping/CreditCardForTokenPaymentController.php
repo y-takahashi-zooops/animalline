@@ -12,6 +12,7 @@ use Plugin\EccubePaymentLite4\Service\GmoEpsilonUrlService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
 
 class CreditCardForTokenPaymentController extends AbstractController
 {
@@ -32,16 +33,23 @@ class CreditCardForTokenPaymentController extends AbstractController
      */
     private $gmoEpsilonRequestService;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         GmoEpsilonUrlService $gmoEpsilonUrlService,
         CartService $cartService,
         OrderHelper $orderHelper,
-        GmoEpsilonRequestService $gmoEpsilonRequestService
+        GmoEpsilonRequestService $gmoEpsilonRequestService,
+        LoggerInterface $logger
     ) {
         $this->gmoEpsilonUrlService = $gmoEpsilonUrlService;
         $this->cartService = $cartService;
         $this->orderHelper = $orderHelper;
         $this->gmoEpsilonRequestService = $gmoEpsilonRequestService;
+        $this->logger = $logger;
     }
 
     /**
@@ -55,7 +63,7 @@ class CreditCardForTokenPaymentController extends AbstractController
     {
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
-            log_info('[注文確認] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
+            $this->logger->info('[注文確認] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
 
             return $this->redirectToRoute('shopping_login');
         }
@@ -64,7 +72,7 @@ class CreditCardForTokenPaymentController extends AbstractController
         $preOrderId = $this->cartService->getPreOrderId();
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
         if (!$Order) {
-            log_info('[注文確認] 購入処理中の受注が存在しません.', [$preOrderId]);
+            $this->logger->info('[注文確認] 購入処理中の受注が存在しません.', [$preOrderId]);
 
             return $this->redirectToRoute('shopping_error');
         }
