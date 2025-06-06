@@ -139,7 +139,8 @@ class AdminController extends AbstractController
         EventDispatcherInterface $eventDispatcher,
         LoggerInterface $logger,
         EccubeConfig $eccubeConfig,
-        Security $security
+        Security $security,
+        EntityManagerInterface $entityManager
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->helper = $helper;
@@ -157,6 +158,7 @@ class AdminController extends AbstractController
         $this->logger = $logger;
         $this->eccubeConfig = $eccubeConfig;
         $this->security = $security;
+        $this->entityManager = $entityManager;
     }
 
     /**
