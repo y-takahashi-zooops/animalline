@@ -18,6 +18,7 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Eccube\Entity\ProductClass;
 use Eccube\Service\TaxRuleService;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
 
 class TaxRuleEventSubscriber implements EventSubscriber
 {
@@ -85,7 +86,7 @@ class TaxRuleEventSubscriber implements EventSubscriber
         }
     }
 
-    public function postUpdate(LifecycleEventArgs $args)
+    public function postUpdate(PostUpdateEventArgs $args)
     {
         $entity = $args->getObject();
 
