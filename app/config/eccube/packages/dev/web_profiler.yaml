@@ -1,6 +1,14 @@
 web_profiler:
     toolbar: true
     intercept_redirects: false
+    # プロファイラーの保存先を明示的に指定
+    profiler:
+        storage:
+            dsn: 'file:%kernel.cache_dir%/profiler'
 
 framework:
-    profiler: { only_exceptions: false }
+    profiler:
+        enabled: true
+        only_exceptions: false
+        # 収集するデータを明示的に指定
+        collect: true
