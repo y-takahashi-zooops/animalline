@@ -81,7 +81,7 @@ class ContactController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -107,7 +107,7 @@ class ContactController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_CONTACT_INDEX_COMPLETE);
 
                     $data = $event->getArgument('data');
 

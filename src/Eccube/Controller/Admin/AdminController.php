@@ -198,7 +198,7 @@ class AdminController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ADMIM_INDEX_ORDER, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_ADMIM_INDEX_ORDER);
         $excludes = $event->getArgument('excludes');
 
         // 受注ステータスごとの受注件数.
@@ -220,7 +220,7 @@ class AdminController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ADMIM_INDEX_SALES, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_ADMIM_INDEX_SALES);
         $this->excludes = $event->getArgument('excludes');
 
         // 今日の売上/件数
@@ -255,7 +255,7 @@ class AdminController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ADMIM_INDEX_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_ADMIM_INDEX_COMPLETE);
 
         // 推奨プラグイン
         $recommendedPlugins = [];
@@ -332,7 +332,7 @@ class AdminController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ADMIM_CHANGE_PASSWORD_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_ADMIM_CHANGE_PASSWORD_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -357,7 +357,7 @@ class AdminController extends AbstractController
                 ],
                 $request
             );
-            $this->eventDispatcher->dispatch(EccubeEvents::ADMIN_ADMIN_CHANGE_PASSWORD_COMPLETE, $event);
+            $this->eventDispatcher->dispatch($event, EccubeEvents::ADMIN_ADMIN_CHANGE_PASSWORD_COMPLETE);
 
             $this->addSuccess('admin.change_password.password_changed', 'admin');
 

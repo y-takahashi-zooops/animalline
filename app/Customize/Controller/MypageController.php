@@ -375,7 +375,7 @@ class MypageController extends BaseMypageController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_MYPAGE_HISTORY_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_MYPAGE_MYPAGE_HISTORY_INITIALIZE);
 
         /** @var Order $Order */
         $SubscriptionContract = $event->getArgument('SubscriptionContract');
@@ -527,7 +527,7 @@ class MypageController extends BaseMypageController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_SHIPPING_EDIT_INITIALIZE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_SHOPPING_SHIPPING_EDIT_INITIALIZE);
 
         $form = $builder->getForm();
         $form->handleRequest($request);

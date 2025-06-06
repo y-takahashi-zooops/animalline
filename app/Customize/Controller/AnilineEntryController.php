@@ -306,7 +306,7 @@ class AnilineEntryController extends AbstractController
                         ],
                         $request
                     );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_INDEX_COMPLETE, $event);
+                    $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_ENTRY_INDEX_COMPLETE);
 
 
                     $activateFlg = $this->BaseInfo->isOptionCustomerActivate();
@@ -553,7 +553,7 @@ class AnilineEntryController extends AbstractController
             ],
             $request
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_ENTRY_ACTIVATE_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_ENTRY_ACTIVATE_COMPLETE);
 
         // メール送信
         $this->mailService->sendCustomerCompleteMail($Customer,$prefix);

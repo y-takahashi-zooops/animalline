@@ -150,7 +150,7 @@ class MailService
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_CUSTOMER_CONFIRM, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CUSTOMER_CONFIRM);
 
         $count = $this->mailer->send($message, $failures);
 
@@ -207,7 +207,7 @@ class MailService
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_CUSTOMER_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CUSTOMER_COMPLETE);
 
         try {
             $this->mailer->send($email);
@@ -272,7 +272,7 @@ class MailService
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_CUSTOMER_WITHDRAW, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CUSTOMER_WITHDRAW);
 
         try {
             $this->mailer->send($email);
@@ -335,7 +335,7 @@ class MailService
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_CONTACT, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_CONTACT);
 
         // メール送信
         try {
@@ -396,7 +396,7 @@ class MailService
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_ORDER, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_ORDER);
 
         // メール送信処理
         try {
@@ -477,7 +477,7 @@ class MailService
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_ADMIN_CUSTOMER_CONFIRM, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_ADMIN_CUSTOMER_CONFIRM);
 
         try {
             $count = $this->mailer->send($email);
@@ -524,7 +524,7 @@ class MailService
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_ADMIN_ORDER, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_ADMIN_ORDER);
 
         try {
             $count = $this->mailer->send($email);
@@ -590,7 +590,7 @@ class MailService
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_PASSWORD_RESET, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_PASSWORD_RESET);
 
         try {
             $count = $this->mailer->send($email);
@@ -654,7 +654,7 @@ class MailService
             ],
             null
         );
-        $this->eventDispatcher->dispatch(EccubeEvents::MAIL_PASSWORD_RESET_COMPLETE, $event);
+        $this->eventDispatcher->dispatch($event, EccubeEvents::MAIL_PASSWORD_RESET_COMPLETE);
 
         try {
             $count = $this->mailer->send($email);
