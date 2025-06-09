@@ -43,5 +43,9 @@ admin_logout:
 logout:
     path: /logout
 
-    # when@dev:
-    #     - { resource: '%kernel.project_dir%/app/config/eccube/routes/dev/web_profiler.yaml', prefix: / }
+admin_product:
+    path: /%eccube_admin_route%/product
+    controller: Customize\Controller\Admin\Product\ProductController::index
+    defaults:
+        page_no: 1
+    methods: [GET, POST]
