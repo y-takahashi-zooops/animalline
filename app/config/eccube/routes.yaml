@@ -10,9 +10,10 @@ customize_controllers:
 web_profiler:
     resource: "../../config/eccube/routes/dev/web_profiler.yaml"
 
-# aniconfig:
-#     path: /aniconfig
-#     controller: App\Controller\AniconfigController::index
+admin:
+    prefix: /%eccube_admin_route%
+    path: /%eccube_admin_route%
+    # controller: App\Controller\AniconfigController::index
 
     #some_route:
     #path: /example
