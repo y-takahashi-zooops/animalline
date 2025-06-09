@@ -62,6 +62,7 @@ class TaxRuleType extends AbstractType
                 'date_widget' => 'choice',
                 'input' => 'datetime',
                 'format' => 'yyyy-MM-dd HH:mm',
+                'html5' => false,
                 'years' => range(date('Y'), date('Y') + 10),
                 'placeholder' => [
                     'year' => '----', 'month' => '--', 'day' => '--',
