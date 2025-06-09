@@ -535,7 +535,7 @@ file that was distributed with this source code.
                                                     />
                                                 </td>
                                                 <td class="align-middle text-left">
-                                                    <a class="action-edit" href="{{ url('admin_order_edit', { id : Order.id }) }}">{{ Order.order_no }}<br>{{ Order.name01 ~ Order.name02 }}<br>{{ Order.order_date|date_min }}</a>
+                                                    <a class="action-edit" href="{{ url('admin_order_edit', { id : Order.id }) }}">{{ Order.order_no }}<br>{{ Order.name01 ~ Order.name02 }}<br>{{ Order.order_date|date('Y-m-d H:i:s') }}</a>
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     {{ Order.payment_method }}
@@ -571,7 +571,7 @@ file that was distributed with this source code.
                                                         {{ Shipping.shipping_date ? Shipping.shipping_date|date_day : 'admin.order.unshipped'|trans }}
                                                     {% endif %}
                                                     {% if Shipping.mail_send_date %}
-                                                        {% set send_mail_date = Shipping.mail_send_date|date_min %}
+                                                        {% set send_mail_date = Shipping.mail_send_date|date('Y-m-d H:i:s') %}
                                                         <i class="fa fa-envelope fa-lg text-secondary" aria-hidden="true" data-tooltip="true" data-placement="top" data-original-title="{{ 'admin.order.shipping_mail__completed'|trans({'%date%': send_mail_date}) }}"></i>
                                                     {% endif %}
                                                 </td>

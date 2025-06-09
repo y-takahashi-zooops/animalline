@@ -237,11 +237,11 @@ http://www.gmo-pg.com/
                                         {% set ip_address = GmoFraudDetection.getIpAddress %}
                                         <tr id="ex-customer-{{ GmoFraudDetection.id }}">
                                             <td class="align-middle text-left pl-3">{{ ip_address }}</td>
-                                            <td class="align-middle text-left">{{ GmoFraudDetection.getOccurTime|date_min }}<br/>{{ FraudDetector.getReleaseTime(ip_address)|date_min }}</td>
+                                            <td class="align-middle text-left">{{ GmoFraudDetection.getOccurTime|date('Y-m-d H:i:s') }}<br/>{{ FraudDetector.getReleaseTime(ip_address)|date('Y-m-d H:i:s') }}</td>
                                             <td class="align-middle text-right">{{ GmoFraudDetection.getErrorCount }}</td>
                                             <td class="align-middle text-center">{{ FraudDetector.getStatus(ip_address) }}</td>
                                             <td class="align-middle text-center">{% if FraudDetector.isLock(ip_address) %}<a name="unlock" class="action-edit" data-url="{{ url('gmo_payment_gateway_admin_fraud_detection_unlock', { ipAddr: ip_address }) }}">{{ 'gmo_payment_gateway.admin.fraud_detection.unlock'|trans }}</a>{% endif %}</td>
-                                            <td class="align-middle text-left">{{ GmoFraudDetection.getCreateDate|date_min }}<br/>{{ GmoFraudDetection.getUpdateDate|date_min }}</td>
+                                            <td class="align-middle text-left">{{ GmoFraudDetection.getCreateDate|date('Y-m-d H:i:s') }}<br/>{{ GmoFraudDetection.getUpdateDate|date('Y-m-d H:i:s') }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
