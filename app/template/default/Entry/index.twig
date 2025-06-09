@@ -51,10 +51,10 @@ file that was distributed with this source code.
     {% endif %}
 {% endif %}
         </div>
-        {% if request.get('ReturnPath') =="adoption_mypage" %}
+        {% if app.request.get('ReturnPath') =="adoption_mypage" %}
         <div style="border: solid 1px; padding: 1rem;"><b>代表者様の情報をご記入ください。団体情報のご記入 は本会員登録後にございます。</b></div>
         {% endif %}
-        {% if request.get('ReturnPath') =="breeder_mypage" %}
+        {% if app.request.get('ReturnPath') =="breeder_mypage" %}
         <div style="border: solid 1px; padding: 1rem;"><b>代表者様の情報をご記入ください。団体情報のご記入 は本会員登録後にございます。</b></div>
         {% else %}
             
@@ -218,7 +218,7 @@ file that was distributed with this source code.
                             {% endif %}
                         {% endfor %}
                     </div>
-                    {% if request.get('ReturnPath') =="adoption_mypage" %}
+                    {% if app.request.get('ReturnPath') =="adoption_mypage" %}
                         <div style="border: solid 1px; padding: 1rem;"><b>
                         当サイトからのメールは「info@animalline.jp」で届きます。
                         保護団体登録に必要な情報を送らせて頂きますので、
@@ -227,7 +227,7 @@ file that was distributed with this source code.
                         又はドメイン『animalline.jp』を
                         受信リストに加えていただきますよう、お願い申し上げます。
                         </b></div>
-                    {% elseif request.get('ReturnPath') =="breeder_mypage" %}
+                    {% elseif app.request.get('ReturnPath') =="breeder_mypage" %}
                         <div style="border: solid 1px; padding: 1rem;"><b>
                         当サイトからのメールは「info@animalline.jp」で届きます。
                         ブリーダー登録に必要な情報を送らせて頂きますので、
@@ -236,7 +236,7 @@ file that was distributed with this source code.
                         又はドメイン『animalline.jp』を
                         受信リストに加えていただきますよう、お願い申し上げます。
                         </b></div>
-                    {% elseif request.get('ReturnPath') =="adoption_top" %}
+                    {% elseif app.request.get('ReturnPath') =="adoption_top" %}
                         <div style="border: solid 1px; padding: 1rem;"><b>
                         当サイトからのメールは「info@animalline.jp」で届きます。
                         本会員認証に必要な情報を送らせて頂きますので、
@@ -263,11 +263,11 @@ file that was distributed with this source code.
                                 <div class="ec-checkbox{{ has_errors(form.user_policy_check) ? ' error' }}">
                                     <label>
                                         {{ form_widget(form.user_policy_check) }}
-                                        {% if request.get('ReturnPath') =="adoption_mypage" %}
+                                        {% if app.request.get('ReturnPath') =="adoption_mypage" %}
                                             {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('adoption_terms') })|raw }}
-                                        {% elseif request.get('ReturnPath') =="breeder_mypage" %}
+                                        {% elseif app.request.get('ReturnPath') =="breeder_mypage" %}
                                             {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('breeder_terms') })|raw }}
-                                        {% elseif request.get('ReturnPath') =="adoption_top" %}
+                                        {% elseif app.request.get('ReturnPath') =="adoption_top" %}
                                             {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('adoption_user_terms') })|raw }}
                                         {% else %}
                                             {{ '<a class="ec-link" href="%url%" target="_blank">利用規約</a>に同意してお進みください'|trans({ '%url%': url('breeder_user_terms') })|raw }}
@@ -276,7 +276,7 @@ file that was distributed with this source code.
                                     </label>
                                     {{ form_errors(form.user_policy_check) }}
                                 </div>
-                                <input type="hidden" name="ReturnPath" value="{{request.get('ReturnPath')}}" />
+                                <input type="hidden" name="ReturnPath" value="{{app.request.get('ReturnPath')}}" />
                                 <button class="ec-blockBtn--action" type="submit" name="mode" value="confirm">{{ '同意する'|trans }}</button>
                                 <a class="ec-blockBtn--cancel" href="{{ url('breeder_top') }}">{{ '同意しない'|trans }}</a>
                             </div>
