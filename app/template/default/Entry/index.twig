@@ -10,9 +10,9 @@ file that was distributed with this source code.
 #}
 
 {# ヘッダーの切り替え #}
-{% if request.get('ReturnPath') =="adoption_mypage" %}
+{% if app.request.query.get('ReturnPath') =="adoption_mypage" %}
     {% set base_template = 'adoption_frame.twig' %}
-{% elseif request.get('ReturnPath') =="breeder_mypage" %}
+{% elseif app.request.query.get('ReturnPath') =="breeder_mypage" %}
     {% set base_template = 'breeder_frame.twig' %}
 {% else %}
     {% set base_template = 'normal_frame.twig' %}
