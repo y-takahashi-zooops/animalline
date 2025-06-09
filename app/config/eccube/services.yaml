@@ -405,7 +405,6 @@ services:
     eccube.security.failure_handler:
         class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
 
-services:
     Eccube\Controller\AbstractController:
         arguments:
             $eccubeConfig: '@Eccube\Common\EccubeConfig'
