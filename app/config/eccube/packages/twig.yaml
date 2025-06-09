@@ -13,6 +13,7 @@ twig:
       '%eccube_theme_src_dir%/toolbar': toolbar
       '%eccube_theme_src_dir%/common': common
       '%kernel.project_dir%/app/template/default': KnpPaginator
+      '%kernel.project_dir%/src/Eccube/Resource/template/': Eccube
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes: ['bootstrap_4_layout.html.twig']
