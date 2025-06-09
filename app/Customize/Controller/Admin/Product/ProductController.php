@@ -65,6 +65,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Eccube\Common\EccubeConfig;
 
 class ProductController extends BaseProductController
 {
@@ -200,6 +201,7 @@ class ProductController extends BaseProductController
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
         SessionInterface $session,
+        EccubeConfig $eccubeConfig,
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -220,6 +222,7 @@ class ProductController extends BaseProductController
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
         $this->session = $session;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
