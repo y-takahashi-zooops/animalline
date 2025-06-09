@@ -216,7 +216,7 @@ class ProductWasteController extends BaseProductController
      * @Route("/%eccube_admin_route%/product/waste/{id}", requirements={"id" = "\d+"}, name="admin_product_waste_regist")
      * @Template("@admin/Product/waste_regist.twig")
      */
-    public function waste_regist(Request $request, $id = null)
+    public function waste_regist(Request $request, ?int $id = null)
     {
         $productClassId = $request->get('id');
         $productClass = $this->productClassRepository->find($productClassId);
