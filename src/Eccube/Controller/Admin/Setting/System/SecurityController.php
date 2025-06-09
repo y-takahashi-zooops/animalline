@@ -38,8 +38,11 @@ class SecurityController extends AbstractController
      *
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(TokenStorageInterface $tokenStorage, FormFactoryInterface $formFactory)
-    {
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        FormFactoryInterface $formFactory,
+        EccubeConfig $eccubeConfig,
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->formFactory = $formFactory;
         $this->eccubeConfig = $eccubeConfig;
