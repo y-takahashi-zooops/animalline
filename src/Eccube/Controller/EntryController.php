@@ -35,6 +35,7 @@ use Eccube\Service\CartService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EntryController extends AbstractController
 {
@@ -109,7 +110,8 @@ class EntryController extends AbstractController
         ValidatorInterface $validatorInterface,
         TokenStorageInterface $tokenStorage,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
@@ -121,6 +123,7 @@ class EntryController extends AbstractController
         $this->cartService = $cartService;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
