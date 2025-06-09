@@ -162,6 +162,11 @@ class ProductWasteController extends BaseProductController
         $this->entityManager = $entityManager;
     }
 
+    public function index(int $page_no = 1)
+    {
+        return $this->redirectToRoute('admin_product_waste');
+    }
+
     /**
      * 廃棄管理画面
      *
