@@ -20,6 +20,7 @@ class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?Response
     {
+        dd('変数内容の確認', $this->defaultOptions['default_target_path']);
         $targetPath = $this->defaultOptions['default_target_path'] ?? '/';
         return $this->httpUtils->createRedirectResponse($request, $targetPath);
     }
