@@ -63,6 +63,7 @@ use Eccube\Repository\Master\OrderItemTypeRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class ProductController extends BaseProductController
 {
@@ -152,6 +153,11 @@ class ProductController extends BaseProductController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var Session
+     */
+    protected SessionInterface $session;
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -171,6 +177,7 @@ class ProductController extends BaseProductController
      * @param StockWasteReasonRepository $stockWasteReasonRepository
      * @param LoggerInterface $logger
      * @param FormFactoryInterface $formFactory
+     * @param SessionInterface $session,
      */
     public function __construct(
         CsvExportService                $csvExportService,
@@ -191,6 +198,7 @@ class ProductController extends BaseProductController
         LoggerInterface $logger,
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
+        SessionInterface $session,
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -210,6 +218,7 @@ class ProductController extends BaseProductController
         $this->logger = $logger;
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->session = $session;
     }
 
     /**
