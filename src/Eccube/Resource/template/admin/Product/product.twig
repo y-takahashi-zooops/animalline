@@ -852,7 +852,7 @@ file that was distributed with this source code.
                                         <span>{{ 'admin.common.create_date'|trans }}</span>
                                     </div>
                                     <div class="col">
-                                        <span>：{{ Product.create_date|date_min }}</span>
+                                        <span>：{{ Product.create_date|date('Y-m-d H:i:s') }}</span>
                                     </div>
                                 </div>
                                 <div class="row mb-2">
@@ -861,7 +861,7 @@ file that was distributed with this source code.
                                         <span>{{ 'admin.common.update_date'|trans }}</span>
                                     </div>
                                     <div class="col">
-                                        <span>：{{ Product.update_date|date_min }}</span>
+                                        <span>：{{ Product.update_date|date('Y-m-d H:i:s') }}</span>
                                     </div>
                                 </div>
                                 <div class="row mb-2">
