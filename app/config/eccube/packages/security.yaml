@@ -25,7 +25,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         admin:
-            pattern: '^/%eccube_admin_route%'
+            pattern: '^/admin'
             # lazy: true
             provider: member_provider
             form_login:
