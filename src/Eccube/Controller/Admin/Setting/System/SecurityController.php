@@ -32,6 +32,7 @@ class SecurityController extends AbstractController
     protected $tokenStorage;
 
     protected FormFactoryInterface $formFactory;
+    protected EccubeConfig $eccubeConfig;
 
     /**
      * SecurityController constructor.
@@ -42,7 +43,7 @@ class SecurityController extends AbstractController
     {
         $this->tokenStorage = $tokenStorage;
         $this->formFactory = $formFactory;
-        parent::__construct($eccubeConfig);
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
