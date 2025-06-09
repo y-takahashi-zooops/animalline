@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Eccube\Common\EccubeConfig;
 
 class SecurityController extends AbstractController
 {
@@ -37,10 +38,11 @@ class SecurityController extends AbstractController
      *
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(TokenStorageInterface $tokenStorage, FormFactoryInterface $formFactory)
+    public function __construct(TokenStorageInterface $tokenStorage, FormFactoryInterface $formFactory, EccubeConfig $eccubeConfig)
     {
         $this->tokenStorage = $tokenStorage;
         $this->formFactory = $formFactory;
+        parent::__construct($eccubeConfig);
     }
 
     /**
