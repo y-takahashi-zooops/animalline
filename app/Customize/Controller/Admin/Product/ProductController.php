@@ -61,6 +61,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Eccube\Controller\Admin\Product\ProductController as BaseProductController;
 use Eccube\Repository\Master\OrderItemTypeRepository;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ProductController extends BaseProductController
 {
@@ -145,6 +146,11 @@ class ProductController extends BaseProductController
     protected $logger;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+    /**
      * ProductController constructor.
      *
      * @param CsvExportService $csvExportService
@@ -163,6 +169,7 @@ class ProductController extends BaseProductController
      * @param StockWasteRepository $stockWasteRepository
      * @param StockWasteReasonRepository $stockWasteReasonRepository
      * @param LoggerInterface $logger
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         CsvExportService                $csvExportService,
@@ -180,7 +187,8 @@ class ProductController extends BaseProductController
         OrderItemTypeRepository         $orderItemTypeRepository,
         StockWasteRepository            $stockWasteRepository,
         StockWasteReasonRepository      $stockWasteReasonRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        FormFactoryInterface $formFactory,
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -198,6 +206,7 @@ class ProductController extends BaseProductController
         $this->stockWasteRepository = $stockWasteRepository;
         $this->stockWasteReasonRepository = $stockWasteReasonRepository;
         $this->logger = $logger;
+        $this->formFactory = $formFactory;
     }
 
     /**
