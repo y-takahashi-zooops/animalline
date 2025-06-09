@@ -405,7 +405,7 @@ services:
     
     Customize\Security\Http\Authentication\EccubeLoginSuccessHandler:
         arguments:
-            $defaultOptions:
+            $options:
                 default_target_path: '/admin'
 
     eccube.security.failure_handler:
