@@ -12,7 +12,7 @@ web_profiler:
 
 admin:
     prefix: /%eccube_admin_route%
-    # path: /%eccube_admin_route%
+    path: /%eccube_admin_route%
     # controller: App\Controller\AniconfigController::index
 
     #some_route:
