@@ -22,12 +22,13 @@ use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Workflow\Event\Event;
 // use Symfony\Component\Workflow\StateMachine;
-use Symfony\Component\Workflow\StateMachineInterface;
+// use Symfony\Component\Workflow\StateMachineInterface;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 class OrderStateMachine implements EventSubscriberInterface
 {
     /**
-     * @var StateMachineInterface
+     * @var WorkflowInterface
      */
     private $machine;
 
@@ -45,7 +46,7 @@ class OrderStateMachine implements EventSubscriberInterface
      */
     private $stockReduceProcessor;
 
-    public function __construct(StateMachineInterface $_orderStateMachine, OrderStatusRepository $orderStatusRepository, PointProcessor $pointProcessor, StockReduceProcessor $stockReduceProcessor)
+    public function __construct(WorkflowInterface $_orderStateMachine, OrderStatusRepository $orderStatusRepository, PointProcessor $pointProcessor, StockReduceProcessor $stockReduceProcessor)
     {
         $this->machine = $_orderStateMachine;
         $this->orderStatusRepository = $orderStatusRepository;
