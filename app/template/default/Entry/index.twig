@@ -39,9 +39,9 @@ file that was distributed with this source code.
                 <button class="ec-blockBtn--action" onclick="location.href='{{ url('breeder_login') }}'">会員ログイン</button>
             </div>
             {% endif %}
-{% if request.get('ReturnPath') =="adoption_mypage" %}
+{% if app.request.get('ReturnPath') =="adoption_mypage" %}
     <h1>{{ '新規保護団体代表者様登録'|trans }}</h1>
-{% elseif request.get('ReturnPath') =="breeder_mypage" %}
+{% elseif app.request.get('ReturnPath') =="breeder_mypage" %}
     <h1>{{ '新規ブリーダー様登録'|trans }}</h1>
 {% else %}
     {% if contact_save is defined and contact_save %}
