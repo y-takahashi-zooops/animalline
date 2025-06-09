@@ -205,7 +205,7 @@ class ProductController extends BaseProductController
      * @Route("/%eccube_admin_route%/product/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_product_page")
      * @Template("@admin/Product/index.twig")
      */
-    public function index(Request $request, $page_no = null, Paginator $paginator)
+    public function index(Request $request, $page_no = 1, Paginator $paginator)
     {
         $builder = $this->formFactory
             ->createBuilder(SearchProductType::class);
