@@ -218,6 +218,7 @@ class ProductWasteController extends BaseProductController
      */
     public function waste_regist(Request $request, ?int $id = null)
     {
+        dd("aaaa");
         $productClassId = $request->get('id');
         $productClass = $this->productClassRepository->find($productClassId);
         if (!$productClass) {

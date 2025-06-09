@@ -447,7 +447,7 @@ class ProductController extends BaseProductController
      * @Route("/%eccube_admin_route%/product/product/{id}/edit", requirements={"id" = "\d+"}, name="admin_product_product_edit")
      * @Template("@admin/Product/product.twig")
      */
-    public function edit(Request $request, ?int $id = null, RouterInterface $router, CacheUtil $cacheUtil)
+    public function edit(Request $request, $id = null, RouterInterface $router, CacheUtil $cacheUtil)
     {
         $has_class = false;
         if (is_null($id)) {
