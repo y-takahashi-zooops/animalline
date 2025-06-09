@@ -1,5 +1,5 @@
 {% autoescape false %}
-    {{ now|date_min }}の受注作成バッチ実行結果は以下の通りです。
+    {{ now|date('Y-m-d H:i:s') }}の受注作成バッチ実行結果は以下の通りです。
 
     受注作成処理件数：{{ numberOfRegularOrders }}
     受注作成処理完了件数：{{ numberOfCompletedOrder }}
