@@ -1,4 +1,5 @@
 admin:
-    resource: ../../src/Eccube/Controller/Admin/
+    # resource: ../../src/Eccube/Controller/Admin/
+    resource: ../../Customize/Controller/Admin/
     type: annotation
     # prefix: /%eccube_admin_route%
