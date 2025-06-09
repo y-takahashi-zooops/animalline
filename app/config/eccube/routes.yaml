@@ -11,8 +11,9 @@ web_profiler:
     resource: "../../config/eccube/routes/dev/web_profiler.yaml"
 
 admin:
+    resource: "../../config/eccube/admin.yaml"
     prefix: /%eccube_admin_route%
-    path: /%eccube_admin_route%
+    # path: /%eccube_admin_route%
     # controller: App\Controller\AniconfigController::index
 
     #some_route:
