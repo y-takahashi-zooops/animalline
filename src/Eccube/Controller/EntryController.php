@@ -157,7 +157,7 @@ class EntryController extends AbstractController
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_ENTRY_INDEX_INITIALIZE);
 
         /* @var $form \Symfony\Component\Form\FormInterface */
-        $form = $builder->getForm();
+        $form = $this->formFactory->create(EntryType::class, $Customer);
 
         $form->handleRequest($request);
 
