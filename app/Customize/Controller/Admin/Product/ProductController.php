@@ -62,6 +62,7 @@ use Eccube\Controller\Admin\Product\ProductController as BaseProductController;
 use Eccube\Repository\Master\OrderItemTypeRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ProductController extends BaseProductController
 {
@@ -189,6 +190,7 @@ class ProductController extends BaseProductController
         StockWasteReasonRepository      $stockWasteReasonRepository,
         LoggerInterface $logger,
         FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -207,6 +209,7 @@ class ProductController extends BaseProductController
         $this->stockWasteReasonRepository = $stockWasteReasonRepository;
         $this->logger = $logger;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
