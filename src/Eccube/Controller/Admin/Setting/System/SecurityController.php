@@ -23,6 +23,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Eccube\Common\EccubeConfig;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SecurityController extends AbstractController
 {
@@ -34,6 +37,12 @@ class SecurityController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var Session
+     */
+    protected SessionInterface $session;
+
+
+    /**
      * SecurityController constructor.
      *
      * @param TokenStorageInterface $tokenStorage
@@ -42,10 +51,14 @@ class SecurityController extends AbstractController
         TokenStorageInterface $tokenStorage,
         FormFactoryInterface $formFactory,
         EccubeConfig $eccubeConfig,
+        EventDispatcherInterface $eventDispatcher,
+        SessionInterface $session,
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->formFactory = $formFactory;
         $this->eccubeConfig = $eccubeConfig;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->session = $session;
     }
 
     /**
