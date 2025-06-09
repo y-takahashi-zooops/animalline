@@ -41,6 +41,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
 
 class AdminController extends AbstractController
 {
@@ -118,7 +119,8 @@ class AdminController extends AbstractController
         ProductRepository $productRepository,
         PluginApiService $pluginApiService,
         FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->helper = $helper;
@@ -131,6 +133,7 @@ class AdminController extends AbstractController
         $this->pluginApiService = $pluginApiService;
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
