@@ -403,9 +403,9 @@ services:
             # - { default_target_path: '/%eccube_admin_route%/' }
             - { default_target_path: '/admin/' }
     
-    Eccube\Security\Http\Authentication\EccubeLoginSuccessHandler:
+    Customize\Security\Http\Authentication\EccubeLoginSuccessHandler:
         arguments:
-            $defaultOptions:
+            $options:
                 default_target_path: '/admin'
 
     eccube.security.failure_handler:
