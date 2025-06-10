@@ -50,7 +50,7 @@ class ShopController extends AbstractController
     /**
      * @var EntityManagerInterface
      */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     /**
      * ShopController constructor.
