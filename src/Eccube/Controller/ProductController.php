@@ -88,7 +88,7 @@ class ProductController extends AbstractController
     protected $logger;
 
     /**
-     * @var Session
+     * @var SessionInterface
      */
     protected SessionInterface $session;
 
@@ -118,7 +118,7 @@ class ProductController extends AbstractController
         ProductListMaxRepository $productListMaxRepository,
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
-        SessionInterface $session,
+        SessionInterface $session
     ) {
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
