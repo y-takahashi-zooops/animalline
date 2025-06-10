@@ -45,6 +45,7 @@ use Customize\Repository\DnaSalesHeaderRepository;
 use Customize\Repository\DnaSalesStatusRepository;
 use DateTime;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MypageController extends BaseMypageController
 {
