@@ -15,7 +15,6 @@ namespace Eccube\Doctrine\Common\CsvDataFixtures;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\DBAL\Connection;
-// use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use SplFileObject;
