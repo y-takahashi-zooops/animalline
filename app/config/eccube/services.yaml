@@ -152,6 +152,7 @@ services:
         autowire: true
         autoconfigure: true
         public: false
+        abstract: false
 
     twig.extension.stringloader:
         class: Twig\Extension\StringLoaderExtension
