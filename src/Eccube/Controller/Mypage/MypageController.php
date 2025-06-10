@@ -37,6 +37,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class MypageController extends AbstractController
 {
@@ -75,6 +78,8 @@ class MypageController extends AbstractController
      */
     protected $logger;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * MypageController constructor.
      *
@@ -91,7 +96,11 @@ class MypageController extends AbstractController
         CartService $cartService,
         BaseInfoRepository $baseInfoRepository,
         PurchaseFlow $purchaseFlow,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        FormFactoryInterface $formFactory,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -99,6 +108,10 @@ class MypageController extends AbstractController
         $this->cartService = $cartService;
         $this->purchaseFlow = $purchaseFlow;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**
