@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class TaxRuleController
@@ -49,11 +50,17 @@ class TaxRuleController extends AbstractController
      * @param BaseInfoRepository $baseInfoRepository
      * @param TaxRuleRepository $taxRuleRepository
      */
-    public function __construct(BaseInfoRepository $baseInfoRepository, TaxRuleRepository $taxRuleRepository, FormFactoryInterface $formFactory)
+    public function __construct(
+        BaseInfoRepository $baseInfoRepository,
+        TaxRuleRepository $taxRuleRepository,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
         $this->BaseInfo = $baseInfoRepository->get();
         $this->taxRuleRepository = $taxRuleRepository;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
