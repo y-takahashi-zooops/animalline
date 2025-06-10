@@ -36,6 +36,8 @@ use Eccube\Repository\CartItemRepository;
 use Eccube\Repository\CartRepository;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ProductController extends BaseProductController
 {
@@ -91,6 +93,11 @@ class ProductController extends BaseProductController
      */
     protected $logger;
 
+    /**
+     * @var SessionInterface
+     */
+    protected SessionInterface $session;
+
     private $title = '';
 
     /**
@@ -106,6 +113,7 @@ class ProductController extends BaseProductController
      * @param CartItemRepository $cartItemRepository
      * @param CartRepository $cartRepository
      * @param LoggerInterface $logger
+     * @param SessionInterface $session
      */
     public function __construct(
         PurchaseFlow $cartPurchaseFlow,
@@ -118,7 +126,8 @@ class ProductController extends BaseProductController
         CartItemRepository $cartItemRepository,
         CartRepository $cartRepository,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SessionInterface $session
     ) {
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -131,6 +140,7 @@ class ProductController extends BaseProductController
         $this->cartRepository = $cartRepository;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->session = $session;
     }
 
     /**
