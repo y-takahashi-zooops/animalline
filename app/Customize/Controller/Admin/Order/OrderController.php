@@ -54,6 +54,8 @@ use Customize\Repository\BreedersRepository;
 use Customize\Repository\ConservationsRepository;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
+
 
 use Psr\Log\LoggerInterface;
 
@@ -186,7 +188,8 @@ class OrderController extends AbstractController
         ConservationsRepository $conservationsRepository,
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig
     ) {
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->csvExportService = $csvExportService;
@@ -207,6 +210,7 @@ class OrderController extends AbstractController
         $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

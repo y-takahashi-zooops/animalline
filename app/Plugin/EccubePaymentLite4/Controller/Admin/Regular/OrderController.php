@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Eccube\Common\EccubeConfig;
 
 class OrderController extends AbstractController
 {
@@ -32,11 +33,13 @@ class OrderController extends AbstractController
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         RegularOrderRepository $regularOrderRepository,
-        IsActiveRegularService $isActiveRegularService
+        IsActiveRegularService $isActiveRegularService,
+        EccubeConfig $eccubeConfig
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->regularOrderRepository = $regularOrderRepository;
         $this->isActiveRegularService = $isActiveRegularService;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

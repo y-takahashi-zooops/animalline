@@ -38,6 +38,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
+use Eccube\Common\EccubeConfig;
 
 class BreederMemberController extends AbstractController
 {
@@ -130,7 +131,8 @@ class BreederMemberController extends AbstractController
         EntityManagerInterface $entityManager,
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EccubeConfig $eccubeConfig
     ) {
         $this->customerRepository = $customerRepository;
         $this->breedersRepository = $breedersRepository;
@@ -146,6 +148,7 @@ class BreederMemberController extends AbstractController
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

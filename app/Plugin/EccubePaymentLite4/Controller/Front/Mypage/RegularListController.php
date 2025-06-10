@@ -10,6 +10,7 @@ use Plugin\EccubePaymentLite4\Repository\RegularOrderRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Eccube\Common\EccubeConfig;
 
 class RegularListController extends AbstractController
 {
@@ -24,10 +25,12 @@ class RegularListController extends AbstractController
 
     public function __construct(
         RegularOrderRepository $regularOrderRepository,
-        OrderRepository $orderRepository
+        OrderRepository $orderRepository,
+        EccubeConfig $eccubeConfig
     ) {
         $this->regularOrderRepository = $regularOrderRepository;
         $this->orderRepository = $orderRepository;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

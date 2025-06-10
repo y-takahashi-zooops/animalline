@@ -38,6 +38,7 @@ use Eccube\Repository\ProductRepository;
 use Eccube\Form\Type\AddCartType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Eccube\Common\EccubeConfig;
 
 use Psr\Log\LoggerInterface;
 
@@ -117,7 +118,8 @@ class ProductInstockController extends AbstractController
         ProductRepository $productRepository,
         CategoryRepository $categoryRepository,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EccubeConfig $eccubeConfig
     ) {
         $this->supplierRepository = $supplierRepository;
         $this->instockScheduleHeaderRepository = $instockScheduleHeaderRepository;
@@ -130,6 +132,7 @@ class ProductInstockController extends AbstractController
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

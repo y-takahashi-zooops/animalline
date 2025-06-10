@@ -13,12 +13,19 @@ use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Eccube\Common\EccubeConfig;
 
 /**
  * 楽天ペイ決済処理を行うクラス
  */
 class PaymentHelperRakutenPay extends PaymentHelper
 {
+    public function __construct(
+        EccubeConfig $eccubeConfig
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+    }
+
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
      *

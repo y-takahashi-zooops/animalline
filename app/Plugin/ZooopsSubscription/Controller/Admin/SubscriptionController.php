@@ -12,6 +12,7 @@ use Plugin\ZooopsSubscription\Form\Type\Admin\SearchSubscriptionType;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Component\Pager\Paginator;
 use Eccube\Util\FormUtil;
+use Eccube\Common\EccubeConfig;
 
 class SubscriptionController extends AbstractController
 {
@@ -40,11 +41,13 @@ class SubscriptionController extends AbstractController
     public function __construct(
         SubscriptionContractRepository $subscriptionContractRepository,
         PageMaxRepository $pageMaxRepository,
-        CustomerRepository $customerRepository
+        CustomerRepository $customerRepository,
+        EccubeConfig $eccubeConfig
     ) {
         $this->subscriptionContractRepository = $subscriptionContractRepository;
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

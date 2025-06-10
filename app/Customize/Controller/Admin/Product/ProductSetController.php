@@ -18,6 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Form\Type\AddCartType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Eccube\Common\EccubeConfig;
 
 class ProductSetController extends AbstractController
 {
@@ -56,13 +57,15 @@ class ProductSetController extends AbstractController
         ProductRepository      $productRepository,
         ProductSetRepository   $productSetRepository,
         CategoryRepository     $categoryRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EccubeConfig $eccubeConfig
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->productRepository = $productRepository;
         $this->productSetRepository = $productSetRepository;
         $this->categoryRepository = $categoryRepository;
         $this->formFactory = $formFactory;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

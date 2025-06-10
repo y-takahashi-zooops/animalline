@@ -28,11 +28,12 @@ class LoadDataFixturesEccubeCommand extends DoctrineCommand
     private ParameterBagInterface $params;
     private ManagerRegistry $registry;
 
-    public function __construct(ManagerRegistry $registry, ParameterBagInterface $params)
+    public function __construct(ManagerRegistry $registry, ParameterBagInterface $params, EccubeConfig $eccubeConfig)
     {
         parent::__construct($registry);
         $this->params = $params;
         $this->registry = $registry;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     protected function configure()

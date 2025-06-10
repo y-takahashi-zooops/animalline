@@ -31,6 +31,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Eccube\Common\EccubeConfig;
 
 class TemplateController extends AbstractController
 {
@@ -62,12 +63,14 @@ class TemplateController extends AbstractController
         TemplateRepository $templateRepository,
         DeviceTypeRepository $deviceTypeRepository,
         EventDispatcherInterface $eventDispatcher,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EccubeConfig $eccubeConfig
     ) {
         $this->templateRepository = $templateRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

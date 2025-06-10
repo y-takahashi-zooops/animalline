@@ -43,6 +43,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
 
 class ProductController extends AbstractController
 {
@@ -120,7 +121,8 @@ class ProductController extends AbstractController
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         SessionInterface $session,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig
     ) {
         parent::__construct();
         $this->purchaseFlow = $cartPurchaseFlow;
@@ -134,6 +136,7 @@ class ProductController extends AbstractController
         $this->logger = $logger;
         $this->session = $session;
         $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

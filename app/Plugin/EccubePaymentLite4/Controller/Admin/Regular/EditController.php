@@ -34,6 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Eccube\Common\EccubeConfig;
 
 class EditController extends AbstractController
 {
@@ -108,7 +109,8 @@ class EditController extends AbstractController
         IsActiveRegularService $isActiveRegularService,
         SearchProductRepository $searchProductRepository,
         SaleTypeRepository $saleTypeRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EccubeConfig $eccubeConfig
     ) {
         $this->regularOrderRepository = $regularOrderRepository;
         $this->regularCreditService = $regularCreditService;
@@ -124,6 +126,7 @@ class EditController extends AbstractController
         $this->searchProductRepository = $searchProductRepository;
         $this->saleTypeRepository = $saleTypeRepository;
         $this->formFactory = $formFactory;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

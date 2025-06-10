@@ -40,6 +40,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Repository\Master\OrderItemTypeRepository;
 use Customize\Controller\Admin\Product\ProductController as BaseProductController;
 use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
 
 class ProductWasteController extends BaseProductController
 {
@@ -144,7 +145,8 @@ class ProductWasteController extends BaseProductController
         TagRepository                   $tagRepository,
         OrderItemTypeRepository         $orderItemTypeRepository,
         StockWasteRepository            $stockWasteRepository,
-        StockWasteReasonRepository      $stockWasteReasonRepository
+        StockWasteReasonRepository      $stockWasteReasonRepository,
+        EccubeConfig $eccubeConfig
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -160,6 +162,8 @@ class ProductWasteController extends BaseProductController
         $this->stockWasteRepository = $stockWasteRepository;
         $this->stockWasteReasonRepository = $stockWasteReasonRepository;
         $this->entityManager = $entityManager;
+        $this->eccubeConfig = $eccubeConfig;
+
     }
 
     // public function index(Request $request, $page_no = null, PaginatorInterface $paginator)

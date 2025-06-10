@@ -17,6 +17,7 @@ use Eccube\Repository\CustomerRepository;
 use Eccube\Repository\Master\PageMaxRepository;
 use Plugin\ZooopsSendmail\Entity\MailTemplate;
 use Customize\Service\SendMailProcess;
+use Eccube\Common\EccubeConfig;
 
 class ZooopsSendmailController extends AbstractController
 {
@@ -59,13 +60,15 @@ class ZooopsSendmailController extends AbstractController
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
         CsvExportService $csvExportService,
-        SendMailProcess $sendMailProcess
+        SendMailProcess $sendMailProcess,
+        EccubeConfig $eccubeConfig
     ) {
         $this->templateRepository = $templateRepository;
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
         $this->csvExportService = $csvExportService;
         $this->sendMailProcess = $sendMailProcess;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

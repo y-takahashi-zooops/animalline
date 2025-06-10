@@ -29,6 +29,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Common\EccubeConfig;
 
 class MemberController extends AbstractController
 {
@@ -69,7 +70,8 @@ class MemberController extends AbstractController
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        EccubeConfig $eccubeConfig
     ) {
         $this->passwordHasher = $passwordHasher;
         $this->memberRepository = $memberRepository;
@@ -78,6 +80,7 @@ class MemberController extends AbstractController
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
