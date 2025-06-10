@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SystemController
 {
@@ -27,14 +28,20 @@ class SystemController
      */
     protected $systemService;
 
+    private TranslatorInterface $translator;
+
     /**
      * SystemController constructor.
      *
      * @param SystemService $systemService
      */
-    public function __construct(SystemService $systemService)
+    public function __construct(
+        SystemService $systemService,
+        TranslatorInterface $translator
+    )
     {
         $this->systemService = $systemService;
+        $this->translator = $translator;
     }
 
     /**
@@ -44,14 +51,14 @@ class SystemController
     public function index(Request $request)
     {
         $info = [];
-        $info[] = ['title' => trans('admin.setting.system.system.eccube'), 'value' => Constant::VERSION];
-        $info[] = ['title' => trans('admin.setting.system.system.server_os'), 'value' => php_uname()];
-        $info[] = ['title' => trans('admin.setting.system.system.database_server'), 'value' => $this->systemService->getDbversion()];
-        $info[] = ['title' => trans('admin.setting.system.system.web_server'), 'value' => $request->server->get('SERVER_SOFTWARE')];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.eccube'), 'value' => Constant::VERSION];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.server_os'), 'value' => php_uname()];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.database_server'), 'value' => $this->systemService->getDbversion()];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.web_server'), 'value' => $request->server->get('SERVER_SOFTWARE')];
 
         $value = phpversion().' ('.implode(', ', get_loaded_extensions()).')';
-        $info[] = ['title' => trans('admin.setting.system.system.php'), 'value' => $value];
-        $info[] = ['title' => trans('admin.setting.system.system.user_agent'), 'value' => $request->headers->get('User-Agent')];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.php'), 'value' => $value];
+        $info[] = ['title' => $this->translator->trans('admin.setting.system.system.user_agent'), 'value' => $request->headers->get('User-Agent')];
 
         return [
             'info' => $info,
