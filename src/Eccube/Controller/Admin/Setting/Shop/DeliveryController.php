@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Class DeliveryController
@@ -71,12 +72,18 @@ class DeliveryController extends AbstractController
     protected $saleTypeRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+    /**
      * DeliveryController constructor.
      *
      * @param PaymentOptionRepository $paymentOptionRepository
      * @param DeliveryFeeRepository $deliveryFeeRepository
      * @param PrefRepository $prefRepository
      * @param DeliveryRepository $deliveryRepository
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         PaymentOptionRepository $paymentOptionRepository,
@@ -85,7 +92,8 @@ class DeliveryController extends AbstractController
         DeliveryRepository $deliveryRepository,
         DeliveryTimeRepository $deliveryTimeRepository,
         SaleTypeRepository $saleTypeRepository,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        FormFactoryInterface $formFactory
     )
     {
         $this->paymentOptionRepository = $paymentOptionRepository;
@@ -95,6 +103,7 @@ class DeliveryController extends AbstractController
         $this->deliveryTimeRepository = $deliveryTimeRepository;
         $this->saleTypeRepository = $saleTypeRepository;
         $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
     }
 
     /**
