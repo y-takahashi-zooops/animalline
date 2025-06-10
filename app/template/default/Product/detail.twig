@@ -383,8 +383,7 @@ file that was distributed with this source code.
 											{{ form_widget(form.order_type[0]) }}
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
-												{{ form_widget(form.normal_quantity, {'attr': {'class': 'normal_readonly'}}) }}
-												{{ form_row(form.normal_quantity) }}
+												{{ form_row(form.normal_quantity, {'attr': {'class': 'normal_readonly'}}) }}
 											</div>
 										</div>
 									</li>
@@ -393,19 +392,16 @@ file that was distributed with this source code.
 											{{ form_widget(form.order_type[1]) }}
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
-												{{ form_widget(form.subscription_quantity, {'attr': {'class': 'subscription_readonly', 'readonly':'readonly'}}) }}
-												{{ form_row(form.subscription_quantity) }}
+												{{ form_row(form.subscription_quantity, {'attr': {'class': 'subscription_readonly', 'readonly':'readonly'}}) }}
 											</div>
 										</div>
 										<ul class="subscription_cycle_block" style="display: none;">
 											<li style="font-weight: bold;">お届けサイクル：</li>
 											<li class="subscription_cycle">
-												<div class="mb-2">{{ form_widget(form.cycle_type[0]) }}</div>
-												{{ form_row(form.month) }}
+												<div class="mb-2">{{ form_row(form.cycle_type[0]) }}</div>
 											</li>
 											<li class="subscription_cycle">
-												<div class="mb-2">{{ form_widget(form.cycle_type[1]) }}</div>
-												{{ form_row(form.day) }}
+												<div class="mb-2">{{ form_row(form.cycle_type[1]) }}</div>
 											</li>
 										</ul>
 									</li>
