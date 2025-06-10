@@ -29,6 +29,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Class PaymentController
@@ -41,17 +42,25 @@ class PaymentController extends AbstractController
     protected $paymentRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+    /**
      * PaymentController constructor.
      *
      * @param PaymentRepository $paymentRepository
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         PaymentRepository $paymentRepository,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        FormFactoryInterface $formFactory
     )
     {
         $this->paymentRepository = $paymentRepository;
         $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
     }
 
     /**
