@@ -27,6 +27,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class MemberController extends AbstractController
 {
@@ -65,13 +67,17 @@ class MemberController extends AbstractController
         MemberRepository $memberRepository,
         TokenStorageInterface $tokenStorage,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     ) {
         $this->passwordHasher = $passwordHasher;
         $this->memberRepository = $memberRepository;
         $this->tokenStorage = $tokenStorage;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**

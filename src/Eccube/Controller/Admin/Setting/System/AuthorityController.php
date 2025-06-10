@@ -23,6 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class AuthorityController extends AbstractController
 {
@@ -38,10 +39,15 @@ class AuthorityController extends AbstractController
      *
      * @param AuthorityRoleRepository $authorityRoleRepository
      */
-    public function __construct(AuthorityRoleRepository $authorityRoleRepository, FormFactoryInterface $formFactory)
+    public function __construct(
+        AuthorityRoleRepository $authorityRoleRepository,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
         $this->authorityRoleRepository = $authorityRoleRepository;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
