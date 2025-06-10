@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class HolidayController extends AbstractController
 {
@@ -24,12 +25,24 @@ class HolidayController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    /**
+     * @var Session
+     */
+    protected SessionInterface $session;
+
+    /**
+     * ProductController constructor.
+     *
+     * @param SessionInterface $session,
+     */
     public function __construct(
         BusinessHolidayRepository $businessHolidayRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        SessionInterface $session
     ) {
         $this->businessHolidayRepository = $businessHolidayRepository;
         $this->formFactory = $formFactory;
+        $this->session = $session;
     }
 
     /**
