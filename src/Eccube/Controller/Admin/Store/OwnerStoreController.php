@@ -35,6 +35,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Eccube\Common\EccubeConfig;
 
 /**
  * @Route("/%eccube_admin_route%/store/plugin/api")
@@ -106,6 +107,7 @@ class OwnerStoreController extends AbstractController
         CacheUtil $cacheUtil,
         FormFactoryInterface $formFactory,
         SessionInterface $session,
+        EccubeConfig $eccubeConfig
     ) {
         $this->pluginRepository = $pluginRepository;
         $this->pluginService = $pluginService;
@@ -118,6 +120,7 @@ class OwnerStoreController extends AbstractController
         $this->composerService = $composerService;
         $this->formFactory = $formFactory;
         $this->session = $session;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
