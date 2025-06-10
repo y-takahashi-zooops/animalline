@@ -72,12 +72,12 @@ class NewsController extends AbstractController
      * @Template("@admin/Content/news.twig")
      *
      * @param Request $request
-     * @param int $page_no
+     * @param int|null  $page_no
      * @param Paginator $paginator
      *
      * @return array
      */
-    public function index(Request $request, $page_no = 1, Paginator $paginator)
+    public function index(Request $request, ?int $page_no = 1, Paginator $paginator)
     {
         $qb = $this->newsRepository->getQueryBuilderAll();
 
