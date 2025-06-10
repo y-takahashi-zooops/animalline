@@ -118,7 +118,8 @@ class ProductController extends AbstractController
         ProductListMaxRepository $productListMaxRepository,
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
-        SessionInterface $session
+        SessionInterface $session,
+        EventDispatcherInterface $eventDispatcher
     ) {
         parent::__construct();
         $this->purchaseFlow = $cartPurchaseFlow;
@@ -131,6 +132,7 @@ class ProductController extends AbstractController
         $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->session = $session;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
