@@ -31,6 +31,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class PageController extends AbstractController
 {
@@ -66,11 +67,13 @@ class PageController extends AbstractController
         PageLayoutRepository $pageLayoutRepository,
         DeviceTypeRepository $deviceTypeRepository,
         FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->pageRepository = $pageRepository;
         $this->pageLayoutRepository = $pageLayoutRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
