@@ -16,6 +16,7 @@ use Plugin\EccubePaymentLite4\Service\GmoEpsilonRequestService;
 use Plugin\EccubePaymentLite4\Service\GmoEpsilonUrlService;
 use Plugin\EccubePaymentLite4\Service\Method\Reg_Credit;
 use Symfony\Component\Routing\Annotation\Route;
+use Eccube\Common\EccubeConfig;
 
 class CreateRegCreditOrderController extends AbstractController
 {
@@ -70,7 +71,8 @@ class CreateRegCreditOrderController extends AbstractController
         RequestGetUserInfoService $requestGetUserInfoService,
         GetCardCgiUrlService $getCardCgiUrlService,
         RequestReceiveOrderService $requestReceiveOrderService,
-        RequestGetSales2Service $requestGetSales2Service
+        RequestGetSales2Service $requestGetSales2Service,
+        EccubeConfig $eccubeConfig
     ) {
         $this->gmoEpsilonRequestService = $gmoEpsilonRequestService;
         $this->orderRepository = $orderRepository;
@@ -82,6 +84,7 @@ class CreateRegCreditOrderController extends AbstractController
         $this->getCardCgiUrlService = $getCardCgiUrlService;
         $this->requestReceiveOrderService = $requestReceiveOrderService;
         $this->requestGetSales2Service = $requestGetSales2Service;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

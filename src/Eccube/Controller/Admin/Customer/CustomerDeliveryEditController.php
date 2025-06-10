@@ -27,6 +27,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
 
 
 class CustomerDeliveryEditController extends AbstractController
@@ -44,11 +45,13 @@ class CustomerDeliveryEditController extends AbstractController
     public function __construct(
         CustomerAddressRepository $customerAddressRepository,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig
     ) {
         $this->customerAddressRepository = $customerAddressRepository;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

@@ -27,6 +27,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
 
 class ChangeController extends AbstractController
 {
@@ -58,7 +59,8 @@ class ChangeController extends AbstractController
         TokenStorageInterface $tokenStorage,
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig
 
     ) {
         $this->customerRepository = $customerRepository;
@@ -67,6 +69,7 @@ class ChangeController extends AbstractController
         $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

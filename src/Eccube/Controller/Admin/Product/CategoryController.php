@@ -31,6 +31,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
 
 class CategoryController extends AbstractController
 {
@@ -60,12 +61,14 @@ class CategoryController extends AbstractController
         CsvExportService $csvExportService,
         CategoryRepository $categoryRepository,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig
     ) {
         $this->csvExportService = $csvExportService;
         $this->categoryRepository = $categoryRepository;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

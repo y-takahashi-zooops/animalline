@@ -13,12 +13,19 @@ use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Eccube\Common\EccubeConfig;
 
 /**
  * キャリア ソフトバンク決済処理を行うクラス
  */
 class PaymentHelperSoftbank extends PaymentHelperCarrier
 {
+    public function __construct(
+        EccubeConfig $eccubeConfig
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+    }
+
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
      *

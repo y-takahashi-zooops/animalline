@@ -55,6 +55,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
 
 class EditController extends AbstractController
 {
@@ -171,7 +172,8 @@ class EditController extends AbstractController
         OrderHelper $orderHelper,
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig
     ) {
         $this->taxRuleService = $taxRuleService;
         $this->deviceTypeRepository = $deviceTypeRepository;
@@ -190,6 +192,7 @@ class EditController extends AbstractController
         $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

@@ -21,12 +21,19 @@ use Plugin\GmoPaymentGateway4\Service\Method\CarDocomo;
 use Plugin\GmoPaymentGateway4\Service\Method\CarSoftbank;
 use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
+use Eccube\Common\EccubeConfig;
 
 /**
  * 結果通知／その他受信向け決済処理を行うクラス
  */
 class PaymentHelperReceive extends PaymentHelper
 {
+    public function __construct(
+        EccubeConfig $eccubeConfig
+    ) {
+        $this->eccubeConfig = $eccubeConfig;
+    }
+
     /**
      * GMO-PG 支払方法別のクラス名称を取得する
      *

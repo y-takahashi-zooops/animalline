@@ -46,6 +46,7 @@ use Customize\Repository\DnaSalesStatusRepository;
 use DateTime;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
 
 class MypageController extends BaseMypageController
 {
@@ -169,7 +170,8 @@ class MypageController extends BaseMypageController
         DnaSalesHeaderRepository $dnaSalesHeaderRepository,
         DnaSalesStatusRepository $dnaSalesStatusRepository,
         FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -189,6 +191,7 @@ class MypageController extends BaseMypageController
         $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

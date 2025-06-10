@@ -21,6 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Eccube\Common\EccubeConfig;
 
 class FraudDetectionController extends AbstractController
 {
@@ -42,11 +43,13 @@ class FraudDetectionController extends AbstractController
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         GmoFraudDetectionRepository $gmoFraudDetectionRepository,
-        FraudDetector $fraudDetector
+        FraudDetector $fraudDetector,
+        EccubeConfig $eccubeConfig
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->gmoFraudDetectionRepository = $gmoFraudDetectionRepository;
         $this->fraudDetector = $fraudDetector;
+        $this->eccubeConfig = $eccubeConfig;
 
         // 不正検知機能を初期化
         $this->fraudDetector->initPaymentMethodClass(CreditCard::class);

@@ -48,6 +48,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
 
 class CustomerController extends AbstractController
 {
@@ -133,7 +134,8 @@ class CustomerController extends AbstractController
         CustomerQueryService $customerQueryService,
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -150,6 +152,7 @@ class CustomerController extends AbstractController
         $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

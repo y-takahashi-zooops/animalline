@@ -45,6 +45,7 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Eccube\Common\EccubeConfig;
 
 class CsvImportController extends AbstractCsvImportController
 {
@@ -121,7 +122,8 @@ class CsvImportController extends AbstractCsvImportController
         ProductClassRepository $productClassRepository,
         ValidatorInterface $validator,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EccubeConfig $eccubeConfig
     ) {
         $this->deliveryDurationRepository = $deliveryDurationRepository;
         $this->tagRepository = $tagRepository;
@@ -133,6 +135,7 @@ class CsvImportController extends AbstractCsvImportController
         $this->validator = $validator;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

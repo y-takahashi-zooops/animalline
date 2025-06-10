@@ -27,6 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
 
 class CustomerEditController extends AbstractController
 {
@@ -49,12 +50,14 @@ class CustomerEditController extends AbstractController
         CustomerRepository $customerRepository,
         UserPasswordHasherInterface $passwordHasher,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig
     ) {
         $this->customerRepository = $customerRepository;
         $this->passwordHasher = $passwordHasher;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
