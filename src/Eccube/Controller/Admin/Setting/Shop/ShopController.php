@@ -26,6 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class ShopController
@@ -63,13 +64,15 @@ class ShopController extends AbstractController
         Environment $twig,
         BaseInfoRepository $baseInfoRepository,
         FormFactoryInterface $formFactory,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        EventDispatcherInterface $eventDispatcher
     )
     {
         $this->baseInfoRepository = $baseInfoRepository;
         $this->twig = $twig;
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
