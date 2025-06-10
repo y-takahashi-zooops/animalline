@@ -28,6 +28,8 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class EmailValidator extends ConstraintValidator
 {
+    public $strict = false;
+    
     /**
      * {@inheritdoc}
      */
