@@ -113,12 +113,12 @@ class OwnerStoreController extends AbstractController
      * @Template("@admin/Store/plugin_search.twig")
      *
      * @param Request     $request
-     * @param int $page_no
+     * @param int|null  $page_no
      * @param Paginator $paginator
      *
      * @return array
      */
-    public function search(Request $request, $page_no = null, Paginator $paginator)
+    public function search(Request $request, ?int $page_no = 1, Paginator $paginator)
     {
         if (empty($this->BaseInfo->getAuthenticationKey())) {
             $this->addWarning('admin.store.plugin.search.not_auth', 'admin');
