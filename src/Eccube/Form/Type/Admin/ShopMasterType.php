@@ -106,7 +106,9 @@ class ShopMasterType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Email(['strict' => $this->eccubeConfig['eccube_rfc_email_check']]),
+                    new Email([
+                        'mode' => $this->eccubeConfig['eccube_rfc_email_check'] ? Email::VALIDATION_MODE_STRICT : Email::VALIDATION_MODE_HTML5,
+                    ]),
                 ],
             ])
             ->add('email02', EmailType::class, [
