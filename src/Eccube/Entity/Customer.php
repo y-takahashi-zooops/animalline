@@ -655,7 +655,7 @@ if (!class_exists('\Eccube\Entity\Customer')) {
          *
          * @return string|null
          */
-        public function getPassword()
+        public function getPassword(): ?string
         {
             return $this->password;
         }
