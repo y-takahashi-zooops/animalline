@@ -27,6 +27,7 @@ use Symfony\Component\HttpKernel\Exception as HttpException;
 use Eccube\Repository\CustomerRepository;
 use Customize\Form\Type\Breeder\BreederPetMovieType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AdoptionPetController extends AbstractController
 {
@@ -106,7 +107,8 @@ class AdoptionPetController extends AbstractController
         AdoptionQueryService                $adoptionQueryService,
         ConservationContactsRepository      $conservationContactsRepository,
         CustomerRepository      $customerRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
     )
     {
         $this->conservationPetsRepository = $conservationPetsRepository;
@@ -120,6 +122,7 @@ class AdoptionPetController extends AbstractController
         $this->conservationContactsRepository = $conservationContactsRepository;
         $this->customerRepository = $customerRepository;
         $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**
