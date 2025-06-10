@@ -23,6 +23,7 @@ use Eccube\Form\Type\Admin\NewsType;
 use Eccube\Repository\NewsRepository;
 use Eccube\Util\CacheUtil;
 use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -73,11 +74,11 @@ class NewsController extends AbstractController
      *
      * @param Request $request
      * @param int|null  $page_no
-     * @param Paginator $paginator
+     * @param PaginatorInterface $paginator
      *
      * @return array
      */
-    public function index(Request $request, ?int $page_no = 1, Paginator $paginator)
+    public function index(Request $request, ?int $page_no = 1, PaginatorInterface $paginator)
     {
         $qb = $this->newsRepository->getQueryBuilderAll();
 
