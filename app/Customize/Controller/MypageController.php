@@ -167,7 +167,8 @@ class MypageController extends BaseMypageController
         ShippingRepository $shippingRepository,
         DnaSalesHeaderRepository $dnaSalesHeaderRepository,
         DnaSalesStatusRepository $dnaSalesStatusRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -186,6 +187,7 @@ class MypageController extends BaseMypageController
         $this->dnaSalesHeaderRepository = $dnaSalesHeaderRepository;
         $this->dnaSalesStatusRepository = $dnaSalesStatusRepository;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
