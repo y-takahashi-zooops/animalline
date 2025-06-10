@@ -346,7 +346,7 @@ class AddCartTypeCustomizer extends AbstractTypeExtension
      */
     public static function getExtendedTypes(): iterable
     {
-        return [AddCartType::class];
+        return [\Eccube\Form\Type\AddCartType::class];
     }
 
 }
