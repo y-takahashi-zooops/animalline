@@ -145,14 +145,6 @@ services:
     Customize\EventListener\LogoutListener:
         tags:
             - { name: kernel.event_subscriber }
-    
-    Customize\Form\Extension\AddCartTypeCustomizer:
-        tags:
-            - { name: form.type_extension }
-        autowire: true
-        autoconfigure: true
-        public: false
-        abstract: false
 
     twig.extension.stringloader:
         class: Twig\Extension\StringLoaderExtension
