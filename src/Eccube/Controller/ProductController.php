@@ -106,7 +106,7 @@ class ProductController extends AbstractController
      * @param AuthenticationUtils $helper
      * @param ProductListMaxRepository $productListMaxRepository
      * @param LoggerInterface $logger
-     * @param SessionInterface $session,
+     * @param SessionInterface $session
      */
     public function __construct(
         PurchaseFlow $cartPurchaseFlow,
@@ -120,6 +120,7 @@ class ProductController extends AbstractController
         LoggerInterface $logger,
         SessionInterface $session
     ) {
+        parent::__construct();
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
         $this->cartService = $cartService;
