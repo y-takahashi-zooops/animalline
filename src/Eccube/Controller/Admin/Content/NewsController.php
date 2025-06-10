@@ -74,7 +74,7 @@ class NewsController extends AbstractController
     /**
      * 新着情報一覧を表示する。
      *
-     * @Route("/%eccube_admin_route%/content/news", name="admin_content_news")
+     * @Route("/%eccube_admin_route%/content/news", name="admin_content_news", defaults={"page_no"=1})
      * @Route("/%eccube_admin_route%/content/news/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_content_news_page")
      * @Template("@admin/Content/news.twig")
      *
