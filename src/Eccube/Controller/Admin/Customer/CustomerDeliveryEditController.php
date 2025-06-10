@@ -26,6 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 
 class CustomerDeliveryEditController extends AbstractController
 {
@@ -41,10 +43,12 @@ class CustomerDeliveryEditController extends AbstractController
 
     public function __construct(
         CustomerAddressRepository $customerAddressRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->customerAddressRepository = $customerAddressRepository;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

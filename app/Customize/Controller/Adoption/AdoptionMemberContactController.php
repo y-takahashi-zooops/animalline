@@ -25,6 +25,7 @@ use Customize\Service\MailService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AdoptionMemberContactController extends AbstractController
 {
@@ -90,7 +91,8 @@ class AdoptionMemberContactController extends AbstractController
         ConservationPetsRepository     $conservationPetsRepository,
         CustomerRepository             $customerRepository,
         MailService                    $mailService,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->conservationContactHeaderRepository = $conservationContactHeaderRepository;
         $this->conservationContactsRepository = $conservationContactsRepository;
@@ -101,6 +103,7 @@ class AdoptionMemberContactController extends AbstractController
         $this->mailService = $mailService;
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

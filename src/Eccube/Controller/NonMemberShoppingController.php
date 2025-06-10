@@ -28,6 +28,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class NonMemberShoppingController extends AbstractShoppingController
 {
@@ -73,7 +74,8 @@ class NonMemberShoppingController extends AbstractShoppingController
         OrderHelper $orderHelper,
         CartService $cartService,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->validator = $validator;
         $this->prefRepository = $prefRepository;
@@ -81,6 +83,7 @@ class NonMemberShoppingController extends AbstractShoppingController
         $this->cartService = $cartService;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

@@ -54,6 +54,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class EditController extends AbstractController
 {
@@ -169,7 +170,8 @@ class EditController extends AbstractController
         OrderStateMachine $orderStateMachine,
         OrderHelper $orderHelper,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->taxRuleService = $taxRuleService;
         $this->deviceTypeRepository = $deviceTypeRepository;
@@ -187,6 +189,7 @@ class EditController extends AbstractController
         $this->orderHelper = $orderHelper;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

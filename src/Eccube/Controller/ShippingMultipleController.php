@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ShippingMultipleController extends AbstractShoppingController
 {
@@ -94,7 +95,8 @@ class ShippingMultipleController extends AbstractShoppingController
         CartService $cartService,
         PurchaseFlow $cartPurchaseFlow,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->prefRepository = $prefRepository;
         $this->orderRepository = $orderRepository;
@@ -104,6 +106,7 @@ class ShippingMultipleController extends AbstractShoppingController
         $this->cartPurchaseFlow = $cartPurchaseFlow;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

@@ -29,6 +29,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class WithdrawController extends AbstractController
 {
@@ -81,7 +82,8 @@ class WithdrawController extends AbstractController
         CartService $cartService,
         OrderHelper $orderHelper,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->mailService = $mailService;
         $this->customerStatusRepository = $customerStatusRepository;
@@ -90,6 +92,7 @@ class WithdrawController extends AbstractController
         $this->orderHelper = $orderHelper;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

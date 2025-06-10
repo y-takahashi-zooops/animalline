@@ -40,6 +40,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ShoppingController extends AbstractShoppingController
 {
@@ -76,7 +77,8 @@ class ShoppingController extends AbstractShoppingController
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
@@ -84,6 +86,7 @@ class ShoppingController extends AbstractShoppingController
         $this->orderHelper = $orderHelper;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

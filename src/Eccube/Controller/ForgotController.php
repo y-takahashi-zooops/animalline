@@ -28,6 +28,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ForgotController extends AbstractController
 {
@@ -70,13 +71,15 @@ class ForgotController extends AbstractController
         MailService $mailService,
         CustomerRepository $customerRepository,
         UserPasswordHasherInterface $passwordHasher,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->validator = $validator;
         $this->mailService = $mailService;
         $this->customerRepository = $customerRepository;
         $this->passwordHasher = $passwordHasher;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

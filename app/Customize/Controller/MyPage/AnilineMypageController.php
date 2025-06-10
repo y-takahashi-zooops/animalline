@@ -25,6 +25,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AnilineMypageController extends AbstractController
 {
@@ -79,7 +80,8 @@ class AnilineMypageController extends AbstractController
         CartService $cartService,
         BaseInfoRepository $baseInfoRepository,
         PurchaseFlow $purchaseFlow,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -87,6 +89,7 @@ class AnilineMypageController extends AbstractController
         $this->cartService = $cartService;
         $this->purchaseFlow = $purchaseFlow;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

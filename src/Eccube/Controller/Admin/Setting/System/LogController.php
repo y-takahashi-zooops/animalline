@@ -20,9 +20,16 @@ use Eccube\Form\Type\Admin\LogType;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class LogController extends AbstractController
 {
+    
+    public function __construct(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
     /**
      * @Route("/%eccube_admin_route%/setting/system/log", name="admin_setting_system_log")
      * @Template("@admin/Setting/System/log.twig")

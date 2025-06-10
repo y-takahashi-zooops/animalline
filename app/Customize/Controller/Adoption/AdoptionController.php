@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class AdoptionController extends AbstractController
 {
@@ -115,7 +116,8 @@ class AdoptionController extends AbstractController
         ConservationsHousesRepository  $conservationsHousesRepository,
         MailService                    $mailService,
         AffiliateStatusRepository $affiliateStatusRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->conservationPetsRepository = $conservationPetsRepository;
         $this->conservationPetImageRepository = $conservationPetImageRepository;
@@ -129,6 +131,7 @@ class AdoptionController extends AbstractController
         $this->affiliateStatusRepository = $affiliateStatusRepository;
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
 

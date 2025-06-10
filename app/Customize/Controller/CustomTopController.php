@@ -28,6 +28,7 @@ use Eccube\Repository\ProductRepository;
 use Eccube\Repository\CategoryRepository;
 use Customize\Config\AnilineConf;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CustomTopController extends AbstractController
 {
@@ -64,7 +65,8 @@ class CustomTopController extends AbstractController
         CategoryRepository $categoryRepository,
         ProductListOrderByRepository $productListOrderByRepository,
         MailService $mailService,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->NewsRepository = $NewsRepository;
         $this->productListOrderByRepository = $productListOrderByRepository;
@@ -72,6 +74,7 @@ class CustomTopController extends AbstractController
         $this->categoryRepository = $categoryRepository;
         $this->mailService = $mailService;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
     /**
      * @Route("/ec", name="homepage")

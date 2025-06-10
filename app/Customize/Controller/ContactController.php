@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ContactController extends AbstractController
 {
@@ -41,10 +42,12 @@ class ContactController extends AbstractController
      */
     public function __construct(
         MailService $mailService,
-        FormFactoryInterface $formFactory)
-    {
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+    ) {
         $this->mailService = $mailService;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

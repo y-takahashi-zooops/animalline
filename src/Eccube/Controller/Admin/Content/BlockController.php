@@ -30,6 +30,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class BlockController extends AbstractController
 {
@@ -48,11 +49,13 @@ class BlockController extends AbstractController
     public function __construct(
         BlockRepository $blockRepository,
         DeviceTypeRepository $deviceTypeRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->blockRepository = $blockRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
