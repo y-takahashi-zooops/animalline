@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class PageController extends AbstractController
 {
@@ -49,19 +50,27 @@ class PageController extends AbstractController
     protected $deviceTypeRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+    /**
      * PageController constructor.
      *
      * @param PageRepository $pageRepository
      * @param DeviceTypeRepository $deviceTypeRepository
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(
         PageRepository $pageRepository,
         PageLayoutRepository $pageLayoutRepository,
-        DeviceTypeRepository $deviceTypeRepository
+        DeviceTypeRepository $deviceTypeRepository,
+        FormFactoryInterface $formFactory,
     ) {
         $this->pageRepository = $pageRepository;
         $this->pageLayoutRepository = $pageLayoutRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**
