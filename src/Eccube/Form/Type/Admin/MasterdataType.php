@@ -49,26 +49,41 @@ class MasterdataType extends AbstractType
     {
         $masterdata = [];
 
-        /** @var MappingDriverChain $driverChain */
-        $driverChain = $this->entityManager->getConfiguration()->getMetadataDriverImpl();
-        /** @var MappingDriver[] $drivers */
-        $drivers = $driverChain->getDrivers();
+        // /** @var MappingDriverChain $driverChain */
+        // $driverChain = $this->entityManager->getConfiguration()->getMetadataDriverImpl();
+        // /** @var MappingDriver[] $drivers */
+        // $drivers = $driverChain->getDrivers();
 
-        foreach ($drivers as $namespace => $driver) {
-            if ($namespace == 'Eccube\Entity') {
-                $classNames = $driver->getAllClassNames();
-                foreach ($classNames as $className) {
-                    /** @var ClassMetadata $meta */
-                    $meta = $this->entityManager->getMetadataFactory()->getMetadataFor($className);
-                    if (strpos($meta->rootEntityName, 'Master') !== false
-                        && $meta->hasField('id')
-                        && $meta->hasField('name')
-                        && $meta->hasField('sort_no')
-                    ) {
-                        $metadataName = str_replace('\\', '-', $meta->getName());
-                        $masterdata[$metadataName] = $meta->getTableName();
-                    }
-                }
+        // foreach ($drivers as $namespace => $driver) {
+        //     if ($namespace == 'Eccube\Entity') {
+        //         $classNames = $driver->getAllClassNames();
+        //         foreach ($classNames as $className) {
+        //             /** @var ClassMetadata $meta */
+        //             $meta = $this->entityManager->getMetadataFactory()->getMetadataFor($className);
+        //             if (strpos($meta->rootEntityName, 'Master') !== false
+        //                 && $meta->hasField('id')
+        //                 && $meta->hasField('name')
+        //                 && $meta->hasField('sort_no')
+        //             ) {
+        //                 $metadataName = str_replace('\\', '-', $meta->getName());
+        //                 $masterdata[$metadataName] = $meta->getTableName();
+        //             }
+        //         }
+        //     }
+        // }
+
+        $classNames = $this->entityManager->getMetadataFactory()->getAllMetadata();
+
+        foreach ($classNames as $meta) {
+            if (
+                strpos($meta->rootEntityName, 'Eccube\Entity') !== false
+                && strpos($meta->rootEntityName, 'Master') !== false
+                && $meta->hasField('id')
+                && $meta->hasField('name')
+                && $meta->hasField('sort_no')
+            ) {
+                $metadataName = str_replace('\\', '-', $meta->getName());
+                $masterdata[$metadataName] = $meta->getTableName();
             }
         }
 
