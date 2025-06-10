@@ -349,4 +349,12 @@ class AddCartTypeCustomizer extends AbstractTypeExtension
         return [\Eccube\Form\Type\AddCartType::class];
     }
 
+    /**
+     * @deprecated For Symfony < 4.2 compatibility
+     */
+    public static function getExtendedType()
+    {
+        return \Eccube\Form\Type\AddCartType::class;
+    }
+
 }
