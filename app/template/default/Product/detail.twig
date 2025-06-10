@@ -380,13 +380,11 @@ file that was distributed with this source code.
 								<ul class="order_list">
 									<li class="order_list_block normal_block" {% if Product.ClassName1 %}style="display: none"{% endif %}>
 										<div class="order_label">
-											{% if form.order_type is defined %}
-												{{ form_widget(form.order_type) }}
-											{% endif %}
+											{{ form_widget(form.order_type[0]) }}
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
 												{{ form_widget(form.normal_quantity, {'attr': {'class': 'normal_readonly'}}) }}
-												{{ form_errors(form.normal_quantity) }}
+												{{ form_row(form.normal_quantity) }}
 											</div>
 										</div>
 									</li>
@@ -396,7 +394,7 @@ file that was distributed with this source code.
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
 												{{ form_widget(form.subscription_quantity, {'attr': {'class': 'subscription_readonly', 'readonly':'readonly'}}) }}
-												{{ form_errors(form.subscription_quantity) }}
+												{{ form_row(form.subscription_quantity) }}
 											</div>
 										</div>
 										<ul class="subscription_cycle_block" style="display: none;">
