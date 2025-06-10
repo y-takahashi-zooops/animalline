@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class MailController
@@ -51,11 +52,13 @@ class MailController extends AbstractController
      */
     public function __construct(
         MailTemplateRepository $mailTemplateRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     )
     {
         $this->mailTemplateRepository = $mailTemplateRepository;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
