@@ -380,7 +380,9 @@ file that was distributed with this source code.
 								<ul class="order_list">
 									<li class="order_list_block normal_block" {% if Product.ClassName1 %}style="display: none"{% endif %}>
 										<div class="order_label">
-											{{ form_widget(form.order_type[0]) }}
+											{% if form.order_type is defined %}
+												{{ form_widget(form.order_type) }}
+											{% endif %}
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
 												{{ form_widget(form.normal_quantity, {'attr': {'class': 'normal_readonly'}}) }}
