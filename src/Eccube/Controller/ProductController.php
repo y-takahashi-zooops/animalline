@@ -120,6 +120,7 @@ class ProductController extends AbstractController
         LoggerInterface $logger,
         SessionInterface $session
     ) {
+        parent::__construct();
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
         $this->cartService = $cartService;
