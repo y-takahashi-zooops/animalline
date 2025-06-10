@@ -365,14 +365,14 @@ file that was distributed with this source code.
 								<div class="ec-select" style="margin-top:1rem">
 									<span>{{ form_label(form.classcategory_id1) }}▼</span><br>
 									{{ form_widget(form.classcategory_id1) }}
-									{{ form_row(form.classcategory_id1) }}
+									{{ form_errors(form.classcategory_id1) }}
 								</div>
 							{% endif %}
 							{% if Product.ClassName2 %}
 								<div class="ec-select">
 									<span>{{ form_label(form.classcategory_id2) }}</span><br>
 									{{ form_widget(form.classcategory_id2) }}
-									{{ form_row(form.classcategory_id2) }}
+									{{ form_errors(form.classcategory_id2) }}
 								</div>
 							{% endif %}
 
