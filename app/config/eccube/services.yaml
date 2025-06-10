@@ -147,12 +147,15 @@ services:
             - { name: kernel.event_subscriber }
     
     Customize\Form\Extension\AddCartTypeCustomizer:
-        autowire: true
-        autoconfigure: true
-        public: false
+        class: Customize\Form\Extension\AddCartTypeCustomizer
+        arguments:
+            $doctrine: '@doctrine'
+            $config: '@Eccube\Common\EccubeConfig'
         tags:
             - { name: form.type_extension }
-        abstract: false
+        autowire: false
+        autoconfigure: false
+        public: false
 
     twig.extension.stringloader:
         class: Twig\Extension\StringLoaderExtension
@@ -168,10 +171,6 @@ services:
             $pluginRepository: '@Eccube\Repository\PluginRepository'
         tags:
           - { name: 'data_collector', template: '@toolbar/eccube.html.twig', id: 'eccube_core', priority: -512 }
-
-    # # Animalline拡張
-    # eccube.security.logout_success_handler:
-    #     class: Customize\Security\Http\Authentication\EccubeLogoutSuccessHandler
 
     # Autowiring can't guess the constructor arguments that are not type-hinted with
     # classes (e.g. container parameters) so you must define those arguments explicitly
