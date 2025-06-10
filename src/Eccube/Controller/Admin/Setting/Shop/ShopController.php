@@ -25,6 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 // use Twig_Environment;
 use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class ShopController
@@ -47,6 +48,11 @@ class ShopController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * ShopController constructor.
      *
      * @param Environment $twig
@@ -56,12 +62,14 @@ class ShopController extends AbstractController
     public function __construct(
         Environment $twig,
         BaseInfoRepository $baseInfoRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
     )
     {
         $this->baseInfoRepository = $baseInfoRepository;
         $this->twig = $twig;
         $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**
