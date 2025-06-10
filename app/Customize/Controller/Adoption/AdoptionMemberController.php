@@ -29,6 +29,8 @@ use Customize\Repository\ConservationContactHeaderRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
 
 class AdoptionMemberController extends AbstractController
 {
@@ -108,7 +110,9 @@ class AdoptionMemberController extends AbstractController
         BenefitsStatusRepository $benefitsStatusRepository,
         ConservationBankAccountRepository $conservationBankAccountRepository,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig,
     ) {
         $this->customerRepository = $customerRepository;
         $this->conservationsRepository = $conservationsRepository;
@@ -121,6 +125,8 @@ class AdoptionMemberController extends AbstractController
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
