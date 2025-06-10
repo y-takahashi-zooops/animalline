@@ -127,7 +127,8 @@ class ProductController extends BaseProductController
         CartRepository $cartRepository,
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
-        SessionInterface $session
+        SessionInterface $session,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -141,6 +142,7 @@ class ProductController extends BaseProductController
         $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->session = $session;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
