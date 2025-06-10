@@ -26,6 +26,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Class MailController
@@ -38,13 +39,23 @@ class MailController extends AbstractController
     protected $mailTemplateRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+    /**
      * MailController constructor.
      *
      * @param MailTemplateRepository $mailTemplateRepository
+     * @param FormFactoryInterface $formFactory
      */
-    public function __construct(MailTemplateRepository $mailTemplateRepository)
+    public function __construct(
+        MailTemplateRepository $mailTemplateRepository,
+        FormFactoryInterface $formFactory
+    )
     {
         $this->mailTemplateRepository = $mailTemplateRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**
