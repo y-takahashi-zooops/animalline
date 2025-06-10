@@ -31,12 +31,16 @@ class HolidayController extends AbstractController
      */
     protected SessionInterface $session;
 
-    private EntityManagerInterface $entityManager;
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
 
     /**
      * ProductController constructor.
      *
      * @param SessionInterface $session,
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
         BusinessHolidayRepository $businessHolidayRepository,
