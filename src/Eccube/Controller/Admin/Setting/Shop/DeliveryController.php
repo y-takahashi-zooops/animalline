@@ -33,6 +33,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class DeliveryController
@@ -77,7 +78,15 @@ class DeliveryController extends AbstractController
      * @param PrefRepository $prefRepository
      * @param DeliveryRepository $deliveryRepository
      */
-    public function __construct(PaymentOptionRepository $paymentOptionRepository, DeliveryFeeRepository $deliveryFeeRepository, PrefRepository $prefRepository, DeliveryRepository $deliveryRepository, DeliveryTimeRepository $deliveryTimeRepository, SaleTypeRepository $saleTypeRepository)
+    public function __construct(
+        PaymentOptionRepository $paymentOptionRepository,
+        DeliveryFeeRepository $deliveryFeeRepository,
+        PrefRepository $prefRepository,
+        DeliveryRepository $deliveryRepository,
+        DeliveryTimeRepository $deliveryTimeRepository,
+        SaleTypeRepository $saleTypeRepository,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
         $this->paymentOptionRepository = $paymentOptionRepository;
         $this->deliveryFeeRepository = $deliveryFeeRepository;
@@ -85,6 +94,7 @@ class DeliveryController extends AbstractController
         $this->deliveryRepository = $deliveryRepository;
         $this->deliveryTimeRepository = $deliveryTimeRepository;
         $this->saleTypeRepository = $saleTypeRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
