@@ -21,6 +21,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SearchProductController extends AbstractController
 {
@@ -28,10 +30,20 @@ class SearchProductController extends AbstractController
      * @var RequestStack
      */
     protected RequestStack $requestStack;
+    
+    /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
 
-    public function __construct(RequestStack $requestStack
+    public function __construct(
+        RequestStack $requestStack,
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
     ) {
         $this->requestStack = $requestStack;
+        $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
