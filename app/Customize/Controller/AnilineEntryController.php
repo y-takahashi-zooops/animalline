@@ -43,6 +43,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AnilineEntryController extends AbstractController
 {
@@ -108,6 +109,8 @@ class AnilineEntryController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * EntryController constructor.
      *
@@ -139,7 +142,8 @@ class AnilineEntryController extends AbstractController
         ConservationsRepository $conservationsRepository,
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->customerStatusRepository = $customerStatusRepository;
         $this->mailService = $mailService;
@@ -155,6 +159,7 @@ class AnilineEntryController extends AbstractController
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**

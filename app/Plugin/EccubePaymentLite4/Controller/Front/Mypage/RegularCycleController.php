@@ -14,6 +14,7 @@ use Plugin\EccubePaymentLite4\Service\IsMypageRegularSettingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RegularCycleController extends AbstractController
 {
@@ -30,14 +31,18 @@ class RegularCycleController extends AbstractController
      */
     private $isActiveRegularService;
 
+    protected $entityManager;
+
     public function __construct(
         CalculateOneAfterAnotherNextDeliveryDateService $calculateOneAfterAnotherNextDeliveryDateService,
         IsMypageRegularSettingService $isMypageRegularSettingService,
-        IsActiveRegularService $isActiveRegularService
+        IsActiveRegularService $isActiveRegularService,
+        EntityManagerInterface $entityManager
     ) {
         $this->calculateOneAfterAnotherNextDeliveryDateService = $calculateOneAfterAnotherNextDeliveryDateService;
         $this->isMypageRegularSettingService = $isMypageRegularSettingService;
         $this->isActiveRegularService = $isActiveRegularService;
+        $this->entityManager = $entityManager;
     }
 
     /**

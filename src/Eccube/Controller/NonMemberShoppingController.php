@@ -30,6 +30,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class NonMemberShoppingController extends AbstractShoppingController
 {
@@ -60,6 +61,8 @@ class NonMemberShoppingController extends AbstractShoppingController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * NonMemberShoppingController constructor.
      *
@@ -77,7 +80,8 @@ class NonMemberShoppingController extends AbstractShoppingController
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->validator = $validator;
         $this->prefRepository = $prefRepository;
@@ -87,6 +91,7 @@ class NonMemberShoppingController extends AbstractShoppingController
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

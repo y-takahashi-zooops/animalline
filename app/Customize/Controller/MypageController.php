@@ -47,6 +47,8 @@ use DateTime;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class MypageController extends BaseMypageController
 {
@@ -132,6 +134,8 @@ class MypageController extends BaseMypageController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     /**
      * MypageController constructor.
      *
@@ -171,7 +175,8 @@ class MypageController extends BaseMypageController
         DnaSalesStatusRepository $dnaSalesStatusRepository,
         FormFactoryInterface $formFactory,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -192,6 +197,7 @@ class MypageController extends BaseMypageController
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

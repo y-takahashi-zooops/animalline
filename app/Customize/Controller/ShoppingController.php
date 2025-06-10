@@ -37,6 +37,8 @@ use Symfony\Component\Validator\Constraints\Date;
 use Eccube\Controller\ShoppingController as BaseShoppingController;
 use Customize\Service\SubscriptionProcess;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class ShoppingController extends BaseShoppingController
 {
@@ -70,13 +72,16 @@ class ShoppingController extends BaseShoppingController
      */
     protected $logger;
 
+    protected $entityManager;
+
     public function __construct(
         CartService $cartService,
         MailService $mailService,
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
         SubscriptionProcess $subscriptionProcess,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
@@ -84,6 +89,7 @@ class ShoppingController extends BaseShoppingController
         $this->orderHelper = $orderHelper;
         $this->subscriptionProcess = $subscriptionProcess;
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**

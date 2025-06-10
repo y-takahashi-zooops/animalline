@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class ProductReviewController admin.
@@ -64,6 +65,8 @@ class ProductReviewController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * ProductReviewController constructor.
      *
@@ -80,7 +83,8 @@ class ProductReviewController extends AbstractController
         CsvExportService $csvExportService,
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->productReviewRepository = $productReviewRepository;
@@ -89,6 +93,7 @@ class ProductReviewController extends AbstractController
         $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

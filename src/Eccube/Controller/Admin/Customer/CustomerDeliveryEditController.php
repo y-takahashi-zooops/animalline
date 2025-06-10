@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 
 class CustomerDeliveryEditController extends AbstractController
@@ -42,16 +43,20 @@ class CustomerDeliveryEditController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     public function __construct(
         CustomerAddressRepository $customerAddressRepository,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->customerAddressRepository = $customerAddressRepository;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

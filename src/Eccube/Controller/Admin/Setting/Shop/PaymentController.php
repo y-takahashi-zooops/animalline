@@ -30,6 +30,7 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class PaymentController
@@ -46,6 +47,8 @@ class PaymentController extends AbstractController
      */
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     /**
      * PaymentController constructor.
      *
@@ -55,12 +58,14 @@ class PaymentController extends AbstractController
     public function __construct(
         PaymentRepository $paymentRepository,
         EventDispatcherInterface $eventDispatcher,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
     )
     {
         $this->paymentRepository = $paymentRepository;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**

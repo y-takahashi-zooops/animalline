@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RegularDiscountSettingController extends AbstractController
 {
@@ -30,17 +31,21 @@ class RegularDiscountSettingController extends AbstractController
      */
     private $logger;
 
+    protected $entityManager;
+
     /**
      * RegularDiscountSettingController constructor.
      */
     public function __construct(
         RegularDiscountRepository $regularDiscountRepository,
         ProductClassRepository $productClassRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->regularDiscountRepository = $regularDiscountRepository;
         $this->productClassRepository = $productClassRepository;
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**

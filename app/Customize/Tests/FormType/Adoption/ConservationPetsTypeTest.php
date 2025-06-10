@@ -10,10 +10,19 @@ use Symfony\Component\Form\Test\TypeTestCase;
 use DateTime;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Validator\Validation;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class ConservationPetsTypeTest extends TypeTestCase
 {
     private $entityManager;
+
+    public function __construct(
+        EntityManagerInterface $entityManager
+    ) {
+        $this->entityManager = $entityManager;
+    }
+        
 
     protected function setUp()
     {

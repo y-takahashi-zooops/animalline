@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RegularCancelController extends AbstractController
 {
@@ -39,18 +40,22 @@ class RegularCancelController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     public function __construct(
         RegularStatusRepository $regularStatusRepository,
         IsMypageRegularSettingService $isMypageRegularSettingService,
         IsActiveRegularService $isActiveRegularService,
         ConfigRepository $configRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
     ) {
         $this->regularStatusRepository = $regularStatusRepository;
         $this->isMypageRegularSettingService = $isMypageRegularSettingService;
         $this->isActiveRegularService = $isActiveRegularService;
         $this->configRepository = $configRepository;
         $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**

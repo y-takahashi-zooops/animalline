@@ -29,6 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 
 class ClassCategoryController extends AbstractController
@@ -55,6 +56,8 @@ class ClassCategoryController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * ClassCategoryController constructor.
      *
@@ -69,7 +72,8 @@ class ClassCategoryController extends AbstractController
         ClassNameRepository $classNameRepository,
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->classCategoryRepository = $classCategoryRepository;
@@ -77,6 +81,7 @@ class ClassCategoryController extends AbstractController
         $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**

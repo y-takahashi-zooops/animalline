@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Reception3DSAuthenticationController extends AbstractController
 {
@@ -60,6 +61,8 @@ class Reception3DSAuthenticationController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
 
     public function __construct(
         ConfigRepository $configRepository,
@@ -70,7 +73,8 @@ class Reception3DSAuthenticationController extends AbstractController
         MailService $mailService,
         OrderHelper $orderHelper,
         LoggerInterface $logger,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->configRepository = $configRepository;
         $this->gmoEpsilonRequestService = $gmoEpsilonRequestService;
@@ -82,6 +86,7 @@ class Reception3DSAuthenticationController extends AbstractController
         $this->orderHelper = $orderHelper;
         $this->logger = $logger;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

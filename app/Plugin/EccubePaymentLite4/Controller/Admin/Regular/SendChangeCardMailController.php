@@ -15,6 +15,7 @@ use Plugin\EccubePaymentLite4\Service\IsActiveRegularService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SendChangeCardMailController extends AbstractController
 {
@@ -35,16 +36,20 @@ class SendChangeCardMailController extends AbstractController
      */
     private $configRepository;
 
+    protected $entityManager;
+
     public function __construct(
         ChangeCardNotificationMailService $changeCardNotificationMailService,
         RegularShippingRepository $regularShippingRepository,
         ConfigRepository $configRepository,
-        IsActiveRegularService $isActiveRegularService
+        IsActiveRegularService $isActiveRegularService,
+        EntityManagerInterface $entityManager
     ) {
         $this->changeCardNotificationMailService = $changeCardNotificationMailService;
         $this->regularShippingRepository = $regularShippingRepository;
         $this->configRepository = $configRepository;
         $this->isActiveRegularService = $isActiveRegularService;
+        $this->entityManager = $entityManager;
     }
 
     /**

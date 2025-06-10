@@ -8,6 +8,7 @@ use Plugin\ZooopsSubscription\Repository\ConfigRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ConfigController extends AbstractController
 {
@@ -16,14 +17,17 @@ class ConfigController extends AbstractController
      */
     protected $configRepository;
 
+    protected $entityManager;
+
     /**
      * ConfigController constructor.
      *
      * @param ConfigRepository $configRepository
      */
-    public function __construct(ConfigRepository $configRepository)
+    public function __construct(ConfigRepository $configRepository, EntityManagerInterface $entityManager)
     {
         $this->configRepository = $configRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**

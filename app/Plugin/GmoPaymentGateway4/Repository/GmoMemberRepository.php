@@ -13,6 +13,7 @@ use Plugin\GmoPaymentGateway4\Entity\GmoMember;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * GmoMemberRepository
@@ -24,6 +25,8 @@ class GmoMemberRepository extends AbstractRepository
      */
     protected $customerRepository;
 
+    protected $entityManager;
+
     /**
      * GmoMemberRepository constructor.
      *
@@ -32,11 +35,13 @@ class GmoMemberRepository extends AbstractRepository
      */
     public function __construct(
         ManagerRegistry $registry,
-        CustomerRepository $customerRepository)
-    {
+        CustomerRepository $customerRepository,
+        EntityManagerInterface $entityManager
+    ) {
         parent::__construct($registry, GmoMember::class);
 
         $this->customerRepository = $customerRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**

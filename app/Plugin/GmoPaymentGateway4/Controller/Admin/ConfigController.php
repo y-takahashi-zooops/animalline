@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ConfigController extends AbstractController
 {
@@ -24,6 +25,8 @@ class ConfigController extends AbstractController
      */
     protected $gmoConfigRepository;
 
+    protected $entityManager;
+
     /**
      * GmoConfigController constructor.
      *
@@ -31,11 +34,13 @@ class ConfigController extends AbstractController
      */
     public function __construct(
         GmoConfigRepository $gmoConfigRepository,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
 
     ) {
         $this->gmoConfigRepository = $gmoConfigRepository;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

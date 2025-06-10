@@ -35,6 +35,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment as Twig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class LayoutController extends AbstractController
 {
@@ -81,6 +82,8 @@ class LayoutController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     /**
      * LayoutController constructor.
      *
@@ -99,7 +102,8 @@ class LayoutController extends AbstractController
         PageRepository $pageRepository,
         ProductRepository $productRepository,
         DeviceTypeRepository $deviceTypeRepository,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
     )
     {
         $this->blockRepository = $blockRepository;
@@ -110,6 +114,7 @@ class LayoutController extends AbstractController
         $this->productRepository = $productRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
         $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**

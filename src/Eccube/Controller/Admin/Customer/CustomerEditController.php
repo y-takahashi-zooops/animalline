@@ -28,6 +28,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CustomerEditController extends AbstractController
 {
@@ -46,18 +47,22 @@ class CustomerEditController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     public function __construct(
         CustomerRepository $customerRepository,
         UserPasswordHasherInterface $passwordHasher,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->customerRepository = $customerRepository;
         $this->passwordHasher = $passwordHasher;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

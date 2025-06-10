@@ -30,6 +30,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ForgotController extends AbstractController
 {
@@ -58,6 +59,8 @@ class ForgotController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * ForgotController constructor.
      *
@@ -74,7 +77,8 @@ class ForgotController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->validator = $validator;
         $this->mailService = $mailService;
@@ -83,6 +87,7 @@ class ForgotController extends AbstractController
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

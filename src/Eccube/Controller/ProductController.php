@@ -44,6 +44,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ProductController extends AbstractController
 {
@@ -94,6 +95,8 @@ class ProductController extends AbstractController
      */
     protected SessionInterface $session;
 
+    protected $entityManager;
+
     private $title = '';
 
 
@@ -122,7 +125,8 @@ class ProductController extends AbstractController
         LoggerInterface $logger,
         SessionInterface $session,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         parent::__construct();
         $this->purchaseFlow = $cartPurchaseFlow;
@@ -137,6 +141,7 @@ class ProductController extends AbstractController
         $this->session = $session;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

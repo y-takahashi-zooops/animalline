@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Eccube\Form\Type\AddCartType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ProductSetController extends AbstractController
 {
@@ -44,6 +45,8 @@ class ProductSetController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     /**
      * ProductSetController constructor.
      *
@@ -58,7 +61,8 @@ class ProductSetController extends AbstractController
         ProductSetRepository   $productSetRepository,
         CategoryRepository     $categoryRepository,
         FormFactoryInterface $formFactory,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->productRepository = $productRepository;
@@ -66,6 +70,7 @@ class ProductSetController extends AbstractController
         $this->categoryRepository = $categoryRepository;
         $this->formFactory = $formFactory;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

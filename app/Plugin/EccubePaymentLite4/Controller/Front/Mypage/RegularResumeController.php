@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RegularResumeController extends AbstractController
 {
@@ -37,18 +38,22 @@ class RegularResumeController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     public function __construct(
         RegularStatusRepository $regularStatusRepository,
         GetNextDeliveryDateWhenResumingService $getNextDeliveryDateWhenResumingService,
         IsMypageRegularSettingService $isMypageRegularSettingService,
         IsActiveRegularService $isActiveRegularService,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
     ) {
         $this->regularStatusRepository = $regularStatusRepository;
         $this->getNextDeliveryDateWhenResumingService = $getNextDeliveryDateWhenResumingService;
         $this->isMypageRegularSettingService = $isMypageRegularSettingService;
         $this->isActiveRegularService = $isActiveRegularService;
         $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**

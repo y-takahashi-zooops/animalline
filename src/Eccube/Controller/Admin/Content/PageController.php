@@ -32,6 +32,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PageController extends AbstractController
 {
@@ -55,6 +56,8 @@ class PageController extends AbstractController
      */
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     /**
      * PageController constructor.
      *
@@ -67,13 +70,15 @@ class PageController extends AbstractController
         PageLayoutRepository $pageLayoutRepository,
         DeviceTypeRepository $deviceTypeRepository,
         FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     ) {
         $this->pageRepository = $pageRepository;
         $this->pageLayoutRepository = $pageLayoutRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**

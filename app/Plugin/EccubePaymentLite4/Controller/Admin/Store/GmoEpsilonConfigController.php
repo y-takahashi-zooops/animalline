@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class GmoEpsilonConfigController extends AbstractController
 {
@@ -56,6 +57,8 @@ class GmoEpsilonConfigController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     public function __construct(
         EccubeConfig $eccubeConfig,
         ConfigRepository $configRepository,
@@ -63,7 +66,8 @@ class GmoEpsilonConfigController extends AbstractController
         GmoEpsilonRequestService $gmoEpsilonRequestService,
         SaleTypeRepository $saleTypeRepository,
         GmoEpsilonUrlService $gmoEpsilonUrlService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->eccubeConfig = $eccubeConfig;
         $this->configRepository = $configRepository;
@@ -72,6 +76,7 @@ class GmoEpsilonConfigController extends AbstractController
         $this->saleTypeRepository = $saleTypeRepository;
         $this->gmoEpsilonUrlService = $gmoEpsilonUrlService;
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**

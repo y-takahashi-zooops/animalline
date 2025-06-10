@@ -40,6 +40,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CustomerController extends AbstractController
 {
@@ -80,6 +81,8 @@ class CustomerController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,
@@ -90,7 +93,8 @@ class CustomerController extends AbstractController
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -102,6 +106,7 @@ class CustomerController extends AbstractController
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**
