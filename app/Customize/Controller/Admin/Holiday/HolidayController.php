@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class HolidayController extends AbstractController
 {
@@ -31,18 +32,26 @@ class HolidayController extends AbstractController
     protected SessionInterface $session;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
      * ProductController constructor.
      *
      * @param SessionInterface $session,
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
         BusinessHolidayRepository $businessHolidayRepository,
         FormFactoryInterface $formFactory,
-        SessionInterface $session
+        SessionInterface $session,
+        EntityManagerInterface $entityManager
     ) {
         $this->businessHolidayRepository = $businessHolidayRepository;
         $this->formFactory = $formFactory;
         $this->session = $session;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -85,7 +94,8 @@ class HolidayController extends AbstractController
 
             $Holiday = (new BusinessHoliday)
                 ->setHolidayDate($holidayDate);
-            $em = $this->getDoctrine()->getManager();
+            // $em = $this->getDoctrine()->getManager();
+            $em = $this->entityManager;
             $em->persist($Holiday);
             $em->flush();
 
