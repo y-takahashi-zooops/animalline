@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * @Route("/%eccube_admin_route%/store/plugin/api")
@@ -72,6 +73,8 @@ class OwnerStoreController extends AbstractController
     /** @var CacheUtil */
     private $cacheUtil;
 
+    protected FormFactoryInterface $formFactory;
+
     /**
      * OwnerStoreController constructor.
      *
@@ -93,7 +96,8 @@ class OwnerStoreController extends AbstractController
         SystemService $systemService,
         PluginApiService $pluginApiService,
         BaseInfoRepository $baseInfoRepository,
-        CacheUtil $cacheUtil
+        CacheUtil $cacheUtil,
+        FormFactoryInterface $formFactory
     ) {
         $this->pluginRepository = $pluginRepository;
         $this->pluginService = $pluginService;
@@ -104,6 +108,7 @@ class OwnerStoreController extends AbstractController
 
         // TODO: Check the flow of the composer service below
         $this->composerService = $composerService;
+        $this->formFactory = $formFactory;
     }
 
     /**
