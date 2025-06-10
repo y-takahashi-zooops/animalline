@@ -32,6 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/%eccube_admin_route%/store/plugin/api")
@@ -114,11 +115,11 @@ class OwnerStoreController extends AbstractController
      *
      * @param Request     $request
      * @param int|null  $page_no
-     * @param Paginator $paginator
+     * @param PaginatorInterface $paginator
      *
      * @return array
      */
-    public function search(Request $request, ?int $page_no = 1, Paginator $paginator)
+    public function search(Request $request, ?int $page_no = 1, PaginatorInterface $paginator)
     {
         if (empty($this->BaseInfo->getAuthenticationKey())) {
             $this->addWarning('admin.store.plugin.search.not_auth', 'admin');
