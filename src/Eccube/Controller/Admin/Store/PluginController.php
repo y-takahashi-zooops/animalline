@@ -41,6 +41,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Eccube\Common\EccubeConfig;
 
 class PluginController extends AbstractController
 {
@@ -92,7 +93,8 @@ class PluginController extends AbstractController
         BaseInfoRepository $baseInfoRepository,
         PluginApiService $pluginApiService,
         ComposerServiceInterface $composerService,
-        SystemService $systemService
+        SystemService $systemService,
+        EccubeConfig $eccubeConfig
     ) {
         $this->pluginRepository = $pluginRepository;
         $this->pluginService = $pluginService;
@@ -100,6 +102,7 @@ class PluginController extends AbstractController
         $this->pluginApiService = $pluginApiService;
         $this->composerService = $composerService;
         $this->systemService = $systemService;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**
