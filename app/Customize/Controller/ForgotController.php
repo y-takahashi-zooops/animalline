@@ -30,6 +30,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ForgotController extends AbstractController
 {
@@ -71,7 +74,9 @@ class ForgotController extends AbstractController
      * @param CustomerRepository $customerRepository
      * @param UserPasswordHasherInterface $passwordHasher
      * @param LoggerInterface $logger
-     * @param FormFactoryInterface $formFactory,
+     * @param FormFactoryInterface $formFactory
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param EccubeConfig $eccubeConfig
      */
     public function __construct(
         ValidatorInterface $validator,
@@ -80,6 +85,9 @@ class ForgotController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
         LoggerInterface $logger,
         FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher,
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->validator = $validator;
         $this->mailService = $mailService;
@@ -87,6 +95,9 @@ class ForgotController extends AbstractController
         $this->passwordHasher = $passwordHasher;
         $this->logger = $logger;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

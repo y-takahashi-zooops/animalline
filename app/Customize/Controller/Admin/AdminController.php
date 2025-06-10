@@ -102,8 +102,6 @@ class AdminController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-
-
     /**
      * @var array 売り上げ状況用受注状況
      */
