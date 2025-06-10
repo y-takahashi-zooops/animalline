@@ -23,16 +23,21 @@ use Plugin\GmoPaymentGateway4\Service\Method\PayEasyAtm;
 use Plugin\GmoPaymentGateway4\Service\Method\RakutenPay;
 use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * 結果通知／その他受信向け決済処理を行うクラス
  */
 class PaymentHelperReceive extends PaymentHelper
 {
+    protected $entityManager;
+
     public function __construct(
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

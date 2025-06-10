@@ -58,6 +58,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ProductController extends AbstractController
 {
@@ -116,6 +117,8 @@ class ProductController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * ProductController constructor.
      *
@@ -144,7 +147,8 @@ class ProductController extends AbstractController
         TagRepository $tagRepository,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -159,6 +163,7 @@ class ProductController extends AbstractController
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

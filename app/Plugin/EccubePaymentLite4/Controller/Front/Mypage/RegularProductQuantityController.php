@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Plugin\EccubePaymentLite4\Service\ModifyRegularOrderService;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RegularProductQuantityController extends AbstractController
 {
@@ -39,18 +40,22 @@ class RegularProductQuantityController extends AbstractController
      */
     private $modifyRegularOrderService;
 
+    protected $entityManager;
+
     public function __construct(
         RegularOrderRepository $regularOrderRepository,
         RegularOrderItemRepository $regularOrderItemRepository,
         IsMypageRegularSettingService $isMypageRegularSettingService,
         IsActiveRegularService $isActiveRegularService,
-        ModifyRegularOrderService $modifyRegularOrderService
+        ModifyRegularOrderService $modifyRegularOrderService,
+        EntityManagerInterface $entityManager
     ) {
         $this->regularOrderRepository = $regularOrderRepository;
         $this->regularOrderItemRepository = $regularOrderItemRepository;
         $this->isMypageRegularSettingService = $isMypageRegularSettingService;
         $this->isActiveRegularService = $isActiveRegularService;
         $this->modifyRegularOrderService = $modifyRegularOrderService;
+        $this->entityManager = $entityManager;
     }
 
     /**

@@ -41,6 +41,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ShoppingController extends AbstractShoppingController
 {
@@ -71,6 +72,8 @@ class ShoppingController extends AbstractShoppingController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     public function __construct(
         CartService $cartService,
         MailService $mailService,
@@ -78,7 +81,8 @@ class ShoppingController extends AbstractShoppingController
         OrderHelper $orderHelper,
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
@@ -87,6 +91,7 @@ class ShoppingController extends AbstractShoppingController
         $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**

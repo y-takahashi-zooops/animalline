@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class EpsilonPaymentBackController extends AbstractController
 {
@@ -39,18 +40,22 @@ class EpsilonPaymentBackController extends AbstractController
      */
     protected $pointHelper;
 
+    protected $entityManager;
+
     public function __construct(
         RequestGetSales2Service $requestGetSales2Service,
         OrderStatusRepository $orderStatusRepository,
         OrderRepository $orderRepository,
         PurchaseFlow $shoppingPurchaseFlow,
-        PointHelper $pointHelper
+        PointHelper $pointHelper,
+        EntityManagerInterface $entityManager
     ) {
         $this->requestGetSales2Service = $requestGetSales2Service;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->orderRepository = $orderRepository;
         $this->purchaseFlow = $shoppingPurchaseFlow;
         $this->pointHelper = $pointHelper;
+        $this->entityManager = $entityManager;
     }
 
     /**

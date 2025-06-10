@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ClassNameController extends AbstractController
 {
@@ -43,18 +44,26 @@ class ClassNameController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * ClassNameController constructor.
      *
      * @param ClassNameRepository $classNameRepository
      * @param LoggerInterface $logger
      */
-    public function __construct(ClassNameRepository $classNameRepository, FormFactoryInterface $formFactory, LoggerInterface $logger, EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        ClassNameRepository $classNameRepository,
+        FormFactoryInterface $formFactory,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
+    ) {
         $this->classNameRepository = $classNameRepository;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**

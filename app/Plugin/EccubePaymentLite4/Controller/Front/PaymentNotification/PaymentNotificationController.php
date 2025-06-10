@@ -21,6 +21,7 @@ use Plugin\EccubePaymentLite4\Repository\PaymentStatusRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PaymentNotificationController extends AbstractController
 {
@@ -49,6 +50,8 @@ class PaymentNotificationController extends AbstractController
      */
     private $cartItemRepository;
 
+    protected $entityManager;
+
     public function __construct(
         OrderRepository $orderRepository,
         PaymentStatusRepository $paymentStatusRepository,
@@ -59,7 +62,8 @@ class PaymentNotificationController extends AbstractController
         MailService $mailService,
         MailHistoryRepository $mailHistoryRepository,
         CartRepository $cartRepository,
-        CartItemRepository $cartItemRepository
+        CartItemRepository $cartItemRepository,
+        EntityManagerInterface $entityManager
     ) {
         $this->orderRepository = $orderRepository;
         $this->paymentStatusRepository = $paymentStatusRepository;
@@ -71,6 +75,7 @@ class PaymentNotificationController extends AbstractController
         $this->mailHistoryRepository = $mailHistoryRepository;
         $this->cartRepository = $cartRepository;
         $this->cartItemRepository = $cartItemRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**

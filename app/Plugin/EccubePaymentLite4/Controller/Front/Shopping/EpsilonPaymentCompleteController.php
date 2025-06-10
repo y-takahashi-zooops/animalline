@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class EpsilonPaymentCompleteController extends AbstractController
 {
@@ -68,6 +69,8 @@ class EpsilonPaymentCompleteController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     public function __construct(
         OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,
@@ -78,7 +81,8 @@ class EpsilonPaymentCompleteController extends AbstractController
         CartService $cartService,
         MailService $mailService,
         MailHistoryRepository $mailHistoryRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
@@ -90,6 +94,7 @@ class EpsilonPaymentCompleteController extends AbstractController
         $this->mailService = $mailService;
         $this->mailHistoryRepository = $mailHistoryRepository;
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**

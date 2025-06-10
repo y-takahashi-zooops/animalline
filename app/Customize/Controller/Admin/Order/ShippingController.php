@@ -47,6 +47,8 @@ use Eccube\Controller\Admin\Order\ShippingController as BaseShippingController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class ShippingController extends BaseShippingController
 {
@@ -112,6 +114,8 @@ class ShippingController extends BaseShippingController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * EditController constructor.
      *
@@ -141,7 +145,8 @@ class ShippingController extends BaseShippingController
         ShippingScheduleHeaderRepository $shippingScheduleHeaderRepository,
         ShippingScheduleRepository       $shippingScheduleRepository,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
@@ -156,6 +161,7 @@ class ShippingController extends BaseShippingController
         $this->shippingScheduleRepository = $shippingScheduleRepository;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**

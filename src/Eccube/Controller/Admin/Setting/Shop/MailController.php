@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class MailController
@@ -44,6 +45,8 @@ class MailController extends AbstractController
      */
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     /**
      * MailController constructor.
      *
@@ -53,12 +56,14 @@ class MailController extends AbstractController
     public function __construct(
         MailTemplateRepository $mailTemplateRepository,
         FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     )
     {
         $this->mailTemplateRepository = $mailTemplateRepository;
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**

@@ -11,6 +11,7 @@ use Eccube\Repository\AbstractRepository;
 use Plugin\GmoPaymentGateway4\Entity\GmoPaymentMethod;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * GmoPaymentMethodRepository
@@ -22,9 +23,10 @@ class GmoPaymentMethodRepository extends AbstractRepository
      *
      * @param ManagerRegistry $registry
      */
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
         parent::__construct($registry, GmoPaymentMethod::class);
+        $this->entityManager = $entityManager;
     }
 
     /**

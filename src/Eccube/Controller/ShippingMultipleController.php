@@ -37,6 +37,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ShippingMultipleController extends AbstractShoppingController
 {
@@ -77,6 +78,8 @@ class ShippingMultipleController extends AbstractShoppingController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * ShippingMultipleController constructor.
      *
@@ -98,7 +101,8 @@ class ShippingMultipleController extends AbstractShoppingController
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->prefRepository = $prefRepository;
         $this->orderRepository = $orderRepository;
@@ -110,6 +114,7 @@ class ShippingMultipleController extends AbstractShoppingController
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

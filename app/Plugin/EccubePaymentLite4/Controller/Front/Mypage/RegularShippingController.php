@@ -12,6 +12,7 @@ use Plugin\EccubePaymentLite4\Service\IsMypageRegularSettingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RegularShippingController extends AbstractController
 {
@@ -24,12 +25,16 @@ class RegularShippingController extends AbstractController
      */
     private $isActiveRegularService;
 
+    protected $entityManager;
+
     public function __construct(
         IsMypageRegularSettingService $isMypageRegularSettingService,
-        IsActiveRegularService $isActiveRegularService
+        IsActiveRegularService $isActiveRegularService,
+        EntityManagerInterface $entityManager
     ) {
         $this->isMypageRegularSettingService = $isMypageRegularSettingService;
         $this->isActiveRegularService = $isActiveRegularService;
+        $this->entityManager = $entityManager;
     }
 
     /**

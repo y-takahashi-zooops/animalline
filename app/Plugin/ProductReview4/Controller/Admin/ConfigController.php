@@ -19,6 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class ConfigController.
@@ -30,10 +31,14 @@ class ConfigController extends \Eccube\Controller\AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     public function __construct(
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
     /**
      * @Route("/%eccube_admin_route%/product_review/config", name="product_review4_admin_config")

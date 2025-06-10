@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class TaxRuleController
@@ -44,6 +45,8 @@ class TaxRuleController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     /**
      * TaxRuleController constructor.
      *
@@ -54,13 +57,15 @@ class TaxRuleController extends AbstractController
         BaseInfoRepository $baseInfoRepository,
         TaxRuleRepository $taxRuleRepository,
         FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     )
     {
         $this->BaseInfo = $baseInfoRepository->get();
         $this->taxRuleRepository = $taxRuleRepository;
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**

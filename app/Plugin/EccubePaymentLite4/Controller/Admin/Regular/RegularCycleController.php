@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RegularCycleController extends AbstractController
 {
@@ -30,10 +31,13 @@ class RegularCycleController extends AbstractController
      */
     private $isActiveRegularService;
 
+    protected $entityManager;
+
     public function __construct(
         RegularCycleRepository $regularCycleRepository,
         RegularCycleTypeRepository $regularCycleTypeRepository,
-        IsActiveRegularService $isActiveRegularService
+        IsActiveRegularService $isActiveRegularService,
+        EntityManagerInterface $entityManager
     ) {
         $this->regularCycleRepository = $regularCycleRepository;
         $this->regularCycleTypeRepository = $regularCycleTypeRepository;
@@ -41,6 +45,7 @@ class RegularCycleController extends AbstractController
         if (!$this->isActiveRegularService->isActive()) {
             throw new NotFoundHttpException();
         }
+        $this->entityManager = $entityManager;
     }
 
     /**

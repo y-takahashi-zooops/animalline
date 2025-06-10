@@ -32,6 +32,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TemplateController extends AbstractController
 {
@@ -52,6 +53,8 @@ class TemplateController extends AbstractController
      */
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     /**
      * TemplateController constructor.
      *
@@ -64,13 +67,15 @@ class TemplateController extends AbstractController
         DeviceTypeRepository $deviceTypeRepository,
         EventDispatcherInterface $eventDispatcher,
         FormFactoryInterface $formFactory,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->templateRepository = $templateRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

@@ -14,16 +14,21 @@ use Plugin\GmoPaymentGateway4\Util\PaymentUtil;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * クレジット決済処理を行うクラス
  */
 class PaymentHelperCredit extends PaymentHelper
 {
+    protected $entityManager;
+
     public function __construct(
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

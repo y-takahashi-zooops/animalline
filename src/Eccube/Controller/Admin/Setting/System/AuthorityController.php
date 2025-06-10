@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AuthorityController extends AbstractController
 {
@@ -34,6 +35,8 @@ class AuthorityController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     /**
      * AuthorityController constructor.
      *
@@ -42,12 +45,14 @@ class AuthorityController extends AbstractController
     public function __construct(
         AuthorityRoleRepository $authorityRoleRepository,
         FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     )
     {
         $this->authorityRoleRepository = $authorityRoleRepository;
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**

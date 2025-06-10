@@ -53,6 +53,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class OrderController extends AbstractController
 {
@@ -134,6 +135,8 @@ class OrderController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * OrderController constructor.
      *
@@ -170,7 +173,8 @@ class OrderController extends AbstractController
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->csvExportService = $csvExportService;
@@ -190,6 +194,7 @@ class OrderController extends AbstractController
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

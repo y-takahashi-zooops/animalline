@@ -56,6 +56,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class EditController extends AbstractController
 {
@@ -136,6 +137,8 @@ class EditController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * EditController constructor.
      *
@@ -173,7 +176,8 @@ class EditController extends AbstractController
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->taxRuleService = $taxRuleService;
         $this->deviceTypeRepository = $deviceTypeRepository;
@@ -193,6 +197,7 @@ class EditController extends AbstractController
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

@@ -23,6 +23,7 @@ use Plugin\ProductReview4\Entity\ProductReview;
 use Plugin\ProductReview4\Entity\ProductReviewStatus;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class ReviewControllerTest front.
@@ -49,15 +50,19 @@ class ReviewControllerTest extends AbstractWebTestCase
      */
     protected $productStatusRepo;
 
+    protected $entityManager;
+
     public function __construct(
         ProductRepository $productRepo,
         SexRepository $sexMasterRepo,
-        ProductStatusRepository $productStatusRepo
+        ProductStatusRepository $productStatusRepo,
+        EntityManagerInterface $entityManager
     ) {
         parent::__construct();
         $this->productRepo = $productRepo;
         $this->sexMasterRepo = $sexMasterRepo;
         $this->productStatusRepo = $productStatusRepo;
+        $this->entityManager = $entityManager;
     }
 
     /**

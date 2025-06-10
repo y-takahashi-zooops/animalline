@@ -32,6 +32,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CategoryController extends AbstractController
 {
@@ -50,6 +51,8 @@ class CategoryController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * CategoryController constructor.
      *
@@ -62,13 +65,15 @@ class CategoryController extends AbstractController
         CategoryRepository $categoryRepository,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->csvExportService = $csvExportService;
         $this->categoryRepository = $categoryRepository;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

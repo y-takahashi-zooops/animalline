@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CsvImportController extends AbstractCsvImportController
 {
@@ -39,14 +40,18 @@ class CsvImportController extends AbstractCsvImportController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     public function __construct(
         ShippingRepository $shippingRepository,
         OrderStateMachine $orderStateMachine,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EntityManagerInterface $entityManager
     ) {
         $this->shippingRepository = $shippingRepository;
         $this->orderStateMachine = $orderStateMachine;
         $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**

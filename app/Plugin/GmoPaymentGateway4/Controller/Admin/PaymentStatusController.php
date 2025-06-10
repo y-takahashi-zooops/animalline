@@ -27,6 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * 決済状況管理
@@ -53,6 +54,8 @@ class PaymentStatusController extends AbstractController
      */
     protected $bulkActions = [];
 
+    protected $entityManager;
+
     /**
      * PaymentController constructor.
      *
@@ -62,12 +65,14 @@ class PaymentStatusController extends AbstractController
         PageMaxRepository $pageMaxRepository,
         OrderRepository $orderRepository,
         PaymentHelperAdmin $PaymentHelperAdmin,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->orderRepository = $orderRepository;
         $this->PaymentHelperAdmin = $PaymentHelperAdmin;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
 
         $this->bulkActions = [
             ['id' => 1, 'name' => trans('gmo_payment_gateway.admin.' .

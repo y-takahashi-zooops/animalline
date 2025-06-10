@@ -12,6 +12,7 @@ use Plugin\EccubePaymentLite4\Repository\PaymentStatusRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ConveniAndPayeasyNotificationController extends AbstractController
 {
@@ -32,16 +33,20 @@ class ConveniAndPayeasyNotificationController extends AbstractController
      */
     private $paymentStatusRepository;
 
+    protected $entityManager;
+
     public function __construct(
         OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,
         GmoEpsilonOrderNoService $gmoEpsilonOrderNoService,
-        PaymentStatusRepository $paymentStatusRepository
+        PaymentStatusRepository $paymentStatusRepository,
+        EntityManagerInterface $entityManager
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderStatusRepository = $orderStatusRepository;
         $this->gmoEpsilonOrderNoService = $gmoEpsilonOrderNoService;
         $this->paymentStatusRepository = $paymentStatusRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**

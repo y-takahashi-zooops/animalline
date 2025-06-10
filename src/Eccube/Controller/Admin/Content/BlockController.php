@@ -31,6 +31,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BlockController extends AbstractController
 {
@@ -46,16 +47,20 @@ class BlockController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     public function __construct(
         BlockRepository $blockRepository,
         DeviceTypeRepository $deviceTypeRepository,
         FormFactoryInterface $formFactory,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     ) {
         $this->blockRepository = $blockRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
         $this->formFactory = $formFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**

@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class CsvController
@@ -41,6 +42,8 @@ class CsvController extends AbstractController
      */
     protected $csvTypeRepository;
 
+    protected $entityManager;
+
     /**
      * CsvController constructor.
      *
@@ -50,12 +53,14 @@ class CsvController extends AbstractController
     public function __construct(
         CsvRepository $csvRepository,
         CsvTypeRepository $csvTypeRepository,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager
     )
     {
         $this->csvRepository = $csvRepository;
         $this->csvTypeRepository = $csvTypeRepository;
         $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**

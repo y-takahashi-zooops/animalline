@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class ProductReviewController front.
@@ -49,6 +50,8 @@ class ProductReviewController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * ProductReviewController constructor.
      *
@@ -59,11 +62,13 @@ class ProductReviewController extends AbstractController
     public function __construct(
         ProductReviewStatusRepository $productStatusRepository,
         ProductReviewRepository $productReviewRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->productReviewStatusRepository = $productStatusRepository;
         $this->productReviewRepository = $productReviewRepository;
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**

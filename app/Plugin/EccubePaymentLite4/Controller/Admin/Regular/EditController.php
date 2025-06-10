@@ -35,6 +35,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class EditController extends AbstractController
 {
@@ -95,6 +96,8 @@ class EditController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     public function __construct(
         RegularOrderRepository $regularOrderRepository,
         RegularCreditService $regularCreditService,
@@ -110,7 +113,8 @@ class EditController extends AbstractController
         SearchProductRepository $searchProductRepository,
         SaleTypeRepository $saleTypeRepository,
         FormFactoryInterface $formFactory,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->regularOrderRepository = $regularOrderRepository;
         $this->regularCreditService = $regularCreditService;
@@ -127,6 +131,7 @@ class EditController extends AbstractController
         $this->saleTypeRepository = $saleTypeRepository;
         $this->formFactory = $formFactory;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

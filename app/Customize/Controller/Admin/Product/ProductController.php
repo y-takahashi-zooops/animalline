@@ -66,6 +66,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ProductController extends BaseProductController
 {
@@ -159,6 +160,8 @@ class ProductController extends BaseProductController
      */
     protected SessionInterface $session;
 
+    protected $entityManager;
+
     /**
      * ProductController constructor.
      *
@@ -202,6 +205,7 @@ class ProductController extends BaseProductController
         EventDispatcherInterface $eventDispatcher,
         SessionInterface $session,
         EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -223,6 +227,7 @@ class ProductController extends BaseProductController
         $this->eventDispatcher = $eventDispatcher;
         $this->session = $session;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**

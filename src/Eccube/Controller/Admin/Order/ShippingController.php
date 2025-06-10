@@ -41,6 +41,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ShippingController extends AbstractController
 {
@@ -96,6 +97,8 @@ class ShippingController extends AbstractController
      */
     protected $logger;
 
+    protected $entityManager;
+
     /**
      * EditController constructor.
      *
@@ -121,7 +124,8 @@ class ShippingController extends AbstractController
         OrderStateMachine $orderStateMachine,
         PurchaseFlow $orderPurchaseFlow,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager
     ) {
         $this->mailService = $mailService;
         $this->orderItemRepository = $orderItemRepository;
@@ -134,6 +138,7 @@ class ShippingController extends AbstractController
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     /**

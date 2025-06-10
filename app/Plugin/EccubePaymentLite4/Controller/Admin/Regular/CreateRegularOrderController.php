@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CreateRegularOrderController extends AbstractController
 {
@@ -102,6 +103,8 @@ class CreateRegularOrderController extends AbstractController
      */
     private $regularSpecifiedCountNotificationMailService;
 
+    private $entityManager;
+
     public function __construct(
         RegularCreditService $regularCreditService,
         RequestCreateRegularOrderService $requestCreateRegularOrderService,
@@ -119,7 +122,8 @@ class CreateRegularOrderController extends AbstractController
         RequestGetUserInfoService $requestGetUserInfoService,
         IsExpireCreditCardService $isExpireCreditCardService,
         UpdateRegularStatusService $updateRegularStatusService,
-        RegularSpecifiedCountNotificationMailService $regularSpecifiedCountNotificationMailService
+        RegularSpecifiedCountNotificationMailService $regularSpecifiedCountNotificationMailService,
+        EntityManagerInterface $entityManager
     ) {
         $this->regularCreditService = $regularCreditService;
         $this->requestCreateRegularOrderService = $requestCreateRegularOrderService;
@@ -138,6 +142,7 @@ class CreateRegularOrderController extends AbstractController
         $this->isExpireCreditCardService = $isExpireCreditCardService;
         $this->updateRegularStatusService = $updateRegularStatusService;
         $this->regularSpecifiedCountNotificationMailService = $regularSpecifiedCountNotificationMailService;
+        $this->entityManager = $entityManager;
     }
 
     /**

@@ -46,6 +46,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Eccube\Common\EccubeConfig;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CsvImportController extends AbstractCsvImportController
 {
@@ -96,6 +97,8 @@ class CsvImportController extends AbstractCsvImportController
 
     protected FormFactoryInterface $formFactory;
 
+    protected $entityManager;
+
     private $errors = [];
 
     /**
@@ -123,7 +126,8 @@ class CsvImportController extends AbstractCsvImportController
         ValidatorInterface $validator,
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        EntityManagerInterface $entityManager
     ) {
         $this->deliveryDurationRepository = $deliveryDurationRepository;
         $this->tagRepository = $tagRepository;
@@ -136,6 +140,7 @@ class CsvImportController extends AbstractCsvImportController
         $this->formFactory = $formFactory;
         $this->logger = $logger;
         $this->eccubeConfig = $eccubeConfig;
+        $this->entityManager = $entityManager;
     }
 
     /**
