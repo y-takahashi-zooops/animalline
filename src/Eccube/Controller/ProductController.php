@@ -40,6 +40,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ProductController extends AbstractController
 {
@@ -85,6 +87,11 @@ class ProductController extends AbstractController
      */
     protected $logger;
 
+    /**
+     * @var Session
+     */
+    protected SessionInterface $session;
+
     private $title = '';
 
 
@@ -99,6 +106,7 @@ class ProductController extends AbstractController
      * @param AuthenticationUtils $helper
      * @param ProductListMaxRepository $productListMaxRepository
      * @param LoggerInterface $logger
+     * @param SessionInterface $session,
      */
     public function __construct(
         PurchaseFlow $cartPurchaseFlow,
@@ -109,7 +117,8 @@ class ProductController extends AbstractController
         AuthenticationUtils $helper,
         ProductListMaxRepository $productListMaxRepository,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SessionInterface $session,
     ) {
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -120,6 +129,7 @@ class ProductController extends AbstractController
         $this->productListMaxRepository = $productListMaxRepository;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->session = $session;
     }
 
     /**
