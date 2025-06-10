@@ -56,6 +56,7 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ProductController extends AbstractController
 {
@@ -140,7 +141,8 @@ class ProductController extends AbstractController
         PageMaxRepository $pageMaxRepository,
         ProductStatusRepository $productStatusRepository,
         TagRepository $tagRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -153,6 +155,7 @@ class ProductController extends AbstractController
         $this->productStatusRepository = $productStatusRepository;
         $this->tagRepository = $tagRepository;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

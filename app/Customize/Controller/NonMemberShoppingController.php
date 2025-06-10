@@ -27,6 +27,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Eccube\Controller\NonMemberShoppingController as BaseNonMemberShoppingController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class NonMemberShoppingController extends BaseNonMemberShoppingController
 {
@@ -72,7 +73,8 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
         OrderHelper $orderHelper,
         CartService $cartService,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->validator = $validator;
         $this->prefRepository = $prefRepository;
@@ -80,6 +82,7 @@ class NonMemberShoppingController extends BaseNonMemberShoppingController
         $this->cartService = $cartService;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

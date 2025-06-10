@@ -26,6 +26,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CustomerEditController extends AbstractController
 {
@@ -47,11 +48,13 @@ class CustomerEditController extends AbstractController
     public function __construct(
         CustomerRepository $customerRepository,
         UserPasswordHasherInterface $passwordHasher,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->customerRepository = $customerRepository;
         $this->passwordHasher = $passwordHasher;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

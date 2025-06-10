@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class TagController extends AbstractController
 {
@@ -38,10 +39,11 @@ class TagController extends AbstractController
      */
     protected $logger;
 
-    public function __construct(TagRepository $tagRepository, LoggerInterface $logger)
+    public function __construct(TagRepository $tagRepository, LoggerInterface $logger, EventDispatcherInterface $eventDispatcher)
     {
         $this->tagRepository = $tagRepository;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

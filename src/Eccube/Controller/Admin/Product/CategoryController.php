@@ -30,6 +30,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CategoryController extends AbstractController
 {
@@ -58,11 +59,13 @@ class CategoryController extends AbstractController
     public function __construct(
         CsvExportService $csvExportService,
         CategoryRepository $categoryRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->csvExportService = $csvExportService;
         $this->categoryRepository = $categoryRepository;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

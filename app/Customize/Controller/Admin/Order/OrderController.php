@@ -53,6 +53,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Customize\Repository\BreedersRepository;
 use Customize\Repository\ConservationsRepository;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 use Psr\Log\LoggerInterface;
 
@@ -184,7 +185,8 @@ class OrderController extends AbstractController
         BreedersRepository $breedersRepository,
         ConservationsRepository $conservationsRepository,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->csvExportService = $csvExportService;
@@ -204,6 +206,7 @@ class OrderController extends AbstractController
         $this->conservationsRepository = $conservationsRepository;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

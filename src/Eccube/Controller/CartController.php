@@ -28,6 +28,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CartController extends AbstractController
 {
@@ -70,13 +71,15 @@ class CartController extends AbstractController
         CartService $cartService,
         PurchaseFlow $cartPurchaseFlow,
         BaseInfoRepository $baseInfoRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->cartService = $cartService;
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->baseInfo = $baseInfoRepository->get();
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

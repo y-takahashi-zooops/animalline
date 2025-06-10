@@ -28,6 +28,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 
 class ClassCategoryController extends AbstractController
 {
@@ -66,13 +68,15 @@ class ClassCategoryController extends AbstractController
         ClassCategoryRepository $classCategoryRepository,
         ClassNameRepository $classNameRepository,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->classCategoryRepository = $classCategoryRepository;
         $this->classNameRepository = $classNameRepository;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

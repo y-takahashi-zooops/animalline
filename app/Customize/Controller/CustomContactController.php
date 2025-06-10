@@ -22,6 +22,7 @@ use Eccube\Service\MailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CustomContactController extends ContactController
 {
@@ -36,9 +37,11 @@ class CustomContactController extends ContactController
      * @param MailService $mailService
      */
     public function __construct(
-        MailService $mailService)
-    {
+        MailService $mailService,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->mailService = $mailService;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

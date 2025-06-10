@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class BreederController extends AbstractController
 {
@@ -140,7 +141,8 @@ class BreederController extends AbstractController
     BreederEvaluationsRepository $breederEvaluationsRepository,
     MailService                      $mailService,
     AffiliateStatusRepository $affiliateStatusRepository,
-    FormFactoryInterface $formFactory
+    FormFactoryInterface $formFactory,
+    EventDispatcherInterface $eventDispatcher
   ) {
     $this->breederContactsRepository = $breederContactsRepository;
     $this->breederPetImageRepository = $breederPetImageRepository;
@@ -157,6 +159,7 @@ class BreederController extends AbstractController
     $this->affiliateStatusRepository = $affiliateStatusRepository;
     $this->entityManager = $entityManager;
     $this->formFactory = $formFactory;
+    $this->eventDispatcher = $eventDispatcher;
   }
 
 

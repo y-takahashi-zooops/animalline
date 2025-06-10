@@ -47,6 +47,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CustomerController extends AbstractController
 {
@@ -131,7 +132,8 @@ class CustomerController extends AbstractController
         CustomerStatusRepository $customerStatusRepository,
         CustomerQueryService $customerQueryService,
         FormFactoryInterface $formFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -147,6 +149,7 @@ class CustomerController extends AbstractController
         $this->customerQueryService = $customerQueryService;
         $this->formFactory = $formFactory;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**

@@ -29,6 +29,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class MailController extends AbstractController
 {
@@ -66,13 +67,15 @@ class MailController extends AbstractController
         MailHistoryRepository $mailHistoryRepository,
         OrderRepository $orderRepository,
         Environment $twig,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->mailService = $mailService;
         $this->mailHistoryRepository = $mailHistoryRepository;
         $this->orderRepository = $orderRepository;
         $this->twig = $twig;
         $this->formFactory = $formFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
