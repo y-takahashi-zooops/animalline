@@ -21,6 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 if (!class_exists('\Eccube\Entity\Customer')) {
     /**
@@ -32,7 +33,7 @@ if (!class_exists('\Eccube\Entity\Customer')) {
      * @ORM\HasLifecycleCallbacks()
      * @ORM\Entity(repositoryClass="Eccube\Repository\CustomerRepository")
      */
-    class Customer extends \Eccube\Entity\AbstractEntity implements UserInterface
+    class Customer extends \Eccube\Entity\AbstractEntity implements UserInterface, PasswordAuthenticatedUserInterface
     {
         /**
          * @var int
