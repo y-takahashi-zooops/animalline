@@ -19,6 +19,7 @@ use Doctrine\ORM\Event\PostLoadEventArgs;
 use Eccube\Entity\ProductClass;
 use Eccube\Service\TaxRuleService;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 
 class TaxRuleEventSubscriber implements EventSubscriber
 {
@@ -50,7 +51,7 @@ class TaxRuleEventSubscriber implements EventSubscriber
         ];
     }
 
-    public function prePersist(PostLoadEventArgs $args)
+    public function prePersist(PrePersistEventArgs $args)
     {
         $entity = $args->getObject();
 
