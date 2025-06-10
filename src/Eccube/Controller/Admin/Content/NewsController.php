@@ -30,6 +30,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class NewsController extends AbstractController
 {
@@ -57,12 +58,14 @@ class NewsController extends AbstractController
     public function __construct(
         EntityManagerInterface $entityManager,
         NewsRepository $newsRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
     )
     {
         $this->newsRepository = $newsRepository;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
