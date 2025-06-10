@@ -147,11 +147,11 @@ services:
             - { name: kernel.event_subscriber }
     
     Customize\Form\Extension\AddCartTypeCustomizer:
-        tags:
-            - { name: form.type_extension }
         autowire: true
         autoconfigure: true
         public: false
+        tags:
+            - { name: form.type_extension }
         abstract: false
 
     twig.extension.stringloader:
