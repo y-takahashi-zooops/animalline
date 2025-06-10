@@ -24,6 +24,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class CsvController
@@ -46,10 +47,15 @@ class CsvController extends AbstractController
      * @param CsvRepository $csvRepository
      * @param CsvTypeRepository $csvTypeRepository
      */
-    public function __construct(CsvRepository $csvRepository, CsvTypeRepository $csvTypeRepository)
+    public function __construct(
+        CsvRepository $csvRepository,
+        CsvTypeRepository $csvTypeRepository,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
         $this->csvRepository = $csvRepository;
         $this->csvTypeRepository = $csvTypeRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
