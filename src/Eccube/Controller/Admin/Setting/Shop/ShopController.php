@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 // use Twig_Environment;
 use Twig\Environment;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Class ShopController
@@ -41,15 +42,26 @@ class ShopController extends AbstractController
     protected $baseInfoRepository;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+    /**
      * ShopController constructor.
      *
      * @param Environment $twig
      * @param BaseInfoRepository $baseInfoRepository
+     * @param FormFactoryInterface $formFactory
      */
-    public function __construct(Environment $twig, BaseInfoRepository $baseInfoRepository)
+    public function __construct(
+        Environment $twig,
+        BaseInfoRepository $baseInfoRepository,
+        FormFactoryInterface $formFactory
+    )
     {
         $this->baseInfoRepository = $baseInfoRepository;
         $this->twig = $twig;
+        $this->formFactory = $formFactory;
     }
 
     /**
