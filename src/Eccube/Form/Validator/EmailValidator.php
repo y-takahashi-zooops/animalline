@@ -67,16 +67,16 @@ class EmailValidator extends ConstraintValidator
         $host = (string) substr($value, strrpos($value, '@') + 1);
 
         // Check for host DNS resource records
-        if ($constraint->checkMX) {
-            if (!$this->checkMX($host)) {
-                $this->context->buildViolation($constraint->message)
-                    ->setParameter('{{ value }}', $this->formatValue($value))
-                    ->setCode(Email::MX_CHECK_FAILED_ERROR)
-                    ->addViolation();
-            }
+        // if ($constraint->checkMX) {
+        //     if (!$this->checkMX($host)) {
+        //         $this->context->buildViolation($constraint->message)
+        //             ->setParameter('{{ value }}', $this->formatValue($value))
+        //             ->setCode(Email::MX_CHECK_FAILED_ERROR)
+        //             ->addViolation();
+        //     }
 
-            return;
-        }
+        //     return;
+        // }
 
         if ($constraint->checkHost && !$this->checkHost($host)) {
             $this->context->buildViolation($constraint->message)
