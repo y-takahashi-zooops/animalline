@@ -92,16 +92,20 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block javascript %}
-	{% if Product is defined and Product is not null %}
-		<script>
-			console.log("Product is available");
-			eccube.classCategories = {{ my_class_categories_as_json(Product)|raw }};
-		</script>
-	{% else %}
-		<script>
-			console.log("Product is NOT available");
-		</script>
-	{% endif %}
+    {% if Product is defined and Product is not null %}
+        <script>
+            console.log("Product is available");
+            {% if my_class_categories_as_json is defined %}
+                eccube.classCategories = {{ my_class_categories_as_json(Product)|raw }};
+            {% else %}
+                console.log("Twig function not defined");
+            {% endif %}
+        </script>
+    {% else %}
+        <script>
+            console.log("Product is NOT available");
+        </script>
+    {% endif %}
     <script>
 		alert("this is my custom template");
         eccube.classCategories = {{ my_class_categories_as_json(Product)|raw }};
