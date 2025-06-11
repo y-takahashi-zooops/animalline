@@ -201,7 +201,7 @@ class EditController extends AbstractController
     /**
      * 受注登録/編集画面.
      *
-     * @Route("/%eccube_admin_route%/order/new", name="admin_order_new")
+     * @Route("/%eccube_admin_route%/order/new", name="admin_order_new", defaults={"id"=null})
      * @Route("/%eccube_admin_route%/order/{id}/edit", requirements={"id" = "\d+"}, name="admin_order_edit")
      * @Template("@admin/Order/edit.twig")
      */
