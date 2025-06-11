@@ -68,6 +68,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 
 class ProductController extends AbstractController
 {
@@ -199,7 +202,10 @@ class ProductController extends AbstractController
         EventDispatcherInterface $eventDispatcher,
         SessionInterface $session,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        RequestStack $requestStack,
+        RouterInterface $router
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -222,6 +228,19 @@ class ProductController extends AbstractController
         $this->session = $session;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
+        $this->requestStack = $requestStack;
+        $this->router = $router;
+        parent::__construct(
+            $eccubeConfig,
+            $entityManager,
+            $translator,
+            $session,
+            $formFactory,
+            $eventDispatcher,
+            $requestStack,
+            $router
+        );
     }
 
     /**
