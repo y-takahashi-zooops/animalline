@@ -164,7 +164,7 @@ class CustomerController extends AbstractController
      * @Route("/%eccube_admin_route%/customer/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_customer_page")
      * @Template("@admin/Customer/index.twig")
      */
-    public function index(Request $request, $page_no = null, Paginator $paginator)
+    public function index(Request $request, ?int $page_no = 1, PaginatorInterface $paginator)
     {
         $session = $this->session;
         $builder = $this->formFactory->createBuilder(SearchCustomerType::class);
