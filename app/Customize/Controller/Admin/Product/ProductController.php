@@ -151,11 +151,6 @@ class ProductController extends BaseProductController
     protected $logger;
 
     /**
-     * @var FormFactoryInterface
-     */
-    protected FormFactoryInterface $formFactory;
-
-    /**
      * @var Session
      */
     protected SessionInterface $session;
