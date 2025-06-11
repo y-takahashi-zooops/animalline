@@ -117,7 +117,13 @@ class CustomerController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var Session
+     */
+    protected SessionInterface $session;
+
+    /**
      * @var LoggerInterface
+     * @param SessionInterface $session,
      */
     protected $logger;
 
@@ -138,7 +144,8 @@ class CustomerController extends AbstractController
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        SessionInterface $session
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -157,6 +164,7 @@ class CustomerController extends AbstractController
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
+        $this->session = $session;
     }
 
     /**
