@@ -32,6 +32,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContext;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class AddCartType extends AbstractType
 {
@@ -81,19 +82,6 @@ class AddCartType extends AbstractType
             }
         }
 
-        $productClassField = $builder
-            ->create('ProductClass', HiddenType::class, [
-                'data_class' => ProductClass::class,
-                'data' => $data,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-            ])
-            ->addModelTransformer(new EntityToIdTransformer(
-                $this->doctrine->getManager(),
-                ProductClass::class
-            ));
-
         $builder
             ->add('product_id', HiddenType::class, [
                 'data' => $Product->getId(),
@@ -102,7 +90,14 @@ class AddCartType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Regex(['pattern' => '/^\d+$/']),
                 ], ])
-            ->add($productClassField);
+            ->add('ProductClass', EntityType::class, [
+                'class' => ProductClass::class,
+                'choice_label' => 'id',
+                'choices' => $ProductClasses->toArray(),
+                'data' => $data,
+                'required' => true,
+                'attr' => ['style' => 'display:none'],
+            ]);
 
         if ($Product->getStockFind()) {
             $builder
@@ -208,9 +203,9 @@ class AddCartType extends AbstractType
      */
     public function validate($data, ExecutionContext $context)
     {
-        $context->getValidator()->validate($data['product_class_id'], [
+        $context->getValidator()->validate($data['ProductClass'], [
             new Assert\NotBlank(),
-        ], '[product_class_id]');
+        ], '[ProductClass]');
         if ($this->Product->getClassName1()) {
             $context->validateValue($data['classcategory_id1'], [
                 new Assert\NotBlank(),
