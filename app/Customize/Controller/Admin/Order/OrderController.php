@@ -56,6 +56,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 
@@ -152,6 +153,11 @@ class OrderController extends AbstractController
     protected $logger;
 
     /**
+     * @var Session
+     */
+    protected SessionInterface $session;
+
+    /**
      * OrderController constructor.
      *
      * @param PurchaseFlow $orderPurchaseFlow
@@ -170,6 +176,7 @@ class OrderController extends AbstractController
      * @param BreedersRepository $breedersRepository ;
      * @param ConservationsRepository $conservationsRepository ;
      * @param LoggerInterface $logger
+     * @param SessionInterface $session,
      */
     public function __construct(
         PurchaseFlow $orderPurchaseFlow,
@@ -192,7 +199,8 @@ class OrderController extends AbstractController
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        SessionInterface $session
     ) {
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->csvExportService = $csvExportService;
@@ -215,6 +223,7 @@ class OrderController extends AbstractController
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
+        $this->session = $session;
     }
 
     /**
