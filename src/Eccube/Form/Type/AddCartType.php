@@ -32,6 +32,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContext;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class AddCartType extends AbstractType
 {
@@ -72,6 +73,14 @@ class AddCartType extends AbstractType
         $Product = $options['product'];
         $this->Product = $Product;
         $ProductClasses = $Product->getProductClasses();
+
+        $data = null;
+        if (!$Product->hasProductClass()) {
+            $first = $ProductClasses->first();
+            if ($first instanceof ProductClass) {
+                $data = $first;
+            }
+        }
 
         $builder
             ->add('product_id', HiddenType::class, [
@@ -194,9 +203,9 @@ class AddCartType extends AbstractType
      */
     public function validate($data, ExecutionContext $context)
     {
-        $context->getValidator()->validate($data['product_class_id'], [
+        $context->getValidator()->validate($data['ProductClass'], [
             new Assert\NotBlank(),
-        ], '[product_class_id]');
+        ], '[ProductClass]');
         if ($this->Product->getClassName1()) {
             $context->validateValue($data['classcategory_id1'], [
                 new Assert\NotBlank(),
