@@ -130,6 +130,12 @@ services:
         tags: ['twig.extension']
         bind:
           $blockTemplates: '%eccube_twig_block_templates%'
+    
+    Eccube\Twig\Extension\EccubeExtension:
+        arguments:
+        $eccubeConfig: '@Eccube\Common\EccubeConfig'
+        $productRepository: '@Eccube\Repository\ProductRepository'
+        tags: ['twig.extension']
 
     Plugin\:
         resource: '../../../app/Plugin/*'
