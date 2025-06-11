@@ -89,6 +89,11 @@ class ProductController extends AbstractController
      */
     protected SessionInterface $session;
 
+    /**
+     * @var EccubeConfig
+     */
+    private EccubeConfig $eccubeConfig;
+
     private $title = '';
 
 
