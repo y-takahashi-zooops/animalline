@@ -12,15 +12,15 @@ file that was distributed with this source code.
 
 {% set body_class = 'product_page' %}
 
-{% if Product is not defined %}
-    <script>console.log("Product is not defined");</script>
-{% elseif Product is null %}
-    <script>console.log("Product is null");</script>
-{% else %}
-    <script>console.log("Product is available");</script>
-{% endif %}
-
 {% block stylesheet %}
+	{% if Product is not defined %}
+		<script>console.log("Product is not defined");</script>
+	{% elseif Product is null %}
+		<script>console.log("Product is null");</script>
+	{% else %}
+		<script>console.log("Product is available");</script>
+	{% endif %}
+
     <style>
 
         .slick-slider {
