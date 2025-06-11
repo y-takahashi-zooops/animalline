@@ -81,6 +81,19 @@ class AddCartType extends AbstractType
             }
         }
 
+        $productClassField = $builder
+            ->create('ProductClass', HiddenType::class, [
+                'data_class' => ProductClass::class,
+                'data' => $data,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
+            ])
+            ->addModelTransformer(new EntityToIdTransformer(
+                $this->doctrine->getManager(),
+                ProductClass::class
+            ));
+
         $builder
             ->add('product_id', HiddenType::class, [
                 'data' => $Product->getId(),
@@ -89,17 +102,7 @@ class AddCartType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Regex(['pattern' => '/^\d+$/']),
                 ], ])
-            ->add(
-                $builder
-                    ->create('ProductClass', HiddenType::class, [
-                        'data_class' => null,
-                        'data' => $data,
-                        'constraints' => [
-                            new Assert\NotBlank(),
-                        ],
-                    ])
-                    ->addModelTransformer(new EntityToIdTransformer($this->doctrine->getManager(), ProductClass::class))
-            );
+            ->add($productClassField);
 
         if ($Product->getStockFind()) {
             $builder
