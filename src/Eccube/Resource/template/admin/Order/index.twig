@@ -570,7 +570,7 @@ file that was distributed with this source code.
                                                             {% endif %}
                                                         </a>
                                                     {% else %}
-                                                        {{ Shipping.shipping_date ? Shipping.shipping_date|date_day : 'admin.order.unshipped'|trans }}
+                                                        {{ Shipping.shipping_date ? Shipping.shipping_date|date('Y-m-d') : 'admin.order.unshipped'|trans }}
                                                     {% endif %}
                                                     {% if Shipping.mail_send_date %}
                                                         {% set send_mail_date = Shipping.mail_send_date|date('Y-m-d H:i:s') %}
