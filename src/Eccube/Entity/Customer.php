@@ -307,6 +307,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         private $relation_id;
 
         /**
+         * @ORM\Column(name="is_conservation", type="string", nullable=true)
+         */
+        private $is_conservation;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -1254,6 +1259,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         public function getRelationId(): ?string
         {
             return $this->relation_id;
+        }
+
+        public function getIsConservation(): ?string
+        {
+            return $this->is_conservation;
         }
     }
 }
