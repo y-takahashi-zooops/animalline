@@ -452,7 +452,6 @@ class ProductController extends BaseProductController
      */
     public function edit(Request $request, $id = null, RouterInterface $router, CacheUtil $cacheUtil)
     {
-        dd("sssss");
         $has_class = false;
         if (is_null($id)) {
             $Product = new Product();
