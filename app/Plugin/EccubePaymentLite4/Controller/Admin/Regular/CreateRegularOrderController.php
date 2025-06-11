@@ -103,8 +103,6 @@ class CreateRegularOrderController extends AbstractController
      */
     private $regularSpecifiedCountNotificationMailService;
 
-    private $entityManager;
-
     public function __construct(
         RegularCreditService $regularCreditService,
         RequestCreateRegularOrderService $requestCreateRegularOrderService,
