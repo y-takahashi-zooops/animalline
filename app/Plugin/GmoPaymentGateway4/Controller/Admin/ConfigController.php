@@ -25,8 +25,6 @@ class ConfigController extends AbstractController
      */
     protected $gmoConfigRepository;
 
-    protected $entityManager;
-
     /**
      * GmoConfigController constructor.
      *
