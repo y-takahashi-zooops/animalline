@@ -93,25 +93,25 @@ file that was distributed with this source code.
 
 {% block javascript %}
     <script>
-		console.log("classCategories:", {{ my_class_categories_as_json(Product)|raw }});
-		alert("this is my custom template");
-        eccube.classCategories = {{ my_class_categories_as_json(Product)|raw }};
+        // Productのチェック
+        {% if Product is defined and Product is not null %}
+            console.log("Product is available");
 
-        // 規格2に選択肢を割り当てる。
-        function fnSetClassCategories(form, classcat_id2_selected) {
-            var $form = $(form);
-            var product_id = $form.find('input[name=product_id]').val();
-            var $sele1 = $form.find('select[name=classcategory_id1]');
-            var $sele2 = $form.find('select[name=classcategory_id2]');
-            eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
-        }
+            // カスタム関数で生成された翻訳キー入りJSONを代入
+            eccube.classCategories = {{ my_class_categories_as_json(Product)|raw }};
+            console.log("classCategories (raw):", eccube.classCategories);
 
-        {% if form.classcategory_id2 is defined %}
-        fnSetClassCategories(
-            $('#form1'), {{ form.classcategory_id2.vars.value|json_encode|raw }}
-        );
-        {% elseif form.classcategory_id1 is defined %}
-        eccube.checkStock($('#form1'), {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
+            // 翻訳をJSで行う例（translator.jsが有効な前提）
+            for (const key1 in eccube.classCategories) {
+                for (const key2 in eccube.classCategories[key1]) {
+                    const item = eccube.classCategories[key1][key2];
+                    if (item.name && typeof item.name === 'string' && item.name.startsWith('trans:')) {
+                        item.name = Translator.trans(item.name.substring(6));
+                    }
+                }
+            }
+        {% else %}
+            console.log("Product is NOT available");
         {% endif %}
     </script>
     <script>
