@@ -66,7 +66,6 @@ class ProductExtension extends AbstractExtension
             ];
         }
 
-        return '"override worked!"';
         return json_encode($class_categories);
     }
 }
