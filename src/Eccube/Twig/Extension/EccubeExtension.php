@@ -59,7 +59,7 @@ class EccubeExtension extends AbstractExtension
         return [
             new TwigFunction('has_errors', [$this, 'hasErrors']),
             new TwigFunction('active_menus', [$this, 'getActiveMenus']),
-            new TwigFunction('class_categories_as_json', [$this, 'getClassCategoriesAsJson']),
+            // new TwigFunction('class_categories_as_json', [$this, 'getClassCategoriesAsJson']),
             new TwigFunction('product', [$this, 'getProduct']),
             new TwigFunction('php_*', [$this, 'getPhpFunctions'], ['pre_escape' => 'html', 'is_safe' => ['html']]),
             new TwigFunction('currency_symbol', [$this, 'getCurrencySymbol']),
