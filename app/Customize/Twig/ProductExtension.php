@@ -22,7 +22,8 @@ class ProductExtension extends AbstractExtension
         $class_categories = [
             '__unselected' => [
                 '__unselected' => [
-                    'name' => trans('common.select'),
+                    // 'name' => trans('common.select'),
+                    'name' => 'trans:common.select',
                     'product_class_id' => '',
                 ],
             ],
@@ -49,7 +50,8 @@ class ProductExtension extends AbstractExtension
             if (!isset($class_categories[$class_category_id1]['#'])) {
                 $class_categories[$class_category_id1]['#'] = [
                     'classcategory_id2' => '',
-                    'name' => trans('common.select'),
+                    // 'name' => trans('common.select'),
+                    'name' => 'trans:common.select',
                     'product_class_id' => '',
                 ];
             }
