@@ -312,6 +312,8 @@ class ProductController extends AbstractController
             throw new NotFoundHttpException();
         }
 
+        $Product->_calc();
+
         $builder = $this->formFactory->createNamedBuilder(
             '',
             AddCartType::class,
