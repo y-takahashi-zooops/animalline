@@ -133,6 +133,8 @@ services:
     
     Eccube\Twig\Extension\EccubeExtension:
         class: Eccube\Twig\Extension\EccubeExtension
+        autowire: false
+        autoconfigure: false
         arguments:
             - '@Eccube\Common\EccubeConfig'
             - '@Eccube\Repository\ProductRepository'
