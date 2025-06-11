@@ -61,6 +61,7 @@ class SearchProductType extends AbstractType
         // ]);
         $builder->add('category_id', IntegerType::class, [
             'required' => false,
+            'mapped' => false
         ]);
         $builder->add('name', SearchType::class, [
             'required' => false,
