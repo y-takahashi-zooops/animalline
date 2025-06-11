@@ -93,6 +93,7 @@ file that was distributed with this source code.
 
 {% block javascript %}
     <script>
+		alert("this is my custom template");
         eccube.classCategories = {{ my_class_categories_as_json(Product)|raw }};
 
         // 規格2に選択肢を割り当てる。
