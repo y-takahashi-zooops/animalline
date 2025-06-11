@@ -89,11 +89,6 @@ class ProductController extends AbstractController
      */
     protected SessionInterface $session;
 
-    /**
-     * @var EccubeConfig
-     */
-    protected EccubeConfig $eccubeConfig;
-
     private $title = '';
 
 
@@ -122,7 +117,6 @@ class ProductController extends AbstractController
         LoggerInterface $logger,
         SessionInterface $session,
         EventDispatcherInterface $eventDispatcher,
-        EccubeConfig $eccubeConfig,
         EntityManagerInterface $entityManager
     ) {
         parent::__construct();
@@ -137,7 +131,6 @@ class ProductController extends AbstractController
         $this->logger = $logger;
         $this->session = $session;
         $this->eventDispatcher = $eventDispatcher;
-        $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
     }
 
