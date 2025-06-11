@@ -109,8 +109,6 @@ class AnilineEntryController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     /**
      * EntryController constructor.
      *

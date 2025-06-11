@@ -51,8 +51,6 @@ class ReviewAdminControllerTest extends AbstractAdminWebTestCase
      */
     protected $productReviewRepo;
 
-    protected $entityManager;
-
     public function __construct(
         EntityManagerInterface $entityManager
     ) {

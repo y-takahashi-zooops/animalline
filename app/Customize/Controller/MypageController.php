@@ -134,8 +134,6 @@ class MypageController extends BaseMypageController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
-
     /**
      * MypageController constructor.
      *

@@ -82,7 +82,6 @@ class PluginController extends AbstractController
      */
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
 
     /**
      * PluginController constructor.

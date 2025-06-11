@@ -59,8 +59,6 @@ class ForgotController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     /**
      * ForgotController constructor.
      *

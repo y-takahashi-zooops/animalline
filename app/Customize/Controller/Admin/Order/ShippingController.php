@@ -114,8 +114,6 @@ class ShippingController extends BaseShippingController
      */
     protected $logger;
 
-    protected $entityManager;
-
     /**
      * EditController constructor.
      *

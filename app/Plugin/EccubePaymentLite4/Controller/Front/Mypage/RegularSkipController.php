@@ -33,8 +33,6 @@ class RegularSkipController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
-
     public function __construct(
         CalculateOneAfterAnotherNextDeliveryDateService $calculateOneAfterAnotherNextDeliveryDateService,
         IsMypageRegularSettingService $isMypageRegularSettingService,

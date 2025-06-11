@@ -54,7 +54,6 @@ class PaymentStatusController extends AbstractController
      */
     protected $bulkActions = [];
 
-    protected $entityManager;
 
     /**
      * PaymentController constructor.

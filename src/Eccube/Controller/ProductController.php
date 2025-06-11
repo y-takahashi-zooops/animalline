@@ -95,8 +95,6 @@ class ProductController extends AbstractController
      */
     protected SessionInterface $session;
 
-    protected $entityManager;
-
     private $title = '';
 
 

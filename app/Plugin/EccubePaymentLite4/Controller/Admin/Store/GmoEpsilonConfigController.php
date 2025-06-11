@@ -57,8 +57,6 @@ class GmoEpsilonConfigController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     public function __construct(
         EccubeConfig $eccubeConfig,
         ConfigRepository $configRepository,

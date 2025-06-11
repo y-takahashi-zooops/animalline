@@ -50,8 +50,6 @@ class ReviewControllerTest extends AbstractWebTestCase
      */
     protected $productStatusRepo;
 
-    protected $entityManager;
-
     public function __construct(
         ProductRepository $productRepo,
         SexRepository $sexMasterRepo,

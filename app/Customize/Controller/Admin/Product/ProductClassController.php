@@ -65,8 +65,6 @@ class ProductClassController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
-
     /**
      * ProductClassController constructor.
      *

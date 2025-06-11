@@ -53,7 +53,6 @@ class TemplateController extends AbstractController
      */
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
 
     /**
      * TemplateController constructor.

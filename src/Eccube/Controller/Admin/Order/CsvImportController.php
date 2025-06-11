@@ -40,7 +40,6 @@ class CsvImportController extends AbstractCsvImportController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
 
     public function __construct(
         ShippingRepository $shippingRepository,

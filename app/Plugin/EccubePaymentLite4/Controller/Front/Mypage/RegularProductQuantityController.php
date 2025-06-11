@@ -40,8 +40,6 @@ class RegularProductQuantityController extends AbstractController
      */
     private $modifyRegularOrderService;
 
-    protected $entityManager;
-
     public function __construct(
         RegularOrderRepository $regularOrderRepository,
         RegularOrderItemRepository $regularOrderItemRepository,

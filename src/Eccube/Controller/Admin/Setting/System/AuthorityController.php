@@ -35,8 +35,6 @@ class AuthorityController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
-
     /**
      * AuthorityController constructor.
      *

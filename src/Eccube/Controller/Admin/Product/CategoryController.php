@@ -51,7 +51,6 @@ class CategoryController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
 
     /**
      * CategoryController constructor.

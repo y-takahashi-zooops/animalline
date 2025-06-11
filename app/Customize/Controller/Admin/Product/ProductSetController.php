@@ -45,8 +45,6 @@ class ProductSetController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
-
     /**
      * ProductSetController constructor.
      *

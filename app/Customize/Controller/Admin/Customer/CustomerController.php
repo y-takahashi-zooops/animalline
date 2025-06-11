@@ -121,8 +121,6 @@ class CustomerController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     public function __construct(
         PageMaxRepository $pageMaxRepository,
         CustomerRepository $customerRepository,

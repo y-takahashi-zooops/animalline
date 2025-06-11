@@ -78,8 +78,6 @@ class ShippingMultipleController extends AbstractShoppingController
      */
     protected $logger;
 
-    protected $entityManager;
-
     /**
      * ShippingMultipleController constructor.
      *

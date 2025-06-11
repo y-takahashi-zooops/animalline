@@ -31,8 +31,6 @@ class ConfigController extends \Eccube\Controller\AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     public function __construct(
         LoggerInterface $logger,
         EntityManagerInterface $entityManager
