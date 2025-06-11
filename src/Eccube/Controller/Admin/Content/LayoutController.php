@@ -82,8 +82,6 @@ class LayoutController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
-
     /**
      * LayoutController constructor.
      *
