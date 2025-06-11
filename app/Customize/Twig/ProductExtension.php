@@ -19,7 +19,6 @@ class ProductExtension extends AbstractExtension
     {
         error_log('[ProductExtension] my_class_categories_as_json called★★');
 
-        $Product->_calc();
         $class_categories = [
             '__unselected' => [
                 '__unselected' => [
