@@ -93,7 +93,9 @@ class AddCartType extends AbstractType
             ->add('ProductClass', EntityType::class, [
                 'class' => ProductClass::class,
                 'choice_label' => 'id',
-                'choices' => $ProductClasses->toArray(),
+                'choices' => array_filter($ProductClasses->toArray(), function ($item) {
+                    return $item instanceof ProductClass;
+                }),
                 'data' => $data,
                 'required' => true,
                 'attr' => ['style' => 'display:none'],
