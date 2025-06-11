@@ -83,7 +83,7 @@ class AddCartType extends AbstractType
 
         $productClassField = $builder
             ->create('ProductClass', HiddenType::class, [
-                'data_class' => ProductClass::class,
+                'data_class' => null, // ← 修正済み
                 'data' => $data,
                 'constraints' => [
                     new Assert\NotBlank(),
