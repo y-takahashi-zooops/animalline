@@ -717,7 +717,7 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                                 <table id="table-form-field" class="table table-striped table-sm mb-0"
-                                       data-prototype="{% filter escape %}{{ include('@admin/Order/order_item_prototype.twig', {'orderItemForm': form.OrderItems.vars.prototype}) }}{% endfilter %}"
+                                       data-prototype="{{ include('@admin/Order/order_item_prototype.twig', {'orderItemForm': form.OrderItems.vars.prototype}) | escape }}"
                                        >
                                     <thead class="table-active">
                                     <tr class="text-nowrap">
