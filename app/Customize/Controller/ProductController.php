@@ -84,13 +84,6 @@ class ProductController extends BaseProductController
     protected $cartItemRepository;
 
     /**
-     * @var CartRepository
-     */
-    protected $cartRepository;
-
-    protected FormFactoryInterface $formFactory;
-
-    /**
      * @var LoggerInterface
      */
     protected $logger;
