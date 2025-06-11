@@ -134,10 +134,10 @@ services:
     Eccube\Twig\Extension\EccubeExtension:
         class: Eccube\Twig\Extension\EccubeExtension
         arguments:
-        - '@Eccube\Common\EccubeConfig'
-        - '@Eccube\Repository\ProductRepository'
+            - '@Eccube\Common\EccubeConfig'
+            - '@Eccube\Repository\ProductRepository'
         tags:
-        - { name: twig.extension }
+            - { name: twig.extension }
 
     Plugin\:
         resource: '../../../app/Plugin/*'
