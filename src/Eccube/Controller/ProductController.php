@@ -85,8 +85,6 @@ class ProductController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected EventDispatcherInterface $eventDispatcher;
-
     /**
      * @var LoggerInterface
      */
