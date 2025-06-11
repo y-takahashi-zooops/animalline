@@ -30,6 +30,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class CustomerEditController extends AbstractController
 {
@@ -53,6 +54,11 @@ class CustomerEditController extends AbstractController
      */
     protected FormFactoryInterface $formFactory;
 
+    /**
+     * @var Session
+     */
+    protected SessionInterface $session;
+
     public function __construct(
         CustomerRepository $customerRepository,
         UserPasswordHasherInterface $passwordHasher,
@@ -60,7 +66,8 @@ class CustomerEditController extends AbstractController
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
         EntityManagerInterface $entityManager,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        SessionInterface $session
     ) {
         $this->customerRepository = $customerRepository;
         $this->passwordHasher = $passwordHasher;
@@ -69,6 +76,7 @@ class CustomerEditController extends AbstractController
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
+        $this->session = $session;
     }
 
     /**

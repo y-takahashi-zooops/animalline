@@ -302,7 +302,7 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         private $regist_type;
 
         /**
-         * @ORM\Column(name="regist_type", type="string", nullable=true)
+         * @ORM\Column(name="relation_id", type="string", nullable=true)
          */
         private $relation_id;
 

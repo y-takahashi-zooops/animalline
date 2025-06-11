@@ -78,12 +78,12 @@ class EmailValidator extends ConstraintValidator
         //     return;
         // }
 
-        if ($constraint->checkHost && !$this->checkHost($host)) {
-            $this->context->buildViolation($constraint->message)
-                ->setParameter('{{ value }}', $this->formatValue($value))
-                ->setCode(Email::HOST_CHECK_FAILED_ERROR)
-                ->addViolation();
-        }
+        // if ($constraint->checkHost && !$this->checkHost($host)) {
+        //     $this->context->buildViolation($constraint->message)
+        //         ->setParameter('{{ value }}', $this->formatValue($value))
+        //         ->setCode(Email::HOST_CHECK_FAILED_ERROR)
+        //         ->addViolation();
+        // }
     }
 
     /**
