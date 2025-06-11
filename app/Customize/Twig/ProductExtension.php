@@ -44,13 +44,17 @@ class ProductExtension extends AbstractExtension
             $class_category_id2 = $ClassCategory2 ? (string) $ClassCategory2->getId() : '';
             $class_category_name2 = $ClassCategory2
                 ? $ClassCategory2->getName() . ($ProductClass->getStockFind() ? '' : trans('front.product.out_of_stock_label'))
-                : '';
+                : trans('common.select');
 
-            $class_categories[$class_category_id1]['#'] = [
-                'classcategory_id2' => '',
-                'name' => trans('common.select'),
-                'product_class_id' => '',
-            ];
+            // デフォルト項目
+            if (!isset($class_categories[$class_category_id1]['#'])) {
+                $class_categories[$class_category_id1]['#'] = [
+                    'classcategory_id2' => '',
+                    'name' => trans('common.select'),
+                    'product_class_id' => '',
+                ];
+            }
+
             $class_categories[$class_category_id1]['#' . $class_category_id2] = [
                 'classcategory_id2' => $class_category_id2,
                 'name' => $class_category_name2,
@@ -61,11 +65,11 @@ class ProductExtension extends AbstractExtension
                 'price02_inc_tax' => number_format($ProductClass->getPrice02IncTax()),
                 'product_class_id' => (string) $ProductClass->getId(),
                 'product_code' => $ProductClass->getCode() ?? '',
-                'sale_type' => (string) $ProductClass->getSaleType()->getId(),
-                'item_cost' => (float) $ProductClass->getItemCost(),
+                'sale_type' => $ProductClass->getSaleType() ? (string) $ProductClass->getSaleType()->getId() : '',
+                'item_cost' => $ProductClass->getItemCost() !== null ? (float) $ProductClass->getItemCost() : 0.0,
             ];
         }
 
-        return json_encode($class_categories);
+        return json_encode($class_categories, JSON_UNESCAPED_UNICODE);
     }
 }
