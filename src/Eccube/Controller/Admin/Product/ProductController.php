@@ -59,6 +59,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ProductController extends AbstractController
 {
@@ -117,6 +118,13 @@ class ProductController extends AbstractController
      */
     protected $logger;
 
+    /**
+     * @var CartRepository
+     */
+    protected $cartRepository;
+
+    protected FormFactoryInterface $formFactory;
+
 
     /**
      * ProductController constructor.
@@ -147,7 +155,8 @@ class ProductController extends AbstractController
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -163,6 +172,7 @@ class ProductController extends AbstractController
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
