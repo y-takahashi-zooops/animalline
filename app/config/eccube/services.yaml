@@ -133,12 +133,11 @@ services:
     
     Eccube\Twig\Extension\EccubeExtension:
         class: Eccube\Twig\Extension\EccubeExtension
-        autowire: true
-        autoconfigure: true
         arguments:
-            - '@Eccube\Common\EccubeConfig'
-            - '@Eccube\Repository\ProductRepository'
-        tags: ['twig.extension']
+        - '@Eccube\Common\EccubeConfig'
+        - '@Eccube\Repository\ProductRepository'
+        tags:
+        - { name: twig.extension }
 
     Plugin\:
         resource: '../../../app/Plugin/*'
