@@ -117,7 +117,8 @@ class ProductController extends AbstractController
         LoggerInterface $logger,
         SessionInterface $session,
         EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        EccubeConfig $eccubeConfig
     ) {
         parent::__construct();
         $this->purchaseFlow = $cartPurchaseFlow;
@@ -132,6 +133,7 @@ class ProductController extends AbstractController
         $this->session = $session;
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     // /**
