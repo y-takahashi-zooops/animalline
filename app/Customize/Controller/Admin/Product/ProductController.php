@@ -70,7 +70,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
 
 class ProductController extends AbstractController
 {
