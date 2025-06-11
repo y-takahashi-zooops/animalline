@@ -79,13 +79,6 @@ class ProductController extends AbstractController
     protected $helper;
 
     /**
-     * @var ProductListMaxRepository
-     */
-    protected $productListMaxRepository;
-
-    protected FormFactoryInterface $formFactory;
-
-    /**
      * @var LoggerInterface
      */
     protected $logger;
