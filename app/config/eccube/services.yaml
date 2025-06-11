@@ -133,6 +133,7 @@ services:
     
     Eccube\Twig\Extension\EccubeExtension:
         class: Eccube\Twig\Extension\EccubeExtension
+        public: true
         autowire: false
         autoconfigure: false
         arguments:
