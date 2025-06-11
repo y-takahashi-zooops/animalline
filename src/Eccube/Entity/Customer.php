@@ -297,6 +297,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         private $conservationContactHeader;
 
         /**
+         * @ORM\Column(name="regist_type", type="string", nullable=true)
+         */
+        private $regist_type;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -1234,6 +1239,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
             }
 
             return $this;
+        }
+
+        public function getRegistType(): ?string
+        {
+            return $this->regist_type;
         }
     }
 }
