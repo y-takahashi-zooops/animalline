@@ -67,8 +67,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Controller\AbstractController;
 
-class ProductController extends BaseProductController
+class ProductController extends AbstractController
 {
     /**
      * @var CsvExportService
