@@ -39,6 +39,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class ProductController extends BaseProductController
 {
