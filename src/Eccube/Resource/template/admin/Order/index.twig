@@ -547,7 +547,7 @@ file that was distributed with this source code.
                                                 </td>
                                                 <td class="align-middle text-right">
                                                     {{ Order.payment_total|price }}<br>
-                                                    {{ Order.payment_date ? Order.payment_date|date_day : 'admin.order.not_payment'|trans }}
+                                                    {{ Order.payment_date ? Order.payment_date|date('Y-m-d') : 'admin.order.not_payment'|trans }}
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     {% if Order.message is not empty %}
