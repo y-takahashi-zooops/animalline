@@ -29,6 +29,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class CustomerEditController extends AbstractController
 {
@@ -47,13 +48,19 @@ class CustomerEditController extends AbstractController
      */
     protected $logger;
 
+    /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
     public function __construct(
         CustomerRepository $customerRepository,
         UserPasswordHasherInterface $passwordHasher,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory
     ) {
         $this->customerRepository = $customerRepository;
         $this->passwordHasher = $passwordHasher;
@@ -61,6 +68,7 @@ class CustomerEditController extends AbstractController
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
