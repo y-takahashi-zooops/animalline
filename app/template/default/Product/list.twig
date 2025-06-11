@@ -94,7 +94,7 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block main %}
-    {% if search_form.category_id.vars.errors|length > 0 %}
+    {% if search_form is defined and search_form.category_id is defined and search_form.category_id.vars.errors|length > 0 %}
         <div class="ec-searchnavRole">
             <p class="errormsg text-danger">{{ 'ご指定のカテゴリは存在しません'|trans }}</p>
         </div>
