@@ -40,7 +40,7 @@ class CsvImportController extends AbstractCsvImportController
     protected $orderStateMachine;
 
     protected FormFactoryInterface $formFactory;
-    private TranslatorInterface $translator;
+    protected TranslatorInterface $translator;
 
 
     public function __construct(
