@@ -11,13 +11,13 @@ class ProductExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('class_categories_as_json', [$this, 'getClassCategoriesAsJson']),
+            new TwigFunction('my_class_categories_as_json', [$this, 'getClassCategoriesAsJson']),
         ];
     }
 
     public function getClassCategoriesAsJson(Product $Product): string
     {
-        error_log('[ProductExtension] getClassCategoriesAsJson called★★');
+        error_log('[ProductExtension] my_class_categories_as_json called★★');
 
         $Product->_calc();
         $class_categories = [
