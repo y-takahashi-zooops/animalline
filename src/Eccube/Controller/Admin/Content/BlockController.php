@@ -47,7 +47,7 @@ class BlockController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct(
         BlockRepository $blockRepository,
