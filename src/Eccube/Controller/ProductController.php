@@ -45,6 +45,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Entity\Category;
 
 class ProductController extends AbstractController
 {
@@ -274,7 +275,13 @@ class ProductController extends AbstractController
 
         $orderByForm->handleRequest($request);
 
-        $Category = $searchForm->get('category_id')->getData();
+        // $Category = $searchForm->get('category_id')->getData();
+        $Category = null;
+        $categoryId = $request->query->get('category_id');
+
+        if ($categoryId) {
+            $Category = $this->entityManager->getRepository(Category::class)->find($categoryId);
+        }
 
         return [
             'subtitle' => $this->getPageTitle($searchData),
