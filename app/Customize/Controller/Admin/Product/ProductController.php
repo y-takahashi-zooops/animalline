@@ -462,7 +462,7 @@ class ProductController extends BaseProductController
                 ->setStatus($ProductStatus);
             // 初期値追加 
             $ProductClass
-                ->setStockCode('00001')
+                ->setStock('00001')
                 ->setIncentiveRatio(5)
                 ->setVisible(true)
                 ->setStockUnlimited(true)
