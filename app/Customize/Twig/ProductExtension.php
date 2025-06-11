@@ -64,7 +64,7 @@ class ProductExtension extends AbstractExtension
                 'product_class_id' => (string) $ProductClass->getId(),
                 'product_code' => $ProductClass->getCode() ?? '',
                 'sale_type' => $ProductClass->getSaleType() ? (string) $ProductClass->getSaleType()->getId() : '',
-                'item_cost' => $ProductClass->getItemCost() !== null ? (float) $ProductClass->getItemCost() : 0.0,
+                'item_cost' => method_exists($ProductClass, 'getItemCost') ? (float) $ProductClass->getItemCost() : 0.0,
             ];
         }
 
