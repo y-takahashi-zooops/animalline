@@ -92,7 +92,7 @@ class ProductController extends AbstractController
     /**
      * @var EccubeConfig
      */
-    private EccubeConfig $eccubeConfig;
+    protected EccubeConfig $eccubeConfig;
 
     private $title = '';
 
