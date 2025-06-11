@@ -463,7 +463,7 @@ class ProductController extends BaseProductController
             // 初期値追加 
             $ProductClass
                 ->setStock('00001')
-                ->setIncentiveRatio(5)
+                // ->setIncentiveRatio(5)
                 ->setVisible(true)
                 ->setStockUnlimited(true)
                 ->setProduct($Product);
