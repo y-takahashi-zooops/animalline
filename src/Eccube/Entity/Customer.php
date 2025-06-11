@@ -312,6 +312,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         private $is_conservation;
 
         /**
+         * @ORM\Column(name="is_breeder", type="string", nullable=true)
+         */
+        private $is_breeder;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -1264,6 +1269,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         public function getIsConservation(): ?string
         {
             return $this->is_conservation;
+        }
+
+        public function getIsBreeder(): ?string
+        {
+            return $this->is_breeder;
         }
     }
 }
