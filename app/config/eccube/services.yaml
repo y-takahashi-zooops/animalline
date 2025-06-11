@@ -135,16 +135,6 @@ services:
         tags:
             - { name: twig.extension }
 
-    # Eccube\Twig\Extension\EccubeExtension:
-    #     class: Eccube\Twig\Extension\EccubeExtension
-    #     public: true
-    #     autowire: false
-    #     autoconfigure: false
-    #     arguments:
-    #         - '@Eccube\Common\EccubeConfig'
-    #         - '@Eccube\Repository\ProductRepository'
-    #     tags: ['twig.extension']
-
     Plugin\:
         resource: '../../../app/Plugin/*'
         exclude: '../../../app/Plugin/*/{Entity,Resource,ServiceProvider,Tests,Codeception,DoctrineMigrations}'
