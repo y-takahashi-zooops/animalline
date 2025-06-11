@@ -90,16 +90,20 @@ class AddCartType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Regex(['pattern' => '/^\d+$/']),
                 ], ])
-            ->add('ProductClass', EntityType::class, [
-                'class' => ProductClass::class,
-                'choice_label' => 'id',
-                'choices' => array_filter($ProductClasses->toArray(), function ($item) {
-                    return $item instanceof ProductClass;
-                }),
-                'data' => $data,
-                'required' => true,
-                'attr' => ['style' => 'display:none'],
-            ]);
+            ->add(
+                $builder
+                    ->create('ProductClass', HiddenType::class, [
+                        'data_class' => null,
+                        'data' => $data?->getId(),
+                        'constraints' => [
+                            new Assert\NotBlank(),
+                        ],
+                    ])
+                    ->addModelTransformer(new EntityToIdTransformer(
+                        $this->doctrine->getManager(),
+                        ProductClass::class
+                    ))
+            );
 
         if ($Product->getStockFind()) {
             $builder
