@@ -131,15 +131,19 @@ services:
         bind:
           $blockTemplates: '%eccube_twig_block_templates%'
     
-    Eccube\Twig\Extension\EccubeExtension:
-        class: Eccube\Twig\Extension\EccubeExtension
-        public: true
-        autowire: false
-        autoconfigure: false
-        arguments:
-            - '@Eccube\Common\EccubeConfig'
-            - '@Eccube\Repository\ProductRepository'
-        tags: ['twig.extension']
+    Customize\Twig\ProductExtension:
+        tags:
+            - { name: twig.extension }
+
+    # Eccube\Twig\Extension\EccubeExtension:
+    #     class: Eccube\Twig\Extension\EccubeExtension
+    #     public: true
+    #     autowire: false
+    #     autoconfigure: false
+    #     arguments:
+    #         - '@Eccube\Common\EccubeConfig'
+    #         - '@Eccube\Repository\ProductRepository'
+    #     tags: ['twig.extension']
 
     Plugin\:
         resource: '../../../app/Plugin/*'

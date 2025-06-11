@@ -205,8 +205,6 @@ class EccubeExtension extends AbstractExtension
         try {
             $Product = $this->productRepository->findWithSortedClassCategories($id);
 
-            dd($Product);
-
             if ($Product->getStatus()->getId() == ProductStatus::DISPLAY_SHOW) {
                 return $Product;
             }
