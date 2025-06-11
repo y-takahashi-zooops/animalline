@@ -78,7 +78,7 @@ class AddCartType extends AbstractType
         if (!$Product->hasProductClass()) {
             $first = $ProductClasses->first();
             if ($first instanceof ProductClass) {
-                $data = $first;
+                $data = $first->getId();
             }
         }
 
@@ -90,20 +90,14 @@ class AddCartType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Regex(['pattern' => '/^\d+$/']),
                 ], ])
-            ->add(
-                $builder
-                    ->create('ProductClass', HiddenType::class, [
-                        'data_class' => null,
-                        'data' => $data?->getId(),
-                        'constraints' => [
-                            new Assert\NotBlank(),
-                        ],
-                    ])
-                    ->addModelTransformer(new EntityToIdTransformer(
-                        $this->doctrine->getManager(),
-                        ProductClass::class
-                    ))
-            );
+            ->add('product_class_id', HiddenType::class, [
+                'data' => $data,
+                'mapped' => false,
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Regex(['pattern' => '/^\d+$/']),
+                ],
+            ]);
 
         if ($Product->getStockFind()) {
             $builder
@@ -155,12 +149,15 @@ class AddCartType extends AbstractType
             $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
                 /** @var CartItem $CartItem */
                 $CartItem = $event->getData();
-                $ProductClass = $CartItem->getProductClass();
-                // FIXME 価格の設定箇所、ここでいいのか
-                if ($ProductClass) {
-                    $CartItem
-                        ->setProductClass($ProductClass)
-                        ->setPrice($ProductClass->getPrice02IncTax());
+                $data = $event->getForm()->get('product_class_id')->getData();
+
+                if ($data) {
+                    $ProductClass = $this->doctrine->getManager()->getRepository(ProductClass::class)->find($data);
+                    if ($ProductClass) {
+                        $CartItem
+                            ->setProductClass($ProductClass)
+                            ->setPrice($ProductClass->getPrice02IncTax());
+                    }
                 }
             });
         }
@@ -209,9 +206,9 @@ class AddCartType extends AbstractType
      */
     public function validate($data, ExecutionContext $context)
     {
-        $context->getValidator()->validate($data['ProductClass'], [
+        $context->getValidator()->validate($data['product_class_id'], [
             new Assert\NotBlank(),
-        ], '[ProductClass]');
+        ], '[product_class_id]');
         if ($this->Product->getClassName1()) {
             $context->validateValue($data['classcategory_id1'], [
                 new Assert\NotBlank(),
