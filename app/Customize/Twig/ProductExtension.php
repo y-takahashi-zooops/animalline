@@ -17,6 +17,8 @@ class ProductExtension extends AbstractExtension
 
     public function getClassCategoriesAsJson(Product $Product): string
     {
+        error_log('[ProductExtension] getClassCategoriesAsJson called★★');
+
         $Product->_calc();
         $class_categories = [
             '__unselected' => [
@@ -64,6 +66,7 @@ class ProductExtension extends AbstractExtension
             ];
         }
 
+        return '"override worked!"';
         return json_encode($class_categories);
     }
 }
