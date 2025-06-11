@@ -132,9 +132,12 @@ services:
           $blockTemplates: '%eccube_twig_block_templates%'
     
     Eccube\Twig\Extension\EccubeExtension:
+        class: Eccube\Twig\Extension\EccubeExtension
+        autowire: true
+        autoconfigure: true
         arguments:
-        $eccubeConfig: '@Eccube\Common\EccubeConfig'
-        $productRepository: '@Eccube\Repository\ProductRepository'
+            - '@Eccube\Common\EccubeConfig'
+            - '@Eccube\Repository\ProductRepository'
         tags: ['twig.extension']
 
     Plugin\:
