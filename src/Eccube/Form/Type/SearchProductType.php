@@ -52,17 +52,18 @@ class SearchProductType extends AbstractType
         $builder->add('mode', HiddenType::class, [
             'data' => 'search',
         ]);
-        // $builder->add('category_id', EntityType::class, [
-        //     'class' => 'Eccube\Entity\Category',
-        //     'choice_label' => 'NameWithLevel',
-        //     'choices' => $Categories,
-        //     'placeholder' => 'common.select__all_products',
-        //     'required' => false,
-        // ]);
-        $builder->add('category_id', IntegerType::class, [
+        $builder->add('category_id', EntityType::class, [
+            'class' => 'Eccube\Entity\Category',
+            'choice_label' => 'NameWithLevel',
+            'choices' => $Categories,
+            'placeholder' => 'common.select__all_products',
             'required' => false,
-            'mapped' => false
+            'mapped' => false,
         ]);
+        // $builder->add('category_id', IntegerType::class, [
+        //     'required' => false,
+        //     'mapped' => false
+        // ]);
         $builder->add('name', SearchType::class, [
             'required' => false,
             'attr' => [
