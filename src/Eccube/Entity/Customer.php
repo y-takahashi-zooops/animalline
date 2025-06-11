@@ -302,6 +302,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         private $regist_type;
 
         /**
+         * @ORM\Column(name="regist_type", type="string", nullable=true)
+         */
+        private $relation_id;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -1244,6 +1249,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         public function getRegistType(): ?string
         {
             return $this->regist_type;
+        }
+
+        public function getRelationId(): ?string
+        {
+            return $this->relation_id;
         }
     }
 }
