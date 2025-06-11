@@ -67,8 +67,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Eccube\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-class ProductController extends BaseProductController
+class ProductController extends AbstractController
 {
     /**
      * @var CsvExportService
@@ -151,11 +154,6 @@ class ProductController extends BaseProductController
     protected $logger;
 
     /**
-     * @var FormFactoryInterface
-     */
-    protected FormFactoryInterface $formFactory;
-
-    /**
      * @var Session
      */
     protected SessionInterface $session;
@@ -203,7 +201,10 @@ class ProductController extends BaseProductController
         EventDispatcherInterface $eventDispatcher,
         SessionInterface $session,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        RequestStack $requestStack,
+        RouterInterface $router
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -226,6 +227,19 @@ class ProductController extends BaseProductController
         $this->session = $session;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
+        $this->requestStack = $requestStack;
+        $this->router = $router;
+        parent::__construct(
+            $eccubeConfig,
+            $entityManager,
+            $translator,
+            $session,
+            $formFactory,
+            $eventDispatcher,
+            $requestStack,
+            $router
+        );
     }
 
     /**
@@ -462,8 +476,8 @@ class ProductController extends BaseProductController
                 ->setStatus($ProductStatus);
             // 初期値追加 
             $ProductClass
-                ->setStockCode('00001')
-                ->setIncentiveRatio(5)
+                ->setStock('00001')
+                // ->setIncentiveRatio(5)
                 ->setVisible(true)
                 ->setStockUnlimited(true)
                 ->setProduct($Product);
