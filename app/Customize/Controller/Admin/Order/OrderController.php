@@ -238,7 +238,7 @@ class OrderController extends AbstractController
      * @Route("/%eccube_admin_route%/order/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_order_page")
      * @Template("@admin/Order/index.twig")
      */
-    public function index(Request $request, $page_no = null, PaginatorInterface $paginator)
+    public function index(Request $request, ?int $page_no = 1, PaginatorInterface $paginator)
     {
         $builder = $this->formFactory
             ->createBuilder(SearchOrderType::class);
