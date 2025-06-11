@@ -293,23 +293,23 @@ file that was distributed with this source code.
                                     <div class="col-6">
                                         <div class="row mb-3">
                                             <div class="col-3"><i class="fa fa-inbox fa-fw mr-1" aria-hidden="true"></i>{{ 'admin.order.order_date'|trans }}</div>
-                                            <div class="col">{{ Order.order_date ? Order.order_date|date_sec : '' }}</div>
+                                            <div class="col">{{ Order.order_date ? Order.order_date|date('Y-m-d') : '' }}</div>
                                         </div>
                                         <div class="row mb-3">
                                             <div class="col-3"><i class="fa fa-money fa-fw mr-1" aria-hidden="true"></i>{{ 'admin.order.payment_date'|trans }}</div>
-                                            <div class="col">{{ Order.payment_date ? Order.payment_date|date_sec : '' }}</div>
+                                            <div class="col">{{ Order.payment_date ? Order.payment_date|date('Y-m-d') : '' }}</div>
                                         </div>
                                         {% if not Order.isMultiple %}
                                             <div class="row mb-3">
                                                 <div class="col-3"><i class="fa fa-truck fa-fw mr-1" aria-hidden="true"></i>{{ 'admin.order.shipping_date'|trans }}</div>
                                                 <div class="col">
-                                                    {{ Order.Shippings[0].shipping_date|date_sec }}
+                                                    {{ Order.Shippings[0].shipping_date|date('Y-m-d') }}
                                                 </div>
                                             </div>
                                         {% endif %}
                                         <div class="row mb-3">
                                             <div class="col-3"><i class="fa fa-refresh fa-fw mr-1" aria-hidden="true"></i>{{ 'admin.common.update_date'|trans }}</div>
-                                            <div class="col">{{ Order.update_date ? Order.update_date|date_sec : '' }}</div>
+                                            <div class="col">{{ Order.update_date ? Order.update_date|date('Y-m-d') : '' }}</div>
                                         </div>
                                         <div class="row mb-3">
                                             <div class="col-3"><i class="fa fa-mobile fa-fw mr-1" aria-hidden="true"></i>{{ 'admin.common.device_type'|trans }}</div>
