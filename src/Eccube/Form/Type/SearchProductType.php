@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class SearchProductType extends AbstractType
 {
@@ -51,11 +52,14 @@ class SearchProductType extends AbstractType
         $builder->add('mode', HiddenType::class, [
             'data' => 'search',
         ]);
-        $builder->add('category_id', EntityType::class, [
-            'class' => 'Eccube\Entity\Category',
-            'choice_label' => 'NameWithLevel',
-            'choices' => $Categories,
-            'placeholder' => 'common.select__all_products',
+        // $builder->add('category_id', EntityType::class, [
+        //     'class' => 'Eccube\Entity\Category',
+        //     'choice_label' => 'NameWithLevel',
+        //     'choices' => $Categories,
+        //     'placeholder' => 'common.select__all_products',
+        //     'required' => false,
+        // ]);
+        $builder->add('category_id', IntegerType::class, [
             'required' => false,
         ]);
         $builder->add('name', SearchType::class, [
