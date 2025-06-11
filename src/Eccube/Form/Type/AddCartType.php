@@ -73,6 +73,14 @@ class AddCartType extends AbstractType
         $this->Product = $Product;
         $ProductClasses = $Product->getProductClasses();
 
+        $data = null;
+        if (!$Product->hasProductClass()) {
+            $first = $ProductClasses->first();
+            if ($first instanceof ProductClass) {
+                $data = $first;
+            }
+        }
+
         $builder
             ->add('product_id', HiddenType::class, [
                 'data' => $Product->getId(),
@@ -85,7 +93,7 @@ class AddCartType extends AbstractType
                 $builder
                     ->create('ProductClass', HiddenType::class, [
                         'data_class' => null,
-                        'data' => $Product->hasProductClass() ? null : $ProductClasses->first(),
+                        'data' => $data,
                         'constraints' => [
                             new Assert\NotBlank(),
                         ],
