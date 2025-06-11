@@ -46,6 +46,7 @@ class SearchProductType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        dd('koko?');
         $Categories = $this->categoryRepository
             ->getList(null, true);
 
