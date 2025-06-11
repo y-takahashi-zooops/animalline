@@ -100,8 +100,6 @@ class CsvImportController extends AbstractCsvImportController
      */
     protected $logger;
 
-    protected $entityManager;
-
     /**
      * CsvImportController constructor.
      *

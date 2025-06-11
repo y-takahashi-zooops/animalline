@@ -56,7 +56,6 @@ class PageController extends AbstractController
      */
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
 
     /**
      * PageController constructor.

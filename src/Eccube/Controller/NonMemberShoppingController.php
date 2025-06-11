@@ -61,8 +61,6 @@ class NonMemberShoppingController extends AbstractShoppingController
      */
     protected $logger;
 
-    protected $entityManager;
-
     /**
      * NonMemberShoppingController constructor.
      *

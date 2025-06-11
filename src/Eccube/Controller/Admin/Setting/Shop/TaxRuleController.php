@@ -45,7 +45,6 @@ class TaxRuleController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
 
     /**
      * TaxRuleController constructor.

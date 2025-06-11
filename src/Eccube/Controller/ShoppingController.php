@@ -72,7 +72,6 @@ class ShoppingController extends AbstractShoppingController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
 
     public function __construct(
         CartService $cartService,

@@ -33,8 +33,6 @@ class ConveniAndPayeasyNotificationController extends AbstractController
      */
     private $paymentStatusRepository;
 
-    protected $entityManager;
-
     public function __construct(
         OrderRepository $orderRepository,
         OrderStatusRepository $orderStatusRepository,

@@ -77,8 +77,6 @@ class DeliveryController extends AbstractController
      */
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
-
     /**
      * DeliveryController constructor.
      *

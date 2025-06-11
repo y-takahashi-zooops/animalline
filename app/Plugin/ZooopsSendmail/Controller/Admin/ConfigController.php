@@ -17,8 +17,6 @@ class ConfigController extends AbstractController
      */
     protected $configRepository;
 
-    protected $entityManager;
-
     /**
      * ConfigController constructor.
      *

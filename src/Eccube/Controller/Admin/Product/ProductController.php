@@ -117,7 +117,6 @@ class ProductController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
 
     /**
      * ProductController constructor.

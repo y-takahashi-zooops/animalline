@@ -40,8 +40,6 @@ class TagController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     public function __construct(
         TagRepository $tagRepository,
         LoggerInterface $logger,

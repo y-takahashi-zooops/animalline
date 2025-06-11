@@ -78,8 +78,6 @@ class OwnerStoreController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
-
     /**
      * @var Session
      */

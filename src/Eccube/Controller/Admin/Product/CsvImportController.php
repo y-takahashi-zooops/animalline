@@ -97,8 +97,6 @@ class CsvImportController extends AbstractCsvImportController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
-
     private $errors = [];
 
     /**

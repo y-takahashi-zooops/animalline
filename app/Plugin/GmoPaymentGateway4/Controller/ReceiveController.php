@@ -108,8 +108,6 @@ class ReceiveController extends AbstractController
      */
     protected $errorUtil;
 
-    protected $entityManager;
-
     /**
      * ReceiveController constructor.
      *

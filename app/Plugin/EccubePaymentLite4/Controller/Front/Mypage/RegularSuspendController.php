@@ -37,8 +37,6 @@ class RegularSuspendController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
-
     public function __construct(
         RegularStatusRepository $regularStatusRepository,
         IsMypageRegularSettingService $isMypageRegularSettingService,

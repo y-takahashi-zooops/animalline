@@ -48,8 +48,6 @@ class DeliveryController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     public function __construct(
         BaseInfoRepository $baseInfoRepository,
         CustomerAddressRepository $customerAddressRepository,

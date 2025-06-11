@@ -31,8 +31,6 @@ class RegularCycleController extends AbstractController
      */
     private $isActiveRegularService;
 
-    protected $entityManager;
-
     public function __construct(
         CalculateOneAfterAnotherNextDeliveryDateService $calculateOneAfterAnotherNextDeliveryDateService,
         IsMypageRegularSettingService $isMypageRegularSettingService,

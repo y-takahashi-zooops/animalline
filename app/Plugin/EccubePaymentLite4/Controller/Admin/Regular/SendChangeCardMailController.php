@@ -36,8 +36,6 @@ class SendChangeCardMailController extends AbstractController
      */
     private $configRepository;
 
-    protected $entityManager;
-
     public function __construct(
         ChangeCardNotificationMailService $changeCardNotificationMailService,
         RegularShippingRepository $regularShippingRepository,

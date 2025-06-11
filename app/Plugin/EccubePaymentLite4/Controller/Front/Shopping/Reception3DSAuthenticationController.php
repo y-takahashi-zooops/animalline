@@ -61,9 +61,6 @@ class Reception3DSAuthenticationController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
-
     public function __construct(
         ConfigRepository $configRepository,
         GmoEpsilonRequestService $gmoEpsilonRequestService,

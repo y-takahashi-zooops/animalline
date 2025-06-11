@@ -151,8 +151,6 @@ class OrderController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     /**
      * OrderController constructor.
      *

@@ -31,8 +31,6 @@ class RegularDiscountSettingController extends AbstractController
      */
     private $logger;
 
-    protected $entityManager;
-
     /**
      * RegularDiscountSettingController constructor.
      */

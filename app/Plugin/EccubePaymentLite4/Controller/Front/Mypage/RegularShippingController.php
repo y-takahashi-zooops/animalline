@@ -25,8 +25,6 @@ class RegularShippingController extends AbstractController
      */
     private $isActiveRegularService;
 
-    protected $entityManager;
-
     public function __construct(
         IsMypageRegularSettingService $isMypageRegularSettingService,
         IsActiveRegularService $isActiveRegularService,

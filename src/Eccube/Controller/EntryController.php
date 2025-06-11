@@ -87,8 +87,6 @@ class EntryController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     /**
      * EntryController constructor.
      *

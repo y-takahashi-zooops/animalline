@@ -50,8 +50,6 @@ class ProductReviewController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     /**
      * ProductReviewController constructor.
      *

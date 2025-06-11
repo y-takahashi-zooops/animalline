@@ -69,7 +69,6 @@ class EpsilonPaymentCompleteController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
 
     public function __construct(
         OrderRepository $orderRepository,

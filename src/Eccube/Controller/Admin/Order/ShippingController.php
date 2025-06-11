@@ -97,7 +97,6 @@ class ShippingController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
 
     /**
      * EditController constructor.

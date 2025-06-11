@@ -40,7 +40,6 @@ class EpsilonPaymentBackController extends AbstractController
      */
     protected $pointHelper;
 
-    protected $entityManager;
 
     public function __construct(
         RequestGetSales2Service $requestGetSales2Service,

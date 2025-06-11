@@ -47,7 +47,6 @@ class PaymentController extends AbstractController
      */
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
 
     /**
      * PaymentController constructor.

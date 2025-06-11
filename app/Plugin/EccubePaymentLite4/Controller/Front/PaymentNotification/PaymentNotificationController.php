@@ -50,8 +50,6 @@ class PaymentNotificationController extends AbstractController
      */
     private $cartItemRepository;
 
-    protected $entityManager;
-
     public function __construct(
         OrderRepository $orderRepository,
         PaymentStatusRepository $paymentStatusRepository,

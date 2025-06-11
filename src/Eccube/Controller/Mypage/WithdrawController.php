@@ -66,8 +66,6 @@ class WithdrawController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     /**
      * WithdrawController constructor.
      *

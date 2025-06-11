@@ -47,8 +47,6 @@ class CustomerEditController extends AbstractController
      */
     protected $logger;
 
-    protected $entityManager;
-
     public function __construct(
         CustomerRepository $customerRepository,
         UserPasswordHasherInterface $passwordHasher,

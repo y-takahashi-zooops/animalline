@@ -55,8 +55,6 @@ class MailController extends AbstractController
 
     protected FormFactoryInterface $formFactory;
 
-    protected $entityManager;
-
     /**
      * MailController constructor.
      *

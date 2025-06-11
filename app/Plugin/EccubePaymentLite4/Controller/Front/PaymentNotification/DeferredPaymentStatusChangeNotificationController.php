@@ -23,7 +23,6 @@ class DeferredPaymentStatusChangeNotificationController extends AbstractControll
      */
     private $paymentStatusRepository;
 
-    protected $entityManager;
 
     public function __construct(
         OrderRepository $orderRepository,

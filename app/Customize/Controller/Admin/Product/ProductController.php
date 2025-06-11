@@ -160,8 +160,6 @@ class ProductController extends BaseProductController
      */
     protected SessionInterface $session;
 
-    protected $entityManager;
-
     /**
      * ProductController constructor.
      *

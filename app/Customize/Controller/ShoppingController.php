@@ -72,8 +72,6 @@ class ShoppingController extends BaseShoppingController
      */
     protected $logger;
 
-    protected $entityManager;
-
     public function __construct(
         CartService $cartService,
         MailService $mailService,
