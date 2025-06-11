@@ -13,14 +13,6 @@ file that was distributed with this source code.
 {% set body_class = 'product_page' %}
 
 {% block stylesheet %}
-	{% if Product is not defined %}
-		<script>console.log("Product is not defined");</script>
-	{% elseif Product is null %}
-		<script>console.log("Product is null");</script>
-	{% else %}
-		<script>console.log("Product is available");</script>
-	{% endif %}
-
     <style>
 
         .slick-slider {
@@ -100,6 +92,16 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block javascript %}
+	{% if Product is defined and Product is not null %}
+		<script>
+			console.log("Product is available");
+			eccube.classCategories = {{ my_class_categories_as_json(Product)|raw }};
+		</script>
+	{% else %}
+		<script>
+			console.log("Product is NOT available");
+		</script>
+	{% endif %}
     <script>
 		alert("this is my custom template");
         eccube.classCategories = {{ my_class_categories_as_json(Product)|raw }};
