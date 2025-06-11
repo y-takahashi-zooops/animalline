@@ -50,6 +50,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 class CustomerController extends AbstractController
@@ -117,7 +118,13 @@ class CustomerController extends AbstractController
     protected FormFactoryInterface $formFactory;
 
     /**
+     * @var Session
+     */
+    protected SessionInterface $session;
+
+    /**
      * @var LoggerInterface
+     * @param SessionInterface $session,
      */
     protected $logger;
 
@@ -138,7 +145,8 @@ class CustomerController extends AbstractController
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        SessionInterface $session
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -157,6 +165,7 @@ class CustomerController extends AbstractController
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
+        $this->session = $session;
     }
 
     /**
@@ -164,7 +173,7 @@ class CustomerController extends AbstractController
      * @Route("/%eccube_admin_route%/customer/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_customer_page")
      * @Template("@admin/Customer/index.twig")
      */
-    public function index(Request $request, $page_no = null, Paginator $paginator)
+    public function index(Request $request, ?int $page_no = 1, PaginatorInterface $paginator)
     {
         $session = $this->session;
         $builder = $this->formFactory->createBuilder(SearchCustomerType::class);
