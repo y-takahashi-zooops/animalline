@@ -632,11 +632,11 @@ class ProductController extends AbstractController
     protected function getPageTitle($searchData)
     {
         if (isset($searchData['name']) && !empty($searchData['name'])) {
-            return trans('front.product.search_result');
+            return $this->translator->trans('front.product.search_result');
         } elseif (isset($searchData['category_id']) && $searchData['category_id']) {
             return $searchData['category_id']->getName();
         } else {
-            return trans('front.product.all_products');
+            return $this->translator->trans('front.product.all_products');
         }
     }
 
