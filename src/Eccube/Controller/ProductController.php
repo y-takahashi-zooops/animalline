@@ -364,23 +364,23 @@ class ProductController extends AbstractController
             $forms[$Product->getId()] = $addCartForm->createView();
         }
 
-        // // 表示件数フォーム
-        // $dispNumberForm = $this->formFactory->createNamedBuilder(
-        //     'disp_number',
-        //     ProductListMaxType::class,
-        //     null,
-        //     ['required' => false, 'allow_extra_fields' => true]
-        // )->getForm();
-        // $dispNumberForm->handleRequest($request);
+        // 表示件数フォーム
+        $dispNumberForm = $this->formFactory->createNamedBuilder(
+            'disp_number',
+            ProductListMaxType::class,
+            null,
+            ['required' => false, 'allow_extra_fields' => true]
+        )->getForm();
+        $dispNumberForm->handleRequest($request);
 
-        // // ソート順フォーム
-        // $orderByForm = $this->formFactory->createNamedBuilder(
-        //     'orderby',
-        //     ProductListOrderByType::class,
-        //     null,
-        //     ['required' => false, 'allow_extra_fields' => true]
-        // )->getForm();
-        // $orderByForm->handleRequest($request);
+        // ソート順フォーム
+        $orderByForm = $this->formFactory->createNamedBuilder(
+            'orderby',
+            ProductListOrderByType::class,
+            null,
+            ['required' => false, 'allow_extra_fields' => true]
+        )->getForm();
+        $orderByForm->handleRequest($request);
 
         // category_idはEntityではないので、Category変数はnullにしておく
         $Category = null;
@@ -389,8 +389,8 @@ class ProductController extends AbstractController
             'subtitle' => $this->getPageTitle($searchData),
             'pagination' => $pagination,
             'search_form' => null, // Twigで使用していたらコメントアウト
-            // 'disp_number_form' => $dispNumberForm->createView(),
-            // 'order_by_form' => $orderByForm->createView(),
+            'disp_number_form' => $dispNumberForm->createView(),
+            'order_by_form' => $orderByForm->createView(),
             'forms' => $forms,
             'Category' => $Category,
         ];
