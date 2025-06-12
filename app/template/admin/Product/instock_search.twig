@@ -204,11 +204,11 @@ file that was distributed with this source code.
                                         <td class="pt-2 pb-2"></td>
                                         <td class="align-middle">{{ instock.id }}</td>
                                         <td class="align-middle">{{ instock.instockHeader.orderDate|date('Y-m-d') }}</td>
-                                        <td class="align-middle">{{ instock.arrivalDateSchedule | date('Y/m/d') }}</td>
-                                        <td class="align-middle">{{ instock.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
-                                        <td class="align-middle">{{ instock.isSendWms == 0 ? '未' : '済' }}</td>
-                                        <td class="align-middle">{{ instock.isCommit == 0 ? '未' : '済' }}</td>
-                                        <td class="align-middle">{{ instock.remarkText }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.arrivalDateSchedule | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.isSendWms == 0 ? '未' : '済' }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.isCommit == 0 ? '未' : '済' }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.remarkText }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
