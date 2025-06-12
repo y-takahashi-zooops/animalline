@@ -296,20 +296,66 @@ class ProductController extends AbstractController
             $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
         }
 
-        // classCategories の JSON を生成し、翻訳適用
-        $classCategories = $this->productRepository->getClassCategories($Product); // あなたの環境の取得関数に合わせてください
+        // ここから
+        $classCategories = [
+            '__unselected' => [
+                '__unselected' => [
+                    'name' => $this->translator->trans('common.select'),
+                    'product_class_id' => '',
+                ],
+            ],
+        ];
 
-        foreach ($classCategories as &$classCat1) {
-            foreach ($classCat1 as &$classCat2) {
-                if (isset($classCat2['name']) && is_string($classCat2['name']) && str_starts_with($classCat2['name'], 'trans:')) {
-                    $key = str_replace('trans:', '', $classCat2['name']);
-                    $classCat2['name'] = $this->translator->trans($key);
-                }
+        foreach ($Product->getProductClasses() as $ProductClass) {
+            if (!$ProductClass->isVisible()) {
+                continue;
             }
-        }
-        unset($classCat1, $classCat2); // 参照の解放（念のため）
 
-        $classCategoriesJson = json_encode($classCategories);
+            $ClassCategory1 = $ProductClass->getClassCategory1();
+            $ClassCategory2 = $ProductClass->getClassCategory2();
+            if ($ClassCategory2 && !$ClassCategory2->isVisible()) {
+                continue;
+            }
+
+            $id1 = $ClassCategory1 ? (string) $ClassCategory1->getId() : '__unselected2';
+            $id2 = $ClassCategory2 ? (string) $ClassCategory2->getId() : '';
+
+            $name2 = $ClassCategory2
+                ? $ClassCategory2->getName() . (!$ProductClass->getStockFind() ? ' ' . $this->translator->trans('front.product.out_of_stock_label') : '')
+                : $this->translator->trans('common.select');
+
+            // 初期選択肢（セレクトボックスの「選択してください」）
+            if (!isset($classCategories[$id1]['#'])) {
+                $classCategories[$id1]['#'] = [
+                    'classcategory_id2' => '',
+                    'name' => $this->translator->trans('common.select'),
+                    'product_class_id' => '',
+                ];
+            }
+
+            $classCategories[$id1]['#' . $id2] = [
+                'classcategory_id2' => $id2,
+                'name' => $name2,
+                'stock_find' => $ProductClass->getStockFind(),
+                'price01' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01()),
+                'price02' => number_format($ProductClass->getPrice02()),
+                'price01_inc_tax' => $ProductClass->getPrice01() === null ? '' : number_format($ProductClass->getPrice01IncTax()),
+                'price02_inc_tax' => number_format($ProductClass->getPrice02IncTax()),
+                'product_class_id' => (string) $ProductClass->getId(),
+                'product_code' => $ProductClass->getCode() ?? '',
+                'sale_type' => $ProductClass->getSaleType() ? (string) $ProductClass->getSaleType()->getId() : '',
+                'item_cost' => method_exists($ProductClass, 'getItemCost') ? (float) $ProductClass->getItemCost() : 0.0,
+            ];
+        }
+
+        $classCategoriesJson = json_encode($classCategories, JSON_UNESCAPED_UNICODE);
+
+        $is_favorite = false;
+        if ($this->isGranted('ROLE_USER')) {
+            $Customer = $this->getUser();
+            $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
+        }
+
 
         return [
             'title' => $this->title,
@@ -317,7 +363,7 @@ class ProductController extends AbstractController
             'form' => $builder->getForm()->createView(),
             'Product' => $Product,
             'is_favorite' => $is_favorite,
-            'class_categories_json' => $this->renderView('Product/class_categories_as_json.twig', ['Product' => $Product]),
+            'class_categories_json' => $classCategoriesJson,
         ];
     }
 
