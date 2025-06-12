@@ -291,14 +291,28 @@ class AnilineEntryController extends AbstractController
                         }
                     }
 
-                    $encoder = $this->passwordHasher->getEncoder($Customer);
-                    $salt = $encoder->createSalt();
-                    $password = $encoder->encodePassword($Customer->getPassword(), $salt);
+                    // $encoder = $this->passwordHasher->getEncoder($Customer);
+                    // $salt = $encoder->createSalt();
+                    // $password = $encoder->encodePassword($Customer->getPassword(), $salt);
+                    // $secretKey = $this->customerRepository->getUniqueSecretKey();
+
+                    // $Customer
+                    //     ->setSalt($salt)
+                    //     ->setPassword($password)
+                    //     ->setSecretKey($secretKey)
+                    //     ->setPoint(0)
+                    //     ->setIsBreeder(0)
+                    //     ->setRegistType($regist_type)
+                    //     ->setIsConservation(0)
+                    //     ->setRelationId($rid);
+
+                    // パスワードをハッシュ化（saltは不要）
+                    $hashedPassword = $this->passwordHasher->hashPassword($Customer, $Customer->getPassword());
+
                     $secretKey = $this->customerRepository->getUniqueSecretKey();
 
                     $Customer
-                        ->setSalt($salt)
-                        ->setPassword($password)
+                        ->setPassword($hashedPassword)
                         ->setSecretKey($secretKey)
                         ->setPoint(0)
                         ->setIsBreeder(0)
