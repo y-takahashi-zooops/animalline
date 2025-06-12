@@ -21,57 +21,6 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-// class ProductListOrderByType extends AbstractType
-// {
-//     /**
-//      * {@inheritdoc}
-//      */
-//     public function buildForm(FormBuilderInterface $builder, array $options)
-//     {
-//         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//             $options = $event->getForm()->getConfig()->getOptions();
-//             if (!$event->getData()) {
-//                 $data = current(array_keys($options['choice_loader']->loadChoiceList()->getValues()));
-//                 $event->setData($data);
-//             }
-//         });
-//         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-//             $options = $event->getForm()->getConfig()->getOptions();
-//             $values = $options['choice_loader']->loadChoiceList()->getValues();
-//             if (!in_array($event->getData(), $values)) {
-//                 $data = current($values);
-//                 $event->setData($data);
-//             }
-//         });
-//     }
-
-//     /**
-//      * {@inheritdoc}
-//      */
-//     public function configureOptions(OptionsResolver $resolver)
-//     {
-//         $resolver->setDefaults([
-//             'class' => 'Eccube\Entity\Master\ProductListOrderBy',
-//         ]);
-//     }
-
-//     /**
-//      * {@inheritdoc}
-//      */
-//     public function getBlockPrefix()
-//     {
-//         return 'product_list_order_by';
-//     }
-
-//     /**
-//      * {@inheritdoc}
-//      */
-//     public function getParent()
-//     {
-//         return MasterType::class;
-//     }
-// }
-
 class ProductListOrderByType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
