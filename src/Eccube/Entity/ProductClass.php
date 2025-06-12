@@ -348,6 +348,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         private $ReturnSchedule;
 
         /**
+         * @ORM\Column(name="supplier_code", type="string", nullable=true)
+         */
+        private $supplier_code;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -883,6 +888,17 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         public function getReturnSchedule(): Collection
         {
             return $this->ReturnSchedule;
+        }
+
+        public function getSupplierCode(): ?string
+        {
+            return $this->supplier_code;
+        }
+
+        public function setSupplierCode(?string $supplier_code): self
+        {
+            $this->supplier_code = $supplier_code;
+            return $this;
         }
     }
 }
