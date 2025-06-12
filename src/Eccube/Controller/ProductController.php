@@ -364,6 +364,12 @@ class ProductController extends AbstractController
             $forms[$Product->getId()] = $addCartForm->createView();
         }
 
+        /* @var $searchForm \Symfony\Component\Form\FormInterface */
+        $searchForm = $builder->getForm();
+        $searchForm->handleRequest($request);
+        // paginator
+        $searchData = $searchForm->getData();
+
         // 表示件数フォーム
         $dispNumberForm = $this->formFactory->createNamedBuilder(
             'disp_number',
@@ -388,7 +394,7 @@ class ProductController extends AbstractController
         return [
             'subtitle' => $this->getPageTitle($searchData),
             'pagination' => $pagination,
-            'search_form' => null, // Twigで使用していたらコメントアウト
+            'search_form' => $searchForm->createView(),
             'disp_number_form' => $dispNumberForm->createView(),
             'order_by_form' => $orderByForm->createView(),
             'forms' => $forms,
