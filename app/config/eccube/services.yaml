@@ -429,5 +429,6 @@ services:
     Customize\Form\Extension\ProductClassTypeExtension:
             autowire: true
             autoconfigure: false
+            public: false
             tags:
-                - { name: form.type_extension }
+                - { name: form.class.supplier_code }
