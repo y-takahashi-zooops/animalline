@@ -317,7 +317,7 @@ class ProductController extends AbstractController
             'form' => $builder->getForm()->createView(),
             'Product' => $Product,
             'is_favorite' => $is_favorite,
-            'class_categories_json' => $classCategoriesJson,
+            'class_categories_json' => $this->renderView('Product/class_categories_as_json.twig', ['Product' => $Product]),
         ];
     }
 
