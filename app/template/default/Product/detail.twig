@@ -122,6 +122,9 @@ file that was distributed with this source code.
 					try {
 						eccube.classCategories = {{ class_categories_json|raw }};
 						console.log("classCategories (raw):", eccube.classCategories);
+						console.log('product_id:', product_id);
+						console.log('select1:', $sele1.length, $sele1);
+						console.log('select2:', $sele2.length, $sele2);
 
 						// 翻訳キーを翻訳済みに差し替え
 						for (const key1 in eccube.classCategories) {
