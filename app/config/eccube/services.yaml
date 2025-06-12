@@ -431,4 +431,4 @@ services:
             autoconfigure: false
             public: false
             tags:
-                - { name: form.class.supplier_code }
+                - { name: form.type_extension }
