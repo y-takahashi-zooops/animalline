@@ -364,23 +364,23 @@ class ProductController extends AbstractController
             $forms[$Product->getId()] = $addCartForm->createView();
         }
 
-        // 表示件数フォーム（現状のフォームは使わないが一応残す場合）
-        $dispNumberForm = $this->formFactory->createNamedBuilder(
-            'disp_number',
-            ProductListMaxType::class,
-            null,
-            ['required' => false, 'allow_extra_fields' => true]
-        )->getForm();
-        $dispNumberForm->handleRequest($request);
+        // // 表示件数フォーム
+        // $dispNumberForm = $this->formFactory->createNamedBuilder(
+        //     'disp_number',
+        //     ProductListMaxType::class,
+        //     null,
+        //     ['required' => false, 'allow_extra_fields' => true]
+        // )->getForm();
+        // $dispNumberForm->handleRequest($request);
 
-        // ソート順フォーム（同様に一応残す）
-        $orderByForm = $this->formFactory->createNamedBuilder(
-            'orderby',
-            ProductListOrderByType::class,
-            null,
-            ['required' => false, 'allow_extra_fields' => true]
-        )->getForm();
-        $orderByForm->handleRequest($request);
+        // // ソート順フォーム
+        // $orderByForm = $this->formFactory->createNamedBuilder(
+        //     'orderby',
+        //     ProductListOrderByType::class,
+        //     null,
+        //     ['required' => false, 'allow_extra_fields' => true]
+        // )->getForm();
+        // $orderByForm->handleRequest($request);
 
         // category_idはEntityではないので、Category変数はnullにしておく
         $Category = null;
@@ -632,11 +632,11 @@ class ProductController extends AbstractController
     protected function getPageTitle($searchData)
     {
         if (isset($searchData['name']) && !empty($searchData['name'])) {
-            return trans('front.product.search_result');
+            return $this->translator->trans('front.product.search_result');
         } elseif (isset($searchData['category_id']) && $searchData['category_id']) {
             return $searchData['category_id']->getName();
         } else {
-            return trans('front.product.all_products');
+            return $this->translator->trans('front.product.all_products');
         }
     }
 
