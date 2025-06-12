@@ -151,6 +151,10 @@ file that was distributed with this source code.
 						// const $sele1 = $form.find('select[name=classcategory_id1]');
 						// const $sele2 = $form.find('select[name=classcategory_id2]');
 
+						function fnSetClassCategories(classcat_id2_selected) {
+							eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
+						}
+
 						{% if form.classcategory_id2 is defined %}
 							fnSetClassCategories({{ form.classcategory_id2.vars.value|json_encode|raw }});
 						{% elseif form.classcategory_id1 is defined %}
