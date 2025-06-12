@@ -288,6 +288,40 @@ class ProductController extends AbstractController
 
         $Category = $searchForm->get('category_id')->getData();
 
+        // JSON翻訳
+        $productsClassCategories = [];
+
+        foreach ($ProductsAndClassCategories as $Product) {
+            $id = $Product->getId();
+            $productsClassCategories[$id] = [];
+
+            foreach ($Product->getProductClasses() as $ProductClass) {
+                if (!$ProductClass->isVisible()) {
+                    continue;
+                }
+
+                $ClassCategory1 = $ProductClass->getClassCategory1();
+                $ClassCategory2 = $ProductClass->getClassCategory2();
+
+                if ($ClassCategory2 && !$ClassCategory2->isVisible()) {
+                    continue;
+                }
+
+                $id1 = $ClassCategory1 ? (string) $ClassCategory1->getId() : '__unselected';
+                $id2 = $ClassCategory2 ? (string) $ClassCategory2->getId() : '';
+
+                if (!isset($productsClassCategories[$id][$id1])) {
+                    $productsClassCategories[$id][$id1] = [];
+                }
+
+                $productsClassCategories[$id][$id1][$id2] = [
+                    'classcategory_id2' => $id2,
+                    'name' => $ClassCategory2 ? $ClassCategory2->getName() : $this->translator->trans('common.select'),
+                    'product_class_id' => (string) $ProductClass->getId(),
+                ];
+            }
+        }
+
         return [
             'subtitle' => $this->getPageTitle($searchData),
             'pagination' => $pagination,
@@ -296,6 +330,7 @@ class ProductController extends AbstractController
             'order_by_form' => $orderByForm->createView(),
             'forms' => $forms,
             'Category' => $Category,
+            'products_class_categories_json' => json_encode($productsClassCategories, JSON_UNESCAPED_UNICODE)
         ];
     }
 
