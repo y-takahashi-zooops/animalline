@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class ProductTypeExtension.
  */
-final class ProductTypeExtension extends AbstractTypeExtension
+class ProductTypeExtension extends AbstractTypeExtension
 {
     public function __construct()
     {
