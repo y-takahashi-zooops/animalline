@@ -92,6 +92,7 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block javascript %}
+	<script src="{{ asset('assets/js/vendor/translations.js') }}"></script>
     <script>
         try {
             {% if Product is defined and Product is not null %}
