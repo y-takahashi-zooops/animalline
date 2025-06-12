@@ -21,13 +21,18 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class LogController extends AbstractController
 {
     
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        FormFactoryInterface $formFactory,
+    )
     {
         $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
     }
 
     /**
