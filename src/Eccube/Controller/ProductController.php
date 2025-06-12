@@ -345,7 +345,7 @@ class ProductController extends AbstractController
             $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
         }
 
-        // ここから
+        // JSONの読み込み
         $classCategories = [
             '__unselected' => [
                 '__unselected' => [
