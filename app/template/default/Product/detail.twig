@@ -101,14 +101,18 @@ file that was distributed with this source code.
                 console.log("classCategories (raw):", eccube.classCategories);
 
                 // 翻訳キーが含まれていればJS側で翻訳（translator.min.jsが前提）
-                for (const key1 in eccube.classCategories) {
-                    for (const key2 in eccube.classCategories[key1]) {
-                        let name = eccube.classCategories[key1][key2].name;
-                        if (typeof name === 'string' && name.startsWith('trans:')) {
-                            const key = name.replace(/^trans:/, '');
-                            eccube.classCategories[key1][key2].name = Translator.trans(key);
+                if (typeof Translator !== 'undefined') {
+                    for (const key1 in eccube.classCategories) {
+                        for (const key2 in eccube.classCategories[key1]) {
+                            let name = eccube.classCategories[key1][key2].name;
+                            if (typeof name === 'string' && name.startsWith('trans:')) {
+                                const key = name.replace(/^trans:/, '');
+                                eccube.classCategories[key1][key2].name = Translator.trans(key);
+                            }
                         }
                     }
+                } else {
+                    console.warn("Translator is not loaded yet.");
                 }
             {% else %}
                 console.log("Product is NOT available");
