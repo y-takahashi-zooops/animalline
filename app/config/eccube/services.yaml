@@ -421,6 +421,7 @@ services:
 
     Customize\Form\Extension\ProductTypeExtension:
         autowire: true
-        autoconfigure: true
+        autoconfigure: false  # ← これを false に
+        public: false
         tags:
             - { name: form.type_extension }
