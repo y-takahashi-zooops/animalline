@@ -1261,9 +1261,21 @@ if (!class_exists('\Eccube\Entity\Customer')) {
             return $this->regist_type;
         }
 
+        public function setRegistType(?string $registType): self
+        {
+            $this->regist_type = $registType;
+            return $this;
+        }
+
         public function getRelationId(): ?string
         {
             return $this->relation_id;
+        }
+
+        public function setRelationId(?int $relationId): self
+        {
+            $this->relation_id = $relationId;
+            return $this;
         }
 
         public function getIsConservation(): ?string
@@ -1271,9 +1283,21 @@ if (!class_exists('\Eccube\Entity\Customer')) {
             return $this->is_conservation;
         }
 
+        public function setIsConservation(int $isConservation): self
+        {
+            $this->is_conservation = $isConservation;
+            return $this;
+        }
+
         public function getIsBreeder(): ?string
         {
             return $this->is_breeder;
+        }
+
+        public function setIsBreeder(int $isBreeder): self
+        {
+            $this->is_breeder = $isBreeder;
+            return $this;
         }
     }
 }
