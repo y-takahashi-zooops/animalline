@@ -374,7 +374,7 @@ class ProductController extends AbstractController
                 : $this->translator->trans('common.select');
 
             // 初期選択肢（セレクトボックスの「選択してください」）
-            if (!isset($classCategories[$id1]['#'])) {
+            if (!isset($classCategories[$id1][''])) {
                 $classCategories[$id1]['#'] = [
                     'classcategory_id2' => '',
                     'name' => $this->translator->trans('common.select'),
@@ -382,7 +382,7 @@ class ProductController extends AbstractController
                 ];
             }
 
-            $classCategories[$id1]['#' . $id2] = [
+            $classCategories[$id1][$id2] = [
                 'classcategory_id2' => $id2,
                 'name' => $name2,
                 'stock_find' => $ProductClass->getStockFind(),
