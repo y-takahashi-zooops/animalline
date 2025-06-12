@@ -11,7 +11,7 @@ class ProductExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('my_class_categories_as_json', [$this, 'getClassCategoriesAsJson']),
+            new TwigFunction('class_categories_as_json', [$this, 'getClassCategoriesAsJson']),
         ];
     }
 
