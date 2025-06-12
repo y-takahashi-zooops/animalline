@@ -418,7 +418,3 @@ services:
     Eccube\Controller\AbstractController:
         arguments:
             $eccubeConfig: '@Eccube\Common\EccubeConfig'
-
-    Customize\Form\Extension\ProductTypeExtension:
-        tags:
-            - { name: form.type_extension }
