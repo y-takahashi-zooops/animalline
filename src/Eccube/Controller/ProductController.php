@@ -120,7 +120,17 @@ class ProductController extends AbstractController
         EntityManagerInterface $entityManager,
         EccubeConfig $eccubeConfig
     ) {
-        parent::__construct($eccubeConfig);
+        parent::__construct(
+            $eccubeConfig,
+            $entityManager,
+            $translator,
+            $session,
+            $formFactory,
+            $eventDispatcher,
+            $requestStack,
+            $router
+        );
+
         $this->purchaseFlow = $cartPurchaseFlow;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
         $this->cartService = $cartService;
@@ -128,11 +138,7 @@ class ProductController extends AbstractController
         $this->BaseInfo = $baseInfoRepository->get();
         $this->helper = $helper;
         $this->productListMaxRepository = $productListMaxRepository;
-        $this->formFactory = $formFactory;
         $this->logger = $logger;
-        $this->session = $session;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager = $entityManager;
     }
 
     // /**
