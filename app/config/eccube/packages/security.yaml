@@ -3,13 +3,26 @@ security:
         # Our user class and the algorithm we'll use to encode passwords
         # https://symfony.com/doc/current/security.html#c-encoding-the-user-s-password
 
-        # 自動的にパスワードハッシュを設定
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-        
-        Eccube\Entity\Member:
-          algorithm: bcrypt
+        # 旧方式
+        legacy:
+            algorithm: sha256
+            encode_as_base64: false
+            iterations: 1
+
+        # Customer 用（bcrypt → sodium へ移行）
         Eccube\Entity\Customer:
-          algorithm: bcrypt
+            algorithm: sodium
+            migrate_from:
+                - bcrypt
+                - legacy
+
+        # Member 用（同上）
+        Eccube\Entity\Member:
+            algorithm: sodium
+            migrate_from:
+                - bcrypt
+                - legacy
+
     providers:
         # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
         # In this example, users are stored via Doctrine in the database
