@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class SearchProductType extends AbstractType
 {
@@ -57,7 +58,12 @@ class SearchProductType extends AbstractType
             'choices' => $Categories,
             'placeholder' => 'common.select__all_products',
             'required' => false,
+            'mapped' => false,
         ]);
+        // $builder->add('category_id', IntegerType::class, [
+        //     'required' => false,
+        //     'mapped' => false
+        // ]);
         $builder->add('name', SearchType::class, [
             'required' => false,
             'attr' => [

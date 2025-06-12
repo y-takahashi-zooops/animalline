@@ -32,7 +32,6 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContext;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class AddCartType extends AbstractType
 {
@@ -74,14 +73,6 @@ class AddCartType extends AbstractType
         $this->Product = $Product;
         $ProductClasses = $Product->getProductClasses();
 
-        $data = null;
-        if (!$Product->hasProductClass()) {
-            $first = $ProductClasses->first();
-            if ($first instanceof ProductClass) {
-                $data = $first->getId();
-            }
-        }
-
         $builder
             ->add('product_id', HiddenType::class, [
                 'data' => $Product->getId(),
@@ -90,14 +81,17 @@ class AddCartType extends AbstractType
                     new Assert\NotBlank(),
                     new Assert\Regex(['pattern' => '/^\d+$/']),
                 ], ])
-            ->add('product_class_id', HiddenType::class, [
-                'data' => $data,
-                'mapped' => false,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Regex(['pattern' => '/^\d+$/']),
-                ],
-            ]);
+            ->add(
+                $builder
+                    ->create('ProductClass', HiddenType::class, [
+                        'data_class' => null,
+                        'data' => $Product->hasProductClass() ? null : $ProductClasses->first(),
+                        'constraints' => [
+                            new Assert\NotBlank(),
+                        ],
+                    ])
+                    ->addModelTransformer(new EntityToIdTransformer($this->doctrine->getManager(), ProductClass::class))
+            );
 
         if ($Product->getStockFind()) {
             $builder
@@ -149,15 +143,12 @@ class AddCartType extends AbstractType
             $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
                 /** @var CartItem $CartItem */
                 $CartItem = $event->getData();
-                $data = $event->getForm()->get('product_class_id')->getData();
-
-                if ($data) {
-                    $ProductClass = $this->doctrine->getManager()->getRepository(ProductClass::class)->find($data);
-                    if ($ProductClass) {
-                        $CartItem
-                            ->setProductClass($ProductClass)
-                            ->setPrice($ProductClass->getPrice02IncTax());
-                    }
+                $ProductClass = $CartItem->getProductClass();
+                // FIXME 価格の設定箇所、ここでいいのか
+                if ($ProductClass) {
+                    $CartItem
+                        ->setProductClass($ProductClass)
+                        ->setPrice($ProductClass->getPrice02IncTax());
                 }
             });
         }
