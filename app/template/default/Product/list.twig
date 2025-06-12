@@ -14,11 +14,7 @@ file that was distributed with this source code.
 
 {% block javascript %}
     <script>
-        eccube.productsClassCategories = {
-            {% for Product in pagination %}
-            "{{ Product.id|escape('js') }}": {{ class_categories_as_json|raw }}{% if loop.last == false %}, {% endif %}
-            {% endfor %}
-        };
+        eccube.productsClassCategories = {{ products_class_categories_json|raw }};
 
         $(function() {
 
