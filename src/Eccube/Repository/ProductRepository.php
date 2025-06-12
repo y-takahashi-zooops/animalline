@@ -22,6 +22,7 @@ use Eccube\Util\StringUtil;
 use Doctrine\Persistence\ManagerRegistry;
 use Eccube\Entity\Master\SaleType;
 use Eccube\Repository\Master\SaleTypeRepository;
+use Eccube\Repository\ProductListMaxRepository;
 /**
  * ProductRepository
  *
@@ -45,6 +46,8 @@ class ProductRepository extends AbstractRepository
      */
     protected $saleTypeRepository;
 
+    protected ProductListMaxRepository $productListMaxRepository;
+
     /**
      * ProductRepository constructor.
      *
@@ -56,12 +59,14 @@ class ProductRepository extends AbstractRepository
         ManagerRegistry $registry,
         Queries $queries,
         EccubeConfig $eccubeConfig,
-        SaleTypeRepository $saleTypeRepository
+        SaleTypeRepository $saleTypeRepository,
+        ProductListMaxRepository $productListMaxRepository
     ) {
         parent::__construct($registry, Product::class);
         $this->queries = $queries;
         $this->eccubeConfig = $eccubeConfig;
         $this->saleTypeRepository = $saleTypeRepository;
+        $this->productListMaxRepository = $productListMaxRepository;
     }
 
     /**
