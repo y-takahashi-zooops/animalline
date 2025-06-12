@@ -36,6 +36,21 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         private $tax_rate = false;
 
         /**
+         * @ORM\Column(name="jan_code", type="string", length=13, nullable=true)
+         */
+        private $jan_code;
+
+        /**
+         * @ORM\Column(name="stock_code", type="string", length=5, nullable=true)
+         */
+        private $stock_code;
+
+        /**
+         * @ORM\Column(name="incentive_ratio", type="decimal", precision=5, scale=2, nullable=true)
+         */
+        private $incentive_ratio;
+
+        /**
          * 商品規格名を含めた商品名を返す.
          *
          * @return string
@@ -909,6 +924,39 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         public function getItemCost(): ?string
         {
             return $this->item_cost;
+        }
+
+        public function getJanCode(): ?string
+        {
+            return $this->jan_code;
+        }
+
+        public function setJanCode(?string $jan_code): self
+        {
+            $this->jan_code = $jan_code;
+            return $this;
+        }
+
+        public function getStockCode(): ?string
+        {
+            return $this->stock_code;
+        }
+
+        public function setStockCode(?string $stock_code): self
+        {
+            $this->stock_code = $stock_code;
+            return $this;
+        }
+
+        public function getIncentiveRatio(): ?float
+        {
+            return $this->incentive_ratio;
+        }
+
+        public function setIncentiveRatio(?float $incentive_ratio): self
+        {
+            $this->incentive_ratio = $incentive_ratio;
+            return $this;
         }
     }
 }

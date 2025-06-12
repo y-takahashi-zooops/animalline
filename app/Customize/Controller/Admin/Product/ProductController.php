@@ -229,7 +229,7 @@ class ProductController extends BaseProductController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/product", name="admin_product")
+     * @Route("/%eccube_admin_route%/product", name="admin_product", defaults={"page_no"=1})
      * @Route("/%eccube_admin_route%/product/page/{page_no}", requirements={"page_no" = "\d+"}, name="admin_product_page")
      * @Template("@admin/Product/index.twig")
      */

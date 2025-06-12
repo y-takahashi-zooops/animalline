@@ -418,3 +418,17 @@ services:
     Eccube\Controller\AbstractController:
         arguments:
             $eccubeConfig: '@Eccube\Common\EccubeConfig'
+
+    Customize\Form\Extension\ProductTypeExtension:
+        autowire: true
+        autoconfigure: false  # ← これを false に
+        public: false
+        tags:
+            - { name: form.type_extension }
+
+    Customize\Form\Extension\ProductClassTypeExtension:
+            autowire: true
+            autoconfigure: false
+            public: false
+            tags:
+                - { name: form.type_extension }

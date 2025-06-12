@@ -25,6 +25,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ProductTypeExtension extends AbstractTypeExtension
 {
+    public function __construct()
+    {
+        // 明示的な空のコンストラクタ（Symfonyに「abstractではない」と認識させる）
+    }
 
     /**
      * {@inheritdoc}
@@ -50,6 +54,6 @@ class ProductTypeExtension extends AbstractTypeExtension
      */
     public static function getExtendedTypes(): iterable
     {
-        return [OrderType::class];
+        return [ProductType::class];
     }
 }
