@@ -1272,9 +1272,21 @@ if (!class_exists('\Eccube\Entity\Customer')) {
             return $this->relation_id;
         }
 
+        public function setRelationId(?int $relationId): self
+        {
+            $this->relation_id = $relationId;
+            return $this;
+        }
+
         public function getIsConservation(): ?string
         {
             return $this->is_conservation;
+        }
+
+        public function setIsConservation(bool $isConservation): self
+        {
+            $this->is_conservation = $isConservation;
+            return $this;
         }
 
         public function getIsBreeder(): ?string
