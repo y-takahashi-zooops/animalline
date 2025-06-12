@@ -1076,7 +1076,7 @@ class CsvImportController extends AbstractCsvImportController
                 'description' => 'admin.product.product_csv.item_cost_description',
                 'required' => true,
             ],
-            t$this->translator->rans('admin.product.product_csv.supplier_code_col') => [
+            $this->translator->trans('admin.product.product_csv.supplier_code_col') => [
                 'id' => 'supplier_code',
                 'description' => 'admin.product.product_csv.supplier_code_description',
                 'required' => false,
