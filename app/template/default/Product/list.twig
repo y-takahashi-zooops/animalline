@@ -524,8 +524,12 @@ file that was distributed with this source code.
                 {% if pagination.totalItemCount > 0 %}
                     <div class="ec-searchnavRole__actions">
                         <div class="ec-select">
-                            {{ form_widget(disp_number_form, {'id': '', 'attr': {'class': 'disp-number'}}) }}
-                            {{ form_widget(order_by_form, {'id': '', 'attr': {'class': 'order-by'}}) }}
+                            {% if disp_number_form is defined and disp_number_form is not null %}
+                                {{ form_widget(disp_number_form, {'id': '', 'attr': {'class': 'disp-number'}}) }}
+                            {% endif %}
+                            {% if order_by_form is defined and order_by_form is not null %}
+                                {{ form_widget(order_by_form, {'id': '', 'attr': {'class': 'order-by'}}) }}
+                            {% endif %}
                         </div>
                     </div>
                 {% endif %}
