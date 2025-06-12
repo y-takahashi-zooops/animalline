@@ -35,16 +35,16 @@ class EccubeAuthenticationFailureHandler extends DefaultAuthenticationFailureHan
     {
         $response = parent::onAuthenticationFailure($request, $exception);
 
-//        if (preg_match('/^https?:\\\\/i', $response->getTargetUrl())) {
-//            $response->setTargetUrl($request->getUriForPath('/'));
-//        }
-        if ($response instanceof RedirectResponse) {
-            // URLが http:// または https:// で始まる場合、リダイレクト先を変更
-            if (preg_match('/^https?:\/\//i', $response->getTargetUrl())) {
-                // 新しいリダイレクト先を設定
-                $response->setTargetUrl($request->getUriForPath('/'));
-            }
-        }
+       if (preg_match('/^https?:\\\\/i', $response->getTargetUrl())) {
+           $response->setTargetUrl($request->getUriForPath('/'));
+       }
+        // if ($response instanceof RedirectResponse) {
+        //     // URLが http:// または https:// で始まる場合、リダイレクト先を変更
+        //     if (preg_match('/^https?:\/\//i', $response->getTargetUrl())) {
+        //         // 新しいリダイレクト先を設定
+        //         $response->setTargetUrl($request->getUriForPath('/'));
+        //     }
+        // }
         return $response;
     }
 }
