@@ -204,10 +204,19 @@ class ProductController extends AbstractController
             ->useResultCache(true, $this->eccubeConfig['eccube_result_cache_lifetime_short']);
 
         /** @var SlidingPagination $pagination */
+        // $pagination = $paginator->paginate(
+        //     $query,
+        //     !empty($searchData['pageno']) ? $searchData['pageno'] : 1,
+        //     !empty($searchData['disp_number']) ? $searchData['disp_number']->getId() : $this->productListMaxRepository->findOneBy([], ['sort_no' => 'ASC'])->getId()
+        // );
+        $dispNumberId = is_object($searchData['disp_number'] ?? null)
+            ? $searchData['disp_number']->getId()
+            : ($searchData['disp_number'] ?? null);
+
         $pagination = $paginator->paginate(
             $query,
             !empty($searchData['pageno']) ? $searchData['pageno'] : 1,
-            !empty($searchData['disp_number']) ? $searchData['disp_number']->getId() : $this->productListMaxRepository->findOneBy([], ['sort_no' => 'ASC'])->getId()
+            $dispNumberId ?: $this->productListMaxRepository->findOneBy([], ['sort_no' => 'ASC'])->getId()
         );
 
         $ids = [];
