@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ProductSupplierController extends AbstractController
 {
@@ -51,11 +52,13 @@ class ProductSupplierController extends AbstractController
     public function __construct(
         EntityManagerInterface $entityManager,
         ProductClassRepository $productClassRepository,
-        SupplierRepository     $supplierRepository
+        SupplierRepository     $supplierRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->productClassRepository = $productClassRepository;
         $this->supplierRepository = $supplierRepository;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -94,7 +97,8 @@ class ProductSupplierController extends AbstractController
         $formUpdate = [];
         foreach ($suppliers as $supplier) {
             $uniqueFormName = 'Form' . $supplier->getId();
-            $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, SupplierType::class, $supplier);
+            // $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, SupplierType::class, $supplier);
+            $formHandle = $this->formFactory->createNamed($uniqueFormName, SupplierType::class, $supplier);
             $formUpdate[$uniqueFormName] = $formHandle;
             $supplier->is_destroy = (bool)$this->productClassRepository->findBy(['supplier_code' => $supplier->getSupplierCode()]);
         }
