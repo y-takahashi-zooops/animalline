@@ -36,6 +36,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         private $tax_rate = false;
 
         /**
+         * @ORM\Column(name="jan_code", type="string", length=13, nullable=true)
+         */
+        private $jan_code;
+
+        /**
          * 商品規格名を含めた商品名を返す.
          *
          * @return string
@@ -909,6 +914,17 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         public function getItemCost(): ?string
         {
             return $this->item_cost;
+        }
+
+        public function getJanCode(): ?string
+        {
+            return $this->jan_code;
+        }
+
+        public function setJanCode(?string $jan_code): self
+        {
+            $this->jan_code = $jan_code;
+            return $this;
         }
     }
 }
