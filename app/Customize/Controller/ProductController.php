@@ -125,19 +125,27 @@ class ProductController extends BaseProductController
         SessionInterface $session,
         EventDispatcherInterface $eventDispatcher
     ) {
-        $this->purchaseFlow = $cartPurchaseFlow;
-        $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
-        $this->cartService = $cartService;
-        $this->productRepository = $productRepository;
-        $this->BaseInfo = $baseInfoRepository->get();
-        $this->helper = $helper;
-        $this->productListMaxRepository = $productListMaxRepository;
+        parent::__construct(
+            $cartPurchaseFlow,
+            $customerFavoriteProductRepository,
+            $cartService,
+            $productRepository,
+            $baseInfoRepository,
+            $helper,
+            $productListMaxRepository,
+            $formFactory,
+            $logger,
+            $session,
+            $eventDispatcher,
+            $entityManager,
+            $eccubeConfig,
+            $translator,
+            $requestStack,
+            $router
+        );
+
         $this->cartItemRepository = $cartItemRepository;
         $this->cartRepository = $cartRepository;
-        $this->formFactory = $formFactory;
-        $this->logger = $logger;
-        $this->session = $session;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
