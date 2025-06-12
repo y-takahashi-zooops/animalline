@@ -41,6 +41,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         private $jan_code;
 
         /**
+         * @ORM\Column(name="stock_code", type="string", length=5, nullable=true)
+         */
+        private $stock_code;
+
+        /**
          * 商品規格名を含めた商品名を返す.
          *
          * @return string
@@ -924,6 +929,17 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         public function setJanCode(?string $jan_code): self
         {
             $this->jan_code = $jan_code;
+            return $this;
+        }
+
+        public function getStockCode(): ?string
+        {
+            return $this->stock_code;
+        }
+
+        public function setStockCode(?string $stock_code): self
+        {
+            $this->stock_code = $stock_code;
             return $this;
         }
     }
