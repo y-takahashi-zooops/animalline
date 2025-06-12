@@ -123,7 +123,12 @@ class ProductController extends BaseProductController
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         SessionInterface $session,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager,
+        EccubeConfig $eccubeConfig,
+        TranslatorInterface $translator,
+        RequestStack $requestStack,
+        RouterInterface $router        
     ) {
         parent::__construct(
             $cartPurchaseFlow,
