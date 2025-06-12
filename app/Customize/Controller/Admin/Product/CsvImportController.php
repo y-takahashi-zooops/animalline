@@ -47,6 +47,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 class CsvImportController extends AbstractCsvImportController
@@ -126,7 +127,8 @@ class CsvImportController extends AbstractCsvImportController
         FormFactoryInterface $formFactory,
         LoggerInterface $logger,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
     ) {
         $this->deliveryDurationRepository = $deliveryDurationRepository;
         $this->tagRepository = $tagRepository;
@@ -140,6 +142,7 @@ class CsvImportController extends AbstractCsvImportController
         $this->logger = $logger;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     /**
