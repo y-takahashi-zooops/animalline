@@ -205,7 +205,7 @@ file that was distributed with this source code.
                                         <td class="align-middle">{{ instock.id }}</td>
                                         <td class="align-middle">{{ instock.instockHeader.orderDate|date('Y-m-d') }}</td>
                                         <td class="align-middle">{{ instock.instockHeader.arrivalDateSchedule | date('Y/m/d') }}</td>
-                                        <td class="align-middle">{{ instock.instockHeader.arrivalDate is empty ? '_' : instock.arrivalDate | date('Y/m/d') }}</td>
+                                        <td class="align-middle">{{ instock.instockHeader.arrivalDate is empty ? '_' : instock.instockHeader.arrivalDate | date('Y/m/d') }}</td>
                                         <td class="align-middle">{{ instock.instockHeader.isSendWms == 0 ? '未' : '済' }}</td>
                                         <td class="align-middle">{{ instock.instockHeader.isCommit == 0 ? '未' : '済' }}</td>
                                         <td class="align-middle">{{ instock.instockHeader.remarkText }}</td>
