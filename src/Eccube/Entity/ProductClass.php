@@ -353,6 +353,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         private $supplier_code;
 
         /**
+         * @ORM\Column(name="item_cost", type="string", nullable=true)
+         */
+        private $item_cost;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -899,6 +904,11 @@ if (!class_exists('\Eccube\Entity\ProductClass')) {
         {
             $this->supplier_code = $supplier_code;
             return $this;
+        }
+
+        public function getItemCost(): ?string
+        {
+            return $this->item_cost;
         }
     }
 }
