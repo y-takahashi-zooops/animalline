@@ -46,6 +46,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Entity\Category;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProductController extends AbstractController
 {
@@ -118,7 +119,8 @@ class ProductController extends AbstractController
         SessionInterface $session,
         EventDispatcherInterface $eventDispatcher,
         EntityManagerInterface $entityManager,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        TranslatorInterface $translator,
     ) {
         parent::__construct(
             $eccubeConfig,
