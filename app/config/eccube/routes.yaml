@@ -52,3 +52,7 @@ admin_product:
     defaults:
         page_no: 1
     methods: [GET, POST]
+
+admin_product_product:
+    resource: '../../Customize/Controller/Admin/Product/ProductController.php'
+    type: annotation

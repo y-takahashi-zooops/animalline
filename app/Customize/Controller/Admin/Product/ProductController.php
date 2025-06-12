@@ -446,7 +446,7 @@ class ProductController extends BaseProductController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/product/new", name="admin_product_product_new", defaults={"id"=null})
+     * @Route("/%eccube_admin_route%/product/product/new", name="admin_product_product_new", defaults={"id"=null})
      * @Route("/%eccube_admin_route%/product/product/{id}/edit", requirements={"id" = "\d+"}, name="admin_product_product_edit")
      * @Template("@admin/Product/product.twig")
      */

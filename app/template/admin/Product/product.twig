@@ -658,22 +658,24 @@ file that was distributed with this source code.
                                 {% endif %}
 
                                 {# エンティティ拡張の自動出力 #}
-                                {% for f in form if f.vars.eccube_form_options.auto_render %}
-                                    {% if f.vars.eccube_form_options.form_theme %}
-                                        {% form_theme f f.vars.eccube_form_options.form_theme %}
-                                        {{ form_row(f) }}
-                                    {% else %}
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <span>{{ f.vars.label|trans }}</span>
-                                            </div>
-                                            <div class="col mb-2">
-                                                <div>
-                                                    {{ form_widget(f) }}
-                                                    {{ form_errors(f) }}
+                                {% for f in form %}
+                                    {% if f.vars.eccube_form_options is defined and f.vars.eccube_form_options.auto_render %}
+                                        {% if f.vars.eccube_form_options.form_theme %}
+                                            {% form_theme f f.vars.eccube_form_options.form_theme %}
+                                            {{ form_row(f) }}
+                                        {% else %}
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <span>{{ f.vars.label|trans }}</span>
+                                                </div>
+                                                <div class="col mb-2">
+                                                    <div>
+                                                        {{ form_widget(f) }}
+                                                        {{ form_errors(f) }}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        {% endif %}
                                     {% endif %}
                                 {% endfor %}
 
