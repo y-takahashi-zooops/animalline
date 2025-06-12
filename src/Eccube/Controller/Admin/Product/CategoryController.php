@@ -33,6 +33,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class CategoryController extends AbstractController
 {
@@ -65,7 +66,8 @@ class CategoryController extends AbstractController
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory
     ) {
         $this->csvExportService = $csvExportService;
         $this->categoryRepository = $categoryRepository;
@@ -73,11 +75,12 @@ class CategoryController extends AbstractController
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
-     * @Route("/%eccube_admin_route%/product/category", name="admin_product_category", defaults={"parent_id"=null})
-     * @Route("/%eccube_admin_route%/product/category/{parent_id}", requirements={"parent_id" = "\d+"}, name="admin_product_category_show")
+     * @Route("/%eccube_admin_route%/product/category", name="admin_product_category", defaults={"parent_id"=null, "id"=null})
+     * @Route("/%eccube_admin_route%/product/category/{parent_id}", requirements={"parent_id" = "\d+"}, name="admin_product_category_show", defaults={"id"=null})
      * @Route("/%eccube_admin_route%/product/category/{id}/edit", requirements={"id" = "\d+"}, name="admin_product_category_edit", defaults={"parent_id"=null})
      * @Template("@admin/Product/category.twig")
      */
