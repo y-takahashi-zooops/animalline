@@ -76,8 +76,8 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/%eccube_admin_route%/product/category", name="admin_product_category", defaults={"parent_id"=null})
-     * @Route("/%eccube_admin_route%/product/category/{parent_id}", requirements={"parent_id" = "\d+"}, name="admin_product_category_show")
+     * @Route("/%eccube_admin_route%/product/category", name="admin_product_category", defaults={"parent_id"=null, "id"=null})
+     * @Route("/%eccube_admin_route%/product/category/{parent_id}", requirements={"parent_id" = "\d+"}, name="admin_product_category_show", defaults={"id"=null})
      * @Route("/%eccube_admin_route%/product/category/{id}/edit", requirements={"id" = "\d+"}, name="admin_product_category_edit", defaults={"parent_id"=null})
      * @Template("@admin/Product/category.twig")
      */
