@@ -107,7 +107,7 @@ file that was distributed with this source code.
                                 {{ form_label(form.birth, '生年月日', { 'label_attr': { 'class': 'ec-label' }}) }}
                             </dt>
                             <dd>
-                                {{ form.birth.vars.data ? form.birth.vars.data|date_day() }}
+                                {{ form.birth.vars.data ? form.birth.vars.data|date('Y/m/d') }}
                                 {{ form_widget(form.birth.year, { type : 'hidden' }) }}
                                 {{ form_widget(form.birth.month, { type : 'hidden' }) }}
                                 {{ form_widget(form.birth.day, { type : 'hidden' }) }}
