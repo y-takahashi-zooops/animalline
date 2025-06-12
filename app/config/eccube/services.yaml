@@ -130,10 +130,6 @@ services:
         tags: ['twig.extension']
         bind:
           $blockTemplates: '%eccube_twig_block_templates%'
-    
-    Customize\Twig\ProductExtension:
-        tags:
-            - { name: twig.extension }
 
     Plugin\:
         resource: '../../../app/Plugin/*'
