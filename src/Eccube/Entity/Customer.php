@@ -1275,5 +1275,11 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         {
             return $this->is_breeder;
         }
+
+        public function setIsBreeder(bool $isBreeder): self
+        {
+            $this->isBreeder = $isBreeder;
+            return $this;
+        }
     }
 }
