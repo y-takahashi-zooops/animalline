@@ -389,8 +389,8 @@ class ProductController extends AbstractController
             'subtitle' => $this->getPageTitle($searchData),
             'pagination' => $pagination,
             'search_form' => null, // Twigで使用していたらコメントアウト
-            'disp_number_form' => $dispNumberForm->createView(),
-            'order_by_form' => $orderByForm->createView(),
+            // 'disp_number_form' => $dispNumberForm->createView(),
+            // 'order_by_form' => $orderByForm->createView(),
             'forms' => $forms,
             'Category' => $Category,
         ];
