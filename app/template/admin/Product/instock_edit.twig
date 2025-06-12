@@ -216,6 +216,7 @@ file that was distributed with this source code.
                                 <table id="table-form-field" class="table table-striped table-sm mb-0"
                                        data-next-index="{{ nextIndex }}"
                                        data-prototype="{% filter escape %}{{ include('@admin/Product/instock_item_prototype.twig', {'instockScheduleForm': form.InstockSchedule.vars.prototype}) }}{% endfilter %}"
+                                       data-prototype="{{ include('@admin/Product/instock_item_prototype.twig', {'instockScheduleForm': form.InstockSchedule.vars.prototype}) | escape }}"
                                 >
                                     <thead class="table-active">
                                     <tr class="text-nowrap">
