@@ -296,12 +296,28 @@ class ProductController extends AbstractController
             $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
         }
 
+        // classCategories の JSON を生成し、翻訳適用
+        $classCategories = $this->productRepository->getClassCategories($Product); // あなたの環境の取得関数に合わせてください
+
+        foreach ($classCategories as &$classCat1) {
+            foreach ($classCat1 as &$classCat2) {
+                if (isset($classCat2['name']) && is_string($classCat2['name']) && str_starts_with($classCat2['name'], 'trans:')) {
+                    $key = str_replace('trans:', '', $classCat2['name']);
+                    $classCat2['name'] = $this->translator->trans($key);
+                }
+            }
+        }
+        unset($classCat1, $classCat2); // 参照の解放（念のため）
+
+        $classCategoriesJson = json_encode($classCategories);
+
         return [
             'title' => $this->title,
             'subtitle' => $Product->getName(),
             'form' => $builder->getForm()->createView(),
             'Product' => $Product,
             'is_favorite' => $is_favorite,
+            'class_categories_json' => $classCategoriesJson,
         ];
     }
 
