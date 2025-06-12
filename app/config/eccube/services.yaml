@@ -425,3 +425,9 @@ services:
         public: false
         tags:
             - { name: form.type_extension }
+
+    Customize\Form\Extension\ProductClassTypeExtension:
+            autowire: true
+            autoconfigure: false
+            tags:
+                - { name: form.type_extension }
