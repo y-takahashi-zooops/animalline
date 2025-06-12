@@ -22,7 +22,6 @@ use Eccube\Util\StringUtil;
 use Doctrine\Persistence\ManagerRegistry;
 use Eccube\Entity\Master\SaleType;
 use Eccube\Repository\Master\SaleTypeRepository;
-use Eccube\Repository\ProductListMaxRepository;
 /**
  * ProductRepository
  *
@@ -46,8 +45,6 @@ class ProductRepository extends AbstractRepository
      */
     protected $saleTypeRepository;
 
-    protected ProductListMaxRepository $productListMaxRepository;
-
     /**
      * ProductRepository constructor.
      *
@@ -60,13 +57,11 @@ class ProductRepository extends AbstractRepository
         Queries $queries,
         EccubeConfig $eccubeConfig,
         SaleTypeRepository $saleTypeRepository,
-        ProductListMaxRepository $productListMaxRepository
     ) {
         parent::__construct($registry, Product::class);
         $this->queries = $queries;
         $this->eccubeConfig = $eccubeConfig;
         $this->saleTypeRepository = $saleTypeRepository;
-        $this->productListMaxRepository = $productListMaxRepository;
     }
 
     /**
@@ -189,14 +184,14 @@ class ProductRepository extends AbstractRepository
         // 価格低い順
         $config = $this->eccubeConfig;
 
-        $orderby = $searchData['orderby'] ?? null;
+        // $orderby = $searchData['orderby'] ?? null;
 
-        // IDのまま来ている場合はエンティティに変換
-        if (!is_object($orderby) && !empty($orderby)) {
-            $orderby = $this->productListMaxRepository->find($orderby);
-        }
+        // // IDのまま来ている場合はエンティティに変換
+        // if (!is_object($orderby) && !empty($orderby)) {
+        //     $orderby = $this->productListMaxRepository->find($orderby);
+        // }
 
-        if ($orderby && $orderby->getId() == $config['eccube_product_order_price_lower']) {
+        if (!empty($searchData['orderby']) && $searchData['orderby']->getId() == $config['eccube_product_order_price_lower']) {
             //@see http://doctrine-orm.readthedocs.org/en/latest/reference/dql-doctrine-query-language.html
             $qb->addSelect('MIN(pc.price02) as HIDDEN price02_min');
             $qb->innerJoin('p.ProductClasses', 'pc');
@@ -205,7 +200,7 @@ class ProductRepository extends AbstractRepository
             $qb->orderBy('price02_min', 'ASC');
             $qb->addOrderBy('p.id', 'DESC');
         // 価格高い順
-        } elseif ($orderby && $orderby->getId() == $config['eccube_product_order_price_higher']) {
+        } elseif (!empty($searchData['orderby']) && $searchData['orderby']->getId() == $config['eccube_product_order_price_higher']) {
             $qb->addSelect('MAX(pc.price02) as HIDDEN price02_max');
             $qb->innerJoin('p.ProductClasses', 'pc');
             $qb->andWhere('pc.visible = true');
@@ -213,7 +208,7 @@ class ProductRepository extends AbstractRepository
             $qb->orderBy('price02_max', 'DESC');
             $qb->addOrderBy('p.id', 'DESC');
         // 新着順
-        } elseif ($orderby && $orderby->getId() == $config['eccube_product_order_newer']) {
+        } elseif (!empty($searchData['orderby']) && $searchData['orderby']->getId() == $config['eccube_product_order_newer']) {
             // 在庫切れ商品非表示の設定が有効時対応
             // @see https://github.com/EC-CUBE/ec-cube/issues/1998
             //if ($this->getEntityManager()->getFilters()->isEnabled('option_nostock_hidden') == true) {
