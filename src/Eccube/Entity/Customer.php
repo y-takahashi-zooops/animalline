@@ -1283,7 +1283,7 @@ if (!class_exists('\Eccube\Entity\Customer')) {
             return $this->is_conservation;
         }
 
-        public function setIsConservation(bool $isConservation): self
+        public function setIsConservation(int $isConservation): self
         {
             $this->is_conservation = $isConservation;
             return $this;
@@ -1294,7 +1294,7 @@ if (!class_exists('\Eccube\Entity\Customer')) {
             return $this->is_breeder;
         }
 
-        public function setIsBreeder(bool $isBreeder): self
+        public function setIsBreeder(int $isBreeder): self
         {
             $this->isBreeder = $isBreeder;
             return $this;
