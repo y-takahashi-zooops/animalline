@@ -1296,7 +1296,7 @@ if (!class_exists('\Eccube\Entity\Customer')) {
 
         public function setIsBreeder(int $isBreeder): self
         {
-            $this->isBreeder = $isBreeder;
+            $this->is_breeder = $isBreeder;
             return $this;
         }
     }
