@@ -20,53 +20,93 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+// class ProductListMaxType extends AbstractType
+// {
+//     /**
+//      * {@inheritdoc}
+//      */
+//     public function buildForm(FormBuilderInterface $builder, array $options)
+//     {
+//         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//             $options = $event->getForm()->getConfig()->getOptions();
+//             if (!$event->getData()) {
+//                 $data = current(array_keys($options['choice_loader']->loadChoiceList()->getValues()));
+//                 $event->setData($data);
+//             }
+//         });
+//         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+//             $options = $event->getForm()->getConfig()->getOptions();
+//             $values = $options['choice_loader']->loadChoiceList()->getValues();
+//             if (!in_array($event->getData(), $values)) {
+//                 $data = current($values);
+//                 $event->setData($data);
+//             }
+//         });
+//     }
+
+//     /**
+//      * {@inheritdoc}
+//      */
+//     public function configureOptions(OptionsResolver $resolver)
+//     {
+//         $resolver->setDefaults([
+//             'class' => 'Eccube\Entity\Master\ProductListMax',
+//         ]);
+//     }
+
+//     /**
+//      * {@inheritdoc}
+//      */
+//     public function getBlockPrefix()
+//     {
+//         return 'product_list_max';
+//     }
+
+//     /**
+//      * {@inheritdoc}
+//      */
+//     public function getParent()
+//     {
+//         return MasterType::class;
+//     }
+// }
+
+namespace Eccube\Form\Type\Master;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 class ProductListMaxType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $options = $event->getForm()->getConfig()->getOptions();
-            if (!$event->getData()) {
-                $data = current(array_keys($options['choice_loader']->loadChoiceList()->getValues()));
-                $event->setData($data);
-            }
-        });
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-            $options = $event->getForm()->getConfig()->getOptions();
-            $values = $options['choice_loader']->loadChoiceList()->getValues();
-            if (!in_array($event->getData(), $values)) {
-                $data = current($values);
-                $event->setData($data);
-            }
-        });
+        // choicesはコントローラーなどで渡す場合ここは空でもOK
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'class' => 'Eccube\Entity\Master\ProductListMax',
+            'choices' => [
+                '10件' => 10,
+                '20件' => 20,
+                '50件' => 50,
+                '100件' => 100,
+            ],
+            'required' => false,
+            'placeholder' => false,
+            'label' => false,
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function getParent()
+    {
+        return ChoiceType::class;
+    }
+
     public function getBlockPrefix()
     {
         return 'product_list_max';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return MasterType::class;
     }
 }
