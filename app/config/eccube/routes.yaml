@@ -46,13 +46,17 @@ admin_logout:
 logout:
     path: /logout
 
-admin_product:
-    path: /%eccube_admin_route%/product
-    controller: Customize\Controller\Admin\Product\ProductController::index
-    defaults:
-        page_no: 1
-    methods: [GET, POST]
+# admin_product:
+#     path: /%eccube_admin_route%/product
+#     controller: Customize\Controller\Admin\Product\ProductController::index
+#     defaults:
+#         page_no: 1
+#     methods: [GET, POST]
 
-admin_product_product:
+admin_product_custom:
     resource: '../../Customize/Controller/Admin/Product/ProductController.php'
     type: annotation
+
+# admin_product_product:
+#     resource: '../../Customize/Controller/Admin/Product/ProductController.php'
+#     type: annotation
