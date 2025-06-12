@@ -47,6 +47,8 @@ use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Entity\Category;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 
 class ProductController extends AbstractController
 {
@@ -121,6 +123,8 @@ class ProductController extends AbstractController
         EntityManagerInterface $entityManager,
         EccubeConfig $eccubeConfig,
         TranslatorInterface $translator,
+        RequestStack $requestStack,
+        RouterInterface $router
     ) {
         parent::__construct(
             $eccubeConfig,
