@@ -122,7 +122,15 @@ file that was distributed with this source code.
 					try {
 						eccube.classCategories = {{ class_categories_json|raw }};
 						console.log("classCategories (raw):", eccube.classCategories);
+
+						const $form = $(formElement);
+						const product_id = $form.find('input[name=product_id]').val();  // ← これを先に定義
+
 						console.log('product_id:', product_id);
+
+						const $sele1 = $form.find('select[name=classcategory_id1]');
+						const $sele2 = $form.find('select[name=classcategory_id2]');
+
 						console.log('select1:', $sele1.length, $sele1);
 						console.log('select2:', $sele2.length, $sele2);
 
