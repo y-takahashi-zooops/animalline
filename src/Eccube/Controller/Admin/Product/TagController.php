@@ -27,6 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class TagController extends AbstractController
 {
@@ -44,12 +45,14 @@ class TagController extends AbstractController
         TagRepository $tagRepository,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory
     ) {
         $this->tagRepository = $tagRepository;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
