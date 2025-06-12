@@ -28,13 +28,6 @@
         if ($sele1 && $sele1.length) {
             var classcat_id1 = $sele1.val() ? $sele1.val() : '';
 
-            console.log($form,)
-
-            var classcat2 = eccube.classCategories[classcat_id1];
-            if (!classcat2) {
-                console.warn('一致するclassCategoriesが見つかりません:', classcat_id1);
-            }
-
             if ($sele2 && $sele2.length) {
                 // 規格2の選択肢をクリア
                 $sele2.children().remove();
