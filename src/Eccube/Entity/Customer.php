@@ -1261,6 +1261,12 @@ if (!class_exists('\Eccube\Entity\Customer')) {
             return $this->regist_type;
         }
 
+        public function setRegistType(?string $registType): self
+        {
+            $this->regist_type = $registType;
+            return $this;
+        }
+
         public function getRelationId(): ?string
         {
             return $this->relation_id;
