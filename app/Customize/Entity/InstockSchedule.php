@@ -83,6 +83,12 @@ class InstockSchedule
      */
     private $update_date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Customize\Entity\InstockScheduleHeader")
+     * @ORM\JoinColumn(name="header_id", referencedColumnName="id")
+     */
+    private $header;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -372,5 +378,10 @@ class InstockSchedule
     public function getTaxType()
     {
         return $this->TaxType;
+    }
+
+    public function getHeader(): ?InstockScheduleHeader
+    {
+        return $this->header;
     }
 }
