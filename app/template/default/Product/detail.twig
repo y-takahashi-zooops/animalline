@@ -93,8 +93,7 @@ file that was distributed with this source code.
 
 {% block javascript %}
 	<script src="{{ asset('assets/js/vendor/translations.js') }}"></script>
-    <script>
-	    // セレクトが描画されるのを待つ関数
+	<script>
 		function waitForElement(selector, callback, retries = 10) {
 			const el = document.querySelector(selector);
 			if (el) {
@@ -106,48 +105,60 @@ file that was distributed with this source code.
 			}
 		}
 
-		document.addEventListener('DOMContentLoaded', function () {
-			try {
-                console.log("Product is available");
-
-                // JSONをControllerから渡された値で直接設定
-                eccube.classCategories = {{ class_categories_json|raw }};
-                console.log("classCategories (raw):", eccube.classCategories);
-
-                // Translatorを使った後処理（必要なら）
-                if (typeof Translator !== 'undefined') {
-                    for (const key1 in eccube.classCategories) {
-                        for (const key2 in eccube.classCategories[key1]) {
-                            let item = eccube.classCategories[key1][key2];
-                            if (typeof item.name === 'string' && item.name.startsWith('trans:')) {
-                                const transKey = item.name.replace(/^trans:/, '');
-                                item.name = Translator.trans(transKey);
-                            }
-                        }
-                    }
-                } else {
-                    console.warn("Translator is not loaded yet.");
-                }
-            } catch (e) {
-                console.error("Error setting classCategories:", e);
-            }
-
-			// 規格2に選択肢を割り当てる
-			function fnSetClassCategories(form, classcat_id2_selected) {
-				var $form = $(form);
-				var product_id = $form.find('input[name=product_id]').val();
-				var $sele1 = $form.find('select[name=classcategory_id1]');
-				var $sele2 = $form.find('select[name=classcategory_id2]');
-				eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
+		function waitForTranslator(callback, retries = 10) {
+			if (typeof Translator !== 'undefined') {
+				callback();
+			} else if (retries > 0) {
+				setTimeout(() => waitForTranslator(callback, retries - 1), 100);
+			} else {
+				console.warn("Translator is not loaded yet.");
+				callback(); // fallback 実行
 			}
+		}
 
-			{% if form.classcategory_id2 is defined %}
-			fnSetClassCategories($('#form1'), {{ form.classcategory_id2.vars.value|json_encode|raw }});
-			{% elseif form.classcategory_id1 is defined %}
-			eccube.checkStock($('#form1'), {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
-			{% endif %}
+		document.addEventListener('DOMContentLoaded', function () {
+			waitForElement('#form1', function (formElement) {
+				waitForTranslator(function () {
+					try {
+						eccube.classCategories = {{ class_categories_json|raw }};
+						console.log("classCategories (raw):", eccube.classCategories);
+
+						// 翻訳キーを翻訳済みに差し替え
+						for (const key1 in eccube.classCategories) {
+							for (const key2 in eccube.classCategories[key1]) {
+								let item = eccube.classCategories[key1][key2];
+								if (typeof item.name === 'string' && item.name.startsWith('trans:')) {
+									const transKey = item.name.replace(/^trans:/, '');
+									item.name = Translator.trans(transKey);
+								}
+							}
+						}
+
+						// セレクト描画
+						const $form = $(formElement);
+						const product_id = $form.find('input[name=product_id]').val();
+						const $sele1 = $form.find('select[name=classcategory_id1]');
+						const $sele2 = $form.find('select[name=classcategory_id2]');
+
+						function fnSetClassCategories(classcat_id2_selected) {
+							eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
+						}
+
+						{% if form.classcategory_id2 is defined %}
+							fnSetClassCategories({{ form.classcategory_id2.vars.value|json_encode|raw }});
+						{% elseif form.classcategory_id1 is defined %}
+							eccube.checkStock($form, {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);
+						{% else %}
+							fnSetClassCategories('');
+						{% endif %}
+
+					} catch (e) {
+						console.error("Error setting classCategories:", e);
+					}
+				});
+			});
 		});
-    </script>
+	</script>
 
     {{ parent() }}
 {% endblock %}
