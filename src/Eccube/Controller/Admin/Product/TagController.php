@@ -28,6 +28,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class TagController extends AbstractController
 {
@@ -46,13 +47,15 @@ class TagController extends AbstractController
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EntityManagerInterface $entityManager,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        SessionInterface $session
     ) {
         $this->tagRepository = $tagRepository;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
+        $this->session = $session;
     }
 
     /**
