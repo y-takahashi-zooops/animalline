@@ -82,10 +82,6 @@ services:
         tags: ['controller.service_arguments']
         autowire: true
         autoconfigure: true
-    
-    Customize\Controller\Admin\Product\ProductController:
-        autowire: true
-        autoconfigure: true
 
     Eccube\Log\Logger:
         autowire: true
