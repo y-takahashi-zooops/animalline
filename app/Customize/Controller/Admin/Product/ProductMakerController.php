@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class ProductMakerController extends AbstractController
 {
@@ -43,10 +44,12 @@ class ProductMakerController extends AbstractController
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        ProductMakerRepository $productMakerRepository
+        ProductMakerRepository $productMakerRepository,
+        FormFactoryInterface $formFactory
     ) {
         $this->entityManager = $entityManager;
         $this->productMakerRepository = $productMakerRepository;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -90,7 +93,8 @@ class ProductMakerController extends AbstractController
         $formUpdate = [];
         foreach ($Makers as $Maker) {
             $uniqueFormName = 'Form' . $Maker->getId();
-            $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, ProductMakerType::class, $Maker);
+            // $formHandle = $this->get('form.factory')->createNamed($uniqueFormName, ProductMakerType::class, $Maker);
+            $formHandle = $this->formFactory->createNamed($uniqueFormName, ProductMakerType::class, $Maker);
             $formUpdate[$uniqueFormName] = $formHandle;
         }
         $formUpdateView = [];
