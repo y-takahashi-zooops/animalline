@@ -315,7 +315,7 @@ class AnilineEntryController extends AbstractController
                         ->setPassword($hashedPassword)
                         ->setSecretKey($secretKey)
                         ->setPoint(0)
-                        ->setIsBreeder(false)
+                        ->setIsBreeder(0)
                         ->setRegistType($regist_type)
                         ->setIsConservation(0)
                         ->setRelationId($rid);
