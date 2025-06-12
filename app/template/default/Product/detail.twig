@@ -94,6 +94,18 @@ file that was distributed with this source code.
 {% block javascript %}
 	<script src="{{ asset('assets/js/vendor/translations.js') }}"></script>
     <script>
+	    // セレクトが描画されるのを待つ関数
+		function waitForElement(selector, callback, retries = 10) {
+			const el = document.querySelector(selector);
+			if (el) {
+				callback(el);
+			} else if (retries > 0) {
+				setTimeout(() => waitForElement(selector, callback, retries - 1), 100);
+			} else {
+				console.warn('Element not found:', selector);
+			}
+		}
+
 		document.addEventListener('DOMContentLoaded', function () {
 			try {
                 console.log("Product is available");
@@ -119,7 +131,7 @@ file that was distributed with this source code.
             } catch (e) {
                 console.error("Error setting classCategories:", e);
             }
-			
+
 			// 規格2に選択肢を割り当てる
 			function fnSetClassCategories(form, classcat_id2_selected) {
 				var $form = $(form);
