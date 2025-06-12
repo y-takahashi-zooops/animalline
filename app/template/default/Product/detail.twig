@@ -96,7 +96,7 @@ file that was distributed with this source code.
         try {
             {% if Product is defined and Product is not null %}
                 console.log("Product is available");
-                eccube.classCategories = {{ my_class_categories_as_json(Product)|raw }};
+                eccube.classCategories = {{ class_categories_as_json(Product)|raw }};
                 console.log("classCategories (raw):", eccube.classCategories);
 
                 // 翻訳キーが含まれていればJS側で翻訳（translator.min.jsが前提）
