@@ -50,6 +50,6 @@ class ProductTypeExtension extends AbstractTypeExtension
      */
     public static function getExtendedTypes(): iterable
     {
-        return [OrderType::class];
+        return [ProductType::class];
     }
 }
