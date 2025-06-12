@@ -67,11 +67,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
-use Eccube\Controller\AbstractController;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
-class ProductController extends AbstractController
+class ProductController extends BaseProductController
 {
     /**
      * @var CsvExportService
@@ -154,6 +151,11 @@ class ProductController extends AbstractController
     protected $logger;
 
     /**
+     * @var FormFactoryInterface
+     */
+    protected FormFactoryInterface $formFactory;
+
+    /**
      * @var Session
      */
     protected SessionInterface $session;
@@ -201,10 +203,7 @@ class ProductController extends AbstractController
         EventDispatcherInterface $eventDispatcher,
         SessionInterface $session,
         EccubeConfig $eccubeConfig,
-        EntityManagerInterface $entityManager,
-        TranslatorInterface $translator,
-        RequestStack $requestStack,
-        RouterInterface $router
+        EntityManagerInterface $entityManager
     ) {
         $this->csvExportService = $csvExportService;
         $this->productClassRepository = $productClassRepository;
@@ -227,19 +226,6 @@ class ProductController extends AbstractController
         $this->session = $session;
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
-        $this->translator = $translator;
-        $this->requestStack = $requestStack;
-        $this->router = $router;
-        parent::__construct(
-            $eccubeConfig,
-            $entityManager,
-            $translator,
-            $session,
-            $formFactory,
-            $eventDispatcher,
-            $requestStack,
-            $router
-        );
     }
 
     /**
@@ -250,7 +236,8 @@ class ProductController extends AbstractController
     public function index(Request $request, $page_no = 1, PaginatorInterface $paginator)
     {
         $builder = $this->formFactory
-            ->createBuilder(SearchProductType::class);
+        ->createBuilder(SearchProductType::class);
+        dd('/product では$this->formFactory問題なし');
 
         $event = new EventArgs(
             [
