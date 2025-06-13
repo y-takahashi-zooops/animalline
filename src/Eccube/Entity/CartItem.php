@@ -40,9 +40,9 @@ if (!class_exists('\Eccube\Entity\CartItem')) {
             return $this->is_repeat;
         }
 
-        public function setIsRepeat(bool $is_repeat): self
+        public function setIsRepeat(?bool $is_repeat): self
         {
-            $this->is_repeat = $is_repeat;
+            $this->is_repeat = (bool)$is_repeat;
             return $this;
         }
 
