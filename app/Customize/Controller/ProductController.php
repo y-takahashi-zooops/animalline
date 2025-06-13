@@ -210,11 +210,17 @@ class ProductController extends BaseProductController
         $addCartData = $form->getData();
 
         // カート商品に同商品がないか検索
-            $cartItem = $this->cartItemRepository->findOneBy(['Cart' => $this->cartService->getCarts(),'ProductClass' => $addCartData['product_class_id']]);
-            if ($cartItem) {
-                // 同商品がカートに存在したらカートに追加させない
-                return;
-            }
+        $cartItem = $this->cartItemRepository->findOneBy(['Cart' => $this->cartService->getCarts(),'ProductClass' => $addCartData['product_class_id']]);
+        if ($cartItem) {
+            // 同商品がカートに存在したらカートに追加させない
+            return;
+        }
+
+        $is_favorite = false;
+        if ($this->isGranted('ROLE_USER')) {
+            $Customer = $this->getUser();
+            $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
+        }
 
         $this->logger->info(
             'カート追加処理開始',
@@ -225,6 +231,7 @@ class ProductController extends BaseProductController
                 'is_repeat' => $addCartData['is_repeat'],
                 'repeat_span' => $addCartData['repeat_span'],
                 'span_unit' => $addCartData['span_unit'],
+                'is_favorite' => $is_favorite,
             ]
         );
 
