@@ -66,7 +66,11 @@ class PasswordEncoder implements PasswordHasherInterface
     public function needsRehash(string $hashedPassword): bool
     {
         // 再ハッシュが必要なら true を返す（今回は常に false）
-        return false;
+        // return false;
+
+        // 現在のハッシュが設定と一致するかを動的に判断 2025/6/13 高橋マサ
+        // return password_needs_rehash($hashedPassword, PASSWORD_ARGON2ID); // ハッシュ化にsodiumを使用の場合
+        return password_needs_rehash($hashedPassword, PASSWORD_BCRYPT, ['cost' => 12]); // ハッシュ化にbcryptを使用の場合
     }
 
     /**
