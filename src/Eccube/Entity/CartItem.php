@@ -141,6 +141,24 @@ if (!class_exists('\Eccube\Entity\CartItem')) {
         }
 
         /**
+         * @return bool
+         */
+        public function getIsRepeat(): bool
+        {
+            return $this->is_repeat;
+        }
+
+        /**
+         * @param bool $is_repeat
+         * @return $this
+         */
+        public function setIsRepeat(bool $is_repeat): self
+        {
+            $this->is_repeat = $is_repeat;
+            return $this;
+        }
+
+        /**
          * 商品明細かどうか.
          *
          * @return boolean 商品明細の場合 true
