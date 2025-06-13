@@ -285,10 +285,6 @@ file that was distributed with this source code.
 									{{ form_errors(form.classcategory_id2) }}
 								</div>
 							{% endif %}
-
-							{{ dump(Product.ClassName1) }}
-							<p>ClassName1: {{ Product.ClassName1 }}</p>
-							
 							<div class="ec-productRole__order">
 								<ul class="order_list">
 									<li class="order_list_block normal_block" {% if Product.ClassName1 %}style="display: none"{% endif %}>
@@ -296,7 +292,13 @@ file that was distributed with this source code.
 											{{ form_widget(form.order_type[0]) }}
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
-												{{ form_row(form.normal_quantity, {'attr': {'class': 'normal_readonly'}}) }}
+												{{ form_widget(form.normal_quantity, {
+													'attr': {
+														'class': 'normal_readonly form-control',
+														'readonly': 'readonly'
+													}
+												}) }}
+												{{ form_errors(form.normal_quantity) }}
 											</div>
 										</div>
 									</li>
