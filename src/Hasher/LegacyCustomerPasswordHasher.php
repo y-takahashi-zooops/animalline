@@ -14,12 +14,16 @@ class LegacyCustomerPasswordHasher implements PasswordHasherInterface
 
     public function verify(string $hashedPassword, string $plainPassword, ?object $user = null): bool
     {
-        if (!$user instanceof Customer) {
+        if (!$user instanceof \Eccube\Entity\Customer) {
+            dump('Not a Customer', $user); // ← デバッグ用
             return false;
         }
 
-        $secretKey = $user->getSecretKey(); // ← これ重要
+        $secretKey = $user->getSecretKey();
+        dump('SecretKey:', $secretKey, 'Plain:', $plainPassword);
+
         $expected = hash('sha256', $secretKey . $plainPassword);
+        dump('Expected:', $expected, 'Actual:', $hashedPassword);
 
         return hash_equals($hashedPassword, $expected);
     }
