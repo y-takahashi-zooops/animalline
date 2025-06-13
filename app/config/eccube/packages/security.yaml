@@ -1,15 +1,11 @@
 security:
     password_hashers:
-        # Our user class and the algorithm we'll use to encode passwords
-        # https://symfony.com/doc/current/security.html#c-encoding-the-user-s-password
-
         # 旧方式
         legacy:
             algorithm: sha256
             encode_as_base64: false
             iterations: 1
 
-        password_hashers:
         Eccube\Entity\Customer:
             algorithm: bcrypt
 
