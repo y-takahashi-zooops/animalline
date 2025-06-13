@@ -12,6 +12,9 @@ security:
         #         - bcrypt
         #         - legacy
 
+        App\Hasher\LegacyCustomerPasswordHasher:
+            algorithm: legacy
+
         Eccube\Entity\Member:
             # algorithm: sodium
             algorithm: bcrypt
