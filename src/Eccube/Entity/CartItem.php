@@ -47,6 +47,24 @@ if (!class_exists('\Eccube\Entity\CartItem')) {
         }
 
         /**
+         * @var int|null
+         *
+         * @ORM\Column(name="repeat_span", type="integer", nullable=true)
+         */
+        private $repeat_span;
+
+        public function getRepeatSpan(): ?int
+        {
+            return $this->repeat_span;
+        }
+
+        public function setRepeatSpan(?int $repeat_span): self
+        {
+            $this->repeat_span = $repeat_span;
+            return $this;
+        }
+
+        /**
          * @var integer
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
