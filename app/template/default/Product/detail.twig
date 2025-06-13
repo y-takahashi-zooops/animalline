@@ -95,19 +95,21 @@ file that was distributed with this source code.
 	<script src="{{ asset('assets/js/vendor/translations.js') }}"></script>
 	<script>
 
-		$.post($(form).attr('action'), $(form).serialize())
-		.done(function(response) {
-			console.log('レスポンス:', response);
+		// デバック用
+		$.post($form.attr('action'), $form.serialize())
+			.done(function(response) {
+				console.log('レスポンス:', response);
 
-			if (response.done) {
-				$('.ec-modal').fadeIn();
-			} else {
-				alert(response.messages.join('\n'));
-			}
-		})
-		.fail(function() {
-			alert('通信エラーが発生しました');
-		});
+				if (response.done) {
+					$('.ec-modal').fadeIn();
+				} else {
+					alert(response.messages.join('\n'));
+				}
+			})
+			.fail(function() {
+				alert('通信エラーが発生しました');
+			});
+		// ここまで
 
 		function waitForElement(selector, callback, retries = 10) {
 			const el = document.querySelector(selector);
