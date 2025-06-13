@@ -36,6 +36,7 @@ class EccubeLoginSuccessHandler extends DefaultAuthenticationSuccessHandler
 
         // plainPassword が Request から来ている前提
         $plainPassword = $request->request->get('_password');
+        dd($user,$plainPassword, $this->hasher->needsRehash($user));
         if ($plainPassword && $this->hasher->needsRehash($user)) {
             $hashedPassword = $this->hasher->hashPassword($user, $plainPassword);
             $user->setPassword($hashedPassword);
