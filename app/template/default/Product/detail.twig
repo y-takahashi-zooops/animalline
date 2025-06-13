@@ -119,11 +119,38 @@ file that was distributed with this source code.
 		document.addEventListener('DOMContentLoaded', function () {
 			waitForElement('#form1', function (formElement) {
 				waitForTranslator(function () {
+					const $form = $(formElement);
+
+					// 定期便切り替えの挙動制御
+					const $orderTypes = $form.find('input[name="form[order_type]"]');
+					const $subscriptionBlock = $form.find('.subscription_block');
+					const $normalBlock = $form.find('.normal_block');
+					const $cycleBlock = $form.find('.subscription_cycle_block');
+
+					function toggleOrderBlock() {
+						const selectedVal = $orderTypes.filter(':checked').val();
+						if (selectedVal === '0') {
+							$normalBlock.show();
+							$subscriptionBlock.hide();
+							$cycleBlock.hide();
+						} else if (selectedVal === '1') {
+							$normalBlock.hide();
+							$subscriptionBlock.show();
+							$cycleBlock.show();
+						}
+					}
+
+					$orderTypes.on('change', toggleOrderBlock);
+					toggleOrderBlock(); // 初期表示用
+					
+					// カテゴリ選択（classcategory）周辺の処理（もとのロジック）
 					try {
 						eccube.classCategories = {{ class_categories_json|raw }};
-						
+						const product_id = $form.find('input[name=product_id]').val();
+						const $sele1 = $form.find('select[name=classcategory_id1]');
+
 						// セレクト描画
-						const $form = $(formElement);
+						eccube.classCategories = {{ class_categories_json|raw }};
 						const product_id = $form.find('input[name=product_id]').val();
 						const $sele1 = $form.find('select[name=classcategory_id1]');
 						const $sele2 = $form.find('select[name=classcategory_id2]');
@@ -329,7 +356,7 @@ file that was distributed with this source code.
 								</button>
 							</div>
 						{% endif %}
-						
+						{{ form_rest(form) }}
 					</form>
 					<div class="ec-modal">
 						<div class="ec-modal-overlay">
