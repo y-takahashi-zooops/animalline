@@ -13,7 +13,7 @@ security:
         #         - legacy
 
         App\Hasher\LegacyCustomerPasswordHasher:
-            algorithm: legacy
+            id: App\Hasher\LegacyCustomerPasswordHasher
 
         Eccube\Entity\Member:
             # algorithm: sodium

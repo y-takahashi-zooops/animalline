@@ -448,4 +448,7 @@ services:
 
     security.user_checker.customer: '@Eccube\Security\UserChecker\PasswordRehashChecker'
 
-    App\Hasher\LegacyCustomerPasswordHasher: ~
+    App\Hasher\LegacyCustomerPasswordHasher:
+        arguments:
+            $logger: '@logger'
+        tags: ['monolog.logger']  # 任意、ログ出力用途
