@@ -407,6 +407,8 @@ services:
         arguments:
             - '@security.http_utils'
             - { default_target_path: '/%eccube_admin_route%/' }
+            - '@security.user_password_hasher'      # 追加: パスワードハッシュサービス
+            - '@doctrine.orm.entity_manager'         # 追加: DB永続化のためのEntityManager
 
     eccube.security.failure_handler:
         class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
@@ -428,3 +430,10 @@ services:
             public: false
             tags:
                 - { name: form.type_extension }
+
+    App\Security\UserChecker\PasswordRehashChecker:
+        arguments:
+            $hasher: '@security.user_password_hasher'
+            $em: '@doctrine.orm.entity_manager'
+
+    security.user_checker.customer: '@App\Security\UserChecker\PasswordRehashChecker'
