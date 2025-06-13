@@ -311,7 +311,7 @@ file that was distributed with this source code.
 
 							{{ dump(Product.ClassName1) }}
 							<p>ClassName1: {{ Product.ClassName1 }}</p>
-
+							
 							<div class="ec-productRole__order">
 								<ul class="order_list">
 									<li class="order_list_block normal_block" {% if Product.ClassName1 %}style="display: none"{% endif %}>
@@ -361,6 +361,7 @@ file that was distributed with this source code.
 								</button>
 							</div>
 						{% endif %}
+						{{ form_rest(form) }}
 					</form>
 					<div class="ec-modal">
 						<div class="ec-modal-overlay">
