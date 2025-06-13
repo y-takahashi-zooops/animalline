@@ -24,7 +24,12 @@ class LegacyCustomerPasswordHasher implements PasswordHasherInterface
     public function verify(string $hashedPassword, string $plainPassword, ?object $user = null): bool
     {
         $this->logger->info('LegacyHasherが呼ばれた');
-        $this->logger->info('LegacyHasher: user class = ' . get_class($user));
+        if (is_object($user)) {
+            $this->logger->info('LegacyHasher: user class = ' . get_class($user));
+        } else {
+            $this->logger->info('LegacyHasher: user is not an object');
+        }
+
         if (!$user instanceof \Eccube\Entity\Customer) {
             $this->logger->info('LegacyHasher: user is not Customer');
             return false;
