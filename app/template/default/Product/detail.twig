@@ -285,7 +285,6 @@ file that was distributed with this source code.
 									{{ form_errors(form.classcategory_id2) }}
 								</div>
 							{% endif %}
-
 							<div class="ec-productRole__order">
 								<ul class="order_list">
 									<li class="order_list_block normal_block" {% if Product.ClassName1 %}style="display: none"{% endif %}>
@@ -293,7 +292,13 @@ file that was distributed with this source code.
 											{{ form_widget(form.order_type[0]) }}
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
-												{{ form_row(form.normal_quantity, {'attr': {'class': 'normal_readonly'}}) }}
+												{{ form_widget(form.normal_quantity, {
+													'attr': {
+														'class': 'normal_readonly form-control',
+														'readonly': 'readonly'
+													}
+												}) }}
+												{{ form_errors(form.normal_quantity) }}
 											</div>
 										</div>
 									</li>
@@ -302,24 +307,32 @@ file that was distributed with this source code.
 											{{ form_widget(form.order_type[1]) }}
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
-												<div class="subscription_input_wrapper">
-													{{ form_widget(form.subscription_quantity, {
-														'attr': {
-															'class': 'subscription_readonly form-control',
-															'readonly': 'readonly'
-														}
-													}) }}
-													{{ form_errors(form.subscription_quantity) }}
-												</div>
+												{{ form_widget(form.subscription_quantity, {
+													'attr': {
+														'class': 'subscription_readonly form-control',
+														'readonly': 'readonly'
+													}
+												}) }}
+												{{ form_errors(form.subscription_quantity) }}
 											</div>
 										</div>
-										<ul class="subscription_cycle_block" style="display: none;">
+										<ul class="subscription_cycle_block"　style="display: none;>
 											<li style="font-weight: bold;">お届けサイクル：</li>
 											<li class="subscription_cycle">
 												<div class="mb-2">{{ form_row(form.cycle_type[0]) }}</div>
+												<div class="form-group">
+													{{ form_label(form.month) }}
+													{{ form_widget(form.month, {'attr': {'class': 'form-control'}}) }}
+													{{ form_errors(form.month) }}
+												</div>
 											</li>
 											<li class="subscription_cycle">
 												<div class="mb-2">{{ form_row(form.cycle_type[1]) }}</div>
+												<div class="form-group">
+													{{ form_label(form.day) }}
+													{{ form_widget(form.day, {'attr': {'class': 'form-control'}}) }}
+													{{ form_errors(form.day) }}
+												</div>
 											</li>
 										</ul>
 									</li>
@@ -337,7 +350,6 @@ file that was distributed with this source code.
 								</button>
 							</div>
 						{% endif %}
-						
 					</form>
 					<div class="ec-modal">
 						<div class="ec-modal-overlay">
