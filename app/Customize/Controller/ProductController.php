@@ -249,8 +249,6 @@ class ProductController extends BaseProductController
 
         $classCategoriesJson = json_encode($classCategories, JSON_UNESCAPED_UNICODE);
 
-        // $classCategoriesJson = $this->getClassCategoriesJson($Product);
-
         /* @var $form \Symfony\Component\Form\FormInterface */
         $form = $builder->getForm();
         $form->handleRequest($request);
