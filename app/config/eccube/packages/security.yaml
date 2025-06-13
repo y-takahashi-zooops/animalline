@@ -59,8 +59,10 @@ security:
                 name: eccube_remember_me
                 remember_me_parameter: 'login_memory'
             form_login:
-                check_path: adoption_login
-                login_path: adoption_login
+                # check_path: adoption_login
+                # login_path: adoption_login
+                check_path: /adoption/login
+                login_path: /adoption/login
                 enable_csrf: true
                 default_target_path: adoption_mypage
                 username_parameter: 'login_email'
