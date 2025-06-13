@@ -145,10 +145,6 @@ file that was distributed with this source code.
 					
 					// カテゴリ選択（classcategory）周辺の処理（もとのロジック）
 					try {
-						eccube.classCategories = {{ class_categories_json|raw }};
-						const product_id = $form.find('input[name=product_id]').val();
-						const $sele1 = $form.find('select[name=classcategory_id1]');
-
 						// セレクト描画
 						eccube.classCategories = {{ class_categories_json|raw }};
 						const product_id = $form.find('input[name=product_id]').val();
