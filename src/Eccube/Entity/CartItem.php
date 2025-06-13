@@ -30,6 +30,41 @@ if (!class_exists('\Eccube\Entity\CartItem')) {
         use PointRateTrait;
 
         /**
+         * @var bool
+         * @ORM\Column(name="is_repeat", type="boolean", options={"default": false})
+         */
+        private $is_repeat = false;
+
+        public function getIsRepeat(): bool
+        {
+            return $this->is_repeat;
+        }
+
+        public function setIsRepeat(?bool $is_repeat): self
+        {
+            $this->is_repeat = (bool)$is_repeat;
+            return $this;
+        }
+
+        /**
+         * @var int|null
+         *
+         * @ORM\Column(name="repeat_span", type="integer", nullable=true)
+         */
+        private $repeat_span;
+
+        public function getRepeatSpan(): ?int
+        {
+            return $this->repeat_span;
+        }
+
+        public function setRepeatSpan(?int $repeat_span): self
+        {
+            $this->repeat_span = $repeat_span;
+            return $this;
+        }
+
+        /**
          * @var integer
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
