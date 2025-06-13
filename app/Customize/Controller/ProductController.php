@@ -195,7 +195,16 @@ class ProductController extends BaseProductController
         $form->handleRequest($request);
 
         if (!$form->isValid()) {
-            throw new NotFoundHttpException();
+            $this->logger->error('フォームバリデーションエラー', [
+                'errors' => (string) $form->getErrors(true, false),
+            ]);
+
+            return $this->render('Product/detail.twig', [
+                'form' => $form->createView(),
+                'Product' => $Product,
+                'BaseInfo' => $this->BaseInfo, // 必要に応じて
+                'errorMessages' => ['入力内容に誤りがあります。'],
+            ]);
         }
 
         $addCartData = $form->getData();
