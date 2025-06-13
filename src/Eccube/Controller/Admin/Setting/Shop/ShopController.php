@@ -27,6 +27,7 @@ use Twig\Environment;
 use Symfony\Component\Form\FormFactoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class ShopController
@@ -65,7 +66,8 @@ class ShopController extends AbstractController
         BaseInfoRepository $baseInfoRepository,
         FormFactoryInterface $formFactory,
         EntityManagerInterface $entityManager,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        SessionInterface $session
     )
     {
         $this->baseInfoRepository = $baseInfoRepository;
@@ -73,6 +75,7 @@ class ShopController extends AbstractController
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->session = $session;
     }
 
     /**
