@@ -15,6 +15,12 @@ class LegacyCustomerPasswordHasher implements PasswordHasherInterface
         $this->logger = $logger;
     }
 
+    public function hash(string $plainPassword): string
+    {
+        // legacy hasher is verify-only; should never be used to hash
+        throw new \LogicException('LegacyCustomerPasswordHasher does not support hashing.');
+    }
+
     public function verify(string $hashedPassword, string $plainPassword, ?object $user = null): bool
     {
         $this->logger->info('LegacyHasherが呼ばれた');
