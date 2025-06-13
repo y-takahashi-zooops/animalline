@@ -4,26 +4,31 @@ namespace App\Hasher;
 
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Eccube\Entity\Customer;
+use Psr\Log\LoggerInterface;
 
 class LegacyCustomerPasswordHasher implements PasswordHasherInterface
 {
-    public function hash(string $plainPassword): string
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
     {
-        throw new \LogicException('hash() should not be called directly.');
+        $this->logger = $logger;
     }
 
     public function verify(string $hashedPassword, string $plainPassword, ?object $user = null): bool
     {
+        $this->logger->info('LegacyHasherが呼ばれた');
         if (!$user instanceof \Eccube\Entity\Customer) {
-            dump('Not a Customer', $user); // ← デバッグ用
+            $this->logger->info('LegacyHasher: user is not Customer');
             return false;
         }
 
         $secretKey = $user->getSecretKey();
-        dump('SecretKey:', $secretKey, 'Plain:', $plainPassword);
-
         $expected = hash('sha256', $secretKey . $plainPassword);
-        dump('Expected:', $expected, 'Actual:', $hashedPassword);
+        $this->logger->info('LegacyHasher: checking password', [
+            'expected' => $expected,
+            'actual' => $hashedPassword,
+        ]);
 
         return hash_equals($hashedPassword, $expected);
     }
