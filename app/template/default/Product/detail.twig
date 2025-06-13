@@ -302,15 +302,7 @@ file that was distributed with this source code.
 											{{ form_widget(form.order_type[1]) }}
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
-												<div class="subscription_input_wrapper">
-													{{ form_widget(form.subscription_quantity, {
-														'attr': {
-															'class': 'subscription_readonly form-control',
-															'readonly': 'readonly'
-														}
-													}) }}
-													{{ form_errors(form.subscription_quantity) }}
-												</div>
+		
 											</div>
 										</div>
 										<ul class="subscription_cycle_block" style="display: none;">
