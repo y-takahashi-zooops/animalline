@@ -11,14 +11,16 @@ security:
 
         # Customer 用（bcrypt → sodium へ移行）
         Eccube\Entity\Customer:
-            algorithm: sodium
+            # algorithm: sodium
+            algorithm: auto
             migrate_from:
                 - bcrypt
                 - legacy
 
         # Member 用（同上）
         Eccube\Entity\Member:
-            algorithm: sodium
+            # algorithm: sodium
+            algorithm: auto
             migrate_from:
                 - bcrypt
                 - legacy
