@@ -303,6 +303,15 @@ file that was distributed with this source code.
 											<div class="ec-numberInput">
 												<span>{{ '数量'|trans }}</span>
 												てすと
+												<div class="subscription_input_wrapper">
+													{{ form_widget(form.subscription_quantity, {
+														'attr': {
+															'class': 'subscription_readonly form-control',
+															'readonly': 'readonly'
+														}
+													}) }}
+													{{ form_errors(form.subscription_quantity) }}
+												</div>
 												{{ form_row(form.subscription_quantity, {'attr': {'class': 'subscription_readonly', 'readonly':'readonly'}}) }}
 											</div>
 										</div>
