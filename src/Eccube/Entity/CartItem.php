@@ -30,6 +30,23 @@ if (!class_exists('\Eccube\Entity\CartItem')) {
         use PointRateTrait;
 
         /**
+         * @var bool
+         * @ORM\Column(name="is_repeat", type="boolean", options={"default": false})
+         */
+        private $is_repeat = false;
+
+        public function getIsRepeat(): bool
+        {
+            return $this->is_repeat;
+        }
+
+        public function setIsRepeat(bool $is_repeat): self
+        {
+            $this->is_repeat = $is_repeat;
+            return $this;
+        }
+
+        /**
          * @var integer
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
@@ -138,24 +155,6 @@ if (!class_exists('\Eccube\Entity\CartItem')) {
         public function getTotalPrice()
         {
             return $this->getPrice() * $this->getQuantity();
-        }
-
-        /**
-         * @return bool
-         */
-        public function getIsRepeat(): bool
-        {
-            return $this->is_repeat;
-        }
-
-        /**
-         * @param bool $is_repeat
-         * @return $this
-         */
-        public function setIsRepeat(bool $is_repeat): self
-        {
-            $this->is_repeat = $is_repeat;
-            return $this;
         }
 
         /**
