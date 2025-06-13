@@ -349,31 +349,68 @@ class ProductController extends BaseProductController
             return $event->getResponse();
         }
 
-        if ($request->isXmlHttpRequest()) {
-            // ajaxでのリクエストの場合は結果をjson形式で返す。
+        // if ($request->isXmlHttpRequest()) {
+        //     // ajaxでのリクエストの場合は結果をjson形式で返す。
 
+        //     // 初期化
+        //     $done = null;
+        //     $messages = [];
+
+        //     if (empty($errorMessages)) {
+        //         // エラーが発生していない場合
+        //         $done = true;
+        //         array_push($messages, trans('front.product.add_cart_complete'));
+        //     } else {
+        //         // エラーが発生している場合
+        //         $done = false;
+        //         $messages = $errorMessages;
+        //     }
+
+        //     return $this->json(['done' => $done, 'messages' => $messages]);
+        // } else {
+        //     // ajax以外でのリクエストの場合はカート画面へリダイレクト
+        //     foreach ($errorMessages as $errorMessage) {
+        //         $this->addRequestError($errorMessage);
+        //     }
+
+        //     return $this->redirectToRoute('cart');
+        // }
+
+        if ($request->isXmlHttpRequest()) {
             // 初期化
             $done = null;
             $messages = [];
 
-            if (empty($errorMessages)) {
-                // エラーが発生していない場合
-                $done = true;
-                array_push($messages, trans('front.product.add_cart_complete'));
-            } else {
-                // エラーが発生している場合
+            if (!$form->isSubmitted()) {
                 $done = false;
-                $messages = $errorMessages;
+                $messages[] = 'フォームが送信されていません。';
+            } elseif (!$form->isValid()) {
+                $done = false;
+                foreach ($form->getErrors(true, false) as $error) {
+                    $messages[] = $error->getMessage();
+                }
+                if (empty($messages)) {
+                    $messages[] = '不明なフォームエラーが発生しました。';
+                }
+            } elseif (!empty($errorMessages)) {
+                $done = false;
+                $messages = array_merge($messages, $errorMessages);
+            } else {
+                $done = true;
+                $messages[] = $this->translator->trans('front.product.add_cart_complete');
             }
 
-            return $this->json(['done' => $done, 'messages' => $messages]);
-        } else {
-            // ajax以外でのリクエストの場合はカート画面へリダイレクト
-            foreach ($errorMessages as $errorMessage) {
-                $this->addRequestError($errorMessage);
-            }
+            // レスポンスをログに出す（デバッグ用）
+            $this->logger->info('Ajaxカート追加レスポンス', [
+                'done' => $done,
+                'messages' => $messages,
+            ]);
 
-            return $this->redirectToRoute('cart');
+            return $this->json([
+                'done' => $done,
+                'messages' => $messages,
+            ]);
         }
+
     }
 }
