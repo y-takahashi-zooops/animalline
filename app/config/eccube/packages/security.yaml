@@ -9,21 +9,12 @@ security:
             encode_as_base64: false
             iterations: 1
 
-        # Customer 用（bcrypt → sodium へ移行）
+        password_hashers:
         Eccube\Entity\Customer:
-            # algorithm: sodium
-            algorithm: auto
-            migrate_from:
-                - bcrypt
-                - legacy
+            algorithm: bcrypt
 
-        # Member 用（同上）
         Eccube\Entity\Member:
-            # algorithm: sodium
-            algorithm: auto
-            migrate_from:
-                - bcrypt
-                - legacy
+            algorithm: bcrypt
 
     providers:
         # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
