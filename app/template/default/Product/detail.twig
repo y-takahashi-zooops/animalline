@@ -341,9 +341,19 @@ file that was distributed with this source code.
 											<li style="font-weight: bold;">お届けサイクル：</li>
 											<li class="subscription_cycle">
 												<div class="mb-2">{{ form_row(form.cycle_type[0]) }}</div>
+												<div class="form-group">
+													{{ form_label(form.month) }}
+													{{ form_widget(form.month, {'attr': {'class': 'form-control'}}) }}
+													{{ form_errors(form.month) }}
+												</div>
 											</li>
 											<li class="subscription_cycle">
 												<div class="mb-2">{{ form_row(form.cycle_type[1]) }}</div>
+												<div class="form-group">
+													{{ form_label(form.day) }}
+													{{ form_widget(form.day, {'attr': {'class': 'form-control'}}) }}
+													{{ form_errors(form.day) }}
+												</div>
 											</li>
 										</ul>
 									</li>
@@ -361,8 +371,6 @@ file that was distributed with this source code.
 								</button>
 							</div>
 						{% endif %}
-						
-						{{ form_rest(form) }}
 					</form>
 					<div class="ec-modal">
 						<div class="ec-modal-overlay">
