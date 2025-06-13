@@ -190,6 +190,12 @@ class ProductController extends BaseProductController
         );
         $this->eventDispatcher->dispatch($event, EccubeEvents::FRONT_PRODUCT_CART_ADD_INITIALIZE);
 
+        $is_favorite = false;
+        if ($this->isGranted('ROLE_USER')) {
+            $Customer = $this->getUser();
+            $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
+        }
+
         /* @var $form \Symfony\Component\Form\FormInterface */
         $form = $builder->getForm();
         $form->handleRequest($request);
@@ -202,8 +208,9 @@ class ProductController extends BaseProductController
             return $this->render('Product/detail.twig', [
                 'form' => $form->createView(),
                 'Product' => $Product,
-                'BaseInfo' => $this->BaseInfo, // 必要に応じて
+                'BaseInfo' => $this->BaseInfo,
                 'errorMessages' => ['入力内容に誤りがあります。'],
+                'is_favorite' => $is_favorite,
             ]);
         }
 
@@ -214,12 +221,6 @@ class ProductController extends BaseProductController
         if ($cartItem) {
             // 同商品がカートに存在したらカートに追加させない
             return;
-        }
-
-        $is_favorite = false;
-        if ($this->isGranted('ROLE_USER')) {
-            $Customer = $this->getUser();
-            $is_favorite = $this->customerFavoriteProductRepository->isFavorite($Customer, $Product);
         }
 
         $this->logger->info(
