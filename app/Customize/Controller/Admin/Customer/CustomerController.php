@@ -146,7 +146,8 @@ class CustomerController extends AbstractController
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
         EntityManagerInterface $entityManager,
-        SessionInterface $session
+        SessionInterface $session,
+        RequestStack $requestStack
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -166,6 +167,7 @@ class CustomerController extends AbstractController
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
         $this->session = $session;
+        $this->requestStack = $requestStack;
     }
 
     /**
