@@ -448,5 +448,4 @@ services:
 
     security.user_checker.customer: '@Eccube\Security\UserChecker\PasswordRehashChecker'
 
-    App\Hasher\LegacyCustomerPasswordHasher:
-    public: false
+    App\Hasher\LegacyCustomerPasswordHasher: ~
