@@ -5,17 +5,23 @@ security:
             encode_as_base64: false
             iterations: 1
 
-        Eccube\Entity\Customer:
-            # algorithm: sodium
-            algorithm: bcrypt
-            migrate_from:
-                - bcrypt
-                - legacy
+        # Eccube\Entity\Customer:
+        #     # algorithm: sodium
+        #     algorithm: bcrypt
+        #     migrate_from:
+        #         - bcrypt
+        #         - legacy
 
         Eccube\Entity\Member:
             # algorithm: sodium
             algorithm: bcrypt
             migrate_from:
+                - bcrypt
+
+        Eccube\Entity\Customer:
+            algorithm: auto
+            migrate_from:
+                - App\Hasher\LegacyCustomerPasswordHasher
                 - bcrypt
 
     providers:

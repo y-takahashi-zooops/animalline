@@ -447,3 +447,6 @@ services:
             $em: '@doctrine.orm.entity_manager'
 
     security.user_checker.customer: '@Eccube\Security\UserChecker\PasswordRehashChecker'
+
+    App\Hasher\LegacyCustomerPasswordHasher:
+    public: false
