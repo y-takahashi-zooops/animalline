@@ -51,6 +51,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Eccube\Common\EccubeConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 
 class CustomerController extends AbstractController
@@ -146,7 +147,8 @@ class CustomerController extends AbstractController
         EventDispatcherInterface $eventDispatcher,
         EccubeConfig $eccubeConfig,
         EntityManagerInterface $entityManager,
-        SessionInterface $session
+        SessionInterface $session,
+        RequestStack $requestStack
     ) {
         $this->pageMaxRepository = $pageMaxRepository;
         $this->customerRepository = $customerRepository;
@@ -166,6 +168,7 @@ class CustomerController extends AbstractController
         $this->eccubeConfig = $eccubeConfig;
         $this->entityManager = $entityManager;
         $this->session = $session;
+        $this->requestStack = $requestStack;
     }
 
     /**
