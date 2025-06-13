@@ -452,3 +452,9 @@ services:
         arguments:
             $logger: '@logger'
         tags: ['monolog.logger']  # 任意、ログ出力用途
+
+    App\Service\LoggingUserPasswordHasher:
+        decorates: Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface
+        arguments:
+            $inner: '@App\Service\LoggingUserPasswordHasher.inner'
+            $logger: '@logger'
