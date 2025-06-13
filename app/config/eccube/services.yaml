@@ -431,9 +431,9 @@ services:
             tags:
                 - { name: form.type_extension }
 
-    App\Security\UserChecker\PasswordRehashChecker:
-        arguments:
-            $hasher: '@security.user_password_hasher'
-            $em: '@doctrine.orm.entity_manager'
+    Eccube\Security\UserChecker\PasswordRehashChecker:
+    arguments:
+        $hasher: '@security.user_password_hasher'
+        $em: '@doctrine.orm.entity_manager'
 
     security.user_checker.customer: '@Eccube\Security\UserChecker\PasswordRehashChecker'
