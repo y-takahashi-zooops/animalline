@@ -432,8 +432,8 @@ services:
                 - { name: form.type_extension }
 
     Eccube\Security\UserChecker\PasswordRehashChecker:
-    arguments:
-        $hasher: '@security.user_password_hasher'
-        $em: '@doctrine.orm.entity_manager'
+        arguments:
+            $hasher: '@security.user_password_hasher'
+            $em: '@doctrine.orm.entity_manager'
 
     security.user_checker.customer: '@Eccube\Security\UserChecker\PasswordRehashChecker'
