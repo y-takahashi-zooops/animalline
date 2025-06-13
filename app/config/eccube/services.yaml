@@ -436,4 +436,4 @@ services:
             $hasher: '@security.user_password_hasher'
             $em: '@doctrine.orm.entity_manager'
 
-    security.user_checker.customer: '@App\Security\UserChecker\PasswordRehashChecker'
+    security.user_checker.customer: '@Eccube\Security\UserChecker\PasswordRehashChecker'
