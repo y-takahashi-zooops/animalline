@@ -1,6 +1,5 @@
 <?php
-
-namespace App\Security\UserChecker;
+namespace Eccube\Security\UserChecker;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
