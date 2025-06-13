@@ -372,7 +372,6 @@ class ProductController extends BaseProductController
             foreach ($errorMessages as $errorMessage) {
                 $this->addRequestError($errorMessage);
             }
-
             return $this->redirectToRoute('cart');
         }
 
