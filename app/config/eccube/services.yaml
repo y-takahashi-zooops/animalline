@@ -400,15 +400,25 @@ services:
         public: true
     
     #Animalline用にカスタマイズ
-    app.eccube.security.success_handler:
-        parent: security.authentication.success_handler
-        class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
+    # app.eccube.security.success_handler:
+    #     parent: security.authentication.success_handler
+    #     class: Customize\Security\Http\Authentication\EccubeLoginSuccessHandler
+    #     public: true
+    #     arguments:
+    #         - '@security.http_utils'
+    #         - { default_target_path: '/%eccube_admin_route%/' }
+    #         - '@security.user_password_hasher'      # 追加: パスワードハッシュサービス
+    #         - '@doctrine.orm.entity_manager'         # 追加: DB永続化のためのEntityManager
+    Customize\Security\Http\Authentication\EccubeLoginSuccessHandler:
         public: true
         arguments:
-            - '@security.http_utils'
-            - { default_target_path: '/%eccube_admin_route%/' }
-            - '@security.user_password_hasher'      # 追加: パスワードハッシュサービス
-            - '@doctrine.orm.entity_manager'         # 追加: DB永続化のためのEntityManager
+            $httpUtils: '@security.http_utils'
+            $options:
+                default_target_path: '/%eccube_admin_route%/'
+            $hasher: '@security.user_password_hasher' # 追加: パスワードハッシュサービス
+            $em: '@doctrine.orm.entity_manager' # 追加: DB永続化のためのEntityManager
+
+    app.eccube.security.success_handler: '@Customize\Security\Http\Authentication\EccubeLoginSuccessHandler'
 
     eccube.security.failure_handler:
         class: Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler
