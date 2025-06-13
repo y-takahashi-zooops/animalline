@@ -65,6 +65,24 @@ if (!class_exists('\Eccube\Entity\CartItem')) {
         }
 
         /**
+         * @var string|null
+         *
+         * @ORM\Column(name="span_unit", type="string", length=10, nullable=true)
+         */
+        private $span_unit;
+
+        public function getSpanUnit(): ?string
+        {
+            return $this->span_unit;
+        }
+
+        public function setSpanUnit(?string $span_unit): self
+        {
+            $this->span_unit = $span_unit;
+            return $this;
+        }
+
+        /**
          * @var integer
          *
          * @ORM\Column(name="id", type="integer", options={"unsigned":true})
