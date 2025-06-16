@@ -253,24 +253,24 @@ class ProductController extends BaseProductController
         $form = $builder->getForm();
         $form->handleRequest($request);
 
-        // if (!$form->isValid()) {
-        //     $this->logger->error('フォームバリデーションエラー', [
-        //         'errors' => (string) $form->getErrors(true, false),
-        //     ]);
-
-        //     return $this->render('Product/detail.twig', [
-        //         'form' => $form->createView(),
-        //         'Product' => $Product,
-        //         'BaseInfo' => $this->BaseInfo,
-        //         'errorMessages' => ['入力内容に誤りがあります。'],
-        //         'is_favorite' => $is_favorite,
-        //         'class_categories_json' => $classCategoriesJson,
-        //     ]);
-        // }
-
         if (!$form->isValid()) {
-            throw new NotFoundHttpException();
+            $this->logger->error('フォームバリデーションエラー', [
+                'errors' => (string) $form->getErrors(true, false),
+            ]);
+
+            return $this->render('Product/detail.twig', [
+                'form' => $form->createView(),
+                'Product' => $Product,
+                'BaseInfo' => $this->BaseInfo,
+                'errorMessages' => ['入力内容に誤りがあります。'],
+                'is_favorite' => $is_favorite,
+                'class_categories_json' => $classCategoriesJson,
+            ]);
         }
+
+        // if (!$form->isValid()) {
+        //     throw new NotFoundHttpException();
+        // }
 
         $addCartData = $form->getData();
 
