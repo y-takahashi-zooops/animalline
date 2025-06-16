@@ -123,7 +123,7 @@ file that was distributed with this source code.
 					try {
 						eccube.classCategories = {{ class_categories_json|raw }};
 
-						 console.log('フォーム内のname属性:', $('input[name^="add_cart"]').toArray().map(e => e.name));
+						console.log('設定したproduct_class_id:', productClass?.product_class_id);
 						
 						// セレクト描画
 						const $form = $(formElement);
@@ -289,9 +289,6 @@ file that was distributed with this source code.
 							id: 'form1'
 						}
 					}) }}
-						{% for child in form %}
-							<p>{{ child.vars.name }} | {{ child.vars.full_name }} | {{ dump(child.vars) }}</p>
-						{% endfor %}
 						{% if Product.stock_find %}
 							{# 仕様 #}
 							{% if Product.ClassName1 %}
