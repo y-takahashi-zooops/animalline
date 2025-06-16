@@ -122,6 +122,8 @@ file that was distributed with this source code.
 				waitForTranslator(function () {
 					try {
 						eccube.classCategories = {{ class_categories_json|raw }};
+
+						 console.log('フォーム内のname属性:', $('input[name^="add_cart"]').toArray().map(e => e.name));
 						
 						// セレクト描画
 						const $form = $(formElement);
@@ -284,9 +286,11 @@ file that was distributed with this source code.
 						action: url('product_add_cart', {id: Product.id}),
 						method: 'post',
 						attr: {
-							id: 'form1'
+							id: 'form1',
+							name: 'add_cart'
 						}
 					}) }}
+						{{ dump(form.ProductClass.vars.full_name) }}
 						{% if Product.stock_find %}
 							{# 仕様 #}
 							{% if Product.ClassName1 %}
