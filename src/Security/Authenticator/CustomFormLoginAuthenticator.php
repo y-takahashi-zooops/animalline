@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Security\Authenticator;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
@@ -16,6 +18,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
@@ -27,11 +30,24 @@ class CustomFormLoginAuthenticator extends FormLoginAuthenticator
 
     public function __construct(
         HttpUtils $httpUtils,
+        string $loginPath,
+        string $checkPath,
+        ?CsrfTokenManagerInterface $csrfTokenManager = null,
+        string $csrfTokenId = 'authenticate',
+        string $usernameParameter = 'login_email',
+        string $passwordParameter = 'login_pass',
         AuthenticationSuccessHandlerInterface $successHandler,
         AuthenticationFailureHandlerInterface $failureHandler
     ) {
-        parent::__construct($httpUtils);
-        $this->httpUtils = $httpUtils;
+        parent::__construct(
+            $httpUtils,
+            $loginPath,
+            $checkPath,
+            $csrfTokenManager,
+            $csrfTokenId,
+            $usernameParameter,
+            $passwordParameter
+        );
         $this->successHandler = $successHandler;
         $this->failureHandler = $failureHandler;
     }
