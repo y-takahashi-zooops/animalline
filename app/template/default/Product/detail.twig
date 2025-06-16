@@ -172,7 +172,21 @@ file that was distributed with this source code.
 
 						// submit直前にProductClassを再設定（安全対策）
 						$form.on('submit', function () {
-							fnSetClassCategories();
+							e.preventDefault(); // ← 送信を止める
+							fnSetClassCategories(); // ← hiddenに正しくセットする
+
+							$.post($form.attr('action'), $form.serialize())
+								.done(function (response) {
+									console.log('レスポンス:', response);
+									if (response.done) {
+										$('.ec-modal').fadeIn();
+									} else {
+										alert(response.messages.join('\n'));
+									}
+								})
+								.fail(function () {
+									alert('通信エラーが発生しました');
+								});
 						});
 
 						// 初期表示時に一度実行（念のため）
