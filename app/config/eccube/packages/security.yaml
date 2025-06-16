@@ -21,15 +21,10 @@ security:
             migrate_from:
                 - bcrypt
 
-        # Eccube\Entity\Customer:
-        #     algorithm: auto
-        #     migrate_from:
-        #         - App\Hasher\LegacyCustomerPasswordHasher
-        #         - bcrypt
         Eccube\Entity\Customer:
             algorithm: auto
             migrate_from:
-                - id: legacy_hasher
+                - App\Hasher\LegacyCustomerPasswordHasher
                 - bcrypt
 
     providers:
