@@ -82,8 +82,6 @@ security:
             logout:
                 path: logout
                 target: adoption_top
-            custom_authenticators:
-                - App\Security\Authenticator\CustomFormLoginAuthenticator
         breeder:
             pattern: '^/breeder/'
             lazy: true
