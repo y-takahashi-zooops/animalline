@@ -11,6 +11,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Routing\RouterInterface;
+use App\Security\Authenticator\Response;
 
 class CustomFormLoginAuthenticator extends AbstractLoginFormAuthenticator
 {
