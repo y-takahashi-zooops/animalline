@@ -448,10 +448,10 @@ services:
 
     security.user_checker.customer: '@Eccube\Security\UserChecker\PasswordRehashChecker'
 
-    # App\Hasher\LegacyCustomerPasswordHasher:
-    #     arguments:
-    #         $logger: '@logger'
-    #     tags: ['monolog.logger']  # 任意、ログ出力用途
+    App\Hasher\LegacyCustomerPasswordHasher:
+        arguments:
+            $logger: '@logger'
+        tags: ['monolog.logger']  # 任意、ログ出力用途
 
     App\Service\LoggingUserPasswordHasher:
         decorates: Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface
@@ -459,7 +459,7 @@ services:
             $inner: '@App\Service\LoggingUserPasswordHasher.inner'
             $logger: '@logger'
 
-    legacy_hasher:
-        class: App\Hasher\LegacyCustomerPasswordHasher
-        arguments:
-            $logger: '@logger'
+    # legacy_hasher:
+    #     class: App\Hasher\LegacyCustomerPasswordHasher
+    #     arguments:
+    #         $logger: '@logger'
