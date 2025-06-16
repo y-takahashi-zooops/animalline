@@ -168,7 +168,7 @@ file that was distributed with this source code.
                 		$sele2.on('change', fnSetClassCategories);
 
 						$form.on('submit', function (e) {
-							e.preventDefault(); // 送信を止める
+							// e.preventDefault(); // 送信を止める
 
 							const success = fnSetClassCategories();
 							if (!success) {
