@@ -146,13 +146,18 @@ file that was distributed with this source code.
 							// 商品規格が確定したあと、ProductClass にセット
 							const selectedId1 = $sele1.val();
 							const selectedId2 = $sele2.val();
+
+							console.log('selectedId1:', selectedId1);
+							console.log('selectedId2:', selectedId2);
+							console.log('classCategories:', eccube.classCategories);
+
 							const productClass = eccube.classCategories[selectedId1]?.[selectedId2];
 
-							console.log('設定したproduct_class_id:', productClass?.product_class_id);
-
 							if (productClass && productClass.product_class_id) {
+								console.log('設定したproduct_class_id:', productClass?.product_class_id);
 								$form.find('[name="add_cart[ProductClass]"]').val(productClass.product_class_id);
 							} else {
+								console.warn('ProductClassが見つかりません');
 								$form.find('[name="add_cart[ProductClass]"]').val('');
 							}
 						}
