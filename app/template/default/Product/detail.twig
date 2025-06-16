@@ -125,7 +125,7 @@ file that was distributed with this source code.
 						
 						// セレクト描画
 						const $form = $(formElement);
-						const product_id = $form.find('input[name="add_cart[product_id]"], input[name="product_id"]').val();
+						const product_id = $form.find('input[name="product_id"], input[name="add_cart[product_id]"]').val();
 						const $sele1 = $form.find('select[name="classcategory_id1"], select[name="add_cart[classcategory_id1]"]');
 						const $sele2 = $form.find('select[name="classcategory_id2"], select[name="add_cart[classcategory_id2]"]');
 
@@ -162,27 +162,32 @@ file that was distributed with this source code.
 							}
 						}
 
-						// 🔽 これを追加
-						$sele1.on('change', function () {
-							fnSetClassCategories('');
-						});
-						$sele2.on('change', function () {
-							fnSetClassCategories('');
-						});
+						$sele1.on('change', fnSetClassCategories);
+                		$sele2.on('change', fnSetClassCategories);
 
-						// submit直前にProductClassを再設定（安全対策）
 						$form.on('submit', function (e) {
-							console.log('submit intercepted');
-							e.preventDefault(); //
-							fnSetClassCategories();
+							e.preventDefault(); // 送信を止める
+
+							const success = fnSetClassCategories();
+							if (!success) {
+								alert('商品規格が選択されていません');
+								return;
+							}
 
 							$.post($form.attr('action'), $form.serialize())
 								.done(function (response) {
-									console.log('レスポンス:', response);
-									if (response.done) {
-										$('.ec-modal').fadeIn();
-									} else {
-										alert(response.messages.join('\n'));
+									try {
+										const json = typeof response === 'string' ? JSON.parse(response) : response;
+										if (json.done) {
+											$('.ec-modal').fadeIn();
+										} else if (json.messages) {
+											alert(json.messages.join('\n'));
+										} else {
+											alert('カート追加に失敗しました');
+										}
+									} catch (e) {
+										console.error("パースエラー:", e);
+										alert('カート処理中にエラーが発生しました');
 									}
 								})
 								.fail(function () {
@@ -190,8 +195,8 @@ file that was distributed with this source code.
 								});
 						});
 
-						// 初期表示時に一度実行（念のため）
-						fnSetClassCategories('');
+						// 初期表示時に一度実行
+						fnSetClassCategories();
 
 						{% if form.classcategory_id2 is defined %}
 							fnSetClassCategories({{ form.classcategory_id2.vars.value|json_encode|raw }});
@@ -385,7 +390,7 @@ file that was distributed with this source code.
 												{{ form_errors(form.subscription_quantity) }}
 											</div>
 										</div>
-										<ul class="subscription_cycle_block"　style="display: none;>
+										<ul class="subscription_cycle_block" style="display: none;>
 											<li style="font-weight: bold;">お届けサイクル：</li>
 											<li class="subscription_cycle">
 												<div class="mb-2">{{ form_row(form.cycle_type[0]) }}</div>
