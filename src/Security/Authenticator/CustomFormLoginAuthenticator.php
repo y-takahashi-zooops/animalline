@@ -30,11 +30,24 @@ class CustomFormLoginAuthenticator extends FormLoginAuthenticator
 
     public function __construct(
         HttpUtils $httpUtils,
+        string $loginPath,
+        string $checkPath,
+        ?CsrfTokenManagerInterface $csrfTokenManager = null,
+        string $csrfTokenId = 'authenticate',
+        string $usernameParameter = 'login_email',
+        string $passwordParameter = 'login_pass',
         AuthenticationSuccessHandlerInterface $successHandler,
         AuthenticationFailureHandlerInterface $failureHandler
     ) {
-        parent::__construct($httpUtils);
-        $this->httpUtils = $httpUtils;
+        parent::__construct(
+            $httpUtils,
+            $loginPath,
+            $checkPath,
+            $csrfTokenManager,
+            $csrfTokenId,
+            $usernameParameter,
+            $passwordParameter
+        );
         $this->successHandler = $successHandler;
         $this->failureHandler = $failureHandler;
     }
