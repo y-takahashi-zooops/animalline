@@ -458,3 +458,8 @@ services:
         arguments:
             $inner: '@App\Service\LoggingUserPasswordHasher.inner'
             $logger: '@logger'
+
+    legacy_hasher:
+        class: App\Hasher\LegacyCustomerPasswordHasher
+        arguments:
+            $logger: '@logger'
