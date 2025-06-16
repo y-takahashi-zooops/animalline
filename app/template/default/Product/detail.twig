@@ -147,8 +147,11 @@ file that was distributed with this source code.
 							const selectedId1 = $sele1.val();
 							const selectedId2 = $sele2.val();
 							const productClass = eccube.classCategories[selectedId1]?.[selectedId2];
+
 							if (productClass && productClass.product_class_id) {
 								$form.find('[name="add_cart[ProductClass]"]').val(productClass.product_class_id);
+							} else {
+								$form.find('[name="add_cart[ProductClass]"]').val('');
 							}
 						}
 
