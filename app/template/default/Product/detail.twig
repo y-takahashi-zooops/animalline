@@ -140,18 +140,17 @@ file that was distributed with this source code.
 							}
 						}
 
-						function fnSetClassCategories(classcat_id2_selected) {
-							eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
+						function fnSetClassCategories() {
+							eccube.setClassCategories($form, product_id, $sele1, $sele2);
 
 							// 商品規格が確定したあと、ProductClass にセット
 							const selectedId1 = $sele1.val();
 							const selectedId2 = $sele2.length ? $sele2.val() : '';
+							const productClass = eccube.classCategories?.[selectedId1]?.[selectedId2];
 
 							console.log('selectedId1:', selectedId1);
 							console.log('selectedId2:', selectedId2);
 							console.log('classCategories:', eccube.classCategories);
-
-							const productClass = eccube.classCategories[selectedId1]?.[selectedId2];
 
 							if (productClass && productClass.product_class_id) {
 								console.log('設定したproduct_class_id:', productClass?.product_class_id);
@@ -168,6 +167,11 @@ file that was distributed with this source code.
 						});
 						$sele2.on('change', function () {
 							fnSetClassCategories('');
+						});
+
+						// submit直前にProductClassを再設定（安全対策）
+						$form.on('submit', function () {
+							fnSetClassCategories();
 						});
 
 						// 初期表示時に一度実行（念のため）
