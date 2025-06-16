@@ -24,7 +24,7 @@ class LegacyCustomerPasswordHasher implements PasswordHasherInterface
     public function verify(string $hashedPassword, string $plainPassword, ?object $user = null): bool
     {
         $this->logger->info('LegacyHasherが呼ばれた');
-        dd('試しにdd', $user);
+        dd('試しにdd!', $user, $hashedPassword, $plainPassword);
         if (is_object($user)) {
             $this->logger->info('LegacyHasher: user class = ' . get_class($user));
         } else {
