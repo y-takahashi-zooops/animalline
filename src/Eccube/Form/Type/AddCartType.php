@@ -90,7 +90,8 @@ class AddCartType extends AbstractType
                             new Assert\NotBlank(),
                         ],
                     ])
-                    ->addModelTransformer(new EntityToIdTransformer($this->doctrine->getManager(), ProductClass::class))
+                    ->addModelTransformer(new EntityToIdTransformer($this->doctrine->getManager()->getRepository(ProductClass::class), 'id'))
+                    // ->addModelTransformer(new EntityToIdTransformer($this->doctrine->getManager(), ProductClass::class))
             );
 
         if ($Product->getStockFind()) {
